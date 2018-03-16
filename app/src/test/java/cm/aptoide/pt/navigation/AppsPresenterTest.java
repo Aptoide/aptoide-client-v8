@@ -41,7 +41,7 @@ public class AppsPresenterTest {
 
     appsPresenter =
         new AppsPresenter(view, appsManager, Schedulers.immediate(), Schedulers.immediate(),
-            CrashReport.getInstance());
+            CrashReport.getInstance(), permissionManager, permissionService);
     //simulate view lifecycle event
     lifecycleEvent = PublishSubject.create();
     when(view.getLifecycle()).thenReturn(lifecycleEvent);

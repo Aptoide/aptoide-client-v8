@@ -1,5 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -16,14 +18,19 @@ public class AppsPresenter implements Presenter {
   private Scheduler viewScheduler;
   private Scheduler computation;
   private CrashReport crashReport;
+  private PermissionManager permissionManager;
+  private PermissionService permissionService;
 
   public AppsPresenter(AppsFragmentView view, AppsManager appsManager, Scheduler viewScheduler,
-      Scheduler computation, CrashReport crashReport) {
+      Scheduler computation, CrashReport crashReport, PermissionManager permissionManager,
+      PermissionService permissionService) {
     this.view = view;
     this.appsManager = appsManager;
     this.viewScheduler = viewScheduler;
     this.computation = computation;
     this.crashReport = crashReport;
+    this.permissionManager = permissionManager;
+    this.permissionService = permissionService;
   }
 
   @Override public void present() {
@@ -161,7 +168,9 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.resumeDownload())
-        .doOnNext(app -> appsManager.resumeDownload(app))
+        .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
+            .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
+            .doOnNext(__ -> appsManager.resumeDownload(app)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));

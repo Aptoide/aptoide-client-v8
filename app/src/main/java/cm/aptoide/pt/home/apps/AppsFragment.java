@@ -9,12 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -26,6 +32,9 @@ import rx.subjects.PublishSubject;
 
 public class AppsFragment extends NavigationTrackFragment implements AppsFragmentView {
 
+  @Inject DownloadAnalytics downloadAnalytics;
+  @Inject InstallAnalytics installAnalytics;
+  @Inject NavigationTracker navigationTracker;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
@@ -36,6 +45,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     appItemClicks = PublishSubject.create();
   }
 
@@ -86,8 +96,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         RepositoryFactory.getUpdateRepository(getContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(),
-        new InstallToDownloadAppMapper(), new InstalledToInstalledAppMapper()),
-        AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance()));
+        new InstallToDownloadAppMapper(), new InstalledToInstalledAppMapper(), downloadAnalytics,
+        installAnalytics), AndroidSchedulers.mainThread(), Schedulers.computation(),
+        CrashReport.getInstance(), new PermissionManager(), ((PermissionService) getContext())));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
