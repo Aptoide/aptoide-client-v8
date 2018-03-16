@@ -46,7 +46,7 @@ public class MainPresenter implements Presenter {
   private final AutoUpdate autoUpdate;
   private final boolean firstCreated;
   private final AptoideBottomNavigator aptoideBottomNavigator;
-  private Scheduler viewScheduler;
+  private final Scheduler viewScheduler;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
