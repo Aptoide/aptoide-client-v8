@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -100,6 +101,14 @@ public class NewSettingsFragment extends FragmentView
     converterFactory = WebService.getDefaultConverter();
   }
 
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -180,7 +189,6 @@ public class NewSettingsFragment extends FragmentView
   @Override public Observable<Void> notificationsClicked() {
     return RxView.clicks(notificationHistory);
   }
-
 
   @Override public Observable<GetStore> getStore() {
     return accountManager.accountStatus()

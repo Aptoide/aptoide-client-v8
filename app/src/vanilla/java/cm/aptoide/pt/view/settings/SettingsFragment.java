@@ -263,9 +263,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .retry()
         .subscribe());
 
+    subscriptions.add(adultContentConfirmationDialog.negativeClicks()
+        .doOnNext(click -> rollbackCheck(adultContentPreferenceView))
+        .retry()
+        .subscribe());
+
     subscriptions.add(RxPreference.clicks(adultContentPreferenceView)
         .flatMap(checked -> {
-          rollbackCheck(adultContentPreferenceView);
           if (((SwitchPreferenceCompat) checked).isChecked()) {
             adultContentConfirmationDialog.show();
             return Observable.empty();
@@ -281,9 +285,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .retry()
         .subscribe());
 
+    subscriptions.add(enableAdultContentPinDialog.negativeClicks()
+        .doOnNext(click -> rollbackCheck(adultContentWithPinPreferenceView))
+        .retry()
+        .subscribe());
+
     subscriptions.add(RxPreference.clicks(adultContentWithPinPreferenceView)
         .flatMap(checked -> {
-          rollbackCheck(adultContentWithPinPreferenceView);
           if (((SwitchPreferenceCompat) checked).isChecked()) {
             enableAdultContentPinDialog.show();
             return Observable.empty();

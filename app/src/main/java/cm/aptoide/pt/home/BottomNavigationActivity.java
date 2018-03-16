@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
-import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.settings.NewSettingsFragment;
-import cm.aptoide.pt.view.settings.SettingsFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
