@@ -1,6 +1,9 @@
 package cm.aptoide.pt.navigation;
 
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.home.BottomNavigationItem;
+import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
@@ -8,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Mockito.verify;
@@ -19,9 +23,10 @@ import static org.mockito.Mockito.when;
 
 public class MyStoresPresenterTest {
 
-  private static final Integer MENU_ITEM_ID_TEST = 3;
+  private static final Integer MENU_ITEM_ID_TEST = R.id.action_stores;
   @Mock private MyStoresFragment view;
   @Mock private BottomNavigationActivity bottomNavigationActivity;
+  private BottomNavigationMapper bottomNavigationMapper;
   private MyStoresPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycle;
   private PublishSubject<Integer> navigationEvent;
@@ -31,7 +36,9 @@ public class MyStoresPresenterTest {
 
     lifecycle = PublishSubject.create();
     navigationEvent = PublishSubject.create();
-    presenter = new MyStoresPresenter(view, bottomNavigationActivity);
+    bottomNavigationMapper = new BottomNavigationMapper();
+    presenter = new MyStoresPresenter(view, bottomNavigationActivity, Schedulers.immediate(),
+        bottomNavigationMapper, BottomNavigationItem.STORES);
 
     when(view.getLifecycle()).thenReturn(lifecycle);
     when(bottomNavigationActivity.navigationEvent()).thenReturn(navigationEvent);

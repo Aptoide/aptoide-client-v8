@@ -20,6 +20,8 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     implements AptoideBottomNavigator {
 
   protected static final int LAYOUT = R.layout.frame_layout;
+  private final static String EVENT_ACTION =
+      "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
   protected BottomNavigationView bottomNavigationView;
   private PublishSubject<Integer> navigationSubject;
 
@@ -68,7 +70,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
 
   private Event getStoreEvent() {
     Event event = new Event();
-    event.setAction("https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores");
+    event.setAction(EVENT_ACTION);
     event.setData(null);
     event.setName(Event.Name.myStores);
     event.setType(Event.Type.CLIENT);

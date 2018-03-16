@@ -23,6 +23,8 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.BottomNavigationItem;
+import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
@@ -113,8 +115,14 @@ import rx.schedulers.Schedulers;
     return new ManageStoreErrorMapper(fragment.getResources(), new ErrorsMapper());
   }
 
-  @FragmentScope @Provides MyStoresPresenter provideMyStorePresenter() {
+  @FragmentScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
+    return new BottomNavigationMapper();
+  }
+
+  @FragmentScope @Provides MyStoresPresenter provideMyStorePresenter(
+      BottomNavigationMapper bottomNavigationMapper) {
     return new MyStoresPresenter((MyStoresView) fragment,
-        (AptoideBottomNavigator) fragment.getActivity());
+        (AptoideBottomNavigator) fragment.getActivity(), AndroidSchedulers.mainThread(),
+        bottomNavigationMapper, BottomNavigationItem.STORES);
   }
 }
