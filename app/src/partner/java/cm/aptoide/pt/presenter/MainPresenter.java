@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -36,6 +37,7 @@ public class MainPresenter implements Presenter {
   private final ApkFy apkFy;
   private final AutoUpdate autoUpdate;
   private final boolean firstCreated;
+  private AptoideBottomNavigator vanillaBottomNavigation;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -44,7 +46,7 @@ public class MainPresenter implements Presenter {
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, String defaultStore, String defaultTheme,
-      boolean firstCreated) {
+      boolean firstCreated, AptoideBottomNavigator vanillaBottomNavigation) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -59,6 +61,7 @@ public class MainPresenter implements Presenter {
     this.sharedPreferences = sharedPreferences;
     this.defaultStore = defaultStore;
     this.defaultTheme = defaultTheme;
+    this.vanillaBottomNavigation = vanillaBottomNavigation;
   }
 
   @Override public void present() {
