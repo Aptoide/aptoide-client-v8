@@ -39,14 +39,12 @@ import rx.exceptions.OnErrorNotImplementedException;
   private final TrendingManager trendingManager;
   private final SearchSuggestionManager suggestionManager;
   private final AptoideBottomNavigator bottomNavigator;
-  private boolean focusInSearchBar;
 
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, boolean isMultiStoreSearch, String defaultStoreName,
-      String defaultThemeName,
-      TrendingManager trendingManager, SearchSuggestionManager suggestionManager,
-      boolean focusInSearchBar, AptoideBottomNavigator bottomNavigator) {
+      String defaultThemeName, TrendingManager trendingManager,
+      SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -58,7 +56,6 @@ import rx.exceptions.OnErrorNotImplementedException;
     this.defaultThemeName = defaultThemeName;
     this.trendingManager = trendingManager;
     this.suggestionManager = suggestionManager;
-    this.focusInSearchBar = focusInSearchBar;
     this.bottomNavigator = bottomNavigator;
   }
 

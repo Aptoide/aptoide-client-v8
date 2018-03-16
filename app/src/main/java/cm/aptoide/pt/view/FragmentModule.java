@@ -130,6 +130,6 @@ import rx.schedulers.Schedulers;
             .getApplicationContext()).getDefaultStoreName(),
         ((AptoideApplication) fragment.getContext()
             .getApplicationContext()).getDefaultThemeName(), trendingManager,
-        searchSuggestionManager, true, (AptoideBottomNavigator) fragment.getActivity());
+        searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity());
   }
 }
