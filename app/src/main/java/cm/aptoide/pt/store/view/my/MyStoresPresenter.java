@@ -14,11 +14,11 @@ import rx.exceptions.OnErrorNotImplementedException;
 
 public class MyStoresPresenter implements Presenter {
 
-  private MyStoresView view;
-  private AptoideBottomNavigator aptoideBottomNavigator;
-  private Scheduler viewSchedulers;
-  private BottomNavigationMapper bottomNavigationMapper;
-  private BottomNavigationItem item;
+  private final MyStoresView view;
+  private final AptoideBottomNavigator aptoideBottomNavigator;
+  private final Scheduler viewSchedulers;
+  private final BottomNavigationMapper bottomNavigationMapper;
+  private final BottomNavigationItem item;
 
   public MyStoresPresenter(MyStoresView view, AptoideBottomNavigator aptoideBottomNavigator,
       Scheduler viewSchedulers, BottomNavigationMapper bottomNavigationMapper,
