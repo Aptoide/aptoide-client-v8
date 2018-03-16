@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,11 +30,12 @@ import rx.subjects.PublishSubject;
 
 public class BottomHomeFragment extends FragmentView implements HomeView {
 
+  private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
+
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private final int visibleThreshold = 2;
-
   @Inject Home home;
   @Inject HomePresenter presenter;
   private RecyclerView list;
@@ -46,6 +48,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private View genericError;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
+  private Parcelable listState;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -56,17 +59,23 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   }
 
   @Override public void onDestroy() {
-    list = null;
-    adapter = null;
     uiEventsListener = null;
-    layoutManager = null;
-    swipeRefreshLayout = null;
-    genericError = null;
-    progressBar = null;
     oneDecimalFormatter = null;
     uiEventsListener = null;
     appClickedEvents = null;
     super.onDestroy();
+  }
+
+  @Override public void onDestroyView() {
+    listState = list.getLayoutManager()
+        .onSaveInstanceState();
+    list = null;
+    adapter = null;
+    layoutManager = null;
+    swipeRefreshLayout = null;
+    genericError = null;
+    progressBar = null;
+    super.onDestroyView();
   }
 
   @Nullable @Override
@@ -75,9 +84,23 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     return inflater.inflate(R.layout.fragment_home, container, false);
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (list != null) {
+      outState.putParcelable(LIST_STATE_KEY, list.getLayoutManager()
+          .onSaveInstanceState());
+    }
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
+        listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+        savedInstanceState.putParcelable(LIST_STATE_KEY, null);
+      }
+    }
     list = (RecyclerView) view.findViewById(R.id.bundles_list);
     genericError = view.findViewById(R.id.generic_error);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
@@ -94,6 +117,11 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public void showHomeBundles(List<HomeBundle> bundles) {
     adapter.update(bundles);
+    if (listState != null) {
+      list.getLayoutManager()
+          .onRestoreInstanceState(listState);
+      listState = null;
+    }
   }
 
   @Override public void showLoading() {
