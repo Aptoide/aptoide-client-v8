@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,7 +21,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -30,7 +31,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
@@ -38,7 +38,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by franciscocalado on 12/03/18.
@@ -53,11 +52,6 @@ public class NewSettingsFragment extends FragmentView
   @Inject NewSettingsNavigator newSettingsNavigator;
   private AptoideAccountManager accountManager;
 
-  private boolean trackAnalytics;
-  private NotificationSyncScheduler notificationSyncScheduler;
-  private String marketName;
-  private Database database;
-  private PublishSubject<Void> populateAccountSubject;
 
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
@@ -73,9 +67,7 @@ public class NewSettingsFragment extends FragmentView
   private ImageView myAccountAvatar;
   private ImageView myStoreAvatar;
   private TextView myAccountName;
-  private TextView myAccountTitle;
   private TextView myStoreName;
-  private TextView myStoreTitle;
   private Button loginButton;
   private Button logoutButton;
   private Button findFriendsButton;
@@ -97,31 +89,26 @@ public class NewSettingsFragment extends FragmentView
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
 
-    populateAccountSubject = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    marketName = application.getMarketName();
-    trackAnalytics = true;
-    database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
 
     bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-
-    notificationSyncScheduler =
-        ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    setAccountViews(view);
-
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     notificationHistory = view.findViewById(R.id.notifications_history);
     settings = view.findViewById(R.id.settings);
+
+    setAccountViews(view);
+    setupToolbar();
 
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new NewSettingsPresenter(this, accountManager, CrashReport.getInstance(),
@@ -279,10 +266,10 @@ public class NewSettingsFragment extends FragmentView
     myStoreAvatar = (ImageView) myStoreView.findViewById(R.id.user_icon);
     myStoreName = (TextView) myStoreView.findViewById(R.id.description);
 
-    myStoreTitle = (TextView) myStoreView.findViewById(R.id.name);
+    TextView myStoreTitle = (TextView) myStoreView.findViewById(R.id.name);
     myStoreTitle.setText("My store");
 
-    myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
+    TextView myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
     myAccountTitle.setText("My account");
 
     loginButton = (Button) view.findViewById(R.id.login_button);
@@ -292,6 +279,18 @@ public class NewSettingsFragment extends FragmentView
     createStoreButton = (Button) view.findViewById(R.id.create_store_button);
     editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
     editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);
+  }
+
+  private void setupToolbar() {
+    toolbar.setTitle("My Account");
+
+    final AppCompatActivity activity = (AppCompatActivity) getActivity();
+    activity.setSupportActionBar(toolbar);
+    ActionBar actionBar = activity.getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setTitle(toolbar.getTitle());
+    }
   }
 
 }
