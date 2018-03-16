@@ -1,10 +1,12 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import rx.Observable;
 
 /**
  * Created by jdandrade on 13/03/2018.
@@ -12,9 +14,12 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 
 public class HomeNavigator {
   private final FragmentNavigator fragmentNavigator;
+  private final AptoideBottomNavigator aptoideBottomNavigator;
 
-  public HomeNavigator(FragmentNavigator fragmentNavigator) {
+  public HomeNavigator(FragmentNavigator fragmentNavigator,
+      AptoideBottomNavigator aptoideBottomNavigator) {
     this.fragmentNavigator = fragmentNavigator;
+    this.aptoideBottomNavigator = aptoideBottomNavigator;
   }
 
   public void navigateToAppView(long appId, String packageName) {
@@ -32,5 +37,10 @@ public class HomeNavigator {
 
   public void navigateToAppView(SearchAdResult searchAdResult) {
     fragmentNavigator.navigateTo(AppViewFragment.newInstance(searchAdResult), true);
+  }
+
+  public Observable<Integer> bottomNavigation() {
+    return aptoideBottomNavigator.navigationEvent()
+        .filter(menuPosition -> menuPosition.equals(R.id.action_home));
   }
 }

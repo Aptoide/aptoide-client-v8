@@ -142,13 +142,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper,
-        (AptoideBottomNavigator) fragment.getActivity());
+        CrashReport.getInstance(), homeNavigator, adMapper);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       FragmentNavigator fragmentNavigator) {
-    return new HomeNavigator(fragmentNavigator);
+    return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity());
   }
 
   @Named("remote") @FragmentScope @Provides BundleDataSource providesRemoteBundleDataSource(

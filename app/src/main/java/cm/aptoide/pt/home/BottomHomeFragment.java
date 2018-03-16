@@ -155,7 +155,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     adapter.add(bundles);
   }
 
-  @UiThread public void scrollToTop() {
+  @UiThread @Override public void scrollToTop() {
     LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
     if (lastVisibleItemPosition > 10) {

@@ -18,18 +18,15 @@ public class HomePresenter implements Presenter {
   private final CrashReport crashReporter;
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
-  private final AptoideBottomNavigator aptoideBottomNavigator;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator, AdMapper adMapper,
-      AptoideBottomNavigator aptoideBottomNavigator) {
+      HomeNavigator homeNavigator, AdMapper adMapper) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
-    this.aptoideBottomNavigator = aptoideBottomNavigator;
   }
 
   @Override public void present() {
@@ -44,6 +41,8 @@ public class HomePresenter implements Presenter {
     handleBottomReached();
 
     handlePullToRefresh();
+
+    handleBottomNavigationEvents();
   }
 
   private void onCreateLoadBundles() {
@@ -73,10 +72,13 @@ public class HomePresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
 
+  private void handleBottomNavigationEvents() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> aptoideBottomNavigator.navigationEvent())
+        .flatMap(created -> homeNavigator.bottomNavigation())
+        .observeOn(viewScheduler)
         .doOnNext(navigated -> view.scrollToTop())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
