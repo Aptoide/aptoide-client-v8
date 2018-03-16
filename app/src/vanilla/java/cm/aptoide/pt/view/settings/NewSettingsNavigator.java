@@ -59,4 +59,11 @@ public class NewSettingsNavigator {
   public void navigateToFindFriends() {
     fragmentNavigator.navigateTo(AddressBookFragment.newInstance(), true);
   }
+
+  public void navigateToSettings() {
+    fragmentNavigator.navigateTo(SettingsFragment.newInstance(), true);
+  }
+
+  public void navigateToNotificationHistory() {
+  }
 }

@@ -57,6 +57,8 @@ public class NewSettingsPresenter implements Presenter {
     handleStoreDisplayableClick();
     handleProfileEditClick();
     handleProfileDisplayableClick();
+    handleSettingsClicked();
+    handleNotificationHistoryClicked();
   }
 
   private void handleLoginClick() {
@@ -88,7 +90,8 @@ public class NewSettingsPresenter implements Presenter {
         .flatMap(__ -> view.userClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(account -> navigator.navigateToUserView(account.getId(), account.getStore()
+        .doOnNext(
+            account -> newSettingsNavigator.navigateToUserView(account.getId(), account.getStore()
             .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
@@ -100,7 +103,7 @@ public class NewSettingsPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.editUserProfileClick()
             .flatMap(click -> accountManager.accountStatus())
-            .doOnNext(account -> navigator.navigateToEditProfileView()))
+            .doOnNext(account -> newSettingsNavigator.navigateToEditProfileView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
@@ -112,7 +115,7 @@ public class NewSettingsPresenter implements Presenter {
         .flatMap(__ -> view.storeClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(account -> navigator.navigateToStoreView(account.getStore()
+        .doOnNext(account -> newSettingsNavigator.navigateToStoreView(account.getStore()
             .getName(), account.getStore()
             .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -129,7 +132,8 @@ public class NewSettingsPresenter implements Presenter {
                 .getMeta()
                 .getData()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(store -> navigator.navigateToEditStoreView(store, EDIT_STORE_REQUEST_CODE),
+        .subscribe(
+            store -> newSettingsNavigator.navigateToEditStoreView(store, EDIT_STORE_REQUEST_CODE),
             throwable -> crashReport.log(throwable));
   }
 
@@ -137,7 +141,7 @@ public class NewSettingsPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .flatMap(__ -> navigator.editStoreResult(EDIT_STORE_REQUEST_CODE))
+        .flatMap(__ -> newSettingsNavigator.editStoreResult(EDIT_STORE_REQUEST_CODE))
         .flatMap(__ -> accountManager.accountStatus()
             .first())
         .observeOn(scheduler)
@@ -192,6 +196,26 @@ public class NewSettingsPresenter implements Presenter {
         .flatMap(resumed -> signOutClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(signOutClick -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleSettingsClicked() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.settingsClicked())
+        .doOnNext(__ -> newSettingsNavigator.navigateToSettings())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleNotificationHistoryClicked() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.notificationsClicked())
+        .doOnNext(__ -> newSettingsNavigator.navigateToNotificationHistory())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
 

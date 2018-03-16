@@ -83,6 +83,10 @@ public class NewSettingsFragment extends FragmentView
   private Button editStoreButton;
   private Button editProfileButton;
 
+  //Navigation buttons
+  private View notificationHistory;
+  private View settings;
+
   //TODO: Add string resources to the settings XML and fragment (ALL STRINGS HARDCODED!!!)
 
   public static Fragment newInstance() {
@@ -115,6 +119,9 @@ public class NewSettingsFragment extends FragmentView
     super.onViewCreated(view, savedInstanceState);
 
     setAccountViews(view);
+
+    notificationHistory = view.findViewById(R.id.notifications_history);
+    settings = view.findViewById(R.id.settings);
 
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new NewSettingsPresenter(this, accountManager, CrashReport.getInstance(),
@@ -178,6 +185,15 @@ public class NewSettingsFragment extends FragmentView
   @Override public Observable<Void> editUserProfileClick() {
     return RxView.clicks(editProfileButton);
   }
+
+  @Override public Observable<Void> settingsClicked() {
+    return RxView.clicks(settings);
+  }
+
+  @Override public Observable<Void> notificationsClicked() {
+    return RxView.clicks(notificationHistory);
+  }
+
 
   @Override public Observable<GetStore> getStore() {
     return accountManager.accountStatus()

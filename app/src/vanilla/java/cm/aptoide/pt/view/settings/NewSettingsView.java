@@ -28,6 +28,10 @@ public interface NewSettingsView extends View {
 
   Observable<Void> editUserProfileClick();
 
+  Observable<Void> settingsClicked();
+
+  Observable<Void> notificationsClicked();
+
   Observable<GetStore> getStore();
 
   void refreshUI(Store store);
