@@ -51,14 +51,19 @@
           style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
 
-      <ProgressBar
-          android:id="@+id/apps_updates_progress_bar"
+      <FrameLayout
           android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
+          android:layout_height="4dp"
           android:layout_marginBottom="4dp"
-          android:indeterminate="false"
-          style="?android:attr/progressBarStyleHorizontal"
-          />
+          >
+        <ProgressBar
+            android:id="@+id/apps_updates_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="4dp"
+            android:indeterminate="false"
+            style="?android:attr/progressBarStyleHorizontal"
+            />
+      </FrameLayout>
 
       <RelativeLayout
           android:id="@+id/apps_updates_update_info_layout"
