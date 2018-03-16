@@ -72,6 +72,7 @@
             android:textSize="10sp"
             tools:ignore="SmallSp"
             tools:text="2.3"
+            style="@style/Aptoide.TextView.Regular.XXS.Black"
             />
 
       </LinearLayout>
