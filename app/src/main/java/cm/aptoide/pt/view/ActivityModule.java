@@ -65,6 +65,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
+import rx.android.schedulers.AndroidSchedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -156,7 +157,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, defaultStoreName, defaultTheme, firstCreated,
-        (AptoideBottomNavigator) activity);
+        (AptoideBottomNavigator) activity, AndroidSchedulers.mainThread());
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
