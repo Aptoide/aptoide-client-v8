@@ -43,6 +43,84 @@ public class AppsPresenter implements Presenter {
     handleInstallAppClick();
 
     handleRetryDownloadClick();
+
+    handleUpdateAllClick();
+
+    handleUpdateClick();
+
+    handlePauseUpdateClick();
+
+    handleCancelUpdateClick();
+
+    handleResumeUpdateClick();
+
+    handleRetryUpdateClick();
+  }
+
+  private void handleRetryUpdateClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.retryUpdate())
+        .doOnNext(app -> appsManager.retryUpdate(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handleResumeUpdateClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.resumeUpdate())
+        .doOnNext(app -> appsManager.resumeUpdate(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handleCancelUpdateClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.cancelUpdate())
+        .doOnNext(app -> appsManager.cancelUpdate(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handlePauseUpdateClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.pauseUpdate())
+        .doOnNext(app -> appsManager.pauseUpdate(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handleUpdateClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.updateApp())
+        .doOnNext(app -> appsManager.updateApp(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handleUpdateAllClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.retryUpdate())
+        .doOnNext(app -> appsManager.retryUpdate(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void handleRetryDownloadClick() {

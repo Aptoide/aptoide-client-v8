@@ -28,17 +28,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
-  private PublishSubject<App> pauseDownload;
-  private PublishSubject<App> cancelDownload;
-  private PublishSubject<App> resumeDownload;
-  private PublishSubject<App> installApp;
-  private PublishSubject<App> retryDownload;
-  private PublishSubject<App> updateAllApps;
-  private PublishSubject<App> updateApp;
-  private PublishSubject<App> pauseUpdate;
-  private PublishSubject<App> cancelUpdate;
-  private PublishSubject<App> resumeUpdate;
-  private PublishSubject<App> retryUpdate;
+  private PublishSubject<AppClick> appItemClicks;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -46,17 +36,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    pauseDownload = PublishSubject.create();
-    cancelDownload = PublishSubject.create();
-    resumeDownload = PublishSubject.create();
-    installApp = PublishSubject.create();
-    retryDownload = PublishSubject.create();
-    updateAllApps = PublishSubject.create();
-    updateApp = PublishSubject.create();
-    pauseUpdate = PublishSubject.create();
-    cancelUpdate = PublishSubject.create();
-    resumeUpdate = PublishSubject.create();
+    appItemClicks = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -95,10 +75,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         new UpdateApp("Facebook", "md5", "sdasda", "com.facebook.katana", 100, false, "165.0.00.33",
             UpdateApp.UpdateStatus.ERROR));
 
-    adapter = new AppsAdapter(appsList,
-        new AppCardViewHolderFactory(pauseDownload, cancelDownload, resumeDownload, installApp,
-            retryDownload, updateAllApps, updateApp, pauseUpdate, cancelUpdate, resumeUpdate,
-            retryUpdate));
+    adapter = new AppsAdapter(appsList, new AppCardViewHolderFactory(appItemClicks));
 
     setupRecyclerView();
 
@@ -143,23 +120,63 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public Observable<App> retryDownload() {
-    return retryDownload;
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_DOWNLOAD)
+        .map(appClick -> appClick.getApp());
   }
 
   @Override public Observable<App> installApp() {
-    return installApp;
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.INSTALL_APP)
+        .map(appClick -> appClick.getApp());
   }
 
   @Override public Observable<App> cancelDownload() {
-    return cancelDownload;
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_DOWNLOAD)
+        .map(appClick -> appClick.getApp());
   }
 
   @Override public Observable<App> resumeDownload() {
-    return resumeDownload;
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_DOWNLOAD)
+        .map(appClick -> appClick.getApp());
   }
 
   @Override public Observable<App> pauseDownload() {
-    return pauseDownload;
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_DOWNLOAD)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> retryUpdate() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_UPDATE)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> updateApp() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_APP)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> pauseUpdate() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_UPDATE)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> cancelUpdate() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_UPDATE)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> resumeUpdate() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_UPDATE)
+        .map(appClick -> appClick.getApp());
   }
 
   private void setInstalledAppsHeader(List<App> installedApps) {
@@ -168,12 +185,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void onDestroy() {
-    installApp = null;
-    retryDownload = null;
-    cancelDownload = null;
-    resumeDownload = null;
-    pauseDownload = null;
-    updateAllApps = null;
+    appItemClicks = null;
     super.onDestroy();
   }
 

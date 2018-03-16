@@ -13,9 +13,9 @@ class UpdatesHeaderViewHolder extends AppsViewHolder {
 
   private TextView title;
   private TextView updateAllButton;
-  private PublishSubject<App> updateAllApps;
+  private PublishSubject<AppClick> updateAllApps;
 
-  public UpdatesHeaderViewHolder(View itemView, PublishSubject<App> updateAllApps) {
+  public UpdatesHeaderViewHolder(View itemView, PublishSubject<AppClick> updateAllApps) {
     super(itemView);
     title = (TextView) itemView.findViewById(R.id.apps_updates_header_title);
     updateAllButton = (TextView) itemView.findViewById(R.id.apps_updates_update_all_button);
@@ -24,6 +24,7 @@ class UpdatesHeaderViewHolder extends AppsViewHolder {
 
   @Override public void setApp(App app) {
     title.setText(((UpdatesHeader) app).getTitle());
-    updateAllButton.setOnClickListener(click -> updateAllApps.onNext(app));
+    updateAllButton.setOnClickListener(
+        click -> updateAllApps.onNext(new AppClick(app, AppClick.ClickType.UPDATE_ALL_APPS)));
   }
 }

@@ -21,11 +21,9 @@ class StandByAppDownloadViewHolder extends AppsViewHolder {
   private TextView downloadProgress;
   private ImageView cancelButton;
   private ImageView resumeButton;
-  private PublishSubject<App> cancelDownload;
-  private PublishSubject<App> resumeDownload;
+  private PublishSubject<AppClick> downloadAction;
 
-  public StandByAppDownloadViewHolder(View itemView, PublishSubject<App> cancelDownload,
-      PublishSubject<App> resumeDownload) {
+  public StandByAppDownloadViewHolder(View itemView, PublishSubject<AppClick> downloadAction) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_downloads_app_name);
@@ -34,8 +32,7 @@ class StandByAppDownloadViewHolder extends AppsViewHolder {
     downloadProgress = (TextView) itemView.findViewById(R.id.apps_download_progress_number);
     cancelButton = (ImageView) itemView.findViewById(R.id.apps_download_cancel_button);
     resumeButton = (ImageView) itemView.findViewById(R.id.apps_download_resume_download);
-    this.cancelDownload = cancelDownload;
-    this.resumeDownload = resumeDownload;
+    this.downloadAction = downloadAction;
   }
 
   @Override public void setApp(App app) {
@@ -47,7 +44,9 @@ class StandByAppDownloadViewHolder extends AppsViewHolder {
     progressBar.setProgress(((DownloadApp) app).getProgress());
     downloadProgress.setText(String.format("%d%%", ((DownloadApp) app).getProgress()));
 
-    cancelButton.setOnClickListener(cancel -> cancelDownload.onNext(app));
-    resumeButton.setOnClickListener(resume -> resumeDownload.onNext(app));
+    cancelButton.setOnClickListener(
+        cancel -> downloadAction.onNext(new AppClick(app, AppClick.ClickType.CANCEL_DOWNLOAD)));
+    resumeButton.setOnClickListener(
+        resume -> downloadAction.onNext(new AppClick(app, AppClick.ClickType.RESUME_DOWNLOAD)));
   }
 }

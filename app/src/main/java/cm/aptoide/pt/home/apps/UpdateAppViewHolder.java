@@ -15,11 +15,11 @@ class UpdateAppViewHolder extends AppsViewHolder {
 
   private TextView appName;
   private ImageView appIcon;
-  private PublishSubject<App> updateApp;
+  private PublishSubject<AppClick> updateApp;
   private ImageView updateAppButton;
   private TextView appVersion;
 
-  public UpdateAppViewHolder(View itemView, PublishSubject<App> updateApp) {
+  public UpdateAppViewHolder(View itemView, PublishSubject<AppClick> updateApp) {
     super(itemView);
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
     appIcon = (ImageView) itemView.findViewById(R.id.apps_updates_app_icon);
@@ -32,7 +32,8 @@ class UpdateAppViewHolder extends AppsViewHolder {
     appName.setText(((UpdateApp) app).getName());
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
-    updateAppButton.setOnClickListener(install -> updateApp.onNext(app));
+    updateAppButton.setOnClickListener(
+        install -> updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_APP)));
     appVersion.setText(((UpdateApp) app).getVersion());
   }
 }

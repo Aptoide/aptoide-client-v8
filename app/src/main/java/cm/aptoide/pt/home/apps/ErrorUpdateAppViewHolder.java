@@ -16,9 +16,9 @@ class ErrorUpdateAppViewHolder extends AppsViewHolder {
   private TextView appName;
   private ImageView appIcon;
   private ImageView retryButton;
-  private PublishSubject<App> retryUpdate;
+  private PublishSubject<AppClick> retryUpdate;
 
-  public ErrorUpdateAppViewHolder(View itemView, PublishSubject<App> retryUpdate) {
+  public ErrorUpdateAppViewHolder(View itemView, PublishSubject<AppClick> retryUpdate) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -31,6 +31,7 @@ class ErrorUpdateAppViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
     appName.setText(((UpdateApp) app).getName());
-    retryButton.setOnClickListener(install -> retryUpdate.onNext(app));
+    retryButton.setOnClickListener(
+        install -> retryUpdate.onNext(new AppClick(app, AppClick.ClickType.RETRY_UPDATE)));
   }
 }

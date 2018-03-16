@@ -25,4 +25,14 @@ public interface AppsFragmentView extends View {
   Observable<App> resumeDownload();
 
   Observable<App> pauseDownload();
+
+  Observable<App> retryUpdate();
+
+  Observable<App> updateApp();
+
+  Observable<App> pauseUpdate();
+
+  Observable<App> cancelUpdate();
+
+  Observable<App> resumeUpdate();
 }

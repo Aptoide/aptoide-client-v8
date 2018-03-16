@@ -70,4 +70,24 @@ public class AppsManager {
   public void pauseDownload(App app) {
 
   }
+
+  public void retryUpdate(App app) {
+
+  }
+
+  public void resumeUpdate(App app) {
+
+  }
+
+  public void cancelUpdate(App app) {
+
+  }
+
+  public void pauseUpdate(App app) {
+
+  }
+
+  public void updateApp(App app) {
+
+  }
 }

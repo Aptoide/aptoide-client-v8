@@ -23,35 +23,10 @@ import static cm.aptoide.pt.home.apps.AppsAdapter.UPDATING;
 
 public class AppCardViewHolderFactory {
 
-  private PublishSubject<App> pauseDownload;
-  private PublishSubject<App> cancelDownload;
-  private PublishSubject<App> resumeDownload;
-  private PublishSubject<App> installApp;
-  private PublishSubject<App> retryDownload;
-  private PublishSubject<App> updateAllApps;
-  private PublishSubject<App> updateApp;
-  private PublishSubject<App> pauseUpdate;
-  private PublishSubject<App> cancelUpdate;
-  private PublishSubject<App> resumeUpdate;
-  private PublishSubject<App> retryUpdate;
+  private PublishSubject<AppClick> appItemClicks;
 
-  public AppCardViewHolderFactory(PublishSubject<App> pauseDownload,
-      PublishSubject<App> cancelDownload, PublishSubject<App> resumeDownload,
-      PublishSubject<App> installApp, PublishSubject<App> retryDownload,
-      PublishSubject<App> updateAllApps, PublishSubject<App> updateApp,
-      PublishSubject<App> pauseUpdate, PublishSubject<App> cancelUpdate,
-      PublishSubject<App> resumeUpdate, PublishSubject<App> retryUpdate) {
-    this.pauseDownload = pauseDownload;
-    this.cancelDownload = cancelDownload;
-    this.resumeDownload = resumeDownload;
-    this.installApp = installApp;
-    this.retryDownload = retryDownload;
-    this.updateAllApps = updateAllApps;
-    this.updateApp = updateApp;
-    this.pauseUpdate = pauseUpdate;
-    this.cancelUpdate = cancelUpdate;
-    this.resumeUpdate = resumeUpdate;
-    this.retryUpdate = retryUpdate;
+  public AppCardViewHolderFactory(PublishSubject<AppClick> appItemClicks) {
+    this.appItemClicks = appItemClicks;
   }
 
   public AppsViewHolder createViewHolder(int viewType, ViewGroup parent) {
@@ -63,41 +38,39 @@ public class AppCardViewHolderFactory {
         break;
       case HEADER_UPDATES:
         appViewHolder = new UpdatesHeaderViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_header_updates_item, parent, false), updateAllApps);
+            .inflate(R.layout.apps_header_updates_item, parent, false), appItemClicks);
         break;
       case ACTIVE_DOWNLOAD:
         appViewHolder = new ActiveAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_active_download_app_item, parent, false), pauseDownload);
+            .inflate(R.layout.apps_active_download_app_item, parent, false), appItemClicks);
         break;
       case STANDBY_DOWNLOAD:
         appViewHolder = new StandByAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_standby_download_app_item, parent, false), cancelDownload,
-            resumeDownload);
+            .inflate(R.layout.apps_standby_download_app_item, parent, false), appItemClicks);
         break;
       case COMPLETED_DOWNLOAD:
         appViewHolder = new CompletedAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_completed_download_app_item, parent, false), installApp);
+            .inflate(R.layout.apps_completed_download_app_item, parent, false), appItemClicks);
         break;
       case ERROR_DOWNLOAD:
         appViewHolder = new ErrorAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_error_download_app_item, parent, false), retryDownload);
+            .inflate(R.layout.apps_error_download_app_item, parent, false), appItemClicks);
         break;
       case UPDATE:
         appViewHolder = new UpdateAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_update_app_item, parent, false), updateApp);
+            .inflate(R.layout.apps_update_app_item, parent, false), appItemClicks);
         break;
       case UPDATING:
         appViewHolder = new UpdatingAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_updating_app_item, parent, false), pauseUpdate);
+            .inflate(R.layout.apps_updating_app_item, parent, false), appItemClicks);
         break;
       case STANDBY_UPDATE:
         appViewHolder = new StandByUpdateAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_standby_update_app_item, parent, false), cancelUpdate,
-            resumeUpdate);
+            .inflate(R.layout.apps_standby_update_app_item, parent, false), appItemClicks);
         break;
       case ERROR_UPDATE:
         appViewHolder = new ErrorUpdateAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_error_update_app_item, parent, false), retryUpdate);
+            .inflate(R.layout.apps_error_update_app_item, parent, false), appItemClicks);
         break;
       case INSTALLED:
         appViewHolder = new InstalledAppViewHolder(LayoutInflater.from(parent.getContext())

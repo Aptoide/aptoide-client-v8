@@ -17,18 +17,16 @@ class ActiveAppDownloadViewHolder extends AppsViewHolder {
   private TextView appName;
   private ImageView appIcon;
   private ProgressBar progressBar;
-  private TextView downloadState;
   private TextView downloadProgress;
   private ImageView pauseButton;
-  private PublishSubject<App> pauseDownload;
+  private PublishSubject<AppClick> pauseDownload;
 
-  public ActiveAppDownloadViewHolder(View itemView, PublishSubject<App> pauseDownload) {
+  public ActiveAppDownloadViewHolder(View itemView, PublishSubject<AppClick> pauseDownload) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_downloads_app_name);
     appIcon = (ImageView) itemView.findViewById(R.id.apps_downloads_icon);
     progressBar = (ProgressBar) itemView.findViewById(R.id.apps_downloads_progress_bar);
-    downloadState = (TextView) itemView.findViewById(R.id.apps_downloads_download_state);
     downloadProgress = (TextView) itemView.findViewById(R.id.apps_download_progress_number);
     pauseButton = (ImageView) itemView.findViewById(R.id.apps_download_pause_button);
     this.pauseDownload = pauseDownload;
@@ -42,6 +40,7 @@ class ActiveAppDownloadViewHolder extends AppsViewHolder {
     progressBar.setProgress(((DownloadApp) app).getProgress());
     downloadProgress.setText(String.format("%d%%", ((DownloadApp) app).getProgress()));
 
-    pauseButton.setOnClickListener(pause -> pauseDownload.onNext(app));
+    pauseButton.setOnClickListener(
+        pause -> pauseDownload.onNext(new AppClick(app, AppClick.ClickType.PAUSE_DOWNLOAD)));
   }
 }

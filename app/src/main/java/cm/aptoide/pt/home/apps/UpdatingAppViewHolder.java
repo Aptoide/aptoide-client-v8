@@ -20,9 +20,9 @@ class UpdatingAppViewHolder extends AppsViewHolder {
   private TextView updateState;
   private TextView updateProgress;
   private ImageView pauseButton;
-  private PublishSubject<App> pauseUpdate;
+  private PublishSubject<AppClick> pauseUpdate;
 
-  public UpdatingAppViewHolder(View itemView, PublishSubject<App> pauseUpdate) {
+  public UpdatingAppViewHolder(View itemView, PublishSubject<AppClick> pauseUpdate) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -43,6 +43,7 @@ class UpdatingAppViewHolder extends AppsViewHolder {
     progressBar.setProgress(((UpdateApp) app).getProgress());
     updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
 
-    pauseButton.setOnClickListener(pause -> pauseUpdate.onNext(app));
+    pauseButton.setOnClickListener(
+        pause -> pauseUpdate.onNext(new AppClick(app, AppClick.ClickType.PAUSE_UPDATE)));
   }
 }
