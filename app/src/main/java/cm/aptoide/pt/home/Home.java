@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import java.util.List;
 import rx.Single;
 
 /**
@@ -15,16 +14,16 @@ public class Home {
     this.bundlesRepository = bundlesRepository;
   }
 
-  public Single<List<HomeBundle>> getHomeBundles() {
-    return bundlesRepository.getHomeBundles();
+  public Single<HomeBundlesModel> loadHomeBundles() {
+    return bundlesRepository.loadHomeBundles();
   }
 
-  public Single<List<HomeBundle>> getFreshHomeBundles() {
-    return bundlesRepository.getFreshHomeBundles();
+  public Single<HomeBundlesModel> loadFreshHomeBundles() {
+    return bundlesRepository.loadFreshHomeBundles();
   }
 
-  public Single<List<HomeBundle>> getNextHomeBundles() {
-    return bundlesRepository.getNextHomeBundles();
+  public Single<HomeBundlesModel> loadNextHomeBundles() {
+    return bundlesRepository.loadNextHomeBundles(5);
   }
 
   public boolean hasMore() {

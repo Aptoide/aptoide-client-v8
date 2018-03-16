@@ -8,6 +8,7 @@ import cm.aptoide.pt.home.AppBundle;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeBundle;
+import cm.aptoide.pt.home.HomeBundlesModel;
 import cm.aptoide.pt.home.HomeClick;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
@@ -42,13 +43,14 @@ public class HomePresenterTest {
   @Mock private Home home;
 
   private HomePresenter presenter;
-  private List<HomeBundle> bundles;
+  private HomeBundlesModel bundlesModel;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Application> appClickEvent;
   private PublishSubject<GetAdsResponse.Ad> adClickEvent;
   private PublishSubject<HomeClick> moreClickEvent;
   private PublishSubject<Object> bottomReachedEvent;
   private PublishSubject<Void> pullToRefreshEvent;
+  private PublishSubject<Void> retryClickedEvent;
   private AppBundle localTopAppsBundle;
   private Application aptoide;
 
@@ -61,19 +63,20 @@ public class HomePresenterTest {
     moreClickEvent = PublishSubject.create();
     bottomReachedEvent = PublishSubject.create();
     pullToRefreshEvent = PublishSubject.create();
+    retryClickedEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper());
-    bundles = new ArrayList<>();
-
     List<Application> applications = getAppsList();
     List<GetAdsResponse.Ad> ads = getAdsList();
+    List<HomeBundle> bundles = new ArrayList<>();
     bundles.add(
         new AppBundle("Editors choice", applications, AppBundle.BundleType.EDITORS, null, ""));
     localTopAppsBundle =
         new AppBundle("Local Top Apps", applications, AppBundle.BundleType.APPS, null, "");
     bundles.add(localTopAppsBundle);
     bundles.add(new AdBundle("Highlighted", ads, null, ""));
+    bundlesModel = new HomeBundlesModel(bundles, false, 0);
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
@@ -81,34 +84,34 @@ public class HomePresenterTest {
     when(view.moreClicked()).thenReturn(moreClickEvent);
     when(view.reachesBottom()).thenReturn(bottomReachedEvent);
     when(view.refreshes()).thenReturn(pullToRefreshEvent);
+    when(view.retryClicked()).thenReturn(retryClickedEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
     //Given an initialised HomePresenter
     presenter.present();
     //When the user clicks the Home menu item
-    //And loading of bundles are requested
-    when(home.getHomeBundles()).thenReturn(Single.just(bundles));
+    //And loading of bundlesModel are requested
+    when(home.loadHomeBundles()).thenReturn(Single.just(bundlesModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the progress indicator should be shown
     verify(view).showLoading();
     //Then the home should be displayed
-    verify(view).showHomeBundles(bundles);
+    verify(view).showHomeBundles(bundlesModel.getList());
     //Then the progress indicator should be hidden
     verify(view).hideLoading();
   }
 
   @Test public void errorLoadingBundles_ShowsError() {
-    IllegalStateException exception = new IllegalStateException("error test");
     //Given an initialised HomePresenter
     presenter.present();
-    //When the loading of bundles is requested
+    //When the loading of bundlesModel is requested
     //And an unexpected error occured
-    when(home.getHomeBundles()).thenReturn(Single.error(exception));
+    when(home.loadHomeBundles()).thenReturn(
+        Single.just(new HomeBundlesModel(HomeBundlesModel.Error.GENERIC)));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the generic error message should be shown in the UI
     verify(view).showGenericError();
-    verify(crashReporter).log(exception);
   }
 
   @Test public void appClicked_NavigateToAppView() {
@@ -143,52 +146,64 @@ public class HomePresenterTest {
   }
 
   @Test public void bottomReached_ShowNextBundles() {
-    //Given an initialised presenter with already loaded bundles into the UI before
+    //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.present();
-    when(home.getNextHomeBundles()).thenReturn(Single.just(bundles));
+    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
     when(home.hasMore()).thenReturn(true);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When scrolling to the end of the view is reached
-    //And there are more bundles available to load
+    //And there are more bundlesModel available to load
     bottomReachedEvent.onNext(new Object());
     //Then it should show the load more progress indicator
     verify(view).showLoadMore();
-    //Then it should request the next bundles to the bundles repository
-    verify(home).getNextHomeBundles();
+    //Then it should request the next bundlesModel to the bundlesModel repository
+    verify(home).loadNextHomeBundles();
     //Then it should hide the load more progress indicator
     verify(view).hideShowMore();
-    //Then it should show the view again with old bundles and added bundles, retaining list position
-    verify(view).showMoreHomeBundles(bundles);
+    //Then it should show the view again with old bundlesModel and added bundlesModel, retaining list position
+    verify(view).showMoreHomeBundles(bundlesModel.getList());
   }
 
   @Test public void bottomReached_NoMoreBundlesAvailableToShow() {
-    //Given an initialised presenter with already loaded bundles into the UI before
+    //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.present();
-    when(home.getNextHomeBundles()).thenReturn(Single.just(bundles));
+    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
     when(home.hasMore()).thenReturn(false);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When scrolling to the end of the view is reached
-    //And there are no more bundles available to load
+    //And there are no more bundlesModel available to load
     bottomReachedEvent.onNext(new Object());
     //Then it should do nothing
     verify(view, never()).showLoadMore();
-    verify(home, never()).getNextHomeBundles();
+    verify(home, never()).loadNextHomeBundles();
     verify(view, never()).hideShowMore();
-    verify(view, never()).showMoreHomeBundles(bundles);
+    verify(view, never()).showMoreHomeBundles(bundlesModel.getList());
   }
 
   @Test public void pullToRefresh_GetFreshBundles() {
-    //Given an initialised presenter with already loaded bundles into the UI before
+    //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.present();
-    when(home.getFreshHomeBundles()).thenReturn(Single.just(bundles));
+    when(home.loadFreshHomeBundles()).thenReturn(Single.just(bundlesModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When pull to refresh is done
     pullToRefreshEvent.onNext(null);
-    //Then the progress indicator should be shown
-    //Then the home should be displayed
-    verify(view).showHomeBundles(bundles);
     //Then the progress indicator should be hidden
     verify(view).hideRefresh();
+  }
+
+  @Test public void retryClicked_LoadNextBundles() {
+    //Given an initialised presenter with already loaded bundlesModel into the UI before
+    presenter.present();
+    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When pull to refresh is done
+    retryClickedEvent.onNext(null);
+    //Then bundles should be shown
+    verify(view).showMoreHomeBundles(bundlesModel.getList());
+    //Then it should hide the load more indicator (if exists)
+    verify(view).hideShowMore();
+    //Then it should hide the loading indicator
+    verify(view).hideLoading();
   }
 
   private List<Application> getAppsList() {

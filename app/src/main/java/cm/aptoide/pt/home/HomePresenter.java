@@ -1,10 +1,12 @@
 package cm.aptoide.pt.home;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import io.reactivex.exceptions.OnErrorNotImplementedException;
 import rx.Scheduler;
+import rx.Single;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -43,6 +45,8 @@ public class HomePresenter implements Presenter {
     handlePullToRefresh();
 
     handleBottomNavigationEvents();
+
+    handleRetryClick();
   }
 
   private void onCreateLoadBundles() {
@@ -50,16 +54,34 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .doOnNext(created -> view.showLoading())
-        .flatMapSingle(created -> home.getHomeBundles())
-        .observeOn(viewScheduler)
-        .doOnNext(view::showHomeBundles)
-        .doOnNext(bundles -> view.hideLoading())
+        .flatMapSingle(created -> loadBundles())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          view.showGenericError();
-          crashReporter.log(throwable);
+        }, crashReporter::log);
+  }
+
+  @NonNull private Single<HomeBundlesModel> loadBundles() {
+    return home.loadHomeBundles()
+        .observeOn(viewScheduler)
+        .doOnSuccess(bundlesModel -> {
+          if (bundlesModel.hasErrors()) {
+            handleError(bundlesModel.getError());
+          } else if (!bundlesModel.isLoading()) {
+            view.hideLoading();
+            view.showHomeBundles(bundlesModel.getList());
+          }
         });
+  }
+
+  private void handleError(HomeBundlesModel.Error error) {
+    switch (error) {
+      case NETWORK:
+        view.showNetworkError();
+        break;
+      case GENERIC:
+        view.showGenericError();
+        break;
+    }
   }
 
   private void handleAppClick() {
@@ -125,11 +147,7 @@ public class HomePresenter implements Presenter {
             .filter(__ -> home.hasMore())
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
-            .flatMapSingle(bottomReached -> home.getNextHomeBundles())
-            .observeOn(viewScheduler)
-            .doOnNext(view::showMoreHomeBundles)
-            .doOnNext(bundles -> view.hideShowMore())
-            .doOnError(throwable -> view.hideShowMore())
+            .flatMapSingle(bottomReached -> loadNextBundles())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -138,19 +156,60 @@ public class HomePresenter implements Presenter {
         });
   }
 
+  @NonNull private Single<HomeBundlesModel> loadNextBundles() {
+    return home.loadNextHomeBundles()
+        .observeOn(viewScheduler)
+        .doOnSuccess(bundlesModel -> {
+          if (bundlesModel.hasErrors()) {
+            handleError(bundlesModel.getError());
+          } else {
+            if (!bundlesModel.isLoading()) {
+              view.showMoreHomeBundles(bundlesModel.getList());
+            }
+          }
+          view.hideShowMore();
+          view.hideLoading();
+        });
+  }
+
   private void handlePullToRefresh() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
-            .flatMapSingle(refreshed -> home.getFreshHomeBundles())
-            .observeOn(viewScheduler)
-            .doOnNext(view::showHomeBundles)
-            .doOnNext(bundles -> view.hideRefresh())
+            .flatMapSingle(refreshed -> loadFreshBundles())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  @NonNull private Single<HomeBundlesModel> loadFreshBundles() {
+    return home.loadFreshHomeBundles()
+        .observeOn(viewScheduler)
+        .doOnSuccess(bundlesModel -> {
+          view.hideRefresh();
+          if (bundlesModel.hasErrors()) {
+            handleError(bundlesModel.getError());
+          } else {
+            if (!bundlesModel.isLoading()) {
+              view.showHomeBundles(bundlesModel.getList());
+            }
+          }
+        });
+  }
+
+  private void handleRetryClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(viewCreated -> view.retryClicked()
+            .observeOn(viewScheduler)
+            .doOnNext(bottom -> view.showLoading())
+            .flatMapSingle(reachesBottom -> loadNextBundles())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(notificationUrl -> {
+        }, crashReporter::log);
   }
 }

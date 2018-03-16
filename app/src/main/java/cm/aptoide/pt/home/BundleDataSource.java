@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import java.util.List;
 import rx.Single;
 
 /**
@@ -9,11 +8,9 @@ import rx.Single;
 
 public interface BundleDataSource {
 
-  Single<List<HomeBundle>> getFreshHomeBundles();
+  Single<HomeBundlesModel> loadFreshHomeBundles();
 
-  Single<List<HomeBundle>> getNextHomeBundles();
+  Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit);
 
-  Single<List<HomeBundle>> getHomeBundles();
-
-  boolean hasMorePosts();
+  boolean hasMore(Integer offset);
 }

@@ -67,6 +67,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -78,6 +79,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -89,8 +91,10 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BundleDataSource;
+import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
-import cm.aptoide.pt.home.LocalBundleDataSource;
+import cm.aptoide.pt.home.InMemoryBundleCache;
+import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -181,6 +185,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1050,8 +1055,38 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCenter(appCenterRepository);
   }
 
-  @Named("local") @Singleton @Provides BundleDataSource providesLocalBundleDataSource() {
-    return new LocalBundleDataSource();
+  @Singleton @Provides InMemoryBundleCache providesLocalBundleDataSource() {
+    return new InMemoryBundleCache(null, false);
+  }
+
+  @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
+      BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager) {
+    return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
+        converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class)).fromUrl(""),
+        ((AptoideApplication) getApplicationContext()).getIdsRepository()
+            .getUniqueIdentifier(),
+        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
+        ((AptoideApplication) getApplicationContext()).getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+        getApplicationContext().getResources(),
+        (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE),
+        (ConnectivityManager) getApplicationContext().getSystemService(
+            Context.CONNECTIVITY_SERVICE),
+        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider());
+  }
+
+  @Singleton @Provides BundlesRepository providesBundleRepository(
+      @Named("remote") BundleDataSource remoteBundleDataSource) {
+    return new BundlesRepository(remoteBundleDataSource,
+        new AbstractMap.SimpleEntry<>(0, new ArrayList<>()));
   }
 
   @Singleton @Provides AdMapper providesAdMapper() {

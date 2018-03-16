@@ -12,20 +12,20 @@ import rx.Single;
 
 public class FakeBundleDataSource implements BundleDataSource {
 
-  @Override public Single<List<HomeBundle>> getFreshHomeBundles() {
+  @Override public Single<HomeBundlesModel> loadFreshHomeBundles() {
     return getHomeBundles();
   }
 
-  @Override public Single<List<HomeBundle>> getNextHomeBundles() {
-    return getFreshHomeBundles();
+  @Override public Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit) {
+    return loadFreshHomeBundles();
   }
 
-  @Override public Single<List<HomeBundle>> getHomeBundles() {
-    return Single.just(getFakeBundles());
+  @Override public boolean hasMore(Integer offset) {
+    return true;
   }
 
-  @Override public boolean hasMorePosts() {
-    return false;
+  public Single<HomeBundlesModel> getHomeBundles() {
+    return Single.just(new HomeBundlesModel(getFakeBundles(), false, 0));
   }
 
   public List<HomeBundle> getFakeBundles() {

@@ -102,14 +102,27 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   public void addLoadMore() {
-    if (!this.bundles.contains(progressBundle)) {
-      this.bundles.add(progressBundle);
-      notifyDataSetChanged();
+    if (getLoadingPosition() < 0) {
+      bundles.add(progressBundle);
+      notifyItemInserted(bundles.size() - 1);
     }
   }
 
   public void removeLoadMore() {
-    this.bundles.remove(progressBundle);
-    notifyDataSetChanged();
+    int loadingPosition = getLoadingPosition();
+    if (loadingPosition >= 0) {
+      bundles.remove(loadingPosition);
+      notifyItemRemoved(loadingPosition);
+    }
+  }
+
+  public synchronized int getLoadingPosition() {
+    for (int i = bundles.size() - 1; i >= 0; i--) {
+      HomeBundle homeBundle = bundles.get(i);
+      if (homeBundle instanceof ProgressBundle) {
+        return i;
+      }
+    }
+    return -1;
   }
 }

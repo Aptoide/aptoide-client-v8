@@ -25,7 +25,7 @@ public class BundlesResponseMapper {
         .getList());
   }
 
-  private List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
+  public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
 
     List<HomeBundle> appBundles = new ArrayList<>();
 

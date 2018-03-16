@@ -38,4 +38,8 @@ public interface HomeView extends View {
   void scrollToTop();
 
   void hideRefresh();
+
+  void showNetworkError();
+
+  Observable<Void> retryClicked();
 }

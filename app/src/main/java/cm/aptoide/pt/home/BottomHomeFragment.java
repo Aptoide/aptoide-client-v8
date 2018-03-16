@@ -17,6 +17,7 @@ import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
+import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +46,13 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
-  private View genericError;
+  private View genericErrorView;
+  private View noNetworkErrorView;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
   private Parcelable listState;
+  private View noNetworkRetryButton;
+  private View retryButton;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -73,7 +77,8 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     adapter = null;
     layoutManager = null;
     swipeRefreshLayout = null;
-    genericError = null;
+    genericErrorView = null;
+    noNetworkErrorView = null;
     progressBar = null;
     super.onDestroyView();
   }
@@ -102,7 +107,10 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
       }
     }
     list = (RecyclerView) view.findViewById(R.id.bundles_list);
-    genericError = view.findViewById(R.id.generic_error);
+    genericErrorView = view.findViewById(R.id.generic_error);
+    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
+    retryButton = genericErrorView.findViewById(R.id.retry);
+    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -126,19 +134,22 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public void showLoading() {
     list.setVisibility(View.GONE);
-    genericError.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
+    noNetworkErrorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     list.setVisibility(View.VISIBLE);
-    genericError.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
+    noNetworkErrorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showGenericError() {
-    this.genericError.setVisibility(View.VISIBLE);
+    this.genericErrorView.setVisibility(View.VISIBLE);
+    this.noNetworkErrorView.setVisibility(View.GONE);
     this.list.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
@@ -194,6 +205,20 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public void hideRefresh() {
     swipeRefreshLayout.setRefreshing(false);
+  }
+
+  @Override public void showNetworkError() {
+    this.noNetworkErrorView.setVisibility(View.VISIBLE);
+    this.genericErrorView.setVisibility(View.GONE);
+    this.list.setVisibility(View.GONE);
+    this.progressBar.setVisibility(View.GONE);
+    if (this.swipeRefreshLayout.isRefreshing()) {
+      this.swipeRefreshLayout.setRefreshing(false);
+    }
+  }
+
+  @Override public Observable<Void> retryClicked() {
+    return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
   }
 
   private boolean isEndReached() {
