@@ -8,16 +8,18 @@ public class DownloadApp implements App {
 
   private String appName;
   private String md5;//to identify
+  private String packageName;
   private String icon;
   private int progress;
   private boolean isIndeterminate;
   private int versionCode;
   private Status downloadStatus;
 
-  public DownloadApp(String appName, String md5, String icon, int progress, boolean isIndeterminate,
-      int versionCode, Status downloadStatus) {
+  public DownloadApp(String appName, String md5, String packageName, String icon, int progress,
+      boolean isIndeterminate, int versionCode, Status downloadStatus) {
     this.appName = appName;
     this.md5 = md5;
+    this.packageName = packageName;
     this.icon = icon;
     this.progress = progress;
     this.isIndeterminate = isIndeterminate;
@@ -55,6 +57,10 @@ public class DownloadApp implements App {
 
   @Override public Type getType() {
     return Type.DOWNLOAD;
+  }
+
+  public String getPackageName() {
+    return packageName;
   }
 
   public enum Status {

@@ -15,9 +15,10 @@ public class InstallToDownloadAppMapper {
 
     for (int i = 0; i < installations.size(); i++) {
       Install install = installations.get(i);
-      downloadsList.add(new DownloadApp(install.getAppName(), install.getMd5(), install.getIcon(),
-          install.getProgress(), install.isIndeterminate(), install.getVersionCode(),
-          mapDownloadStatus(install.getState())));
+      downloadsList.add(
+          new DownloadApp(install.getAppName(), install.getMd5(), install.getPackageName(),
+              install.getIcon(), install.getProgress(), install.isIndeterminate(),
+              install.getVersionCode(), mapDownloadStatus(install.getState())));
     }
     return downloadsList;
   }

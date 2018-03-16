@@ -47,17 +47,20 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     List<App> appsList = new ArrayList<>();
     appsList.add(new Header(
         "Downloads"));// FIXME: 3/15/18 headers should use string resource for translation
-    appsList.add(
-        new DownloadApp("Aptoide", "md5", "sdasda", 20, false, 21212, DownloadApp.Status.ACTIVE));
+    appsList.add(new DownloadApp("Aptoide", "md5", "cm.aptoide.pt", "sdasda", 20, false, 21212,
+        DownloadApp.Status.ACTIVE));
 
     appsList.add(
-        new DownloadApp("Uploader", "md5", "sdasda", 20, false, 21212, DownloadApp.Status.STANDBY));
+        new DownloadApp("Uploader", "md5", "pt.cm.aptoide.uploader", "sdasda", 20, false, 21212,
+            DownloadApp.Status.STANDBY));
 
-    appsList.add(new DownloadApp("Messenger", "md5", "sadasda", 100, false, 21212,
-        DownloadApp.Status.COMPLETED));
+    appsList.add(
+        new DownloadApp("Messenger", "md5", "com.facebook.katana", "sadasda", 100, false, 21212,
+            DownloadApp.Status.COMPLETED));
 
-    appsList.add(new DownloadApp("Fit2Gather", "md5", "sadasda", 100, false, 21212,
-        DownloadApp.Status.ERROR));
+    appsList.add(
+        new DownloadApp("Fit2Gather", "md5", "pt.iscte-iul.daam.fit2gather", "sadasda", 100, false,
+            21212, DownloadApp.Status.ERROR));
 
     appsList.add(new UpdatesHeader("upedates heuhue"));
     appsList.add(
