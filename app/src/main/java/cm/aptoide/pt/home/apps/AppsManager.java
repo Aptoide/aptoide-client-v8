@@ -120,6 +120,7 @@ public class AppsManager {
   }
 
   public void pauseDownload(App app) {
+    installManager.stopInstallation(((DownloadApp) app).getMd5());
   }
 
   public void retryUpdate(App app) {
