@@ -73,7 +73,8 @@ public class AppsManager {
   }
 
   public void cancelDownload(App app) {
-
+    installManager.removeInstallationFile(((DownloadApp) app).getMd5(),
+        ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode());
   }
 
   public Observable<Install> resumeDownload(App app) {
