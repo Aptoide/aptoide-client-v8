@@ -433,6 +433,8 @@ public class HomeFragment extends StoreFragment {
         return Event.Name.getUserTimeline;
       case TabNavigation.UPDATES:
         return Event.Name.myUpdates;
+      case TabNavigation.HOME:
+        return Event.Name.getStoreWidgets;
       default:
         throw new IllegalArgumentException("Invalid tab.");
     }
