@@ -9,5 +9,4 @@ import cm.aptoide.pt.presenter.View;
 public interface MyStoresView extends View {
 
   void scrollToTop();
-
 }
