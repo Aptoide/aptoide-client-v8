@@ -102,7 +102,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
   @Override
   public Observable<GetStoreWidgets> observe(boolean bypassCache, boolean bypassServerCache) {
     this.bypassServerCache = bypassServerCache;
-    return super.observe();
+    return super.observe(bypassCache, bypassServerCache);
   }
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
