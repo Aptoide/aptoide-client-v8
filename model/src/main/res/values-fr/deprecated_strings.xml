@@ -157,9 +157,9 @@
   <string name="updates_tab">Mises à jour</string>
   <string name="feedback_send_button">Envoyez vos commentaires</string>
   <!-- NavDrawer List items -->
-  <string name="my_account">My Account</string>
-  <string name="setting_schdwntitle">Scheduled Downloads</string>
-  <string name="settings">Settings</string>
+  <string name="my_account">Mon compte</string>
+  <string name="setting_schdwntitle">Téléchargements planifiés</string>
+  <string name="settings">Préférences</string>
   <string name="facebook">Facebook</string>
   <string name="twitter">Twitter</string>
   <string name="backup_apps">Backup Apps</string>

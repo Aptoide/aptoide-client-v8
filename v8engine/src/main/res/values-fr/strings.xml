@@ -125,28 +125,28 @@ et ne contient pas de menace !</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>IGNORER</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_welcome_message"><b>Bienvenue</b></string>
   <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
   <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
   <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_title_viewpager_two"><b>Flux d\'Apps</b></string>
   <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
-  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
-  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
-  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
-  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_title_viewpager_three"><b>Rejoignez la communauté</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Suivez</b> vos amis</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Notez</b> les applications</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Créez</b> votre boutique</string>
+  <string name="wizard_register_now_button">S\'Inscrive maintenant</string>
   <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
-  <string name="wizard_or_login"><u>or Login</u></string>
+  <string name="wizard_or_login"><u>ou connectez-vous</u></string>
   <string name="you_need_to_be_logged_in">Vous devez être connecté</string>
   <string name="follow">Suivre</string>
   <!--need translation-->
   <string name="followed">Abonné</string>
   <string name="unfollow_yes_no">Voulez-vous vraiment vous désabonner ?</string>
   <string name="unfollow">Se désabonner</string>
-  <string name="appview_follow_store_button_text">Follow?</string>
+  <string name="appview_follow_store_button_text">S\'abonner ?</string>
   <string name="unfollowing_store_message">Vous ne suivez plus %s</string>
   <string name="store_followed">Vous êtes abonnés à la boutique %s</string>
   <string name="subscribers">Abonnés</string>
@@ -269,7 +269,7 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="create_store_displayable_message">Créez une boutique et partagez vos applications !</string>
   <string name="create_store_displayable_button">CRÉER UN MAGASIN</string>
   <string name="my_store_created_displayable_message">Votre boutique d\'applications Android</string>
-  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">Vous venez de créer votre boutique !</string>
   <string name="create_store_displayable_explore_message">Entrez et explorez toutes les possibilités...</string>
   <string name="create_store_displayable_explore_button">Explorer</string>
   <!-- stores tab > my store with no apps -->
@@ -319,15 +319,15 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="private_following_message">vous suivez %d utilisateurs / boutiques privés</string>
   <!-- Payments -->
   <string name="item_payment_button_use">use</string>
-  <string name="item_payment_button_register">register</string>
-  <string name="item_payment_approving_text">Approving...</string>
-  <string name="activity_payment_more_payments_button">Use another payment method</string>
+  <string name="item_payment_button_register">s’inscrire</string>
+  <string name="item_payment_approving_text">Approbation en cours...</string>
+  <string name="activity_payment_more_payments_button">Utiliser un autre mode de paiement</string>
   <string name="reviews_expand_button">%d réponses</string>
   <string name="out_of_space_dialog_title">Espace insuffisant</string>
   <string name="out_of_space_dialog_message">Libérez de l\'espace avant de poursuivre.</string>
   <!--new setting options-->
-  <string name="languages">Languages</string>
-  <string name="language_dialog">Select a language</string>
+  <string name="languages">Langues</string>
+  <string name="language_dialog">Sélectionnez une langue</string>
   <string name="topAppsNotification">Top apps recommendations</string>
   <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

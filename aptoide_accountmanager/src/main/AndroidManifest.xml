@@ -24,7 +24,6 @@
     <activity
         android:name=".LoginActivity"
         android:exported="true"
-        android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
@@ -38,28 +37,22 @@
 
     <activity
         android:name=".CreateUserActivity"
-        android:configChanges="orientation|screenSize"
-        android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
 
     <activity
         android:name=".CreateStoreActivity"
-        android:configChanges="orientation|screenSize"
         android:exported="true"
-        android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
 
     <activity
         android:name=".LoggedInActivity"
-        android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
 
     <activity
         android:name=".LoggedInActivity2ndStep"
-        android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
 
