@@ -1,5 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.AppContext;
@@ -9,6 +11,7 @@ import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import rx.Observable;
 
@@ -24,17 +27,22 @@ public class AppsManager {
   private InstalledToInstalledAppMapper installedToInstalledAppMapper;
   private DownloadAnalytics downloadAnalytics;
   private InstallAnalytics installAnalytics;
+  private PackageManager packageManager;
+  private Context context;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       InstallToDownloadAppMapper downloadsManager,
       InstalledToInstalledAppMapper installedToInstalledAppMapper,
-      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics) {
+      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
+      PackageManager packageManager, Context context) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.installToDownloadAppMapper = downloadsManager;
     this.installedToInstalledAppMapper = installedToInstalledAppMapper;
     this.downloadAnalytics = downloadAnalytics;
     this.installAnalytics = installAnalytics;
+    this.packageManager = packageManager;
+    this.context = context;
   }
 
   public Observable<List<App>> getUpdatesList() {
@@ -64,12 +72,23 @@ public class AppsManager {
         });
   }
 
-  public void retryDownload(App app) {
-
+  public Observable<Install> retryDownload(App app) {
+    return resumeDownload(app);
   }
 
-  public void installApp(App app) {
-
+  public Observable<Install> installApp(App app) {
+    return installManager.getInstall(((DownloadApp) app).getMd5(),
+        ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode())
+        .first()
+        .flatMap(installationProgress -> {
+          if (installationProgress.getState() == Install.InstallationStatus.INSTALLED) {
+            AptoideUtils.SystemU.openApp(((DownloadApp) app).getPackageName(), packageManager,
+                context);
+            return Observable.empty();
+          } else {
+            return resumeDownload(app);
+          }
+        });
   }
 
   public void cancelDownload(App app) {

@@ -37,7 +37,7 @@ public class AppsPresenter implements Presenter {
 
     getUpdatesList();
 
-    getInstalls();
+    getInstalledApps();
 
     getDownloads();
 
@@ -192,13 +192,14 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(computation)
         .flatMap(__ -> appsManager.getDownloadApps())
+        .observeOn(viewScheduler)
         .doOnNext(list -> view.showDownloadsList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
 
-  private void getInstalls() {
+  private void getInstalledApps() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(computation)
