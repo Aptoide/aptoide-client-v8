@@ -9,18 +9,18 @@
       >
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="true"
-        android:key="generalnetworkmobile"
-        android:title="@string/setting_mobile"
-        />
-    <android.support.v7.preference.SwitchPreferenceCompat
-        android:defaultValue="true"
         android:key="hwspecsChkBox"
         android:summary="@string/setting_appfiltersum"
         android:title="@string/setting_appfiltertitle"
         />
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="generalnetworkmobile"
+        android:title="@string/setting_mobile"
+        />
   </PreferenceCategory>
   <PreferenceCategory
-      android:title="Updates"
+      android:title="@string/updates"
       >
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="true"
@@ -33,21 +33,21 @@
         android:summary="@string/settings_include_system_apps_summary"
         android:title="@string/settings_include_system_apps_title"/>
     <Preference
-        android:key="excludedupdates"
-        android:title="Excluded updates"/>
+        android:key="excludedUpdates"
+        android:title="@string/excluded_updates"/>
   </PreferenceCategory>
 
   <PreferenceCategory android:title="@string/setting_notifications">
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="true"
-        android:key="notificationaptoide"
-        android:summary="@string/setting_notifications_sub_sub_section_1"
-        android:title="@string/setting_notifications_sub_section_1"/>
-    <android.support.v7.preference.SwitchPreferenceCompat
-        android:defaultValue="true"
         android:key="notification_campaign_and_social"
         android:summary="@string/setting_notifications_sub_sub_section_2"
         android:title="@string/setting_notifications_sub_section_2"/>
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="notificationaptoide"
+        android:summary="@string/setting_notifications_sub_sub_section_1"
+        android:title="@string/setting_notifications_sub_section_1"/>
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="checkautoupdate"
@@ -76,14 +76,12 @@
         android:defaultValue="true"
         android:key="matureChkBox"
         android:persistent="false"
-        android:summary="@string/setting_dont_show_mature_content"
-        android:title="@string/setting_mature_filtering"/>
+        android:title="@string/setting_dont_show_mature_content"/>
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="matureChkBoxWithPin"
         android:persistent="false"
-        android:summary="@string/setting_dont_show_mature_content"
-        android:title="@string/setting_mature_filtering"
+        android:title="@string/setting_dont_show_mature_content"
         android:visible="false"/>
     <Preference
         android:inputType="number"
@@ -115,13 +113,22 @@
 
   <PreferenceCategory
       android:key="about"
-      android:title="@string/settings_about_us">
+      android:title="@string/settings_support">
+    <Preference
+        android:key="sendFeedback"
+        android:title="@string/settings_send_feedback"/>
     <Preference
         android:key="aboutDialog"
         android:title="@string/settings_about_us"/>
     <Preference
+        android:key="termsConditions"
+        android:title="@string/settings_terms_conditions"/>
+    <Preference
         android:key="hwspecs"
         android:summary="@string/setting_hwspecssum"
         android:title="@string/setting_hwspecstitle"/>
+    <Preference
+        android:key="deleteAccount"
+        android:title="@string/settings_delete_account"/>
   </PreferenceCategory>
 </PreferenceScreen>

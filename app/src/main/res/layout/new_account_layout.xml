@@ -6,7 +6,7 @@
     >
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
       android:orientation="vertical"
       >
 
@@ -38,7 +38,7 @@
           android:layout_gravity="center_horizontal"
           android:layout_marginTop="24dp"
           android:gravity="center"
-          android:text="Sign in or register to get the most out of Aptoide"
+          android:text="@string/newaccount_signin_message"
           android:textColor="@color/black"
           />
       <Button
@@ -48,7 +48,7 @@
           android:layout_gravity="center_horizontal"
           android:layout_marginTop="16dp"
           android:src="@drawable/button_border_amber"
-          android:text="LOGIN/REGISTER"
+          android:text="@string/newaccount_signin"
           android:textAppearance="@style/TextAppearance.AppCompat.Button"
           />
 
@@ -86,7 +86,7 @@
           android:layout_gravity="center_horizontal"
           android:layout_marginTop="16dp"
           android:gravity="center"
-          android:text="Create an Aptoide store to share apps with the community."
+          android:text="@string/newaccount_create_store_message"
           android:textColor="@color/black"
           android:textSize="17dp"
           android:visibility="gone"
@@ -100,8 +100,8 @@
           android:layout_marginRight="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="16dp"
-          android:background="@color/grey"
-          android:text="CREATE A STORE"
+          android:background="@color/aptoide_orange"
+          android:text="@string/newaccount_create_store"
           android:visibility="gone"
           />
       <Button
@@ -113,8 +113,8 @@
           android:layout_marginRight="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="8dp"
-          android:background="@color/grey"
-          android:text="FIND FRIENDS"
+          android:background="@color/aptoide_orange"
+          android:text="@string/newaccount_find_friends"
           />
       <Button
           android:id="@+id/logout_button"
@@ -125,8 +125,8 @@
           android:layout_marginRight="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="8dp"
-          android:background="@color/grey"
-          android:text="LOGOUT"
+          android:background="@color/aptoide_orange"
+          android:text="@string/newaccount_log_out"
           />
     </LinearLayout>
 
@@ -154,7 +154,7 @@
           android:layout_marginLeft="12dp"
           android:layout_marginStart="12dp"
           android:layout_marginTop="17dp"
-          android:text="Notification history"
+          android:text="@string/newaccount_notification_history"
           android:textColor="@color/black_87_alpha"
           style="@style/Aptoide.TextView.Regular.M"
           />
@@ -164,7 +164,6 @@
         android:id="@+id/card_custom_view_line_separator"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:layout_alignParentBottom="true"
         android:layout_marginEnd="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="15dp"
@@ -194,7 +193,7 @@
           android:layout_marginLeft="12dp"
           android:layout_marginStart="12dp"
           android:layout_marginTop="17dp"
-          android:text="Settings"
+          android:text="@string/newaccount_settings"
           android:textColor="@color/black_87_alpha"
           style="@style/Aptoide.TextView.Regular.M"
           />

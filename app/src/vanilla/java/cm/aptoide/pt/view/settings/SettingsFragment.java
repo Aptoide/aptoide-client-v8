@@ -44,18 +44,22 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
+import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.util.SettingsConstants;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
+import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxPreference;
 import rx.Observable;
@@ -77,6 +81,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "removeMaturepin";
   private static final String ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY = "matureChkBoxWithPin";
   private static final String ADULT_CONTENT_PREFERENCE_VIEW_KEY = "matureChkBox";
+  private static final String EXCLUDED_UPDATES_PREFERENCE_KEY = "excludedUpdates";
+  private static final String SEND_FEEDBACK_PREFERENCE_KEY = "sendFeedback";
 
   protected Toolbar toolbar;
   private Context context;
@@ -94,6 +100,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private SwitchPreferenceCompat adultContentPreferenceView;
   private SwitchPreferenceCompat adultContentWithPinPreferenceView;
   private SwitchPreferenceCompat socialCampaignNotifications;
+  private Preference excludedUpdates;
+  private Preference sendFeedback;
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
@@ -103,6 +111,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private UpdateRepository repository;
   private String defaultThemeName;
   private AdultContentAnalytics adultContentAnalytics;
+  private FragmentNavigator fragmentNavigator;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -110,6 +119,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     adultContentAnalytics = application.getAdultContentAnalytics();
@@ -121,6 +131,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
+    fragmentNavigator = ((ActivityResultNavigator) getActivity()).getFragmentNavigator();
     adultContentConfirmationDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
             .setPositiveButton(R.string.yes)
@@ -200,6 +211,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         (SwitchPreferenceCompat) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
     pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
+    excludedUpdates = findPreference(EXCLUDED_UPDATES_PREFERENCE_KEY);
+    sendFeedback = findPreference(SEND_FEEDBACK_PREFERENCE_KEY);
 
     setupClickHandlers();
   }
@@ -245,7 +258,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .subscribe(isChecked -> handleSocialNotifications(
             ((SwitchPreferenceCompat) isChecked).isChecked())));
 
+    subscriptions.add(RxPreference.clicks(excludedUpdates)
+        .subscribe(
+            clicked -> fragmentNavigator.navigateTo(ExcludedUpdatesFragment.newInstance(), true)));
 
+    subscriptions.add(RxPreference.clicks(sendFeedback)
+        .subscribe(
+            clicked -> fragmentNavigator.navigateTo(SendFeedbackFragment.newInstance(), true)));
 
     subscriptions.add(accountManager.enabled()
         .observeOn(AndroidSchedulers.mainThread())

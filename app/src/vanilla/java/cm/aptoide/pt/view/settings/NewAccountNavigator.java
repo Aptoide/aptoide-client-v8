@@ -15,13 +15,13 @@ import rx.Observable;
  * Created by franciscocalado on 13/03/18.
  */
 
-public class NewSettingsNavigator {
+public class NewAccountNavigator {
 
   private final FragmentNavigator fragmentNavigator;
   private final MyAccountNavigator accountNavigator;
   private final AccountNavigator navigator;
 
-  public NewSettingsNavigator(FragmentNavigator fragmentNavigator,
+  public NewAccountNavigator(FragmentNavigator fragmentNavigator,
       MyAccountNavigator accountNavigator, AccountNavigator navigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountNavigator = accountNavigator;

@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
-import cm.aptoide.pt.view.settings.NewSettingsFragment;
+import cm.aptoide.pt.view.settings.NewAccountFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -49,7 +49,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
       case R.id.action_search:
         break;
       case R.id.action_stores:
-        selectedFragment = new NewSettingsFragment();
+        selectedFragment = new NewAccountFragment();
         break;
       case R.id.action_apps:
         selectedFragment = new BottomHomeFragment();

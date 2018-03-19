@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -21,6 +20,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -31,7 +31,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.BackButtonFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import okhttp3.OkHttpClient;
@@ -43,13 +43,13 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by franciscocalado on 12/03/18.
  */
 
-public class NewSettingsFragment extends FragmentView
-    implements SharedPreferences.OnSharedPreferenceChangeListener, NewSettingsView {
+public class NewAccountFragment extends BackButtonFragment
+    implements SharedPreferences.OnSharedPreferenceChangeListener, NewAccountView {
 
   private static final float STROKE_SIZE = 0.04f;
 
   protected Toolbar toolbar;
-  @Inject NewSettingsNavigator newSettingsNavigator;
+  @Inject NewAccountNavigator newAccountNavigator;
   private AptoideAccountManager accountManager;
 
   private Converter.Factory converterFactory;
@@ -80,7 +80,7 @@ public class NewSettingsFragment extends FragmentView
   //TODO: Add string resources to the settings XML and fragment (ALL STRINGS HARDCODED!!!)
 
   public static Fragment newInstance() {
-    return new NewSettingsFragment();
+    return new NewAccountFragment();
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -97,14 +97,6 @@ public class NewSettingsFragment extends FragmentView
     converterFactory = WebService.getDefaultConverter();
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -116,14 +108,19 @@ public class NewSettingsFragment extends FragmentView
     setupToolbar();
 
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
-    attachPresenter(new NewSettingsPresenter(this, accountManager, CrashReport.getInstance(),
+    attachPresenter(new NewAccountPresenter(this, accountManager, CrashReport.getInstance(),
         application.getDefaultSharedPreferences(), AndroidSchedulers.mainThread(),
-        newSettingsNavigator));
+        newAccountNavigator));
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.new_settings_layout, container, false);
+    return inflater.inflate(R.layout.new_account_layout, container, false);
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
@@ -270,10 +267,10 @@ public class NewSettingsFragment extends FragmentView
     myStoreName = (TextView) myStoreView.findViewById(R.id.description);
 
     TextView myStoreTitle = (TextView) myStoreView.findViewById(R.id.name);
-    myStoreTitle.setText("My store");
+    myStoreTitle.setText(R.string.newaccount_my_store);
 
     TextView myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
-    myAccountTitle.setText("My account");
+    myAccountTitle.setText(R.string.newaccount_my_account);
 
     loginButton = (Button) view.findViewById(R.id.login_button);
     logoutButton = (Button) view.findViewById(R.id.logout_button);
@@ -285,7 +282,7 @@ public class NewSettingsFragment extends FragmentView
   }
 
   private void setupToolbar() {
-    toolbar.setTitle("My Account");
+    toolbar.setTitle(R.string.my_account_title_my_account);
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);
@@ -294,5 +291,6 @@ public class NewSettingsFragment extends FragmentView
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setTitle(toolbar.getTitle());
     }
+    toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
   }
 }
