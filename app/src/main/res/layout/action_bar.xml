@@ -3,11 +3,9 @@
 
 <android.support.design.widget.AppBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_bar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:showIn="@layout/store_activity_with_logo"
     >
 
   <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,7 +18,6 @@
       android:minHeight="112dp"
       android:theme="?attr/toolbarTheme"
       app:layout_collapseMode="pin"
-      app:layout_scrollFlags="scroll|enterAlways"
       app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
       >
 
