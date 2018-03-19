@@ -4,8 +4,6 @@ import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
-import cm.aptoide.pt.account.view.MyAccountNavigator;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.presenter.Presenter;
@@ -24,22 +22,17 @@ public class NewSettingsPresenter implements Presenter {
   private final NewSettingsView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
-  private final MyAccountNavigator navigator;
   private final SharedPreferences sharedPreferences;
-  private final NavigationTracker navigationTracker;
   private final Scheduler scheduler;
   private final NewSettingsNavigator newSettingsNavigator;
 
   public NewSettingsPresenter(NewSettingsView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, MyAccountNavigator accountNavigator,
-      SharedPreferences sharedPreferences, NavigationTracker navigationTracker, Scheduler scheduler,
+      CrashReport crashReport, SharedPreferences sharedPreferences, Scheduler scheduler,
       NewSettingsNavigator newSettingsNavigator) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
-    navigator = accountNavigator;
     this.sharedPreferences = sharedPreferences;
-    this.navigationTracker = navigationTracker;
     this.scheduler = scheduler;
     this.newSettingsNavigator = newSettingsNavigator;
   }
