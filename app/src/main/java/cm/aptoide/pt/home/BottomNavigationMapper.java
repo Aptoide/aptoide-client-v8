@@ -13,12 +13,16 @@ public class BottomNavigationMapper {
     switch (menuItemId) {
       case R.id.action_home:
         bottomNavigationItem = BottomNavigationItem.HOME;
+        break;
       case R.id.action_search:
         bottomNavigationItem = BottomNavigationItem.SEARCH;
+        break;
       case R.id.action_stores:
         bottomNavigationItem = BottomNavigationItem.STORES;
+        break;
       case R.id.action_apps:
         bottomNavigationItem = BottomNavigationItem.APPS;
+        break;
     }
     if (bottomNavigationItem == null) {
       throw new IllegalStateException("The selected menuItem is not supported");
