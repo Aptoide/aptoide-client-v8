@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
+import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -17,6 +20,8 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     implements AptoideBottomNavigator {
 
   protected static final int LAYOUT = R.layout.frame_layout;
+  private final static String EVENT_ACTION =
+      "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
   protected BottomNavigationView bottomNavigationView;
   private PublishSubject<Integer> navigationSubject;
 
@@ -48,6 +53,8 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
       case R.id.action_search:
         break;
       case R.id.action_stores:
+        selectedFragment =
+            MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
         break;
       case R.id.action_apps:
         selectedFragment = new BottomHomeFragment();
@@ -59,5 +66,14 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
         fragmentNavigator.navigateTo(selectedFragment, true);
       }
     }
+  }
+
+  private Event getStoreEvent() {
+    Event event = new Event();
+    event.setAction(EVENT_ACTION);
+    event.setData(null);
+    event.setName(Event.Name.myStores);
+    event.setType(Event.Type.CLIENT);
+    return event;
   }
 }

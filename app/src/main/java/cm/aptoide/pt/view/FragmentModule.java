@@ -24,6 +24,7 @@ import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeNavigator;
@@ -34,6 +35,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.store.view.my.MyStoresPresenter;
+import cm.aptoide.pt.store.view.my.MyStoresView;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
@@ -57,7 +60,7 @@ import rx.schedulers.Schedulers;
     this.packageName = packageName;
   }
 
-  @Provides @FragmentScope LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(
+  @FragmentScope @Provides LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
     return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment,
@@ -68,7 +71,7 @@ import rx.schedulers.Schedulers;
         accountAnalytics);
   }
 
-  @Provides @FragmentScope ImagePickerPresenter provideImagePickerPresenter(
+  @FragmentScope @Provides ImagePickerPresenter provideImagePickerPresenter(
       AccountPermissionProvider accountPermissionProvider, PhotoFileGenerator photoFileGenerator,
       ImageValidator imageValidator, UriToPathResolver uriToPathResolver,
       ImagePickerNavigator imagePickerNavigator) {
@@ -130,5 +133,16 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository) {
     return new Home(bundlesRepository);
+  }
+
+  @FragmentScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
+    return new BottomNavigationMapper();
+  }
+
+  @FragmentScope @Provides MyStoresPresenter provideMyStorePresenter(
+      BottomNavigationMapper bottomNavigationMapper) {
+    return new MyStoresPresenter((MyStoresView) fragment,
+        (AptoideBottomNavigator) fragment.getActivity(), AndroidSchedulers.mainThread(),
+        bottomNavigationMapper);
   }
 }
