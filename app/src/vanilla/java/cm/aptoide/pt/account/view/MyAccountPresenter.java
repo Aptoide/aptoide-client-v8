@@ -26,7 +26,7 @@ public class MyAccountPresenter implements Presenter {
   private final SharedPreferences sharedPreferences;
   private final NotificationAnalytics analytics;
   private final NavigationTracker navigationTracker;
-  private Scheduler viewScheduler;
+  private final Scheduler viewScheduler;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, MyAccountNavigator navigator, NotificationCenter notificationCenter,
