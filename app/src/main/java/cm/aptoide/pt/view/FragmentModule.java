@@ -124,7 +124,8 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides SearchResultPresenter provideSearchResultPresenter(
       SearchAnalytics searchAnalytics, SearchNavigator searchNavigator, SearchManager searchManager,
-      TrendingManager trendingManager, SearchSuggestionManager searchSuggestionManager) {
+      TrendingManager trendingManager, SearchSuggestionManager searchSuggestionManager,
+      BottomNavigationMapper bottomNavigationMapper) {
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager,
         ((AptoideApplication) fragment.getContext()
@@ -133,7 +134,8 @@ import rx.schedulers.Schedulers;
             .getApplicationContext()).getDefaultStoreName(),
         ((AptoideApplication) fragment.getContext()
             .getApplicationContext()).getDefaultThemeName(), trendingManager,
-        searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity());
+        searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
+        bottomNavigationMapper);
   }
 
   @FragmentScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {

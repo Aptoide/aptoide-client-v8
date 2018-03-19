@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.BottomNavigationItem;
+import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -39,12 +41,14 @@ import rx.exceptions.OnErrorNotImplementedException;
   private final TrendingManager trendingManager;
   private final SearchSuggestionManager suggestionManager;
   private final AptoideBottomNavigator bottomNavigator;
+  private final BottomNavigationMapper bottomNavigationMapper;
 
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, boolean isMultiStoreSearch, String defaultStoreName,
       String defaultThemeName, TrendingManager trendingManager,
-      SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator) {
+      SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -57,6 +61,7 @@ import rx.exceptions.OnErrorNotImplementedException;
     this.trendingManager = trendingManager;
     this.suggestionManager = suggestionManager;
     this.bottomNavigator = bottomNavigator;
+    this.bottomNavigationMapper = bottomNavigationMapper;
   }
 
   @Override public void present() {
@@ -78,7 +83,8 @@ import rx.exceptions.OnErrorNotImplementedException;
     handleQueryTextSubmitted();
     handleQueryTextChanged();
     handleQueryTextCleaned();
-    handleClickOnBottomNav();
+    handleClickOnBottomNavWithResults();
+    handleClickOnBottomNavWithoutResults();
     listenToSearchQueries();
   }
 
@@ -494,13 +500,33 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, err -> crashReport.log(err));
   }
 
-  private void handleClickOnBottomNav() {
+  private void handleClickOnBottomNavWithResults() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> bottomNavigator.navigationEvent())
-        .observeOn(viewScheduler)
-        .filter(navigated -> view.hasResults())
-        .doOnNext(__ -> view.scrollToTop())
+        .flatMap(created -> bottomNavigator.navigationEvent()
+            .filter(navigationEvent -> bottomNavigationMapper.mapItemClicked(navigationEvent)
+                .equals(BottomNavigationItem.SEARCH))
+            .observeOn(viewScheduler)
+            .filter(navigated -> view.hasResults())
+            .doOnNext(__ -> view.scrollToTop())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleClickOnBottomNavWithoutResults() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> bottomNavigator.navigationEvent()
+            .filter(navigationEvent -> bottomNavigationMapper.mapItemClicked(navigationEvent)
+                .equals(BottomNavigationItem.SEARCH))
+            .observeOn(viewScheduler)
+            .filter(navigated -> !view.hasResults())
+            .doOnNext(__ -> view.focusInSearchBar())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {

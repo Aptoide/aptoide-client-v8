@@ -64,6 +64,7 @@ public class SearchResultFragment extends BackButtonFragment
     implements SearchResultView, SearchSuggestionsView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
+  private static final String FRAGMENT_TITLE = "Search apps & games";
   private static final String VIEW_MODEL = "view_model";
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
@@ -264,6 +265,8 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.VISIBLE);
+    allStoresResultList.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
@@ -471,11 +474,13 @@ public class SearchResultFragment extends BackButtonFragment
         .isEmpty()) {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
+      allStoresResultList.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
+      allStoresResultList.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
     }
@@ -767,7 +772,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     if (viewModel.getCurrentQuery()
         .isEmpty()) {
-      toolbar.setTitle("Search apps & games");
+      toolbar.setTitle(FRAGMENT_TITLE);
     } else {
       toolbar.setTitle(viewModel.getCurrentQuery());
     }
@@ -787,7 +792,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void collapseSearchBar(boolean shouldShowSuggestions) {
     if (searchMenuItem != null) searchMenuItem.collapseActionView();
-    if (!hasResults()) searchView.setQuery("Search apps & games", false);
+    if (!hasResults()) toolbar.setTitle(FRAGMENT_TITLE);
   }
 
   @Override public String getCurrentQuery() {
