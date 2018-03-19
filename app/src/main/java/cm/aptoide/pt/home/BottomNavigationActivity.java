@@ -54,7 +54,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
         break;
       case R.id.action_stores:
         selectedFragment =
-            MyStoresFragment.newInstance(getStoreEvent(), null, "stores", StoreContext.home);
+            MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
         break;
       case R.id.action_apps:
         selectedFragment = new BottomHomeFragment();
