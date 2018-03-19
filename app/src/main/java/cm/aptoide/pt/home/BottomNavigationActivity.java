@@ -8,8 +8,8 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
-import cm.aptoide.pt.view.settings.NewAccountFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
+import cm.aptoide.pt.view.settings.NewAccountFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
