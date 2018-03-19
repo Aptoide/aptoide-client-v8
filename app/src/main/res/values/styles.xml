@@ -31,9 +31,6 @@
 
   <style name="Ripple">
     <!-- Customize your theme here. -->
-    <item name="colorPrimary">#017117</item>
-    <item name="colorPrimaryDark">#FF4081</item>
-    <item name="colorAccent">#FF4081</item>
     <item name="colorControlHighlight">@color/aptoide_orange</item>
   </style>
 
