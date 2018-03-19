@@ -66,4 +66,8 @@
 
   <color name="create_user_dark_orange">#C16114</color>
 
+  <!-- Bottom Nav -->
+  <color name="bottom_nav_non_selected_item_color">#8A000000</color>
+
+
 </resources>

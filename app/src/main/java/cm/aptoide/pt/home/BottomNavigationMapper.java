@@ -9,16 +9,20 @@ import cm.aptoide.pt.R;
 public class BottomNavigationMapper {
 
   public BottomNavigationItem mapItemClicked(Integer menuItemId) {
+    BottomNavigationItem bottomNavigationItem = null;
     switch (menuItemId) {
       case R.id.action_home:
-        return BottomNavigationItem.HOME;
+        bottomNavigationItem = BottomNavigationItem.HOME;
       case R.id.action_search:
-        return BottomNavigationItem.SEARCH;
+        bottomNavigationItem = BottomNavigationItem.SEARCH;
       case R.id.action_stores:
-        return BottomNavigationItem.STORES;
+        bottomNavigationItem = BottomNavigationItem.STORES;
       case R.id.action_apps:
-        return BottomNavigationItem.APPS;
+        bottomNavigationItem = BottomNavigationItem.APPS;
     }
-    return null;
+    if (bottomNavigationItem == null) {
+      throw new IllegalStateException("The selected menuItem is not supported");
+    }
+    return bottomNavigationItem;
   }
 }
