@@ -113,7 +113,7 @@
         android:contentDescription="@null"
         android:padding="12dp"
         android:scaleType="center"
-        android:src="@drawable/media_pause"
+        android:src="@drawable/ic_pause_action_black"
         />
   </RelativeLayout>
 

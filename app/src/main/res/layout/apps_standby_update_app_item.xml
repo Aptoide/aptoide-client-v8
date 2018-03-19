@@ -116,7 +116,7 @@
           android:contentDescription="@null"
           android:padding="12dp"
           android:scaleType="center"
-          android:src="@drawable/media_pause"
+          android:src="@drawable/ic_pause_action_black"
           />
 
       <ImageView
@@ -127,7 +127,7 @@
           android:contentDescription="@null"
           android:padding="12dp"
           android:scaleType="fitCenter"
-          android:src="@drawable/media_play"
+          android:src="@drawable/ic_play_arrow_action_black"
           />
 
     </LinearLayout>

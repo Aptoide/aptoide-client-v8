@@ -98,7 +98,7 @@
         android:contentDescription="@null"
         android:padding="12dp"
         android:scaleType="center"
-        android:src="@drawable/ic_refresh_black"
+        android:src="@drawable/ic_refresh_action_black"
         />
   </RelativeLayout>
 
