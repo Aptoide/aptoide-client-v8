@@ -55,39 +55,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
 
     List<App> appsList = new ArrayList<>();
-    appsList.add(new Header(
-        "Downloads"));// FIXME: 3/15/18 headers should use string resource for translation
-    appsList.add(new DownloadApp("Aptoide", "md5", "cm.aptoide.pt", "sdasda", 20, false, 21212,
-        DownloadApp.Status.ACTIVE));
-
-    appsList.add(
-        new DownloadApp("Uploader", "md5", "pt.cm.aptoide.uploader", "sdasda", 20, false, 21212,
-            DownloadApp.Status.STANDBY));
-
-    appsList.add(
-        new DownloadApp("Messenger", "md5", "com.facebook.katana", "sadasda", 100, false, 21212,
-            DownloadApp.Status.COMPLETED));
-
-    appsList.add(
-        new DownloadApp("Fit2Gather", "md5", "pt.iscte-iul.daam.fit2gather", "sadasda", 100, false,
-            21212, DownloadApp.Status.ERROR));
-
-    appsList.add(new UpdatesHeader("upedates heuhue"));
-    appsList.add(
-        new UpdateApp("BackupApps", "md5", "sdasda", "cm.aptoide.backupapps", 1, false, "31231",
-            UpdateApp.UpdateStatus.UPDATE));
-
-    appsList.add(new UpdateApp("Whatsapp", "md5", "sdasda", "com.whatsapp", 0, false, "2.18.84",
-        UpdateApp.UpdateStatus.UPDATING));
-
-    appsList.add(
-        new UpdateApp("Clash Royale", "md5", "sdasda", "com.supercell.clashroyale", 100, false,
-            "2.1.8", UpdateApp.UpdateStatus.STANDBY));
-
-    appsList.add(
-        new UpdateApp("Facebook", "md5", "sdasda", "com.facebook.katana", 100, false, "165.0.00.33",
-            UpdateApp.UpdateStatus.ERROR));
-
     adapter = new AppsAdapter(appsList, new AppCardViewHolderFactory(appItemClicks));
 
     setupRecyclerView();
@@ -97,8 +64,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(),
         new InstallToDownloadAppMapper(), new InstalledToInstalledAppMapper(), downloadAnalytics,
-        installAnalytics), AndroidSchedulers.mainThread(), Schedulers.computation(),
-        CrashReport.getInstance(), new PermissionManager(), ((PermissionService) getContext())));
+        installAnalytics, getContext().getPackageManager(), getContext()),
+        AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
+        new PermissionManager(), ((PermissionService) getContext())));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -119,6 +87,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesList(List<App> list) {
+    list.add(new UpdatesHeader(getResources().getString(R.string.apps_title_updates_header)));
     adapter.addApps(list);
   }
 
@@ -129,6 +98,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showDownloadsList(List<App> list) {
     if (list != null && !list.isEmpty()) {
+      list.add(new Header(getResources().getString(R.string.apps_title_downloads_header)));
       adapter.addApps(list);
     }
   }
@@ -195,7 +165,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   private void setInstalledAppsHeader(List<App> installedApps) {
     installedApps.add(0,
-        new Header(getResources().getString(R.string.apps_short_installed_apps_header)));
+        new Header(getResources().getString(R.string.apps_title_installed_apps_header)));
   }
 
   @Override public void onDestroy() {

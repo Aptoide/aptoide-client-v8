@@ -212,7 +212,6 @@ public class AppsPresenter implements Presenter {
   }
 
   private void getUpdatesList() {
-
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)

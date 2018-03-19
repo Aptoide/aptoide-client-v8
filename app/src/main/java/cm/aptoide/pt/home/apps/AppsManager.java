@@ -62,7 +62,6 @@ public class AppsManager {
 
   public Observable<List<App>> getDownloadApps() {
     return installManager.getInstallations()
-        .distinctUntilChanged()
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.empty();

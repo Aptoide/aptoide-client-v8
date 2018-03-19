@@ -63,6 +63,14 @@ public class DownloadApp implements App {
     return packageName;
   }
 
+  @Override public boolean equals(Object obj) {
+    if (!(obj instanceof DownloadApp)) {
+      return false;
+    }
+    DownloadApp other = ((DownloadApp) obj);
+    return md5.equals(other.getMd5());
+  }
+
   public enum Status {
     ACTIVE, STANDBY, COMPLETED, ERROR;
   }

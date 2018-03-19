@@ -114,7 +114,17 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   }
 
   public void addApps(List<App> list) {
-    listOfApps.addAll(list);
-    notifyDataSetChanged();
+    for (int i = 0; i < list.size(); i++) {
+      if (listOfApps.contains(list.get(i))) {
+        //update
+        int itemIndex = listOfApps.indexOf(list.get(i));
+        listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
+        notifyItemChanged(itemIndex);
+      } else {
+        //add new element
+        listOfApps.add(list.get(i));
+        notifyItemInserted(listOfApps.size() - 1);
+      }
+    }
   }
 }
