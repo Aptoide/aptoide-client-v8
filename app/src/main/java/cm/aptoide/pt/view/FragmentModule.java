@@ -23,7 +23,6 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -123,6 +122,6 @@ import rx.schedulers.Schedulers;
       BottomNavigationMapper bottomNavigationMapper) {
     return new MyStoresPresenter((MyStoresView) fragment,
         (AptoideBottomNavigator) fragment.getActivity(), AndroidSchedulers.mainThread(),
-        bottomNavigationMapper, BottomNavigationItem.STORES);
+        bottomNavigationMapper);
   }
 }

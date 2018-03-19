@@ -2,7 +2,6 @@ package cm.aptoide.pt.navigation;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.BottomNavigationActivity;
-import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
@@ -38,7 +37,7 @@ public class MyStoresPresenterTest {
     navigationEvent = PublishSubject.create();
     bottomNavigationMapper = new BottomNavigationMapper();
     presenter = new MyStoresPresenter(view, bottomNavigationActivity, Schedulers.immediate(),
-        bottomNavigationMapper, BottomNavigationItem.STORES);
+        bottomNavigationMapper);
 
     when(view.getLifecycle()).thenReturn(lifecycle);
     when(bottomNavigationActivity.navigationEvent()).thenReturn(navigationEvent);
