@@ -40,6 +40,8 @@ class ActiveAppDownloadViewHolder extends AppsViewHolder {
     progressBar.setProgress(((DownloadApp) app).getProgress());
     downloadProgress.setText(String.format("%d%%", ((DownloadApp) app).getProgress()));
 
+    progressBar.setIndeterminate(((DownloadApp) app).isIndeterminate());
+
     pauseButton.setOnClickListener(
         pause -> pauseDownload.onNext(new AppClick(app, AppClick.ClickType.PAUSE_DOWNLOAD)));
   }
