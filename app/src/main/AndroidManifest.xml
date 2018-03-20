@@ -259,7 +259,6 @@
 
         <data
             android:host="*.aptoide.com"
-            android:pathPrefix="/store/"
             android:scheme="http"/>
       </intent-filter>
 
@@ -272,7 +271,6 @@
 
         <data
             android:host="*.aptoide.com"
-            android:pathPrefix="/store/"
             android:scheme="https"/>
       </intent-filter>
 
