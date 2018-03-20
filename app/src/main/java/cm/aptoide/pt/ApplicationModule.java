@@ -79,6 +79,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -88,6 +89,11 @@ import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
+import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.BundleDataSource;
+import cm.aptoide.pt.home.BundlesRepository;
+import cm.aptoide.pt.home.BundlesResponseMapper;
+import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -874,13 +880,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      Database database,
-      AdsRepository adsRepository) {
+      Database database, AdsRepository adsRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
-        AccessorFactory.getAccessorFor(database, Store.class)),
-        StoreUtils.getSubscribedStoresIds(
-            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), adsRepository);
+        AccessorFactory.getAccessorFor(database, Store.class)), StoreUtils.getSubscribedStoresIds(
+        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), adsRepository);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1060,5 +1064,42 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppCenter providesAppCenter(AppCenterRepository appCenterRepository) {
     return new AppCenter(appCenterRepository);
+  }
+
+  @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
+      BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager) {
+    return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
+        converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
+            Store.class)).fromUrl(""),
+        ((AptoideApplication) getApplicationContext()).getIdsRepository()
+            .getUniqueIdentifier(),
+        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
+        ((AptoideApplication) getApplicationContext()).getQManager()
+            .getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+        getApplicationContext().getResources(),
+        (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE),
+        (ConnectivityManager) getApplicationContext().getSystemService(
+            Context.CONNECTIVITY_SERVICE),
+        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider());
+  }
+
+  @Singleton @Provides BundlesRepository providesBundleRepository(
+      @Named("remote") BundleDataSource remoteBundleDataSource) {
+    return new BundlesRepository(remoteBundleDataSource, new ArrayList<>(), 0);
+  }
+
+  @Singleton @Provides AdMapper providesAdMapper() {
+    return new AdMapper();
+  }
+
+  @Singleton @Provides BundlesResponseMapper providesBundlesMapper() {
+    return new BundlesResponseMapper();
   }
 }

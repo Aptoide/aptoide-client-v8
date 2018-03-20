@@ -69,7 +69,6 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
 
-
   private static final int VISIBLE_THRESHOLD = 5;
   private static final long ANIMATION_DURATION = 125L;
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
@@ -107,7 +106,6 @@ public class SearchResultFragment extends BackButtonFragment
   private String currentQuery;
   private PublishSubject<Void> searchSetupPublishSubject;
   private boolean focusInSearchBar;
-
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -160,7 +158,6 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList = (RecyclerView) view.findViewById(R.id.suggestions_list);
 
     trendingResultList = (RecyclerView) view.findViewById(R.id.trending_list);
-
 
     followedStoresResultList =
         (RecyclerView) view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
@@ -634,7 +631,6 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setLayoutManager(new LinearLayoutManager(getContext()));
     suggestionsResultList.setAdapter(searchSuggestionsAdapter);
     trendingResultList.setAdapter(searchTrendingAdapter);
-
 
     if (viewModel != null && viewModel.hasData()) {
       restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(

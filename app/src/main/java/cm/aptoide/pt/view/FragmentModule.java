@@ -23,8 +23,14 @@ import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationMapper;
+import cm.aptoide.pt.home.BundlesRepository;
+import cm.aptoide.pt.home.Home;
+import cm.aptoide.pt.home.HomeNavigator;
+import cm.aptoide.pt.home.HomePresenter;
+import cm.aptoide.pt.home.HomeView;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
@@ -136,6 +142,21 @@ import rx.schedulers.Schedulers;
             .getApplicationContext()).getDefaultThemeName(), trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
+  }
+
+  @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
+      HomeNavigator homeNavigator, AdMapper adMapper) {
+    return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
+        CrashReport.getInstance(), homeNavigator, adMapper);
+  }
+
+  @FragmentScope @Provides HomeNavigator providesHomeNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity());
+  }
+
+  @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository) {
+    return new Home(bundlesRepository);
   }
 
   @FragmentScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {

@@ -131,7 +131,7 @@ public class CardViewHolderFactory {
             dateCalculator, spannableFactory, cardTouchEventPublishSubject);
       case PROGRESS:
         return new ProgressViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_progress_item, parent, false));
+            .inflate(R.layout.progress_item, parent, false));
       case TIMELINE_STATS:
         return new TimelineStatsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_stats_item, parent, false), spannableFactory,

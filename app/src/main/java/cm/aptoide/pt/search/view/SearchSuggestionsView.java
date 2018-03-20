@@ -20,6 +20,4 @@ public interface SearchSuggestionsView extends View {
   void setSuggestionsList(List<String> suggestions);
 
   void setTrendingCursor(List<String> trendingCursor);
-
-
 }
