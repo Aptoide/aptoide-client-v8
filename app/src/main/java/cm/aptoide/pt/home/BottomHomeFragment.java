@@ -163,8 +163,8 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public Observable<Object> reachesBottom() {
     return RxRecyclerView.scrollEvents(list)
-        .distinctUntilChanged()
         .filter(scroll -> isEndReached())
+        .distinctUntilChanged()
         .cast(Object.class);
   }
 
