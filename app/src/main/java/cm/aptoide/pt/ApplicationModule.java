@@ -185,7 +185,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1085,8 +1084,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesRepository providesBundleRepository(
       @Named("remote") BundleDataSource remoteBundleDataSource) {
-    return new BundlesRepository(remoteBundleDataSource,
-        new AbstractMap.SimpleEntry<>(0, new ArrayList<>()));
+    return new BundlesRepository(remoteBundleDataSource, new ArrayList<>(), 0);
   }
 
   @Singleton @Provides AdMapper providesAdMapper() {
