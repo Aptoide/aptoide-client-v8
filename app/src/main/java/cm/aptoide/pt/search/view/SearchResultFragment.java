@@ -708,7 +708,6 @@ public class SearchResultFragment extends BackButtonFragment
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState,
       @Nullable Parcelable followedStoresSearchListState) {
 
-    searchView.setQuery(viewModel.getCurrentQuery(), false);
     final List<SearchAppResult> allStoresSearchAppResults =
         viewModel.getAllStoresSearchAppResults();
     if (allStoresSearchAppResults.size() > 0) {
