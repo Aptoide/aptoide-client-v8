@@ -32,14 +32,20 @@
       />
 
   <android.support.v7.widget.RecyclerView
-      android:id="@+id/trending_suggestions"
-      android:layout_width="300dp"
-      android:layout_height="320dp"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginTop="60dp"
+      android:id="@+id/suggestions_list"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="?attr/actionBarSize"
       android:visibility="gone"
       />
 
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/trending_list"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:visibility="gone"
+      />
 
   <RelativeLayout
       android:id="@+id/fragment_search_result_layout"
@@ -47,7 +53,7 @@
       android:layout_height="match_parent"
       android:layout_marginTop="?attr/actionBarSize"
       android:visibility="gone"
-      tools:visibility="visible"
+      tools:visibility="gone"
       >
 
 
@@ -115,7 +121,9 @@
         android:theme="?attr/toolbarTheme"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        />
+        >
+
+    </android.support.v7.widget.Toolbar>
 
   </android.support.design.widget.AppBarLayout>
 </FrameLayout>

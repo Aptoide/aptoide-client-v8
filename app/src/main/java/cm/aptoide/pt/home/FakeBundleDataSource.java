@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import rx.Single;
 
@@ -70,6 +71,7 @@ public class FakeBundleDataSource implements BundleDataSource {
     appBundles.add(appBundle);
     appBundles.add(appBundle1);
     appBundles.add(appBundle2);
+    appBundles.add(new AdBundle("Highlighted", Collections.emptyList(), null, ""));
     return appBundles;
   }
 }

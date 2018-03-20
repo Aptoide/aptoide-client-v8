@@ -2,10 +2,9 @@ package cm.aptoide.pt.navigation;
 
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
-import cm.aptoide.pt.home.AdBundle;
 import cm.aptoide.pt.home.AdMapper;
-import cm.aptoide.pt.home.AppBundle;
 import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeBundlesModel;
@@ -15,9 +14,6 @@ import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.Application;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -51,7 +47,7 @@ public class HomePresenterTest {
   private PublishSubject<Object> bottomReachedEvent;
   private PublishSubject<Void> pullToRefreshEvent;
   private PublishSubject<Void> retryClickedEvent;
-  private AppBundle localTopAppsBundle;
+  private HomeBundle localTopAppsBundle;
   private Application aptoide;
 
   @Before public void setupHomePresenter() {
@@ -67,16 +63,13 @@ public class HomePresenterTest {
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper());
-    List<Application> applications = getAppsList();
-    List<GetAdsResponse.Ad> ads = getAdsList();
-    List<HomeBundle> bundles = new ArrayList<>();
-    bundles.add(
-        new AppBundle("Editors choice", applications, AppBundle.BundleType.EDITORS, null, ""));
-    localTopAppsBundle =
-        new AppBundle("Local Top Apps", applications, AppBundle.BundleType.APPS, null, "");
-    bundles.add(localTopAppsBundle);
-    bundles.add(new AdBundle("Highlighted", ads, null, ""));
-    bundlesModel = new HomeBundlesModel(bundles, false, 0);
+    aptoide =
+        new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
+            300);
+    FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
+    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
+    localTopAppsBundle = bundlesModel.getList()
+        .get(0);
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
@@ -204,20 +197,5 @@ public class HomePresenterTest {
     verify(view).hideShowMore();
     //Then it should hide the loading indicator
     verify(view).hideLoading();
-  }
-
-  private List<Application> getAppsList() {
-    List<Application> tmp = new ArrayList<>();
-    aptoide =
-        new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
-            300);
-    tmp.add(aptoide);
-    tmp.add(new Application("Facebook", "http://via.placeholder.com/350x150", (float) 4.2, 1000,
-        "katana.facebook.com", 30));
-    return tmp;
-  }
-
-  private List<GetAdsResponse.Ad> getAdsList() {
-    return Collections.emptyList();
   }
 }

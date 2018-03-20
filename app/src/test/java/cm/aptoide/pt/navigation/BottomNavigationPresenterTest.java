@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Mockito.verify;
@@ -56,7 +57,7 @@ public class BottomNavigationPresenterTest {
     presenter = new MainPresenter(mainView, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, autoUpdate, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
-        deepLinkManager, true, bottomNavigationActivity);
+        deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate());
 
     //simulate view lifecycle event
     when(mainView.getLifecycle()).thenReturn(lifecycleEvent);
