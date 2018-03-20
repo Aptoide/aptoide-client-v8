@@ -9,7 +9,8 @@ import static cm.aptoide.pt.home.apps.AppsAdapter.ACTIVE_DOWNLOAD;
 import static cm.aptoide.pt.home.apps.AppsAdapter.COMPLETED_DOWNLOAD;
 import static cm.aptoide.pt.home.apps.AppsAdapter.ERROR_DOWNLOAD;
 import static cm.aptoide.pt.home.apps.AppsAdapter.ERROR_UPDATE;
-import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER;
+import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER_DOWNLOADS;
+import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER_INSTALLED;
 import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER_UPDATES;
 import static cm.aptoide.pt.home.apps.AppsAdapter.INSTALLED;
 import static cm.aptoide.pt.home.apps.AppsAdapter.STANDBY_DOWNLOAD;
@@ -32,7 +33,8 @@ public class AppCardViewHolderFactory {
   public AppsViewHolder createViewHolder(int viewType, ViewGroup parent) {
     AppsViewHolder appViewHolder;
     switch (viewType) {
-      case HEADER:
+      case HEADER_DOWNLOADS:
+      case HEADER_INSTALLED:
         appViewHolder = new HeaderViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_header_item, parent, false));
         break;

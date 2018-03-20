@@ -17,6 +17,6 @@ public class Header implements App {
   }
 
   @Override public Type getType() {
-    return Type.HEADER;
+    return Type.HEADER_INSTALLED;
   }
 }

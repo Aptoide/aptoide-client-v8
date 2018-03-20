@@ -10,17 +10,18 @@ import java.util.List;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
-  protected static final int HEADER = 0;
-  protected static final int HEADER_UPDATES = 1;
-  protected static final int ACTIVE_DOWNLOAD = 2;
-  protected static final int STANDBY_DOWNLOAD = 3;
-  protected static final int COMPLETED_DOWNLOAD = 4;
-  protected static final int ERROR_DOWNLOAD = 5;
-  protected static final int INSTALLED = 6;
-  protected static final int UPDATE = 7;
-  protected static final int UPDATING = 8;
-  protected static final int STANDBY_UPDATE = 9;
-  protected static final int ERROR_UPDATE = 10;
+  protected static final int HEADER_DOWNLOADS = 0;
+  protected static final int HEADER_INSTALLED = 1;
+  protected static final int HEADER_UPDATES = 2;
+  protected static final int ACTIVE_DOWNLOAD = 3;
+  protected static final int STANDBY_DOWNLOAD = 4;
+  protected static final int COMPLETED_DOWNLOAD = 5;
+  protected static final int ERROR_DOWNLOAD = 6;
+  protected static final int INSTALLED = 7;
+  protected static final int UPDATE = 8;
+  protected static final int UPDATING = 9;
+  protected static final int STANDBY_UPDATE = 10;
+  protected static final int ERROR_UPDATE = 11;
 
   private List<App> listOfApps;
   private AppCardViewHolderFactory appCardViewHolderFactory;
@@ -42,8 +43,11 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     App item = listOfApps.get(position);
     int type;
     switch (item.getType()) {
-      case HEADER:
-        type = HEADER;
+      case HEADER_DOWNLOADS:
+        type = HEADER_DOWNLOADS;
+        break;
+      case HEADER_INSTALLED:
+        type = HEADER_INSTALLED;
         break;
       case HEADER_UPDATES:
         type = HEADER_UPDATES;
@@ -113,7 +117,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return type;
   }
 
-  public void addApps(List<App> list) {
+  private void addApps(List<App> list) {
     for (int i = 0; i < list.size(); i++) {
       if (listOfApps.contains(list.get(i))) {
         //update
@@ -126,5 +130,17 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         notifyItemInserted(listOfApps.size() - 1);
       }
     }
+  }
+
+  public void addUpdateAppsList(List<App> updatesList) {
+
+  }
+
+  public void addInstalledAppsList(List<App> installedApps) {
+
+  }
+
+  public void addDownloadAppsList(List<App> downloadsList) {
+
   }
 }

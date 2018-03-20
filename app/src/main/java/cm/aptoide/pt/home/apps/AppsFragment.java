@@ -55,6 +55,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
 
     List<App> appsList = new ArrayList<>();
+    appsList.add(new UpdatesHeader(getResources().getString(R.string.apps_title_updates_header)));
+    appsList.add(
+        new DownloadsHeader(getResources().getString(R.string.apps_title_downloads_header)));
+    appsList.add(
+        new InstalledHeader(getResources().getString(R.string.apps_title_installed_apps_header)));
+
     adapter = new AppsAdapter(appsList, new AppCardViewHolderFactory(appItemClicks));
 
     setupRecyclerView();
@@ -88,18 +94,16 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showUpdatesList(List<App> list) {
     list.add(new UpdatesHeader(getResources().getString(R.string.apps_title_updates_header)));
-    adapter.addApps(list);
+    adapter.addUpdateAppsList(list);
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
-    setInstalledAppsHeader(installedApps);
-    adapter.addApps(installedApps);
+    adapter.addInstalledAppsList(installedApps);
   }
 
   @Override public void showDownloadsList(List<App> list) {
     if (list != null && !list.isEmpty()) {
-      list.add(new Header(getResources().getString(R.string.apps_title_downloads_header)));
-      adapter.addApps(list);
+      adapter.addDownloadAppsList(list);
     }
   }
 
@@ -161,11 +165,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     return appItemClicks.filter(
         appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_UPDATE)
         .map(appClick -> appClick.getApp());
-  }
-
-  private void setInstalledAppsHeader(List<App> installedApps) {
-    installedApps.add(0,
-        new Header(getResources().getString(R.string.apps_title_installed_apps_header)));
   }
 
   @Override public void onDestroy() {
