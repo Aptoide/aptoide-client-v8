@@ -265,8 +265,6 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
-    followedStoresResultList.setVisibility(View.VISIBLE);
-    allStoresResultList.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
@@ -463,8 +461,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public boolean hasResults() {
-    return (allStoresResultList.getVisibility() == View.VISIBLE
-        || followedStoresResultList.getVisibility() == View.VISIBLE)
+    return (allStoresResultAdapter.getItemCount() != 0
+        || followedStoresResultAdapter.getItemCount() != 0)
         && !searchMenuItem.isActionViewExpanded();
   }
 
@@ -474,13 +472,11 @@ public class SearchResultFragment extends BackButtonFragment
         .isEmpty()) {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
-      allStoresResultList.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
-      allStoresResultList.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
     }
@@ -712,6 +708,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState,
       @Nullable Parcelable followedStoresSearchListState) {
 
+    searchView.setQuery(viewModel.getCurrentQuery(), false);
     final List<SearchAppResult> allStoresSearchAppResults =
         viewModel.getAllStoresSearchAppResults();
     if (allStoresSearchAppResults.size() > 0) {
