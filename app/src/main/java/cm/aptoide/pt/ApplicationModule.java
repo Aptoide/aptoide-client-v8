@@ -67,6 +67,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -123,6 +124,7 @@ import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
+import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
@@ -133,6 +135,7 @@ import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
@@ -865,6 +868,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {
     return RxJavaCallAdapterFactory.create();
+  }
+
+  @Singleton @Provides SearchManager providesSearchManager(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      Database database,
+      AdsRepository adsRepository) {
+    return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
+        okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
+        AccessorFactory.getAccessorFor(database, Store.class)),
+        StoreUtils.getSubscribedStoresIds(
+            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), adsRepository);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(

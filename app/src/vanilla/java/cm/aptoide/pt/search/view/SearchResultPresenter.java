@@ -1,59 +1,74 @@
 package cm.aptoide.pt.search.view;
 
 import android.support.annotation.NonNull;
-import android.util.Pair;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.BottomNavigationItem;
+import cm.aptoide.pt.home.BottomNavigationMapper;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
-import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResult;
-import com.jakewharton.rxrelay.PublishRelay;
+import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import rx.Completable;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
+import rx.exceptions.OnErrorNotImplementedException;
 
 @SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
     implements Presenter {
-
+  private static final String TAG = SearchResultPresenter.class.getName();
   private final SearchResultView view;
   private final SearchAnalytics analytics;
   private final SearchNavigator navigator;
   private final CrashReport crashReport;
   private final Scheduler viewScheduler;
   private final SearchManager searchManager;
-  private final PublishRelay<SearchAdResult> onAdClickRelay;
-  private final PublishRelay<SearchAppResult> onItemViewClickRelay;
-  private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay;
   private final String defaultStoreName;
   private final String defaultThemeName;
   private final boolean isMultiStoreSearch;
+  private final TrendingManager trendingManager;
+  private final SearchSuggestionManager suggestionManager;
+  private final AptoideBottomNavigator bottomNavigator;
+  private final BottomNavigationMapper bottomNavigationMapper;
 
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
-      SearchManager searchManager, PublishRelay<SearchAdResult> onAdClickRelay,
-      PublishRelay<SearchAppResult> onItemViewClickRelay,
-      PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClickRelay,
-      boolean isMultiStoreSearch, String defaultStoreName, String defaultThemeName) {
+      SearchManager searchManager, boolean isMultiStoreSearch, String defaultStoreName,
+      String defaultThemeName, TrendingManager trendingManager,
+      SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
     this.crashReport = crashReport;
     this.viewScheduler = viewScheduler;
     this.searchManager = searchManager;
-    this.onAdClickRelay = onAdClickRelay;
-    this.onItemViewClickRelay = onItemViewClickRelay;
-    this.onOpenPopupMenuClickRelay = onOpenPopupMenuClickRelay;
     this.isMultiStoreSearch = isMultiStoreSearch;
     this.defaultStoreName = defaultStoreName;
     this.defaultThemeName = defaultThemeName;
+    this.trendingManager = trendingManager;
+    this.suggestionManager = suggestionManager;
+    this.bottomNavigator = bottomNavigator;
+    this.bottomNavigationMapper = bottomNavigationMapper;
   }
 
   @Override public void present() {
+    handleToolbarClick();
+    handleSearchMenuItemClick();
+    focusInSearchBar();
+    handleSuggestionClicked();
     stopLoadingMoreOnDestroy();
     doFirstSearch();
     firstAdsDataLoad();
@@ -65,6 +80,24 @@ import rx.Single;
     handleClickOnNoResultsImage();
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
+    handleQueryTextSubmitted();
+    handleQueryTextChanged();
+    handleQueryTextCleaned();
+    handleClickOnBottomNavWithResults();
+    handleClickOnBottomNavWithoutResults();
+    listenToSearchQueries();
+  }
+
+  private void focusInSearchBar() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.searchSetup())
+        .filter(__ -> view.shouldFocusInSearchBar())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.focusInSearchBar())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
   }
 
   private void stopLoadingMoreOnDestroy() {
@@ -170,7 +203,7 @@ import rx.Single;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> onItemViewClickRelay)
+        .flatMap(__ -> view.onViewItemClicked())
         .doOnNext(data -> openAppView(data))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -181,7 +214,7 @@ import rx.Single;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> onAdClickRelay)
+        .flatMap(__ -> view.onAdClicked())
         .doOnNext(data -> {
           analytics.searchAppClick(view.getViewModel()
               .getCurrentQuery(), data.getPackageName());
@@ -196,7 +229,7 @@ import rx.Single;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> onOpenPopupMenuClickRelay)
+        .flatMap(__ -> view.onOpenPopUpMenuClicked())
         .flatMap(pair -> {
           final SearchAppResult data = pair.first;
           final boolean hasVersions = data.hasOtherVersions();
@@ -363,5 +396,157 @@ import rx.Single;
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
+  }
+
+  private void handleQueryTextCleaned() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> getDebouncedQueryChanges().filter(
+            data -> !data.hasQuery() && view.isSearchViewExpanded())
+            .flatMapSingle(data -> trendingManager.getTrendingListSuggestions()
+                .observeOn(viewScheduler)
+                .doOnSuccess(trendingList -> {
+                  view.setTrendingList(trendingList);
+                  view.toggleTrendingView();
+                }))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleQueryTextChanged() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.searchSetup())
+        .flatMap(__ -> getDebouncedQueryChanges())
+        .filter(data -> data.hasQuery() && !data.isSubmitted())
+        .map(data -> data.getQuery()
+            .toString())
+        .flatMapSingle(query -> suggestionManager.getSuggestionsForApp(query)
+            .onErrorResumeNext(err -> {
+              if (err instanceof TimeoutException) {
+                Logger.i(TAG, "Timeout reached while waiting for application suggestions");
+              }
+              return Single.error(err);
+            })
+            .observeOn(viewScheduler)
+            .doOnSuccess(queryResults -> {
+              view.setSuggestionsList(queryResults);
+              view.toggleSuggestionsView();
+            }))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleQueryTextSubmitted() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.searchSetup())
+        .flatMap(__ -> getDebouncedQueryChanges())
+        .filter(data -> data.hasQuery() && data.isSubmitted())
+        .observeOn(viewScheduler)
+        .doOnNext(data -> {
+          view.collapseSearchBar(false);
+          view.hideSuggestionsViews();
+          navigator.navigate(data.getQuery());
+          if (data.isSuggestion()) {
+            analytics.searchFromSuggestion(data.getQuery(), data.getPosition());
+          } else {
+            analytics.search(data.getQuery());
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleSuggestionClicked() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.listenToSuggestionClick())
+        .filter(data -> data.hasQuery() && data.isSubmitted())
+        .observeOn(viewScheduler)
+        .doOnNext(data -> {
+          view.collapseSearchBar(false);
+          view.hideSuggestionsViews();
+          navigator.navigate(data.getQuery());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleToolbarClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.toolbarClick())
+        .doOnNext(__ -> analytics.searchStart(SearchSource.SEARCH_TOOLBAR, true))
+        .doOnNext(__ -> view.focusInSearchBar())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleSearchMenuItemClick() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.RESUME)
+        .flatMap(__ -> view.searchMenuItemClick())
+        .doOnNext(__ -> analytics.searchStart(SearchSource.SEARCH_ICON, true))
+        .doOnNext(__ -> view.focusInSearchBar())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickOnBottomNavWithResults() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> bottomNavigator.navigationEvent()
+            .filter(navigationEvent -> bottomNavigationMapper.mapItemClicked(navigationEvent)
+                .equals(BottomNavigationItem.SEARCH))
+            .observeOn(viewScheduler)
+            .filter(navigated -> view.hasResults())
+            .doOnNext(__ -> view.scrollToTop())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleClickOnBottomNavWithoutResults() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> bottomNavigator.navigationEvent()
+            .filter(navigationEvent -> bottomNavigationMapper.mapItemClicked(navigationEvent)
+                .equals(BottomNavigationItem.SEARCH))
+            .observeOn(viewScheduler)
+            .filter(navigated -> !view.hasResults())
+            .doOnNext(__ -> view.focusInSearchBar())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void listenToSearchQueries() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.RESUME)
+        .flatMap(__ -> view.searchSetup())
+        .flatMap(__ -> view.queryChanged())
+        .doOnNext(event -> view.emmitQueryEvent(event))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  @NonNull private Observable<SearchQueryEvent> getDebouncedQueryChanges() {
+    return view.onQueryTextChanged()
+        .debounce(250, TimeUnit.MILLISECONDS);
   }
 }
