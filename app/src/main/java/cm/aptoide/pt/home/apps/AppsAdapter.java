@@ -117,7 +117,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return type;
   }
 
-  private void addApps(List<App> list) {
+  private void addApps(List<App> list, int offset) {
     for (int i = 0; i < list.size(); i++) {
       if (listOfApps.contains(list.get(i))) {
         //update
@@ -126,21 +126,40 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         notifyItemChanged(itemIndex);
       } else {
         //add new element
-        listOfApps.add(list.get(i));
-        notifyItemInserted(listOfApps.size() - 1);
+        listOfApps.add(offset + 1, list.get(i));
+        notifyItemInserted(offset + 1);
       }
     }
   }
 
   public void addUpdateAppsList(List<App> updatesList) {
-
+    int updatesHeaderPosition = findHeaderPosition(App.Type.HEADER_UPDATES);
+    addApps(updatesList, updatesHeaderPosition);
   }
 
   public void addInstalledAppsList(List<App> installedApps) {
-
+    int headerPosition = findHeaderPosition(App.Type.HEADER_INSTALLED);
+    addApps(installedApps, headerPosition);
   }
 
   public void addDownloadAppsList(List<App> downloadsList) {
+    int headerPosition = findHeaderPosition(App.Type.HEADER_DOWNLOADS);
+    addApps(downloadsList, headerPosition);
+  }
 
+  private int findHeaderPosition(App.Type headerToFind) {
+    if (headerToFind != App.Type.HEADER_DOWNLOADS
+        && headerToFind != App.Type.HEADER_INSTALLED
+        && headerToFind != App.Type.HEADER_UPDATES) {
+      throw new IllegalArgumentException("The argument must be a type of header ");
+    }
+
+    for (int i = 0; i < listOfApps.size(); i++) {
+      if (listOfApps.get(i)
+          .getType() == headerToFind) {
+        return i;
+      }
+    }
+    return 0;
   }
 }
