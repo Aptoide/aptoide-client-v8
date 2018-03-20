@@ -39,7 +39,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private static final int VISIBLE_THRESHOLD = 2;
   @Inject Home home;
   @Inject HomePresenter presenter;
-  private RecyclerView list;
+  private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeClick> uiEventsListener;
   private PublishSubject<Application> appClickedEvents;
@@ -71,9 +71,9 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   }
 
   @Override public void onDestroyView() {
-    listState = list.getLayoutManager()
+    listState = bundlesList.getLayoutManager()
         .onSaveInstanceState();
-    list = null;
+    bundlesList = null;
     adapter = null;
     layoutManager = null;
     swipeRefreshLayout = null;
@@ -91,8 +91,8 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    if (list != null) {
-      outState.putParcelable(LIST_STATE_KEY, list.getLayoutManager()
+    if (bundlesList != null) {
+      outState.putParcelable(LIST_STATE_KEY, bundlesList.getLayoutManager()
           .onSaveInstanceState());
     }
   }
@@ -106,7 +106,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
         savedInstanceState.putParcelable(LIST_STATE_KEY, null);
       }
     }
-    list = (RecyclerView) view.findViewById(R.id.bundles_list);
+    bundlesList = (RecyclerView) view.findViewById(R.id.bundles_list);
     genericErrorView = view.findViewById(R.id.generic_error);
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
     retryButton = genericErrorView.findViewById(R.id.retry);
@@ -118,29 +118,29 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
         oneDecimalFormatter, appClickedEvents, adClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
-    list.setLayoutManager(layoutManager);
-    list.setAdapter(adapter);
+    bundlesList.setLayoutManager(layoutManager);
+    bundlesList.setAdapter(adapter);
     attachPresenter(presenter);
   }
 
   @Override public void showHomeBundles(List<HomeBundle> bundles) {
     adapter.update(bundles);
     if (listState != null) {
-      list.getLayoutManager()
+      bundlesList.getLayoutManager()
           .onRestoreInstanceState(listState);
       listState = null;
     }
   }
 
   @Override public void showLoading() {
-    list.setVisibility(View.GONE);
+    bundlesList.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
-    list.setVisibility(View.VISIBLE);
+    bundlesList.setVisibility(View.VISIBLE);
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
@@ -150,7 +150,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   @Override public void showGenericError() {
     this.genericErrorView.setVisibility(View.VISIBLE);
     this.noNetworkErrorView.setVisibility(View.GONE);
-    this.list.setVisibility(View.GONE);
+    this.bundlesList.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
@@ -162,7 +162,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   }
 
   @Override public Observable<Object> reachesBottom() {
-    return RxRecyclerView.scrollEvents(list)
+    return RxRecyclerView.scrollEvents(bundlesList)
         .filter(scroll -> isEndReached())
         .distinctUntilChanged()
         .cast(Object.class);
@@ -195,12 +195,12 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   }
 
   @UiThread @Override public void scrollToTop() {
-    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
     if (lastVisibleItemPosition > 10) {
-      list.scrollToPosition(10);
+      bundlesList.scrollToPosition(10);
     }
-    list.smoothScrollToPosition(0);
+    bundlesList.smoothScrollToPosition(0);
   }
 
   @Override public void hideRefresh() {
@@ -210,7 +210,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   @Override public void showNetworkError() {
     this.noNetworkErrorView.setVisibility(View.VISIBLE);
     this.genericErrorView.setVisibility(View.GONE);
-    this.list.setVisibility(View.GONE);
+    this.bundlesList.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
