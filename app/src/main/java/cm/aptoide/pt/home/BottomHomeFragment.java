@@ -36,7 +36,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
-  private final int visibleThreshold = 2;
+  private static final int VISIBLE_THRESHOLD = 2;
   @Inject Home home;
   @Inject HomePresenter presenter;
   private RecyclerView list;
@@ -223,6 +223,6 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
-        <= visibleThreshold;
+        <= VISIBLE_THRESHOLD;
   }
 }
