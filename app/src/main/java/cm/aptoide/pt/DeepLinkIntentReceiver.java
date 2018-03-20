@@ -166,7 +166,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
             }
           }
         }
-
+        deepLinkAnalytics.sendWebsite();
         finish();
       } else if (u.getHost()
           .contains("imgs.aptoide.com")) {
@@ -190,6 +190,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
           /**
            * store
            */
+          deepLinkAnalytics.websiteFromStoreWebPage();
           Logger.v(TAG, "aptoide web site: store: " + u.getLastPathSegment());
           ArrayList<String> list = new ArrayList<String>();
           list.add(u.getLastPathSegment());
@@ -202,12 +203,14 @@ public class DeepLinkIntentReceiver extends ActivityView {
             /**
              * App view
              */
+            deepLinkAnalytics.websiteFromAppViewWebPage();
             Logger.v(TAG, "aptoide web site: app view: " + appName[0]);
             startAppView(appName[0]);
           } else if (appName != null && appName.length == 3) {
             /**
              * Home
              */
+            deepLinkAnalytics.websiteFromHomeWebPage();
             Logger.v(TAG, "aptoide web site: home: " + appName[0]);
             startFromHome();
           }
@@ -302,6 +305,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
             i.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
             startActivity(i);
           } else {
+            deepLinkAnalytics.sendWebsite();
             finish();
           }
         }
@@ -318,6 +322,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
         if (id != null) {
           openUserScreen(Long.valueOf(id));
         }
+        deepLinkAnalytics.sendWebsite();
         finish();
         return;
       } else if (uri.startsWith("aptoide://")) {
@@ -325,6 +330,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
         if ("getUserTimeline".equals(parse.getQueryParameter("name"))) {
           String cardId = parse.getQueryParameter("cardId");
           startFromAppsTimeline(cardId);
+          deepLinkAnalytics.sendWebsite();
           finish();
           return;
         }
@@ -335,24 +341,29 @@ public class DeepLinkIntentReceiver extends ActivityView {
             query = parse.getQueryParameter("keyword");
           }
           startFromSearch(query);
+          deepLinkAnalytics.sendWebsite();
           finish();
           return;
         }
         if ("myStore".equals(parse.getQueryParameter("name"))) {
           startFromMyStore();
+          deepLinkAnalytics.sendWebsite();
           finish();
           return;
         }
         if ("pickApp".equals(parse.getQueryParameter("name"))) {
           startFromPickApp();
+          deepLinkAnalytics.sendWebsite();
           finish();
           return;
         }
         if (sURIMatcher.match(parse) == DEEPLINK_ID) {
           startGenericDeepLink(parse);
         }
+        deepLinkAnalytics.sendWebsite();
         finish();
       } else {
+        deepLinkAnalytics.sendWebsite();
         finish();
       }
     }
