@@ -93,7 +93,6 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
-import cm.aptoide.pt.home.InMemoryBundleCache;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
@@ -1065,10 +1064,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppCenter providesAppCenter(AppCenterRepository appCenterRepository) {
     return new AppCenter(appCenterRepository);
-  }
-
-  @Singleton @Provides InMemoryBundleCache providesLocalBundleDataSource() {
-    return new InMemoryBundleCache(null, false);
   }
 
   @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(
