@@ -25,7 +25,7 @@ public class BundlesRepository {
     if (cachedBundles.isEmpty()) {
       return loadNextHomeBundles(limit);
     } else {
-      return Single.just(new HomeBundlesModel(cachedBundles, false, offset));
+      return Single.just(new HomeBundlesModel(new ArrayList<>(cachedBundles), false, offset));
     }
   }
 
