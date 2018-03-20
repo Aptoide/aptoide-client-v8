@@ -23,12 +23,12 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<Application> appClickedEvents;
-  private final PublishSubject<HomeClick> uiEventsListener;
+  private final PublishSubject<HomeMoreClick> uiEventsListener;
   private List<HomeBundle> bundles;
   private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
-      PublishSubject<HomeClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
+      PublishSubject<HomeMoreClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
       PublishSubject<Application> appClickedEvents,
       PublishSubject<GetAdsResponse.Ad> adPublishSubject) {
     this.bundles = bundles;

@@ -22,9 +22,9 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
   private final EditorsAppsAdapter appsAdapter;
-  private final PublishSubject<HomeClick> uiEventsListener;
+  private final PublishSubject<HomeMoreClick> uiEventsListener;
 
-  public EditorsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
+  public EditorsBundleViewHolder(View view, PublishSubject<HomeMoreClick> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
@@ -53,7 +53,6 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(homeBundle.getTitle());
     appsAdapter.update((List<Application>) homeBundle.getContent());
 
-    moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeClick(homeBundle, HomeClick.Type.MORE)));
+    moreButton.setOnClickListener(v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle)));
   }
 }

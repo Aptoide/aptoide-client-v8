@@ -23,7 +23,7 @@ public interface HomeView extends View {
 
   Observable<Object> reachesBottom();
 
-  Observable<HomeClick> moreClicked();
+  Observable<HomeMoreClick> moreClicked();
 
   Observable<Application> appClicked();
 

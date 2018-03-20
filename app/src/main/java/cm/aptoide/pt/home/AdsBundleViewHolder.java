@@ -22,9 +22,9 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
   private final AdsInBundleAdapter appsInBundleAdapter;
-  private final PublishSubject<HomeClick> uiEventsListener;
+  private final PublishSubject<HomeMoreClick> uiEventsListener;
 
-  public AdsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
+  public AdsBundleViewHolder(View view, PublishSubject<HomeMoreClick> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<GetAdsResponse.Ad> adClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
@@ -54,7 +54,6 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(homeBundle.getTitle());
     appsInBundleAdapter.update((List<GetAdsResponse.Ad>) homeBundle.getContent());
 
-    moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeClick(homeBundle, HomeClick.Type.MORE)));
+    moreButton.setOnClickListener(v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle)));
   }
 }

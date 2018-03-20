@@ -41,7 +41,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
-  private PublishSubject<HomeClick> uiEventsListener;
+  private PublishSubject<HomeMoreClick> uiEventsListener;
   private PublishSubject<Application> appClickedEvents;
   private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
   private LinearLayoutManager layoutManager;
@@ -168,7 +168,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
         .cast(Object.class);
   }
 
-  @Override public Observable<HomeClick> moreClicked() {
+  @Override public Observable<HomeMoreClick> moreClicked() {
     return uiEventsListener;
   }
 

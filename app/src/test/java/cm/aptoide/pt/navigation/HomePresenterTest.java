@@ -8,7 +8,7 @@ import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeBundlesModel;
-import cm.aptoide.pt.home.HomeClick;
+import cm.aptoide.pt.home.HomeMoreClick;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
@@ -43,7 +43,7 @@ public class HomePresenterTest {
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Application> appClickEvent;
   private PublishSubject<GetAdsResponse.Ad> adClickEvent;
-  private PublishSubject<HomeClick> moreClickEvent;
+  private PublishSubject<HomeMoreClick> moreClickEvent;
   private PublishSubject<Object> bottomReachedEvent;
   private PublishSubject<Void> pullToRefreshEvent;
   private PublishSubject<Void> retryClickedEvent;
@@ -128,7 +128,7 @@ public class HomePresenterTest {
   }
 
   @Test public void moreClicked_NavigateToActionView() {
-    HomeClick click = new HomeClick(localTopAppsBundle, HomeClick.Type.MORE);
+    HomeMoreClick click = new HomeMoreClick(localTopAppsBundle);
     //Given an initialised HomePresenter
     presenter.present();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
