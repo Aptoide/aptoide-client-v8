@@ -21,10 +21,8 @@ import rx.subjects.PublishSubject;
 class EditorsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
-  private final RecyclerView graphicsList;
   private final EditorsAppsAdapter appsAdapter;
   private final PublishSubject<HomeClick> uiEventsListener;
-  private final LinearLayoutManager layoutManager;
 
   public EditorsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
@@ -32,9 +30,9 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
-    graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
+    RecyclerView graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
     appsAdapter = new EditorsAppsAdapter(new ArrayList<>(), oneDecimalFormatter, appClickedEvents);
-    layoutManager =
+    LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     graphicsList.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,

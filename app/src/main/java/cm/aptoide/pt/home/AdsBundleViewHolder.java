@@ -21,10 +21,8 @@ import rx.subjects.PublishSubject;
 class AdsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
-  private final RecyclerView appsList;
   private final AdsInBundleAdapter appsInBundleAdapter;
   private final PublishSubject<HomeClick> uiEventsListener;
-  private final LinearLayoutManager layoutManager;
 
   public AdsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<GetAdsResponse.Ad> adClickedEvents) {
@@ -32,10 +30,10 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
-    appsList = (RecyclerView) view.findViewById(R.id.apps_list);
+    RecyclerView appsList = (RecyclerView) view.findViewById(R.id.apps_list);
     appsInBundleAdapter =
         new AdsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, adClickedEvents);
-    layoutManager =
+    LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     appsList.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
