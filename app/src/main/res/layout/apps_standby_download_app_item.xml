@@ -116,7 +116,7 @@
           android:contentDescription="@null"
           android:padding="12dp"
           android:scaleType="center"
-          android:src="@drawable/ic_pause_action_black"
+          android:src="@drawable/ic_clear_action_black"
           />
 
       <ImageView
