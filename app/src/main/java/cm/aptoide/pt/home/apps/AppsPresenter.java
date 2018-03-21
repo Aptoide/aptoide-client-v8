@@ -146,7 +146,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.installApp())
-        .doOnNext(app -> appsManager.installApp(app))
+        .flatMapCompletable(app -> appsManager.installApp(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -170,7 +170,7 @@ public class AppsPresenter implements Presenter {
         .flatMap(created -> view.resumeDownload())
         .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
             .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
-            .doOnNext(__ -> appsManager.resumeDownload(app)))
+            .flatMapCompletable(__ -> appsManager.resumeDownload(app)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));

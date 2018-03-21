@@ -13,6 +13,7 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -71,23 +72,24 @@ public class AppsManager {
         });
   }
 
-  public Observable<Install> retryDownload(App app) {
+  public Completable retryDownload(App app) {
     return resumeDownload(app);
   }
 
-  public Observable<Install> installApp(App app) {
+  public Completable installApp(App app) {
     return installManager.getInstall(((DownloadApp) app).getMd5(),
         ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode())
         .first()
-        .flatMap(installationProgress -> {
+        .flatMapCompletable(installationProgress -> {
           if (installationProgress.getState() == Install.InstallationStatus.INSTALLED) {
             AptoideUtils.SystemU.openApp(((DownloadApp) app).getPackageName(), packageManager,
                 context);
-            return Observable.empty();
+            return Completable.never();
           } else {
             return resumeDownload(app);
           }
-        });
+        })
+        .toCompletable();
   }
 
   public void cancelDownload(App app) {
@@ -95,14 +97,16 @@ public class AppsManager {
         ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode());
   }
 
-  public Observable<Install> resumeDownload(App app) {
+  public Completable resumeDownload(App app) {
     return installManager.getDownload(((DownloadApp) app).getMd5())
-        .toObservable()
-        .flatMap(download -> installManager.install(download)
-            .toObservable()
-            .flatMap(downloadProgress -> installManager.getInstall(((DownloadApp) app).getMd5(),
-                ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode()))
-            .doOnSubscribe(() -> setupEvents(download)));
+        .flatMapCompletable(download -> installManager.install(download)
+            .doOnSubscribe(subscription -> setupEvents(download)));
+    /**
+     .toObservable()
+     .flatMap(downloadProgress -> installManager.getInstall(((DownloadApp) app).getMd5(),
+     ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode()))
+     .doOnSubscribe(() -> setupEvents(download)));
+     **/
   }
 
   private void setupEvents(Download download) {
