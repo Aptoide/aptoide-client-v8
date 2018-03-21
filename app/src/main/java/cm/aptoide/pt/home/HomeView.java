@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.app.Application;
@@ -42,4 +43,8 @@ public interface HomeView extends View {
   void showNetworkError();
 
   Observable<Void> retryClicked();
+
+  void setUserImage(Account account);
+
+  Observable<Void> imageClick();
 }

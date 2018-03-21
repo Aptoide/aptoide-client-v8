@@ -20,14 +20,33 @@
       app:layout_collapseMode="pin"
       app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
       >
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:src="@drawable/logo"
         />
 
+      <ImageView
+          android:id="@+id/user_actionbar_icon"
+          android:layout_width="25dp"
+          android:layout_height="25dp"
+          android:layout_alignParentRight="true"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:layout_marginRight="18dp"
+          android:foregroundGravity="right"
+          android:src="@drawable/ic_account_circle"
+          android:visibility="invisible"
+          />
+
+    </RelativeLayout>
   </android.support.v7.widget.Toolbar>
 
 </android.support.design.widget.AppBarLayout>

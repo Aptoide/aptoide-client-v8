@@ -10,9 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
@@ -53,6 +56,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private Parcelable listState;
   private View noNetworkRetryButton;
   private View retryButton;
+  private ImageView userAvatar;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -106,6 +110,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
         savedInstanceState.putParcelable(LIST_STATE_KEY, null);
       }
     }
+    userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
     bundlesList = (RecyclerView) view.findViewById(R.id.bundles_list);
     genericErrorView = view.findViewById(R.id.generic_error);
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
@@ -219,6 +224,21 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public Observable<Void> retryClicked() {
     return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
+  }
+
+  @Override public void setUserImage(Account account) {
+    if (account != null && account.isLoggedIn()) {
+      String userAvatarUrl = account.getAvatar();
+      userAvatarUrl = userAvatarUrl.replace("50", "150");
+      ImageLoader.with(getContext())
+          .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
+              R.drawable.my_account_placeholder);
+    }
+    userAvatar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<Void> imageClick() {
+    return RxView.clicks(userAvatar);
   }
 
   private boolean isEndReached() {
