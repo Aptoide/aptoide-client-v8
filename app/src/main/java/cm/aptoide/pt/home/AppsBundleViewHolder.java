@@ -8,7 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.app.Application;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import rx.subjects.PublishSubject;
 
 /**
@@ -18,19 +21,19 @@ import rx.subjects.PublishSubject;
 class AppsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
-  private final RecyclerView appsList;
   private final AppsInBundleAdapter appsInBundleAdapter;
-  private final PublishSubject<AppBundle> uiEventsListener;
-  private final LinearLayoutManager layoutManager;
+  private final PublishSubject<HomeMoreClick> uiEventsListener;
 
-  public AppsBundleViewHolder(View view, PublishSubject<AppBundle> uiEventsListener) {
+  public AppsBundleViewHolder(View view, PublishSubject<HomeMoreClick> uiEventsListener,
+      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
-    appsList = (RecyclerView) view.findViewById(R.id.apps_list);
-    appsInBundleAdapter = new AppsInBundleAdapter(new ArrayList<>());
-    layoutManager =
+    RecyclerView appsList = (RecyclerView) view.findViewById(R.id.apps_list);
+    appsInBundleAdapter =
+        new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, appClickedEvents);
+    LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     appsList.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
@@ -43,10 +46,14 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
     appsList.setAdapter(appsInBundleAdapter);
   }
 
-  @Override public void setBundle(AppBundle appBundle, int position) {
-    bundleTitle.setText(appBundle.getTitle());
-    appsInBundleAdapter.add(appBundle.getApps());
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
+    if (!(homeBundle instanceof AppBundle)) {
+      throw new IllegalStateException(this.getClass()
+          .getName() + " is getting non AppBundle instance!");
+    }
+    bundleTitle.setText(homeBundle.getTitle());
+    appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
 
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(appBundle));
+    moreButton.setOnClickListener(v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle)));
   }
 }

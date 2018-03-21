@@ -46,6 +46,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
@@ -524,6 +525,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("user/follower/set/") Observable<BaseV7Response> unfollowUser(
         @Body UnfollowUserRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("getStoreWidgets/") Observable<GetStoreWidgets> getHomeBundles(
+        @Body GetHomeBundlesRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }

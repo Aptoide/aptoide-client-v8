@@ -28,22 +28,11 @@
   <style name="Widget.Aptoide.Card.Title.Large.Black">
     <item name="android:textColor">@android:color/black</item>
   </style>
-  <![CDATA[
 
-
-
-
-
-
-
-
-
-
-
-
-  >
-
-  ]]>
+  <style name="Ripple">
+    <!-- Customize your theme here. -->
+    <item name="colorControlHighlight">@color/aptoide_orange</item>
+  </style>
 
   <style name="customRowStyleHomeLayout">
     <item name="android:clickable">true</item>

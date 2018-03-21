@@ -1,35 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:orientation="vertical"
     >
 
-  <TextView
-      android:id="@+id/bundle_title"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      tools:text="migos bundle"
-      />
-
-  <Button
-      android:id="@+id/bundle_more"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:text="@string/button_header_more"
-      style="@style/Widget.Aptoide.Button.Borderless.Colored"
-      />
+  <include layout="@layout/home_bundle_header"/>
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/apps_list"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="50dp"
       android:orientation="horizontal"
       />
 
-
-</RelativeLayout>
+</LinearLayout>

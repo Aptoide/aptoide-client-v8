@@ -20,7 +20,6 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.LoginPreferences;
-import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -53,7 +52,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
@@ -114,7 +112,6 @@ import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.crashlytics.android.Crashlytics;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -129,7 +126,6 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import rx.Completable;
 import rx.Observable;
@@ -156,17 +152,11 @@ public abstract class AptoideApplication extends Application {
   @Inject AdultContent adultContent;
   @Inject IdsRepository idsRepository;
   @Inject @Named("default") OkHttpClient defaultClient;
-  @Inject @Named("web-socket") OkHttpClient webSocketClient;
-  @Inject @Named("user-agent") Interceptor userAgentInterceptor;
-  @Inject @Named("default") ObjectMapper nonNullObjectMapper;
-  @Inject RequestBodyFactory requestBodyFactory;
   @Inject RootAvailabilityManager rootAvailabilityManager;
-  @Inject StoreManager storeManager;
   @Inject AuthenticationPersistence authenticationPersistence;
   @Inject AccountAnalytics accountAnalytics;
   @Inject Crashlytics crashlytics;
   @Inject @Named("default") SharedPreferences defaultSharedPreferences;
-  @Inject @Named("secureShared") SharedPreferences secureSharedPreferences;
   @Inject SyncScheduler alarmSyncScheduler;
   @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
@@ -181,7 +171,6 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
   @Inject NavigationTracker navigationTracker;
-  @Inject PageViewsAnalytics pageViewsAnalytics;
   @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
@@ -881,10 +870,6 @@ public abstract class AptoideApplication extends Application {
     return timelineRepositoryFactory.create(action);
   }
 
-  public PageViewsAnalytics getPageViewsAnalytics() {
-    return pageViewsAnalytics;
-  }
-
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     if (fragmentResultRelay == null) {
       fragmentResultRelay = BehaviorRelay.create();
@@ -960,14 +945,6 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationAnalytics getNotificationAnalytics() {
     return notificationAnalytics;
-  }
-
-  public ObjectMapper getNonNullObjectMapper() {
-    return nonNullObjectMapper;
-  }
-
-  public OkHttpClient getDefaultWebSocketClient() {
-    return webSocketClient;
   }
 
   public IdsRepository getIdsRepository() {

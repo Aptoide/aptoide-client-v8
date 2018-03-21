@@ -26,6 +26,7 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
@@ -64,6 +65,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
+import rx.android.schedulers.AndroidSchedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -154,7 +156,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
-        fragmentNavigator, deepLinkManager, defaultStoreName, defaultTheme, firstCreated);
+        fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
+        AndroidSchedulers.mainThread());
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(

@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -134,7 +135,8 @@ public class GetStoreWidgetsRequest
             clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
-            connectivityManager, versionCodeProvider, bypassServerCache))
+            connectivityManager, versionCodeProvider, bypassServerCache,
+            Type.ADS.getPerLineCount(resources, windowManager)))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())

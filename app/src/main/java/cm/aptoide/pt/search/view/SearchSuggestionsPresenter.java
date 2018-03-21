@@ -64,7 +64,7 @@ import rx.Single;
             __ -> getDebouncedQueryChanges().filter(data -> data.hasQuery() && data.isSubmitted()))
         .observeOn(viewScheduler)
         .doOnNext(data -> {
-          view.collapseSearchBar();
+          view.collapseSearchBar(true);
           navigator.navigate(data.getQuery());
           if (data.isSuggestion()) {
             searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition());
@@ -86,9 +86,9 @@ import rx.Single;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges().filter(data -> !data.hasQuery())
-            .flatMapSingle(data -> trendingManager.getTrendingSuggestions()
+            .flatMapSingle(data -> trendingManager.getTrendingCursorSuggestions()
                 .observeOn(viewScheduler)
-                .doOnSuccess(trendingList -> view.setTrending(trendingList)))
+                .doOnSuccess(trendingList -> view.setTrendingCursor(trendingList)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -130,10 +130,10 @@ import rx.Single;
               || data.getQuery()
               .length() == 0) && (currentQuery == null || currentQuery.isEmpty());
         })
-        .flatMapSingle(__ -> trendingManager.getTrendingSuggestions())
+        .flatMapSingle(__ -> trendingManager.getTrendingCursorSuggestions())
         .filter(data -> data != null && data.size() > 0)
         .observeOn(viewScheduler)
-        .doOnNext(data -> view.setTrending(data))
+        .doOnNext(data -> view.setTrendingCursor(data))
         .doOnNext(__ -> view.focusInSearchBar())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

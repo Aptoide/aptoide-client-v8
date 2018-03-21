@@ -12,9 +12,8 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -23,12 +22,10 @@ import com.jakewharton.rxrelay.PublishRelay;
 import javax.inject.Inject;
 import rx.Observable;
 
-public class MainActivity extends TabNavigatorActivity
+public class MainActivity extends BottomNavigationActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
-  private static final int LAYOUT = R.layout.frame_layout;
   @Inject Presenter presenter;
-  @Inject AnalyticsManager analytics;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -37,8 +34,6 @@ public class MainActivity extends TabNavigatorActivity
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
-
-    setContentView(LAYOUT);
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);

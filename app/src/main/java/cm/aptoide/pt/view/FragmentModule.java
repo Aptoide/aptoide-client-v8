@@ -3,6 +3,7 @@ package cm.aptoide.pt.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -22,11 +23,28 @@ import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.BottomNavigationMapper;
+import cm.aptoide.pt.home.BundlesRepository;
+import cm.aptoide.pt.home.Home;
+import cm.aptoide.pt.home.HomeNavigator;
+import cm.aptoide.pt.home.HomePresenter;
+import cm.aptoide.pt.home.HomeView;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.search.SearchManager;
+import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
+import cm.aptoide.pt.search.suggestions.TrendingManager;
+import cm.aptoide.pt.search.view.SearchResultPresenter;
+import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.store.view.my.MyStoresPresenter;
+import cm.aptoide.pt.store.view.my.MyStoresView;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
@@ -50,7 +68,7 @@ import rx.schedulers.Schedulers;
     this.packageName = packageName;
   }
 
-  @Provides @FragmentScope LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(
+  @FragmentScope @Provides LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
     return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment,
@@ -61,7 +79,7 @@ import rx.schedulers.Schedulers;
         accountAnalytics);
   }
 
-  @Provides @FragmentScope ImagePickerPresenter provideImagePickerPresenter(
+  @FragmentScope @Provides ImagePickerPresenter provideImagePickerPresenter(
       AccountPermissionProvider accountPermissionProvider, PhotoFileGenerator photoFileGenerator,
       ImageValidator imageValidator, UriToPathResolver uriToPathResolver,
       ImagePickerNavigator imagePickerNavigator) {
@@ -110,9 +128,45 @@ import rx.schedulers.Schedulers;
     return new ManageStoreErrorMapper(fragment.getResources(), new ErrorsMapper());
   }
 
-  /**
-   @FragmentScope @Provides AppsPresenter provideAppsPresenter() {
-   return new AppsPresenter( (AppsFragment) fragment, );
-   }
-   **/
+  @FragmentScope @Provides SearchResultPresenter provideSearchResultPresenter(
+      SearchAnalytics searchAnalytics, SearchNavigator searchNavigator, SearchManager searchManager,
+      TrendingManager trendingManager, SearchSuggestionManager searchSuggestionManager,
+      BottomNavigationMapper bottomNavigationMapper) {
+    return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
+        CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager,
+        ((AptoideApplication) fragment.getContext()
+            .getApplicationContext()).hasMultiStoreSearch(),
+        ((AptoideApplication) fragment.getContext()
+            .getApplicationContext()).getDefaultStoreName(),
+        ((AptoideApplication) fragment.getContext()
+            .getApplicationContext()).getDefaultThemeName(), trendingManager,
+        searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
+        bottomNavigationMapper);
+  }
+
+  @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
+      HomeNavigator homeNavigator, AdMapper adMapper) {
+    return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
+        CrashReport.getInstance(), homeNavigator, adMapper);
+  }
+
+  @FragmentScope @Provides HomeNavigator providesHomeNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity());
+  }
+
+  @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository) {
+    return new Home(bundlesRepository);
+  }
+
+  @FragmentScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
+    return new BottomNavigationMapper();
+  }
+
+  @FragmentScope @Provides MyStoresPresenter provideMyStorePresenter(
+      BottomNavigationMapper bottomNavigationMapper) {
+    return new MyStoresPresenter((MyStoresView) fragment,
+        (AptoideBottomNavigator) fragment.getActivity(), AndroidSchedulers.mainThread(),
+        bottomNavigationMapper);
+  }
 }
