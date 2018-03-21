@@ -77,7 +77,6 @@ public class NewAccountFragment extends BackButtonFragment
   private View notificationHistory;
   private View settings;
 
-  //TODO: Add string resources to the settings XML and fragment (ALL STRINGS HARDCODED!!!)
 
   public static Fragment newInstance() {
     return new NewAccountFragment();
@@ -120,7 +119,7 @@ public class NewAccountFragment extends BackButtonFragment
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.new_account_layout, container, false);
+    return inflater.inflate(R.layout.fragment_my_account, container, false);
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
@@ -128,9 +127,7 @@ public class NewAccountFragment extends BackButtonFragment
   }
 
   @Override public void showAccount(Account account) {
-    if (account.getNickname()
-        .isEmpty() || account.getNickname()
-        .equals(null) || account == null) {
+    if (TextUtils.isEmpty(account.getNickname())) {
       showLoginAccountDisplayable();
     } else if (account.getStore()
         .getName()

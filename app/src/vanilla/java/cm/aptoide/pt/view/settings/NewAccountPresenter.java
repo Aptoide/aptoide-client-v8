@@ -17,7 +17,7 @@ import rx.Scheduler;
 
 public class NewAccountPresenter implements Presenter {
 
-  public static final int EDIT_STORE_REQUEST_CODE = 1230;
+  private static final int EDIT_STORE_REQUEST_CODE = 1230;
 
   private final NewAccountView view;
   private final AptoideAccountManager accountManager;
@@ -38,7 +38,6 @@ public class NewAccountPresenter implements Presenter {
   }
 
   @Override public void present() {
-    //Account handlers
     populateAccountViews();
     checkIfStoreIsInvalidAndRefresh();
     handleLoginClick();
@@ -83,9 +82,9 @@ public class NewAccountPresenter implements Presenter {
         .flatMap(__ -> view.userClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(
-            account -> newAccountNavigator.navigateToUserView(account.getId(), account.getStore()
-            .getTheme()))
+        .doOnNext(account -> newAccountNavigator.navigateToUserView(account.getId(),
+            account.getStore()
+                .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
@@ -95,7 +94,8 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.editUserProfileClick()
-            .flatMap(click -> accountManager.accountStatus())
+            .flatMap(click -> accountManager.accountStatus()
+                .first())
             .doOnNext(account -> newAccountNavigator.navigateToEditProfileView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
@@ -124,6 +124,7 @@ public class NewAccountPresenter implements Presenter {
             .map(getStore -> getStore.getNodes()
                 .getMeta()
                 .getData()))
+        .observeOn(scheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(
             store -> newAccountNavigator.navigateToEditStoreView(store, EDIT_STORE_REQUEST_CODE),
@@ -170,10 +171,10 @@ public class NewAccountPresenter implements Presenter {
         .flatMap(lifecycleEvent -> accountManager.accountStatus())
         .filter(account -> !storeExistsInAccount(account))
         .flatMap(account -> view.getStore()
-            .observeOn(scheduler)
             .map(store -> store.getNodes()
                 .getMeta()
                 .getData())
+            .observeOn(scheduler)
             .doOnNext(store -> view.refreshUI(store)))
         .flatMap(__ -> accountManager.updateAccount()
             .toObservable())

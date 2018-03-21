@@ -241,10 +241,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void setupClickHandlers() {
-    //set AppStore name
-    //findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
-    //    AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
-    //        getContext().getResources(), marketName));
 
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
