@@ -7,6 +7,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.search.view.SearchResultFragment;
@@ -61,7 +62,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
             MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
         break;
       case R.id.action_apps:
-        selectedFragment = new BottomHomeFragment();
+        selectedFragment = new AppsFragment();
         break;
     }
     if (selectedFragment != null) {
