@@ -55,9 +55,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
 
     List<App> appsList = new ArrayList<>();
-    appsList.add(new UpdatesHeader(getResources().getString(R.string.apps_title_updates_header)));
     appsList.add(
         new DownloadsHeader(getResources().getString(R.string.apps_title_downloads_header)));
+    appsList.add(new UpdatesHeader(getResources().getString(R.string.apps_title_updates_header)));
     appsList.add(
         new InstalledHeader(getResources().getString(R.string.apps_title_installed_apps_header)));
 
