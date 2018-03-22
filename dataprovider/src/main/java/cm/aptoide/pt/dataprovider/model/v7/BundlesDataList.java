@@ -15,8 +15,6 @@ public class BundlesDataList {
   private int offset;
   private Integer limit;
   private int next;
-  private int hidden;
-  private boolean loaded;
   private List<Bundle> list;
 
   public BundlesDataList() {
@@ -60,22 +58,6 @@ public class BundlesDataList {
 
   public void setNext(int next) {
     this.next = next;
-  }
-
-  public int getHidden() {
-    return this.hidden;
-  }
-
-  public void setHidden(int hidden) {
-    this.hidden = hidden;
-  }
-
-  public boolean isLoaded() {
-    return this.loaded;
-  }
-
-  public void setLoaded(boolean loaded) {
-    this.loaded = loaded;
   }
 
   public List<Bundle> getList() {
