@@ -216,6 +216,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(__ -> appsManager.getUpdatesList())
+        .observeOn(viewScheduler)
         .doOnNext(list -> view.showUpdatesList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

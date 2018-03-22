@@ -24,22 +24,18 @@ public class AppsManager {
 
   private UpdatesManager updatesManager;
   private InstallManager installManager;
-  private InstallToDownloadAppMapper installToDownloadAppMapper;
-  private InstalledToInstalledAppMapper installedToInstalledAppMapper;
+  private AppMapper appMapper;
   private DownloadAnalytics downloadAnalytics;
   private InstallAnalytics installAnalytics;
   private PackageManager packageManager;
   private Context context;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
-      InstallToDownloadAppMapper downloadsManager,
-      InstalledToInstalledAppMapper installedToInstalledAppMapper,
-      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
+      AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
       PackageManager packageManager, Context context) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
-    this.installToDownloadAppMapper = downloadsManager;
-    this.installedToInstalledAppMapper = installedToInstalledAppMapper;
+    this.appMapper = appMapper;
     this.downloadAnalytics = downloadAnalytics;
     this.installAnalytics = installAnalytics;
     this.packageManager = packageManager;
@@ -47,10 +43,8 @@ public class AppsManager {
   }
 
   public Observable<List<App>> getUpdatesList() {
-    //return updatesManager.getUpdatesList()
-    //  .map(updatesList ->);
-    // TODO: 3/7/18 map Displayables to updateApp
-    return null;
+    return updatesManager.getUpdatesList()
+        .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
   public Observable<List<App>> getInstalledApps() {
@@ -58,7 +52,7 @@ public class AppsManager {
         .flatMapIterable(list -> list)
         .flatMap(item -> updatesManager.filterUpdates(item))
         .toList()
-        .map(installeds -> installedToInstalledAppMapper.getInstalledApps(installeds));
+        .map(installeds -> appMapper.getInstalledApps(installeds));
   }
 
   public Observable<List<App>> getDownloadApps() {
@@ -68,7 +62,7 @@ public class AppsManager {
             return Observable.empty();
           }
           return Observable.just(installations)
-              .map(installedApps -> installToDownloadAppMapper.getDownloadApps(installedApps));
+              .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
   }
 

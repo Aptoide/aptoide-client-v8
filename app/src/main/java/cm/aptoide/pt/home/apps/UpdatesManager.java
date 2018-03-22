@@ -1,7 +1,10 @@
 package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.updates.UpdateRepository;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
 
 /**
@@ -31,5 +34,10 @@ public class UpdatesManager {
           }
           return Observable.just(item);
         });
+  }
+
+  public Observable<List<Update>> getUpdatesList() {
+    return updateRepository.getAll(false)
+        .sample(750, TimeUnit.MILLISECONDS);
   }
 }

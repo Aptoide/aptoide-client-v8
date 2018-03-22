@@ -69,10 +69,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         RepositoryFactory.getUpdateRepository(getContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(),
-        new InstallToDownloadAppMapper(), new InstalledToInstalledAppMapper(), downloadAnalytics,
-        installAnalytics, getContext().getPackageManager(), getContext()),
-        AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
-        new PermissionManager(), ((PermissionService) getContext())));
+        new AppMapper(), downloadAnalytics, installAnalytics, getContext().getPackageManager(),
+        getContext()), AndroidSchedulers.mainThread(), Schedulers.computation(),
+        CrashReport.getInstance(), new PermissionManager(), ((PermissionService) getContext())));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -93,7 +92,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesList(List<App> list) {
-    list.add(new UpdatesHeader(getResources().getString(R.string.apps_title_updates_header)));
     adapter.addUpdateAppsList(list);
   }
 
