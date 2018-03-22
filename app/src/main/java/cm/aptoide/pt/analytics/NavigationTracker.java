@@ -1,6 +1,5 @@
 package cm.aptoide.pt.analytics;
 
-import android.support.annotation.Nullable;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.logger.Logger;
 import java.util.Collections;
@@ -32,9 +31,9 @@ public class NavigationTracker {
     }
   }
 
-  public @Nullable ScreenTagHistory getCurrentScreen() {
+  public ScreenTagHistory getCurrentScreen() {
     if (historyList.isEmpty()) {
-      return null;
+      return new ScreenTagHistory();
     }
     return historyList.get(historyList.size() - 1);
   }
@@ -43,9 +42,9 @@ public class NavigationTracker {
     return historyList;
   }
 
-  public @Nullable ScreenTagHistory getPreviousScreen() {
+  public ScreenTagHistory getPreviousScreen() {
     if (historyList.size() < 2) {
-      return null;
+      return new ScreenTagHistory();
     }
     return historyList.get(historyList.size() - 2);
   }
@@ -53,20 +52,19 @@ public class NavigationTracker {
   public String getPreviousViewName() {
     if (historyList.size() < 2) {
       return "";
+    } else {
+      return historyList.get(historyList.size() - 2)
+          .getFragment();
     }
-    return historyList.get(historyList.size() - 2)
-        .getFragment();
   }
 
   public String getCurrentViewName() {
     if (historyList.isEmpty()) {
       return "";
-    } else if (historyList.get(historyList.size() - 1)
-        .getFragment() == null) {
-      return "";
+    } else {
+      return historyList.get(historyList.size() - 1)
+          .getFragment();
     }
-    return historyList.get(historyList.size() - 1)
-        .getFragment();
   }
 
   private boolean filter(ScreenTagHistory screenTagHistory) {

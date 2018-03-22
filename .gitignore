@@ -48,3 +48,5 @@ projectFilesBackup/.idea/
 instapk.log*
 .hgignore
 instapk.properties
+
+.gitmodules
