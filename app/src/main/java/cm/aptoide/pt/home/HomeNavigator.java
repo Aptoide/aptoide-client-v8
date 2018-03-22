@@ -1,11 +1,11 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.view.settings.SettingsFragment;
 import rx.Observable;
 
 /**
@@ -15,11 +15,14 @@ import rx.Observable;
 public class HomeNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final AptoideBottomNavigator aptoideBottomNavigator;
+  private final BottomNavigationMapper bottomNavigationMapper;
 
   public HomeNavigator(FragmentNavigator fragmentNavigator,
-      AptoideBottomNavigator aptoideBottomNavigator) {
+      AptoideBottomNavigator aptoideBottomNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
     this.fragmentNavigator = fragmentNavigator;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
+    this.bottomNavigationMapper = bottomNavigationMapper;
   }
 
   public void navigateToAppView(long appId, String packageName) {
@@ -41,6 +44,11 @@ public class HomeNavigator {
 
   public Observable<Integer> bottomNavigation() {
     return aptoideBottomNavigator.navigationEvent()
-        .filter(menuPosition -> menuPosition.equals(R.id.action_home));
+        .filter(menuPosition -> bottomNavigationMapper.mapItemClicked(menuPosition)
+            .equals(BottomNavigationItem.HOME));
+  }
+
+  public void navigateToSettings() {
+    fragmentNavigator.navigateTo(SettingsFragment.newInstance(), true);
   }
 }

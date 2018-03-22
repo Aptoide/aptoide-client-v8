@@ -1,5 +1,7 @@
 package cm.aptoide.pt.navigation;
 
+import cm.aptoide.accountmanager.Account;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.home.AdMapper;
@@ -37,6 +39,8 @@ public class HomePresenterTest {
   @Mock private CrashReport crashReporter;
   @Mock private HomeNavigator homeNavigator;
   @Mock private Home home;
+  @Mock private AptoideAccountManager aptoideAccountManager;
+  @Mock private Account account;
 
   private HomePresenter presenter;
   private HomeBundlesModel bundlesModel;
@@ -49,6 +53,8 @@ public class HomePresenterTest {
   private PublishSubject<Void> retryClickedEvent;
   private HomeBundle localTopAppsBundle;
   private Application aptoide;
+  private PublishSubject<Void> imageClickEvent;
+  private PublishSubject<Account> accountStatusEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -60,9 +66,11 @@ public class HomePresenterTest {
     bottomReachedEvent = PublishSubject.create();
     pullToRefreshEvent = PublishSubject.create();
     retryClickedEvent = PublishSubject.create();
+    imageClickEvent = PublishSubject.create();
+    accountStatusEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
-        new AdMapper());
+        new AdMapper(), aptoideAccountManager);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300);
@@ -78,6 +86,8 @@ public class HomePresenterTest {
     when(view.reachesBottom()).thenReturn(bottomReachedEvent);
     when(view.refreshes()).thenReturn(pullToRefreshEvent);
     when(view.retryClicked()).thenReturn(retryClickedEvent);
+    when(view.imageClick()).thenReturn(imageClickEvent);
+    when(aptoideAccountManager.accountStatus()).thenReturn(accountStatusEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -197,5 +207,41 @@ public class HomePresenterTest {
     verify(view).hideShowMore();
     //Then it should hide the loading indicator
     verify(view).hideLoading();
+  }
+
+  @Test public void loadLoggedInUserImageUserTest() {
+    //When the user is logged in
+    when(account.getAvatar()).thenReturn("A string");
+    when(account.isLoggedIn()).thenReturn(true);
+    //Given an initialised HomePresenter
+    presenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And AccountManager returns an account
+    accountStatusEvent.onNext(account);
+    //Then it should show the image
+    verify(view).setUserImage("A string");
+    verify(view).showAvatar();
+  }
+
+  @Test public void loadNotLoggedInUserImageUserTest() {
+    //When the user is logged in
+    when(account.isLoggedIn()).thenReturn(false);
+    //Given an initialised HomePresenter
+    presenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And AccountManager returns an account
+    accountStatusEvent.onNext(account);
+    //Then it should show the image
+    verify(view).showAvatar();
+  }
+
+  @Test public void handeUserImageClick() {
+    //Given an initialised HomePresenter
+    presenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an user clicks the profile image
+    imageClickEvent.onNext(null);
+    //Then it should navigate to the Settings Fragment
+    verify(homeNavigator).navigateToSettings();
   }
 }

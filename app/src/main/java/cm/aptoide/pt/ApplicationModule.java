@@ -45,6 +45,7 @@ import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.analytics.analytics.AnalyticsNormalizer;
 import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventService;
@@ -1016,7 +1017,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("facebookEvents") Collection<String> facebookEvents,
       @Named("fabricEvents") Collection<String> fabricEvents,
       @Named("flurryEvents") Collection<String> flurryEvents,
-      @Named("flurrySession") SessionLogger flurrySessionLogger) {
+      @Named("flurrySession") SessionLogger flurrySessionLogger,
+      @Named("normalizer") AnalyticsNormalizer analyticsNormalizer) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
@@ -1024,7 +1026,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .addLogger(flurryEventLogger, flurryEvents)
         .addSessionLogger(flurrySessionLogger)
         .setKnockLogger(knockEventLogger)
+        .setAnalyticsNormalizer(analyticsNormalizer)
         .build();
+  }
+
+  @Singleton @Provides @Named("normalizer") AnalyticsNormalizer providesAnalyticsNormalizer() {
+    return new AnalyticsNormalizer();
   }
 
   @Singleton @Provides AppShortcutsAnalytics providesAppShortcutsAnalytics(
@@ -1092,7 +1099,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesRepository providesBundleRepository(
       @Named("remote") BundleDataSource remoteBundleDataSource) {
-    return new BundlesRepository(remoteBundleDataSource, new ArrayList<>(), 0);
+    return new BundlesRepository(remoteBundleDataSource, new ArrayList<>(), 0, 5);
   }
 
   @Singleton @Provides AdMapper providesAdMapper() {

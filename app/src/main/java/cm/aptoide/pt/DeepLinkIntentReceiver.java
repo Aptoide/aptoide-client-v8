@@ -96,6 +96,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
     deepLinkAnalytics.website(uri);
     shortcutNavigation = false;
 
+    Logger.v(TAG, "uri: " + uri);
+
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
 
       ShortcutManager shortcutManager =
@@ -120,8 +122,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
         }
       }
     }
-
-    Logger.v(TAG, "uri: " + uri);
 
     Uri u = null;
     try {
@@ -166,7 +166,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
             }
           }
         }
-
+        deepLinkAnalytics.sendWebsite();
         finish();
       } else if (u.getHost()
           .contains("imgs.aptoide.com")) {
@@ -178,7 +178,11 @@ public class DeepLinkIntentReceiver extends ActivityView {
       } else if (u.getHost()
           .contains("aptoide.com")) {
         /**
-         * This could be a store or a app from the new web site
+         * Coming from our web site.
+         * This could be from and to:
+         * a store
+         * or a app view
+         * or home (tab/website)
          */
         if (u.getPath() != null && u.getPath()
             .contains("store")) {
@@ -186,7 +190,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
           /**
            * store
            */
-          Logger.v(TAG, "store: " + u.getLastPathSegment());
+          deepLinkAnalytics.websiteFromStoreWebPage();
+          Logger.v(TAG, "aptoide web site: store: " + u.getLastPathSegment());
           ArrayList<String> list = new ArrayList<String>();
           list.add(u.getLastPathSegment());
           startWithRepo(list);
@@ -198,153 +203,169 @@ public class DeepLinkIntentReceiver extends ActivityView {
             /**
              * App view
              */
-            Logger.v(TAG, "app: " + appName[0]);
+            deepLinkAnalytics.websiteFromAppViewWebPage();
+            Logger.v(TAG, "aptoide web site: app view: " + appName[0]);
             startAppView(appName[0]);
+          } else if (appName != null && appName.length == 3) {
+            /**
+             * Home
+             */
+            deepLinkAnalytics.websiteFromHomeWebPage();
+            Logger.v(TAG, "aptoide web site: home: " + appName[0]);
+            startFromHome();
           }
         }
       }
-    }
-    if (uri.startsWith("aptoiderepo")) {
+      if (uri.startsWith("aptoiderepo")) {
 
-      ArrayList<String> repo = new ArrayList<>();
-      repo.add(uri.substring(14));
-      startWithRepo(StoreUtils.split(repo));
-    } else if (uri.startsWith("aptoidexml")) {
+        ArrayList<String> repo = new ArrayList<>();
+        repo.add(uri.substring(14));
+        startWithRepo(StoreUtils.split(repo));
+      } else if (uri.startsWith("aptoidexml")) {
 
-      String repo = uri.substring(13);
-      parseXmlString(repo);
-      Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-      i.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
-      startActivity(i);
-    } else if (uri.startsWith("aptoidesearch://")) {
-      startFromPackageName(uri.split("aptoidesearch://")[1]);
-    } else if (uri.startsWith("aptoidevoicesearch://")) {
-      aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
-    } else if (u != null && "market".equalsIgnoreCase(u.getScheme())) {
+        String repo = uri.substring(13);
+        parseXmlString(repo);
+        Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
+        i.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
+        startActivity(i);
+      } else if (uri.startsWith("aptoidesearch://")) {
+        startFromPackageName(uri.split("aptoidesearch://")[1]);
+      } else if (uri.startsWith("aptoidevoicesearch://")) {
+        aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
+      } else if (u != null && "market".equalsIgnoreCase(u.getScheme())) {
       /*
        * market schema:
        * could come from a search or a to open an app
        */
-      String packageName = "";
-      if ("details".equalsIgnoreCase(u.getHost())) {
-        packageName = u.getQueryParameter("id");
-      } else if ("search".equalsIgnoreCase(u.getHost())) {
-        packageName = u.getQueryParameter("q");
-      } else {
-        //old code
-        String params = uri.split("&")[0];
-        String[] param = params.split("=");
-        packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
-        if (packageName.contains("pname:")) {
-          packageName = packageName.substring(6);
-        } else if (packageName.contains("pub:")) {
-          packageName = packageName.substring(4);
-        }
-      }
-      startFromPackageName(packageName);
-    } else if (uri.startsWith("http://market.android.com/details?id=")) {
-      String param = uri.split("=")[1];
-      startFromPackageName(param);
-    } else if (uri.startsWith("https://market.android.com/details?id=")) {
-      String param = uri.split("=")[1];
-      startFromPackageName(param);
-    } else if (uri.startsWith("https://play.google.com/store/apps/details?id=") || uri.startsWith(
-        "http://play.google.com/store/apps/details?id=")) {
-      String params = uri.split("&")[0];
-      String param = params.split("=")[1];
-      if (param.contains("pname:")) {
-        param = param.substring(6);
-      } else if (param.contains("pub:")) {
-        param = param.substring(4);
-      } else {
-        try {
-          param = Uri.parse(uri)
-              .getQueryParameter("id");
-        } catch (NullPointerException e) {
-          CrashReport.getInstance()
-              .log(e);
-        }
-      }
-      startFromPackageName(param);
-    } else if (uri.contains("aptword://")) {
-
-      // TODO: 12-08-2016 neuro aptword Seems discontinued???
-      String param = uri.substring("aptword://".length());
-
-      if (!TextUtils.isEmpty(param)) {
-
-        param = param.replaceAll("\\*", "_")
-            .replaceAll("\\+", "/");
-
-        String json = new String(Base64.decode(param.getBytes(), 0));
-
-        Logger.d("AptoideAptWord", json);
-
-        GetAdsResponse.Ad ad = null;
-        try {
-          ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
-        } catch (IOException e) {
-          CrashReport.getInstance()
-              .log(e);
-        }
-
-        if (ad != null) {
-          Intent i = new Intent(this, startClass);
-          i.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
-          startActivity(i);
+        String packageName = "";
+        if ("details".equalsIgnoreCase(u.getHost())) {
+          packageName = u.getQueryParameter("id");
+        } else if ("search".equalsIgnoreCase(u.getHost())) {
+          packageName = u.getQueryParameter("q");
         } else {
-          finish();
+          //old code
+          String params = uri.split("&")[0];
+          String[] param = params.split("=");
+          packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
+          if (packageName.contains("pname:")) {
+            packageName = packageName.substring(6);
+          } else if (packageName.contains("pub:")) {
+            packageName = packageName.substring(4);
+          }
         }
-      }
-    } else if (uri.startsWith("file://")) {
+        startFromPackageName(packageName);
+      } else if (uri.startsWith("http://market.android.com/details?id=")) {
+        String param = uri.split("=")[1];
+        startFromPackageName(param);
+      } else if (uri.startsWith("https://market.android.com/details?id=")) {
+        String param = uri.split("=")[1];
+        startFromPackageName(param);
+      } else if (uri.startsWith("https://play.google.com/store/apps/details?id=") || uri.startsWith(
+          "http://play.google.com/store/apps/details?id=")) {
+        String params = uri.split("&")[0];
+        String param = params.split("=")[1];
+        if (param.contains("pname:")) {
+          param = param.substring(6);
+        } else if (param.contains("pub:")) {
+          param = param.substring(4);
+        } else {
+          try {
+            param = Uri.parse(uri)
+                .getQueryParameter("id");
+          } catch (NullPointerException e) {
+            CrashReport.getInstance()
+                .log(e);
+          }
+        }
+        startFromPackageName(param);
+      } else if (uri.contains("aptword://")) {
 
-      downloadMyApp();
-    } else if (uri.startsWith("aptoideinstall://")) {
-      parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
-    } else if (u.getHost()
-        .equals("cm.aptoide.pt") && u.getPath()
-        .equals("/deeplink") && u.getQueryParameter("name")
-        .equals("getHome")) {
-      String id = u.getQueryParameter("user_id");
-      if (id != null) {
-        openUserScreen(Long.valueOf(id));
-      }
-      finish();
-      return;
-    } else if (uri.startsWith("aptoide://")) {
-      Uri parse = Uri.parse(uri);
-      if ("getUserTimeline".equals(parse.getQueryParameter("name"))) {
-        String cardId = parse.getQueryParameter("cardId");
-        startFromAppsTimeline(cardId);
-        finish();
-        return;
-      }
-      if ("search".equals(parse.getQueryParameter("name"))) {
-        String query = "";
-        if (parse.getQueryParameterNames()
-            .contains("keyword")) {
-          query = parse.getQueryParameter("keyword");
+        // TODO: 12-08-2016 neuro aptword Seems discontinued???
+        String param = uri.substring("aptword://".length());
+
+        if (!TextUtils.isEmpty(param)) {
+
+          param = param.replaceAll("\\*", "_")
+              .replaceAll("\\+", "/");
+
+          String json = new String(Base64.decode(param.getBytes(), 0));
+
+          Logger.d("AptoideAptWord", json);
+
+          GetAdsResponse.Ad ad = null;
+          try {
+            ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
+          } catch (IOException e) {
+            CrashReport.getInstance()
+                .log(e);
+          }
+
+          if (ad != null) {
+            Intent i = new Intent(this, startClass);
+            i.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
+            startActivity(i);
+          } else {
+            deepLinkAnalytics.sendWebsite();
+            finish();
+          }
         }
-        startFromSearch(query);
+      } else if (uri.startsWith("file://")) {
+
+        downloadMyApp();
+      } else if (uri.startsWith("aptoideinstall://")) {
+        parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
+      } else if (u.getHost()
+          .equals("cm.aptoide.pt") && u.getPath()
+          .equals("/deeplink") && u.getQueryParameter("name")
+          .equals("getHome")) {
+        String id = u.getQueryParameter("user_id");
+        if (id != null) {
+          openUserScreen(Long.valueOf(id));
+        }
+        deepLinkAnalytics.sendWebsite();
         finish();
         return;
-      }
-      if ("myStore".equals(parse.getQueryParameter("name"))) {
-        startFromMyStore();
+      } else if (uri.startsWith("aptoide://")) {
+        Uri parse = Uri.parse(uri);
+        if ("getUserTimeline".equals(parse.getQueryParameter("name"))) {
+          String cardId = parse.getQueryParameter("cardId");
+          startFromAppsTimeline(cardId);
+          deepLinkAnalytics.sendWebsite();
+          finish();
+          return;
+        }
+        if ("search".equals(parse.getQueryParameter("name"))) {
+          String query = "";
+          if (parse.getQueryParameterNames()
+              .contains("keyword")) {
+            query = parse.getQueryParameter("keyword");
+          }
+          startFromSearch(query);
+          deepLinkAnalytics.sendWebsite();
+          finish();
+          return;
+        }
+        if ("myStore".equals(parse.getQueryParameter("name"))) {
+          startFromMyStore();
+          deepLinkAnalytics.sendWebsite();
+          finish();
+          return;
+        }
+        if ("pickApp".equals(parse.getQueryParameter("name"))) {
+          startFromPickApp();
+          deepLinkAnalytics.sendWebsite();
+          finish();
+          return;
+        }
+        if (sURIMatcher.match(parse) == DEEPLINK_ID) {
+          startGenericDeepLink(parse);
+        }
+        deepLinkAnalytics.sendWebsite();
         finish();
-        return;
-      }
-      if ("pickApp".equals(parse.getQueryParameter("name"))) {
-        startFromPickApp();
+      } else {
+        deepLinkAnalytics.sendWebsite();
         finish();
-        return;
       }
-      if (sURIMatcher.match(parse) == DEEPLINK_ID) {
-        startGenericDeepLink(parse);
-      }
-      finish();
-    } else {
-      finish();
     }
   }
 
@@ -455,6 +476,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     i.putExtra(DeepLinksKeys.CARD_ID, cardId);
     if (shortcutNavigation) i.putExtra(FROM_SHORTCUT, shortcutNavigation);
 
+    startActivity(i);
+  }
+
+  public void startFromHome() {
+    Intent i = new Intent(this, startClass);
+    i.putExtra(DeepLinksTargets.HOME_DEEPLINK, true);
     startActivity(i);
   }
 
@@ -593,6 +620,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String GENERIC_DEEPLINK = "generic_deeplink";
     public static final String USER_DEEPLINK = "open_user_profile";
     public static final String TIMELINE_DEEPLINK = "apps_timeline";
+    public static final String HOME_DEEPLINK = "home_tab";
     public static final String MY_STORE_DEEPLINK = "my_store";
     public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
   }

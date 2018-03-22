@@ -12,18 +12,19 @@ public class BundlesRepository {
   private final BundleDataSource remoteBundleDataSource;
   private List<HomeBundle> cachedBundles;
   private int offset;
+  private int limit;
 
   public BundlesRepository(BundleDataSource remoteBundleDataSource, List<HomeBundle> cachedBundles,
-      int offset) {
+      int offset, int limit) {
     this.remoteBundleDataSource = remoteBundleDataSource;
     this.cachedBundles = cachedBundles;
     this.offset = offset;
+    this.limit = limit;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
-    int limit = 5;
     if (cachedBundles.isEmpty()) {
-      return loadNextHomeBundles(limit);
+      return loadNextHomeBundles();
     } else {
       return Single.just(new HomeBundlesModel(new ArrayList<>(cachedBundles), false, offset));
     }
@@ -43,7 +44,7 @@ public class BundlesRepository {
         homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
   }
 
-  public Single<HomeBundlesModel> loadNextHomeBundles(int limit) {
+  public Single<HomeBundlesModel> loadNextHomeBundles() {
     return remoteBundleDataSource.loadNextHomeBundles(offset, limit)
         .doOnSuccess(homeBundlesModel -> updateCache(homeBundlesModel, false))
         .map(homeBundlesModel -> cloneList(homeBundlesModel));

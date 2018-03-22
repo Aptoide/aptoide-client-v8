@@ -42,7 +42,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private boolean bypassServerCache;
 
-  protected GetHomeBundlesRequest(Body body, OkHttpClient httpClient,
+  private GetHomeBundlesRequest(Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       WSWidgetsUtils widgetsUtils, BaseRequestWithStore.StoreCredentials storeCredentials,
