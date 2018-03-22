@@ -444,6 +444,20 @@ public class ImageLoader {
     }
   }
 
+  public void loadWithRoundCorners(String image, int radius, ImageView previewImage,
+      @DrawableRes int placeHolderDrawableId) {
+    Context context = weakContext.get();
+    if (context != null) {
+      Glide.with(context)
+          .load(image)
+          .centerCrop()
+          .placeholder(placeHolderDrawableId)
+          .bitmapTransform(new CenterCrop(context), new RoundedCornersTransform(context, radius, 0,
+              RoundedCornersTransform.CornerType.ALL))
+          .into(previewImage);
+    }
+  }
+
   public void loadIntoTarget(String imageUrl, SimpleTarget<GlideDrawable> simpleTarget) {
     Context context = weakContext.get();
     if (context != null) {

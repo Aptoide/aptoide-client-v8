@@ -57,7 +57,8 @@
 
     <activity
         android:name=".view.entry.EntryActivity"
-        android:theme="@style/Theme.AppCompat.Translucent">
+        android:theme="@style/Theme.AppCompat.Translucent"
+        >
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
@@ -71,9 +72,14 @@
         android:name=".view.OpenGLES20Activity"
         android:theme="@style/Theme.AppCompat.Translucent"></activity>
 
-    <activity android:name=".view.MainActivity"/>
+    <activity
+        android:name=".view.MainActivity"
+        android:windowSoftInputMode="adjustNothing"></activity>
 
-    <activity android:name=".view.FairyMainActivity"/>
+    <activity
+        android:name=".view.FairyMainActivity"
+        android:windowSoftInputMode="adjustNothing"
+        />
 
     <meta-data
         android:name="io.fabric.ApiKey"
@@ -123,7 +129,9 @@
 
     <activity
         android:name=".timeline.post.PostActivity"
-        android:launchMode="singleInstance">
+        android:launchMode="singleInstance"
+        android:windowSoftInputMode="adjustNothing"
+        >
       <intent-filter>
         <action android:name="android.intent.action.SEND"/>
         <category android:name="android.intent.category.DEFAULT"/>
@@ -135,7 +143,8 @@
         android:name=".billing.view.BillingActivity"
         android:launchMode="singleInstance"
         android:screenOrientation="sensor"
-        android:theme="@style/AppBaseTheme.NoTitle.Transparent">
+        android:theme="@style/AppBaseTheme.NoTitle.Transparent"
+        >
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
 
@@ -149,15 +158,21 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".account.view.LoginActivity"/>
+    <activity
+        android:name=".account.view.LoginActivity"
+        android:windowSoftInputMode="adjustNothing"
+        />
 
     <activity
         android:name="com.facebook.FacebookActivity"
-        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
+        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        android:windowSoftInputMode="adjustNothing"
+        />
 
     <activity
         android:name=".DeepLinkIntentReceiver"
-        android:exported="true">
+        android:exported="true"
+        >
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
 
@@ -314,7 +329,9 @@
 
     <activity
         android:name="com.mopub.common.MoPubBrowser"
-        android:configChanges="keyboardHidden|orientation|screenSize"/>
+        android:configChanges="keyboardHidden|orientation|screenSize"
+        android:windowSoftInputMode="adjustNothing"
+        />
 
     <receiver
         android:name=".widget.SearchWidgetProvider"

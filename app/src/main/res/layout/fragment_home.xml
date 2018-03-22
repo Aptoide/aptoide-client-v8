@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <include layout="@layout/action_bar"/>
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/bundles_list"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+    </android.support.v4.widget.SwipeRefreshLayout>
+    <include layout="@layout/partial_view_incl_no_network"/>
+
+    <include layout="@layout/partial_view_error"/>
+
+    <include layout="@layout/partial_view_progress_bar"/>
+  </FrameLayout>
+</LinearLayout>
