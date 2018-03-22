@@ -5,7 +5,9 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import rx.Observable;
 import rx.Scheduler;
+import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by filipegoncalves on 3/7/18.
@@ -48,8 +50,6 @@ public class AppsPresenter implements Presenter {
     handleCancelDownloadClick();
 
     handleInstallAppClick();
-
-    handleRetryDownloadClick();
 
     handleUpdateAllClick();
 
@@ -130,17 +130,6 @@ public class AppsPresenter implements Presenter {
         }, error -> crashReport.log(error));
   }
 
-  private void handleRetryDownloadClick() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(viewScheduler)
-        .flatMap(created -> view.retryDownload())
-        .doOnNext(app -> appsManager.retryDownload(app))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
-  }
-
   private void handleInstallAppClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
@@ -167,7 +156,7 @@ public class AppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.resumeDownload())
+        .flatMap(created -> Observable.merge(view.resumeDownload(), view.retryDownload()))
         .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
             .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
             .flatMapCompletable(__ -> appsManager.resumeDownload(app)))

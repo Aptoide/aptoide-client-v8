@@ -66,10 +66,6 @@ public class AppsManager {
         });
   }
 
-  public Completable retryDownload(App app) {
-    return resumeDownload(app);
-  }
-
   public Completable installApp(App app) {
     return installManager.getInstall(((DownloadApp) app).getMd5(),
         ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode())
