@@ -1092,7 +1092,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesRepository providesBundleRepository(
       @Named("remote") BundleDataSource remoteBundleDataSource) {
-    return new BundlesRepository(remoteBundleDataSource, new ArrayList<>(), 0);
+    return new BundlesRepository(remoteBundleDataSource, new ArrayList<>(), 0, 5);
   }
 
   @Singleton @Provides AdMapper providesAdMapper() {

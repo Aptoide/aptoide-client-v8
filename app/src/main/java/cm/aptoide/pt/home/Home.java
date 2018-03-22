@@ -23,7 +23,7 @@ public class Home {
   }
 
   public Single<HomeBundlesModel> loadNextHomeBundles() {
-    return bundlesRepository.loadNextHomeBundles(5);
+    return bundlesRepository.loadNextHomeBundles();
   }
 
   public boolean hasMore() {
