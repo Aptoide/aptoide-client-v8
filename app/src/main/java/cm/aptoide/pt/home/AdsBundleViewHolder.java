@@ -46,7 +46,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     appsList.setAdapter(appsInBundleAdapter);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle, int position) {
+  @Override public void setBundle(HomeBundle homeBundle) {
     if (!(homeBundle instanceof AdBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");

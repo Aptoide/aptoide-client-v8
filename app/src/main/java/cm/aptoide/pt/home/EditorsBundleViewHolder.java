@@ -45,7 +45,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     graphicsList.setAdapter(appsAdapter);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle, int position) {
+  @Override public void setBundle(HomeBundle homeBundle) {
     if (!(homeBundle instanceof AppBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
