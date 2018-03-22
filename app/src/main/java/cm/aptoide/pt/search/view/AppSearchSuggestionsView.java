@@ -9,6 +9,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
+import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
@@ -112,7 +113,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
     return queryTextChangedPublisher;
   }
 
-  @Override public void collapseSearchBar() {
+  @Override public void collapseSearchBar(boolean shouldShowSuggestions) {
     if (searchMenuItem != null) searchMenuItem.collapseActionView();
   }
 
@@ -131,7 +132,15 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
     }
   }
 
-  @Override public void setTrending(List<String> trending) {
+  @Override public void setTrendingList(List<Suggestion> trendingList) {
+    //Not to be used here!
+  }
+
+  @Override public void setSuggestionsList(List<String> suggestions) {
+    //Not to be used here!
+  }
+
+  @Override public void setTrendingCursor(List<String> trending) {
     suggestionCursorAdapter.setData(trending);
   }
 

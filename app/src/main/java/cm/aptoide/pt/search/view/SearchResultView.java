@@ -1,12 +1,16 @@
 package cm.aptoide.pt.search.view;
 
-import cm.aptoide.pt.presenter.View;
+import android.util.Pair;
+import android.view.MenuItem;
+import android.view.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
+import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
 import rx.Observable;
 
-public interface SearchResultView extends View {
+public interface SearchResultView extends SearchSuggestionsView {
 
   void showFollowedStoresResult();
 
@@ -57,6 +61,38 @@ public interface SearchResultView extends View {
   void hideFollowedStoresTab();
 
   void hideNonFollowedStoresTab();
+
+  Observable<Void> searchSetup();
+
+  void toggleSuggestionsView();
+
+  void toggleTrendingView();
+
+  void hideSuggestionsViews();
+
+  boolean isSearchViewExpanded();
+
+  Observable<SearchQueryEvent> listenToSuggestionClick();
+
+  Observable<Void> toolbarClick();
+
+  Observable<MenuItem> searchMenuItemClick();
+
+  Observable<SearchAdResult> onAdClicked();
+
+  Observable<SearchAppResult> onViewItemClicked();
+
+  Observable<Pair<SearchAppResult, View>> onOpenPopUpMenuClicked();
+
+  Observable<SearchViewQueryTextEvent> queryChanged();
+
+  void emmitQueryEvent(SearchViewQueryTextEvent event);
+
+  boolean shouldFocusInSearchBar();
+
+  void scrollToTop();
+
+  boolean hasResults();
 
   interface Model {
 

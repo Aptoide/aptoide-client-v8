@@ -54,9 +54,8 @@ public class MainPresenter implements Presenter {
       NotificationSyncScheduler notificationSyncScheduler,
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
-      DeepLinkManager deepLinkManager, String defaultStoreName, String defaultTheme,
-      boolean firstCreated, AptoideBottomNavigator aptoideBottomNavigator,
-      Scheduler viewScheduler) {
+      DeepLinkManager deepLinkManager, boolean firstCreated,
+      AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;

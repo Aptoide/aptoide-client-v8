@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
@@ -19,11 +20,13 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import javax.inject.Inject;
@@ -39,6 +42,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
 
   private static final String TAG = MyStoresFragment.class.getSimpleName();
   @Inject MyStoresPresenter myStoresPresenter;
+  private ImageView userAvatar;
 
   public static MyStoresFragment newInstance(Event event, String storeTheme, String tag,
       StoreContext storeContext) {
@@ -56,6 +60,18 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+  }
+
+  @Override public void onDestroyView() {
+    userAvatar = null;
+    super.onDestroyView();
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    registerForViewChanges();
+    userAvatar = (ImageView) getView().findViewById(R.id.user_actionbar_icon);
+    attachPresenter(myStoresPresenter);
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
@@ -109,16 +125,6 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     return displayables;
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    registerForViewChanges();
-  }
-
-  @Override public void onViewCreated() {
-    super.onViewCreated();
-    attachPresenter(myStoresPresenter);
-  }
-
   private void registerForViewChanges() {
     AptoideAccountManager accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
@@ -162,5 +168,19 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
       view.scrollToPosition(10);
     }
     view.smoothScrollToPosition(0);
+  }
+
+  @Override public void setUserImage(String userAvatarUrl) {
+    ImageLoader.with(getContext())
+        .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
+            R.drawable.my_account_placeholder);
+  }
+
+  @Override public Observable<Void> imageClick() {
+    return RxView.clicks(userAvatar);
+  }
+
+  @Override public void showAvatar() {
+    userAvatar.setVisibility(View.VISIBLE);
   }
 }

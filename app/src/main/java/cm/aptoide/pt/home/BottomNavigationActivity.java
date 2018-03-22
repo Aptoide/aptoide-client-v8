@@ -3,11 +3,13 @@ package cm.aptoide.pt.home;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
+import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.view.settings.NewAccountFragment;
 import rx.Observable;
@@ -45,6 +47,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
   @Override public void showFragment(Integer menuItemId) {
     Fragment currentFragment = getFragmentNavigator().getFragment();
     Fragment selectedFragment = null;
+    String defaultStoreName = ((AptoideApplication) getApplicationContext()).getDefaultStoreName();
     //Each view from the  BottomNavigation has to implement a scrollToTop method when clicked again (see BottomHomeFragment)
     //Each fragment should implement it's own action bar
     switch (menuItemId) {
@@ -52,6 +55,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
         selectedFragment = new BottomHomeFragment();
         break;
       case R.id.action_search:
+        selectedFragment = SearchResultFragment.newInstance(defaultStoreName, true);
         break;
       case R.id.action_stores:
         selectedFragment =

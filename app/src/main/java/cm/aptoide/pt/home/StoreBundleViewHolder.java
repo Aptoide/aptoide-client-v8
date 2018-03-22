@@ -11,7 +11,7 @@ class StoreBundleViewHolder extends AppBundleViewHolder {
     super(view);
   }
 
-  @Override public void setBundle(AppBundle appBundle, int position) {
+  @Override public void setBundle(HomeBundle appBundle, int position) {
 
   }
 }

@@ -48,8 +48,7 @@ import rx.schedulers.Schedulers;
       Converter.Factory converterFactory, String q, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache) {
-
+      AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache, int limit) {
     if (wsWidget.getType() != null) {
 
       String url = null;
@@ -88,8 +87,8 @@ import rx.schedulers.Schedulers;
 
         case ADS:
           return GetAdsRequest.ofHomepage(clientUniqueId, googlePlayServicesAvailable, oemid,
-              mature, httpClient, converterFactory, q, sharedPreferences, resources, windowManager,
-              connectivityManager, versionCodeProvider)
+              mature, httpClient, converterFactory, q, sharedPreferences, resources,
+              connectivityManager, versionCodeProvider, limit)
               .observe(bypassCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
