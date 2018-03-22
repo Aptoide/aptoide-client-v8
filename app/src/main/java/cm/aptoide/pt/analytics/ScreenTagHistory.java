@@ -8,9 +8,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 
 public class ScreenTagHistory {
 
+  private final static String NO_HISTORY = "NO_HISTORY";
+
   private String fragment;
   private String tag;
   private String store;
+
+  public ScreenTagHistory() {
+    this(NO_HISTORY, NO_HISTORY, NO_HISTORY);
+  }
 
   private ScreenTagHistory(String fragment, String tag, String store) {
     this.fragment = fragment;
@@ -19,11 +25,11 @@ public class ScreenTagHistory {
   }
 
   public String getStore() {
-    return store;
+    return store != null ? store : "";
   }
 
   public String getFragment() {
-    return fragment;
+    return fragment != null ? fragment : "";
   }
 
   public void setFragment(String fragment) {
@@ -31,7 +37,7 @@ public class ScreenTagHistory {
   }
 
   public String getTag() {
-    return tag;
+    return tag != null ? tag : "";
   }
 
   public void setTag(String tag) {
