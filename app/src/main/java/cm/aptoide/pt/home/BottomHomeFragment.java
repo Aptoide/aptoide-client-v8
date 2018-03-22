@@ -65,7 +65,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   @Override public void onDestroy() {
     uiEventsListener = null;
     oneDecimalFormatter = null;
-    uiEventsListener = null;
+    adClickedEvents = null;
     appClickedEvents = null;
     super.onDestroy();
   }
