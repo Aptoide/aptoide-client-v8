@@ -56,7 +56,7 @@ public class ManagerPreferences {
   }
 
   public static boolean getGeneralDownloadsMobile(SharedPreferences sharedPreferences) {
-    //returning the opposite because of the copy text on the preference
+    //returning the opposite because of the copy text on the preference was reverted from a version to another
     return !sharedPreferences.getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
   }
 
