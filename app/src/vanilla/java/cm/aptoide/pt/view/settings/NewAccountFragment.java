@@ -193,8 +193,7 @@ public class NewAccountFragment extends BackButtonFragment
   }
 
   @Override public void refreshUI(Store store) {
-    myStoreName.setText(store.
-        getName());
+    myStoreName.setText(store.getName());
     setUserStore(store.getName(), store.getAvatar());
   }
 
