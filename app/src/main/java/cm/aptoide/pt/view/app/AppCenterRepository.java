@@ -80,8 +80,7 @@ public class AppCenterRepository {
         .isEmpty()) {
       return loadNextApps(storeId, limit);
     }
-    int appsLeft = limit
-        - cache.getValue()
+    int appsLeft = limit - cache.getValue()
         .size() % limit;
     if (appsLeft == 0) {
       return Single.just(new AppsList(new ArrayList<>(cache.getValue()), false, cache.getKey()));

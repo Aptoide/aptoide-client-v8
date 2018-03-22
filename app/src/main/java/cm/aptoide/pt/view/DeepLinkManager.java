@@ -40,6 +40,7 @@ import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
+import cm.aptoide.pt.timeline.view.navigation.HomeTabNavigation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -133,6 +134,8 @@ public class DeepLinkManager {
       downloadNotificationDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
       fromTimelineDeepLink(intent);
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.HOME_DEEPLINK)) {
+      fromHomeDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
@@ -265,6 +268,11 @@ public class DeepLinkManager {
       appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.TIMELINE);
     }
     tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
+  }
+
+  private void fromHomeDeepLink() {
+
+    tabNavigator.navigate(new HomeTabNavigation());
   }
 
   private void newUpdatesDeepLink() {

@@ -64,7 +64,6 @@ public class SearchResultFragment extends BackButtonFragment
     implements SearchResultView, SearchSuggestionsView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
-  private static final String FRAGMENT_TITLE = "Search apps & games";
   private static final String VIEW_MODEL = "view_model";
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
@@ -438,7 +437,7 @@ public class SearchResultFragment extends BackButtonFragment
     return RxSearchView.queryTextChangeEvents(searchView);
   }
 
-  @Override public void emmitQueryEvent(SearchViewQueryTextEvent event) {
+  @Override public void queryEvent(SearchViewQueryTextEvent event) {
     queryTextChangedPublisher.onNext(new SearchQueryEvent(event.queryText()
         .toString(), event.isSubmitted()));
   }
@@ -815,7 +814,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     if (viewModel.getCurrentQuery()
         .isEmpty()) {
-      toolbar.setTitle(FRAGMENT_TITLE);
+      toolbar.setTitle(R.string.search_hint_title);
     } else {
       toolbar.setTitle(viewModel.getCurrentQuery());
     }
@@ -835,7 +834,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void collapseSearchBar(boolean shouldShowSuggestions) {
     if (searchMenuItem != null) searchMenuItem.collapseActionView();
-    if (!hasResults()) toolbar.setTitle(FRAGMENT_TITLE);
+    if (!hasResults()) toolbar.setTitle(R.string.search_hint_title);
   }
 
   @Override public String getCurrentQuery() {

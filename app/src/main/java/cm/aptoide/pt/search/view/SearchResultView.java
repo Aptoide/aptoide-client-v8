@@ -86,7 +86,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<SearchViewQueryTextEvent> queryChanged();
 
-  void emmitQueryEvent(SearchViewQueryTextEvent event);
+  void queryEvent(SearchViewQueryTextEvent event);
 
   boolean shouldFocusInSearchBar();
 

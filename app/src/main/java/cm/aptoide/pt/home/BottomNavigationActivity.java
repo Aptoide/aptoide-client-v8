@@ -11,6 +11,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
+import cm.aptoide.pt.view.settings.NewAccountFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -61,7 +62,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
             MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
         break;
       case R.id.action_apps:
-        selectedFragment = new BottomHomeFragment();
+        selectedFragment = new NewAccountFragment();
         break;
     }
     if (selectedFragment != null) {

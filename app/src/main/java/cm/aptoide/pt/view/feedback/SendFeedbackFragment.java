@@ -64,6 +64,10 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     return sendFeedbackFragment;
   }
 
+  public static SendFeedbackFragment newInstance() {
+    return new SendFeedbackFragment();
+  }
+
   public static SendFeedbackFragment newInstance(String screenShotPath, String cardId) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
     Bundle bundle = new Bundle();

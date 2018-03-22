@@ -565,7 +565,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         .filter(event -> event == View.LifecycleEvent.RESUME)
         .flatMap(__ -> view.searchSetup())
         .flatMap(__ -> view.queryChanged())
-        .doOnNext(event -> view.emmitQueryEvent(event))
+        .doOnNext(event -> view.queryEvent(event))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

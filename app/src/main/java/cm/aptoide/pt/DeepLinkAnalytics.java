@@ -20,6 +20,12 @@ public class DeepLinkAnalytics {
   private static final String URI = "Uri";
   private static final String SOURCE = "Source";
   private static final String LAUNCHER = "Launcher";
+  private static final String SOURCE_GROUP_OPTION_APP_VIEW = "aptoide app view";
+  private static final String SOURCE_GROUP_OPTION_HOME = "aptoide homepage";
+  private static final String SOURCE_GROUP_OPTION_STORE = "aptoide store";
+  private static final String SOURCE_GROUP_ATTRIBUTE = "source_group";
+  private HashMap<String, Object> map = new HashMap<>();
+
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
@@ -34,15 +40,40 @@ public class DeepLinkAnalytics {
   }
 
   public void website(String uri) {
-    HashMap<String, Object> map = new HashMap<>();
+    map = new HashMap<>();
     map.put(SOURCE, WEBSITE);
 
     if (uri != null) {
       map.put(URI, uri.substring(0, uri.indexOf(":")));
     }
-    analyticsManager.logEvent(map, FACEBOOK_APP_LAUNCH, AnalyticsManager.Action.AUTO,
-        getViewName(true));
-    analyticsManager.logEvent(map, APP_LAUNCH, AnalyticsManager.Action.AUTO, getViewName(true));
+  }
+
+  public void sendWebsite() {
+
+    if (map != null && !map.isEmpty()) {
+      analyticsManager.logEvent(map, FACEBOOK_APP_LAUNCH, AnalyticsManager.Action.AUTO,
+          getViewName(true));
+      analyticsManager.logEvent(map, APP_LAUNCH, AnalyticsManager.Action.AUTO, getViewName(true));
+    }
+    map = null;
+  }
+
+  private void websiteSourceGroup(String sourceGroupValue) {
+    if (map != null && !map.isEmpty()) {
+      map.put(SOURCE_GROUP_ATTRIBUTE, sourceGroupValue);
+    }
+  }
+
+  public void websiteFromHomeWebPage() {
+    websiteSourceGroup(SOURCE_GROUP_OPTION_HOME);
+  }
+
+  public void websiteFromAppViewWebPage() {
+    websiteSourceGroup(SOURCE_GROUP_OPTION_APP_VIEW);
+  }
+
+  public void websiteFromStoreWebPage() {
+    websiteSourceGroup(SOURCE_GROUP_OPTION_STORE);
   }
 
   public void newUpdatesNotification() {

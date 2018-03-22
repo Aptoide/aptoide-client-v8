@@ -63,7 +63,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   @Override public void onBindViewHolder(AppBundleViewHolder appBundleViewHolder, int position) {
-    appBundleViewHolder.setBundle(bundles.get(position), position);
+    appBundleViewHolder.setBundle(bundles.get(position));
   }
 
   @Override public int getItemViewType(int position) {
