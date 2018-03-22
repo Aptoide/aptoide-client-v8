@@ -95,6 +95,6 @@ public class MyStoresPresenterTest {
     //When an user clicks the profile image
     imageClickEvent.onNext(null);
     //Then it should navigate to the Settings Fragment
-    verify(myStoresNavigator).navigateToSettings();
+    verify(myStoresNavigator).navigateToMyAccount();
   }
 }

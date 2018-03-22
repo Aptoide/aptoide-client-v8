@@ -242,6 +242,6 @@ public class HomePresenterTest {
     //When an user clicks the profile image
     imageClickEvent.onNext(null);
     //Then it should navigate to the Settings Fragment
-    verify(homeNavigator).navigateToSettings();
+    verify(homeNavigator).navigateToMyAccount();
   }
 }

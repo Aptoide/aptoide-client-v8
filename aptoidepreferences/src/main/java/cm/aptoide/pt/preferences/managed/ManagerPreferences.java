@@ -56,7 +56,8 @@ public class ManagerPreferences {
   }
 
   public static boolean getGeneralDownloadsMobile(SharedPreferences sharedPreferences) {
-    return sharedPreferences.getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
+    //returning the opposite because of the copy text on the preference
+    return !sharedPreferences.getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
   }
 
   public static boolean getAnimationsEnabledStatus(SharedPreferences defaultSharedPreferences) {

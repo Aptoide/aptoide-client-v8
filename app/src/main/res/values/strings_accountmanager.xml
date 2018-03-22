@@ -95,4 +95,16 @@
   <string name="edit_store_facebook_helper_text">Enter Facebook page</string>
   <string name="edit_store_youtube_helper_text">Enter Your user or Channel</string>
 
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">Sign in or register to get the most out of Aptoide</string>
+  <string name="newaccount_signin">login/register</string>
+  <string name="newaccount_my_account">My account</string>
+  <string name="newaccount_my_store">My store</string>
+  <string name="newaccount_create_store">create a store</string>
+  <string name="newaccount_create_store_message">Create an Aptoide store to share apps with the community.</string>
+  <string name="newaccount_find_friends">find friends</string>
+  <string name="newaccount_log_out">logout</string>
+  <string name="newaccount_notification_history">Notification history</string>
+  <string name="newaccount_settings">Settings</string>
+  <string name="newaccount_edit">Edit</string>
 </resources>
