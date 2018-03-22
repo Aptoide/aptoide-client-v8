@@ -487,7 +487,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public boolean shouldShowSuggestions() {
-    return toolbar.getTitle() == FRAGMENT_TITLE;
+    return toolbar.getTitle()
+        .equals(getResources().getString(R.string.search_hint_title));
   }
 
   public void showSuggestionsView() {
@@ -846,11 +847,11 @@ public class SearchResultFragment extends BackButtonFragment
       searchMenuItem.expandActionView();
     }
 
-    if (searchView != null && !getCurrentQuery().isEmpty()) {
+    if (searchView != null && unsubmittedQuery != null) {
+      searchView.setQuery(unsubmittedQuery, false);
+    } else if (searchView != null && !getCurrentQuery().isEmpty()) {
       final String currentQuery = getCurrentQuery();
       searchView.setQuery(currentQuery, false);
-    } else if (searchView != null && unsubmittedQuery != null) {
-      searchView.setQuery(unsubmittedQuery, false);
     }
 
     showSuggestionsView();
