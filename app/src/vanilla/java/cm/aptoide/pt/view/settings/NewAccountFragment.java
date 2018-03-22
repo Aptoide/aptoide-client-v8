@@ -77,7 +77,6 @@ public class NewAccountFragment extends BackButtonFragment
   private View notificationHistory;
   private View settings;
 
-
   public static Fragment newInstance() {
     return new NewAccountFragment();
   }
@@ -267,7 +266,7 @@ public class NewAccountFragment extends BackButtonFragment
     myStoreTitle.setText(R.string.newaccount_my_store);
 
     TextView myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
-    myAccountTitle.setText(R.string.newaccount_my_account);
+    myAccountTitle.setText(R.string.newaccount_my_profile);
 
     loginButton = (Button) view.findViewById(R.id.login_button);
     logoutButton = (Button) view.findViewById(R.id.logout_button);
