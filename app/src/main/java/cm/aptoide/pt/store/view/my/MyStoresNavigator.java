@@ -4,7 +4,7 @@ import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.view.settings.SettingsFragment;
+import cm.aptoide.pt.view.settings.NewAccountFragment;
 import rx.Observable;
 
 /**
@@ -31,7 +31,7 @@ public class MyStoresNavigator {
             .equals(BottomNavigationItem.STORES));
   }
 
-  public void navigateToSettings() {
-    fragmentNavigator.navigateTo(SettingsFragment.newInstance(), true);
+  public void navigateToMyAccount() {
+    fragmentNavigator.navigateTo(NewAccountFragment.newInstance(), true);
   }
 }

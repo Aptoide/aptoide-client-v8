@@ -5,7 +5,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.view.settings.SettingsFragment;
+import cm.aptoide.pt.view.settings.NewAccountFragment;
 import rx.Observable;
 
 /**
@@ -48,7 +48,7 @@ public class HomeNavigator {
             .equals(BottomNavigationItem.HOME));
   }
 
-  public void navigateToSettings() {
-    fragmentNavigator.navigateTo(SettingsFragment.newInstance(), true);
+  public void navigateToMyAccount() {
+    fragmentNavigator.navigateTo(NewAccountFragment.newInstance(), true);
   }
 }
