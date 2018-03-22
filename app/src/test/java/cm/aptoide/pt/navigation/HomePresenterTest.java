@@ -209,14 +209,30 @@ public class HomePresenterTest {
     verify(view).hideLoading();
   }
 
-  @Test public void loadUserImageTest() {
+  @Test public void loadLoggedInUserImageUserTest() {
+    //When the user is logged in
+    when(account.getAvatar()).thenReturn("A string");
+    when(account.isLoggedIn()).thenReturn(true);
     //Given an initialised HomePresenter
     presenter.present();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And AccountManager returns an account
     accountStatusEvent.onNext(account);
     //Then it should show the image
-    verify(view).setUserImage(account);
+    verify(view).setUserImage("A string");
+    verify(view).showAvatar();
+  }
+
+  @Test public void loadNotLoggedInUserImageUserTest() {
+    //When the user is logged in
+    when(account.isLoggedIn()).thenReturn(false);
+    //Given an initialised HomePresenter
+    presenter.present();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And AccountManager returns an account
+    accountStatusEvent.onNext(account);
+    //Then it should show the image
+    verify(view).showAvatar();
   }
 
   @Test public void handeUserImageClick() {

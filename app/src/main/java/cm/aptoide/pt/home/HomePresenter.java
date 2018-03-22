@@ -1,13 +1,15 @@
 package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
+import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -225,12 +227,18 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> accountManager.accountStatus()
             .first())
+        .flatMap(account -> getUserAvatar(account))
         .observeOn(viewScheduler)
-        .doOnNext(account -> view.setUserImage(account))
+        .doOnNext(userAvatarUrl -> {
+          if (userAvatarUrl != null) {
+            view.setUserImage(userAvatarUrl);
+          }
+          view.showAvatar();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          throw new rx.exceptions.OnErrorNotImplementedException(throwable);
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 
@@ -244,7 +252,15 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          throw new rx.exceptions.OnErrorNotImplementedException(throwable);
+          throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  private Observable<String> getUserAvatar(Account account) {
+    String userAvatarUrl = null;
+    if (account != null && account.isLoggedIn()) {
+      userAvatarUrl = account.getAvatar();
+    }
+    return Observable.just(userAvatarUrl);
   }
 }

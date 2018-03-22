@@ -170,18 +170,17 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     view.smoothScrollToPosition(0);
   }
 
-  @Override public void setUserImage(Account account) {
-    if (account != null && account.isLoggedIn()) {
-      String userAvatarUrl = account.getAvatar();
-      userAvatarUrl = userAvatarUrl.replace("50", "150");
-      ImageLoader.with(getContext())
-          .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
-              R.drawable.my_account_placeholder);
-    }
-    userAvatar.setVisibility(View.VISIBLE);
+  @Override public void setUserImage(String userAvatarUrl) {
+    ImageLoader.with(getContext())
+        .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
+            R.drawable.my_account_placeholder);
   }
 
   @Override public Observable<Void> imageClick() {
     return RxView.clicks(userAvatar);
+  }
+
+  @Override public void showAvatar() {
+    userAvatar.setVisibility(View.VISIBLE);
   }
 }

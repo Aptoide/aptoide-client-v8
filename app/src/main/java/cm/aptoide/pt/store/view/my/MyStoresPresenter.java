@@ -1,8 +1,10 @@
 package cm.aptoide.pt.store.view.my;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import rx.Observable;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -50,8 +52,14 @@ public class MyStoresPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> accountManager.accountStatus()
             .first())
+        .flatMap(account -> getUserAvatar(account))
         .observeOn(viewScheduler)
-        .doOnNext(account -> view.setUserImage(account))
+        .doOnNext(userAvatarUrl -> {
+          if (userAvatarUrl != null) {
+            view.setUserImage(userAvatarUrl);
+          }
+          view.showAvatar();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
@@ -71,5 +79,13 @@ public class MyStoresPresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  private Observable<String> getUserAvatar(Account account) {
+    String userAvatarUrl = null;
+    if (account != null && account.isLoggedIn()) {
+      userAvatarUrl = account.getAvatar();
+    }
+    return Observable.just(userAvatarUrl);
   }
 }

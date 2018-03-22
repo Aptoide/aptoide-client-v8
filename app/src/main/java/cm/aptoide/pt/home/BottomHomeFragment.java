@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -71,6 +70,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     oneDecimalFormatter = null;
     uiEventsListener = null;
     appClickedEvents = null;
+    userAvatar = null;
     super.onDestroy();
   }
 
@@ -226,19 +226,18 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
   }
 
-  @Override public void setUserImage(Account account) {
-    if (account != null && account.isLoggedIn()) {
-      String userAvatarUrl = account.getAvatar();
-      userAvatarUrl = userAvatarUrl.replace("50", "150");
-      ImageLoader.with(getContext())
-          .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
-              R.drawable.my_account_placeholder);
-    }
-    userAvatar.setVisibility(View.VISIBLE);
+  @Override public void setUserImage(String userAvatarUrl) {
+    ImageLoader.with(getContext())
+        .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
+            R.drawable.my_account_placeholder);
   }
 
   @Override public Observable<Void> imageClick() {
     return RxView.clicks(userAvatar);
+  }
+
+  @Override public void showAvatar() {
+    userAvatar.setVisibility(View.VISIBLE);
   }
 
   private boolean isEndReached() {
