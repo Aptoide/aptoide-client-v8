@@ -12,6 +12,6 @@ class StoreBundleViewHolder extends AppBundleViewHolder {
   }
 
   @Override public void setBundle(HomeBundle appBundle) {
-
+    // TODO: 22/03/2018 featured store
   }
 }
