@@ -40,7 +40,7 @@
           android:layout_alignParentRight="true"
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
-          android:layout_marginRight="18dp"
+          android:layout_marginRight="15dp"
           android:foregroundGravity="right"
           android:src="@drawable/ic_account_circle"
           android:visibility="invisible"
