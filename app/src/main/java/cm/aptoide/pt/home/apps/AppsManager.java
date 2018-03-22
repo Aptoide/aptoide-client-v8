@@ -101,12 +101,6 @@ public class AppsManager {
     return installManager.getDownload(((DownloadApp) app).getMd5())
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(subscription -> setupEvents(download)));
-    /**
-     .toObservable()
-     .flatMap(downloadProgress -> installManager.getInstall(((DownloadApp) app).getMd5(),
-     ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode()))
-     .doOnSubscribe(() -> setupEvents(download)));
-     **/
   }
 
   private void setupEvents(Download download) {
