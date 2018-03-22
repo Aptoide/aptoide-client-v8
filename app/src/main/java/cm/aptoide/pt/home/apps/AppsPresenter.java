@@ -7,7 +7,6 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 import rx.Scheduler;
-import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by filipegoncalves on 3/7/18.
