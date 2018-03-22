@@ -147,6 +147,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         android:orientation="horizontal"
         >
       <ImageView
@@ -167,8 +170,7 @@
           android:layout_marginStart="12dp"
           android:layout_marginTop="17dp"
           android:text="@string/newaccount_notification_history"
-          android:textColor="@color/black_87_alpha"
-          style="@style/Aptoide.TextView.Regular.M"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
     </LinearLayout>
 
@@ -187,6 +189,9 @@
         android:id="@+id/settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         android:orientation="horizontal"
         >
       <ImageView
@@ -206,8 +211,7 @@
           android:layout_marginStart="12dp"
           android:layout_marginTop="17dp"
           android:text="@string/newaccount_settings"
-          android:textColor="@color/black_87_alpha"
-          style="@style/Aptoide.TextView.Regular.M"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
     </LinearLayout>
   </LinearLayout>
