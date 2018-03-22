@@ -1,12 +1,15 @@
 package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.Account;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
+import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -20,19 +23,23 @@ public class HomePresenter implements Presenter {
   private final CrashReport crashReporter;
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
+  private final AptoideAccountManager accountManager;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator, AdMapper adMapper) {
+      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
+    this.accountManager = accountManager;
   }
 
   @Override public void present() {
     onCreateLoadBundles();
+
+    loadUserImage();
 
     handleAppClick();
 
@@ -47,6 +54,8 @@ public class HomePresenter implements Presenter {
     handleBottomNavigationEvents();
 
     handleRetryClick();
+
+    handleUserImageClick();
   }
 
   private void onCreateLoadBundles() {
@@ -211,5 +220,47 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
+  }
+
+  private void loadUserImage() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> accountManager.accountStatus()
+            .first())
+        .flatMap(account -> getUserAvatar(account))
+        .observeOn(viewScheduler)
+        .doOnNext(userAvatarUrl -> {
+          if (userAvatarUrl != null) {
+            view.setUserImage(userAvatarUrl);
+          }
+          view.showAvatar();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleUserImageClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.imageClick()
+            .observeOn(viewScheduler)
+            .doOnNext(account -> homeNavigator.navigateToSettings())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private Observable<String> getUserAvatar(Account account) {
+    String userAvatarUrl = null;
+    if (account != null && account.isLoggedIn()) {
+      userAvatarUrl = account.getAvatar();
+    }
+    return Observable.just(userAvatarUrl);
   }
 }

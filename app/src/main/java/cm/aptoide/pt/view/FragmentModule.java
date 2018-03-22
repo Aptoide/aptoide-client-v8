@@ -43,6 +43,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import dagger.Module;
@@ -145,28 +146,34 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
-      HomeNavigator homeNavigator, AdMapper adMapper) {
+      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper);
+        CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager);
   }
 
-  @FragmentScope @Provides HomeNavigator providesHomeNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity());
+  @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
+    return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
+        bottomNavigationMapper);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository) {
     return new Home(bundlesRepository);
   }
 
-  @FragmentScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
+  @FragmentScope @Provides BottomNavigationMapper providesBottomNavigationMapper() {
     return new BottomNavigationMapper();
   }
 
-  @FragmentScope @Provides MyStoresPresenter provideMyStorePresenter(
-      BottomNavigationMapper bottomNavigationMapper) {
-    return new MyStoresPresenter((MyStoresView) fragment,
-        (AptoideBottomNavigator) fragment.getActivity(), AndroidSchedulers.mainThread(),
+  @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
+      AptoideAccountManager aptoideAccountManager, MyStoresNavigator navigator) {
+    return new MyStoresPresenter((MyStoresView) fragment, AndroidSchedulers.mainThread(),
+        aptoideAccountManager, navigator);
+  }
+
+  @FragmentScope @Provides MyStoresNavigator providesMyStoreNavigator(
+      FragmentNavigator fragmentNavigator, BottomNavigationMapper bottomNavigationMapper) {
+    return new MyStoresNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
   }
 }

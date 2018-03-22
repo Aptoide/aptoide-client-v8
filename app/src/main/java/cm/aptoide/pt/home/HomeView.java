@@ -42,4 +42,10 @@ public interface HomeView extends View {
   void showNetworkError();
 
   Observable<Void> retryClicked();
+
+  void setUserImage(String userAvatarUrl);
+
+  Observable<Void> imageClick();
+
+  void showAvatar();
 }
