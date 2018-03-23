@@ -1,10 +1,12 @@
 package cm.aptoide.pt.view.wizard;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -17,6 +19,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
@@ -51,6 +54,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
   private boolean isInPortraitMode;
   private int currentPosition;
   private Runnable registerViewpagerCurrentItem;
+  private BottomNavigationActivity bottomNavigationActivity;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -66,11 +70,19 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     }
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
+  }
+
   @Override public void onDestroy() {
     if (viewPager != null) {
       viewPager.removeOnPageChangeListener(null);
       viewPager = null;
     }
+    bottomNavigationActivity = null;
     super.onDestroy();
   }
 
@@ -136,6 +148,13 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     viewPager.post(registerViewpagerCurrentItem);
   }
 
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    bottomNavigationActivity.hide();
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
   @Override public void onDestroyView() {
     viewPager.removeOnPageChangeListener(pageChangeListener);
     viewPager.removeCallbacks(registerViewpagerCurrentItem);
@@ -146,6 +165,7 @@ public class WizardFragment extends UIComponentFragment implements WizardView {
     nextIcon = null;
     viewPager.setAdapter(null);
     viewPager = null;
+    bottomNavigationActivity.show();
     super.onDestroyView();
   }
 
