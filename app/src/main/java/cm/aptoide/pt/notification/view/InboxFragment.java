@@ -1,17 +1,21 @@
 package cm.aptoide.pt.notification.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
@@ -32,6 +36,19 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
   private RecyclerView list;
   private InboxAdapter adapter;
   private PublishSubject<AptoideNotification> notificationSubject;
+  private BottomNavigationActivity bottomNavigationActivity;
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
+  }
+
+  @Override public void onDestroy() {
+    bottomNavigationActivity = null;
+    super.onDestroy();
+  }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
@@ -42,6 +59,20 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onDestroyView() {
+    bottomNavigationActivity.show();
+    super.onDestroyView();
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    super.setupToolbarDetails(toolbar);
+    toolbar.setTitle(getString(R.string.myaccount_header_title));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -73,6 +104,13 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
             AndroidSchedulers.mainThread()));
   }
 
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    bottomNavigationActivity.hide();
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
   @Override public void showNotifications(List<AptoideNotification> notifications) {
     adapter.updateNotifications(notifications);
   }
@@ -83,14 +121,5 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
   @Override public int getContentViewId() {
     return R.layout.fragment_inbox;
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
-  @Override protected void setupToolbarDetails(Toolbar toolbar) {
-    super.setupToolbarDetails(toolbar);
-    toolbar.setTitle(getString(R.string.myaccount_header_title));
   }
 }

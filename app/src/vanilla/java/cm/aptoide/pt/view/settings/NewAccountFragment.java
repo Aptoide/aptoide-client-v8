@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.settings;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.BackButtonFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -72,6 +74,7 @@ public class NewAccountFragment extends BackButtonFragment
   private Button createStoreButton;
   private Button editStoreButton;
   private Button editProfileButton;
+  private BottomNavigationActivity bottomNavigationActivity;
 
   //Navigation buttons
   private View notificationHistory;
@@ -116,8 +119,40 @@ public class NewAccountFragment extends BackButtonFragment
         .getSimpleName());
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
+  }
+
+  @Override public void onDestroy() {
+    bottomNavigationActivity = null;
+    super.onDestroy();
+  }
+
+  @Override public void onDestroyView() {
+    myProfileView = null;
+    myStoreView = null;
+    loginView = null;
+    accountView = null;
+    createStoreMessage = null;
+    myAccountAvatar = null;
+    myAccountName = null;
+    myStoreName = null;
+    loginButton = null;
+    logoutButton = null;
+    findFriendsButton = null;
+    createStoreButton = null;
+    editStoreButton = null;
+    editProfileButton = null;
+    bottomNavigationActivity.show();
+    super.onDestroyView();
+  }
+
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    bottomNavigationActivity.hide();
     return inflater.inflate(R.layout.fragment_my_account, container, false);
   }
 
