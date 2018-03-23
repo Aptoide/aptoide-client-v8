@@ -94,6 +94,10 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   boolean hasResults();
 
+  void disableUpNavigation();
+
+  boolean shouldHideUpNavigation();
+
   interface Model {
 
     List<SearchAppResult> getFollowedStoresSearchAppResults();
