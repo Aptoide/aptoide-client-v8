@@ -14,14 +14,18 @@ public class TimelineBundle implements HomeBundle {
   private final BundleType type;
   private final Event event;
   private final String tag;
+  private final String userIcon;
+  private final String userName;
 
   public TimelineBundle(String title, List<Application> apps, BundleType type, Event event,
-      String tag) {
+      String tag, String userIcon, String userName) {
     this.title = title;
     this.apps = apps;
     this.type = type;
     this.event = event;
     this.tag = tag;
+    this.userIcon = userIcon;
+    this.userName = userName;
   }
 
   @Override public String getTitle() {
@@ -33,7 +37,7 @@ public class TimelineBundle implements HomeBundle {
   }
 
   @Override public BundleType getType() {
-    return BundleType.TIMELINE;
+    return this.type;
   }
 
   @Override public Event getEvent() {
@@ -42,5 +46,13 @@ public class TimelineBundle implements HomeBundle {
 
   @Override public String getTag() {
     return this.tag;
+  }
+
+  public String getUserIcon() {
+    return userIcon;
+  }
+
+  public String getUserName() {
+    return userName;
   }
 }

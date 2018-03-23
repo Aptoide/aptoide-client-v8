@@ -19,7 +19,6 @@
       android:layout_gravity="center_vertical"
       android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
-      android:text="@string/home_recommends"
       android:textStyle="italic"
       tools:text="best app store recommends"
       style="@style/Aptoide.TextView.Medium.S.BlackAlpha"

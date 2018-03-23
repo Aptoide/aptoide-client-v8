@@ -15,7 +15,7 @@ import rx.subjects.PublishSubject;
  */
 
 public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
-  private static final int TIMELINE = R.layout.timeline_recommends_bundle_item;
+  private static final int SOCIAL = R.layout.social_recommends_bundle_item;
   private static final int EDITORS = R.layout.editors_choice_bundle_item;
   private static final int APPS = R.layout.apps_bundle_item;
   private static final int STORE = R.layout.store_bundle_item;
@@ -46,6 +46,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return new EditorsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter,
             appClickedEvents);
+      case SOCIAL:
+        return new SocialBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(SOCIAL, parent, false), appClickedEvents);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter, appClickedEvents);
@@ -71,7 +74,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     switch (bundles.get(position)
         .getType()) {
       case TIMELINE:
-        return TIMELINE;
+        return SOCIAL;
       case APPS:
         return APPS;
       case EDITORS:
