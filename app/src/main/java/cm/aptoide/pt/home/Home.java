@@ -1,5 +1,9 @@
 package cm.aptoide.pt.home;
 
+import android.support.annotation.NonNull;
+import cm.aptoide.pt.view.app.Application;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Single;
 
 /**
@@ -15,7 +19,11 @@ public class Home {
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
-    return bundlesRepository.loadHomeBundles();
+    return bundlesRepository.loadHomeBundles()
+        .flatMap(homeBundlesModel -> {
+          List<HomeBundle> homeBundles = addFakeSocialBundleTo(homeBundlesModel);
+          return Single.just(new HomeBundlesModel(homeBundles, false, 0));
+        });
   }
 
   public Single<HomeBundlesModel> loadFreshHomeBundles() {
@@ -28,5 +36,18 @@ public class Home {
 
   public boolean hasMore() {
     return bundlesRepository.hasMore();
+  }
+
+  @NonNull private List<HomeBundle> addFakeSocialBundleTo(HomeBundlesModel homeBundlesModel) {
+    List<HomeBundle> homeBundles = new ArrayList<>();
+    List<Application> apps = new ArrayList<>();
+    apps.add(new Application("asf wallet",
+        "http://pool.img.aptoide.com/asf-store/ace60f6352f6dd9289843b5b0b2ab3d4_icon.png", 5,
+        1000000, "asf.wallet.android.com", 36057221));
+    homeBundles.add(new SocialBundle("ok", apps, HomeBundle.BundleType.SOCIAL, null, "TAG",
+        "http://pool.img.aptoide.com/asf-store/3bf5adf05843f9f28c486d5ddef8f873_ravatar.jpg",
+        "asf-store"));
+    homeBundles.addAll(homeBundlesModel.getList());
+    return homeBundles;
   }
 }

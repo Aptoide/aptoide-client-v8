@@ -73,7 +73,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   @Override public int getItemViewType(int position) {
     switch (bundles.get(position)
         .getType()) {
-      case TIMELINE:
+      case SOCIAL:
         return SOCIAL;
       case APPS:
         return APPS;

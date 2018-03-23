@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
@@ -22,6 +23,8 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
   private final ImageView icon;
   private final TextView rating;
   private final ImageView userIcon;
+  private final View appLayout;
+  private final Button install;
 
   public SocialBundleViewHolder(View view, PublishSubject<Application> appClickedEvents) {
     super(view);
@@ -31,12 +34,14 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
     this.rating = (TextView) view.findViewById(R.id.rating_label);
     this.userName = (TextView) view.findViewById(R.id.recommends);
     this.userIcon = (ImageView) view.findViewById(R.id.icon);
+    this.appLayout = view.findViewById(R.id.recommended_app_layout);
+    this.install = (Button) view.findViewById(R.id.install);
   }
 
   @Override public void setBundle(HomeBundle homeBundle) {
     if (!(homeBundle instanceof SocialBundle)) {
       throw new IllegalStateException(this.getClass()
-          .getName() + " is getting non AppBundle instance!");
+          .getName() + " is getting a non SocialBundle instance!");
     }
     SocialBundle bundle = (SocialBundle) homeBundle;
     List<Application> apps = (List<Application>) homeBundle.getContent();
@@ -44,17 +49,18 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
 
     if (apps != null && !apps.isEmpty()) {
       app = apps.get(0);
-      AptoideUtils.StringU.getFormattedString(R.string.home_recommends, itemView.getContext()
-          .getResources(), bundle.getUserName());
+      userName.setText(AptoideUtils.StringU.getFormattedString(R.string.home_recommends,
+          itemView.getContext()
+              .getResources(), bundle.getUserName()));
       appName.setText(app.getName());
       ImageLoader.with(itemView.getContext())
           .load(bundle.getUserIcon(), userIcon);
       rating.setText(String.valueOf(app.getRating()));
       ImageLoader.with(itemView.getContext())
           .load(app.getIcon(), icon);
-      userName.setText(bundle.getUserName());
 
-      itemView.setOnClickListener(v -> appClickedEvents.onNext(app));
+      appLayout.setOnClickListener(v -> appClickedEvents.onNext(app));
+      install.setOnClickListener(v -> appClickedEvents.onNext(app));
     }
   }
 }
