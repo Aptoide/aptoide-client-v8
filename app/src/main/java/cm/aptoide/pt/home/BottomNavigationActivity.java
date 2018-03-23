@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -31,8 +29,6 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
       "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
   protected BottomNavigationView bottomNavigationView;
   private PublishSubject<Integer> navigationSubject;
-  private Animation slideUp;
-  private Animation slideDown;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -74,13 +70,11 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
   }
 
   @Override public void hide() {
-    bottomNavigationView.startAnimation(slideDown);
     bottomNavigationView.setVisibility(View.GONE);
   }
 
   @Override public void show() {
     bottomNavigationView.setVisibility(View.VISIBLE);
-    bottomNavigationView.startAnimation(slideUp);
   }
 
   private Event getStoreEvent() {
@@ -100,7 +94,5 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
       navigationSubject.onNext(item.getItemId());
       return true;
     });
-    slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
-    slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
   }
 }
