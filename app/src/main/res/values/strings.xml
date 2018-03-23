@@ -455,6 +455,7 @@
   <string name="all_stores">All stores</string>
   <string name="followed_stores">Followed stores</string>
   <string name="search_minimum_chars">Write at least 2 chars. to search for something</string>
+  <string name="search_hint_title">Search apps &amp; games</string>
 
   <!-- My account -->
   <string name="my_account_title_my_account">My Account</string>

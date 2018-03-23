@@ -30,7 +30,6 @@
   </style>
 
   <style name="Ripple">
-    <!-- Customize your theme here. -->
     <item name="colorControlHighlight">@color/aptoide_orange</item>
   </style>
 
