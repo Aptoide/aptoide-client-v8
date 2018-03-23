@@ -15,6 +15,7 @@ import rx.subjects.PublishSubject;
  */
 
 public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
+  private static final int TIMELINE = R.layout.timeline_recommends_bundle_item;
   private static final int EDITORS = R.layout.editors_choice_bundle_item;
   private static final int APPS = R.layout.apps_bundle_item;
   private static final int STORE = R.layout.store_bundle_item;
@@ -69,6 +70,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   @Override public int getItemViewType(int position) {
     switch (bundles.get(position)
         .getType()) {
+      case TIMELINE:
+        return TIMELINE;
       case APPS:
         return APPS;
       case EDITORS:
