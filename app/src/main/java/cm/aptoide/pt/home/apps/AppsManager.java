@@ -6,6 +6,7 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
@@ -29,10 +30,11 @@ public class AppsManager {
   private InstallAnalytics installAnalytics;
   private PackageManager packageManager;
   private Context context;
+  private DownloadFactory downloadFactory;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
-      PackageManager packageManager, Context context) {
+      PackageManager packageManager, Context context, DownloadFactory downloadFactory) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -40,6 +42,7 @@ public class AppsManager {
     this.installAnalytics = installAnalytics;
     this.packageManager = packageManager;
     this.context = context;
+    this.downloadFactory = downloadFactory;
   }
 
   public Observable<List<App>> getUpdatesList() {
@@ -90,15 +93,22 @@ public class AppsManager {
   public Completable resumeDownload(App app) {
     return installManager.getDownload(((DownloadApp) app).getMd5())
         .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(subscription -> setupEvents(download)));
+            .doOnSubscribe(subscription -> setupDownloadEvents(download)));
   }
 
-  private void setupEvents(Download download) {
+  private void setupDownloadEvents(Download download) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.DOWNLOADS);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL, AppContext.DOWNLOADS,
         getOrigin(download.getAction()));
+  }
+
+  private void setupUpdateEvents(Download download) {
+    downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
+        DownloadAnalytics.AppContext.UPDATE_TAB);
+    installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
+        InstallType.UPDATE, AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, Origin.UPDATE);
   }
 
   private Origin getOrigin(int action) {
@@ -145,7 +155,23 @@ public class AppsManager {
 
   }
 
-  public void updateApp(App app) {
+  public Completable updateApp(App app) {
+    String packageName = ((UpdateApp) app).getPackageName();
+    return updatesManager.getUpdate(packageName)
+        .flatMap(update -> {
+          Download value = downloadFactory.create(update);
+          return Observable.just(value);
+        })
+        .flatMapCompletable(download -> installManager.install(download)
+            .doOnSubscribe(__ -> setupUpdateEvents(download)))
+        .toCompletable();
+  }
 
+  public boolean showWarning() {
+    return installManager.showWarning();
+  }
+
+  public void storeRootAnswer(boolean answer) {
+    installManager.rootInstallAllowed(answer);
   }
 }

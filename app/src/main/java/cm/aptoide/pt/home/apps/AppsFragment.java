@@ -15,8 +15,11 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,8 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
+
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
  * Created by filipegoncalves on 3/7/18.
@@ -70,8 +75,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(),
         new AppMapper(), downloadAnalytics, installAnalytics, getContext().getPackageManager(),
-        getContext()), AndroidSchedulers.mainThread(), Schedulers.computation(),
-        CrashReport.getInstance(), new PermissionManager(), ((PermissionService) getContext())));
+        getContext(), new DownloadFactory(
+        ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
+        AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
+        new PermissionManager(), ((PermissionService) getContext())));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -163,6 +170,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     return appItemClicks.filter(
         appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_UPDATE)
         .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<Boolean> showRootWarning() {
+    return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
+        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, getResources()))
+        .map(response -> (response.equals(YES)));
   }
 
   @Override public void onDestroy() {

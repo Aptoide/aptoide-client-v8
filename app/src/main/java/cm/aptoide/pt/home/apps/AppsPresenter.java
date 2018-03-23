@@ -7,6 +7,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 import rx.Scheduler;
+import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by filipegoncalves on 3/7/18.
@@ -111,11 +112,22 @@ public class AppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.updateApp())
-        .doOnNext(app -> appsManager.updateApp(app))
+        .flatMap(created -> view.updateApp()
+            .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
+                .flatMap(__ -> {
+                  if (appsManager.showWarning()) {
+                    return view.showRootWarning()
+                        .doOnNext(answer -> appsManager.storeRootAnswer(answer));
+                  }
+                  return Observable.just(true);
+                })
+                .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
+                .flatMapCompletable(__3 -> appsManager.updateApp(app))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> crashReport.log(error));
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
   }
 
   private void handleUpdateAllClick() {

@@ -35,4 +35,6 @@ public interface AppsFragmentView extends View {
   Observable<App> cancelUpdate();
 
   Observable<App> resumeUpdate();
+
+  Observable<Boolean> showRootWarning();
 }

@@ -40,4 +40,8 @@ public class UpdatesManager {
     return updateRepository.getAll(false)
         .sample(750, TimeUnit.MILLISECONDS);
   }
+
+  public Observable<Update> getUpdate(String packageName) {
+    return updateRepository.get(packageName);
+  }
 }
