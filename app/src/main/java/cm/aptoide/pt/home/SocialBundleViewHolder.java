@@ -54,7 +54,7 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
               .getResources(), bundle.getUserName()));
       appName.setText(app.getName());
       ImageLoader.with(itemView.getContext())
-          .load(bundle.getUserIcon(), userIcon);
+          .loadUsingCircleTransform(bundle.getUserIcon(), userIcon);
       rating.setText(String.valueOf(app.getRating()));
       ImageLoader.with(itemView.getContext())
           .load(app.getIcon(), icon);
