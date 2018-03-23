@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:orientation="horizontal"
+    tools:showIn="@layout/app_home_item"
+    >
+
+  <ImageView
+      android:layout_width="10dp"
+      android:layout_height="10dp"
+      android:layout_gravity="center_vertical"
+      android:src="@drawable/ic_star_black"
+      />
+  <TextView
+      android:id="@+id/rating_label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="1dp"
+      android:layout_marginLeft="5dp"
+      android:layout_marginStart="5dp"
+      android:textSize="10sp"
+      tools:ignore="SmallSp"
+      tools:text="2.3"
+      style="@style/Aptoide.TextView.Regular.XXS.Black"
+      />
+
+</LinearLayout>
+
+    
