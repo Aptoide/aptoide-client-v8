@@ -75,6 +75,9 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
+  private static final String TRENDING_LIST_STATE = "trending_list_state";
+  private static final String UNSUBMITTED_QUERY = "unsubmitted_query";
+
   @Inject SearchResultPresenter searchResultPresenter;
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -109,6 +112,8 @@ public class SearchResultFragment extends BackButtonFragment
   private boolean focusInSearchBar;
   private ActionBar actionBar;
   private boolean noResults;
+  private String unsubmittedQuery;
+  private boolean isSearchExpanded;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -178,7 +183,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showFollowedStoresResult() {
-    if (followedStoresResultList.getVisibility() == VISIBLE) {
+    if (followedStoresResultList.getVisibility() == View.VISIBLE) {
       setFollowedStoresButtonSelected();
       return;
     }
@@ -186,7 +191,7 @@ public class SearchResultFragment extends BackButtonFragment
       int viewWidth = allStoresResultList.getWidth();
 
       followedStoresResultList.setTranslationX(-viewWidth);
-      followedStoresResultList.setVisibility(VISIBLE);
+      followedStoresResultList.setVisibility(View.VISIBLE);
       followedStoresResultList.animate()
           .translationXBy(viewWidth)
           .setDuration(ANIMATION_DURATION)
@@ -201,14 +206,14 @@ public class SearchResultFragment extends BackButtonFragment
           })
           .start();
     } else {
-      followedStoresResultList.setVisibility(VISIBLE);
+      followedStoresResultList.setVisibility(View.VISIBLE);
       allStoresResultList.setVisibility(View.INVISIBLE);
       setFollowedStoresButtonSelected();
     }
   }
 
   @Override public void showAllStoresResult() {
-    if (allStoresResultList.getVisibility() == VISIBLE) {
+    if (allStoresResultList.getVisibility() == View.VISIBLE) {
       setAllStoresButtonSelected();
       return;
     }
@@ -221,7 +226,7 @@ public class SearchResultFragment extends BackButtonFragment
           .start();
 
       allStoresResultList.setTranslationX(viewWidth);
-      allStoresResultList.setVisibility(VISIBLE);
+      allStoresResultList.setVisibility(View.VISIBLE);
       allStoresResultList.animate()
           .translationXBy(-viewWidth)
           .setDuration(ANIMATION_DURATION)
@@ -232,7 +237,7 @@ public class SearchResultFragment extends BackButtonFragment
           .start();
     } else {
       followedStoresResultList.setVisibility(View.INVISIBLE);
-      allStoresResultList.setVisibility(VISIBLE);
+      allStoresResultList.setVisibility(View.VISIBLE);
       setAllStoresButtonSelected();
     }
   }
@@ -252,7 +257,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showNoResultsView() {
-    noSearchLayout.setVisibility(VISIBLE);
+    noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
     allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
     followedStoresResultList.setVisibility(View.GONE);
@@ -266,11 +271,11 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(VISIBLE);
+    searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showLoading() {
-    progressBar.setVisibility(VISIBLE);
+    progressBar.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
   }
@@ -368,8 +373,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void hideFollowedStoresTab() {
-    allStoresButton.setVisibility(VISIBLE);
-    allStoresResultList.setVisibility(VISIBLE);
+    allStoresButton.setVisibility(View.VISIBLE);
+    allStoresResultList.setVisibility(View.VISIBLE);
     followedStoresButton.setVisibility(View.GONE);
     followedStoresResultList.setVisibility(View.GONE);
     setAllStoresButtonSelected();
@@ -379,8 +384,8 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void hideNonFollowedStoresTab() {
     allStoresButton.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
-    followedStoresButton.setVisibility(VISIBLE);
-    followedStoresResultList.setVisibility(VISIBLE);
+    followedStoresButton.setVisibility(View.VISIBLE);
+    followedStoresResultList.setVisibility(View.VISIBLE);
     setFollowedStoresButtonSelected();
     viewModel.setAllStoresSelected(false);
   }
@@ -390,13 +395,13 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void toggleSuggestionsView() {
-    suggestionsResultList.setVisibility(VISIBLE);
+    suggestionsResultList.setVisibility(View.VISIBLE);
     trendingResultList.setVisibility(View.GONE);
   }
 
   @Override public void toggleTrendingView() {
     suggestionsResultList.setVisibility(View.GONE);
-    trendingResultList.setVisibility(VISIBLE);
+    trendingResultList.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideSuggestionsViews() {
@@ -448,7 +453,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void scrollToTop() {
     RecyclerView list;
-    if (followedStoresResultList.getVisibility() == VISIBLE) {
+    if (followedStoresResultList.getVisibility() == View.VISIBLE) {
       list = followedStoresResultList;
     } else {
       list = allStoresResultList;
@@ -481,20 +486,51 @@ public class SearchResultFragment extends BackButtonFragment
         && noSearchLayout.getVisibility() != VISIBLE;
   }
 
+  @Override public void setUnsubmittedQuery(String query) {
+
+    unsubmittedQuery = query;
+  }
+
+  @Override public void clearUnsubmittedQuery() {
+    unsubmittedQuery = "";
+  }
+
+  @Override public void setVisibilityOnRestore() {
+    if (!focusInSearchBar) {
+      if (hasSearchResults()) {
+        showResultsView();
+      } else {
+        showSuggestionsView();
+      }
+    }
+  }
+
+  @Override public boolean shouldShowSuggestions() {
+    return toolbar.getTitle()
+        .equals(getResources().getString(R.string.search_hint_title));
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
         .isEmpty()) {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
-      trendingResultList.setVisibility(VISIBLE);
+      trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
-      suggestionsResultList.setVisibility(VISIBLE);
+      suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
     }
+  }
+
+  private void forceSuggestions() {
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.VISIBLE);
+    suggestionsResultList.setVisibility(View.GONE);
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -515,11 +551,11 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setFollowedStoresButtonSelected() {
-    if (followedStoresButton.getVisibility() == VISIBLE) {
+    if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.white));
       followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
     }
-    if (allStoresButton.getVisibility() == VISIBLE) {
+    if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
       allStoresButton.setBackgroundResource(0);
     }
@@ -532,11 +568,11 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setAllStoresButtonSelected() {
-    if (followedStoresButton.getVisibility() == VISIBLE) {
+    if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
       followedStoresButton.setBackgroundResource(0);
     }
-    if (allStoresButton.getVisibility() == VISIBLE) {
+    if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.white));
       allStoresButton.setBackgroundResource(R.drawable.search_button_background);
     }
@@ -561,6 +597,7 @@ public class SearchResultFragment extends BackButtonFragment
         new MenuItemCompat.OnActionExpandListener() {
           @Override public boolean onMenuItemActionExpand(MenuItem menuItem) {
             enableUpNavigation();
+            isSearchExpanded = true;
             return true;
           }
 
@@ -570,12 +607,14 @@ public class SearchResultFragment extends BackButtonFragment
             } else if (noResults) {
               showNoResultsView();
             } else {
-              showSuggestionsView();
+              forceSuggestions();
             }
             if (shouldHideUpNavigation()) disableUpNavigation();
+            isSearchExpanded = false;
             return true;
           }
         });
+
     searchSetupPublishSubject.onNext(null);
   }
 
@@ -600,8 +639,11 @@ public class SearchResultFragment extends BackButtonFragment
       viewModel = Parcels.unwrap(getArguments().getParcelable(VIEW_MODEL));
     }
 
-    focusInSearchBar =
-        getArguments().containsKey(FOCUS_IN_SEARCH) && getArguments().getBoolean(FOCUS_IN_SEARCH);
+    if (savedInstanceState != null && savedInstanceState.containsKey(FOCUS_IN_SEARCH)) {
+      focusInSearchBar = savedInstanceState.getBoolean(FOCUS_IN_SEARCH);
+    } else if (getArguments().containsKey(FOCUS_IN_SEARCH) && savedInstanceState == null) {
+      focusInSearchBar = getArguments().getBoolean(FOCUS_IN_SEARCH);
+    }
 
     if (viewModel != null) currentQuery = viewModel.getCurrentQuery();
 
@@ -659,7 +701,14 @@ public class SearchResultFragment extends BackButtonFragment
       restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(
           ALL_STORES_SEARCH_LIST_STATE) : null,
           savedInstanceState != null ? savedInstanceState.getParcelable(
-              FOLLOWED_STORES_SEARCH_LIST_STATE) : null);
+              FOLLOWED_STORES_SEARCH_LIST_STATE) : null,
+          savedInstanceState != null ? savedInstanceState.getParcelable(TRENDING_LIST_STATE)
+              : null);
+    }
+    if (savedInstanceState != null) {
+      unsubmittedQuery =
+          savedInstanceState.containsKey(UNSUBMITTED_QUERY) ? savedInstanceState.getString(
+              UNSUBMITTED_QUERY) : "";
     }
 
     attachPresenter(searchResultPresenter);
@@ -719,13 +768,17 @@ public class SearchResultFragment extends BackButtonFragment
     outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
         .onSaveInstanceState());
 
+    outState.putString(UNSUBMITTED_QUERY, unsubmittedQuery);
+
+    if (isSearchExpanded) outState.putBoolean(FOCUS_IN_SEARCH, true);
+
     outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
         followedStoresResultList.getLayoutManager()
             .onSaveInstanceState());
   }
 
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState,
-      @Nullable Parcelable followedStoresSearchListState) {
+      @Nullable Parcelable followedStoresSearchListState, Parcelable trendingListState) {
 
     final List<SearchAppResult> allStoresSearchAppResults =
         viewModel.getAllStoresSearchAppResults();
@@ -833,10 +886,13 @@ public class SearchResultFragment extends BackButtonFragment
       searchMenuItem.expandActionView();
     }
 
-    if (searchView != null && !getCurrentQuery().isEmpty()) {
+    if (searchView != null && unsubmittedQuery != null) {
+      searchView.setQuery(unsubmittedQuery, false);
+    } else if (searchView != null && !getCurrentQuery().isEmpty()) {
       final String currentQuery = getCurrentQuery();
       searchView.setQuery(currentQuery, false);
     }
+
     showSuggestionsView();
   }
 

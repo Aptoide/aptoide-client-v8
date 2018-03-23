@@ -44,6 +44,10 @@ public class SearchSuggestionsAdapter extends RecyclerView.Adapter<SuggestionVie
     notifyDataSetChanged();
   }
 
+  public List<Suggestion> getSuggestions() {
+    return suggestions;
+  }
+
   public void addSuggestionsFromString(List<String> suggestions) {
     List<Suggestion> result = new ArrayList<>();
 
