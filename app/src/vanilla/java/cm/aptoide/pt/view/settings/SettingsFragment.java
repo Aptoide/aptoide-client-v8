@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.view.settings;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -43,6 +44,7 @@ import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -112,6 +114,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private String defaultThemeName;
   private AdultContentAnalytics adultContentAnalytics;
   private FragmentNavigator fragmentNavigator;
+  private BottomNavigationActivity bottomNavigationActivity;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -181,7 +184,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
       ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
     }
-
+    bottomNavigationActivity.hide();
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
@@ -219,7 +222,20 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onDestroyView() {
     subscriptions.clear();
+    bottomNavigationActivity.show();
     super.onDestroyView();
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
+  }
+
+  @Override public void onDestroy() {
+    bottomNavigationActivity = null;
+    super.onDestroy();
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -321,7 +337,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         })
         .retry()
         .subscribe());
-
 
     subscriptions.add(accountManager.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())

@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -22,7 +23,8 @@ import rx.subjects.PublishSubject;
 public abstract class BottomNavigationActivity extends TabNavigatorActivity
     implements AptoideBottomNavigator {
 
-  protected static final int LAYOUT = R.layout.frame_layout;
+  protected static final int BOTTOMNAVLAYOUT = R.layout.frame_layout;
+
   private final static String EVENT_ACTION =
       "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
   protected BottomNavigationView bottomNavigationView;
@@ -30,14 +32,8 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(LAYOUT);
     navigationSubject = PublishSubject.create();
-    bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-    BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-    bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-      navigationSubject.onNext(item.getItemId());
-      return true;
-    });
+    setBottomNavigation();
   }
 
   @Override public Observable<Integer> navigationEvent() {
@@ -73,6 +69,14 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     }
   }
 
+  @Override public void hide() {
+    bottomNavigationView.setVisibility(View.GONE);
+  }
+
+  @Override public void show() {
+    bottomNavigationView.setVisibility(View.VISIBLE);
+  }
+
   private Event getStoreEvent() {
     Event event = new Event();
     event.setAction(EVENT_ACTION);
@@ -80,5 +84,15 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     event.setName(Event.Name.myStores);
     event.setType(Event.Type.CLIENT);
     return event;
+  }
+
+  private void setBottomNavigation() {
+    setContentView(BOTTOMNAVLAYOUT);
+    bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+    BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+    bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+      navigationSubject.onNext(item.getItemId());
+      return true;
+    });
   }
 }
