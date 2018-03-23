@@ -8,7 +8,7 @@ import java.util.List;
  * Created by jdandrade on 23/03/2018.
  */
 
-public class TimelineBundle implements HomeBundle {
+public class SocialBundle implements HomeBundle {
   private final String title;
   private final List<Application> apps;
   private final BundleType type;
@@ -17,7 +17,7 @@ public class TimelineBundle implements HomeBundle {
   private final String userIcon;
   private final String userName;
 
-  public TimelineBundle(String title, List<Application> apps, BundleType type, Event event,
+  public SocialBundle(String title, List<Application> apps, BundleType type, Event event,
       String tag, String userIcon, String userName) {
     this.title = title;
     this.apps = apps;

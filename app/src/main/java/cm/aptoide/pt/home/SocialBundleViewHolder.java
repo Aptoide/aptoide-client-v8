@@ -34,11 +34,11 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
   }
 
   @Override public void setBundle(HomeBundle homeBundle) {
-    if (!(homeBundle instanceof TimelineBundle)) {
+    if (!(homeBundle instanceof SocialBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
-    TimelineBundle bundle = (TimelineBundle) homeBundle;
+    SocialBundle bundle = (SocialBundle) homeBundle;
     List<Application> apps = (List<Application>) homeBundle.getContent();
     Application app;
 
