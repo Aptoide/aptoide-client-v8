@@ -510,6 +510,10 @@ public class SearchResultFragment extends BackButtonFragment
         .equals(getResources().getString(R.string.search_hint_title));
   }
 
+  @Override public boolean getNoResultsViewState() {
+    return noResults;
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -614,6 +618,8 @@ public class SearchResultFragment extends BackButtonFragment
             return true;
           }
         });
+
+    focusInSearchBar = currentQuery.isEmpty() && !noResults;
 
     searchSetupPublishSubject.onNext(null);
   }

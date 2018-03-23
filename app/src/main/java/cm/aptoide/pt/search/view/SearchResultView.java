@@ -106,6 +106,8 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   boolean shouldShowSuggestions();
 
+  boolean getNoResultsViewState();
+
   interface Model {
 
     List<SearchAppResult> getFollowedStoresSearchAppResults();
