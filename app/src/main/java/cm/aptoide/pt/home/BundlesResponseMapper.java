@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -13,18 +12,12 @@ import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import rx.functions.Func1;
 
 /**
  * Created by jdandrade on 08/03/2018.
  */
 
 public class BundlesResponseMapper {
-  @NonNull Func1<GetStoreWidgets, List<HomeBundle>> map() {
-    return bundlesResponse -> fromWidgetsToBundles(bundlesResponse.getDataList()
-        .getList());
-  }
-
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
 
     List<HomeBundle> appBundles = new ArrayList<>();
