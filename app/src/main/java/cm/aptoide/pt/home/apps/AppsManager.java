@@ -158,9 +158,6 @@ public class AppsManager {
     installManager.stopInstallation(((DownloadApp) app).getMd5());
   }
 
-  public void retryUpdate(App app) {
-  }
-
   public Completable resumeUpdate(App app) {
     return installManager.getDownload(((UpdateApp) app).getMd5())
         .flatMapCompletable(download -> installManager.install(download)
@@ -168,7 +165,8 @@ public class AppsManager {
   }
 
   public void cancelUpdate(App app) {
-
+    installManager.removeInstallationFile(((UpdateApp) app).getMd5(),
+        ((UpdateApp) app).getPackageName(), Integer.parseInt(((UpdateApp) app).getVersion()));
   }
 
   public void pauseUpdate(App app) {
@@ -193,5 +191,9 @@ public class AppsManager {
 
   public void storeRootAnswer(boolean answer) {
     installManager.rootInstallAllowed(answer);
+  }
+
+  public void updateAll() {
+
   }
 }
