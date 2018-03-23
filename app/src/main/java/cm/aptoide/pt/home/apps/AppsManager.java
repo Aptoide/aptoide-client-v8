@@ -159,11 +159,12 @@ public class AppsManager {
   }
 
   public void retryUpdate(App app) {
-
   }
 
-  public void resumeUpdate(App app) {
-
+  public Completable resumeUpdate(App app) {
+    return installManager.getDownload(((UpdateApp) app).getMd5())
+        .flatMapCompletable(download -> installManager.install(download)
+            .doOnSubscribe(subscription -> setupDownloadEvents(download)));
   }
 
   public void cancelUpdate(App app) {
@@ -171,7 +172,7 @@ public class AppsManager {
   }
 
   public void pauseUpdate(App app) {
-
+    installManager.stopInstallation(((UpdateApp) app).getMd5());
   }
 
   public Completable updateApp(App app) {

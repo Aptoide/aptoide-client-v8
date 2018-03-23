@@ -61,7 +61,7 @@ public class AppsPresenter implements Presenter {
 
     handleResumeUpdateClick();
 
-    handleRetryUpdateClick();
+    //handleRetryUpdateClick();
 
     observeUpdatesList();
   }
@@ -93,8 +93,8 @@ public class AppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.resumeUpdate())
-        .doOnNext(app -> appsManager.resumeUpdate(app))
+        .flatMap(created -> Observable.merge(view.resumeUpdate(), view.retryUpdate()))
+        .flatMapCompletable(app -> appsManager.resumeUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
