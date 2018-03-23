@@ -63,6 +63,14 @@ public class UpdateApp implements App {
     return isIndeterminate;
   }
 
+  @Override public boolean equals(Object obj) {
+    if (!(obj instanceof UpdateApp)) {
+      return false;
+    }
+    UpdateApp other = ((UpdateApp) obj);
+    return md5.equals(other.getMd5());
+  }
+
   public enum UpdateStatus {
     UPDATE, STANDBY, UPDATING, ERROR
   }

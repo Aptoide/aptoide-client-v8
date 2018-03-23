@@ -72,4 +72,41 @@ public class AppMapper {
     }
     return updatesList;
   }
+
+  public List<App> getUpdatesList(List<Install> installs) {
+    List<App> updatesList = new ArrayList<>();
+    for (Install install : installs) {
+      updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
+          install.getPackageName(), install.getProgress(), install.isIndeterminate(),
+          String.valueOf(install.getVersionCode()), mapUpdateStatus(install.getState())));
+    }
+    return updatesList;
+  }
+
+  private UpdateApp.UpdateStatus mapUpdateStatus(Install.InstallationStatus state) {
+    UpdateApp.UpdateStatus status;
+
+    switch (state) {
+      case GENERIC_ERROR:
+      case INSTALLATION_TIMEOUT:
+      case NOT_ENOUGH_SPACE_ERROR:
+        status = UpdateApp.UpdateStatus.ERROR;
+        break;
+      case PAUSED:
+      case IN_QUEUE:
+        status = UpdateApp.UpdateStatus.STANDBY;
+        break;
+      case INSTALLING:
+        status = UpdateApp.UpdateStatus.UPDATING;
+        break;
+      case INSTALLED:
+      case UNINSTALLED:
+        status = UpdateApp.UpdateStatus.UPDATE;
+        break;
+      default:
+        status = UpdateApp.UpdateStatus.UPDATE;
+        break;
+    }
+    return status;
+  }
 }

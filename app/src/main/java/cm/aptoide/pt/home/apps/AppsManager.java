@@ -17,6 +17,8 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
+import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
+
 /**
  * Created by filipegoncalves on 3/7/18.
  */
@@ -50,6 +52,20 @@ public class AppsManager {
         .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
+  public Observable<List<App>> getUpdateDownloadsList() {
+    return installManager.getInstallations()
+        .flatMap(installations -> {
+          if (installations == null || installations.isEmpty()) {
+            return Observable.empty();
+          }
+          return Observable.just(installations)
+              .flatMapIterable(installs -> installs)
+              .filter(install -> install.getType() == UPDATE)
+              .toList()
+              .map(updatesList -> appMapper.getUpdatesList(updatesList));
+        });
+  }
+
   public Observable<List<App>> getInstalledApps() {
     return installManager.fetchInstalled()
         .flatMapIterable(list -> list)
@@ -65,6 +81,9 @@ public class AppsManager {
             return Observable.empty();
           }
           return Observable.just(installations)
+              .flatMapIterable(installs -> installs)
+              .filter(install -> install.getType() != Install.InstallationType.UPDATE)
+              .toList()
               .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
   }

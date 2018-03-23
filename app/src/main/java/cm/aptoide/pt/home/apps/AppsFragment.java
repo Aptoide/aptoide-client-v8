@@ -178,6 +178,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(response -> (response.equals(YES)));
   }
 
+  @Override public void showUpdatesDownloadList(List<App> updatesDownloadList) {
+    adapter.addUpdateAppsList(updatesDownloadList);
+  }
+
   @Override public void onDestroy() {
     appItemClicks = null;
     super.onDestroy();

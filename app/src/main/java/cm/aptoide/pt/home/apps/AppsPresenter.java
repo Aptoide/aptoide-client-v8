@@ -37,7 +37,7 @@ public class AppsPresenter implements Presenter {
 
   @Override public void present() {
 
-    getUpdatesList();
+    getAvailableUpdatesList();
 
     getInstalledApps();
 
@@ -62,6 +62,20 @@ public class AppsPresenter implements Presenter {
     handleResumeUpdateClick();
 
     handleRetryUpdateClick();
+
+    observeUpdatesList();
+  }
+
+  private void observeUpdatesList() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(computation)
+        .flatMap(__ -> appsManager.getUpdateDownloadsList())
+        .observeOn(viewScheduler)
+        .doOnNext(list -> view.showUpdatesDownloadList(list))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void handleRetryUpdateClick() {
@@ -211,7 +225,7 @@ public class AppsPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private void getUpdatesList() {
+  private void getAvailableUpdatesList() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
