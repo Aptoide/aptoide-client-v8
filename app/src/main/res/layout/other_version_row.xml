@@ -37,8 +37,8 @@
       <ImageView
           android:layout_width="10dp"
           android:layout_height="12dp"
-          android:drawableTint="@color/green_tint_default"
           android:src="@drawable/ic_appview_version"
+          android:tint="@color/green_tint_default"
           />
 
       <TextView
