@@ -86,7 +86,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
-          android:src="@drawable/icon_logged_in"
+          android:src="@drawable/ic_logged_in"
           />
 
       <TextView

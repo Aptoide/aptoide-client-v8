@@ -34,13 +34,19 @@
         tools:background="@android:color/transparent"
         >
 
+      <ImageView
+          android:layout_width="10dp"
+          android:layout_height="12dp"
+          android:drawableTint="@color/green_tint_default"
+          android:src="@drawable/ic_appview_version"
+          />
+
       <TextView
           android:id="@+id/version_name"
           android:layout_width="wrap_content"
           android:layout_height="@dimen/other_version_icon_size_with_icon"
-          android:drawableLeft="@drawable/ic_appview_version_green"
-          android:drawablePadding="4dp"
-          android:drawableStart="@drawable/ic_appview_version_green"
+          android:layout_marginLeft="4dp"
+          android:layout_marginStart="4dp"
           android:ellipsize="end"
           android:fontFamily="@string/font_family_regular"
           android:gravity="center_vertical"

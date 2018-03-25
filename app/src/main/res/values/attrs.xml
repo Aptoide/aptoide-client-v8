@@ -34,7 +34,6 @@
 
   <attr format="reference" name="icMyAccountDrawable"/>
   <attr format="reference" name="icSearchDrawable"/>
-  <attr format="reference" name="icScheduledDrawable"/>
   <attr format="reference" name="icExcludedUpdatesDrawable"/>
   <attr format="reference" name="icSettingsDrawable"/>
   <attr format="reference" name="icSendFeedbackDrawable"/>
@@ -66,7 +65,6 @@
   <attr format="reference" name="icRatingBadDrawable"/>
   <attr format="reference" name="icRatingFloatDrawable"/>
   <attr format="reference" name="icRatingGoodDrawable"/>
-  <attr format="reference" name="icRevertDrawable"/>
   <attr format="reference" name="icStoreInfoDrawable"/>
   <attr format="reference" name="icTimelineAccessSecure"/>
   <attr format="reference" name="icTimelineDrawable"/>

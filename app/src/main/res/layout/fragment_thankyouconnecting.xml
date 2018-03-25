@@ -41,9 +41,9 @@
       android:layout_height="70dp"
       android:layout_marginRight="24dp"
       android:layout_marginTop="112dp"
+      android:src="@drawable/ic_check"
       app:layout_constraintRight_toRightOf="@+id/addressbook_graphic"
       app:layout_constraintTop_toTopOf="@+id/addressbook_graphic"
-      app:srcCompat="@drawable/ic_check"
       tools:ignore="ContentDescription"
       />
 

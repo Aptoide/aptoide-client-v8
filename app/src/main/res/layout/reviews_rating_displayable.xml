@@ -30,10 +30,10 @@
         >
 
       <ImageView
-          android:layout_width="7.3dp"
-          android:layout_height="8.7dp"
+          android:layout_width="8dp"
+          android:layout_height="8dp"
           android:layout_gravity="center_vertical"
-          android:src="@drawable/ic_user_icon"
+          android:src="@drawable/ic_user_shape_white"
           />
 
       <TextView

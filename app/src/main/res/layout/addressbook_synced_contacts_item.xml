@@ -24,7 +24,7 @@
       android:layout_alignBottom="@+id/main_icon"
       android:layout_toLeftOf="@+id/names_layout"
       android:layout_toStartOf="@+id/names_layout"
-      tools:src="@drawable/icon_store"
+      tools:src="@drawable/ic_store"
       />
 
 
@@ -43,7 +43,8 @@
         android:id="@+id/store_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/icon_store"
+        android:drawableLeft="@drawable/ic_store"
+        android:drawableStart="@drawable/ic_store"
         android:textStyle="bold"
         tools:text="teste"
         />

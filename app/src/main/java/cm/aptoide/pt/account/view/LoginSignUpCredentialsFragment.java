@@ -233,13 +233,13 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Override public void showPassword() {
     isPasswordVisible = true;
     aptoidePasswordEditText.setTransformationMethod(null);
-    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.icon_open_eye);
+    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.ic_open_eye);
   }
 
   @Override public void hidePassword() {
     isPasswordVisible = false;
     aptoidePasswordEditText.setTransformationMethod(new PasswordTransformationMethod());
-    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.icon_closed_eye);
+    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.ic_closed_eye);
   }
 
   @Override public void dismiss() {

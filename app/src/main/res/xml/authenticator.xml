@@ -5,4 +5,4 @@
     android:customTokens="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
-    android:smallIcon="@drawable/icon_user"/>
+    android:smallIcon="@drawable/ic_user_circle"/>

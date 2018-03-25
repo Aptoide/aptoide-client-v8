@@ -13,5 +13,5 @@
       android:drawable="@drawable/white_star"/>
   <item
       android:id="@android:id/progress"
-      android:drawable="@drawable/yellow_star"/>
+      android:drawable="@drawable/ic_yellow_star"/>
 </layer-list>

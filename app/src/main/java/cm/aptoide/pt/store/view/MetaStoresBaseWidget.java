@@ -46,13 +46,13 @@ public abstract class MetaStoresBaseWidget<T extends Displayable> extends Widget
             imageButton.setImageDrawable(getDrawable(R.drawable.facebook_logo));
             break;
           case TWITTER:
-            imageButton.setImageDrawable(getDrawable(R.drawable.twitter_logo));
+            imageButton.setImageDrawable(getDrawable(R.drawable.logo_twitch_large));
             break;
           case YOUTUBE:
-            imageButton.setImageDrawable(getDrawable(R.drawable.youtube_logo));
+            imageButton.setImageDrawable(getDrawable(R.drawable.logo_youtube_large));
             break;
           case TWITCH:
-            imageButton.setImageDrawable(getDrawable(R.drawable.twitch_logo));
+            imageButton.setImageDrawable(getDrawable(R.drawable.logo_twitch_large));
             break;
         }
         ViewGroup.MarginLayoutParams layoutParams =

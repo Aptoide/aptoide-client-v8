@@ -47,8 +47,8 @@
 
     <ImageButton
         android:id="@+id/refreshButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -60,7 +60,7 @@
         android:contentDescription="@string/remote_install_retry"
         android:padding="0dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/img_refresh"
+        android:src="@drawable/ic_refresh"
         android:visibility="visible"
         />
   </RelativeLayout>
