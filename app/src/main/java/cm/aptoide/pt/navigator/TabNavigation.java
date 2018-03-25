@@ -19,6 +19,7 @@ public interface TabNavigation {
   int STORES = 4;
   int COMMENTS = 5;
   int HOME = 6;
+  int BUNDLES = 7;
 
   Bundle getBundle();
 

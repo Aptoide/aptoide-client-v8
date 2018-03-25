@@ -23,6 +23,7 @@ public class DeepLinkAnalytics {
   private static final String SOURCE_GROUP_OPTION_APP_VIEW = "aptoide app view";
   private static final String SOURCE_GROUP_OPTION_HOME = "aptoide homepage";
   private static final String SOURCE_GROUP_OPTION_STORE = "aptoide store";
+  private static final String SOURCE_GROUP_OPTION_BUNDLES = "aptoide bundle";
   private static final String SOURCE_GROUP_ATTRIBUTE = "source_group";
   private HashMap<String, Object> map = new HashMap<>();
 
@@ -70,6 +71,10 @@ public class DeepLinkAnalytics {
 
   public void websiteFromAppViewWebPage() {
     websiteSourceGroup(SOURCE_GROUP_OPTION_APP_VIEW);
+  }
+
+  public void websiteFromBundlesWebPage() {
+    websiteSourceGroup(SOURCE_GROUP_OPTION_BUNDLES);
   }
 
   public void websiteFromStoreWebPage() {

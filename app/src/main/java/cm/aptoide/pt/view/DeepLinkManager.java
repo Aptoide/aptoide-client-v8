@@ -124,6 +124,8 @@ public class DeepLinkManager {
       downloadNotificationDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.HOME_DEEPLINK)) {
       fromHomeDeepLink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.BUNDLE)) {
+      fromBundleDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
@@ -245,6 +247,10 @@ public class DeepLinkManager {
   private void downloadNotificationDeepLink() {
     deepLinkAnalytics.downloadingUpdates();
     bottomNavigator.showFragment(R.id.action_apps);
+  }
+
+  private void fromBundleDeepLink(Intent intent) {
+    bottomNavigator.showFragment(R.id.action_home);
   }
 
   private void fromHomeDeepLink() {
