@@ -98,6 +98,257 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     Logger.v(TAG, "uri: " + uri);
 
+    dealWithShortcuts();
+
+    Uri u = null;
+    try {
+      u = Uri.parse(uri);
+    } catch (Exception e) {
+      CrashReport.getInstance()
+          .log(e);
+    }
+    //Loogin for url from the new site
+    if (u != null && u.getHost() != null) {
+
+      if (u.getHost()
+          .contains("webservices.aptoide.com")) {
+        dealWithWebservicesAptoide(uri);
+      } else if (u.getHost()
+          .contains("imgs.aptoide.com")) {
+        dealWithImagesApoide(uri);
+      } else if (u.getHost()
+          .contains("aptoide.com")) {
+        dealWithAptoideWebsite(u);
+      } else if ("aptoiderepo".equalsIgnoreCase(u.getScheme())) {
+        dealWithAptoideRepo(uri);
+      } else if ("aptoidexml".equalsIgnoreCase(u.getScheme())) {
+        dealWithAptoideXml(uri);
+      } else if ("aptoidesearch".equalsIgnoreCase(u.getScheme())) {
+        startFromPackageName(uri.split("aptoidesearch://")[1]);
+      } else if ("market".equalsIgnoreCase(u.getScheme())) {
+        dealWithMArketSchema(uri, u);
+      } else if (u.getHost()
+          .contains("market.android.com")) {
+        startFromPackageName(u.getQueryParameter("id"));
+      } else if (u.getHost()
+          .contains("play.google.com") && u.getPath()
+          .equalsIgnoreCase("store/apps/details")) {
+        dealWithGoogleHost(u);
+      } else if ("aptword".equalsIgnoreCase(u.getScheme())) {
+        dealWithAptword(uri);
+      } else if ("file".equalsIgnoreCase(u.getScheme())) {
+        downloadMyApp();
+      } else if ("aptoideinstall".equalsIgnoreCase(u.getScheme())) {
+        parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
+      } else if (u.getHost()
+          .equals("cm.aptoide.pt") && u.getPath()
+          .equals("/deeplink") && "aptoide".equalsIgnoreCase(u.getScheme())) {
+        dealWithAptoideSchema(u);
+      }
+    }
+    deepLinkAnalytics.sendWebsite();
+    finish();
+  }
+
+  private void dealWithAptoideSchema(Uri u) {
+    if ("getHome".equals(u.getQueryParameter("name"))) {
+      String id = u.getQueryParameter("user_id");
+      if (id != null) {
+        openUserScreen(Long.valueOf(id));
+      }
+    } else if ("getUserTimeline".equals(u.getQueryParameter("name"))) {
+      startFromAppsTimeline(u.getQueryParameter("cardId"));
+    } else if ("search".equals(u.getQueryParameter("name"))) {
+      String query = "";
+      if (u.getQueryParameterNames()
+          .contains("keyword")) {
+        query = u.getQueryParameter("keyword");
+      }
+      startFromSearch(query);
+    } else if ("myStore".equals(u.getQueryParameter("name"))) {
+      startFromMyStore();
+    } else if ("pickApp".equals(u.getQueryParameter("name"))) {
+      startFromPickApp();
+    } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
+      startGenericDeepLink(u);
+    }
+  }
+
+  private void dealWithAptword(String uri) {
+    // TODO: 12-08-2016 neuro aptword Seems discontinued???
+    String param = uri.substring("aptword://".length());
+
+    if (!TextUtils.isEmpty(param)) {
+
+      param = param.replaceAll("\\*", "_")
+          .replaceAll("\\+", "/");
+
+      String json = new String(Base64.decode(param.getBytes(), 0));
+
+      Logger.d("AptoideAptWord", json);
+
+      GetAdsResponse.Ad ad = null;
+      try {
+        ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
+      } catch (IOException e) {
+        CrashReport.getInstance()
+            .log(e);
+      }
+
+      if (ad != null) {
+        Intent i = new Intent(this, startClass);
+        i.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
+        startActivity(i);
+      }
+    }
+  }
+
+  private void dealWithGoogleHost(Uri uri) {
+    String param = uri.getQueryParameter("id");
+    if (param.contains("pname:")) {
+      param = param.substring(6);
+    } else if (param.contains("pub:")) {
+      param = param.substring(4);
+    }
+    startFromPackageName(param);
+  }
+
+  private void dealWithMArketSchema(String uri, Uri u) {
+  /*
+   * market schema:
+   * could come from a search or a to open an app
+   */
+    String packageName = "";
+    if ("details".equalsIgnoreCase(u.getHost())) {
+      packageName = u.getQueryParameter("id");
+    } else if ("search".equalsIgnoreCase(u.getHost())) {
+      packageName = u.getQueryParameter("q");
+    } else {
+      //old code
+      String params = uri.split("&")[0];
+      String[] param = params.split("=");
+      packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
+      if (packageName.contains("pname:")) {
+        packageName = packageName.substring(6);
+      } else if (packageName.contains("pub:")) {
+        packageName = packageName.substring(4);
+      }
+    }
+    startFromPackageName(packageName);
+  }
+
+  private void dealWithAptoideXml(String uri) {
+    String repo = uri.substring(13);
+    parseXmlString(repo);
+    Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
+    i.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
+    startActivity(i);
+  }
+
+  private void dealWithAptoideRepo(String uri) {
+    ArrayList<String> repo = new ArrayList<>();
+    repo.add(uri.substring(14));
+    startWithRepo(StoreUtils.split(repo));
+  }
+
+  private void dealWithAptoideWebsite(Uri u) {
+    /**
+     * Coming from our web site.
+     * This could be from and to:
+     * a store
+     * or a app view
+     * or home (tab/website)
+     * or bundle with format store/apps/group
+     */
+    if (u.getPath() != null && u.getPath()
+        .contains("store/apps/group")) {
+      /**
+       *
+       */
+      deepLinkAnalytics.websiteFromBundlesWebPage();
+      String bundleId = u.getLastPathSegment();
+      Logger.v(TAG, "aptoide web site: bundle: " + bundleId);
+      if (!TextUtils.isEmpty(bundleId)
+          && bundleId.contains("-")
+          && bundleId.indexOf("-") < bundleId.length()) {
+        startFromBundle(bundleId.substring(bundleId.indexOf("-") + 1));
+      }
+    } else if (u.getPath() != null && u.getPath()
+        .contains("store")) {
+
+      /**
+       * store
+       */
+      deepLinkAnalytics.websiteFromStoreWebPage();
+      Logger.v(TAG, "aptoide web site: store: " + u.getLastPathSegment());
+      ArrayList<String> list = new ArrayList<String>();
+      list.add(u.getLastPathSegment());
+      startWithRepo(list);
+    } else {
+      String[] appName = u.getHost()
+          .split("\\.");
+      if (appName != null && appName.length == 4) {
+
+        /**
+         * App view
+         */
+        deepLinkAnalytics.websiteFromAppViewWebPage();
+        Logger.v(TAG, "aptoide web site: app view: " + appName[0]);
+        startAppView(appName[0]);
+      } else if (appName != null && appName.length == 3) {
+        /**
+         * Home
+         */
+        deepLinkAnalytics.websiteFromHomeWebPage();
+        Logger.v(TAG, "aptoide web site: home: " + appName[0]);
+        startFromHome();
+      }
+    }
+  }
+
+  private void dealWithImagesApoide(String uri) {
+    String[] strings = uri.split("-");
+    long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
+
+    startFromAppView(id, null, false);
+  }
+
+  private void dealWithWebservicesAptoide(String uri) {
+    /** refactored to remove org.apache libs */
+    Map<String, String> params = null;
+
+    try {
+      params = AptoideUtils.StringU.splitQuery(URI.create(uri));
+    } catch (UnsupportedEncodingException e) {
+      CrashReport.getInstance()
+          .log(e);
+    }
+
+    if (params != null) {
+      String uid = null;
+      for (Map.Entry<String, String> entry : params.entrySet()) {
+        if (entry.getKey()
+            .equals("uid")) {
+          uid = entry.getValue();
+        }
+      }
+
+      if (uid != null) {
+        try {
+          long id = Long.parseLong(uid);
+          startFromAppView(id, null, true);
+        } catch (NumberFormatException e) {
+          CrashReport.getInstance()
+              .log(e);
+          CrashReport.getInstance()
+              .log(e);
+          ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
+        }
+      }
+    }
+  }
+
+  private void dealWithShortcuts() {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
 
       ShortcutManager shortcutManager =
@@ -120,251 +371,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
             }
           }
         }
-      }
-    }
-
-    Uri u = null;
-    try {
-      u = Uri.parse(uri);
-    } catch (Exception e) {
-    }
-    //Loogin for url from the new site
-    if (u != null && u.getHost() != null) {
-
-      if (u.getHost()
-          .contains("webservices.aptoide.com")) {
-
-        /** refactored to remove org.apache libs */
-        Map<String, String> params = null;
-
-        try {
-          params = AptoideUtils.StringU.splitQuery(URI.create(uri));
-        } catch (UnsupportedEncodingException e) {
-          CrashReport.getInstance()
-              .log(e);
-        }
-
-        if (params != null) {
-          String uid = null;
-          for (Map.Entry<String, String> entry : params.entrySet()) {
-            if (entry.getKey()
-                .equals("uid")) {
-              uid = entry.getValue();
-            }
-          }
-
-          if (uid != null) {
-            try {
-              long id = Long.parseLong(uid);
-              startFromAppView(id, null, true);
-            } catch (NumberFormatException e) {
-              CrashReport.getInstance()
-                  .log(e);
-              CrashReport.getInstance()
-                  .log(e);
-              ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
-            }
-          }
-        }
-        deepLinkAnalytics.sendWebsite();
-        finish();
-      } else if (u.getHost()
-          .contains("imgs.aptoide.com")) {
-
-        String[] strings = uri.split("-");
-        long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
-
-        startFromAppView(id, null, false);
-      } else if (u.getHost()
-          .contains("aptoide.com")) {
-        /**
-         * Coming from our web site.
-         * This could be from and to:
-         * a store
-         * or a app view
-         * or home (tab/website)
-         */
-        if (u.getPath() != null && u.getPath()
-            .contains("store")) {
-
-          /**
-           * store
-           */
-          deepLinkAnalytics.websiteFromStoreWebPage();
-          Logger.v(TAG, "aptoide web site: store: " + u.getLastPathSegment());
-          ArrayList<String> list = new ArrayList<String>();
-          list.add(u.getLastPathSegment());
-          startWithRepo(list);
-        } else {
-          String[] appName = u.getHost()
-              .split("\\.");
-          if (appName != null && appName.length == 4) {
-
-            /**
-             * App view
-             */
-            deepLinkAnalytics.websiteFromAppViewWebPage();
-            Logger.v(TAG, "aptoide web site: app view: " + appName[0]);
-            startAppView(appName[0]);
-          } else if (appName != null && appName.length == 3) {
-            /**
-             * Home
-             */
-            deepLinkAnalytics.websiteFromHomeWebPage();
-            Logger.v(TAG, "aptoide web site: home: " + appName[0]);
-            startFromHome();
-          }
-        }
-      }
-      if (uri.startsWith("aptoiderepo")) {
-
-        ArrayList<String> repo = new ArrayList<>();
-        repo.add(uri.substring(14));
-        startWithRepo(StoreUtils.split(repo));
-      } else if (uri.startsWith("aptoidexml")) {
-
-        String repo = uri.substring(13);
-        parseXmlString(repo);
-        Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-        i.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
-        startActivity(i);
-      } else if (uri.startsWith("aptoidesearch://")) {
-        startFromPackageName(uri.split("aptoidesearch://")[1]);
-      } else if (uri.startsWith("aptoidevoicesearch://")) {
-        aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
-      } else if (u != null && "market".equalsIgnoreCase(u.getScheme())) {
-      /*
-       * market schema:
-       * could come from a search or a to open an app
-       */
-        String packageName = "";
-        if ("details".equalsIgnoreCase(u.getHost())) {
-          packageName = u.getQueryParameter("id");
-        } else if ("search".equalsIgnoreCase(u.getHost())) {
-          packageName = u.getQueryParameter("q");
-        } else {
-          //old code
-          String params = uri.split("&")[0];
-          String[] param = params.split("=");
-          packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
-          if (packageName.contains("pname:")) {
-            packageName = packageName.substring(6);
-          } else if (packageName.contains("pub:")) {
-            packageName = packageName.substring(4);
-          }
-        }
-        startFromPackageName(packageName);
-      } else if (uri.startsWith("http://market.android.com/details?id=")) {
-        String param = uri.split("=")[1];
-        startFromPackageName(param);
-      } else if (uri.startsWith("https://market.android.com/details?id=")) {
-        String param = uri.split("=")[1];
-        startFromPackageName(param);
-      } else if (uri.startsWith("https://play.google.com/store/apps/details?id=") || uri.startsWith(
-          "http://play.google.com/store/apps/details?id=")) {
-        String params = uri.split("&")[0];
-        String param = params.split("=")[1];
-        if (param.contains("pname:")) {
-          param = param.substring(6);
-        } else if (param.contains("pub:")) {
-          param = param.substring(4);
-        } else {
-          try {
-            param = Uri.parse(uri)
-                .getQueryParameter("id");
-          } catch (NullPointerException e) {
-            CrashReport.getInstance()
-                .log(e);
-          }
-        }
-        startFromPackageName(param);
-      } else if (uri.contains("aptword://")) {
-
-        // TODO: 12-08-2016 neuro aptword Seems discontinued???
-        String param = uri.substring("aptword://".length());
-
-        if (!TextUtils.isEmpty(param)) {
-
-          param = param.replaceAll("\\*", "_")
-              .replaceAll("\\+", "/");
-
-          String json = new String(Base64.decode(param.getBytes(), 0));
-
-          Logger.d("AptoideAptWord", json);
-
-          GetAdsResponse.Ad ad = null;
-          try {
-            ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
-          } catch (IOException e) {
-            CrashReport.getInstance()
-                .log(e);
-          }
-
-          if (ad != null) {
-            Intent i = new Intent(this, startClass);
-            i.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
-            startActivity(i);
-          } else {
-            deepLinkAnalytics.sendWebsite();
-            finish();
-          }
-        }
-      } else if (uri.startsWith("file://")) {
-
-        downloadMyApp();
-      } else if (uri.startsWith("aptoideinstall://")) {
-        parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
-      } else if (u.getHost()
-          .equals("cm.aptoide.pt") && u.getPath()
-          .equals("/deeplink") && u.getQueryParameter("name")
-          .equals("getHome")) {
-        String id = u.getQueryParameter("user_id");
-        if (id != null) {
-          openUserScreen(Long.valueOf(id));
-        }
-        deepLinkAnalytics.sendWebsite();
-        finish();
-        return;
-      } else if (uri.startsWith("aptoide://")) {
-        Uri parse = Uri.parse(uri);
-        if ("getUserTimeline".equals(parse.getQueryParameter("name"))) {
-          String cardId = parse.getQueryParameter("cardId");
-          startFromAppsTimeline(cardId);
-          deepLinkAnalytics.sendWebsite();
-          finish();
-          return;
-        }
-        if ("search".equals(parse.getQueryParameter("name"))) {
-          String query = "";
-          if (parse.getQueryParameterNames()
-              .contains("keyword")) {
-            query = parse.getQueryParameter("keyword");
-          }
-          startFromSearch(query);
-          deepLinkAnalytics.sendWebsite();
-          finish();
-          return;
-        }
-        if ("myStore".equals(parse.getQueryParameter("name"))) {
-          startFromMyStore();
-          deepLinkAnalytics.sendWebsite();
-          finish();
-          return;
-        }
-        if ("pickApp".equals(parse.getQueryParameter("name"))) {
-          startFromPickApp();
-          deepLinkAnalytics.sendWebsite();
-          finish();
-          return;
-        }
-        if (sURIMatcher.match(parse) == DEEPLINK_ID) {
-          startGenericDeepLink(parse);
-        }
-        deepLinkAnalytics.sendWebsite();
-        finish();
-      } else {
-        deepLinkAnalytics.sendWebsite();
-        finish();
       }
     }
   }
@@ -410,43 +416,24 @@ public class DeepLinkIntentReceiver extends ActivityView {
   }
 
   public void startFromPackageName(String packageName) {
-    GetAppRequest.of(packageName,
-        ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-        ((AptoideApplication) getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(),
-        ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
-        ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
-        .observe()
-        .subscribe(app -> {
-          if (app.isOk()) {
-            startFromAppView(packageName);
-          } else {
+    if (packageName != null) {
+      GetAppRequest.of(packageName,
+          ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
+          ((AptoideApplication) getApplicationContext()).getDefaultClient(),
+          WebService.getDefaultConverter(),
+          ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
+          ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
+          .observe()
+          .subscribe(app -> {
+            if (app.isOk()) {
+              startFromAppView(packageName);
+            } else {
+              startFromSearch(packageName);
+            }
+          }, err -> {
             startFromSearch(packageName);
-          }
-        }, err -> {
-          startFromSearch(packageName);
-        });
-  }
-
-  public void aptoidevoiceSearch(String param) {
-    // TODO: voiceSearch was used by a foreign app, dunno if still used.
-
-    //        Cursor c = new AptoideDatabase(Aptoide.getDb()).getSearchResults(param, StoreActivity.Sort.DOWNLOADS);
-    //
-    //        ArrayList<String> namelist = new ArrayList<String>();
-    //        ArrayList<Long> idlist = new ArrayList<Long>();
-    //
-    //        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-    //            namelist.add(c.getString(c.getColumnIndex("name")));
-    //            idlist.add(c.getLong(c.getColumnIndex("_id")));
-    //        }
-    //
-    //        Intent i = new Intent();
-    //        i.putStringArrayListExtra("namelist", namelist);
-    //        i.putExtra("idlist", AptoideUtils.longListToLongArray(idlist));
-    //
-    //        setResult(UNKONWN_FLAG, i);
-    finish();
+          });
+    }
   }
 
   public void startAppView(String uname) {
@@ -476,6 +463,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
     i.putExtra(DeepLinksKeys.CARD_ID, cardId);
     if (shortcutNavigation) i.putExtra(FROM_SHORTCUT, shortcutNavigation);
 
+    startActivity(i);
+  }
+
+  public void startFromBundle(String bundleId) {
+    Intent i = new Intent(this, startClass);
+    i.putExtra(DeepLinksTargets.BUNDLE, true);
+    i.putExtra(DeepLinksKeys.BUNDLE_ID, bundleId);
     startActivity(i);
   }
 
@@ -623,6 +617,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String HOME_DEEPLINK = "home_tab";
     public static final String MY_STORE_DEEPLINK = "my_store";
     public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
+    public static final String BUNDLE = "bundle";
   }
 
   public static class DeepLinksKeys {
@@ -636,6 +631,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String URI = "uri";
     public static final String CARD_ID = "cardId";
     public static final String OPEN_MODE = "openMode";
+    public static final String BUNDLE_ID = "bundle_id";
 
     //deep link query parameters
     public static final String ACTION = "action";
@@ -681,32 +677,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
       if (app != null && !app.isEmpty()) {
 
         /** never worked... */
-        //                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(IntentReceiver.this);
-        //                final AlertDialog installAppDialog = dialogBuilder.create();
-        ////                installAppDialog.setTitle(ApplicationAptoide.MARKETNAME);
-        //                installAppDialog.setIcon(android.R.drawable.ic_menu_more);
-        //                installAppDialog.setCancelable(false);
-        //
-        //
-        //                installAppDialog.setMessage(getString(R.string.installapp_alrt) + app.get("name") + "?");
-        //
-        //                installAppDialog.setButton(Dialog.BUTTON_POSITIVE, getString(android.R.string.yes), new Dialog.OnClickListener() {
-        //                    @Override
-        //                    public void onClick(DialogInterface arg0, int arg1) {
-        ////                        Download download = new Download();
-        ////                        Logger.d("Aptoide-IntentReceiver", "getapk id: " + id);
-        ////                        download.setId(id);
-        ////                        ((Start)getApplicationContext()).installApp(0);
-        //
-        //                        Toast toast = ShowMessage.asToast();(IntentReceiver.this, getString(R.strings;
-        //                        toast.show();
-        //                    }
-        //                });
-        //
-        //                installAppDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no), neutralListener);
-        //                installAppDialog.setOnDismissListener(IntentReceiver.this);
-        //                installAppDialog.show();
-
       } else {
         proceed();
       }
