@@ -57,6 +57,7 @@ import cm.aptoide.pt.util.SettingsConstants;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
@@ -74,7 +75,7 @@ import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTI
  * @author fabio
  */
 public class SettingsFragment extends PreferenceFragmentCompat
-    implements SharedPreferences.OnSharedPreferenceChangeListener {
+    implements SharedPreferences.OnSharedPreferenceChangeListener, NotBottomNavigationView {
   private static final String TAG = SettingsFragment.class.getSimpleName();
 
   private static final String ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "Maturepin";
@@ -321,7 +322,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         })
         .retry()
         .subscribe());
-
 
     subscriptions.add(accountManager.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())
