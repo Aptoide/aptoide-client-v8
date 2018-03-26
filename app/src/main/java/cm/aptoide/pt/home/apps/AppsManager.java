@@ -38,7 +38,8 @@ public class AppsManager {
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
-      UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context, DownloadFactory downloadFactory) {
+      UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context,
+      DownloadFactory downloadFactory) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -126,11 +127,11 @@ public class AppsManager {
         getOrigin(download.getAction()));
   }
 
-  private void setupUpdateEvents(Download download) {
+  private void setupUpdateEvents(Download download, Origin origin) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.UPDATE_TAB);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        InstallType.UPDATE, AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, Origin.UPDATE);
+        InstallType.UPDATE, AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, origin);
   }
 
   private Origin getOrigin(int action) {
@@ -184,7 +185,7 @@ public class AppsManager {
           return Observable.just(value);
         })
         .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupUpdateEvents(download)))
+            .doOnSubscribe(__ -> setupUpdateEvents(download, Origin.UPDATE)))
         .toCompletable();
   }
 
@@ -202,7 +203,7 @@ public class AppsManager {
         .flatMapIterable(updatesList -> updatesList)
         .flatMap(update -> {
           Download download = downloadFactory.create(update);
-          setupUpdateEvents(download);
+          setupUpdateEvents(download, Origin.UPDATE_ALL);
           return Observable.just(download);
         })
         .toList()
