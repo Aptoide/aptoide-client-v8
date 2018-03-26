@@ -51,4 +51,8 @@ public interface AppsFragmentView extends View {
   void showUnknownErrorMessage();
 
   void removeExcludedUpdates(List<App> excludedUpdatesList);
+
+  Observable<App> updateClick();
+
+  void navigateToAppView(long appId, String packageName);
 }

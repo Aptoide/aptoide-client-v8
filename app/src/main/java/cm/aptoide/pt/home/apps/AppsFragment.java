@@ -19,6 +19,7 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -43,11 +44,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject InstallAnalytics installAnalytics;
   @Inject NavigationTracker navigationTracker;
+  @Inject UpdatesAnalytics updatesAnalytics;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
   private PublishSubject<Void> updateAll;
   private RxAlertDialog ignoreUpdatesDialog;
+  private AppsNavigator appsNavigator;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -63,6 +66,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    appsNavigator = new AppsNavigator(getFragmentNavigator());
+
     List<App> appsList = new ArrayList<>();
     appsList.add(
         new DownloadsHeader(getResources().getString(R.string.apps_title_downloads_header)));
@@ -71,9 +76,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         new InstalledHeader(getResources().getString(R.string.apps_title_installed_apps_header)));
 
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
-
     adapter = new AppsAdapter(appsList, new AppCardViewHolderFactory(appItemClicks, updateAll));
-
     setupRecyclerView();
 
     buildIgnoreUpdatesDialog();
@@ -82,8 +85,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         RepositoryFactory.getUpdateRepository(getContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(),
-        new AppMapper(), downloadAnalytics, installAnalytics, getContext().getPackageManager(),
-        getContext(), new DownloadFactory(
+        new AppMapper(), downloadAnalytics, installAnalytics, updatesAnalytics,
+        getContext().getPackageManager(), getContext(), new DownloadFactory(
         ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
         AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
         new PermissionManager(), ((PermissionService) getContext())));
@@ -208,7 +211,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public Observable<App> updateLongClick() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_LONG_CLICK)
+        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_CARD_LONG_CLICK)
         .map(appClick -> appClick.getApp());
   }
 
@@ -227,6 +230,16 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void removeExcludedUpdates(List<App> excludedUpdatesList) {
     adapter.removeUpdatesList(excludedUpdatesList);
+  }
+
+  @Override public Observable<App> updateClick() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_CARD_CLICK)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public void navigateToAppView(long appId, String packageName) {
+    appsNavigator.navigateToAppView(appId, packageName);
   }
 
   @Override public void onDestroy() {

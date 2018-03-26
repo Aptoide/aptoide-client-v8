@@ -15,9 +15,11 @@ public class UpdateApp implements App {
   private String version;
   private int versionCode;
   private UpdateStatus updateStatus;
+  private long appId;
 
   public UpdateApp(String name, String md5, String icon, String packageName, int progress,
-      boolean isIndeterminate, String version, int versionCode, UpdateStatus updateStatus) {
+      boolean isIndeterminate, String version, int versionCode, UpdateStatus updateStatus,
+      long appId) {
     this.name = name;
     this.md5 = md5;
     this.icon = icon;
@@ -27,6 +29,7 @@ public class UpdateApp implements App {
     this.version = version;
     this.versionCode = versionCode;
     this.updateStatus = updateStatus;
+    this.appId = appId;
   }
 
   @Override public Type getType() {
@@ -75,6 +78,10 @@ public class UpdateApp implements App {
 
   public int getVersionCode() {
     return versionCode;
+  }
+
+  public long getAppId() {
+    return appId;
   }
 
   public enum UpdateStatus {

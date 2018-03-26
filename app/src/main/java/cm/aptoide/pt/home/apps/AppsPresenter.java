@@ -53,7 +53,7 @@ public class AppsPresenter implements Presenter {
 
     handleUpdateAllClick();
 
-    handleUpdateClick();
+    handleUpdateAppClick();
 
     handlePauseUpdateClick();
 
@@ -61,11 +61,25 @@ public class AppsPresenter implements Presenter {
 
     handleResumeUpdateClick();
 
+    handleUpdateCardClick();
+
     observeUpdatesList();
 
-    handleIgnoreUpdateClick();
+    handleUpdateCardLongClick();
 
     observeExcludedUpdates();
+  }
+
+  private void handleUpdateCardClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.updateClick())
+        .doOnNext(app -> view.navigateToAppView(((UpdateApp) app).getAppId(),
+            ((UpdateApp) app).getPackageName()))
+        .doOnNext(__ -> appsManager.setAppViewAnalyticsEvent())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void observeExcludedUpdates() {
@@ -82,7 +96,7 @@ public class AppsPresenter implements Presenter {
         });
   }
 
-  private void handleIgnoreUpdateClick() {
+  private void handleUpdateCardLongClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.updateLongClick())
@@ -142,7 +156,7 @@ public class AppsPresenter implements Presenter {
         }, error -> crashReport.log(error));
   }
 
-  private void handleUpdateClick() {
+  private void handleUpdateAppClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)

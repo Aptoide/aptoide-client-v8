@@ -12,6 +12,7 @@ import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import rx.Completable;
@@ -30,18 +31,20 @@ public class AppsManager {
   private AppMapper appMapper;
   private DownloadAnalytics downloadAnalytics;
   private InstallAnalytics installAnalytics;
+  private UpdatesAnalytics updatesAnalytics;
   private PackageManager packageManager;
   private Context context;
   private DownloadFactory downloadFactory;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
-      PackageManager packageManager, Context context, DownloadFactory downloadFactory) {
+      UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context, DownloadFactory downloadFactory) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
     this.downloadAnalytics = downloadAnalytics;
     this.installAnalytics = installAnalytics;
+    this.updatesAnalytics = updatesAnalytics;
     this.packageManager = packageManager;
     this.context = context;
     this.downloadFactory = downloadFactory;
@@ -209,5 +212,9 @@ public class AppsManager {
 
   public Observable<Void> excludeUpdate(App app) {
     return updatesManager.excludeUpdate(((UpdateApp) app).getPackageName());
+  }
+
+  public void setAppViewAnalyticsEvent() {
+    updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW);
   }
 }

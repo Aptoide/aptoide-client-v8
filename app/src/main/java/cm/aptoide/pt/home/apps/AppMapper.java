@@ -68,7 +68,7 @@ public class AppMapper {
       Update update = updates.get(i);
       updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
-          UpdateApp.UpdateStatus.UPDATE));
+          UpdateApp.UpdateStatus.UPDATE, update.getAppId()));
     }
     return updatesList;
   }
@@ -78,7 +78,8 @@ public class AppMapper {
     for (Install install : installs) {
       updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
           install.getPackageName(), install.getProgress(), install.isIndeterminate(),
-          install.getVersionName(), install.getVersionCode(), mapUpdateStatus(install.getState())));
+          install.getVersionName(), install.getVersionCode(), mapUpdateStatus(install.getState()),
+          -1)); //Updates in progress (downloads) dont have app id.
     }
     return updatesList;
   }
