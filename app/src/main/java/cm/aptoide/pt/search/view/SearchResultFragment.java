@@ -481,13 +481,12 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public boolean shouldHideUpNavigation() {
-    return !(allStoresResultAdapter.getItemCount() != 0
-        || followedStoresResultAdapter.getItemCount() != 0)
+    return (allStoresResultAdapter.getItemCount() == 0
+        || followedStoresResultAdapter.getItemCount() == 0)
         && noSearchLayout.getVisibility() != VISIBLE;
   }
 
   @Override public void setUnsubmittedQuery(String query) {
-
     unsubmittedQuery = query;
   }
 
