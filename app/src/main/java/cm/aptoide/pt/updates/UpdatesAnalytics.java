@@ -12,6 +12,7 @@ import java.util.Map;
 public class UpdatesAnalytics {
 
   public final static String UPDATE_EVENT = "Updates";
+  public final static String OPEN_APP_VIEW = "Open App View";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
