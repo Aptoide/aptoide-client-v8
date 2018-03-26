@@ -29,6 +29,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
@@ -39,7 +40,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by trinkes on 7/12/16.
  */
-public class SendFeedbackFragment extends BaseToolbarFragment {
+public class SendFeedbackFragment extends BaseToolbarFragment implements NotBottomNavigationView {
 
   public static final String SCREENSHOT_PATH = "SCREENSHOT_PATH";
   public static final String LOGS_FILE_NAME = "logs.txt";

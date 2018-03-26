@@ -16,6 +16,7 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.presenter.InviteFriendsPresenter;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
@@ -24,7 +25,7 @@ import javax.inject.Inject;
  * Created by jdandrade on 23/02/2017.
  */
 public class InviteFriendsFragment extends UIComponentFragment
-    implements InviteFriendsContract.View {
+    implements InviteFriendsContract.View, NotBottomNavigationView {
   public static final String OPEN_MODE = "OPEN_MODE";
   public static final String TAG = "TAG";
   @Inject AnalyticsManager analyticsManager;

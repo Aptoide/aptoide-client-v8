@@ -14,6 +14,7 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +27,8 @@ import rx.subjects.PublishSubject;
  * Created by pedroribeiro on 16/05/17.
  */
 
-public class InboxFragment extends BaseToolbarFragment implements InboxView {
+public class InboxFragment extends BaseToolbarFragment
+    implements InboxView, NotBottomNavigationView {
 
   @Inject AnalyticsManager analyticsManager;
   private RecyclerView list;
@@ -69,8 +71,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
             ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
             CrashReport.getInstance(),
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-            application.getNotificationAnalytics(),
-            AndroidSchedulers.mainThread()));
+            application.getNotificationAnalytics(), AndroidSchedulers.mainThread()));
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {

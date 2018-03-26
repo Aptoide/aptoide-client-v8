@@ -3,6 +3,7 @@
 
 <android.support.design.widget.AppBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_bar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -35,15 +36,17 @@
 
       <ImageView
           android:id="@+id/user_actionbar_icon"
-          android:layout_width="26dp"
-          android:layout_height="26dp"
+          android:layout_width="46dp"
+          android:layout_height="46dp"
           android:layout_alignParentRight="true"
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
           android:layout_marginRight="15dp"
           android:foregroundGravity="right"
+          android:padding="10dp"
           android:src="@drawable/ic_account_circle"
           android:visibility="invisible"
+          tools:visibility="visible"
           />
 
     </RelativeLayout>

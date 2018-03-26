@@ -12,7 +12,7 @@
       android:id="@+id/fragment_placeholder"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginBottom="?android:actionBarSize"
+      android:layout_above="@+id/bottom_navigation"
       />
 
   <!--this layout was added in order to use the snackbar with the activity layout-->

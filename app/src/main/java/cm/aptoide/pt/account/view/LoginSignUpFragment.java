@@ -9,9 +9,11 @@ import android.view.View;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.presenter.LoginSignUpView;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 
-public class LoginSignUpFragment extends BaseToolbarFragment implements LoginSignUpView {
+public class LoginSignUpFragment extends BaseToolbarFragment
+    implements LoginSignUpView, NotBottomNavigationView {
 
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
