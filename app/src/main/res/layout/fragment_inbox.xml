@@ -35,7 +35,8 @@
         android:layout_height="132dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="47dp"
-        android:src="@drawable/ic_notifications_empty_state"
+        android:contentDescription="@string/notifications_empty_state_icon_description"
+        app:srcCompat="@drawable/ic_notifications_empty_state"
         />
     <TextView
         android:id="@+id/empty_state_title"
@@ -43,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="There are no notifications yet!"
+        android:text="@string/notifications_empty_state_main_title"
         android:textSize="19sp"
         />
     <TextView
@@ -53,7 +54,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Recommend apps to your friends and followers"
+        android:text="@string/notifications_empty_state_sub_title"
         android:textSize="14sp"
 
         />
