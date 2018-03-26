@@ -26,11 +26,9 @@
       android:layout_marginTop="10dp"
       android:gravity="center_vertical"
       android:maxLines="1"
-      android:text="Clash Royal"
-      android:textColor="@color/black_87_alpha"
-      android:textSize="15dp"
       tools:ellipsize="end"
-      style="@style/Aptoide.TextView.Regular.M"
+      tools:text="Clash Royal"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
 </LinearLayout>

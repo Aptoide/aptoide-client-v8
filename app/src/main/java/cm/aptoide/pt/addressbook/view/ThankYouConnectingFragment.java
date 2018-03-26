@@ -6,13 +6,15 @@ import android.view.View;
 import android.widget.Button;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by jdandrade on 01/03/2017.
  */
-public class ThankYouConnectingFragment extends UIComponentFragment {
+public class ThankYouConnectingFragment extends UIComponentFragment
+    implements NotBottomNavigationView {
   public static final String TAG = "TAG";
   private Button done;
   private String entranceTag;

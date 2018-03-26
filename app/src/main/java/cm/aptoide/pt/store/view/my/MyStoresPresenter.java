@@ -38,7 +38,7 @@ public class MyStoresPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.imageClick()
             .observeOn(viewScheduler)
-            .doOnNext(click -> myStoresNavigator.navigateToSettings())
+            .doOnNext(click -> myStoresNavigator.navigateToMyAccount())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

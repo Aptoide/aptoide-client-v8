@@ -5,26 +5,26 @@
       android:id="@+id/action_home"
       android:enabled="true"
       android:icon="@drawable/ic_home_bottom_nav"
-      android:title="@string/home_title"
+      android:title="@string/bottomnavigation_button_home"
       app:showAsAction="ifRoom"/>
   <item
       android:id="@+id/action_search"
       android:enabled="true"
       android:icon="@drawable/ic_search_bottom"
-      android:title="@string/search"
+      android:title="@string/bottomnavigation_button_search"
       app:showAsAction="ifRoom"/>
   <item
       android:id="@+id/action_stores"
       android:enabled="true"
       android:icon="@drawable/ic_store_bottom_nav"
-      android:title="@string/stores"
+      android:title="@string/bottomnavigation_button_stores"
       app:showAsAction="ifRoom"/>
 
   <item
       android:id="@+id/action_apps"
       android:enabled="true"
       android:icon="@drawable/ic_apps_bottom"
-      android:title="@string/apps"
+      android:title="@string/bottomnavigation_button_apps"
       app:showAsAction="ifRoom"/>
 
 </menu>

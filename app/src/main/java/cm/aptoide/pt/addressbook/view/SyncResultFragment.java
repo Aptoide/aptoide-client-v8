@@ -17,6 +17,7 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.presenter.SyncResultContract;
 import cm.aptoide.pt.presenter.SyncResultPresenter;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,7 +30,8 @@ import javax.inject.Inject;
  * Created by jdandrade on 13/02/2017.
  */
 
-public class SyncResultFragment extends UIComponentFragment implements SyncResultContract.View {
+public class SyncResultFragment extends UIComponentFragment
+    implements SyncResultContract.View, NotBottomNavigationView {
 
   public static final int SYNCED_LIST_NUMBER_OF_COLUMNS = 2;
   public static final String CONTACTS_JSON = "CONTACTS_JSON";

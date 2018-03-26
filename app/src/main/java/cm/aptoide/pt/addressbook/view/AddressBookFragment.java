@@ -31,6 +31,7 @@ import cm.aptoide.pt.presenter.AddressBookContract;
 import cm.aptoide.pt.presenter.AddressBookPresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -51,7 +52,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class AddressBookFragment extends UIComponentFragment implements AddressBookContract.View {
+public class AddressBookFragment extends UIComponentFragment
+    implements AddressBookContract.View, NotBottomNavigationView {
 
   public static final int TWITTER_REQUEST_CODE = 140;
   public static final int FACEBOOK_REQUEST_CODE = 64206;
