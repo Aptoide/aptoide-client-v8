@@ -24,10 +24,13 @@ import static cm.aptoide.pt.home.apps.AppsAdapter.UPDATING;
 
 public class AppCardViewHolderFactory {
 
-  private PublishSubject<AppClick> appItemClicks;
+  private final PublishSubject<AppClick> appItemClicks;
+  private final PublishSubject<Void> updateAll;
 
-  public AppCardViewHolderFactory(PublishSubject<AppClick> appItemClicks) {
+  public AppCardViewHolderFactory(PublishSubject<AppClick> appItemClicks,
+      PublishSubject<Void> updateAll) {
     this.appItemClicks = appItemClicks;
+    this.updateAll = updateAll;
   }
 
   public AppsViewHolder createViewHolder(int viewType, ViewGroup parent) {
@@ -40,7 +43,7 @@ public class AppCardViewHolderFactory {
         break;
       case HEADER_UPDATES:
         appViewHolder = new UpdatesHeaderViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_header_updates_item, parent, false), appItemClicks);
+            .inflate(R.layout.apps_header_updates_item, parent, false), updateAll);
         break;
       case ACTIVE_DOWNLOAD:
         appViewHolder = new ActiveAppDownloadViewHolder(LayoutInflater.from(parent.getContext())

@@ -43,6 +43,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
+  private PublishSubject<Void> updateAll;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -52,6 +53,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     appItemClicks = PublishSubject.create();
+    updateAll = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appsList.add(
         new InstalledHeader(getResources().getString(R.string.apps_title_installed_apps_header)));
 
-    adapter = new AppsAdapter(appsList, new AppCardViewHolderFactory(appItemClicks));
+    adapter = new AppsAdapter(appsList, new AppCardViewHolderFactory(appItemClicks, updateAll));
 
     setupRecyclerView();
 
@@ -182,7 +184,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.addUpdateAppsList(updatesDownloadList);
   }
 
+  @Override public Observable<Void> updateAll() {
+    return updateAll;
+  }
+
   @Override public void onDestroy() {
+    updateAll = null;
     appItemClicks = null;
     super.onDestroy();
   }

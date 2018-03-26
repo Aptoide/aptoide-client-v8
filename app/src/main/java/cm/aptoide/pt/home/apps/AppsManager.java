@@ -193,7 +193,17 @@ public class AppsManager {
     installManager.rootInstallAllowed(answer);
   }
 
-  public void updateAll() {
-
+  public Completable updateAll() {
+    return updatesManager.updateAll()
+        .first()
+        .flatMapIterable(updatesList -> updatesList)
+        .flatMap(update -> {
+          Download download = downloadFactory.create(update);
+          setupUpdateEvents(download);
+          return Observable.just(download);
+        })
+        .toList()
+        .flatMap(downloads -> installManager.startInstalls(downloads))
+        .toCompletable();
   }
 }

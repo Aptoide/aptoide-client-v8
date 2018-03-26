@@ -136,7 +136,10 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.updateAll())
-        .doOnNext(app -> appsManager.updateAll())
+        .flatMap(__ -> permissionManager.requestExternalStoragePermission(permissionService))
+        .observeOn(computation)
+        .flatMapCompletable(app -> appsManager.updateAll())
+        .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));

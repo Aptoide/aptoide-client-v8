@@ -40,5 +40,5 @@ public interface AppsFragmentView extends View {
 
   void showUpdatesDownloadList(List<App> updatesDownloadList);
 
-  Observable<App> updateAll();
+  Observable<Void> updateAll();
 }
