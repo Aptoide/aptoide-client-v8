@@ -36,8 +36,8 @@ public class UpdatesManager {
         });
   }
 
-  public Observable<List<Update>> getUpdatesList() {
-    return updateRepository.getAll(false)
+  public Observable<List<Update>> getUpdatesList(boolean isExcluded) {
+    return updateRepository.getAll(isExcluded)
         .sample(750, TimeUnit.MILLISECONDS);
   }
 
@@ -47,5 +47,9 @@ public class UpdatesManager {
 
   public Observable<List<Update>> updateAll() {
     return updateRepository.getAll(false);
+  }
+
+  public Observable<Void> excludeUpdate(String packageName) {
+    return updateRepository.setExcluded(packageName, true);
   }
 }

@@ -35,5 +35,10 @@ class UpdateAppViewHolder extends AppsViewHolder {
     updateAppButton.setOnClickListener(
         install -> updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_APP)));
     appVersion.setText(((UpdateApp) app).getVersion());
+
+    itemView.setOnLongClickListener(install -> {
+      updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_LONG_CLICK));
+      return true;
+    });
   }
 }

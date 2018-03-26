@@ -41,4 +41,14 @@ public interface AppsFragmentView extends View {
   void showUpdatesDownloadList(List<App> updatesDownloadList);
 
   Observable<Void> updateAll();
+
+  Observable<App> updateLongClick();
+
+  void showIgnoreUpdate();
+
+  Observable<Void> ignoreUpdate();
+
+  void showUnknownErrorMessage();
+
+  void removeExcludedUpdates(List<App> excludedUpdatesList);
 }

@@ -134,7 +134,12 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   public void addUpdateAppsList(List<App> updatesList) {
     int updatesHeaderPosition = findHeaderPosition(App.Type.HEADER_UPDATES);
+    removeExcludedUpdates(updatesList);
     addApps(updatesList, updatesHeaderPosition);
+  }
+
+  private void removeExcludedUpdates(List<App> updatesList) {
+
   }
 
   public void addInstalledAppsList(List<App> installedApps) {
@@ -161,5 +166,17 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       }
     }
     return 0;
+  }
+
+  public void removeUpdatesList(List<App> excludedUpdatesList) {
+    for (App app : excludedUpdatesList) {
+      if (app instanceof UpdateApp) {
+        if (listOfApps.contains(((UpdateApp) app))) {
+          int indexOfExcludedApp = listOfApps.indexOf(((UpdateApp) app));
+          listOfApps.remove(indexOfExcludedApp);
+          notifyItemRemoved(indexOfExcludedApp);
+        }
+      }
+    }
   }
 }

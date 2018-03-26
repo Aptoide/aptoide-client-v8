@@ -47,8 +47,8 @@ public class AppsManager {
     this.downloadFactory = downloadFactory;
   }
 
-  public Observable<List<App>> getUpdatesList() {
-    return updatesManager.getUpdatesList()
+  public Observable<List<App>> getUpdatesList(boolean isExcluded) {
+    return updatesManager.getUpdatesList(isExcluded)
         .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
@@ -205,5 +205,9 @@ public class AppsManager {
         .toList()
         .flatMap(downloads -> installManager.startInstalls(downloads))
         .toCompletable();
+  }
+
+  public Observable<Void> excludeUpdate(App app) {
+    return updatesManager.excludeUpdate(((UpdateApp) app).getPackageName());
   }
 }

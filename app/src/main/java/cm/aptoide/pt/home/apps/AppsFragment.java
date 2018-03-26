@@ -21,7 +21,9 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -45,6 +47,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
   private PublishSubject<Void> updateAll;
+  private RxAlertDialog ignoreUpdatesDialog;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -60,8 +63,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
-
     List<App> appsList = new ArrayList<>();
     appsList.add(
         new DownloadsHeader(getResources().getString(R.string.apps_title_downloads_header)));
@@ -69,9 +70,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appsList.add(
         new InstalledHeader(getResources().getString(R.string.apps_title_installed_apps_header)));
 
+    recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
+
     adapter = new AppsAdapter(appsList, new AppCardViewHolderFactory(appItemClicks, updateAll));
 
     setupRecyclerView();
+
+    buildIgnoreUpdatesDialog();
 
     attachPresenter(new AppsPresenter(this, new AppsManager(new UpdatesManager(
         RepositoryFactory.getUpdateRepository(getContext(),
@@ -87,6 +92,14 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  private void buildIgnoreUpdatesDialog() {
+    ignoreUpdatesDialog =
+        new RxAlertDialog.Builder(getContext()).setTitle(R.string.apps_title_ignore_updates)
+            .setPositiveButton(R.string.apps_button_ignore_updates_yes)
+            .setNegativeButton(R.string.apps_button_ignore_updates_no)
+            .build();
   }
 
   private void setupRecyclerView() {
@@ -191,6 +204,29 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public Observable<Void> updateAll() {
     return updateAll;
+  }
+
+  @Override public Observable<App> updateLongClick() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_LONG_CLICK)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public void showIgnoreUpdate() {
+    ignoreUpdatesDialog.show();
+  }
+
+  @Override public Observable<Void> ignoreUpdate() {
+    return ignoreUpdatesDialog.positiveClicks()
+        .map(__ -> null);
+  }
+
+  @Override public void showUnknownErrorMessage() {
+    ShowMessage.asSnack(this, R.string.unknown_error);
+  }
+
+  @Override public void removeExcludedUpdates(List<App> excludedUpdatesList) {
+    adapter.removeUpdatesList(excludedUpdatesList);
   }
 
   @Override public void onDestroy() {

@@ -62,6 +62,39 @@ public class AppsPresenter implements Presenter {
     handleResumeUpdateClick();
 
     observeUpdatesList();
+
+    handleIgnoreUpdateClick();
+
+    observeExcludedUpdates();
+  }
+
+  private void observeExcludedUpdates() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(computation)
+        .flatMap(__ -> appsManager.getUpdatesList(true))
+        .observeOn(viewScheduler)
+        .doOnNext(excludedUpdatesList -> view.removeExcludedUpdates(excludedUpdatesList))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          crashReport.log(error);
+        });
+  }
+
+  private void handleIgnoreUpdateClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.updateLongClick())
+        .doOnNext(app -> view.showIgnoreUpdate())
+        .flatMap(app -> view.ignoreUpdate()
+            .flatMap(__ -> appsManager.excludeUpdate(app)))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          view.showUnknownErrorMessage();
+          crashReport.log(error);
+        });
   }
 
   private void observeUpdatesList() {
@@ -219,7 +252,7 @@ public class AppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(__ -> appsManager.getUpdatesList())
+        .flatMap(__ -> appsManager.getUpdatesList(false))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showUpdatesList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

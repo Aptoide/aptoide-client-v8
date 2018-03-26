@@ -13,4 +13,10 @@
   <string name="apps_short_update_paused">Update paused</string>
   <string name="apps_short_error_update">An error occurred</string>
 
+  <string name="apps_title_ignore_updates">Ignore update</string>
+  <string name="apps_button_ignore_updates_yes">yes</string>
+  <string name="apps_button_ignore_updates_no">no</string>
+
+  <string name="apps_short_excluded_updates_unknown_error">Unknown Error</string>
+
 </resources>
