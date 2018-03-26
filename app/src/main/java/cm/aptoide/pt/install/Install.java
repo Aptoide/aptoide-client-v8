@@ -16,12 +16,13 @@ public class Install {
   private final String md5;
   private final String packageName;
   private final int versionCode;
+  private final String versionName;
   private final String appName;
   private final String icon;
 
   public Install(int progress, InstallationStatus state, InstallationType type,
       boolean isIndeterminate, int speed, String md5, String packageName, int versionCode,
-      String appName, String icon) {
+      String versionName, String appName, String icon) {
     this.progress = progress;
     this.state = state;
     this.type = type;
@@ -30,6 +31,7 @@ public class Install {
     this.md5 = md5;
     this.packageName = packageName;
     this.versionCode = versionCode;
+    this.versionName = versionName;
     this.appName = appName;
     this.icon = icon;
   }
@@ -84,6 +86,7 @@ public class Install {
     int result = state.hashCode();
     result = 31 * result + md5.hashCode();
     result = 31 * result + packageName.hashCode();
+    result = 31 * result + versionName.hashCode();
     result = 31 * result + versionCode;
     return result;
   }
@@ -94,6 +97,7 @@ public class Install {
 
     final Install that = (Install) o;
 
+    if (!versionName.equals(that.versionName)) return false;
     if (versionCode != that.versionCode) return false;
     if (state != that.state) return false;
     if (!md5.equals(that.md5)) return false;
@@ -108,6 +112,10 @@ public class Install {
     return state == Install.InstallationStatus.GENERIC_ERROR
         || state == Install.InstallationStatus.INSTALLATION_TIMEOUT
         || state == Install.InstallationStatus.NOT_ENOUGH_SPACE_ERROR;
+  }
+
+  public String getVersionName() {
+    return versionName;
   }
 
   public enum InstallationStatus {

@@ -166,7 +166,7 @@ public class AppsManager {
 
   public void cancelUpdate(App app) {
     installManager.removeInstallationFile(((UpdateApp) app).getMd5(),
-        ((UpdateApp) app).getPackageName(), Integer.parseInt(((UpdateApp) app).getVersion()));
+        ((UpdateApp) app).getPackageName(), ((UpdateApp) app).getVersionCode());
   }
 
   public void pauseUpdate(App app) {
