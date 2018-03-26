@@ -140,9 +140,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       AdsRepository adsRepository) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
-        storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, searchNavigator,
+        storeAccessor, defaultTheme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics,
-        timelineAnalytics, storeAnalytics, adsRepository);
+        timelineAnalytics, storeAnalytics, adsRepository, (AptoideBottomNavigator) activity);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
