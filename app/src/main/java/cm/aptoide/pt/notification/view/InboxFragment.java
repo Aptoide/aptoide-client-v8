@@ -32,6 +32,7 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
   private RecyclerView list;
   private InboxAdapter adapter;
   private PublishSubject<AptoideNotification> notificationSubject;
+  private View emptyState;
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
@@ -63,6 +64,8 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
 
+    emptyState = view.findViewById(R.id.empty_state);
+
     AptoideApplication application = ((AptoideApplication) getContext().getApplicationContext());
     attachPresenter(
         new InboxPresenter(this, ((ActivityResultNavigator) getContext()).getInboxNavigator(),
@@ -79,6 +82,10 @@ public class InboxFragment extends BaseToolbarFragment implements InboxView {
 
   @Override public Observable<AptoideNotification> notificationSelection() {
     return notificationSubject;
+  }
+
+  @Override public void showEmptyState() {
+    emptyState.setVisibility(View.VISIBLE);
   }
 
   @Override public int getContentViewId() {
