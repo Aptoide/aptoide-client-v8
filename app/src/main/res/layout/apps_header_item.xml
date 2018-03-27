@@ -14,8 +14,7 @@
       android:layout_marginLeft="8dp"
       android:layout_marginTop="16dp"
       tools:text="Downloads"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
-  <!-- TODO There is no such style as Regular.L.Black so used this one instead-->
 
 </LinearLayout>

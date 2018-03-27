@@ -78,7 +78,7 @@
             android:paddingTop="2dp"
             android:text="@string/apps_short_error_update"
             android:textColor="@color/red_700"
-            style="@style/Aptoide.TextView.Regular.XS"
+            style="@style/Aptoide.TextView.Medium.XS.Red700"
             />
       </LinearLayout>
 

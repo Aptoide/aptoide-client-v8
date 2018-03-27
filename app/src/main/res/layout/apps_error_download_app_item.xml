@@ -77,8 +77,7 @@
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
             android:text="@string/apps_short_error_download"
-            android:textColor="@color/red_700"
-            style="@style/Aptoide.TextView.Regular.XS"
+            style="@style/Aptoide.TextView.Medium.XS.Red700"
             />
       </LinearLayout>
 

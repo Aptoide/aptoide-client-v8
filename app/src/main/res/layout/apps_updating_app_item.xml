@@ -79,7 +79,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/apps_short_updating"
-            style="@style/Aptoide.TextView.Regular.XS.Grey"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
             />
 
         <TextView
@@ -90,7 +90,7 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="start"
             tools:text="80%"
-            style="@style/Aptoide.TextView.Regular.XS.Grey"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
             />
       </RelativeLayout>
 
