@@ -68,7 +68,7 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
           .loadUsingCircleTransform(bundle.getUserIcon(), userIcon);
     } else {
       ImageLoader.with(itemView.getContext())
-          .load(bundle.getDrawableId(), icon);
+          .load(bundle.getDrawableId(), userIcon);
     }
   }
 }
