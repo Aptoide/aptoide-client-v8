@@ -38,8 +38,6 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import cm.aptoide.pt.timeline.view.navigation.HomeTabNavigation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -72,7 +70,6 @@ public class DeepLinkManager {
   private final AppShortcutsAnalytics appShortcutsAnalytics;
   private final AptoideAccountManager accountManager;
   private final DeepLinkAnalytics deepLinkAnalytics;
-  private final TimelineAnalytics timelineAnalytics;
   private final StoreAnalytics storeAnalytics;
   private final AdsRepository adsRepository;
   private final CompositeSubscription subscriptions;
@@ -84,7 +81,7 @@ public class DeepLinkManager {
       NavigationTracker navigationTracker, SearchNavigator searchNavigator,
       SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
-      TimelineAnalytics timelineAnalytics, StoreAnalytics storeAnalytics,
+      StoreAnalytics storeAnalytics,
       AdsRepository adsRepository) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
@@ -100,7 +97,6 @@ public class DeepLinkManager {
     this.searchAnalytics = searchAnalytics;
     this.appShortcutsAnalytics = appShortcutsAnalytics;
     this.accountManager = accountManager;
-    this.timelineAnalytics = timelineAnalytics;
     this.deepLinkAnalytics = deepLinkAnalytics;
     this.storeAnalytics = storeAnalytics;
     this.adsRepository = adsRepository;
@@ -132,8 +128,6 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink();
-    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
-      fromTimelineDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.HOME_DEEPLINK)) {
       fromHomeDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
@@ -260,16 +254,6 @@ public class DeepLinkManager {
     tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
   }
 
-  private void fromTimelineDeepLink(Intent intent) {
-    deepLinkAnalytics.timelineNotification();
-    String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
-    if (intent.hasExtra(FROM_SHORTCUT)) {
-      timelineAnalytics.sendTimelineTabOpenedFromShortcut();
-      appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.TIMELINE);
-    }
-    tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
-  }
-
   private void fromHomeDeepLink() {
 
     tabNavigator.navigate(new HomeTabNavigation());
@@ -361,7 +345,6 @@ public class DeepLinkManager {
   }
 
   private static final class ShortcutDestinations {
-    private static final String TIMELINE = "Timeline";
     private static final String SEARCH = "Search";
     private static final String MY_STORE = "My_Store";
     private static final String MY_STORE_NOT_LOGGED_IN = "My_Store_Not_Logged_In";
