@@ -31,6 +31,7 @@ import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
+import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
@@ -175,5 +176,10 @@ import rx.schedulers.Schedulers;
       FragmentNavigator fragmentNavigator, BottomNavigationMapper bottomNavigationMapper) {
     return new MyStoresNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
+  }
+
+  @FragmentScope @Provides AppsNavigator providesAppsNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new AppsNavigator(fragmentNavigator);
   }
 }

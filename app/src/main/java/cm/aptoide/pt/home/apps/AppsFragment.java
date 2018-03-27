@@ -50,11 +50,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Inject NavigationTracker navigationTracker;
   @Inject UpdatesAnalytics updatesAnalytics;
   @Inject AptoideAccountManager accountManager;
+  @Inject AppsNavigator appsNavigator;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
   private PublishSubject<Void> updateAll;
-  private RxAlertDialog ignoreUpdatesDialog;
+  private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
 
   public static AppsFragment newInstance() {
@@ -70,7 +71,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     List<App> appsList = new ArrayList<>();
     appsList.add(
         new DownloadsHeader(getResources().getString(R.string.apps_title_downloads_header)));
@@ -95,7 +95,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
         AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
         new PermissionManager(), ((PermissionService) getContext()), accountManager,
-        new AppsNavigator(getFragmentNavigator())));
+        appsNavigator));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -104,7 +104,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   private void buildIgnoreUpdatesDialog() {
-    ignoreUpdatesDialog =
+    ignoreUpdateDialog =
         new RxAlertDialog.Builder(getContext()).setTitle(R.string.apps_title_ignore_updates)
             .setPositiveButton(R.string.apps_button_ignore_updates_yes)
             .setNegativeButton(R.string.apps_button_ignore_updates_no)
@@ -222,11 +222,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showIgnoreUpdate() {
-    ignoreUpdatesDialog.show();
+    ignoreUpdateDialog.show();
   }
 
   @Override public Observable<Void> ignoreUpdate() {
-    return ignoreUpdatesDialog.positiveClicks()
+    return ignoreUpdateDialog.positiveClicks()
         .map(__ -> null);
   }
 
@@ -266,7 +266,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    ignoreUpdateDialog = null;
     recyclerView = null;
     adapter = null;
+    userAvatar = null;
   }
 }
