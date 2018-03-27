@@ -5,19 +5,19 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 
 /**
- * Created by filipegoncalves on 3/8/18.
+ * Created by filipegoncalves on 3/27/18.
  */
 
-public class HeaderViewHolder extends AppsViewHolder {
+class DownloadsHeaderViewHolder extends AppsViewHolder {
 
   private TextView title;
 
-  public HeaderViewHolder(View itemView) {
+  public DownloadsHeaderViewHolder(View itemView) {
     super(itemView);
     title = (TextView) itemView.findViewById(R.id.apps_downloads_header_title);
   }
 
   @Override public void setApp(App app) {
-    title.setText(((Header) app).getTitle());
+    title.setText(R.string.apps_title_downloads_header);
   }
 }

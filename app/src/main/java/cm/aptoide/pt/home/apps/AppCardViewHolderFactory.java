@@ -37,8 +37,11 @@ public class AppCardViewHolderFactory {
     AppsViewHolder appViewHolder;
     switch (viewType) {
       case HEADER_DOWNLOADS:
+        appViewHolder = new DownloadsHeaderViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.apps_header_item, parent, false));
+        break;
       case HEADER_INSTALLED:
-        appViewHolder = new HeaderViewHolder(LayoutInflater.from(parent.getContext())
+        appViewHolder = new InstalledHeaderViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_header_item, parent, false));
         break;
       case HEADER_UPDATES:

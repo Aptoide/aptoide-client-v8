@@ -23,7 +23,7 @@ class UpdatesHeaderViewHolder extends AppsViewHolder {
   }
 
   @Override public void setApp(App app) {
-    title.setText(((UpdatesHeader) app).getTitle());
+    title.setText(R.string.apps_title_updates_header);
     updateAllButton.setOnClickListener(click -> updateAllApps.onNext(null));
   }
 }

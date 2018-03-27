@@ -133,22 +133,59 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   }
 
   public void addUpdateAppsList(List<App> updatesList) {
-    int updatesHeaderPosition = findHeaderPosition(App.Type.HEADER_UPDATES);
-    removeExcludedUpdates(updatesList);
-    addApps(updatesList, updatesHeaderPosition);
+    int headerPosition = findHeaderPosition(App.Type.HEADER_UPDATES);
+    if (headerPosition == -1) {//there is no updates header
+      headerPosition = findLastDownloadPosition();
+      listOfApps.add(headerPosition + 1, new Header(App.Type.HEADER_UPDATES));
+      notifyItemInserted(headerPosition + 1);
+      headerPosition++;
+    }
+    addApps(updatesList, headerPosition);
   }
 
-  private void removeExcludedUpdates(List<App> updatesList) {
-
+  private int findLastDownloadPosition() {
+    int lastDownloadPosition = -1;
+    for (int i = 0; i < listOfApps.size(); i++) {
+      if (listOfApps.get(i)
+          .getType() == App.Type.DOWNLOAD) {
+        lastDownloadPosition = i;
+      }
+    }
+    return lastDownloadPosition;
   }
 
   public void addInstalledAppsList(List<App> installedApps) {
     int headerPosition = findHeaderPosition(App.Type.HEADER_INSTALLED);
+    if (headerPosition == -1) {
+      headerPosition = findLastUpdatePosition();
+      if (headerPosition == -1) {//there are no updates
+        headerPosition = findLastDownloadPosition();
+      }
+      listOfApps.add(headerPosition + 1, new Header(App.Type.HEADER_INSTALLED));
+      notifyItemInserted(headerPosition + 1);
+      headerPosition++;
+    }
     addApps(installedApps, headerPosition);
+  }
+
+  private int findLastUpdatePosition() {
+    int lastUpdatePosition = -1;
+    for (int i = 0; i < listOfApps.size(); i++) {
+      if (listOfApps.get(i)
+          .getType() == App.Type.UPDATE) {
+        lastUpdatePosition = i;
+      }
+    }
+    return lastUpdatePosition;
   }
 
   public void addDownloadAppsList(List<App> downloadsList) {
     int headerPosition = findHeaderPosition(App.Type.HEADER_DOWNLOADS);
+    if (headerPosition == -1) {//no downloads header
+      listOfApps.add(headerPosition + 1, new Header(App.Type.HEADER_DOWNLOADS));
+      headerPosition++;
+      notifyItemInserted(headerPosition + 1);
+    }
     addApps(downloadsList, headerPosition);
   }
 
@@ -165,7 +202,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         return i;
       }
     }
-    return 0;
+    return -1;
   }
 
   public void removeUpdatesList(List<App> excludedUpdatesList) {

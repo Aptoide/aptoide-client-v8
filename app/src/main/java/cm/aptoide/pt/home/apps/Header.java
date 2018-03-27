@@ -6,17 +6,13 @@ package cm.aptoide.pt.home.apps;
 
 public class Header implements App {
 
-  private String title;
+  private Type type;
 
-  public Header(String title) {
-    this.title = title;
-  }
-
-  public String getTitle() {
-    return title;
+  public Header(Type type) {
+    this.type = type;
   }
 
   @Override public Type getType() {
-    return Type.HEADER_INSTALLED;
+    return type;
   }
 }

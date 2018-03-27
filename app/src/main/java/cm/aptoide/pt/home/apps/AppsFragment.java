@@ -71,15 +71,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    List<App> appsList = new ArrayList<>();
-    appsList.add(
-        new DownloadsHeader(getResources().getString(R.string.apps_title_downloads_header)));
-    appsList.add(new UpdatesHeader(getResources().getString(R.string.apps_title_updates_header)));
-    appsList.add(
-        new InstalledHeader(getResources().getString(R.string.apps_title_installed_apps_header)));
 
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
-    adapter = new AppsAdapter(appsList, new AppCardViewHolderFactory(appItemClicks, updateAll));
+    adapter =
+        new AppsAdapter(new ArrayList<>(), new AppCardViewHolderFactory(appItemClicks, updateAll));
     setupRecyclerView();
 
     buildIgnoreUpdatesDialog();
