@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private static final int VISIBLE_THRESHOLD = 2;
+  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject Home home;
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
@@ -56,6 +58,14 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private View noNetworkRetryButton;
   private View retryButton;
   private ImageView userAvatar;
+  private BottomNavigationActivity bottomNavigationActivity;
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -74,19 +84,6 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     super.onDestroy();
   }
 
-  @Override public void onDestroyView() {
-    listState = bundlesList.getLayoutManager()
-        .onSaveInstanceState();
-    bundlesList = null;
-    adapter = null;
-    layoutManager = null;
-    swipeRefreshLayout = null;
-    genericErrorView = null;
-    noNetworkErrorView = null;
-    progressBar = null;
-    super.onDestroyView();
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -102,6 +99,9 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     if (savedInstanceState != null) {
@@ -126,6 +126,24 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
     attachPresenter(presenter);
+  }
+
+  @Override public void onDestroyView() {
+    listState = bundlesList.getLayoutManager()
+        .onSaveInstanceState();
+    bundlesList = null;
+    adapter = null;
+    layoutManager = null;
+    swipeRefreshLayout = null;
+    genericErrorView = null;
+    noNetworkErrorView = null;
+    progressBar = null;
+    super.onDestroyView();
+  }
+
+  @Override public void onDetach() {
+    bottomNavigationActivity = null;
+    super.onDetach();
   }
 
   @Override public void showHomeBundles(List<HomeBundle> bundles) {
