@@ -141,8 +141,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
         storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, searchNavigator,
-        searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics,
-        timelineAnalytics, storeAnalytics, adsRepository);
+        searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
+        adsRepository);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
