@@ -68,7 +68,7 @@ public class DownloadApp implements App {
       return false;
     }
     DownloadApp other = ((DownloadApp) obj);
-    return md5.equals(other.getMd5());
+    return md5.equals(other.getMd5()) && getType().equals(other.getType());
   }
 
   public enum Status {
