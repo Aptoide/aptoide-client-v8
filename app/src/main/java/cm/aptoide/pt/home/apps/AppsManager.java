@@ -86,7 +86,8 @@ public class AppsManager {
           }
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
-              .filter(install -> install.getType() != Install.InstallationType.UPDATE)
+              .filter(install -> install.getType() != Install.InstallationType.UPDATE
+                  && install.getType() != Install.InstallationType.INSTALLED)
               .toList()
               .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
