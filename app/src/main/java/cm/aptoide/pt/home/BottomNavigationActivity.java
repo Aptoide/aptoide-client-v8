@@ -75,7 +75,10 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
         break;
     }
     if (selectedFragment != null) {
-      if (selectedFragment.getClass() != currentFragment.getClass()) {
+      if (currentFragment == null) {
+        FragmentNavigator fragmentNavigator = getFragmentNavigator();
+        fragmentNavigator.navigateTo(selectedFragment, true);
+      } else if (selectedFragment.getClass() != currentFragment.getClass()) {
         FragmentNavigator fragmentNavigator = getFragmentNavigator();
         fragmentNavigator.navigateTo(selectedFragment, true);
       }

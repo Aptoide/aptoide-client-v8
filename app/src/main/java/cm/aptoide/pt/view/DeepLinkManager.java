@@ -11,6 +11,7 @@ import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
@@ -23,14 +24,11 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.navigator.SimpleTabNavigation;
-import cm.aptoide.pt.navigator.TabNavigation;
-import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.repository.StoreRepository;
-import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -38,7 +36,6 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
-import cm.aptoide.pt.timeline.view.navigation.HomeTabNavigation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -58,12 +55,10 @@ public class DeepLinkManager {
   private final StoreUtilsProxy storeUtilsProxy;
   private final StoreRepository storeRepository;
   private final FragmentNavigator fragmentNavigator;
-  private final TabNavigator tabNavigator;
   private final DeepLinkMessages deepLinkMessages;
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
   private final String defaultTheme;
-  private final SearchNavigator searchNavigator;
   private final NavigationTracker navigationTracker;
   private final NotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
@@ -73,33 +68,32 @@ public class DeepLinkManager {
   private final StoreAnalytics storeAnalytics;
   private final AdsRepository adsRepository;
   private final CompositeSubscription subscriptions;
+  private final AptoideBottomNavigator bottomNavigator;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
-      FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
+      FragmentNavigator fragmentNavigator, AptoideBottomNavigator bottomNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
       StoreAccessor storeAccessor, String defaultTheme, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker, SearchNavigator searchNavigator,
-      SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
-      AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
-      StoreAnalytics storeAnalytics,
+      NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
+      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
+      DeepLinkAnalytics deepLinkAnalytics, StoreAnalytics storeAnalytics,
       AdsRepository adsRepository) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
-    this.tabNavigator = tabNavigator;
     this.deepLinkMessages = deepLinkMessages;
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
     this.defaultTheme = defaultTheme;
     this.navigationTracker = navigationTracker;
     this.notificationAnalytics = notificationAnalytics;
-    this.searchNavigator = searchNavigator;
     this.searchAnalytics = searchAnalytics;
     this.appShortcutsAnalytics = appShortcutsAnalytics;
     this.accountManager = accountManager;
     this.deepLinkAnalytics = deepLinkAnalytics;
     this.storeAnalytics = storeAnalytics;
     this.adsRepository = adsRepository;
+    this.bottomNavigator = bottomNavigator;
     this.subscriptions = new CompositeSubscription();
   }
 
@@ -186,7 +180,7 @@ public class DeepLinkManager {
   }
 
   private void searchDeepLink(String query, boolean shortcutNavigation) {
-    searchNavigator.navigate(query);
+    bottomNavigator.showFragment(R.id.action_search);
     if (query == null || query.isEmpty()) {
       if (shortcutNavigation) {
         searchAnalytics.searchStart(SearchSource.SHORTCUT, false);
@@ -239,8 +233,7 @@ public class DeepLinkManager {
   }
 
   @NonNull private Completable navigateToStores() {
-    return Completable.fromAction(
-        () -> tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.STORES)));
+    return Completable.fromAction(() -> bottomNavigator.showFragment(R.id.action_stores));
   }
 
   @NonNull private Completable openStore(Store store) {
@@ -251,18 +244,17 @@ public class DeepLinkManager {
 
   private void downloadNotificationDeepLink() {
     deepLinkAnalytics.downloadingUpdates();
-    tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
+    bottomNavigator.showFragment(R.id.action_apps);
   }
 
   private void fromHomeDeepLink() {
-
-    tabNavigator.navigate(new HomeTabNavigation());
+    bottomNavigator.showFragment(R.id.action_home);
   }
 
   private void newUpdatesDeepLink() {
     notificationAnalytics.sendUpdatesNotificationClickEvent();
     deepLinkAnalytics.newUpdatesNotification();
-    tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
+    bottomNavigator.showFragment(R.id.action_apps);
   }
 
   private void genericDeepLink(Uri uri) {
@@ -307,12 +299,10 @@ public class DeepLinkManager {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE);
             storeAnalytics.sendStoreOpenEvent(APP_SHORTCUT, navigation.getStore()
                 .getName(), false);
-            fragmentNavigator.navigateTo(StoreFragment.newInstance(navigation.getStore()
-                .getName(), navigation.getStore()
-                .getTheme(), StoreFragment.OpenType.GetHome), true);
+            bottomNavigator.showFragment(R.id.action_stores);
           } else {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE_NOT_LOGGED_IN);
-            tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.STORES));
+            bottomNavigator.showFragment(R.id.action_stores);
           }
         }, throwable -> Logger.e(TAG, "myStoreDeepLink: " + throwable)));
   }
