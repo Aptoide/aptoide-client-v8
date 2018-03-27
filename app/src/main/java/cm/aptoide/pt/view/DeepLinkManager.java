@@ -16,6 +16,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -250,7 +251,12 @@ public class DeepLinkManager {
   }
 
   private void fromBundleDeepLink(Intent intent) {
-    bottomNavigator.showFragment(R.id.action_home);
+    Event event = new Event();
+    event.setType(Event.Type.API);
+    event.setName(Event.Name.listApps);
+    fragmentNavigator.navigateTo(ListAppsFragment.newInstance(event, "",
+        intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.BUNDLE_ID), StoreContext.home,
+        true), true);
   }
 
   private void fromHomeDeepLink() {
