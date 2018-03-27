@@ -219,7 +219,6 @@ android {
     variant.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
     variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_SIXPACK_HOST",
         "\"" + project.APTOIDE_WEB_SERVICES_SIXPACK_HOST + "\""
-    variant.buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
         "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
