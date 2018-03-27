@@ -74,7 +74,6 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     super.onDetach();
   }
 
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);

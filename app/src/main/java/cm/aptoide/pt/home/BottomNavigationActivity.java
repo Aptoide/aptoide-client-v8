@@ -29,7 +29,6 @@ import rx.subjects.PublishSubject;
 public abstract class BottomNavigationActivity extends TabNavigatorActivity
     implements AptoideBottomNavigator {
 
-
   protected static final int LAYOUT = R.layout.frame_layout;
   private final static String EVENT_ACTION =
       "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";

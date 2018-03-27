@@ -279,7 +279,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           timelineAnalytics.sendTimelineTabOpened();
         }
-        
+
         if (storeContext.equals(StoreContext.meta)) {
           storeAnalytics.sendStoreInteractEvent("Open Tab", adapter.getPageTitle(position)
               .toString(), storeName);
