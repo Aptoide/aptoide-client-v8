@@ -85,13 +85,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.SuggestionCursorAdapter;
-import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.suggestions.TrendingManager;
-import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
-import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -111,7 +106,6 @@ import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
-import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
@@ -126,7 +120,6 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.PublishSubject;
 
 /**
  * Created on 04/05/16.
@@ -172,10 +165,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   private PublishRelay installAppRelay;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
-  private AppSearchSuggestionsView appSearchSuggestionsView;
-  private SearchNavigator searchNavigator;
-  private TrendingManager trendingManager;
-  private SearchAnalytics searchAnalytics;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -379,13 +368,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
 
-    searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
-
-    searchNavigator =
-        new SearchNavigator(getFragmentNavigator(), application.getDefaultStoreName());
-
-    trendingManager = application.getTrendingManager();
-
     crashReport = CrashReport.getInstance();
 
     setHasOptionsMenu(true);
@@ -463,22 +445,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
         .autoConnect();
-
-    appSearchSuggestionsView =
-        new AppSearchSuggestionsView(this, RxView.clicks(toolbar), crashReport,
-            suggestionCursorAdapter, PublishSubject.create(), toolbarMenuItemClick,
-            searchAnalytics);
-
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-
-    final SearchSuggestionsPresenter searchSuggestionsPresenter =
-        new SearchSuggestionsPresenter(appSearchSuggestionsView,
-            application.getSearchSuggestionManager(), AndroidSchedulers.mainThread(),
-            suggestionCursorAdapter, crashReport, trendingManager, searchNavigator, false,
-            searchAnalytics);
-
-    attachPresenter(searchSuggestionsPresenter);
 
     handleMenuItemClick(toolbarMenuItemClick);
   }
@@ -613,15 +579,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.fragment_appview, menu);
-
-    final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-    if (appSearchSuggestionsView != null && menuItem != null) {
-      appSearchSuggestionsView.initialize(menuItem);
-    } else if (menuItem != null) {
-      menuItem.setVisible(false);
-    } else {
-      menu.removeItem(R.id.menu_item_search);
-    }
   }
 
   @Override public String getDefaultTheme() {

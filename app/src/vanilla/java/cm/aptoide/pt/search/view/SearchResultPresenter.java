@@ -65,11 +65,13 @@ import rx.exceptions.OnErrorNotImplementedException;
   }
 
   @Override public void present() {
+    getTrendingOnStart();
     handleToolbarClick();
     handleSearchMenuItemClick();
     focusInSearchBar();
     handleSuggestionClicked();
     stopLoadingMoreOnDestroy();
+    handleFragmentRestorationVisibility();
     doFirstSearch();
     firstAdsDataLoad();
     handleClickFollowedStoresSearchButton();
@@ -88,10 +90,35 @@ import rx.exceptions.OnErrorNotImplementedException;
     listenToSearchQueries();
   }
 
+  private void handleFragmentRestorationVisibility() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.searchSetup())
+        .filter(__ -> !view.shouldFocusInSearchBar() && view.shouldShowSuggestions())
+        .doOnNext(__ -> view.setVisibilityOnRestore())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void getTrendingOnStart() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.searchSetup())
+        .flatMapSingle(__ -> trendingManager.getTrendingListSuggestions()
+            .observeOn(viewScheduler)
+            .doOnSuccess(trending -> view.setTrendingList(trending)))
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
   private void focusInSearchBar() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
+        .first()
         .filter(__ -> view.shouldFocusInSearchBar())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.focusInSearchBar())
@@ -372,6 +399,7 @@ import rx.exceptions.OnErrorNotImplementedException;
             && viewModel.getFollowedStoresOffset() == 0)
         .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
+        .doOnNext(__ -> view.hideSuggestionsViews())
         .doOnNext(__ -> view.showLoading())
         .flatMapSingle(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
             viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
@@ -403,13 +431,11 @@ import rx.exceptions.OnErrorNotImplementedException;
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges().filter(
             data -> !data.hasQuery() && view.isSearchViewExpanded())
-            .flatMapSingle(data -> trendingManager.getTrendingListSuggestions()
-                .observeOn(viewScheduler)
-                .doOnSuccess(trendingList -> {
-                  view.setTrendingList(trendingList);
-                  view.toggleTrendingView();
-                }))
-            .retry())
+            .observeOn(viewScheduler)
+            .doOnNext(data -> {
+              view.clearUnsubmittedQuery();
+              view.toggleTrendingView();
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -419,10 +445,12 @@ import rx.exceptions.OnErrorNotImplementedException;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
+        .first()
         .flatMap(__ -> getDebouncedQueryChanges())
         .filter(data -> data.hasQuery() && !data.isSubmitted())
         .map(data -> data.getQuery()
             .toString())
+        .doOnNext(query -> view.setUnsubmittedQuery(query))
         .flatMapSingle(query -> suggestionManager.getSuggestionsForApp(query)
             .onErrorResumeNext(err -> {
               if (err instanceof TimeoutException) {
@@ -444,6 +472,7 @@ import rx.exceptions.OnErrorNotImplementedException;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
+        .first()
         .flatMap(__ -> getDebouncedQueryChanges())
         .filter(data -> data.hasQuery() && data.isSubmitted())
         .observeOn(viewScheduler)
@@ -538,6 +567,7 @@ import rx.exceptions.OnErrorNotImplementedException;
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.RESUME)
         .flatMap(__ -> view.searchSetup())
+        .first()
         .flatMap(__ -> view.queryChanged())
         .doOnNext(event -> view.queryEvent(event))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

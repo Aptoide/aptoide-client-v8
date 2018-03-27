@@ -1,6 +1,5 @@
 package cm.aptoide.pt.search.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -36,8 +35,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.BottomNavigationActivity;
-import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchViewModel;
@@ -63,11 +60,12 @@ import rx.Emitter;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
+import static android.view.View.VISIBLE;
+
 public class SearchResultFragment extends BackButtonFragment
     implements SearchResultView, SearchSuggestionsView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
-  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.SEARCH;
   private static final String VIEW_MODEL = "view_model";
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
@@ -77,6 +75,9 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
       "followed_stores_search_list_state";
+  private static final String TRENDING_LIST_STATE = "trending_list_state";
+  private static final String UNSUBMITTED_QUERY = "unsubmitted_query";
+
   @Inject SearchResultPresenter searchResultPresenter;
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -109,7 +110,10 @@ public class SearchResultFragment extends BackButtonFragment
   private String currentQuery;
   private PublishSubject<Void> searchSetupPublishSubject;
   private boolean focusInSearchBar;
-  private BottomNavigationActivity bottomNavigationActivity;
+  private ActionBar actionBar;
+  private boolean noResults;
+  private String unsubmittedQuery;
+  private boolean isSearchExpanded;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -260,6 +264,7 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
+    noResults = true;
   }
 
   @Override public void showResultsView() {
@@ -467,6 +472,47 @@ public class SearchResultFragment extends BackButtonFragment
         && !searchMenuItem.isActionViewExpanded();
   }
 
+  @Override public void disableUpNavigation() {
+    if (actionBar != null) {
+      actionBar.setHomeButtonEnabled(false);
+      actionBar.setDisplayHomeAsUpEnabled(false);
+      actionBar.setDisplayShowHomeEnabled(false);
+    }
+  }
+
+  @Override public boolean shouldHideUpNavigation() {
+    return (allStoresResultAdapter.getItemCount() == 0
+        || followedStoresResultAdapter.getItemCount() == 0)
+        && noSearchLayout.getVisibility() != VISIBLE;
+  }
+
+  @Override public void setUnsubmittedQuery(String query) {
+    unsubmittedQuery = query;
+  }
+
+  @Override public void clearUnsubmittedQuery() {
+    unsubmittedQuery = "";
+  }
+
+  @Override public void setVisibilityOnRestore() {
+    if (!focusInSearchBar) {
+      if (hasSearchResults()) {
+        showResultsView();
+      } else {
+        showSuggestionsView();
+      }
+    }
+  }
+
+  @Override public boolean shouldShowSuggestions() {
+    return toolbar.getTitle()
+        .equals(getResources().getString(R.string.search_hint_title));
+  }
+
+  @Override public boolean getNoResultsViewState() {
+    return noResults;
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -481,6 +527,13 @@ public class SearchResultFragment extends BackButtonFragment
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
     }
+  }
+
+  private void forceSuggestions() {
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.VISIBLE);
+    suggestionsResultList.setVisibility(View.GONE);
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -534,6 +587,46 @@ public class SearchResultFragment extends BackButtonFragment
     }
   }
 
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.fragment_search_result, menu);
+
+    searchMenuItem = menu.findItem(R.id.menu_item_search);
+    searchView = (SearchView) searchMenuItem.getActionView();
+    AutoCompleteTextView autoCompleteTextView =
+        (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
+    autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
+    MenuItemCompat.setOnActionExpandListener(searchMenuItem,
+        new MenuItemCompat.OnActionExpandListener() {
+          @Override public boolean onMenuItemActionExpand(MenuItem menuItem) {
+            enableUpNavigation();
+            isSearchExpanded = true;
+            return true;
+          }
+
+          @Override public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+            if (hasSearchResults()) {
+              showResultsView();
+            } else if (noResults) {
+              showNoResultsView();
+            } else {
+              forceSuggestions();
+            }
+            if (shouldHideUpNavigation()) disableUpNavigation();
+            isSearchExpanded = false;
+            return true;
+          }
+        });
+
+    focusInSearchBar = currentQuery.isEmpty() && !noResults;
+
+    searchSetupPublishSubject.onNext(null);
+  }
+
+  @Override public String getDefaultTheme() {
+    return super.getDefaultTheme();
+  }
+
   private boolean hasSearchResults() {
     return allStoresResultAdapter.getItemCount() > 0
         || followedStoresResultAdapter.getItemCount() > 0;
@@ -551,14 +644,19 @@ public class SearchResultFragment extends BackButtonFragment
       viewModel = Parcels.unwrap(getArguments().getParcelable(VIEW_MODEL));
     }
 
-    focusInSearchBar =
-        getArguments().containsKey(FOCUS_IN_SEARCH) && getArguments().getBoolean(FOCUS_IN_SEARCH);
+    if (savedInstanceState != null && savedInstanceState.containsKey(FOCUS_IN_SEARCH)) {
+      focusInSearchBar = savedInstanceState.getBoolean(FOCUS_IN_SEARCH);
+    } else if (getArguments().containsKey(FOCUS_IN_SEARCH) && savedInstanceState == null) {
+      focusInSearchBar = getArguments().getBoolean(FOCUS_IN_SEARCH);
+    }
 
     if (viewModel != null) currentQuery = viewModel.getCurrentQuery();
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 
     defaultThemeName = application.getDefaultThemeName();
+
+    noResults = false;
 
     onItemViewClickRelay = PublishRelay.create();
     onOpenPopupMenuClickRelay = PublishRelay.create();
@@ -598,7 +696,6 @@ public class SearchResultFragment extends BackButtonFragment
     attachAllStoresResultListDependencies();
     setupToolbar();
     setupTheme();
-    bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
 
     suggestionsResultList.setLayoutManager(new LinearLayoutManager(getContext()));
     trendingResultList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -609,7 +706,14 @@ public class SearchResultFragment extends BackButtonFragment
       restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(
           ALL_STORES_SEARCH_LIST_STATE) : null,
           savedInstanceState != null ? savedInstanceState.getParcelable(
-              FOLLOWED_STORES_SEARCH_LIST_STATE) : null);
+              FOLLOWED_STORES_SEARCH_LIST_STATE) : null,
+          savedInstanceState != null ? savedInstanceState.getParcelable(TRENDING_LIST_STATE)
+              : null);
+    }
+    if (savedInstanceState != null) {
+      unsubmittedQuery =
+          savedInstanceState.containsKey(UNSUBMITTED_QUERY) ? savedInstanceState.getString(
+              UNSUBMITTED_QUERY) : "";
     }
 
     attachPresenter(searchResultPresenter);
@@ -618,45 +722,6 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    if (activity instanceof BottomNavigationActivity) {
-      bottomNavigationActivity = ((BottomNavigationActivity) activity);
-    }
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.fragment_search_result, menu);
-
-    searchMenuItem = menu.findItem(R.id.menu_item_search);
-    searchView = (SearchView) searchMenuItem.getActionView();
-    AutoCompleteTextView autoCompleteTextView =
-        (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
-    autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
-    MenuItemCompat.setOnActionExpandListener(searchMenuItem,
-        new MenuItemCompat.OnActionExpandListener() {
-          @Override public boolean onMenuItemActionExpand(MenuItem menuItem) {
-            return true;
-          }
-
-          @Override public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-            if (hasSearchResults()) {
-              showResultsView();
-            } else {
-              showSuggestionsView();
-            }
-            return true;
-          }
-        });
-    if (!hasResults()) searchView.setQuery("Search apps & games", false);
-    searchSetupPublishSubject.onNext(null);
-  }
-
-  @Override public String getDefaultTheme() {
-    return super.getDefaultTheme();
   }
 
   private void setupTheme() {
@@ -686,11 +751,6 @@ public class SearchResultFragment extends BackButtonFragment
     super.onDestroyView();
   }
 
-  @Override public void onDetach() {
-    bottomNavigationActivity = null;
-    super.onDetach();
-  }
-
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {
     return new DividerItemDecoration(getContext(), listItemPadding);
   }
@@ -713,13 +773,17 @@ public class SearchResultFragment extends BackButtonFragment
     outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
         .onSaveInstanceState());
 
+    outState.putString(UNSUBMITTED_QUERY, unsubmittedQuery);
+
+    if (isSearchExpanded) outState.putBoolean(FOCUS_IN_SEARCH, true);
+
     outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
         followedStoresResultList.getLayoutManager()
             .onSaveInstanceState());
   }
 
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState,
-      @Nullable Parcelable followedStoresSearchListState) {
+      @Nullable Parcelable followedStoresSearchListState, Parcelable trendingListState) {
 
     final List<SearchAppResult> allStoresSearchAppResults =
         viewModel.getAllStoresSearchAppResults();
@@ -780,6 +844,10 @@ public class SearchResultFragment extends BackButtonFragment
   private void setupToolbar() {
 
     if (viewModel.getCurrentQuery()
+        .isEmpty() && !noResults) {
+      toolbar.setTitle(R.string.search_hint_title);
+      toolbar.setTitleMarginStart(100);
+    } else if (viewModel.getCurrentQuery()
         .isEmpty()) {
       toolbar.setTitle(R.string.search_hint_title);
     } else {
@@ -788,10 +856,18 @@ public class SearchResultFragment extends BackButtonFragment
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);
-    ActionBar actionBar = activity.getSupportActionBar();
+    actionBar = activity.getSupportActionBar();
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setTitle(toolbar.getTitle());
+    }
+  }
+
+  public void enableUpNavigation() {
+    if (actionBar != null) {
+      actionBar.setHomeButtonEnabled(true);
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setDisplayShowHomeEnabled(true);
     }
   }
 
@@ -801,7 +877,9 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void collapseSearchBar(boolean shouldShowSuggestions) {
     if (searchMenuItem != null) searchMenuItem.collapseActionView();
-    if (!hasResults()) toolbar.setTitle(R.string.search_hint_title);
+    if (!hasResults()) {
+      toolbar.setTitle(R.string.search_hint_title);
+    }
   }
 
   @Override public String getCurrentQuery() {
@@ -813,10 +891,13 @@ public class SearchResultFragment extends BackButtonFragment
       searchMenuItem.expandActionView();
     }
 
-    if (searchView != null && !getCurrentQuery().isEmpty()) {
+    if (searchView != null && unsubmittedQuery != null) {
+      searchView.setQuery(unsubmittedQuery, false);
+    } else if (searchView != null && !getCurrentQuery().isEmpty()) {
       final String currentQuery = getCurrentQuery();
       searchView.setQuery(currentQuery, false);
     }
+
     showSuggestionsView();
   }
 
