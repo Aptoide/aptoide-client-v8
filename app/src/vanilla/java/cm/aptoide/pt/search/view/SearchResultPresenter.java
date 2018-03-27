@@ -511,7 +511,11 @@ import rx.exceptions.OnErrorNotImplementedException;
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.toolbarClick())
-        .doOnNext(__ -> analytics.searchStart(SearchSource.SEARCH_TOOLBAR, true))
+        .doOnNext(__ -> {
+          if (!view.shouldFocusInSearchBar()) {
+            analytics.searchStart(SearchSource.SEARCH_TOOLBAR, true);
+          }
+        })
         .doOnNext(__ -> view.focusInSearchBar())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -522,7 +526,9 @@ import rx.exceptions.OnErrorNotImplementedException;
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.RESUME)
         .flatMap(__ -> view.searchMenuItemClick())
-        .doOnNext(__ -> analytics.searchStart(SearchSource.SEARCH_ICON, true))
+        .doOnNext(__ -> {
+          if (!view.shouldFocusInSearchBar()) analytics.searchStart(SearchSource.SEARCH_ICON, true);
+        })
         .doOnNext(__ -> view.focusInSearchBar())
         .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
         .subscribe(__ -> {

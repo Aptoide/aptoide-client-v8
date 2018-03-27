@@ -10,6 +10,7 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -71,15 +72,14 @@ import javax.inject.Singleton;
     List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY,
-        AppViewAnalytics.APP_VIEW_OPEN_FROM, StoreAnalytics.STORES_TAB_OPEN,
-        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
-        StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
-        AccountAnalytics.LOGIN_EVENT_NAME, FirstLaunchAnalytics.FIRST_LAUNCH,
-        AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
-        AccountAnalytics.CREATE_YOUR_STORE, AccountAnalytics.PROFILE_SETTINGS,
-        AdultContentAnalytics.ADULT_CONTENT, AppViewAnalytics.DOWNGRADE_DIALOG,
-        DeepLinkAnalytics.APP_LAUNCH, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL));
+        AppViewAnalytics.APP_VIEW_OPEN_FROM, StoreAnalytics.STORES_TAB_INTERACT,
+        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
+        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
+        FirstLaunchAnalytics.FIRST_LAUNCH, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN,
+        AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.CREATE_YOUR_STORE,
+        AccountAnalytics.PROFILE_SETTINGS, AdultContentAnalytics.ADULT_CONTENT,
+        AppViewAnalytics.DOWNGRADE_DIALOG, DeepLinkAnalytics.APP_LAUNCH,
+        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL));
     for (CardType cardType : CardType.values()) {
       flurryEvents.add(cardType.name() + "_" + TimelineAnalytics.APPS_TIMELINE_EVENT);
     }
@@ -105,9 +105,9 @@ import javax.inject.Singleton;
         NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
         TimelineAnalytics.SOCIAL_CARD_PREVIEW, TimelineAnalytics.CARD_ACTION,
         TimelineAnalytics.TIMELINE_OPENED, TimelineAnalytics.FOLLOW_FRIENDS,
-        StoreAnalytics.STORES_TAB_OPEN, StoreAnalytics.STORES_TAB_INTERACT,
-        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
-        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
+        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
+        StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
+        AccountAnalytics.LOGIN_EVENT_NAME, AccountAnalytics.FOLLOW_FRIENDS,
         UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
         DrawerAnalytics.DRAWER_OPEN_EVENT, DrawerAnalytics.DRAWER_INTERACT_EVENT,
         FirstLaunchAnalytics.FIRST_LAUNCH, InstallFabricEvents.ROOT_V2_COMPLETE,
@@ -121,6 +121,7 @@ import javax.inject.Singleton;
         BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS,
         AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
         AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
-        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP);
+        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP,
+        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT);
   }
 }
