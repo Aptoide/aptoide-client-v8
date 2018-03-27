@@ -185,7 +185,8 @@ public class AppsPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          throw new OnErrorNotImplementedException(error);
+          crashReport.log(error);
+          //throw new OnErrorNotImplementedException(error);
         });
   }
 
