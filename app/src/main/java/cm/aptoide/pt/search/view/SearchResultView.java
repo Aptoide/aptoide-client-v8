@@ -94,6 +94,20 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   boolean hasResults();
 
+  void disableUpNavigation();
+
+  boolean shouldHideUpNavigation();
+
+  void setUnsubmittedQuery(String query);
+
+  void clearUnsubmittedQuery();
+
+  void setVisibilityOnRestore();
+
+  boolean shouldShowSuggestions();
+
+  boolean getNoResultsViewState();
+
   interface Model {
 
     List<SearchAppResult> getFollowedStoresSearchAppResults();

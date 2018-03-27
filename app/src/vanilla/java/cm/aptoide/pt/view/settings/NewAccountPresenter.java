@@ -169,7 +169,7 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> accountManager.accountStatus())
-        .filter(account -> !storeExistsInAccount(account))
+        .filter(account -> !storeExistsInAccount(account) && account.hasStore())
         .flatMap(account -> view.getStore()
             .map(store -> store.getNodes()
                 .getMeta()
