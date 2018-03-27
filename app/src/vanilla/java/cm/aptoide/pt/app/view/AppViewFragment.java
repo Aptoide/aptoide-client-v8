@@ -579,7 +579,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.fragment_appview, menu);
-    menu.removeItem(R.id.menu_item_search);
   }
 
   @Override public String getDefaultTheme() {
