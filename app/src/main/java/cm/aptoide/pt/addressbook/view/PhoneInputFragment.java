@@ -29,6 +29,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.PhoneInputContract;
 import cm.aptoide.pt.presenter.PhoneInputPresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
@@ -38,7 +39,8 @@ import retrofit2.Converter;
 /**
  * Created by jdandrade on 14/02/2017.
  */
-public class PhoneInputFragment extends UIComponentFragment implements PhoneInputContract.View {
+public class PhoneInputFragment extends UIComponentFragment
+    implements PhoneInputContract.View, NotBottomNavigationView {
 
   public static final String TAG = "TAG";
   @Inject AnalyticsManager analyticsManager;

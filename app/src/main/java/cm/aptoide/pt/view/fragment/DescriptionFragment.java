@@ -29,11 +29,13 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
-public class DescriptionFragment extends BaseLoaderToolbarFragment {
+public class DescriptionFragment extends BaseLoaderToolbarFragment
+    implements NotBottomNavigationView {
 
   private static final String TAG = DescriptionFragment.class.getSimpleName();
 

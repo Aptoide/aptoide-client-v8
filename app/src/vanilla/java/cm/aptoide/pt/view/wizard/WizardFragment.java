@@ -18,6 +18,7 @@ import cm.aptoide.pt.account.view.LoginBottomSheet;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -35,7 +36,8 @@ import rx.android.schedulers.AndroidSchedulers;
  * Wizard Page.
  * It also manages swapping pages and UI changes (Indicator + skip/next arrow)
  */
-public class WizardFragment extends UIComponentFragment implements WizardView {
+public class WizardFragment extends UIComponentFragment
+    implements WizardView, NotBottomNavigationView {
 
   public static final int LAYOUT = R.layout.fragment_wizard;
   private static final String PAGE_INDEX = "page_index";

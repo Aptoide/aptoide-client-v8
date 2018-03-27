@@ -42,6 +42,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.CustomTextInputLayout;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.dialog.ImagePickerDialog;
 import com.jakewharton.rxbinding.view.RxView;
@@ -55,7 +56,8 @@ import javax.inject.Inject;
 import org.parceler.Parcels;
 import rx.Observable;
 
-public class ManageStoreFragment extends BackButtonFragment implements ManageStoreView {
+public class ManageStoreFragment extends BackButtonFragment
+    implements ManageStoreView, NotBottomNavigationView {
 
   private static final String EXTRA_STORE_MODEL = "store_model";
   private static final String EXTRA_GO_TO_HOME = "go_to_home";

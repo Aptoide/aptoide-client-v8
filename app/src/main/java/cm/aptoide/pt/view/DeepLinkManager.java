@@ -27,7 +27,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -37,8 +36,6 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.timeline.view.navigation.AppsTimelineTabNavigation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -58,7 +55,6 @@ public class DeepLinkManager {
   private final StoreUtilsProxy storeUtilsProxy;
   private final StoreRepository storeRepository;
   private final FragmentNavigator fragmentNavigator;
-  private final TabNavigator tabNavigator;
   private final DeepLinkMessages deepLinkMessages;
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
@@ -69,25 +65,22 @@ public class DeepLinkManager {
   private final AppShortcutsAnalytics appShortcutsAnalytics;
   private final AptoideAccountManager accountManager;
   private final DeepLinkAnalytics deepLinkAnalytics;
-  private final TimelineAnalytics timelineAnalytics;
   private final StoreAnalytics storeAnalytics;
   private final AdsRepository adsRepository;
   private final CompositeSubscription subscriptions;
   private final AptoideBottomNavigator bottomNavigator;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
-      FragmentNavigator fragmentNavigator, TabNavigator tabNavigator,
+      FragmentNavigator fragmentNavigator, AptoideBottomNavigator bottomNavigator,
       DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
       StoreAccessor storeAccessor, String defaultTheme, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker,
-      SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
-      AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
-      TimelineAnalytics timelineAnalytics, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AptoideBottomNavigator bottomNavigator) {
+      NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
+      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
+      DeepLinkAnalytics deepLinkAnalytics, StoreAnalytics storeAnalytics,
+      AdsRepository adsRepository) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
-    this.tabNavigator = tabNavigator;
     this.deepLinkMessages = deepLinkMessages;
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
@@ -97,7 +90,6 @@ public class DeepLinkManager {
     this.searchAnalytics = searchAnalytics;
     this.appShortcutsAnalytics = appShortcutsAnalytics;
     this.accountManager = accountManager;
-    this.timelineAnalytics = timelineAnalytics;
     this.deepLinkAnalytics = deepLinkAnalytics;
     this.storeAnalytics = storeAnalytics;
     this.adsRepository = adsRepository;
@@ -130,8 +122,6 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink();
-    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.TIMELINE_DEEPLINK)) {
-      fromTimelineDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.HOME_DEEPLINK)) {
       fromHomeDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
@@ -244,7 +234,6 @@ public class DeepLinkManager {
 
   @NonNull private Completable navigateToStores() {
     return Completable.fromAction(() -> bottomNavigator.showFragment(R.id.action_stores));
-    //tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.STORES
   }
 
   @NonNull private Completable openStore(Store store) {
@@ -255,18 +244,7 @@ public class DeepLinkManager {
 
   private void downloadNotificationDeepLink() {
     deepLinkAnalytics.downloadingUpdates();
-    //tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.DOWNLOADS));
     bottomNavigator.showFragment(R.id.action_apps);
-  }
-
-  private void fromTimelineDeepLink(Intent intent) {
-    deepLinkAnalytics.timelineNotification();
-    String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
-    if (intent.hasExtra(FROM_SHORTCUT)) {
-      timelineAnalytics.sendTimelineTabOpenedFromShortcut();
-      appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.TIMELINE);
-    }
-    tabNavigator.navigate(new AppsTimelineTabNavigation(cardId));
   }
 
   private void fromHomeDeepLink() {
@@ -277,7 +255,6 @@ public class DeepLinkManager {
     notificationAnalytics.sendUpdatesNotificationClickEvent();
     deepLinkAnalytics.newUpdatesNotification();
     bottomNavigator.showFragment(R.id.action_apps);
-    //tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.UPDATES));
   }
 
   private void genericDeepLink(Uri uri) {
@@ -323,13 +300,9 @@ public class DeepLinkManager {
             storeAnalytics.sendStoreOpenEvent(APP_SHORTCUT, navigation.getStore()
                 .getName(), false);
             bottomNavigator.showFragment(R.id.action_stores);
-            //fragmentNavigator.navigateTo(StoreFragment.newInstance(navigation.getStore()
-            //    .getName(), navigation.getStore()
-            //    .getTheme(), StoreFragment.OpenType.GetHome), true);
           } else {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE_NOT_LOGGED_IN);
             bottomNavigator.showFragment(R.id.action_stores);
-            //tabNavigator.navigate(new SimpleTabNavigation(TabNavigation.STORES));
           }
         }, throwable -> Logger.e(TAG, "myStoreDeepLink: " + throwable)));
   }
@@ -362,7 +335,6 @@ public class DeepLinkManager {
   }
 
   private static final class ShortcutDestinations {
-    private static final String TIMELINE = "Timeline";
     private static final String SEARCH = "Search";
     private static final String MY_STORE = "My_Store";
     private static final String MY_STORE_NOT_LOGGED_IN = "My_Store_Not_Logged_In";

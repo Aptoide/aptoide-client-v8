@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import java.util.ArrayList;
@@ -18,7 +19,8 @@ import java.util.ArrayList;
  * <p>
  * code migrated from v7
  */
-public class ScreenshotsViewerFragment extends UIComponentFragment {
+public class ScreenshotsViewerFragment extends UIComponentFragment
+    implements NotBottomNavigationView {
 
   // vars
   private ArrayList<String> uris;

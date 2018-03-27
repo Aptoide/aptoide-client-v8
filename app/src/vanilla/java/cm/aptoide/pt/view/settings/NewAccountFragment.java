@@ -32,6 +32,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.BackButtonFragment;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import okhttp3.OkHttpClient;
@@ -44,7 +45,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class NewAccountFragment extends BackButtonFragment
-    implements SharedPreferences.OnSharedPreferenceChangeListener, NewAccountView {
+    implements SharedPreferences.OnSharedPreferenceChangeListener, NewAccountView,
+    NotBottomNavigationView {
 
   private static final float STROKE_SIZE = 0.04f;
 
@@ -114,6 +116,25 @@ public class NewAccountFragment extends BackButtonFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Override public void onDestroyView() {
+    myProfileView = null;
+    myStoreView = null;
+    loginView = null;
+    accountView = null;
+    createStoreMessage = null;
+    myAccountAvatar = null;
+    myAccountName = null;
+    myStoreName = null;
+    loginButton = null;
+    logoutButton = null;
+    findFriendsButton = null;
+    createStoreButton = null;
+    editStoreButton = null;
+    editProfileButton = null;
+
+    super.onDestroyView();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

@@ -21,4 +21,6 @@ public interface AptoideBottomNavigator {
    * Shows the fragment in case the current Fragment is not the one that is selected
    */
   void showFragment(Integer menuItem);
+
+  void toogleBottomNavigation();
 }

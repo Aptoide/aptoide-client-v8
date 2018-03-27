@@ -3,6 +3,9 @@ package cm.aptoide.pt.home;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -11,6 +14,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.TabNavigatorActivity;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.settings.NewAccountFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -27,6 +31,8 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
       "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
   protected BottomNavigationView bottomNavigationView;
   private PublishSubject<Integer> navigationSubject;
+  private Animation animationup;
+  private Animation animationdown;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -38,6 +44,9 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
       navigationSubject.onNext(item.getItemId());
       return true;
     });
+    animationup = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+    animationdown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+    toogleBottomNavigation(); //Here because of the SettingsFragment that doesn't extend the BaseFragment
   }
 
   @Override public Observable<Integer> navigationEvent() {
@@ -72,6 +81,21 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
       } else if (selectedFragment.getClass() != currentFragment.getClass()) {
         FragmentNavigator fragmentNavigator = getFragmentNavigator();
         fragmentNavigator.navigateTo(selectedFragment, true);
+      }
+    }
+  }
+
+  @Override public void toogleBottomNavigation() {
+    Fragment fragment = getFragmentNavigator().getFragment();
+    if (fragment instanceof NotBottomNavigationView) {
+      if (bottomNavigationView.getVisibility() != View.GONE) {
+        bottomNavigationView.startAnimation(animationdown);
+        bottomNavigationView.setVisibility(View.GONE);
+      }
+    } else {
+      if (bottomNavigationView.getVisibility() != View.VISIBLE) {
+        bottomNavigationView.startAnimation(animationup);
+        bottomNavigationView.setVisibility(View.VISIBLE);
       }
     }
   }
