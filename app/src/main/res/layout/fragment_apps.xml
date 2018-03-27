@@ -6,6 +6,7 @@
     android:orientation="vertical"
     >
 
+  <include layout="@layout/action_bar"/>
   <android.support.v7.widget.RecyclerView
       android:id="@+id/fragment_apps_recycler_view"
       android:layout_width="match_parent"

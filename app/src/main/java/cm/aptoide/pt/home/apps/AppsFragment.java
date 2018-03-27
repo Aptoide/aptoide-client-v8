@@ -8,6 +8,8 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -18,6 +20,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -25,6 +28,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -45,12 +49,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Inject InstallAnalytics installAnalytics;
   @Inject NavigationTracker navigationTracker;
   @Inject UpdatesAnalytics updatesAnalytics;
+  @Inject AptoideAccountManager accountManager;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
   private PublishSubject<Void> updateAll;
   private RxAlertDialog ignoreUpdatesDialog;
-  private AppsNavigator appsNavigator;
+  private ImageView userAvatar;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -66,8 +71,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    appsNavigator = new AppsNavigator(getFragmentNavigator());
-
     List<App> appsList = new ArrayList<>();
     appsList.add(
         new DownloadsHeader(getResources().getString(R.string.apps_title_downloads_header)));
@@ -81,6 +84,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
     buildIgnoreUpdatesDialog();
 
+    userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
+
     attachPresenter(new AppsPresenter(this, new AppsManager(new UpdatesManager(
         RepositoryFactory.getUpdateRepository(getContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
@@ -89,7 +94,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         getContext().getPackageManager(), getContext(), new DownloadFactory(
         ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
         AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
-        new PermissionManager(), ((PermissionService) getContext())));
+        new PermissionManager(), ((PermissionService) getContext()), accountManager,
+        new AppsNavigator(getFragmentNavigator())));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -238,8 +244,18 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(appClick -> appClick.getApp());
   }
 
-  @Override public void navigateToAppView(long appId, String packageName) {
-    appsNavigator.navigateToAppView(appId, packageName);
+  @Override public void setUserImage(String userAvatarUrl) {
+    ImageLoader.with(getContext())
+        .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
+            R.drawable.my_account_placeholder);
+  }
+
+  @Override public void showAvatar() {
+    userAvatar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<Void> imageClick() {
+    return RxView.clicks(userAvatar);
   }
 
   @Override public void onDestroy() {

@@ -1,5 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
+import cm.aptoide.accountmanager.Account;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -15,17 +17,20 @@ import rx.exceptions.OnErrorNotImplementedException;
 
 public class AppsPresenter implements Presenter {
 
-  private AppsFragmentView view;
-  private AppsManager appsManager;
-  private Scheduler viewScheduler;
-  private Scheduler computation;
-  private CrashReport crashReport;
-  private PermissionManager permissionManager;
-  private PermissionService permissionService;
+  private final AppsFragmentView view;
+  private final AppsManager appsManager;
+  private final Scheduler viewScheduler;
+  private final Scheduler computation;
+  private final CrashReport crashReport;
+  private final PermissionManager permissionManager;
+  private final PermissionService permissionService;
+  private final AptoideAccountManager accountManager;
+  private final AppsNavigator appsNavigator;
 
   public AppsPresenter(AppsFragmentView view, AppsManager appsManager, Scheduler viewScheduler,
       Scheduler computation, CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService) {
+      PermissionService permissionService, AptoideAccountManager accountManager,
+      AppsNavigator appsNavigator) {
     this.view = view;
     this.appsManager = appsManager;
     this.viewScheduler = viewScheduler;
@@ -33,6 +38,8 @@ public class AppsPresenter implements Presenter {
     this.crashReport = crashReport;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.accountManager = accountManager;
+    this.appsNavigator = appsNavigator;
   }
 
   @Override public void present() {
@@ -68,13 +75,17 @@ public class AppsPresenter implements Presenter {
     handleUpdateCardLongClick();
 
     observeExcludedUpdates();
+
+    loadUserImage();
+
+    handleUserAvatarClick();
   }
 
   private void handleUpdateCardClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.updateClick())
-        .doOnNext(app -> view.navigateToAppView(((UpdateApp) app).getAppId(),
+        .doOnNext(app -> appsNavigator.navigateToAppView(((UpdateApp) app).getAppId(),
             ((UpdateApp) app).getPackageName()))
         .doOnNext(__ -> appsManager.setAppViewAnalyticsEvent())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -274,5 +285,47 @@ public class AppsPresenter implements Presenter {
         }, err -> {
           crashReport.log(err);
         });
+  }
+
+  private void loadUserImage() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> accountManager.accountStatus()
+            .first())
+        .flatMap(account -> getUserAvatar(account))
+        .observeOn(viewScheduler)
+        .doOnNext(userAvatarUrl -> {
+          if (userAvatarUrl != null) {
+            view.setUserImage(userAvatarUrl);
+          }
+          view.showAvatar();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleUserAvatarClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.imageClick()
+            .observeOn(viewScheduler)
+            .doOnNext(account -> appsNavigator.navigateToMyAccount())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private Observable<String> getUserAvatar(Account account) {
+    String userAvatarUrl = null;
+    if (account != null && account.isLoggedIn()) {
+      userAvatarUrl = account.getAvatar();
+    }
+    return Observable.just(userAvatarUrl);
   }
 }
