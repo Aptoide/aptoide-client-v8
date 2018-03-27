@@ -29,4 +29,26 @@ public class BottomNavigationMapper {
     }
     return bottomNavigationItem;
   }
+
+  public int mapToBottomNavigationPosition(BottomNavigationItem bottomNavigationItem) {
+    int bottomNavigationId = -1;
+    switch (bottomNavigationItem) {
+      case HOME:
+        bottomNavigationId = 0;
+        break;
+      case SEARCH:
+        bottomNavigationId = 1;
+        break;
+      case STORES:
+        bottomNavigationId = 2;
+        break;
+      case APPS:
+        bottomNavigationId = 3;
+        break;
+    }
+    if (bottomNavigationId == -1) {
+      throw new IllegalStateException("The selected menuItem is not supported");
+    }
+    return bottomNavigationId;
+  }
 }

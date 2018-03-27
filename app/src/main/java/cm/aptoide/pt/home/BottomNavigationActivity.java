@@ -26,6 +26,7 @@ import rx.subjects.PublishSubject;
 public abstract class BottomNavigationActivity extends TabNavigatorActivity
     implements AptoideBottomNavigator {
 
+
   protected static final int LAYOUT = R.layout.frame_layout;
   private final static String EVENT_ACTION =
       "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
@@ -47,6 +48,14 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     animationup = AnimationUtils.loadAnimation(this, R.anim.slide_up);
     animationdown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
     toogleBottomNavigation(); //Here because of the SettingsFragment that doesn't extend the BaseFragment
+  }
+
+  @Override protected void onDestroy() {
+    navigationSubject = null;
+    bottomNavigationView = null;
+    animationdown = null;
+    animationup = null;
+    super.onDestroy();
   }
 
   @Override public Observable<Integer> navigationEvent() {
@@ -95,6 +104,15 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
         bottomNavigationView.setVisibility(View.VISIBLE);
       }
     }
+  }
+
+  @Override public void requestFocus(BottomNavigationItem bottomNavigationItem) {
+    BottomNavigationMapper bottomNavigationMapper = new BottomNavigationMapper();
+    int bottomNavigationPosition =
+        bottomNavigationMapper.mapToBottomNavigationPosition(bottomNavigationItem);
+    bottomNavigationView.getMenu()
+        .getItem(bottomNavigationPosition)
+        .setChecked(true);
   }
 
   private Event getStoreEvent() {

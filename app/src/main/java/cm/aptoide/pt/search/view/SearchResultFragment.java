@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -35,6 +36,8 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchViewModel;
@@ -64,6 +67,7 @@ public class SearchResultFragment extends BackButtonFragment
     implements SearchResultView, SearchSuggestionsView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
+  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.SEARCH;
   private static final String VIEW_MODEL = "view_model";
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
@@ -105,6 +109,7 @@ public class SearchResultFragment extends BackButtonFragment
   private String currentQuery;
   private PublishSubject<Void> searchSetupPublishSubject;
   private boolean focusInSearchBar;
+  private BottomNavigationActivity bottomNavigationActivity;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -529,38 +534,6 @@ public class SearchResultFragment extends BackButtonFragment
     }
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.fragment_search_result, menu);
-
-    searchMenuItem = menu.findItem(R.id.menu_item_search);
-    searchView = (SearchView) searchMenuItem.getActionView();
-    AutoCompleteTextView autoCompleteTextView =
-        (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
-    autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
-    MenuItemCompat.setOnActionExpandListener(searchMenuItem,
-        new MenuItemCompat.OnActionExpandListener() {
-          @Override public boolean onMenuItemActionExpand(MenuItem menuItem) {
-            return true;
-          }
-
-          @Override public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-            if (hasSearchResults()) {
-              showResultsView();
-            } else {
-              showSuggestionsView();
-            }
-            return true;
-          }
-        });
-    if (!hasResults()) searchView.setQuery("Search apps & games", false);
-    searchSetupPublishSubject.onNext(null);
-  }
-
-  @Override public String getDefaultTheme() {
-    return super.getDefaultTheme();
-  }
-
   private boolean hasSearchResults() {
     return allStoresResultAdapter.getItemCount() > 0
         || followedStoresResultAdapter.getItemCount() > 0;
@@ -625,6 +598,7 @@ public class SearchResultFragment extends BackButtonFragment
     attachAllStoresResultListDependencies();
     setupToolbar();
     setupTheme();
+    bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
 
     suggestionsResultList.setLayoutManager(new LinearLayoutManager(getContext()));
     trendingResultList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -644,6 +618,45 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.fragment_search_result, menu);
+
+    searchMenuItem = menu.findItem(R.id.menu_item_search);
+    searchView = (SearchView) searchMenuItem.getActionView();
+    AutoCompleteTextView autoCompleteTextView =
+        (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
+    autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
+    MenuItemCompat.setOnActionExpandListener(searchMenuItem,
+        new MenuItemCompat.OnActionExpandListener() {
+          @Override public boolean onMenuItemActionExpand(MenuItem menuItem) {
+            return true;
+          }
+
+          @Override public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+            if (hasSearchResults()) {
+              showResultsView();
+            } else {
+              showSuggestionsView();
+            }
+            return true;
+          }
+        });
+    if (!hasResults()) searchView.setQuery("Search apps & games", false);
+    searchSetupPublishSubject.onNext(null);
+  }
+
+  @Override public String getDefaultTheme() {
+    return super.getDefaultTheme();
   }
 
   private void setupTheme() {
@@ -671,6 +684,11 @@ public class SearchResultFragment extends BackButtonFragment
     followedStoresResultList.clearAnimation();
     setupTheme();
     super.onDestroyView();
+  }
+
+  @Override public void onDetach() {
+    bottomNavigationActivity = null;
+    super.onDetach();
   }
 
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {
