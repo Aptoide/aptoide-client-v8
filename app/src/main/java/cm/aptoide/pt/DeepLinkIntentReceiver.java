@@ -107,74 +107,79 @@ public class DeepLinkIntentReceiver extends ActivityView {
       CrashReport.getInstance()
           .log(e);
     }
+    Intent i = null;
     //Loogin for url from the new site
     if (u != null && u.getHost() != null) {
 
       if (u.getHost()
           .contains("webservices.aptoide.com")) {
-        dealWithWebservicesAptoide(uri);
+        i = dealWithWebservicesAptoide(uri);
       } else if (u.getHost()
           .contains("imgs.aptoide.com")) {
-        dealWithImagesApoide(uri);
+        i = dealWithImagesApoide(uri);
       } else if (u.getHost()
           .contains("aptoide.com")) {
-        dealWithAptoideWebsite(u);
+        i = dealWithAptoideWebsite(u);
       } else if ("aptoiderepo".equalsIgnoreCase(u.getScheme())) {
-        dealWithAptoideRepo(uri);
+        i = dealWithAptoideRepo(uri);
       } else if ("aptoidexml".equalsIgnoreCase(u.getScheme())) {
-        dealWithAptoideXml(uri);
+        i = dealWithAptoideXml(uri);
       } else if ("aptoidesearch".equalsIgnoreCase(u.getScheme())) {
-        startFromPackageName(uri.split("aptoidesearch://")[1]);
+        i = startFromPackageName(uri.split("aptoidesearch://")[1]);
       } else if ("market".equalsIgnoreCase(u.getScheme())) {
-        dealWithMArketSchema(uri, u);
+        i = dealWithMArketSchema(uri, u);
       } else if (u.getHost()
           .contains("market.android.com")) {
-        startFromPackageName(u.getQueryParameter("id"));
+        i = startFromPackageName(u.getQueryParameter("id"));
       } else if (u.getHost()
           .contains("play.google.com") && u.getPath()
           .equalsIgnoreCase("store/apps/details")) {
-        dealWithGoogleHost(u);
+        i = dealWithGoogleHost(u);
       } else if ("aptword".equalsIgnoreCase(u.getScheme())) {
-        dealWithAptword(uri);
+        i = dealWithAptword(uri);
       } else if ("file".equalsIgnoreCase(u.getScheme())) {
         downloadMyApp();
       } else if ("aptoideinstall".equalsIgnoreCase(u.getScheme())) {
-        parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
+        i = parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
       } else if (u.getHost()
           .equals("cm.aptoide.pt") && u.getPath()
           .equals("/deeplink") && "aptoide".equalsIgnoreCase(u.getScheme())) {
-        dealWithAptoideSchema(u);
+        i = dealWithAptoideSchema(u);
       }
+    }
+    if (i != null) {
+      startActivity(i);
     }
     deepLinkAnalytics.sendWebsite();
     finish();
   }
 
-  private void dealWithAptoideSchema(Uri u) {
+  private Intent dealWithAptoideSchema(Uri u) {
     if ("getHome".equals(u.getQueryParameter("name"))) {
       String id = u.getQueryParameter("user_id");
       if (id != null) {
-        openUserScreen(Long.valueOf(id));
+        return openUserScreen(Long.valueOf(id));
       }
     } else if ("getUserTimeline".equals(u.getQueryParameter("name"))) {
-      startFromAppsTimeline(u.getQueryParameter("cardId"));
+      return startFromAppsTimeline(u.getQueryParameter("cardId"));
     } else if ("search".equals(u.getQueryParameter("name"))) {
       String query = "";
       if (u.getQueryParameterNames()
           .contains("keyword")) {
         query = u.getQueryParameter("keyword");
       }
-      startFromSearch(query);
+      return startFromSearch(query);
     } else if ("myStore".equals(u.getQueryParameter("name"))) {
-      startFromMyStore();
+      return startFromMyStore();
     } else if ("pickApp".equals(u.getQueryParameter("name"))) {
-      startFromPickApp();
+      return startFromPickApp();
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
-      startGenericDeepLink(u);
+      return startGenericDeepLink(u);
     }
+    return null;
   }
 
-  private void dealWithAptword(String uri) {
+  private Intent dealWithAptword(String uri) {
     // TODO: 12-08-2016 neuro aptword Seems discontinued???
     String param = uri.substring("aptword://".length());
 
@@ -198,22 +203,23 @@ public class DeepLinkIntentReceiver extends ActivityView {
       if (ad != null) {
         Intent i = new Intent(this, startClass);
         i.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
-        startActivity(i);
+        return i;
       }
     }
+    return null;
   }
 
-  private void dealWithGoogleHost(Uri uri) {
+  private Intent dealWithGoogleHost(Uri uri) {
     String param = uri.getQueryParameter("id");
     if (param.contains("pname:")) {
       param = param.substring(6);
     } else if (param.contains("pub:")) {
       param = param.substring(4);
     }
-    startFromPackageName(param);
+    return startFromPackageName(param);
   }
 
-  private void dealWithMArketSchema(String uri, Uri u) {
+  private Intent dealWithMArketSchema(String uri, Uri u) {
   /*
    * market schema:
    * could come from a search or a to open an app
@@ -234,24 +240,24 @@ public class DeepLinkIntentReceiver extends ActivityView {
         packageName = packageName.substring(4);
       }
     }
-    startFromPackageName(packageName);
+    return startFromPackageName(packageName);
   }
 
-  private void dealWithAptoideXml(String uri) {
+  private Intent dealWithAptoideXml(String uri) {
     String repo = uri.substring(13);
     parseXmlString(repo);
     Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
     i.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
-    startActivity(i);
+    return i;
   }
 
-  private void dealWithAptoideRepo(String uri) {
+  private Intent dealWithAptoideRepo(String uri) {
     ArrayList<String> repo = new ArrayList<>();
     repo.add(uri.substring(14));
-    startWithRepo(StoreUtils.split(repo));
+    return startWithRepo(StoreUtils.split(repo));
   }
 
-  private void dealWithAptoideWebsite(Uri u) {
+  private Intent dealWithAptoideWebsite(Uri u) {
     /**
      * Coming from our web site.
      * This could be from and to:
@@ -263,7 +269,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     if (u.getPath() != null && u.getPath()
         .contains("store/apps/group")) {
       /**
-       *
+       * Bundles
        */
       deepLinkAnalytics.websiteFromBundlesWebPage();
       String bundleId = u.getLastPathSegment();
@@ -271,7 +277,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       if (!TextUtils.isEmpty(bundleId)
           && bundleId.contains("-")
           && bundleId.indexOf("-") < bundleId.length()) {
-        startFromBundle(bundleId.substring(bundleId.indexOf("-") + 1));
+        return startFromBundle(bundleId.substring(bundleId.indexOf("-") + 1));
       }
     } else if (u.getPath() != null && u.getPath()
         .contains("store")) {
@@ -283,7 +289,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       Logger.v(TAG, "aptoide web site: store: " + u.getLastPathSegment());
       ArrayList<String> list = new ArrayList<String>();
       list.add(u.getLastPathSegment());
-      startWithRepo(list);
+      return startWithRepo(list);
     } else {
       String[] appName = u.getHost()
           .split("\\.");
@@ -294,26 +300,26 @@ public class DeepLinkIntentReceiver extends ActivityView {
          */
         deepLinkAnalytics.websiteFromAppViewWebPage();
         Logger.v(TAG, "aptoide web site: app view: " + appName[0]);
-        startAppView(appName[0]);
+        return startAppView(appName[0]);
       } else if (appName != null && appName.length == 3) {
         /**
          * Home
          */
         deepLinkAnalytics.websiteFromHomeWebPage();
         Logger.v(TAG, "aptoide web site: home: " + appName[0]);
-        startFromHome();
+        return startFromHome();
       }
     }
+    return null;
   }
 
-  private void dealWithImagesApoide(String uri) {
+  private Intent dealWithImagesApoide(String uri) {
     String[] strings = uri.split("-");
     long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
-
-    startFromAppView(id, null, false);
+    return startFromAppView(id, null, false);
   }
 
-  private void dealWithWebservicesAptoide(String uri) {
+  private Intent dealWithWebservicesAptoide(String uri) {
     /** refactored to remove org.apache libs */
     Map<String, String> params = null;
 
@@ -336,7 +342,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       if (uid != null) {
         try {
           long id = Long.parseLong(uid);
-          startFromAppView(id, null, true);
+          return startFromAppView(id, null, true);
         } catch (NumberFormatException e) {
           CrashReport.getInstance()
               .log(e);
@@ -346,9 +352,10 @@ public class DeepLinkIntentReceiver extends ActivityView {
         }
       }
     }
+    return null;
   }
 
-  private void dealWithShortcuts() {
+  private Intent dealWithShortcuts() {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
 
       ShortcutManager shortcutManager =
@@ -372,22 +379,23 @@ public class DeepLinkIntentReceiver extends ActivityView {
           }
         }
       }
+      return fromShortcut;
     }
+    return null;
   }
 
-  private void openUserScreen(Long userId) {
+  private Intent openUserScreen(Long userId) {
     Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
     i.putExtra(DeepLinksTargets.USER_DEEPLINK, userId);
-    startActivity(i);
+    return i;
   }
 
-  public void startWithRepo(ArrayList<String> repo) {
+  public Intent startWithRepo(ArrayList<String> repo) {
     Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
     i.putExtra(DeepLinksTargets.NEW_REPO, repo);
-    startActivity(i);
-
     // TODO: 10-08-2016 jdandrade
     deepLinkAnalytics.newRepo();
+    return i;
   }
 
   private void parseXmlString(String file) {
@@ -410,12 +418,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
   }
 
-  @Override public void startActivity(Intent intent) {
-    super.startActivity(intent);
-    finish();
-  }
-
-  public void startFromPackageName(String packageName) {
+  public Intent startFromPackageName(String packageName) {
     if (packageName != null) {
       GetAppRequest.of(packageName,
           ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
@@ -434,19 +437,18 @@ public class DeepLinkIntentReceiver extends ActivityView {
             startFromSearch(packageName);
           });
     }
+    //FIXME send the intent returned by the 3 methods above start*
+    return null;
   }
 
-  public void startAppView(String uname) {
+  public Intent startAppView(String uname) {
     Intent i = new Intent(this, startClass);
-
     i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
     i.putExtra(DeepLinksKeys.UNAME, uname);
-
-    //TODO this is not in MainActivity
-    startActivity(i);
+    return i;
   }
 
-  public void startFromAppView(long id, String packageName, boolean showPopup) {
+  public Intent startFromAppView(long id, String packageName, boolean showPopup) {
     Intent i = new Intent(this, startClass);
 
     i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
@@ -454,91 +456,91 @@ public class DeepLinkIntentReceiver extends ActivityView {
     i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
     i.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
 
-    startActivity(i);
+    return i;
   }
 
-  public void startFromAppsTimeline(String cardId) {
+  public Intent startFromAppsTimeline(String cardId) {
     Intent i = new Intent(this, startClass);
     i.putExtra(DeepLinksTargets.TIMELINE_DEEPLINK, true);
     i.putExtra(DeepLinksKeys.CARD_ID, cardId);
     if (shortcutNavigation) i.putExtra(FROM_SHORTCUT, shortcutNavigation);
 
-    startActivity(i);
+    return i;
   }
 
-  public void startFromBundle(String bundleId) {
+  public Intent startFromBundle(String bundleId) {
     Intent i = new Intent(this, startClass);
     i.putExtra(DeepLinksTargets.BUNDLE, true);
     i.putExtra(DeepLinksKeys.BUNDLE_ID, bundleId);
-    startActivity(i);
+    return i;
   }
 
-  public void startFromHome() {
+  public Intent startFromHome() {
     Intent i = new Intent(this, startClass);
     i.putExtra(DeepLinksTargets.HOME_DEEPLINK, true);
-    startActivity(i);
+    return i;
   }
 
   private void downloadMyApp() {
     asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
   }
 
-  private void parseAptoideInstallUri(String substring) {
+  private Intent parseAptoideInstallUri(String substring) {
     AptoideInstallParser parser = new AptoideInstallParser();
     AptoideInstall aptoideInstall = parser.parse(substring);
     if (aptoideInstall.getAppId() > 0) {
-      startFromAppView(aptoideInstall.getAppId(), aptoideInstall.getPackageName(), false);
+      return startFromAppView(aptoideInstall.getAppId(), aptoideInstall.getPackageName(), false);
     } else {
-      startFromAppview(aptoideInstall.getStoreName(), aptoideInstall.getPackageName(),
+      return startFromAppview(aptoideInstall.getStoreName(), aptoideInstall.getPackageName(),
           aptoideInstall.shouldShowPopup());
     }
   }
 
-  private void startGenericDeepLink(Uri parse) {
+  private Intent startGenericDeepLink(Uri parse) {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.GENERIC_DEEPLINK, true);
     intent.putExtra(DeepLinksKeys.URI, parse);
-    startActivity(intent);
+    return intent;
   }
 
-  public void startFromAppView(String packageName) {
+  public Intent startFromAppView(String packageName) {
     Intent i = new Intent(this, startClass);
 
     i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
     i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
 
-    startActivity(i);
+    return i;
   }
 
-  public void startFromSearch(String query) {
+  public Intent startFromSearch(String query) {
     Intent i = new Intent(this, startClass);
 
     i.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
     i.putExtra(SearchManager.QUERY, query);
     i.putExtra(FROM_SHORTCUT, shortcutNavigation);
 
-    startActivity(i);
+    return i;
   }
 
-  private void startFromAppview(String repo, String packageName, boolean showPopup) {
+  private Intent startFromAppview(String repo, String packageName, boolean showPopup) {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
     intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
     intent.putExtra(DeepLinksKeys.STORENAME_KEY, repo);
     intent.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
-    startActivity(intent);
+    return intent;
   }
 
-  private void startFromMyStore() {
+  private Intent startFromMyStore() {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.MY_STORE_DEEPLINK, true);
-    startActivity(intent);
+    return intent;
   }
 
-  private void startFromPickApp() {
+  private Intent startFromPickApp() {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.PICK_APP_DEEPLINK, true);
-    startActivity(intent);
+    return intent;
   }
 
   private void downloadMyAppFile(String myappUri) throws Exception {
