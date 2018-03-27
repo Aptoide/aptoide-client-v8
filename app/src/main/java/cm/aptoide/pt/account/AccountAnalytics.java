@@ -36,6 +36,7 @@ public class AccountAnalytics {
   public static final String LOGIN_EVENT_NAME = "Account_Login_Screen";
   public static final String SIGN_UP_EVENT_NAME = "Account_Signup_Screen";
   public static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
+  public static final String FOLLOW_FRIENDS = "My_Account_Follow_Friends";
   private static final String INVALID_GRANT_CODE = "invalid_grant";
   private static final String STATUS = "Status";
   private static final String LOGIN_METHOD = "Method";
@@ -99,6 +100,11 @@ public class AccountAnalytics {
     signUpEvent =
         new AccountEvent(map, SIGN_UP_EVENT_NAME, AnalyticsManager.Action.CLICK, getViewName(true));
     clearLoginEvents();
+  }
+
+  public void sendFollowFriendsClickEvent() {
+    analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   private void clearSignUpEvents() {

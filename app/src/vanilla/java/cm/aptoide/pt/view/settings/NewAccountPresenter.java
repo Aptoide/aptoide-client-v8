@@ -25,16 +25,18 @@ public class NewAccountPresenter implements Presenter {
   private final SharedPreferences sharedPreferences;
   private final Scheduler scheduler;
   private final NewAccountNavigator newAccountNavigator;
+  private final AccountAnalytics accountAnalytics;
 
   public NewAccountPresenter(NewAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, SharedPreferences sharedPreferences, Scheduler scheduler,
-      NewAccountNavigator newAccountNavigator) {
+      NewAccountNavigator newAccountNavigator, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.sharedPreferences = sharedPreferences;
     this.scheduler = scheduler;
     this.newAccountNavigator = newAccountNavigator;
+    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -149,7 +151,10 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.findFriendsClick())
-        .doOnNext(__ -> newAccountNavigator.navigateToFindFriends())
+        .doOnNext(__ -> {
+          accountAnalytics.sendFollowFriendsClickEvent();
+          newAccountNavigator.navigateToFindFriends();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable));
