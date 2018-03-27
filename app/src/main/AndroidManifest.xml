@@ -74,11 +74,11 @@
 
     <activity
         android:name=".view.MainActivity"
-        android:windowSoftInputMode="adjustNothing"></activity>
+        android:windowSoftInputMode="adjustPan"></activity>
 
     <activity
         android:name=".view.FairyMainActivity"
-        android:windowSoftInputMode="adjustNothing"
+        android:windowSoftInputMode="adjustPan"
         />
 
     <meta-data
@@ -130,7 +130,7 @@
     <activity
         android:name=".timeline.post.PostActivity"
         android:launchMode="singleInstance"
-        android:windowSoftInputMode="adjustNothing"
+        android:windowSoftInputMode="adjustPan"
         >
       <intent-filter>
         <action android:name="android.intent.action.SEND"/>
@@ -160,13 +160,13 @@
 
     <activity
         android:name=".account.view.LoginActivity"
-        android:windowSoftInputMode="adjustNothing"
+        android:windowSoftInputMode="adjustPan"
         />
 
     <activity
         android:name="com.facebook.FacebookActivity"
         android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-        android:windowSoftInputMode="adjustNothing"
+        android:windowSoftInputMode="adjustPan"
         />
 
     <activity
@@ -330,7 +330,7 @@
     <activity
         android:name="com.mopub.common.MoPubBrowser"
         android:configChanges="keyboardHidden|orientation|screenSize"
-        android:windowSoftInputMode="adjustNothing"
+        android:windowSoftInputMode="adjustPan"
         />
 
     <receiver
