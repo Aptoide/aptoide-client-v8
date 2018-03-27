@@ -44,7 +44,6 @@ android {
     versionName "8.6.4.1"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
-    vectorDrawables.useSupportLibrary = true
   }
 
   lintOptions {
