@@ -19,11 +19,7 @@ public class Home {
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
-    return bundlesRepository.loadHomeBundles()
-        .flatMap(homeBundlesModel -> {
-          List<HomeBundle> homeBundles = addFakeSocialBundleTo(homeBundlesModel);
-          return Single.just(new HomeBundlesModel(homeBundles, false, 0));
-        });
+    return bundlesRepository.loadHomeBundles();
   }
 
   public Single<HomeBundlesModel> loadFreshHomeBundles() {
@@ -44,7 +40,7 @@ public class Home {
     apps.add(new Application("asf wallet",
         "http://pool.img.aptoide.com/asf-store/ace60f6352f6dd9289843b5b0b2ab3d4_icon.png", 5,
         1000000, "asf.wallet.android.com", 36057221));
-    homeBundles.add(new SocialBundle("ok", apps, HomeBundle.BundleType.SOCIAL, null, "TAG",
+    homeBundles.add(new SocialBundle(apps, HomeBundle.BundleType.SOCIAL, null, "TAG",
         "http://pool.img.aptoide.com/asf-store/3bf5adf05843f9f28c486d5ddef8f873_ravatar.jpg",
         "asf-store"));
     homeBundles.addAll(homeBundlesModel.getList());

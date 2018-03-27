@@ -53,14 +53,22 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
           itemView.getContext()
               .getResources(), bundle.getUserName()));
       appName.setText(app.getName());
-      ImageLoader.with(itemView.getContext())
-          .loadUsingCircleTransform(bundle.getUserIcon(), userIcon);
       rating.setText(String.valueOf(app.getRating()));
       ImageLoader.with(itemView.getContext())
           .load(app.getIcon(), icon);
-
+      setRecommenderImage(bundle);
       appLayout.setOnClickListener(v -> appClickedEvents.onNext(app));
       install.setOnClickListener(v -> appClickedEvents.onNext(app));
+    }
+  }
+
+  private void setRecommenderImage(SocialBundle bundle) {
+    if (bundle.hasAvatar()) {
+      ImageLoader.with(itemView.getContext())
+          .loadUsingCircleTransform(bundle.getUserIcon(), userIcon);
+    } else {
+      ImageLoader.with(itemView.getContext())
+          .load(bundle.getDrawableId(), icon);
     }
   }
 }

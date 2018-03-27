@@ -1,5 +1,7 @@
 package cm.aptoide.pt.home;
 
+import android.support.annotation.DrawableRes;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.view.app.Application;
 import java.util.List;
@@ -14,18 +16,32 @@ public class SocialBundle implements HomeBundle {
   private final BundleType type;
   private final Event event;
   private final String tag;
+  private final int drawableId;
   private final String userIcon;
-  private final String userName;
+  private final String name;
 
-  public SocialBundle(String title, List<Application> apps, BundleType type, Event event,
-      String tag, String userIcon, String userName) {
-    this.title = title;
+  public SocialBundle(List<Application> apps, BundleType type, Event event, String tag,
+      String userIcon, String name) {
+    this.title = "n/a";
     this.apps = apps;
     this.type = type;
     this.event = event;
     this.tag = tag;
     this.userIcon = userIcon;
-    this.userName = userName;
+    this.name = name;
+    this.drawableId = R.drawable.placeholder_square;
+  }
+
+  public SocialBundle(List<Application> apps, BundleType type, Event event, String tag,
+      @DrawableRes int drawableId, String name) {
+    this.title = "n/a";
+    this.apps = apps;
+    this.type = type;
+    this.event = event;
+    this.tag = tag;
+    this.drawableId = drawableId;
+    this.name = name;
+    this.userIcon = "";
   }
 
   @Override public String getTitle() {
@@ -53,6 +69,14 @@ public class SocialBundle implements HomeBundle {
   }
 
   public String getUserName() {
-    return userName;
+    return name;
+  }
+
+  public int getDrawableId() {
+    return drawableId;
+  }
+
+  public boolean hasAvatar() {
+    return userIcon != null && !userIcon.isEmpty();
   }
 }

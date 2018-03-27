@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -7,6 +8,8 @@ import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
+import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
@@ -18,6 +21,13 @@ import java.util.List;
  */
 
 public class BundlesResponseMapper {
+
+  private final String marketName;
+
+  public BundlesResponseMapper(String marketName) {
+    this.marketName = marketName;
+  }
+
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
 
     List<HomeBundle> appBundles = new ArrayList<>();
@@ -39,6 +49,26 @@ public class BundlesResponseMapper {
           appBundles.add(
               new AdBundle(widget.getTitle(), ((GetAdsResponse) widget.getViewObject()).getAds(),
                   new Event().setName(Event.Name.getAds), widget.getTag()));
+        } else if (type.equals(HomeBundle.BundleType.SOCIAL)) {
+          List<Card> list = ((SocialResponse) widget.getViewObject()).getDataList()
+              .getList();
+          if (!list.isEmpty()) {
+            List<App> apps = new ArrayList<>();
+            Card card = list.get(0);
+            App app = card.getApp();
+            apps.add(app);
+            if (card.hasUser()) {
+              appBundles.add(
+                  new SocialBundle(applicationsToApps(apps, type), type, event, widget.getTag(),
+                      card.getUser()
+                          .getAvatar(), card.getUser()
+                      .getName()));
+            } else {
+              appBundles.add(
+                  new SocialBundle(applicationsToApps(apps, type), type, event, widget.getTag(),
+                      R.mipmap.ic_launcher, marketName));
+            }
+          }
         }
       } catch (Exception ignore) {
       }
@@ -71,6 +101,8 @@ public class BundlesResponseMapper {
         }
       case ADS:
         return HomeBundle.BundleType.ADS;
+      case TIMELINE_CARD:
+        return HomeBundle.BundleType.SOCIAL;
       default:
         return HomeBundle.BundleType.APPS;
     }
