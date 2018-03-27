@@ -53,7 +53,6 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.settings.NewAccountNavigator;
@@ -136,7 +135,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       NavigationTracker navigationTracker, SearchNavigator searchNavigator,
       SearchAnalytics searchAnalytics, DeepLinkAnalytics deepLinkAnalytics,
       AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
-      TimelineAnalytics timelineAnalytics, StoreAnalytics storeAnalytics,
+      StoreAnalytics storeAnalytics,
       AdsRepository adsRepository) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
