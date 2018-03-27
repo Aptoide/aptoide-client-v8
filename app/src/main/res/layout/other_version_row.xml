@@ -6,6 +6,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="120dp"
@@ -116,7 +117,7 @@
         android:id="@+id/store_icon"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        tools:src="@drawable/ic_avatar_apps"
+        app:srcCompat="@drawable/ic_avatar_apps"
         />
 
     <TextView

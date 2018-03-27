@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:paddingBottom="7.3dp"
@@ -108,7 +109,7 @@
       <ImageView
           android:layout_width="match_parent"
           android:layout_height="41dp"
-          android:src="@drawable/vector_smart_object"
+          app:srcCompat="@drawable/ic_star_moving"
           />
 
       <TextView
