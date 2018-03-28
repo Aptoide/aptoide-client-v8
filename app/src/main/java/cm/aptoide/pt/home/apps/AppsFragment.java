@@ -124,15 +124,18 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showUpdatesList(List<App> list) {
     adapter.addUpdateAppsList(list);
+    recyclerView.smoothScrollToPosition(0);
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
     adapter.addInstalledAppsList(installedApps);
+    recyclerView.smoothScrollToPosition(0);
   }
 
   @Override public void showDownloadsList(List<App> list) {
     if (list != null && !list.isEmpty()) {
       adapter.addDownloadAppsList(list);
+      recyclerView.smoothScrollToPosition(0);
     }
   }
 
@@ -204,6 +207,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showUpdatesDownloadList(List<App> updatesDownloadList) {
     adapter.addUpdateAppsList(updatesDownloadList);
+    recyclerView.smoothScrollToPosition(0);
   }
 
   @Override public Observable<Void> updateAll() {
