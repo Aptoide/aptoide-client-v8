@@ -122,7 +122,7 @@ import javax.inject.Singleton;
         BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS,
         AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
         AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
-        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP,
-        HomeAnalytics.HOME_INTERACT);
+        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
+        TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT);
   }
 }

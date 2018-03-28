@@ -566,13 +566,14 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private void showRecommendsDialog(AppViewInstallDisplayable displayable, Context context) {
     AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
     alertDialog.setMessage(R.string.appview_message_recommend_app);
+    String packageName = displayable.getPojo()
+        .getNodes()
+        .getMeta()
+        .getData()
+        .getPackageName();
     alertDialog.setPositiveButton(context.getString(R.string.appview_button_recommend)
         .toUpperCase(), (dialog, which) -> {
-      socialRepository.share(displayable.getPojo()
-          .getNodes()
-          .getMeta()
-          .getData()
-          .getPackageName(), displayable.getPojo()
+      socialRepository.share(packageName, displayable.getPojo()
           .getNodes()
           .getMeta()
           .getData()
@@ -580,14 +581,20 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
           .getId(), "install");
       ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
       displayable.getTimelineAnalytics()
+          .sendRecommendedAppInteractEvent(packageName, "Recommend");
+      displayable.getTimelineAnalytics()
           .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
     });
     alertDialog.setNegativeButton(context.getString(R.string.skip)
-        .toUpperCase(), (dialog, which) -> displayable.getTimelineAnalytics()
-        .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL));
+        .toUpperCase(), (dialog, which) -> {
+      displayable.getTimelineAnalytics()
+          .sendRecommendedAppInteractEvent(packageName, "Skip");
+      displayable.getTimelineAnalytics()
+          .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
+    });
     alertDialog.show();
     displayable.getTimelineAnalytics()
-        .sendRecommendedAppInteractEvent();
+        .sendRecommendedAppImpressionEvent(packageName);
   }
 
   private void showDialogError(String title, String message) {
