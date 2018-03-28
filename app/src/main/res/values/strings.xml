@@ -525,6 +525,6 @@
   <string name="all_button_ok">OK</string>
 
 
-  <string name="appcardview_title_zero_stars">- -</string>
+  <string name="appcardview_title_zero_stars" translatable="false">- -</string>
 </resources>
 
