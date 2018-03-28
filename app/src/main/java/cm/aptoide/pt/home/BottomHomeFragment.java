@@ -13,10 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.app.Application;
-import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -31,7 +32,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/03/2018.
  */
 
-public class BottomHomeFragment extends FragmentView implements HomeView {
+public class BottomHomeFragment extends NavigationTrackFragment implements HomeView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
 
@@ -45,6 +46,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private BundlesAdapter adapter;
   private PublishSubject<HomeMoreClick> uiEventsListener;
   private PublishSubject<Application> appClickedEvents;
+  private PublishSubject<AppClick> recommendsClickedEvents;
   private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
@@ -61,8 +63,41 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     super.onCreate(savedInstanceState);
     uiEventsListener = PublishSubject.create();
     appClickedEvents = PublishSubject.create();
+    recommendsClickedEvents = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("#.#");
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
+    if (savedInstanceState != null) {
+      if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
+        listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+        savedInstanceState.putParcelable(LIST_STATE_KEY, null);
+      }
+    }
+    userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
+    bundlesList = (RecyclerView) view.findViewById(R.id.bundles_list);
+    genericErrorView = view.findViewById(R.id.generic_error);
+    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
+    retryButton = genericErrorView.findViewById(R.id.retry);
+    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
+        oneDecimalFormatter, appClickedEvents, adClickedEvents, recommendsClickedEvents);
+    layoutManager = new LinearLayoutManager(getContext());
+    bundlesList.setLayoutManager(layoutManager);
+    bundlesList.setAdapter(adapter);
+    attachPresenter(presenter);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", null);
   }
 
   @Override public void onDestroy() {
@@ -70,6 +105,7 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     oneDecimalFormatter = null;
     adClickedEvents = null;
     appClickedEvents = null;
+    recommendsClickedEvents = null;
     userAvatar = null;
     super.onDestroy();
   }
@@ -99,33 +135,6 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
       outState.putParcelable(LIST_STATE_KEY, bundlesList.getLayoutManager()
           .onSaveInstanceState());
     }
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
-    if (savedInstanceState != null) {
-      if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
-        listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
-        savedInstanceState.putParcelable(LIST_STATE_KEY, null);
-      }
-    }
-    userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
-    bundlesList = (RecyclerView) view.findViewById(R.id.bundles_list);
-    genericErrorView = view.findViewById(R.id.generic_error);
-    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
-    retryButton = genericErrorView.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
-    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, appClickedEvents, adClickedEvents);
-    layoutManager = new LinearLayoutManager(getContext());
-    bundlesList.setLayoutManager(layoutManager);
-    bundlesList.setAdapter(adapter);
-    attachPresenter(presenter);
   }
 
   @Override public void showHomeBundles(List<HomeBundle> bundles) {
@@ -179,6 +188,10 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
 
   @Override public Observable<Application> appClicked() {
     return appClickedEvents;
+  }
+
+  @Override public Observable<AppClick> recommendedAppClicked() {
+    return recommendsClickedEvents;
   }
 
   @Override public Observable<GetAdsResponse.Ad> adClicked() {

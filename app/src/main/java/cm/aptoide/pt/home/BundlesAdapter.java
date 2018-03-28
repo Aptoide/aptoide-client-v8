@@ -25,19 +25,22 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<Application> appClickedEvents;
   private final PublishSubject<HomeMoreClick> uiEventsListener;
+  private final PublishSubject<AppClick> recommendsClickedEvents;
   private List<HomeBundle> bundles;
   private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeMoreClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
       PublishSubject<Application> appClickedEvents,
-      PublishSubject<GetAdsResponse.Ad> adPublishSubject) {
+      PublishSubject<GetAdsResponse.Ad> adPublishSubject,
+      PublishSubject<AppClick> recommendsClickedEvents) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
     this.adClickedEvents = adPublishSubject;
+    this.recommendsClickedEvents = recommendsClickedEvents;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,7 +51,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             appClickedEvents);
       case SOCIAL:
         return new SocialBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(SOCIAL, parent, false), appClickedEvents);
+            .inflate(SOCIAL, parent, false), recommendsClickedEvents);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter, appClickedEvents);
@@ -67,7 +70,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   @Override public void onBindViewHolder(AppBundleViewHolder appBundleViewHolder, int position) {
-    appBundleViewHolder.setBundle(bundles.get(position));
+    appBundleViewHolder.setBundle(bundles.get(position), position);
   }
 
   @Override public int getItemViewType(int position) {

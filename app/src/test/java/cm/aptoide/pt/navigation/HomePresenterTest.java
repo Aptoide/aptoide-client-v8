@@ -8,6 +8,7 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
+import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeBundlesModel;
 import cm.aptoide.pt.home.HomeMoreClick;
@@ -41,6 +42,7 @@ public class HomePresenterTest {
   @Mock private Home home;
   @Mock private AptoideAccountManager aptoideAccountManager;
   @Mock private Account account;
+  @Mock private HomeAnalytics homeAnalytics;
 
   private HomePresenter presenter;
   private HomeBundlesModel bundlesModel;
@@ -70,7 +72,7 @@ public class HomePresenterTest {
     accountStatusEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
-        new AdMapper(), aptoideAccountManager);
+        new AdMapper(), aptoideAccountManager, homeAnalytics);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300);

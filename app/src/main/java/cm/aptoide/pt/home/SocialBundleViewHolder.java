@@ -17,7 +17,7 @@ import rx.subjects.PublishSubject;
 
 class SocialBundleViewHolder extends AppBundleViewHolder {
 
-  private final PublishSubject<Application> appClickedEvents;
+  private final PublishSubject<AppClick> appClickedEvents;
   private final TextView appName;
   private final TextView userName;
   private final ImageView icon;
@@ -26,7 +26,7 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
   private final View appLayout;
   private final Button install;
 
-  public SocialBundleViewHolder(View view, PublishSubject<Application> appClickedEvents) {
+  public SocialBundleViewHolder(View view, PublishSubject<AppClick> appClickedEvents) {
     super(view);
     this.appClickedEvents = appClickedEvents;
     this.appName = (TextView) view.findViewById(R.id.recommended_app_name);
@@ -38,7 +38,7 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
     this.install = (Button) view.findViewById(R.id.install);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     if (!(homeBundle instanceof SocialBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting a non SocialBundle instance!");
@@ -57,8 +57,10 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
       ImageLoader.with(itemView.getContext())
           .load(app.getIcon(), icon);
       setRecommenderImage(bundle);
-      appLayout.setOnClickListener(v -> appClickedEvents.onNext(app));
-      install.setOnClickListener(v -> appClickedEvents.onNext(app));
+      appLayout.setOnClickListener(
+          v -> appClickedEvents.onNext(new AppClick(app, position, AppClick.Type.SOCIAL_CLICK)));
+      install.setOnClickListener(
+          v -> appClickedEvents.onNext(new AppClick(app, position, AppClick.Type.SOCIAL_INSTALL)));
     }
   }
 
