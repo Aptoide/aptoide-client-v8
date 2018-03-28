@@ -22,12 +22,12 @@ import static cm.aptoide.pt.home.apps.AppsAdapter.UPDATING;
  * Created by filipegoncalves on 3/12/18.
  */
 
-public class AppCardViewHolderFactory {
+public class AppsCardViewHolderFactory {
 
   private final PublishSubject<AppClick> appItemClicks;
   private final PublishSubject<Void> updateAll;
 
-  public AppCardViewHolderFactory(PublishSubject<AppClick> appItemClicks,
+  public AppsCardViewHolderFactory(PublishSubject<AppClick> appItemClicks,
       PublishSubject<Void> updateAll) {
     this.appItemClicks = appItemClicks;
     this.updateAll = updateAll;

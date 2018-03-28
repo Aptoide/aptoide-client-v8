@@ -74,7 +74,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
     adapter =
-        new AppsAdapter(new ArrayList<>(), new AppCardViewHolderFactory(appItemClicks, updateAll));
+        new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));
     setupRecyclerView();
 
     buildIgnoreUpdatesDialog();

@@ -24,15 +24,15 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   protected static final int ERROR_UPDATE = 11;
 
   private List<App> listOfApps;
-  private AppCardViewHolderFactory appCardViewHolderFactory;
+  private AppsCardViewHolderFactory appsCardViewHolderFactory;
 
-  public AppsAdapter(List<App> listOfApps, AppCardViewHolderFactory appCardViewHolderFactory) {
+  public AppsAdapter(List<App> listOfApps, AppsCardViewHolderFactory appsCardViewHolderFactory) {
     this.listOfApps = listOfApps;
-    this.appCardViewHolderFactory = appCardViewHolderFactory;
+    this.appsCardViewHolderFactory = appsCardViewHolderFactory;
   }
 
   @Override public AppsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return appCardViewHolderFactory.createViewHolder(viewType, parent);
+    return appsCardViewHolderFactory.createViewHolder(viewType, parent);
   }
 
   @Override public void onBindViewHolder(AppsViewHolder appsViewHolder, int position) {

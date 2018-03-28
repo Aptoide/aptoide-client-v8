@@ -26,15 +26,15 @@ import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
 
 public class AppsManager {
 
-  private UpdatesManager updatesManager;
-  private InstallManager installManager;
-  private AppMapper appMapper;
-  private DownloadAnalytics downloadAnalytics;
-  private InstallAnalytics installAnalytics;
-  private UpdatesAnalytics updatesAnalytics;
-  private PackageManager packageManager;
-  private Context context;
-  private DownloadFactory downloadFactory;
+  private final UpdatesManager updatesManager;
+  private final InstallManager installManager;
+  private final AppMapper appMapper;
+  private final DownloadAnalytics downloadAnalytics;
+  private final InstallAnalytics installAnalytics;
+  private final UpdatesAnalytics updatesAnalytics;
+  private final PackageManager packageManager;
+  private final Context context;
+  private final DownloadFactory downloadFactory;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
