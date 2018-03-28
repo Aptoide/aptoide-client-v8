@@ -61,7 +61,7 @@ android:fitsSystemWindows="true"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:layout_margin="10dp"
-          android:src="@drawable/wizard_community"
+          android:src="@drawable/wizard_3"
           />
 
       <TextView

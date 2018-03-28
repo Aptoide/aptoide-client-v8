@@ -36,7 +36,7 @@ public class WizardPageTwoFragment extends BackButtonFragment {
     ((TextView) view.findViewById(R.id.title)).setText(R.string.wizard_title_viewpager_two);
     ((TextView) view.findViewById(R.id.description)).setText(
         R.string.wizard_sub_title_viewpager_two);
-    ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_two);
+    ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_2);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
