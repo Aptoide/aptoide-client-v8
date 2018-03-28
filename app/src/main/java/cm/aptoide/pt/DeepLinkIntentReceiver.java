@@ -22,6 +22,7 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.link.AptoideInstall;
@@ -107,48 +108,48 @@ public class DeepLinkIntentReceiver extends ActivityView {
       CrashReport.getInstance()
           .log(e);
     }
-    Intent i = null;
+    Intent intent = null;
     //Loogin for url from the new site
     if (u != null && u.getHost() != null) {
 
       if (u.getHost()
           .contains("webservices.aptoide.com")) {
-        i = dealWithWebservicesAptoide(uri);
+        intent = dealWithWebservicesAptoide(uri);
       } else if (u.getHost()
           .contains("imgs.aptoide.com")) {
-        i = dealWithImagesApoide(uri);
+        intent = dealWithImagesApoide(uri);
       } else if (u.getHost()
           .contains("aptoide.com")) {
-        i = dealWithAptoideWebsite(u);
+        intent = dealWithAptoideWebsite(u);
       } else if ("aptoiderepo".equalsIgnoreCase(u.getScheme())) {
-        i = dealWithAptoideRepo(uri);
+        intent = dealWithAptoideRepo(uri);
       } else if ("aptoidexml".equalsIgnoreCase(u.getScheme())) {
-        i = dealWithAptoideXml(uri);
+        intent = dealWithAptoideXml(uri);
       } else if ("aptoidesearch".equalsIgnoreCase(u.getScheme())) {
-        i = startFromPackageName(uri.split("aptoidesearch://")[1]);
+        intent = startFromPackageName(uri.split("aptoidesearch://")[1]);
       } else if ("market".equalsIgnoreCase(u.getScheme())) {
-        i = dealWithMArketSchema(uri, u);
+        intent = dealWithMArketSchema(uri, u);
       } else if (u.getHost()
           .contains("market.android.com")) {
-        i = startFromPackageName(u.getQueryParameter("id"));
+        intent = startFromPackageName(u.getQueryParameter("id"));
       } else if (u.getHost()
           .contains("play.google.com") && u.getPath()
           .equalsIgnoreCase("store/apps/details")) {
-        i = dealWithGoogleHost(u);
+        intent = dealWithGoogleHost(u);
       } else if ("aptword".equalsIgnoreCase(u.getScheme())) {
-        i = dealWithAptword(uri);
+        intent = dealWithAptword(uri);
       } else if ("file".equalsIgnoreCase(u.getScheme())) {
         downloadMyApp();
       } else if ("aptoideinstall".equalsIgnoreCase(u.getScheme())) {
-        i = parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
+        intent = parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
       } else if (u.getHost()
           .equals("cm.aptoide.pt") && u.getPath()
           .equals("/deeplink") && "aptoide".equalsIgnoreCase(u.getScheme())) {
-        i = dealWithAptoideSchema(u);
+        intent = dealWithAptoideSchema(u);
       }
     }
-    if (i != null) {
-      startActivity(i);
+    if (intent != null) {
+      startActivity(intent);
     }
     deepLinkAnalytics.sendWebsite();
     finish();
@@ -419,26 +420,27 @@ public class DeepLinkIntentReceiver extends ActivityView {
   }
 
   public Intent startFromPackageName(String packageName) {
+    Intent intent;
+    GetApp app = null;
     if (packageName != null) {
-      GetAppRequest.of(packageName,
+
+      app = GetAppRequest.of(packageName,
           ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
           ((AptoideApplication) getApplicationContext()).getDefaultClient(),
           WebService.getDefaultConverter(),
           ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
           ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
           .observe()
-          .subscribe(app -> {
-            if (app.isOk()) {
-              startFromAppView(packageName);
-            } else {
-              startFromSearch(packageName);
-            }
-          }, err -> {
-            startFromSearch(packageName);
-          });
+          .toBlocking()
+          .first();
     }
-    //FIXME send the intent returned by the 3 methods above start*
-    return null;
+
+    if (app != null && app.isOk()) {
+      intent = startFromAppView(packageName);
+    } else {
+      intent = startFromSearch(packageName);
+    }
+    return intent;
   }
 
   public Intent startAppView(String uname) {
