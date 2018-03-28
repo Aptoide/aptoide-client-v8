@@ -138,36 +138,36 @@ public class DownloadsPresenterTest {
     activeDownloadsList = new ArrayList<>();
     activeDownloadsList.add(
         new Install(30, Install.InstallationStatus.INSTALLING, Install.InstallationType.UPDATE,
-            true, -1, null, "com.whatsapp", 1221, versionName, "Whatsapp", ""));
+            true, -1, null, "com.whatsapp", 1221, "", "Whatsapp", ""));
   }
 
   private void buildStandByDownloadsList() {
     standByDownloadsList = new ArrayList<>();
     standByDownloadsList.add(
         new Install(20, Install.InstallationStatus.PAUSED, Install.InstallationType.INSTALL, false,
-            -1, null, "com.facebook.katana", 48, versionName, "Facebook", ""));
+            -1, null, "com.facebook.katana", 48, "", "Facebook", ""));
 
     standByDownloadsList.add(
         new Install(20, Install.InstallationStatus.IN_QUEUE, Install.InstallationType.INSTALL,
-            false, -1, null, "com.orca.facebook", 48, versionName, "Messenger", ""));
+            false, -1, null, "com.orca.facebook", 48, "", "Messenger", ""));
     standByDownloadsList.add(
         new Install(20, Install.InstallationStatus.GENERIC_ERROR, Install.InstallationType.INSTALL,
-            false, -1, null, "org.telegram.messenger", 48, versionName, "Telegram", ""));
+            false, -1, null, "org.telegram.messenger", 48, "", "Telegram", ""));
     standByDownloadsList.add(new Install(1906, Install.InstallationStatus.INSTALLATION_TIMEOUT,
         Install.InstallationType.INSTALL, false, -1, null, "com.ikeyboard.theme.sportingcp", 1906,
-        versionName, "Sporting CP Keyboard Theme", ""));
+        "", "Sporting CP Keyboard Theme", ""));
     standByDownloadsList.add(new Install(218, Install.InstallationStatus.NOT_ENOUGH_SPACE_ERROR,
-        Install.InstallationType.INSTALL, false, -1, null, "com.supercell.clashroyale", 218,
-        versionName, "Clash Royale", ""));
+        Install.InstallationType.INSTALL, false, -1, null, "com.supercell.clashroyale", 218, "",
+        "Clash Royale", ""));
   }
 
   private void buildCompletedDownloadsList() {
     completedDownloadsList = new ArrayList<>();
     completedDownloadsList.add(
         new Install(10, Install.InstallationStatus.INSTALLED, Install.InstallationType.UPDATE,
-            false, -1, null, "cm.aptoide.pt", 123, versionName, "Aptoide", ""));
+            false, -1, null, "cm.aptoide.pt", 123, "", "Aptoide", ""));
     completedDownloadsList.add(
         new Install(50, Install.InstallationStatus.UNINSTALLED, Install.InstallationType.INSTALL,
-            false, -1, null, "com.instagram.android", 19302, versionName, "Instagramado", ""));
+            false, -1, null, "com.instagram.android", 19302, "", "Instagramado", ""));
   }
 }
