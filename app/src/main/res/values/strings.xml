@@ -399,7 +399,7 @@
   <string name="download_retry">Retry</string>
   <string name="retry_connection">Retry connection</string>
   <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
-  <string name="could_not_connect_internet">couldn\'t connect to the Internet</string>
+  <string name="could_not_connect_internet">Couldn\'t connect to the Internet</string>
 
   <!-- Vote -->
   <string name="reply">Reply</string>

@@ -5,6 +5,7 @@
     android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:paddingBottom="56dp"
     >
 
   <LinearLayout
@@ -28,7 +29,6 @@
       android:background="@color/white"
       android:gravity="center"
       android:orientation="vertical"
-      android:paddingBottom="56dp"
       >
     <TextView
         android:id="@+id/title"
