@@ -10,7 +10,7 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="380dp"
-      android:background="@drawable/wizard_background"
+      android:background="@color/aptoide_orange"
       android:gravity="center"
       >
     <ImageView
