@@ -46,7 +46,6 @@ public class WizardFragment extends UIComponentFragment
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
   private View skipText;
-  private View nextIcon;
   private List<RadioButton> wizardButtons;
   private View skipOrNextLayout;
   private LoginBottomSheet loginBottomSheet;
@@ -145,7 +144,6 @@ public class WizardFragment extends UIComponentFragment
     wizardButtons = null;
     radioGroup = null;
     skipText = null;
-    nextIcon = null;
     viewPager.setAdapter(null);
     viewPager = null;
     super.onDestroyView();
@@ -159,10 +157,6 @@ public class WizardFragment extends UIComponentFragment
       viewPager.setCurrentItem(currentPosition);
       handleSelectedPage(currentPosition);
     });
-  }
-
-  @Override public Observable<Void> goToNextPageClick() {
-    return RxView.clicks(nextIcon);
   }
 
   @Override public Observable<Void> skipWizardClick() {
@@ -201,22 +195,6 @@ public class WizardFragment extends UIComponentFragment
     return wizardButtons.size();
   }
 
-  /**
-   * Show the arrow in all pages except the last.
-   */
-  @Override public void showArrow() {
-    skipText.setVisibility(View.GONE);
-    nextIcon.setVisibility(View.VISIBLE);
-  }
-
-  /**
-   * On the last page we show skip button instead of the arrow.
-   */
-  @Override public void showSkipButton() {
-    skipText.setVisibility(View.VISIBLE);
-    nextIcon.setVisibility(View.GONE);
-  }
-
   private void createRadioButtons() {
     // set button dimension
     int buttonSize = AptoideUtils.ScreenU.getPixelsForDip(10, getResources());
@@ -251,7 +229,6 @@ public class WizardFragment extends UIComponentFragment
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);
-    nextIcon = view.findViewById(R.id.next_icon);
     isInPortraitMode = getActivity().getResources()
         .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
   }

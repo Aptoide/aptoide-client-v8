@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/aptoide_orange"
+    android:background="@color/white"
     android:orientation="vertical"
     android:weightSum="9"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -21,14 +21,14 @@
   <LinearLayout
       android:id="@+id/skip_next_layout"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="56dp"
       android:layout_alignParentBottom="true"
-      android:background="@color/default_color"
+      android:background="@color/white"
       android:measureWithLargestChild="false"
       android:minHeight="48dp"
       android:orientation="horizontal"
       android:weightSum="4"
-      tools:background="@color/red"
+      tools:background="@color/white"
       tools:visibility="visible"
       >
     <!-- UI element used for padding only -->
@@ -52,7 +52,6 @@
         tools:layout_height="25dp"
         />
 
-    <!-- only one of the next 2 elements will be visible -->
     <TextView
         android:id="@+id/skip_text"
         android:layout_width="0dp"
@@ -63,34 +62,12 @@
         android:text="@string/skip"
         android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/white"
+        android:textColor="@color/aptoide_orange"
         android:textStyle="bold"
-        android:visibility="gone"
         android:weightSum="1"
         tools:text="SKIP"
-        tools:visibility="gone"
-        />
-
-    <ImageView
-        android:id="@+id/next_icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:padding="@dimen/padding_small"
-        android:src="@drawable/wizard_next_arrow"
-        android:visibility="visible"
-        android:weightSum="1"
-        tools:visibility="visible"
         />
 
   </LinearLayout>
-
-  <View
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:layout_above="@id/skip_next_layout"
-      android:background="#20000000"
-      />
 
 </RelativeLayout>

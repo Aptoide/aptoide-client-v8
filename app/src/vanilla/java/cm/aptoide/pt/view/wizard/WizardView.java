@@ -8,8 +8,6 @@ import rx.Observable;
 interface WizardView extends View {
   Completable createWizardAdapter(Account account);
 
-  Observable<Void> goToNextPageClick();
-
   Observable<Void> skipWizardClick();
 
   void goToNextPage();
@@ -19,8 +17,4 @@ interface WizardView extends View {
   void handleSelectedPage(int selectedPage);
 
   int getWizardButtonsCount();
-
-  void showArrow();
-
-  void showSkipButton();
 }
