@@ -48,9 +48,11 @@
           />
 
       <LinearLayout
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginEnd="1dp"
           android:layout_marginLeft="1dp"
+          android:layout_marginRight="1dp"
           android:layout_marginStart="1dp"
           android:layout_marginTop="2dp"
           android:orientation="horizontal"
@@ -72,6 +74,16 @@
             tools:ignore="SmallSp"
             tools:text="2.3"
             style="@style/Aptoide.TextView.Regular.XXS.Black"
+            />
+        <TextView
+            android:id="@+id/tv_ad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:maxLines="1"
+            android:text="@string/all_title_ad"
+            android:visibility="gone"
+            style="@style/Aptoide.TextView.Regular.XXS"
             />
 
       </LinearLayout>
