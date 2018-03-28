@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified on 24/06/2016.
-  -->
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="107dp"
+    android:layout_height="156dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
     >
+
 
   <RelativeLayout
       android:layout_width="match_parent"
@@ -47,28 +44,8 @@
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:lines="2"
-          android:paddingEnd="3dp"
-          android:paddingLeft="3dp"
-          android:paddingRight="3dp"
-          android:paddingStart="3dp"
-          android:textColor="?android:attr/textColorSecondary"
-          android:textSize="14sp"
+          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           />
-
-      <TextView
-          android:id="@+id/downloads"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:ellipsize="end"
-          android:maxLines="1"
-          android:paddingEnd="3dp"
-          android:paddingLeft="3dp"
-          android:paddingRight="3dp"
-          android:paddingStart="3dp"
-          android:textColor="?android:attr/textColorSecondary"
-          android:textSize="12sp"
-          />
-
 
       <LinearLayout
           android:layout_width="wrap_content"
@@ -108,8 +85,7 @@
           android:paddingRight="3dp"
           android:paddingStart="3dp"
           android:text="@string/all_title_ad"
-          android:textColor="?android:attr/textColorSecondary"
-          style="@style/Aptoide.TextView.Regular.XXS"
+          style="@style/Aptoide.TextView.Regular.XXS.Black"
           />
 
 
@@ -117,4 +93,4 @@
 
   </RelativeLayout>
 
-</FrameLayout>
+</android.support.v7.widget.CardView>

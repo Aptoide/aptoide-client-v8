@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewAdDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -47,9 +47,8 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
       // TODO: 01-08-2017 neuro fill app tag
       app.getStore()
           .setAppearance(new Store.Appearance());
-      displayables.add(
-          new AppViewSuggestedAppDisplayable(app, displayable.getAppViewSimilarAppAnalytics(),
-              displayable.getNavigationTracker(), displayable.getStoreContext()));
+      displayables.add(new GridAppDisplayable(app, null, true, displayable.getNavigationTracker(),
+          displayable.getStoreContext()));
     }
 
     BaseAdapter adapter = new BaseAdapter(displayables) {

@@ -26,7 +26,7 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<AppViewHolder> {
           .inflate(R.layout.search_ad_loading_list_item, parent, false));
     } else {
       return new ApplicationViewHolder(LayoutInflater.from(parent.getContext())
-          .inflate(R.layout.displayable_grid_app, parent, false), appClicks);
+          .inflate(R.layout.app_home_item, parent, false), appClicks);
     }
   }
 
@@ -39,7 +39,7 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<AppViewHolder> {
     if (application instanceof AppLoading) {
       return R.layout.search_ad_loading_list_item;
     } else {
-      return R.layout.displayable_grid_app;
+      return R.layout.app_home_item;
     }
   }
 

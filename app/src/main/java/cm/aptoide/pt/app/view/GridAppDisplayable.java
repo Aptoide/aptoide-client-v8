@@ -43,7 +43,7 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
   }
 
   @LayoutRes @Override public int getViewLayout() {
-    return R.layout.displayable_grid_app;
+    return R.layout.app_home_item;
   }
 
   public NavigationTracker getNavigationTracker() {
