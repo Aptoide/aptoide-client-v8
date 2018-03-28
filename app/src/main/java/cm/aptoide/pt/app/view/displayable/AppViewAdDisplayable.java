@@ -22,7 +22,4 @@ public class AppViewAdDisplayable extends GridAdDisplayable {
     return new Configs(3, true);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_app_view_ad;
-  }
 }

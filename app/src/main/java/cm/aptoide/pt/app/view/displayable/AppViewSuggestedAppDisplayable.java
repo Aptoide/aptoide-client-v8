@@ -25,8 +25,7 @@ public class AppViewSuggestedAppDisplayable extends GridAppDisplayable {
   public AppViewSuggestedAppDisplayable(App app,
       AppViewSimilarAppAnalytics appViewSimilarAppAnalytics, NavigationTracker navigationTracker,
       StoreContext storeContext) {
-    // TODO: 01-08-2017 neuro tags
-    super(app, null, true, navigationTracker, storeContext);
+    super(app, null, navigationTracker, storeContext);
 
     this.appViewSimilarAppAnalytics = appViewSimilarAppAnalytics;
   }
@@ -36,7 +35,7 @@ public class AppViewSuggestedAppDisplayable extends GridAppDisplayable {
   }
 
   @Override public int getViewLayout() {
-    return R.layout.displayable_app_view_suggested_app;
+    return R.layout.displayable_grid_app_suggested;
   }
 
   public AppViewSimilarAppAnalytics getAppViewSimilarAppAnalytics() {
