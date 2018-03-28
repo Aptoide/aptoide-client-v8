@@ -62,6 +62,9 @@
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
   <string name="appcardview_title_no_starts" translatable="false">- -</string>
+  <string name="appcardview_title_zero_stars">- -</string>
+  <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
+  <string name="appview_button_recommend">Recommend</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -523,11 +526,8 @@
   <string name="shortcut_button_timeline">Timeline</string>
   <string name="shortcut_button_my_store">My Store</string>
   <string name="shortcut_button_pick_app">Surprise me</string>
-
   <string name="all_button_ok">OK</string>
   <string name="home_recommends">%s recommends</string>
-  <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
-  <string name="appview_button_recommend">Recommend</string>
 
   <!--Terms and Conditions URL navigation-->
   <string name="terms_conditions_navigation_url" translatable="false">https://terms.aptoide.com</string>
