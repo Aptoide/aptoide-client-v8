@@ -20,7 +20,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
 
   private TextView name;
   private ImageView icon;
-  private TextView ratingBar;
+  private TextView rating;
 
   public GridAppWidget(View itemView) {
     super(itemView);
@@ -29,23 +29,22 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
   @Override protected void assignViews(@NonNull View view) {
     name = (TextView) itemView.findViewById(R.id.name);
     icon = (ImageView) itemView.findViewById(R.id.icon);
-    ratingBar = (TextView) itemView.findViewById(R.id.rating_label);
+    rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
   @Override public void bindView(T displayable) {
     final App pojo = displayable.getPojo();
-    final long appId = pojo.getId();
     final FragmentActivity context = getContext();
 
     ImageLoader.with(context)
         .load(pojo.getIcon(), icon);
 
     name.setText(pojo.getName());
-    DecimalFormat oneDecimalFormatter = new DecimalFormat("#.#");
-
-    //ratingBar.setText(oneDecimalFormatter.format(pojo.getStats()
-    //  .getRating()
-    //.getAvg()));
-    ratingBar.setText("3");
+    try {
+      DecimalFormat oneDecimalFormatter = new DecimalFormat("#.#");
+      rating.setText(oneDecimalFormatter.format(pojo.getStats()));
+    } catch (Exception e) {
+      rating.setText(R.string.appcardview_title_no_start);
+    }
   }
 }

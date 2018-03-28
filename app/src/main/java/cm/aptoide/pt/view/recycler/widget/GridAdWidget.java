@@ -12,6 +12,7 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
+import java.text.DecimalFormat;
 
 /**
  * Created by neuro on 20-06-2016.
@@ -30,6 +31,8 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     name = (TextView) itemView.findViewById(R.id.name);
     icon = (ImageView) itemView.findViewById(R.id.icon);
     rating = (TextView) itemView.findViewById(R.id.rating_label);
+    itemView.findViewById(R.id.tv_ad)
+        .setVisibility(View.VISIBLE);
   }
 
   @Override public void bindView(GridAdDisplayable displayable) {
@@ -46,8 +49,11 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
               .newAppViewFragment(new SearchAdResult(pojo), displayable.getTag()), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
-    //DecimalFormat oneDecimalFormatter = new DecimalFormat("#.#");
-    //rating.setText(oneDecimalFormatter.format(pojo.getStars() + ""));
-    rating.setText("4");
+    try {
+      DecimalFormat oneDecimalFormatter = new DecimalFormat("#.#");
+      rating.setText(oneDecimalFormatter.format(pojo.getStars()));
+    } catch (Exception e) {
+      rating.setText(R.string.appcardview_title_no_start);
+    }
   }
 }
