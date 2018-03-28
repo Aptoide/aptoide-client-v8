@@ -26,11 +26,12 @@
         android:contentDescription="@null"
         />
     <include
-        android:id="@+id/i_ad"
         layout="@layout/ad_badge_layout"
+        android:id="@+id/i_ad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/icon"
+        android:layout_alignLeft="@+id/icon"
         android:layout_alignStart="@+id/icon"
         android:visibility="gone"
         />
