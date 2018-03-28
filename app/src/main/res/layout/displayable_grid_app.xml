@@ -68,19 +68,33 @@
           android:textSize="12sp"
           />
 
-      <!--style="?android:attr/ratingBarStyleIndicator"-->
-      <RatingBar
-          android:id="@+id/ratingbar"
+      <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="5dp"
-          android:layout_marginStart="5dp"
-          android:layout_marginTop="5dp"
-          android:clickable="false"
-          android:isIndicator="true"
-          android:numStars="5"
-          style="?attr/gridItemRatingBar"
-          />
+          android:layout_marginLeft="1dp"
+          android:layout_marginStart="1dp"
+          android:layout_marginTop="2dp"
+          android:orientation="horizontal"
+          >
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_star_black"
+            />
+        <TextView
+            android:id="@+id/rating_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:textColor="?android:attr/textColorSecondary"
+            style="@style/Aptoide.TextView.Regular.XXS"
+            />
+
+      </LinearLayout>
 
       <TextView
           android:id="@+id/store_name"

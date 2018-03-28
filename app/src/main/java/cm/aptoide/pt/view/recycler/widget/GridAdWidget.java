@@ -3,7 +3,6 @@ package cm.aptoide.pt.view.recycler.widget;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -23,7 +22,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
   private TextView name;
   private ImageView icon;
   private TextView downloadsNumber;
-  private RatingBar rating;
+  private TextView rating;
 
   public GridAdWidget(View itemView) {
     super(itemView);
@@ -33,7 +32,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     name = (TextView) itemView.findViewById(R.id.name);
     icon = (ImageView) itemView.findViewById(R.id.icon);
     downloadsNumber = (TextView) itemView.findViewById(R.id.downloads);
-    rating = (RatingBar) itemView.findViewById(R.id.ratingbar);
+    rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
   @Override public void bindView(GridAdDisplayable displayable) {
@@ -50,9 +49,8 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
               .newAppViewFragment(new SearchAdResult(pojo), displayable.getTag()), true);
         }, throwable -> CrashReport.getInstance()
             .log(throwable)));
-    downloadsNumber.setText(
-        AptoideUtils.StringU.withSuffix(pojo.getDownloads()) + context.getString(
-            R.string._downloads));
-    rating.setRating(pojo.getStars());
+    downloadsNumber.setText(context.getString(R.string.downloads_count_text,
+        AptoideUtils.StringU.withSuffix(pojo.getDownloads())));
+    rating.setText(pojo.getStars() + "");
   }
 }

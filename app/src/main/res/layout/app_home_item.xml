@@ -69,7 +69,6 @@
             android:layout_marginBottom="1dp"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
-            android:textSize="10sp"
             tools:ignore="SmallSp"
             tools:text="2.3"
             style="@style/Aptoide.TextView.Regular.XXS.Black"
