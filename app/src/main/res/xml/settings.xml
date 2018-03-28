@@ -127,8 +127,9 @@
         android:key="hwspecs"
         android:summary="@string/setting_hwspecssum"
         android:title="@string/setting_hwspecstitle"/>
-    <Preference
-        android:key="deleteAccount"
-        android:title="@string/settings_delete_account"/>
+    <!--<Preference-->
+        <!--android:key="deleteAccount"-->
+        <!--android:title="@string/settings_delete_account"-->
+        <!--/>-->
   </PreferenceCategory>
 </PreferenceScreen>
