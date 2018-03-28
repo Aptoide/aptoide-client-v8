@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app.view.widget;
 
 import android.view.View;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -15,7 +14,7 @@ import cm.aptoide.pt.view.recycler.widget.GridAdWidget;
 public class AppViewAdWidget extends GridAdWidget {
 
   private TextView downloadsTextView;
-  private RatingBar ratingBar;
+  private TextView ratingBar;
 
   public AppViewAdWidget(View itemView) {
     super(itemView);
@@ -25,7 +24,7 @@ public class AppViewAdWidget extends GridAdWidget {
     super.assignViews(itemView);
 
     downloadsTextView = (TextView) itemView.findViewById(R.id.downloads);
-    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
+    ratingBar = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
   @Override public void bindView(GridAdDisplayable displayable) {
@@ -34,9 +33,9 @@ public class AppViewAdWidget extends GridAdWidget {
     int downloads = displayable.getPojo()
         .getDownloads();
 
-    downloadsTextView.setText(
-        AptoideUtils.StringU.withSuffix(downloads) + getContext().getString(R.string._downloads));
-    ratingBar.setRating(displayable.getPojo()
-        .getStars());
+    downloadsTextView.setText(getContext().getString(R.string.downloads_count_text,
+        AptoideUtils.StringU.withSuffix(downloads)));
+    ratingBar.setText(displayable.getPojo()
+        .getStars() + "");
   }
 }

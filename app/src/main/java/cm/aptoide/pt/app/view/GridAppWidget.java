@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -26,7 +25,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
   private TextView name;
   private ImageView icon;
   private TextView downloads;
-  private RatingBar ratingBar;
+  private TextView ratingBar;
   private TextView tvStoreName;
   private TextView tvAddedTime;
 
@@ -38,7 +37,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
     name = (TextView) itemView.findViewById(R.id.name);
     icon = (ImageView) itemView.findViewById(R.id.icon);
     downloads = (TextView) itemView.findViewById(R.id.downloads);
-    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
+    ratingBar = (TextView) itemView.findViewById(R.id.rating_label);
     tvStoreName = (TextView) itemView.findViewById(R.id.store_name);
     tvAddedTime = (TextView) itemView.findViewById(R.id.added_time);
   }
@@ -56,11 +55,11 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
         .getDownloads();
 
     name.setText(pojo.getName());
-    this.downloads.setText(
-        AptoideUtils.StringU.withSuffix(downloads) + context.getString(R.string._downloads));
-    ratingBar.setRating(pojo.getStats()
+    this.downloads.setText(context.getString(R.string.downloads_count_text,
+        AptoideUtils.StringU.withSuffix(downloads)));
+    ratingBar.setText(pojo.getStats()
         .getRating()
-        .getAvg());
+        .getAvg() + "");
     tvStoreName.setText(pojo.getStore()
         .getName());
     tvAddedTime.setText(AptoideUtils.DateTimeU.getInstance(getContext())

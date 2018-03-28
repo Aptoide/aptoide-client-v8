@@ -68,6 +68,7 @@
 
 
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>
+  <string name="downloads_count_text">%1$s downloads</string>
 
   <!-- Common (menu) -->
   <string name="menu_title_search">Search</string>
@@ -331,7 +332,6 @@
   <string name="active">Active</string>
   <string name="completed">Completed</string>
   <string name="stand_by">Standby</string>
-  <string name="_downloads"> downloads</string>
   <string name="description">Description</string>
   <string name="version">Version</string>
 
