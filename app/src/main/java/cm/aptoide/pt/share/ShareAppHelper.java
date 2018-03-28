@@ -79,8 +79,8 @@ public class ShareAppHelper {
       return;
     }
     if (createStoreUserPrivacyEnabled) {
-      SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager, false,
-          SharePreviewDialog.SharePreviewOpenMode.SHARE, timelineAnalytics, sharedPreferences);
+      SharePreviewDialog sharePreviewDialog =
+          new SharePreviewDialog(accountManager, false, timelineAnalytics, sharedPreferences);
       AlertDialog.Builder alertDialog =
           sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(activity, appName,
               iconPath, averageRating);

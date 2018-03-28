@@ -518,5 +518,7 @@
 
   <string name="all_button_ok">OK</string>
   <string name="home_recommends">%s recommends</string>
+  <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
+  <string name="appview_button_recommend">Recommend</string>
 </resources>
 

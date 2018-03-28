@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.app.view.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -54,11 +55,11 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.timeline.SocialRepository;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.dialog.SharePreviewDialog;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import okhttp3.OkHttpClient;
@@ -512,24 +513,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .doOnCompleted(() -> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
                       sharedPreferences) && isCreateStoreUserPrivacyEnabled) {
-                    SharePreviewDialog sharePreviewDialog =
-                        new SharePreviewDialog(displayable, accountManager, true,
-                            SharePreviewDialog.SharePreviewOpenMode.SHARE,
-                            displayable.getTimelineAnalytics(), sharedPreferences);
-                    AlertDialog.Builder alertDialog =
-                        sharePreviewDialog.getPreviewDialogBuilder(getContext());
-
-                    sharePreviewDialog.showShareCardPreviewDialog(displayable.getPojo()
-                            .getNodes()
-                            .getMeta()
-                            .getData()
-                            .getPackageName(), displayable.getPojo()
-                            .getNodes()
-                            .getMeta()
-                            .getData()
-                            .getStore()
-                            .getId(), "install", context, sharePreviewDialog, alertDialog,
-                        socialRepository);
+                    showRecommendsDialog(displayable, context);
                   } else if (!accountManager.isLoggedIn()
                       && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
                       || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
@@ -577,6 +561,31 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         installHandler.onClick(v);
       }
     };
+  }
+
+  private void showRecommendsDialog(AppViewInstallDisplayable displayable, Context context) {
+    AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+    alertDialog.setMessage(R.string.appview_message_recommend_app);
+    alertDialog.setPositiveButton(context.getString(R.string.appview_button_recommend)
+        .toUpperCase(), (dialog, which) -> {
+      socialRepository.share(displayable.getPojo()
+          .getNodes()
+          .getMeta()
+          .getData()
+          .getPackageName(), displayable.getPojo()
+          .getNodes()
+          .getMeta()
+          .getData()
+          .getStore()
+          .getId(), "install");
+      ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
+      displayable.getTimelineAnalytics()
+          .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
+    });
+    alertDialog.setNegativeButton(context.getString(R.string.skip)
+        .toUpperCase(), (dialog, which) -> displayable.getTimelineAnalytics()
+        .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL));
+    alertDialog.show();
   }
 
   private void showDialogError(String title, String message) {
