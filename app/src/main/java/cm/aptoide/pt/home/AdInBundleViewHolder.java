@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
@@ -18,10 +17,10 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
   private final TextView nameTextView;
   private final ImageView iconView;
   private final TextView rating;
-  private final PublishSubject<GetAdsResponse.Ad> adClickedEvents;
+  private final PublishSubject<WrappedAdTag> adClickedEvents;
   private final DecimalFormat oneDecimalFormatter;
 
-  public AdInBundleViewHolder(View itemView, PublishSubject<GetAdsResponse.Ad> adClickedEvents,
+  public AdInBundleViewHolder(View itemView, PublishSubject<WrappedAdTag> adClickedEvents,
       DecimalFormat oneDecimalFormatter) {
     super(itemView);
     nameTextView = ((TextView) itemView.findViewById(R.id.name));
@@ -31,13 +30,16 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
     this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
-  public void setApp(GetAdsResponse.Ad ad) {
-    nameTextView.setText(ad.getData()
+  public void setApp(WrappedAdTag ad) {
+    nameTextView.setText(ad.getAd()
+        .getData()
         .getName());
     ImageLoader.with(itemView.getContext())
-        .loadWithRoundCorners(ad.getData()
+        .loadWithRoundCorners(ad.getAd()
+            .getData()
             .getIcon(), 8, iconView, R.drawable.placeholder_square);
-    float rating = ad.getData()
+    float rating = ad.getAd()
+        .getData()
         .getStars();
     if (rating == 0) {
       this.rating.setText("- -");

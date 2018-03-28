@@ -103,7 +103,8 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
             .observeOn(viewScheduler)
-            .doOnNext(app -> homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName()))
+            .doOnNext(app -> homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(),
+                app.getTag()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -119,7 +120,8 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(click -> homeNavigator.navigateToAppView(click.getApp()
                 .getAppId(), click.getApp()
-                .getPackageName()))
+                .getPackageName(), click.getApp()
+                .getTag()))
             .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
                 .getRating(), click.getApp()
                 .getPackageName(), click.getPosition(), click.getType()))

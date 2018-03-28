@@ -11,15 +11,19 @@ public class Application {
   private final int downloads;
   private final long appId;
   private final String packageName;
+  private final String tag;
+  private final String storeName;
 
   public Application(String name, String icon, float rating, int downloads, String packageName,
-      long appId) {
+      long appId, String tag, String storeName) {
     this.name = name;
     this.icon = icon;
     this.rating = rating;
     this.downloads = downloads;
     this.appId = appId;
     this.packageName = packageName;
+    this.tag = tag;
+    this.storeName = storeName;
   }
 
   public Application() {
@@ -29,6 +33,8 @@ public class Application {
     downloads = -1;
     appId = -1;
     packageName = null;
+    tag = "";
+    storeName = "";
   }
 
   public long getAppId() {
@@ -53,5 +59,13 @@ public class Application {
 
   public String getName() {
     return name;
+  }
+
+  public String getTag() {
+    return tag;
+  }
+
+  public String getStoreName() {
+    return storeName;
   }
 }

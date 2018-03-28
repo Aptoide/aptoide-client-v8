@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -27,12 +26,11 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final PublishSubject<HomeMoreClick> uiEventsListener;
   private final PublishSubject<AppClick> recommendsClickedEvents;
   private List<HomeBundle> bundles;
-  private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
+  private PublishSubject<WrappedAdTag> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeMoreClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<Application> appClickedEvents,
-      PublishSubject<GetAdsResponse.Ad> adPublishSubject,
+      PublishSubject<Application> appClickedEvents, PublishSubject<WrappedAdTag> adPublishSubject,
       PublishSubject<AppClick> recommendsClickedEvents) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;

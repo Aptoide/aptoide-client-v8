@@ -75,7 +75,7 @@ public class HomePresenterTest {
         new AdMapper(), aptoideAccountManager, homeAnalytics);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
-            300);
+            300, "", "");
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
     bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
     localTopAppsBundle = bundlesModel.getList()
@@ -126,7 +126,7 @@ public class HomePresenterTest {
     //When an app is clicked
     appClickEvent.onNext(aptoide);
     //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName());
+    verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(), tag);
   }
 
   @Test public void adClicked_NavigateToAppView() {

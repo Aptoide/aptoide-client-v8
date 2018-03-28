@@ -4,9 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -16,17 +14,17 @@ import rx.subjects.PublishSubject;
 
 class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<GetAdsResponse.Ad> adClickedEvents;
-  private List<GetAdsResponse.Ad> ads;
+  private final PublishSubject<WrappedAdTag> adClickedEvents;
+  private List<WrappedAdTag> ads;
 
-  public AdsInBundleAdapter(ArrayList<GetAdsResponse.Ad> ads, DecimalFormat oneDecimalFormatter,
-      PublishSubject<GetAdsResponse.Ad> adClickedEvents) {
+  public AdsInBundleAdapter(List<WrappedAdTag> ads, DecimalFormat oneDecimalFormatter,
+      PublishSubject<WrappedAdTag> adClickedEvents) {
     this.ads = ads;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adClickedEvents;
   }
 
-  public void update(List<GetAdsResponse.Ad> ads) {
+  public void update(List<WrappedAdTag> ads) {
     this.ads = ads;
     notifyDataSetChanged();
   }

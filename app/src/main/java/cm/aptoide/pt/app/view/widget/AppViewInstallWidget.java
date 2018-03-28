@@ -586,6 +586,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         .toUpperCase(), (dialog, which) -> displayable.getTimelineAnalytics()
         .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL));
     alertDialog.show();
+    displayable.getTimelineAnalytics()
+        .sendRecommendedAppInteractEvent();
   }
 
   private void showDialogError(String title, String message) {

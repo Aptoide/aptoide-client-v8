@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -47,7 +47,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   private PublishSubject<HomeMoreClick> uiEventsListener;
   private PublishSubject<Application> appClickedEvents;
   private PublishSubject<AppClick> recommendsClickedEvents;
-  private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
+  private PublishSubject<WrappedAdTag> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericErrorView;
@@ -96,8 +96,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), "", null);
+    return ScreenTagHistory.Builder.build("HomeFragment", "", StoreContext.home);
   }
 
   @Override public void onDestroy() {
@@ -194,7 +193,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     return recommendsClickedEvents;
   }
 
-  @Override public Observable<GetAdsResponse.Ad> adClicked() {
+  @Override public Observable<WrappedAdTag> adClicked() {
     return adClickedEvents;
   }
 

@@ -32,10 +32,10 @@ public class FakeBundleDataSource implements BundleDataSource {
   public List<HomeBundle> getFakeBundles() {
     List<Application> tmp = new ArrayList<>();
     String icon = "https://placeimg.com/640/480/any";
-    Application aptoide = new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300);
+    Application aptoide = new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, "", "");
     tmp.add(aptoide);
     Application facebook =
-        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30);
+        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30, "", "");
     tmp.add(facebook);
     tmp.add(aptoide);
     tmp.add(facebook);
@@ -46,11 +46,11 @@ public class FakeBundleDataSource implements BundleDataSource {
 
     List<Application> tmp1 = new ArrayList<>();
     FeatureGraphicApplication aptoideFeatureGraphic =
-        new FeatureGraphicApplication("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, icon);
+        new FeatureGraphicApplication("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, icon, "", "");
     tmp.add(aptoideFeatureGraphic);
     FeatureGraphicApplication facebookFeatureGraphic =
         new FeatureGraphicApplication("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com",
-            30, icon);
+            30, icon, "", "");
     tmp1.add(facebookFeatureGraphic);
     tmp1.add(aptoideFeatureGraphic);
     tmp1.add(facebookFeatureGraphic);
@@ -71,7 +71,8 @@ public class FakeBundleDataSource implements BundleDataSource {
     appBundles.add(appBundle);
     appBundles.add(appBundle1);
     appBundles.add(appBundle2);
-    appBundles.add(new AdBundle("Highlighted", Collections.emptyList(), null, ""));
+    appBundles.add(
+        new AdBundle("Highlighted", new AdsTagWrapper(Collections.emptyList(), ""), null, ""));
     return appBundles;
   }
 }

@@ -806,4 +806,8 @@ public class TimelineAnalytics {
   private String getViewName(boolean isCurrent) {
     return navigationTracker.getViewName(isCurrent);
   }
+
+  public void sendRecommendedAppInteractEvent() {
+
+  }
 }

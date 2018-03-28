@@ -44,11 +44,11 @@ public class BundlesResponseMapper {
 
           appBundles.add(new AppBundle(widget.getTitle(), applicationsToApps(
               ((ListApps) widget.getViewObject()).getDataList()
-                  .getList(), type), type, event, widget.getTag()));
+                  .getList(), type, widget.getTag()), type, event, widget.getTag()));
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
-          appBundles.add(
-              new AdBundle(widget.getTitle(), ((GetAdsResponse) widget.getViewObject()).getAds(),
-                  new Event().setName(Event.Name.getAds), widget.getTag()));
+          appBundles.add(new AdBundle(widget.getTitle(),
+              new AdsTagWrapper(((GetAdsResponse) widget.getViewObject()).getAds(),
+                  widget.getTag()), new Event().setName(Event.Name.getAds), widget.getTag()));
         } else if (type.equals(HomeBundle.BundleType.SOCIAL)) {
           List<Card> list = ((SocialResponse) widget.getViewObject()).getDataList()
               .getList();
@@ -59,14 +59,14 @@ public class BundlesResponseMapper {
             apps.add(app);
             if (card.hasUser()) {
               appBundles.add(
-                  new SocialBundle(applicationsToApps(apps, type), type, event, widget.getTag(),
-                      card.getUser()
-                          .getAvatar(), card.getUser()
+                  new SocialBundle(applicationsToApps(apps, type, widget.getTag()), type, event,
+                      widget.getTag(), card.getUser()
+                      .getAvatar(), card.getUser()
                       .getName()));
             } else {
               appBundles.add(
-                  new SocialBundle(applicationsToApps(apps, type), type, event, widget.getTag(),
-                      R.mipmap.ic_launcher, marketName));
+                  new SocialBundle(applicationsToApps(apps, type, widget.getTag()), type, event,
+                      widget.getTag(), R.mipmap.ic_launcher, marketName));
             }
           }
         }
@@ -108,7 +108,8 @@ public class BundlesResponseMapper {
     }
   }
 
-  private List<Application> applicationsToApps(List<App> apps, AppBundle.BundleType type) {
+  private List<Application> applicationsToApps(List<App> apps, AppBundle.BundleType type,
+      String tag) {
     if (apps == null || apps.isEmpty()) {
       return Collections.emptyList();
     }
@@ -118,12 +119,15 @@ public class BundlesResponseMapper {
         applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic()));
+            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
+            app.getStore()
+                .getName()));
       } else {
         applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId()));
+            .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getStore()
+            .getName()));
       }
     }
 
