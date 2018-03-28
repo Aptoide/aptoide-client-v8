@@ -7,10 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
@@ -18,7 +18,6 @@ import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import java.util.Collections;
 import java.util.List;
-import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
@@ -30,10 +29,10 @@ import rx.subjects.PublishSubject;
 public class InboxFragment extends BaseToolbarFragment
     implements InboxView, NotBottomNavigationView {
 
-  @Inject AnalyticsManager analyticsManager;
   private RecyclerView list;
   private InboxAdapter adapter;
   private PublishSubject<AptoideNotification> notificationSubject;
+  private LinearLayout emptyState;
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
@@ -65,6 +64,8 @@ public class InboxFragment extends BaseToolbarFragment
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
 
+    emptyState = (LinearLayout) view.findViewById(R.id.empty_state);
+
     AptoideApplication application = ((AptoideApplication) getContext().getApplicationContext());
     attachPresenter(
         new InboxPresenter(this, ((ActivityResultNavigator) getContext()).getInboxNavigator(),
@@ -80,6 +81,10 @@ public class InboxFragment extends BaseToolbarFragment
 
   @Override public Observable<AptoideNotification> notificationSelection() {
     return notificationSubject;
+  }
+
+  @Override public void showEmptyState() {
+    emptyState.setVisibility(View.VISIBLE);
   }
 
   @Override public int getContentViewId() {
