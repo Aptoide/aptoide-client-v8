@@ -59,4 +59,6 @@ public interface AppsFragmentView extends View {
   void showAvatar();
 
   Observable<Void> imageClick();
+
+  void removeInstalledDownloads(List<App> installedDownloadsList);
 }

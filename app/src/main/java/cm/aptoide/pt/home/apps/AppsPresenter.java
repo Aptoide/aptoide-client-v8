@@ -79,6 +79,20 @@ public class AppsPresenter implements Presenter {
     loadUserImage();
 
     handleUserAvatarClick();
+
+    observeDownloadInstallations();
+  }
+
+  private void observeDownloadInstallations() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(computation)
+        .flatMap(__ -> appsManager.getInstalledDownloads())
+        .observeOn(viewScheduler)
+        .doOnNext(installedDownloadsList -> view.removeInstalledDownloads(installedDownloadsList))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void handleUpdateCardClick() {

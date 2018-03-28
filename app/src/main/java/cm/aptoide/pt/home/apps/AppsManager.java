@@ -87,7 +87,8 @@ public class AppsManager {
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() != Install.InstallationType.UPDATE
-                  && install.getType() != Install.InstallationType.INSTALLED)
+                  || install.getState() != Install.InstallationStatus.UNINSTALLED)
+              .flatMap(item -> installManager.filterInstalled(item))
               .toList()
               .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
@@ -218,5 +219,19 @@ public class AppsManager {
 
   public void setAppViewAnalyticsEvent() {
     updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW);
+  }
+
+  public Observable<List<App>> getInstalledDownloads() {
+    return installManager.getInstallations()
+        .flatMap(installations -> {
+          if (installations == null || installations.isEmpty()) {
+            return Observable.empty();
+          }
+          return Observable.just(installations)
+              .flatMapIterable(installs -> installs)
+              .flatMap(install -> installManager.filterNonInstalled(install))
+              .toList()
+              .map(installedApps -> appMapper.getDownloadApps(installedApps));
+        });
   }
 }

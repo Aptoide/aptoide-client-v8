@@ -513,4 +513,25 @@ public class InstallManager {
         .filter(item -> !item.isSystemApp())
         .toList();
   }
+
+  public Observable<Install> filterInstalled(Install item) {
+    return Observable.just(installedRepository.contains(item.getPackageName()))
+        .flatMap(isInstalled -> {
+          if (isInstalled) {
+            return Observable.empty();
+          }
+          return Observable.just(item);
+        });
+  }
+
+  public Observable<Install> filterNonInstalled(Install item) {
+    return Observable.just(installedRepository.contains(item.getPackageName()))
+        .flatMap(isInstalled -> {
+          if (isInstalled) {
+            return Observable.just(item);
+          } else {
+            return Observable.empty();
+          }
+        });
+  }
 }

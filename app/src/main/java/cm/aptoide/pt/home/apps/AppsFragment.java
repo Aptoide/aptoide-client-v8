@@ -133,10 +133,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showDownloadsList(List<App> list) {
-    if (list != null && !list.isEmpty()) {
-      adapter.addDownloadAppsList(list);
-      recyclerView.smoothScrollToPosition(0);
-    }
+    adapter.addDownloadAppsList(list);
+    recyclerView.smoothScrollToPosition(0);
   }
 
   @Override public Observable<App> retryDownload() {
@@ -255,6 +253,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public Observable<Void> imageClick() {
     return RxView.clicks(userAvatar);
+  }
+
+  @Override public void removeInstalledDownloads(List<App> installedDownloadsList) {
+    adapter.removeInstalledDownloads(installedDownloadsList);
   }
 
   @Override public void onDestroy() {

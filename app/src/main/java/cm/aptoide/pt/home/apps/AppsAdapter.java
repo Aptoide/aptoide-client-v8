@@ -205,14 +205,24 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return -1;
   }
 
-  public void removeUpdatesList(List<App> excludedUpdatesList) {
-    for (App app : excludedUpdatesList) {
+  public void removeUpdatesList(List<App> updatesToRemove) {
+    for (App app : updatesToRemove) {
       if (app instanceof UpdateApp) {
         if (listOfApps.contains(((UpdateApp) app))) {
           int indexOfExcludedApp = listOfApps.indexOf(((UpdateApp) app));
           listOfApps.remove(indexOfExcludedApp);
           notifyItemRemoved(indexOfExcludedApp);
         }
+      }
+    }
+  }
+
+  public void removeInstalledDownloads(List<App> installedDownloadsList) {
+    for (App app : installedDownloadsList) {
+      if (listOfApps.contains(((DownloadApp) app))) {
+        int indexOfInstalledApp = listOfApps.indexOf(((DownloadApp) app));
+        listOfApps.remove(((DownloadApp) app));
+        notifyItemRemoved(indexOfInstalledApp);
       }
     }
   }
