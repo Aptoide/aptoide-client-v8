@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -19,6 +20,45 @@
         app:titleMarginStart="30dp"
         />
   </android.support.design.widget.AppBarLayout>
+
+  <LinearLayout
+      android:id="@+id/empty_state"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:visibility="gone"
+      tools:visibility="visible"
+      >
+    <ImageView
+        android:id="@+id/empty_state_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="47dp"
+        android:contentDescription="@string/notifications_empty_state_icon_description"
+        android:src="@drawable/ic_notifications_empty_state"
+        />
+    <TextView
+        android:id="@+id/empty_state_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="@string/notifications_empty_state_main_title"
+        android:textSize="19sp"
+        />
+    <TextView
+        android:id="@+id/empty_state_subtitle"
+        android:layout_width="232dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/notifications_empty_state_sub_title"
+        android:textSize="14sp"
+
+        />
+  </LinearLayout>
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/fragment_inbox_list"

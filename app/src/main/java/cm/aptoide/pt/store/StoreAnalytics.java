@@ -12,7 +12,6 @@ import java.util.Map;
 
 public class StoreAnalytics {
 
-  public static final String STORES_TAB_OPEN = "Stores_Tab_Open";
   public static final String STORES_TAB_INTERACT = "Stores_Tab_Interact";
   public static final String STORES_OPEN = "Store_Open";
   public static final String STORES_INTERACT = "Store_Interact";
@@ -28,11 +27,6 @@ public class StoreAnalytics {
   public StoreAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
-  }
-
-  public void sendStoreTabOpenedEvent() {
-    analyticsManager.logEvent(null, STORES_TAB_OPEN, AnalyticsManager.Action.CLICK,
-        getViewName(true));
   }
 
   /// "add store" event implemented (according to sunil the information about how many apps/subscribers only needs to be sent when comming from a "follow a recommended store" event

@@ -39,7 +39,13 @@ public class InboxPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> notificationCenter.getInboxNotifications(NUMBER_OF_NOTIFICATIONS))
         .observeOn(viewScheduler)
-        .doOnNext(notifications -> view.showNotifications(notifications))
+        .doOnNext(notifications -> {
+          if (notifications.isEmpty()) {
+            view.showEmptyState();
+          } else {
+            view.showNotifications(notifications);
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notifications -> {
         }, throwable -> crashReport.log(throwable));

@@ -20,23 +20,6 @@
   </shortcut>
   <shortcut
       android:enabled="true"
-      android:icon="@drawable/ic_shortcut_timeline"
-      android:shortcutId="timeline"
-      android:shortcutShortLabel="@string/shortcut_button_timeline">
-
-    <intent
-
-        android:action="android.intent.action.VIEW"
-        android:data="aptoide://cm.aptoide.pt/deeplink?name=getUserTimeline"
-        android:targetClass="cm.aptoide.pt.DeepLinkIntentReceiver"
-        android:targetPackage="cm.aptoide.pt.dev">
-      <extra
-          android:name="timeline"
-          android:value="true"/>
-    </intent>
-  </shortcut>
-  <shortcut
-      android:enabled="true"
       android:icon="@drawable/ic_shortcut_store"
       android:shortcutId="myStore"
       android:shortcutShortLabel="@string/shortcut_button_my_store">

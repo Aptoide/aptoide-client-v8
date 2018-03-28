@@ -20,6 +20,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -52,6 +53,7 @@ public class NewAccountFragment extends BackButtonFragment
 
   protected Toolbar toolbar;
   @Inject NewAccountNavigator newAccountNavigator;
+  @Inject AccountAnalytics accountAnalytics;
   private AptoideAccountManager accountManager;
 
   private Converter.Factory converterFactory;
@@ -110,7 +112,7 @@ public class NewAccountFragment extends BackButtonFragment
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new NewAccountPresenter(this, accountManager, CrashReport.getInstance(),
         application.getDefaultSharedPreferences(), AndroidSchedulers.mainThread(),
-        newAccountNavigator));
+        newAccountNavigator, accountAnalytics));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
