@@ -166,8 +166,7 @@ public class AppsManager {
 
   public Completable resumeUpdate(App app) {
     return installManager.getDownload(((UpdateApp) app).getMd5())
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(subscription -> setupDownloadEvents(download)));
+        .flatMapCompletable(download -> installManager.install(download));
   }
 
   public void cancelUpdate(App app) {
