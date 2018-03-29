@@ -178,8 +178,9 @@ import rx.schedulers.Schedulers;
         bottomNavigationMapper);
   }
 
-  @FragmentScope @Provides AppsNavigator providesAppsNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new AppsNavigator(fragmentNavigator);
+  @FragmentScope @Provides AppsNavigator providesAppsNavigator(FragmentNavigator fragmentNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
+    return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
+        bottomNavigationMapper);
   }
 }
