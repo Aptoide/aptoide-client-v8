@@ -57,6 +57,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
 
+    handleClickOnTermsAndConditions();
+
     handleFacebookSignUpResult();
     handleFacebookSignUpEvent();
     handleFacebookSignUpWithRequiredPermissionsEvent();
@@ -274,6 +276,18 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
           view.hideLoading();
           view.showError(errorMapper.map(err));
           crashReport.log(err);
+        });
+  }
+
+  private void handleClickOnTermsAndConditions() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsClick())
+        .doOnNext(__ -> accountNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          crashReport.log(throwable);
         });
   }
 

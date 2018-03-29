@@ -8,6 +8,7 @@ package cm.aptoide.pt.account.view;
 import android.app.Activity;
 import android.net.Uri;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookLoginResult;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
@@ -160,5 +161,10 @@ public class AccountNavigator {
   public void navigateToCreateStoreView() {
     fragmentNavigator.navigateToCleaningBackStack(
         ManageStoreFragment.newInstance(new ManageStoreViewModel(), true), true);
+  }
+
+  public void navigateToTermsAndConditions() {
+    fragmentNavigator.navigateTo(GenericWebviewFragment.newInstance(activityNavigator.getActivity()
+        .getString(R.string.terms_conditions_navigation_url)), true);
   }
 }
