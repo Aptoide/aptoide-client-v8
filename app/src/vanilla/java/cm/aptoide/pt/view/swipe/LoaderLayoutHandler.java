@@ -62,7 +62,7 @@ public class LoaderLayoutHandler {
 
   private void hideViewsToShowAfterLoading() {
     for (View view : this.viewsToShowAfterLoading) {
-      view.setVisibility(View.GONE);
+      if (view != null) view.setVisibility(View.GONE);
     }
   }
 
