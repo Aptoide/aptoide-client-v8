@@ -225,5 +225,26 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         notifyItemRemoved(indexOfInstalledApp);
       }
     }
+    removeDownloadsHeader();
+  }
+
+  private void removeDownloadsHeader() {
+    if (countNumberOfAppsByType(App.Type.DOWNLOAD) == 0) {
+      int downloadsHeaderPosition = findHeaderPosition(App.Type.HEADER_DOWNLOADS);
+      if (downloadsHeaderPosition > -1) {
+        listOfApps.remove(downloadsHeaderPosition);
+        notifyItemRemoved(downloadsHeaderPosition);
+      }
+    }
+  }
+
+  private int countNumberOfAppsByType(App.Type type) {
+    int appsByType = 0;
+    for (App app : listOfApps) {
+      if (app.getType() == type) {
+        appsByType++;
+      }
+    }
+    return appsByType;
   }
 }

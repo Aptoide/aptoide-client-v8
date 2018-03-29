@@ -270,6 +270,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(computation)
         .flatMap(__ -> appsManager.getDownloadApps())
         .observeOn(viewScheduler)
+        .filter(list -> !list.isEmpty())
         .doOnNext(list -> view.showDownloadsList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
