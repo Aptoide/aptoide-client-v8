@@ -20,16 +20,16 @@
   <string name="please_wait_upload">If you\'re uploading, it may take a while…</string>
 
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Meet your new social app store!</string>
-  <string name="wizard_sub_title_viewpager_one">Explore the best app videos and news <b>in your timeline.</b></string>
+  <string name="wizard_title_viewpager_one">New App Navigation</string>
+  <string name="wizard_sub_title_viewpager_one">Discovering apps in much easier and \nfun now</string>
 
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two">Create a Personal Store</string>
-  <string name="wizard_sub_title_viewpager_two"><b>Share</b> your favourite apps \n with the <b>Aptoide Community</b>.</string>
+  <string name="wizard_sub_title_viewpager_two">Share your favourite apps \n with the Aptoide Community</string>
 
   <!-- WIZARD PAGE 3 -->
   <string name="login_sign_up_title">Join Our Community</string>
-  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends.</string>
+  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
 
   <string name="you_need_to_be_logged_in">You need to be logged in</string>
   <string name="follow">Follow</string>

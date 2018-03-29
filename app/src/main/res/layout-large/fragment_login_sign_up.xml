@@ -54,6 +54,7 @@ android:fitsSystemWindows="true"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:text="@string/login_sign_up_title"
+          android:textColor="@color/white"
           style="@style/OnBoarding.Title.TextView"
           />
 
@@ -62,7 +63,7 @@ android:fitsSystemWindows="true"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:layout_margin="10dp"
-          android:src="@drawable/wizard_community"
+          android:src="@drawable/wizard_3"
           />
 
       <TextView

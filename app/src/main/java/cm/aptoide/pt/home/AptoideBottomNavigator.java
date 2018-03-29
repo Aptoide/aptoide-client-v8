@@ -21,4 +21,17 @@ public interface AptoideBottomNavigator {
    * Shows the fragment in case the current Fragment is not the one that is selected
    */
   void showFragment(Integer menuItem);
+
+  /**
+   * Hides or shows the BottomNavigation depending on the fragment
+   */
+  void toogleBottomNavigation();
+
+  /**
+   * Puts the focus on the button of the BottomNavigation request by the fragment that calls this
+   * method
+   *
+   * @param bottomNavigationItem Button to give focus
+   */
+  void requestFocus(BottomNavigationItem bottomNavigationItem);
 }

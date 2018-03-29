@@ -23,13 +23,14 @@ import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import rx.Observable;
 
 public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
-    implements LoginSignUpCredentialsView {
+    implements LoginSignUpCredentialsView, NotBottomNavigationView {
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String CLEAN_BACK_STACK = "clean_back_stack";

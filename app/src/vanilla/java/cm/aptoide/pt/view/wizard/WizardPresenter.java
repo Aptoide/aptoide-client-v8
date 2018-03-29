@@ -34,15 +34,12 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
   }
 
   private Observable<Void> setupHandlers() {
-    Observable<Void> goToNextPageClick = view.goToNextPageClick()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> view.goToNextPage());
 
     Observable<Void> skipWizardClick = view.skipWizardClick()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> view.skipWizard());
 
-    return Observable.merge(goToNextPageClick, skipWizardClick);
+    return skipWizardClick;
   }
 
   @Override public void present() {
@@ -63,14 +60,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
       //Inside the wizards third page
       accountAnalytics.enterAccountScreen(AccountAnalytics.AccountOrigins.WIZARD);
     }
-
     view.handleSelectedPage(position);
-
-    if (position > 0 && position < view.getWizardButtonsCount() - 1) {
-      view.showArrow();
-    } else if (position == view.getWizardButtonsCount() - 1) {
-      view.showSkipButton();
-    }
   }
 
   @Override public void onPageScrollStateChanged(int state) {

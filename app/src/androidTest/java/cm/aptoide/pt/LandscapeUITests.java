@@ -20,10 +20,8 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static cm.aptoide.pt.UITests.goToMyAccount;
 import static cm.aptoide.pt.UITests.goToSettings;
@@ -108,11 +106,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
     mActivityRule.launchActivity(new Intent());
     Activity activity = mActivityRule.getActivity();
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    onView(withId(R.id.next_icon)).perform(swipeLeft());
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    onView(withId(R.id.next_icon)).perform(swipeLeft());
     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    onView(withId(R.id.skip_text)).perform(click());
   }
 
   /**
@@ -122,7 +117,6 @@ import static cm.aptoide.pt.UITests.skipWizard;
   @Test public void landscapeEditProfileName() {
     TestType.initialization = TestType.TestTypes.LOGGEDIN;
     goToMyAccount();
-    onView(withId(R.id.my_account_edit_user_profile)).perform(click());
     Activity activity = mActivityRule.getActivity();
     onView(withId(R.id.create_user_username_inserted)).perform(click());
     onView(withId(R.id.create_user_username_inserted)).perform(replaceText("D011"),

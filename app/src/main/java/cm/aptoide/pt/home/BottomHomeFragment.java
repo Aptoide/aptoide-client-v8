@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -40,6 +41,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private static final int VISIBLE_THRESHOLD = 2;
+  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject Home home;
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
@@ -58,6 +60,24 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   private View noNetworkRetryButton;
   private View retryButton;
   private ImageView userAvatar;
+  private BottomNavigationActivity bottomNavigationActivity;
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
+  }
+
+  @Override public void onDestroy() {
+    uiEventsListener = null;
+    oneDecimalFormatter = null;
+    adClickedEvents = null;
+    appClickedEvents = null;
+    recommendsClickedEvents = null;
+    userAvatar = null;
+    super.onDestroy();
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -69,6 +89,9 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     if (savedInstanceState != null) {
@@ -99,14 +122,18 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     return ScreenTagHistory.Builder.build("HomeFragment", "", StoreContext.home);
   }
 
-  @Override public void onDestroy() {
-    uiEventsListener = null;
-    oneDecimalFormatter = null;
-    adClickedEvents = null;
-    appClickedEvents = null;
-    recommendsClickedEvents = null;
-    userAvatar = null;
-    super.onDestroy();
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_home, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (bundlesList != null) {
+      outState.putParcelable(LIST_STATE_KEY, bundlesList.getLayoutManager()
+          .onSaveInstanceState());
+    }
   }
 
   @Override public void onDestroyView() {
@@ -122,18 +149,9 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     super.onDestroyView();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_home, container, false);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    if (bundlesList != null) {
-      outState.putParcelable(LIST_STATE_KEY, bundlesList.getLayoutManager()
-          .onSaveInstanceState());
-    }
+  @Override public void onDetach() {
+    bottomNavigationActivity = null;
+    super.onDetach();
   }
 
   @Override public void showHomeBundles(List<HomeBundle> bundles) {

@@ -36,7 +36,12 @@
 
 
   <string name="button_header_more">more</string>
-  <string name="search">Search</string>
+
+  <!--Bottom Navigation-->
+  <string name="bottomnavigation_button_home">Home</string>
+  <string name="bottomnavigation_button_search">Search</string>
+  <string name="bottomnavigation_button_stores">Stores</string>
+  <string name="bottomnavigation_button_apps">Apps</string>
 
   <!-- AppView -->
   <string name="appview_button_install">Install</string>
@@ -65,6 +70,7 @@
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>
 
   <!-- Common (menu) -->
+  <string name="menu_title_search">Search</string>
   <string name="menu_install">Install</string>
   <string name="menu_select_all">Select All</string>
   <string name="menu_select_none">Select None</string>
@@ -84,8 +90,6 @@
   <string name="fake_app">Fake app</string>
   <string name="virus">Virus</string>
   <string name="additional_information">Additional information</string>
-
-  <!-- Preferences -->
 
   <!-- "Other <app name> versions on different Stores" -->
   <string name="social_facebook_screen_title">Facebook</string>
@@ -395,7 +399,7 @@
   <string name="download_retry">Retry</string>
   <string name="retry_connection">Retry connection</string>
   <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
-  <string name="could_not_connect_internet">couldn\'t connect to the Internet</string>
+  <string name="could_not_connect_internet">Couldn\'t connect to the Internet</string>
 
   <!-- Vote -->
   <string name="reply">Reply</string>
@@ -465,6 +469,9 @@
   <string name="generalscreen_short_root_install_timeout_error_message">%d apps failed to root install</string>
   <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
+  <string name="notifications_empty_state_main_title">There are no notifications yet!</string>
+  <string name="notifications_empty_state_sub_title">Recommend apps to your friends and followers</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
 
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
   <string name="hello_follow_me_on_aptoide">Hello! Follow me on %s</string>

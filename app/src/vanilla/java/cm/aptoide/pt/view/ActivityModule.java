@@ -53,7 +53,6 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.settings.NewAccountNavigator;
@@ -133,16 +132,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       NotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
-      NavigationTracker navigationTracker, SearchNavigator searchNavigator,
-      SearchAnalytics searchAnalytics, DeepLinkAnalytics deepLinkAnalytics,
-      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
-      TimelineAnalytics timelineAnalytics, StoreAnalytics storeAnalytics,
+      NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
+      DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
+      AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
       AdsRepository adsRepository) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
-        (TabNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
-        storeAccessor, defaultTheme, notificationAnalytics, navigationTracker, searchNavigator,
-        searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics,
-        timelineAnalytics, storeAnalytics, adsRepository);
+        (AptoideBottomNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity,
+        sharedPreferences, storeAccessor, defaultTheme, notificationAnalytics, navigationTracker,
+        searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
+        adsRepository);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
