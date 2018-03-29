@@ -8,7 +8,7 @@ public class AdMapper {
   public AdMapper() {
   }
 
-  Func1<? super WrappedAdTag, AbstractMap.SimpleEntry<String, SearchAdResult>> mapAdToSearchAd() {
+  Func1<? super AdClick, AbstractMap.SimpleEntry<String, SearchAdResult>> mapAdToSearchAd() {
     return ad -> {
       if (ad == null) {
         return new AbstractMap.SimpleEntry<>("", new SearchAdResult());

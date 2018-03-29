@@ -28,7 +28,7 @@ public interface HomeView extends View {
 
   Observable<AppClick> recommendedAppClicked();
 
-  Observable<WrappedAdTag> adClicked();
+  Observable<AdClick> adClicked();
 
   void showLoadMore();
 

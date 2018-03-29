@@ -17,10 +17,10 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
   private final TextView nameTextView;
   private final ImageView iconView;
   private final TextView rating;
-  private final PublishSubject<WrappedAdTag> adClickedEvents;
+  private final PublishSubject<AdClick> adClickedEvents;
   private final DecimalFormat oneDecimalFormatter;
 
-  public AdInBundleViewHolder(View itemView, PublishSubject<WrappedAdTag> adClickedEvents,
+  public AdInBundleViewHolder(View itemView, PublishSubject<AdClick> adClickedEvents,
       DecimalFormat oneDecimalFormatter) {
     super(itemView);
     nameTextView = ((TextView) itemView.findViewById(R.id.name));
@@ -30,7 +30,7 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
     this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
-  public void setApp(WrappedAdTag ad) {
+  public void setApp(AdClick ad) {
     nameTextView.setText(ad.getAd()
         .getData()
         .getName());

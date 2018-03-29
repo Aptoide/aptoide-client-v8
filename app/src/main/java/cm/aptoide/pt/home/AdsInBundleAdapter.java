@@ -14,17 +14,17 @@ import rx.subjects.PublishSubject;
 
 class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<WrappedAdTag> adClickedEvents;
-  private List<WrappedAdTag> ads;
+  private final PublishSubject<AdClick> adClickedEvents;
+  private List<AdClick> ads;
 
-  public AdsInBundleAdapter(List<WrappedAdTag> ads, DecimalFormat oneDecimalFormatter,
-      PublishSubject<WrappedAdTag> adClickedEvents) {
+  public AdsInBundleAdapter(List<AdClick> ads, DecimalFormat oneDecimalFormatter,
+      PublishSubject<AdClick> adClickedEvents) {
     this.ads = ads;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adClickedEvents;
   }
 
-  public void update(List<WrappedAdTag> ads) {
+  public void update(List<AdClick> ads) {
     this.ads = ads;
     notifyDataSetChanged();
   }

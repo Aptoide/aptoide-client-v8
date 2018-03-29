@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AdBundle implements HomeBundle {
   private final String title;
-  private final List<WrappedAdTag> ads;
+  private final List<AdClick> ads;
   private final Event event;
   private final String tag;
 
@@ -19,7 +19,7 @@ public class AdBundle implements HomeBundle {
     this.title = title;
     this.ads = new ArrayList<>();
     for (GetAdsResponse.Ad ad : ads.getAds()) {
-      this.ads.add(new WrappedAdTag(ad, tag));
+      this.ads.add(new AdClick(ad, tag));
     }
     this.event = event;
     this.tag = tag;
@@ -45,7 +45,7 @@ public class AdBundle implements HomeBundle {
     return tag;
   }
 
-  public List<WrappedAdTag> getAds() {
+  public List<AdClick> getAds() {
     return ads;
   }
 }

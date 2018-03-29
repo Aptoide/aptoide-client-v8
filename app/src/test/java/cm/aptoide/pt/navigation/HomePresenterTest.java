@@ -3,8 +3,9 @@ package cm.aptoide.pt.navigation;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.AppClick;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
@@ -15,7 +16,6 @@ import cm.aptoide.pt.home.HomeMoreClick;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.Application;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +48,8 @@ public class HomePresenterTest {
   private HomeBundlesModel bundlesModel;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Application> appClickEvent;
-  private PublishSubject<GetAdsResponse.Ad> adClickEvent;
+  private PublishSubject<AdClick> adClickEvent;
+  private PublishSubject<AppClick> recommendedClickEvent;
   private PublishSubject<HomeMoreClick> moreClickEvent;
   private PublishSubject<Object> bottomReachedEvent;
   private PublishSubject<Void> pullToRefreshEvent;
@@ -63,6 +64,7 @@ public class HomePresenterTest {
 
     lifecycleEvent = PublishSubject.create();
     appClickEvent = PublishSubject.create();
+    recommendedClickEvent = PublishSubject.create();
     adClickEvent = PublishSubject.create();
     moreClickEvent = PublishSubject.create();
     bottomReachedEvent = PublishSubject.create();
@@ -83,6 +85,7 @@ public class HomePresenterTest {
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
+    when(view.recommendedAppClicked()).thenReturn(recommendedClickEvent);
     when(view.adClicked()).thenReturn(adClickEvent);
     when(view.moreClicked()).thenReturn(moreClickEvent);
     when(view.reachesBottom()).thenReturn(bottomReachedEvent);
@@ -126,7 +129,8 @@ public class HomePresenterTest {
     //When an app is clicked
     appClickEvent.onNext(aptoide);
     //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(), tag);
+    verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
+        aptoide.getTag());
   }
 
   @Test public void adClicked_NavigateToAppView() {
@@ -136,7 +140,7 @@ public class HomePresenterTest {
     //When an app is clicked
     adClickEvent.onNext(null);
     //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToAppView(any(SearchAdResult.class));
+    verify(homeNavigator).navigateToAppView(any());
   }
 
   @Test public void moreClicked_NavigateToActionView() {

@@ -6,11 +6,11 @@ import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
  * Created by jdandrade on 28/03/2018.
  */
 
-public class WrappedAdTag {
+public class AdClick {
   private final GetAdsResponse.Ad ad;
   private final String tag;
 
-  public WrappedAdTag(GetAdsResponse.Ad ad, String tag) {
+  public AdClick(GetAdsResponse.Ad ad, String tag) {
     this.ad = ad;
     this.tag = tag;
   }

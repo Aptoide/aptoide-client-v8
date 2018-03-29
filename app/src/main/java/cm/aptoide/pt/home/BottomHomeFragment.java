@@ -47,7 +47,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   private PublishSubject<HomeMoreClick> uiEventsListener;
   private PublishSubject<Application> appClickedEvents;
   private PublishSubject<AppClick> recommendsClickedEvents;
-  private PublishSubject<WrappedAdTag> adClickedEvents;
+  private PublishSubject<AdClick> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericErrorView;
@@ -193,7 +193,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     return recommendsClickedEvents;
   }
 
-  @Override public Observable<WrappedAdTag> adClicked() {
+  @Override public Observable<AdClick> adClicked() {
     return adClickedEvents;
   }
 
