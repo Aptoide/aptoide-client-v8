@@ -40,17 +40,20 @@ public class BundlesResponseMapper {
       Event event = getEvent(widget);
 
       try {
+        String widgetTag = widget.getTag();
+        Object viewObject = widget.getViewObject();
+        String title = widget.getTitle();
         if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
 
-          appBundles.add(new AppBundle(widget.getTitle(), applicationsToApps(
-              ((ListApps) widget.getViewObject()).getDataList()
-                  .getList(), type, widget.getTag()), type, event, widget.getTag()));
+          appBundles.add(new AppBundle(title, applicationsToApps(
+              ((ListApps) viewObject).getDataList()
+                  .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
-          appBundles.add(new AdBundle(widget.getTitle(),
-              new AdsTagWrapper(((GetAdsResponse) widget.getViewObject()).getAds(),
-                  widget.getTag()), new Event().setName(Event.Name.getAds), widget.getTag()));
+          appBundles.add(new AdBundle(title,
+              new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
+              new Event().setName(Event.Name.getAds), widgetTag));
         } else if (type.equals(HomeBundle.BundleType.SOCIAL)) {
-          List<Card> list = ((SocialResponse) widget.getViewObject()).getDataList()
+          List<Card> list = ((SocialResponse) viewObject).getDataList()
               .getList();
           if (!list.isEmpty()) {
             List<App> apps = new ArrayList<>();
@@ -59,14 +62,14 @@ public class BundlesResponseMapper {
             apps.add(app);
             if (card.hasUser()) {
               appBundles.add(
-                  new SocialBundle(applicationsToApps(apps, type, widget.getTag()), type, event,
-                      widget.getTag(), card.getUser()
+                  new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
+                      widgetTag, card.getUser()
                       .getAvatar(), card.getUser()
                       .getName()));
             } else {
               appBundles.add(
-                  new SocialBundle(applicationsToApps(apps, type, widget.getTag()), type, event,
-                      widget.getTag(), R.mipmap.ic_launcher, marketName));
+                  new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
+                      widgetTag, R.mipmap.ic_launcher, marketName));
             }
           }
         }
