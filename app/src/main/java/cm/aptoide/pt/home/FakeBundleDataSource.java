@@ -74,6 +74,13 @@ public class FakeBundleDataSource implements BundleDataSource {
     appBundles.add(appBundle2);
     appBundles.add(
         new AdBundle("Highlighted", new AdsTagWrapper(Collections.emptyList(), ""), null, ""));
+    List<Application> apps = new ArrayList<>();
+    apps.add(new Application("asf wallet",
+        "http://pool.img.aptoide.com/asf-store/ace60f6352f6dd9289843b5b0b2ab3d4_icon.png", 5,
+        1000000, "asf.wallet.android.com", 36057221, "", ""));
+    appBundles.add(new SocialBundle(apps, HomeBundle.BundleType.SOCIAL, null, "TAG",
+        "http://pool.img.aptoide.com/asf-store/3bf5adf05843f9f28c486d5ddef8f873_ravatar.jpg",
+        "asf-store"));
     return appBundles;
   }
 }
