@@ -470,7 +470,8 @@
   <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
   <string name="notifications_empty_state_main_title">There are no notifications yet!</string>
-  <string name="notifications_empty_state_sub_title">Recommend apps to your friends and followers</string>
+  <string name="notifications_empty_state_sub_title">Follow friends to be notified about the best apps</string>
+  <string name="notifications_empty_state_button_follow_friends">FIND FRIENDS</string>
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
 
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
@@ -527,5 +528,8 @@
   <string name="home_recommends">%s recommends</string>
   <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
   <string name="appview_button_recommend">Recommend</string>
+
+  <!--Terms and Conditions URL navigation-->
+  <string name="terms_conditions_navigation_url" translatable="false">https://terms.aptoide.com</string>
 </resources>
 

@@ -269,7 +269,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     subscriptions.add(RxPreference.clicks(termsAndConditions)
         .subscribe(clicked -> fragmentNavigator.navigateTo(
-            GenericWebviewFragment.newInstance("https://terms.aptoide.com"), true)));
+            GenericWebviewFragment.newInstance(getString(R.string.terms_conditions_navigation_url)),
+            true)));
 
     subscriptions.add(accountManager.enabled()
         .observeOn(AndroidSchedulers.mainThread())
