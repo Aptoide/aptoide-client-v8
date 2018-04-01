@@ -317,6 +317,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(computation)
         .flatMap(__ -> appsManager.getInstalledApps())
         .observeOn(viewScheduler)
+        .filter(list -> !list.isEmpty())
         .doOnNext(installedApps -> view.showInstalledApps(installedApps))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -329,6 +330,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(__ -> appsManager.getUpdatesList(false))
         .observeOn(viewScheduler)
+        .filter(list -> !list.isEmpty())
         .doOnNext(list -> view.showUpdatesList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
