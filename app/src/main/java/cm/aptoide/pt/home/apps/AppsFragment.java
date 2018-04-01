@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -124,7 +125,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showUpdatesList(List<App> list) {
     adapter.addUpdateAppsList(list);
-    recyclerView.smoothScrollToPosition(0);
+    this.recyclerView.smoothScrollToPosition(0);
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
@@ -134,7 +135,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showDownloadsList(List<App> list) {
     adapter.addDownloadAppsList(list);
-    recyclerView.smoothScrollToPosition(0);
+    this.recyclerView.smoothScrollToPosition(0);
   }
 
   @Override public Observable<App> retryDownload() {
@@ -257,6 +258,15 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void removeInstalledDownloads(List<App> installedDownloadsList) {
     adapter.removeInstalledDownloads(installedDownloadsList);
+  }
+
+  @UiThread @Override public void scrollToTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      recyclerView.scrollToPosition(10);
+    }
+    recyclerView.smoothScrollToPosition(0);
   }
 
   @Override public void onDestroy() {

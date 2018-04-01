@@ -81,6 +81,8 @@ public class AppsPresenter implements Presenter {
     handleUserAvatarClick();
 
     observeDownloadInstallations();
+
+    handleBottomNavigationEvents();
   }
 
   private void observeDownloadInstallations() {
@@ -201,6 +203,19 @@ public class AppsPresenter implements Presenter {
         }, error -> {
           crashReport.log(error);
           //throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleBottomNavigationEvents() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> appsNavigator.bottomNavigation())
+        .observeOn(viewScheduler)
+        .doOnNext(navigated -> view.scrollToTop())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 

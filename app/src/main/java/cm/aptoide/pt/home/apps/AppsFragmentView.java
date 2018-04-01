@@ -61,4 +61,6 @@ public interface AppsFragmentView extends View {
   Observable<Void> imageClick();
 
   void removeInstalledDownloads(List<App> installedDownloadsList);
+
+  void scrollToTop();
 }
