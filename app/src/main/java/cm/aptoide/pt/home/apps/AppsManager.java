@@ -201,8 +201,9 @@ public class AppsManager {
   }
 
   public Completable updateAll() {
-    return updatesManager.updateAll()
+    return updatesManager.getAllUpdates()
         .first()
+        .filter(updatesList -> !updatesList.isEmpty())
         .flatMapIterable(updatesList -> updatesList)
         .flatMap(update -> {
           Download download = downloadFactory.create(update);

@@ -45,7 +45,7 @@ public class UpdatesManager {
     return updateRepository.get(packageName);
   }
 
-  public Observable<List<Update>> updateAll() {
+  public Observable<List<Update>> getAllUpdates() {
     return updateRepository.getAll(false);
   }
 
