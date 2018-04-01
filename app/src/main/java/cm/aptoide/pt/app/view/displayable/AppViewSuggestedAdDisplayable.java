@@ -8,12 +8,12 @@ import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 /**
  * Created by neuro on 01-08-2017.
  */
-public class AppViewAdDisplayable extends GridAdDisplayable {
+public class AppViewSuggestedAdDisplayable extends GridAdDisplayable {
 
-  public AppViewAdDisplayable() {
+  public AppViewSuggestedAdDisplayable() {
   }
 
-  public AppViewAdDisplayable(MinimalAd minimalAd, NavigationTracker navigationTracker) {
+  public AppViewSuggestedAdDisplayable(MinimalAd minimalAd, NavigationTracker navigationTracker) {
     // TODO: 01-08-2017 neuro tags
     super(minimalAd, null, navigationTracker);
   }
@@ -23,6 +23,6 @@ public class AppViewAdDisplayable extends GridAdDisplayable {
   }
 
   @Override public int getViewLayout() {
-    return R.layout.displayable_app_view_ad;
+    return R.layout.displayable_app_view_suggested_ad;
   }
 }

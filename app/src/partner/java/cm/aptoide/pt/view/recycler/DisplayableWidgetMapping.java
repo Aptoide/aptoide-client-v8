@@ -11,7 +11,6 @@ import cm.aptoide.pt.app.view.GridAppWidget;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppWidget;
 import cm.aptoide.pt.app.view.OtherVersionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewAdDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
@@ -236,7 +235,7 @@ public class DisplayableWidgetMapping {
         AppViewSuggestedAppDisplayable.class));
 
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AppViewAdWidget.class, AppViewAdDisplayable.class));
+        new DisplayableWidgetMapping(AppViewAdWidget.class, AppViewSuggestedAdDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(OtherVersionWidget.class, OtherVersionDisplayable.class));
