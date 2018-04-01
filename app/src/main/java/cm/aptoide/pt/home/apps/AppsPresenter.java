@@ -83,6 +83,25 @@ public class AppsPresenter implements Presenter {
     observeDownloadInstallations();
 
     handleBottomNavigationEvents();
+
+    observeUpdateInstallations();
+  }
+
+  private void observeUpdateInstallations() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(computation)
+        .flatMap(__ -> appsManager.getInstalledUpdates())
+        .observeOn(viewScheduler)
+        .filter(installedUpdatesList -> !installedUpdatesList.isEmpty())
+        .doOnNext(installedUpdatesList -> view.removeInstalledUpdates(installedUpdatesList))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+
+          //crashReport.log(error);
+          throw new OnErrorNotImplementedException(error);
+        });
   }
 
   private void observeDownloadInstallations() {
@@ -313,9 +332,7 @@ public class AppsPresenter implements Presenter {
         .doOnNext(list -> view.showUpdatesList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> {
-          crashReport.log(err);
-        });
+        }, err -> crashReport.log(err));
   }
 
   private void loadUserImage() {

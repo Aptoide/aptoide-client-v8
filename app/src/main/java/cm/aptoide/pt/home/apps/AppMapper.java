@@ -51,7 +51,7 @@ public class AppMapper {
     return status;
   }
 
-  public List<App> getInstalledApps(List<Installed> installeds) {
+  public List<App> mapInstalledToInstalledApps(List<Installed> installeds) {
     List<App> installedAppsList = new ArrayList<>();
 
     for (int i = 0; i < installeds.size(); i++) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -75,7 +76,7 @@ public class AppsManager {
         .flatMapIterable(list -> list)
         .flatMap(item -> updatesManager.filterUpdates(item))
         .toList()
-        .map(installeds -> appMapper.getInstalledApps(installeds));
+        .map(installeds -> appMapper.mapInstalledToInstalledApps(installeds));
   }
 
   public Observable<List<App>> getDownloadApps() {
@@ -233,5 +234,43 @@ public class AppsManager {
               .toList()
               .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
+  }
+
+  public Observable<List<App>> getInstalledUpdates() {
+    return installManager.getInstallations()
+        .flatMap(installations -> {
+          if (installations == null || installations.isEmpty()) {
+            return Observable.empty();
+          }
+          return Observable.just(installations)
+              .flatMapIterable(installs -> installs)
+              .filter(install -> install.getType() == UPDATE)
+              .flatMap(install -> filterNonInstalled(install))
+              .toList()
+              .filter(updatesList -> !updatesList.isEmpty())
+              .map(updatesList -> appMapper.getUpdatesList(updatesList));
+        });
+  }
+
+  private Observable<Install> filterNonInstalled(Install install) {
+
+    return installManager.fetchInstalled()
+        .flatMapIterable(list -> list)
+        .flatMap(item -> updatesManager.filterUpdates(item))
+        .toList()
+        .flatMap(installeds -> confirmInstallation(installeds, install));
+  }
+
+  private Observable<Install> confirmInstallation(List<Installed> installeds, Install install) {
+    for (Installed installed : installeds) {
+      if (installed.getPackageName()
+          .equals(install.getPackageName())
+          && installed.getVersionCode() == install.getVersionCode()
+          && installed.getVersionName()
+          .equals(install.getVersionName())) {
+        return Observable.just(install);
+      }
+    }
+    return Observable.empty();
   }
 }

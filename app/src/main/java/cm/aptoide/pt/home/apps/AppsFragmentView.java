@@ -63,4 +63,6 @@ public interface AppsFragmentView extends View {
   void removeInstalledDownloads(List<App> installedDownloadsList);
 
   void scrollToTop();
+
+  void removeInstalledUpdates(List<App> installedUpdatesList);
 }
