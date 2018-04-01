@@ -71,6 +71,7 @@ public final class Database {
   private <E extends RealmObject> Observable<E> copyFromRealm(E object) {
     return Observable.just(object)
         .filter(data -> data.isLoaded())
+        .filter(realmObject -> realmObject.isValid())
         .map(realmObject -> get().copyFromRealm(realmObject))
         .observeOn(Schedulers.io());
   }
