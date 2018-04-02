@@ -35,6 +35,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AdultContentAnalytics;
+import cm.aptoide.pt.account.view.GenericWebviewFragment;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -84,6 +85,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String ADULT_CONTENT_PREFERENCE_VIEW_KEY = "matureChkBox";
   private static final String EXCLUDED_UPDATES_PREFERENCE_KEY = "excludedUpdates";
   private static final String SEND_FEEDBACK_PREFERENCE_KEY = "sendFeedback";
+  private static final String TERMS_AND_CONDITIONS_PREFERENCE_KEY = "termsConditions";
 
   protected Toolbar toolbar;
   private Context context;
@@ -103,6 +105,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private SwitchPreferenceCompat socialCampaignNotifications;
   private Preference excludedUpdates;
   private Preference sendFeedback;
+  private Preference termsAndConditions;
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
@@ -214,6 +217,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     excludedUpdates = findPreference(EXCLUDED_UPDATES_PREFERENCE_KEY);
     sendFeedback = findPreference(SEND_FEEDBACK_PREFERENCE_KEY);
+    termsAndConditions = findPreference(TERMS_AND_CONDITIONS_PREFERENCE_KEY);
 
     setupClickHandlers();
   }
@@ -262,6 +266,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
     subscriptions.add(RxPreference.clicks(sendFeedback)
         .subscribe(
             clicked -> fragmentNavigator.navigateTo(SendFeedbackFragment.newInstance(), true)));
+
+    subscriptions.add(RxPreference.clicks(termsAndConditions)
+        .subscribe(clicked -> fragmentNavigator.navigateTo(
+            GenericWebviewFragment.newInstance(getString(R.string.terms_conditions_navigation_url)),
+            true)));
 
     subscriptions.add(accountManager.enabled()
         .observeOn(AndroidSchedulers.mainThread())

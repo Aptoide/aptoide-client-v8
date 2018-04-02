@@ -40,7 +40,7 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
     float rating = ad.getData()
         .getStars();
     if (rating == 0) {
-      this.rating.setText("- -");
+      this.rating.setText(R.string.appcardview_title_no_starts);
     } else {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }

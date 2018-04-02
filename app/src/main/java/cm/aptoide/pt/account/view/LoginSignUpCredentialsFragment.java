@@ -108,10 +108,12 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
-        .toString());
-    outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
-        .toString());
+    if (outState != null) {
+      outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
+          .toString());
+      outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
+          .toString());
+    }
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -145,6 +147,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return RxView.clicks(facebookLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
             getStartupClickOrigin()));
+  }
+
+  @Override public Observable<Void> termsAndConditionsClick() {
+    return RxView.clicks(termsAndConditions);
   }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {

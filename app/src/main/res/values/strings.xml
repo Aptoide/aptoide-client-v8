@@ -61,7 +61,7 @@
   <string name="appview_rate_this_app_text">Rate this app</string>
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
-
+  <string name="appcardview_title_no_starts" translatable="false">- -</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -399,7 +399,7 @@
   <string name="download_retry">Retry</string>
   <string name="retry_connection">Retry connection</string>
   <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
-  <string name="could_not_connect_internet">couldn\'t connect to the Internet</string>
+  <string name="could_not_connect_internet">Couldn\'t connect to the Internet</string>
 
   <!-- Vote -->
   <string name="reply">Reply</string>
@@ -470,7 +470,8 @@
   <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
   <string name="notifications_empty_state_main_title">There are no notifications yet!</string>
-  <string name="notifications_empty_state_sub_title">Recommend apps to your friends and followers</string>
+  <string name="notifications_empty_state_sub_title">Follow friends to be notified about the best apps</string>
+  <string name="notifications_empty_state_button_follow_friends">FIND FRIENDS</string>
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
 
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
@@ -524,5 +525,8 @@
   <string name="shortcut_button_pick_app">Surprise me</string>
 
   <string name="all_button_ok">OK</string>
+
+  <!--Terms and Conditions URL navigation-->
+  <string name="terms_conditions_navigation_url" translatable="false">https://terms.aptoide.com</string>
 </resources>
 

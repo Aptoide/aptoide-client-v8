@@ -46,12 +46,10 @@
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/retry"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="32dp"
-        android:layout_marginLeft="44dp"
-        android:layout_marginRight="44dp"
         android:focusable="true"
         android:fontFamily="@string/font_family_medium"
         android:gravity="center"
