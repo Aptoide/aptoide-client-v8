@@ -54,8 +54,7 @@ public class AppMapper {
   public List<App> mapInstalledToInstalledApps(List<Installed> installeds) {
     List<App> installedAppsList = new ArrayList<>();
 
-    for (int i = 0; i < installeds.size(); i++) {
-      Installed installed = installeds.get(i);
+    for (Installed installed : installeds) {
       installedAppsList.add(new InstalledApp(installed.getName(), installed.getPackageName(),
           installed.getVersionName(), installed.getIcon()));
     }
@@ -64,8 +63,7 @@ public class AppMapper {
 
   public List<App> mapUpdateToUpdateAppList(List<Update> updates) {
     List<App> updatesList = new ArrayList<>();
-    for (int i = 0; i < updates.size(); i++) {
-      Update update = updates.get(i);
+    for (Update update : updates) {
       updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
           UpdateApp.UpdateStatus.UPDATE, update.getAppId()));
