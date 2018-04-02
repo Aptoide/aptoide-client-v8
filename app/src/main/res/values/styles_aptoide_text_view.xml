@@ -58,6 +58,11 @@
     <item name="android:lineSpacingExtra">5dp</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XS">
+    <item name="android:textSize">12sp</item>
+    <item name="android:lineSpacingExtra">5dp</item>
+  </style>
+
 
   <!-- Colors-->
   <style name="Aptoide.TextView.Regular.XS.GreyFog">

@@ -24,9 +24,11 @@ public class HomePresenter implements Presenter {
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
   private final AptoideAccountManager accountManager;
+  private final HomeAnalytics homeAnalytics;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager) {
+      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager,
+      HomeAnalytics homeAnalytics) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
@@ -34,6 +36,7 @@ public class HomePresenter implements Presenter {
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
     this.accountManager = accountManager;
+    this.homeAnalytics = homeAnalytics;
   }
 
   @Override public void present() {
@@ -42,6 +45,8 @@ public class HomePresenter implements Presenter {
     loadUserImage();
 
     handleAppClick();
+
+    handleRecommendedAppClick();
 
     handleAdClick();
 
@@ -98,7 +103,28 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
             .observeOn(viewScheduler)
-            .doOnNext(app -> homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName()))
+            .doOnNext(app -> homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(),
+                app.getTag()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleRecommendedAppClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.recommendedAppClicked()
+            .observeOn(viewScheduler)
+            .doOnNext(click -> homeNavigator.navigateToAppView(click.getApp()
+                .getAppId(), click.getApp()
+                .getPackageName(), click.getApp()
+                .getTag()))
+            .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
+                .getRating(), click.getApp()
+                .getPackageName(), click.getPosition(), click.getType()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

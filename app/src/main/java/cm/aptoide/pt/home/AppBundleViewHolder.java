@@ -12,5 +12,5 @@ abstract class AppBundleViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
   }
 
-  public abstract void setBundle(HomeBundle homeBundle);
+  public abstract void setBundle(HomeBundle homeBundle, int position);
 }

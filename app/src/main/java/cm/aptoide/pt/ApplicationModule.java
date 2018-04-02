@@ -1107,8 +1107,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AdMapper();
   }
 
-  @Singleton @Provides BundlesResponseMapper providesBundlesMapper() {
-    return new BundlesResponseMapper();
+  @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
+      @Named("marketName") String marketName) {
+    return new BundlesResponseMapper(marketName);
   }
 
   @Singleton @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(

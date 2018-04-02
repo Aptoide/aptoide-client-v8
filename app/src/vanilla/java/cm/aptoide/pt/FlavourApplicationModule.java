@@ -11,6 +11,7 @@ import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.home.BottomNavigationAnalytics;
+import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -121,7 +122,8 @@ import javax.inject.Singleton;
         BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS,
         AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
         AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
-        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP,
+        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
+        TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT);
   }
 }

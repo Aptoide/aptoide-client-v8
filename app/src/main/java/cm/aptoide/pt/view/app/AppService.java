@@ -69,7 +69,7 @@ public class AppService {
         list.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getDownloads(), app.getPackageName(), app.getId()));
+            .getDownloads(), app.getPackageName(), app.getId(), ""));
       }
       return Observable.just(new AppsList(list, false, listApps.getDataList()
           .getNext()));

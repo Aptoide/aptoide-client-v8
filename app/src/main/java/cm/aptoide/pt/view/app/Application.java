@@ -11,15 +11,17 @@ public class Application {
   private final int downloads;
   private final long appId;
   private final String packageName;
+  private final String tag;
 
   public Application(String name, String icon, float rating, int downloads, String packageName,
-      long appId) {
+      long appId, String tag) {
     this.name = name;
     this.icon = icon;
     this.rating = rating;
     this.downloads = downloads;
     this.appId = appId;
     this.packageName = packageName;
+    this.tag = tag;
   }
 
   public Application() {
@@ -29,6 +31,7 @@ public class Application {
     downloads = -1;
     appId = -1;
     packageName = null;
+    tag = "";
   }
 
   public long getAppId() {
@@ -53,5 +56,9 @@ public class Application {
 
   public String getName() {
     return name;
+  }
+
+  public String getTag() {
+    return tag;
   }
 }

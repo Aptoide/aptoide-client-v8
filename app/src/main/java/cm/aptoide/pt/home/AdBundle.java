@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,13 +11,16 @@ import java.util.List;
 
 public class AdBundle implements HomeBundle {
   private final String title;
-  private final List<GetAdsResponse.Ad> ads;
+  private final List<AdClick> ads;
   private final Event event;
   private final String tag;
 
-  public AdBundle(String title, List<GetAdsResponse.Ad> ads, Event event, String tag) {
+  public AdBundle(String title, AdsTagWrapper ads, Event event, String tag) {
     this.title = title;
-    this.ads = ads;
+    this.ads = new ArrayList<>();
+    for (GetAdsResponse.Ad ad : ads.getAds()) {
+      this.ads.add(new AdClick(ad, tag));
+    }
     this.event = event;
     this.tag = tag;
   }
@@ -41,7 +45,7 @@ public class AdBundle implements HomeBundle {
     return tag;
   }
 
-  public List<GetAdsResponse.Ad> getAds() {
+  public List<AdClick> getAds() {
     return ads;
   }
 }

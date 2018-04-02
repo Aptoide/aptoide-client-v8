@@ -525,6 +525,9 @@
   <string name="shortcut_button_pick_app">Surprise me</string>
 
   <string name="all_button_ok">OK</string>
+  <string name="home_recommends">%s recommends</string>
+  <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
+  <string name="appview_button_recommend">Recommend</string>
 
   <!--Terms and Conditions URL navigation-->
   <string name="terms_conditions_navigation_url" translatable="false">https://terms.aptoide.com</string>
