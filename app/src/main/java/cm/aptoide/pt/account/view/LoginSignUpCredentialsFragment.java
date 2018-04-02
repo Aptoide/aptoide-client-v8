@@ -108,7 +108,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    if (outState != null) {
+    if (outState != null && aptoideEmailEditText != null && aptoidePasswordEditText != null) {
       outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
           .toString());
       outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
