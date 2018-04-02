@@ -64,6 +64,8 @@ public class TimelineAnalytics {
   public static final String TIMELINE_OPENED = "Apps_Timeline_Open";
   public static final String SOCIAL_CARD_PREVIEW = "Apps_Timeline_Social_Card_Preview";
   public static final String CARD_ACTION = "Apps_Timeline_Card_Action";
+  public static final String MESSAGE_IMPRESSION = "Message_Impression";
+  public static final String MESSAGE_INTERACT = "Message_Interact";
   private static final String CARD_TYPE = "card_type";
   private static final String ACTION = "action";
   private static final String SOCIAL_ACTION = "social_action";
@@ -805,5 +807,26 @@ public class TimelineAnalytics {
 
   private String getViewName(boolean isCurrent) {
     return navigationTracker.getViewName(isCurrent);
+  }
+
+  public void sendRecommendedAppImpressionEvent(String packageName) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("type", "recommend app");
+    data.put("fragment", getViewName(true));
+    data.put("package_name", packageName);
+
+    analyticsManager.logEvent(data, MESSAGE_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendRecommendedAppInteractEvent(String packageName, String action) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("type", "recommend app");
+    data.put("fragment", getViewName(true));
+    data.put("package_name", packageName);
+    data.put("action", action);
+
+    analyticsManager.logEvent(data, MESSAGE_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 }

@@ -6,6 +6,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.settings.NewAccountFragment;
+import java.util.AbstractMap;
 import rx.Observable;
 
 /**
@@ -25,9 +26,9 @@ public class HomeNavigator {
     this.bottomNavigationMapper = bottomNavigationMapper;
   }
 
-  public void navigateToAppView(long appId, String packageName) {
+  public void navigateToAppView(long appId, String packageName, String tag) {
     fragmentNavigator.navigateTo(
-        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, ""),
+        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag),
         true);
   }
 
@@ -38,8 +39,9 @@ public class HomeNavigator {
         .getTag(), StoreContext.home, false), true);
   }
 
-  public void navigateToAppView(SearchAdResult searchAdResult) {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstance(searchAdResult), true);
+  public void navigateToAppView(AbstractMap.SimpleEntry<String, SearchAdResult> entry) {
+    fragmentNavigator.navigateTo(AppViewFragment.newInstance(entry.getValue(), entry.getKey()),
+        true);
   }
 
   public Observable<Integer> bottomNavigation() {

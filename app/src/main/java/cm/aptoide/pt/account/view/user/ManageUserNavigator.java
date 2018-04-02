@@ -1,19 +1,14 @@
 package cm.aptoide.pt.account.view.user;
 
+import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.store.view.home.HomeFragment;
 
 public class ManageUserNavigator {
 
   private final FragmentNavigator navigator;
-  private final String defaultStore;
-  private final String defaultTheme;
 
-  public ManageUserNavigator(FragmentNavigator navigator, String defaultStore,
-      String defaultTheme) {
+  public ManageUserNavigator(FragmentNavigator navigator) {
     this.navigator = navigator;
-    this.defaultStore = defaultStore;
-    this.defaultTheme = defaultTheme;
   }
 
   public void toProfileStepOne() {
@@ -22,7 +17,7 @@ public class ManageUserNavigator {
   }
 
   public void goToHome() {
-    navigator.navigateToCleaningBackStack(HomeFragment.newInstance(defaultStore, defaultTheme),
+    navigator.navigateToCleaningBackStack(new BottomHomeFragment(),
         true);
   }
 

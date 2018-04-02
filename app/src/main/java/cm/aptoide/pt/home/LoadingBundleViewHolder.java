@@ -11,7 +11,7 @@ class LoadingBundleViewHolder extends AppBundleViewHolder {
     super(view);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     //do nothing
   }
 }
