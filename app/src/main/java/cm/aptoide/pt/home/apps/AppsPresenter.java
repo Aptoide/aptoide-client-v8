@@ -208,7 +208,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.updateApp()
             .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
-                .flatMap(__ -> {
+                .flatMap(success -> {
                   if (appsManager.showWarning()) {
                     return view.showRootWarning()
                         .doOnNext(answer -> appsManager.storeRootAnswer(answer));
@@ -216,7 +216,8 @@ public class AppsPresenter implements Presenter {
                   return Observable.just(true);
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
-                .flatMapCompletable(__3 -> appsManager.updateApp(app))))
+                .flatMapCompletable(__3 -> appsManager.updateApp(app)))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -242,8 +243,9 @@ public class AppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.updateAll())
-        .flatMap(__ -> permissionManager.requestExternalStoragePermission(permissionService))
+        .flatMap(created -> view.updateAll()
+            .flatMap(__ -> permissionManager.requestExternalStoragePermission(permissionService))
+            .retry())
         .observeOn(computation)
         .flatMapCompletable(app -> appsManager.updateAll())
         .observeOn(viewScheduler)
@@ -278,10 +280,11 @@ public class AppsPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> Observable.merge(view.resumeDownload(), view.retryDownload()))
-        .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
-            .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
-            .flatMapCompletable(__ -> appsManager.resumeDownload(app)))
+        .flatMap(created -> Observable.merge(view.resumeDownload(), view.retryDownload())
+            .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
+                .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
+                .flatMapCompletable(__ -> appsManager.resumeDownload(app)))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
