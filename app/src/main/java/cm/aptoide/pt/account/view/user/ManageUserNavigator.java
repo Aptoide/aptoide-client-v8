@@ -6,14 +6,9 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 public class ManageUserNavigator {
 
   private final FragmentNavigator navigator;
-  private final String defaultStore;
-  private final String defaultTheme;
 
-  public ManageUserNavigator(FragmentNavigator navigator, String defaultStore,
-      String defaultTheme) {
+  public ManageUserNavigator(FragmentNavigator navigator) {
     this.navigator = navigator;
-    this.defaultStore = defaultStore;
-    this.defaultTheme = defaultTheme;
   }
 
   public void toProfileStepOne() {

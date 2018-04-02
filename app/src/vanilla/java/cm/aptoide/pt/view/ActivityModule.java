@@ -165,7 +165,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       AccountAnalytics accountAnalytics) {
     return new AccountNavigator(fragmentNavigator, accountManager, ((ActivityNavigator) activity),
         LoginManager.getInstance(), callbackManager, googleApiClient, PublishRelay.create(),
-        defaultStoreName, defaultTheme, "http://m.aptoide.com/account/password-recovery",
+        "http://m.aptoide.com/account/password-recovery",
         accountAnalytics);
   }
 
@@ -193,12 +193,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides ManageStoreNavigator provideManageStoreNavigator(
       FragmentNavigator fragmentNavigator) {
-    return new ManageStoreNavigator(fragmentNavigator, defaultStoreName, defaultTheme);
+    return new ManageStoreNavigator(fragmentNavigator);
   }
 
   @ActivityScope @Provides ManageUserNavigator provideManageUserNavigator(
       FragmentNavigator fragmentNavigator) {
-    return new ManageUserNavigator(fragmentNavigator, defaultStoreName, defaultTheme);
+    return new ManageUserNavigator(fragmentNavigator);
   }
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(

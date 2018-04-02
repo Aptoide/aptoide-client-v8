@@ -8,14 +8,9 @@ import cm.aptoide.pt.navigator.Result;
 public class ManageStoreNavigator {
 
   private final FragmentNavigator fragmentNavigator;
-  private String defaultStore;
-  private String defaultTheme;
 
-  public ManageStoreNavigator(FragmentNavigator fragmentNavigator, String defaultStore,
-      String defaultTheme) {
+  public ManageStoreNavigator(FragmentNavigator fragmentNavigator) {
     this.fragmentNavigator = fragmentNavigator;
-    this.defaultStore = defaultStore;
-    this.defaultTheme = defaultTheme;
   }
 
   public void goBack() {

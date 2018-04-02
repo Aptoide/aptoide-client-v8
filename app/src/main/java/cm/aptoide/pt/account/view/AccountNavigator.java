@@ -47,15 +47,13 @@ public class AccountNavigator {
   private final GoogleApiClient client;
   private final PublishRelay<FacebookLoginResult> facebookLoginSubject;
   private final String recoverPasswordUrl;
-  private final String defaultStore;
-  private final String defaultTheme;
   private final AccountAnalytics accountAnalytics;
 
   public AccountNavigator(FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       ActivityNavigator activityNavigator, LoginManager facebookLoginManager,
       CallbackManager callbackManager, GoogleApiClient client,
-      PublishRelay<FacebookLoginResult> facebookLoginSubject, String defaultStore,
-      String defaultTheme, String recoverPasswordUrl, AccountAnalytics accountAnalytics) {
+      PublishRelay<FacebookLoginResult> facebookLoginSubject, String recoverPasswordUrl,
+      AccountAnalytics accountAnalytics) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
     this.activityNavigator = activityNavigator;
@@ -63,8 +61,6 @@ public class AccountNavigator {
     this.callbackManager = callbackManager;
     this.client = client;
     this.facebookLoginSubject = facebookLoginSubject;
-    this.defaultStore = defaultStore;
-    this.defaultTheme = defaultTheme;
     this.recoverPasswordUrl = recoverPasswordUrl;
     this.accountAnalytics = accountAnalytics;
   }
