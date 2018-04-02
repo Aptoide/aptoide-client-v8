@@ -149,7 +149,7 @@ public class NewAccountFragment extends BackButtonFragment
   }
 
   @Override public void showAccount(Account account) {
-    if (TextUtils.isEmpty(account.getNickname())) {
+    if (TextUtils.isEmpty(account.getEmail())) {
       showLoginAccountDisplayable();
     } else if (account.getStore()
         .getName()
