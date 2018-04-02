@@ -3,7 +3,6 @@
 
   <!-- Stores themes -->
   <color name="default_color">#e17117</color>
-  <color name="default_background_color">#f7f6f4</color>
 
   <color name="amber">#ffc107</color>
   <color name="black">#000000</color>
