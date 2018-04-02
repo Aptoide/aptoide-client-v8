@@ -25,7 +25,7 @@
 
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two">Create a Personal Store</string>
-  <string name="wizard_sub_title_viewpager_two">Share your favourite apps \n with the Aptoide Community</string>
+  <string name="wizard_sub_title_viewpager_two">Share your favorite apps \n with the Aptoide Community</string>
 
   <!-- WIZARD PAGE 3 -->
   <string name="login_sign_up_title">Join Our Community</string>

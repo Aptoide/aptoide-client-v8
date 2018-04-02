@@ -34,7 +34,7 @@ public class AppInBundleViewHolder extends AppViewHolder {
         .loadWithRoundCorners(app.getIcon(), 8, iconView, R.drawable.placeholder_square);
     float rating = app.getRating();
     if (rating == 0) {
-      this.rating.setText("- -");
+      this.rating.setText(R.string.appcardview_title_no_starts);
     } else {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
