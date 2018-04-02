@@ -95,7 +95,6 @@ import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
-import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
@@ -1106,11 +1105,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AdMapper providesAdMapper() {
     return new AdMapper();
-  }
-
-  @Singleton @Provides HomeAnalytics providesHomeAnalytics(AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new HomeAnalytics(navigationTracker, analyticsManager);
   }
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(

@@ -32,10 +32,10 @@ public class FakeBundleDataSource implements BundleDataSource {
   public List<HomeBundle> getFakeBundles() {
     List<Application> appsList = new ArrayList<>();
     String icon = "https://placeimg.com/640/480/any";
-    Application aptoide = new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, "", "");
+    Application aptoide = new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, "");
     appsList.add(aptoide);
     Application facebook =
-        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30, "", "");
+        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30, "");
     appsList.add(facebook);
     appsList.add(aptoide);
     appsList.add(facebook);
@@ -46,11 +46,11 @@ public class FakeBundleDataSource implements BundleDataSource {
 
     List<Application> appsForEditorsList = new ArrayList<>();
     FeatureGraphicApplication aptoideFeatureGraphic =
-        new FeatureGraphicApplication("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, icon, "", "");
+        new FeatureGraphicApplication("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, icon, "");
     appsList.add(aptoideFeatureGraphic);
     FeatureGraphicApplication facebookFeatureGraphic =
         new FeatureGraphicApplication("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com",
-            30, icon, "", "");
+            30, icon, "");
     appsForEditorsList.add(facebookFeatureGraphic);
     appsForEditorsList.add(aptoideFeatureGraphic);
     appsForEditorsList.add(facebookFeatureGraphic);
@@ -77,7 +77,7 @@ public class FakeBundleDataSource implements BundleDataSource {
     List<Application> apps = new ArrayList<>();
     apps.add(new Application("asf wallet",
         "http://pool.img.aptoide.com/asf-store/ace60f6352f6dd9289843b5b0b2ab3d4_icon.png", 5,
-        1000000, "asf.wallet.android.com", 36057221, "", ""));
+        1000000, "asf.wallet.android.com", 36057221, ""));
     appBundles.add(new SocialBundle(apps, HomeBundle.BundleType.SOCIAL, null, "TAG",
         "http://pool.img.aptoide.com/asf-store/3bf5adf05843f9f28c486d5ddef8f873_ravatar.jpg",
         "asf-store"));

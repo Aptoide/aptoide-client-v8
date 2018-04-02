@@ -122,15 +122,12 @@ public class BundlesResponseMapper {
         applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
-            app.getStore()
-                .getName()));
+            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag));
       } else {
         applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getStore()
-            .getName()));
+            .getPdownloads(), app.getPackageName(), app.getId(), tag));
       }
     }
 

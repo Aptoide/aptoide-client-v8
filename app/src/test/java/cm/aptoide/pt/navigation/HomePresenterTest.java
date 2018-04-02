@@ -77,7 +77,7 @@ public class HomePresenterTest {
         new AdMapper(), aptoideAccountManager, homeAnalytics);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
-            300, "", "");
+            300, "");
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
     bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
     localTopAppsBundle = bundlesModel.getList()
