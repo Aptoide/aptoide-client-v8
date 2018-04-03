@@ -42,6 +42,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
             .findAllSorted(Installed.NAME, Sort.ASCENDING)
             .asObservable()
             .unsubscribeOn(RealmSchedulers.getScheduler()))
+        .filter(installed -> installed.isValid())
         .flatMap(installed -> database.copyFromRealm(installed))
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io())

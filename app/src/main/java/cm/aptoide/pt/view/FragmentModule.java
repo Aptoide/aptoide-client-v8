@@ -34,6 +34,7 @@ import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
+import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
@@ -184,5 +185,11 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides HomeAnalytics providesHomeAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new HomeAnalytics(navigationTracker, analyticsManager);
+  }
+
+  @FragmentScope @Provides AppsNavigator providesAppsNavigator(FragmentNavigator fragmentNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
+    return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
+        bottomNavigationMapper);
   }
 }
