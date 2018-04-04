@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
@@ -59,7 +60,8 @@ public class BottomNavigationNavigator {
         break;
       case 3:
         bottomNavigationAnalytics.sendNavigateToAppsClickEvent();
-        navigateToApps();
+        AppsFragment appsFragment = new AppsFragment();
+        navigateToApps(appsFragment);
         break;
     }
   }
@@ -76,8 +78,8 @@ public class BottomNavigationNavigator {
     navigateToSelectedFragment(2, myStoresFragment);
   }
 
-  public void navigateToApps() {
-
+  public void navigateToApps(AppsFragment appsFragment) {
+    navigateToSelectedFragment(3, appsFragment);
   }
 
   public void navigateBack() {
@@ -127,7 +129,7 @@ public class BottomNavigationNavigator {
         position = 2;
         break;
       case 3:
-        fragment = new BottomHomeFragment();
+        fragment = new AppsFragment();
         position = 3;
         break;
     }
