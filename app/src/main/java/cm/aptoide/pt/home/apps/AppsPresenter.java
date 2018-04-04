@@ -85,6 +85,29 @@ public class AppsPresenter implements Presenter {
     handleBottomNavigationEvents();
 
     observeUpdateInstallations();
+
+    handleRefreshApps();
+  }
+
+  private void handleRefreshApps() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.refreshApps()
+            .flatMapCompletable(__ -> appsManager.refreshAllUpdates()
+                .observeOn(viewScheduler)
+                .doOnCompleted(() -> view.hidePullToRefresh())
+                .doOnError(throwable -> {
+                  view.hidePullToRefresh();
+                  throwable.printStackTrace();
+                }))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+          view.hidePullToRefresh();
+        }, error -> {
+          view.hidePullToRefresh();
+          crashReport.log(error);
+        });
   }
 
   private void observeUpdateInstallations() {
@@ -98,9 +121,7 @@ public class AppsPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-
-          //crashReport.log(error);
-          throw new OnErrorNotImplementedException(error);
+          crashReport.log(error);
         });
   }
 
@@ -222,7 +243,6 @@ public class AppsPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> {
           crashReport.log(error);
-          //throw new OnErrorNotImplementedException(error);
         });
   }
 

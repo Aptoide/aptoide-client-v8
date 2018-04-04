@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +32,9 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +66,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
   private BottomNavigationActivity bottomNavigationActivity;
+  private SwipeRefreshLayout swipeRefreshLayout;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -82,8 +86,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
     adapter =
         new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
     setupRecyclerView();
-
     buildIgnoreUpdatesDialog();
 
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
@@ -139,6 +143,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_apps, container, false);
   }
 
@@ -244,7 +249,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUnknownErrorMessage() {
-    ShowMessage.asSnack(this, R.string.unknown_error);
+    Snackbar.make(this.getView(), R.string.unknown_error, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void removeExcludedUpdates(List<App> excludedUpdatesList) {
@@ -288,8 +294,20 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.removeUpdatesList(installedUpdatesList);
   }
 
+  @Override public Observable<Void> refreshApps() {
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
+  @Override public void hidePullToRefresh() {
+    Log.d("testesfilipe", "hidePullToRefresh: i am inside the hidePullToRefresh on the fragment ");
+    if (swipeRefreshLayout.isRefreshing()) {
+      swipeRefreshLayout.setRefreshing(false);
+    }
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
+    swipeRefreshLayout = null;
     ignoreUpdateDialog = null;
     recyclerView = null;
     adapter = null;

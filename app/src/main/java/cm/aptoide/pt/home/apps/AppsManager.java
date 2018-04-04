@@ -254,7 +254,6 @@ public class AppsManager {
   }
 
   private Observable<Install> filterNonInstalled(Install install) {
-
     return installManager.fetchInstalled()
         .flatMapIterable(list -> list)
         .flatMap(item -> updatesManager.filterUpdates(item))
@@ -273,5 +272,9 @@ public class AppsManager {
       }
     }
     return Observable.empty();
+  }
+
+  public Completable refreshAllUpdates() {
+    return updatesManager.refreshUpdates();
   }
 }
