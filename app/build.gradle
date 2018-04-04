@@ -239,8 +239,6 @@ android {
     variant.buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
     variant.buildConfigField "int", "IN_BILLING_SUPPORTED_API_VERSION",
         project.IN_BILLING_SUPPORTED_API_VERSION
-    variant.buildConfigField "String", "MOPUB_NATIVE_AD_UNIT_ID",
-        "\"" + project.MOPUB_NATIVE_AD_UNIT_ID + "\""
     variant.buildConfigField "int", "ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS",
         project.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS
     variant.buildConfigField "int", "ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS",
