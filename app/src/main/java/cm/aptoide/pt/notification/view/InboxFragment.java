@@ -12,7 +12,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
@@ -67,12 +66,11 @@ public class InboxFragment extends BaseToolbarFragment
     emptyState = (LinearLayout) view.findViewById(R.id.empty_state);
 
     AptoideApplication application = ((AptoideApplication) getContext().getApplicationContext());
-    attachPresenter(
-        new InboxPresenter(this, ((ActivityResultNavigator) getContext()).getInboxNavigator(),
-            ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
-            CrashReport.getInstance(),
-            ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
-            application.getNotificationAnalytics(), AndroidSchedulers.mainThread()));
+    attachPresenter(new InboxPresenter(this,
+        ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter(),
+        CrashReport.getInstance(),
+        ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker(),
+        application.getNotificationAnalytics(), AndroidSchedulers.mainThread()));
   }
 
   @Override public void showNotifications(List<AptoideNotification> notifications) {

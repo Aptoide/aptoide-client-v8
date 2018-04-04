@@ -93,9 +93,6 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newListStoresFragment();
 
-  @Deprecated Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
-      StoreContext storeContext);
-
   @Deprecated Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
       StoreContext storeName);
 

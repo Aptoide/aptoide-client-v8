@@ -165,8 +165,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       AccountAnalytics accountAnalytics) {
     return new AccountNavigator(fragmentNavigator, accountManager, ((ActivityNavigator) activity),
         LoginManager.getInstance(), callbackManager, googleApiClient, PublishRelay.create(),
-        "http://m.aptoide.com/account/password-recovery",
-        accountAnalytics);
+        "http://m.aptoide.com/account/password-recovery", accountAnalytics);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {
@@ -202,9 +201,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
-      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
-      NotificationNavigator notificationNavigator) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator, notificationNavigator);
+      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator);
   }
 
   @ActivityScope @Provides NotificationNavigator provideNotificationNavigator(

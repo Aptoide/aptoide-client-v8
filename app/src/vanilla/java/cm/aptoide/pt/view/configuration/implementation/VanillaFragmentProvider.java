@@ -19,7 +19,6 @@ import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.GetStoreFragment;
 import cm.aptoide.pt.store.view.GetStoreWidgetsFragment;
@@ -170,11 +169,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
 
   @Override public Fragment newListStoresFragment() {
     return new ListStoresFragment();
-  }
-
-  @Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
-      StoreContext storeContext) {
-    return TimelineFragment.newInstance(action, userId, storeId, storeContext);
   }
 
   @Override public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
