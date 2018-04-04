@@ -341,10 +341,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("setComment") Observable<SetComment> postStoreComment(@Body PostCommentForStore.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("setComment") Observable<SetComment> postTimelineComment(
-        @Body PostCommentForTimelineArticle.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(
         @Body SetReviewRatingRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

@@ -62,7 +62,6 @@ public class TimelineAnalytics {
   private final ReadPostsPersistence readPostsPersistence;
   private final List<Map<String, Object>> openTimelineEventsData;
   private final AnalyticsManager analyticsManager;
-  private String version;
 
   public TimelineAnalytics(NotificationAnalytics notificationAnalytics,
       NavigationTracker navigationTracker, ReadPostsPersistence readPostsPersistence,

@@ -5,16 +5,11 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
-import cm.aptoide.pt.dataprovider.ws.v7.PostDeleteRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.UnfollowUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.repository.exception.RepositoryIllegalArgumentException;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
-import rx.Completable;
 import rx.Single;
 
 /**
@@ -38,20 +33,6 @@ public class TimelineService {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-  }
-
-  public Completable like(String postId) {
-    return LikeCardRequest.of(postId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
-        sharedPreferences)
-        .observe()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new IllegalStateException(V7.getErrorMessage(response)));
-          }
-        })
-        .toCompletable();
   }
 
   public Single<User> getTimelineStats(boolean refresh, boolean bypassServerCache) {
@@ -83,48 +64,6 @@ public class TimelineService {
           }
           return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
         });
-  }
-
-  public Single<String> shareApp(String cardId, Long storeId) {
-    return ShareCardRequest.of(cardId, storeId, okhttp, converterFactory, bodyInterceptor,
-        tokenInvalidator, sharedPreferences)
-        .observe()
-        .toSingle()
-        .flatMap(response -> {
-          if (response.isOk()) {
-            return Single.just(response.getData()
-                .getCardUid());
-          }
-          return Single.error(new RepositoryIllegalArgumentException(V7.getErrorMessage(response)));
-        });
-  }
-
-  public Completable postComment(String cardId, String commentText) {
-    return PostCommentForTimelineArticle.of(cardId, commentText, bodyInterceptor, okhttp,
-        converterFactory, tokenInvalidator, sharedPreferences)
-        .observe()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new IllegalStateException(V7.getErrorMessage(response)));
-          }
-        })
-        .toCompletable();
-  }
-
-  public Completable deletePost(String postId) {
-    return PostDeleteRequest.of(postId, bodyInterceptor, okhttp, converterFactory, tokenInvalidator,
-        sharedPreferences)
-        .observe()
-        .toCompletable();
-  }
-
-  public Completable unfollowUser(Long userId) {
-    return UnfollowUserRequest.of(userId, bodyInterceptor, okhttp, converterFactory,
-        tokenInvalidator, sharedPreferences)
-        .observe()
-        .toCompletable();
   }
 
   public static class User {
