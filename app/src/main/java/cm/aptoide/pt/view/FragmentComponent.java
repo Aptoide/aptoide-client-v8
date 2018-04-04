@@ -13,6 +13,7 @@ import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.download.view.DownloadsFragment;
 import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
@@ -92,6 +93,8 @@ public interface FragmentComponent {
   void inject(ListStoreAppsFragment listStoreAppsFragment);
 
   void inject(BottomHomeFragment bottomHomeFragment);
+
+  void inject(AppsFragment appsFragment);
 
   void inject(NewAccountFragment newAccountFragment);
 }

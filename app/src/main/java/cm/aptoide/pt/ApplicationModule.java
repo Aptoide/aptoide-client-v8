@@ -150,6 +150,7 @@ import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.timeline.post.PostAnalytics;
+import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -239,6 +240,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       ConnectivityManager connectivityManager, TelephonyManager providesSystemService) {
     return new DownloadAnalytics(connectivityManager, providesSystemService, navigationTracker,
         analyticsManager);
+  }
+
+  @Singleton @Provides UpdatesAnalytics providesUpdatesAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new UpdatesAnalytics(analyticsManager, navigationTracker);
   }
 
   @Singleton @Provides TelephonyManager providesTelephonyManager() {
@@ -466,7 +472,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PendingIntent.FLAG_UPDATE_CURRENT);
 
     NotificationCompat.Action action =
-        new NotificationCompat.Action(R.drawable.ic_refresh_black_24dp,
+        new NotificationCompat.Action(R.drawable.ic_refresh_action_black,
             application.getString(R.string.generalscreen_short_root_install_timeout_error_action),
             retryPendingIntent);
 
