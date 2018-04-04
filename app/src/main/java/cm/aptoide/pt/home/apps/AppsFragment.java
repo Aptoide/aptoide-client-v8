@@ -87,9 +87,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter =
         new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
+    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     setupRecyclerView();
     buildIgnoreUpdatesDialog();
-
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
 
     attachPresenter(new AppsPresenter(this, new AppsManager(new UpdatesManager(
