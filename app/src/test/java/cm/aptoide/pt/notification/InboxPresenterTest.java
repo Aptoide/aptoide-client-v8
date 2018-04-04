@@ -29,7 +29,6 @@ public class InboxPresenterTest {
   private static int NUMBER_OF_NOTIFICATIONS_TEST = 50;
 
   @Mock private InboxFragment view;
-  @Mock private InboxNavigator navigator;
   @Mock private NotificationCenter notificationCenter;
   @Mock private NotificationAnalytics analytics;
   @Mock private CrashReport crashReport;
