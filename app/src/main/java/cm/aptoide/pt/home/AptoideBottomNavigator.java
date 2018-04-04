@@ -28,10 +28,9 @@ public interface AptoideBottomNavigator {
   void toogleBottomNavigation();
 
   /**
-   * Puts the focus on the button of the BottomNavigation request by the fragment that calls this
-   * method
+   * Puts the focus on the button of the BottomNavigation
    *
    * @param bottomNavigationItem Button to give focus
    */
-  void requestFocus(BottomNavigationItem bottomNavigationItem);
+  void setFocusOnBottomNavigationItem(int bottomNavigationItem);
 }

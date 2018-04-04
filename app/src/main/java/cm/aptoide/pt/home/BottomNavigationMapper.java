@@ -30,25 +30,25 @@ public class BottomNavigationMapper {
     return bottomNavigationItem;
   }
 
-  public int mapToBottomNavigationPosition(BottomNavigationItem bottomNavigationItem) {
-    int bottomNavigationId = -1;
-    switch (bottomNavigationItem) {
-      case HOME:
-        bottomNavigationId = 0;
+  public int mapToBottomNavigationPosition(Integer menuItemId) {
+    int bottomNavigationPosition = -1;
+    switch (menuItemId) {
+      case R.id.action_home:
+        bottomNavigationPosition = 0;
         break;
-      case SEARCH:
-        bottomNavigationId = 1;
+      case R.id.action_search:
+        bottomNavigationPosition = 1;
         break;
-      case STORES:
-        bottomNavigationId = 2;
+      case R.id.action_stores:
+        bottomNavigationPosition = 2;
         break;
-      case APPS:
-        bottomNavigationId = 3;
+      case R.id.action_apps:
+        bottomNavigationPosition = 3;
         break;
     }
-    if (bottomNavigationId == -1) {
+    if (bottomNavigationPosition == -1) {
       throw new IllegalStateException("The selected menuItem is not supported");
     }
-    return bottomNavigationId;
+    return bottomNavigationPosition;
   }
 }

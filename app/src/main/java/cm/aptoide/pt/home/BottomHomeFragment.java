@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -33,7 +32,8 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/03/2018.
  */
 
-public class BottomHomeFragment extends NavigationTrackFragment implements HomeView {
+public class BottomHomeFragment extends NavigationTrackFragment
+    implements HomeView, BottomNavigationFragmentView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
 
@@ -41,7 +41,6 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private static final int VISIBLE_THRESHOLD = 2;
-  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject Home home;
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
@@ -60,14 +59,6 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   private View noNetworkRetryButton;
   private View retryButton;
   private ImageView userAvatar;
-  private BottomNavigationActivity bottomNavigationActivity;
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    if (activity instanceof BottomNavigationActivity) {
-      bottomNavigationActivity = ((BottomNavigationActivity) activity);
-    }
-  }
 
   @Override public void onDestroy() {
     uiEventsListener = null;
@@ -89,9 +80,6 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    if (bottomNavigationActivity != null) {
-      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
-    }
     super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     if (savedInstanceState != null) {
@@ -147,11 +135,6 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     noNetworkErrorView = null;
     progressBar = null;
     super.onDestroyView();
-  }
-
-  @Override public void onDetach() {
-    bottomNavigationActivity = null;
-    super.onDetach();
   }
 
   @Override public void showHomeBundles(List<HomeBundle> bundles) {

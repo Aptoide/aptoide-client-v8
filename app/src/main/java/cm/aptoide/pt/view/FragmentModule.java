@@ -165,10 +165,6 @@ import rx.schedulers.Schedulers;
     return new Home(bundlesRepository);
   }
 
-  @FragmentScope @Provides BottomNavigationMapper providesBottomNavigationMapper() {
-    return new BottomNavigationMapper();
-  }
-
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
       AptoideAccountManager aptoideAccountManager, MyStoresNavigator navigator) {
     return new MyStoresPresenter((MyStoresView) fragment, AndroidSchedulers.mainThread(),

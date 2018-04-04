@@ -6,11 +6,11 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -47,6 +47,7 @@ public class MainPresenter implements Presenter {
   private final boolean firstCreated;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final Scheduler viewScheduler;
+  private final BottomNavigationNavigator bottomNavigationNavigator;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -55,7 +56,8 @@ public class MainPresenter implements Presenter {
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, boolean firstCreated,
-      AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler) {
+      AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler,
+      BottomNavigationNavigator bottomNavigationNavigator) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -72,6 +74,7 @@ public class MainPresenter implements Presenter {
     this.securePreferences = securePreferences;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.viewScheduler = viewScheduler;
+    this.bottomNavigationNavigator = bottomNavigationNavigator;
   }
 
   @Override public void present() {
@@ -172,8 +175,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void showHome() {
-    Fragment home = new BottomHomeFragment();
-    fragmentNavigator.navigateToWithoutBackSave(home, true);
+    bottomNavigationNavigator.navigateToHome(new BottomHomeFragment());
   }
 
   private void watchInstalls(List<Install> installs) {
