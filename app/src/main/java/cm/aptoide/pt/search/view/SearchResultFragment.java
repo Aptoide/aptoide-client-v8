@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -35,7 +36,8 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.BottomNavigationFragmentView;
+import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchViewModel;
@@ -64,9 +66,10 @@ import rx.subjects.PublishSubject;
 import static android.view.View.VISIBLE;
 
 public class SearchResultFragment extends BackButtonFragment
-    implements SearchResultView, SearchSuggestionsView, BottomNavigationFragmentView {
+    implements SearchResultView, SearchSuggestionsView {
 
   private static final int LAYOUT = R.layout.global_search_fragment;
+  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.SEARCH;
   private static final String VIEW_MODEL = "view_model";
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
@@ -115,6 +118,7 @@ public class SearchResultFragment extends BackButtonFragment
   private boolean noResults;
   private String unsubmittedQuery;
   private boolean isSearchExpanded;
+  private BottomNavigationActivity bottomNavigationActivity;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -652,6 +656,9 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     findChildViews(view);
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
@@ -710,6 +717,18 @@ public class SearchResultFragment extends BackButtonFragment
     followedStoresResultList.clearAnimation();
     setupTheme();
     super.onDestroyView();
+  }
+
+  @Override public void onDetach() {
+    bottomNavigationActivity = null;
+    super.onDetach();
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -83,15 +83,16 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     }
   }
 
-  @Override public void setFocusOnBottomNavigationItem(int bottomNavigationPosition) {
+  @Override public void requestFocus(BottomNavigationItem bottomNavigationItem) {
+    int bottomNavigationPosition =
+        bottomNavigationMapper.mapToBottomNavigationPosition(bottomNavigationItem);
     bottomNavigationView.getMenu()
         .getItem(bottomNavigationPosition)
         .setChecked(true);
   }
 
   @Override public void onBackPressed() {
-    if (getFragmentNavigator().getFragment() instanceof BottomNavigationFragmentView
-        && bottomNavigationNavigator.canNavigateBack()) {
+    if (getFragmentNavigator().peekLast() == null && bottomNavigationNavigator.canNavigateBack()) {
       bottomNavigationNavigator.navigateBack();
     } else {
       super.onBackPressed();

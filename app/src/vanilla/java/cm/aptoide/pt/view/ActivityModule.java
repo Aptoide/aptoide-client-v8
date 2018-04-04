@@ -239,8 +239,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
       FragmentNavigator fragmentNavigator, @Named("defaultStoreName") String defaultStoreName,
       BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
-    return new BottomNavigationNavigator((AptoideBottomNavigator) activity, fragmentNavigator,
-        defaultStoreName, bottomNavigationAnalytics, searchAnalytics);
+    return new BottomNavigationNavigator(fragmentNavigator, defaultStoreName,
+        bottomNavigationAnalytics, searchAnalytics);
   }
 
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.store.view.my;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -19,7 +20,8 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.home.BottomNavigationFragmentView;
+import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
@@ -39,12 +41,13 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 13/12/2016.
  */
 
-public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment
-    implements MyStoresView, BottomNavigationFragmentView {
+public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implements MyStoresView {
 
   private static final String TAG = MyStoresFragment.class.getSimpleName();
+  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.STORES;
   @Inject MyStoresPresenter myStoresPresenter;
   private ImageView userAvatar;
+  private BottomNavigationActivity bottomNavigationActivity;
 
   public static MyStoresFragment newInstance(Event event, String storeTheme, String tag,
       StoreContext storeContext) {
@@ -59,6 +62,18 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment
     return new MyStoresFragment();
   }
 
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
+  }
+
+  @Override public void onDetach() {
+    bottomNavigationActivity = null;
+    super.onDetach();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
@@ -71,6 +86,9 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     registerForViewChanges();
     userAvatar = (ImageView) getView().findViewById(R.id.user_actionbar_icon);
     attachPresenter(myStoresPresenter);

@@ -32,5 +32,5 @@ public interface AptoideBottomNavigator {
    *
    * @param bottomNavigationItem Button to give focus
    */
-  void setFocusOnBottomNavigationItem(int bottomNavigationItem);
+  void requestFocus(BottomNavigationItem bottomNavigationItem);
 }

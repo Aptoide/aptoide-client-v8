@@ -21,16 +21,13 @@ public class BottomNavigationNavigator {
   private final static String EVENT_ACTION =
       "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
   private final FragmentNavigator fragmentNavigator;
-  private final AptoideBottomNavigator aptoideBottomNavigator;
   private final String defaultStoreName;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
   private ArrayList<Integer> bottomNavigationItens;
 
-  public BottomNavigationNavigator(AptoideBottomNavigator aptoideBottomNavigator,
-      FragmentNavigator fragmentNavigator, String defaultStoreName,
+  public BottomNavigationNavigator(FragmentNavigator fragmentNavigator, String defaultStoreName,
       BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
-    this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.defaultStoreName = defaultStoreName;
     this.bottomNavigationAnalytics = bottomNavigationAnalytics;
     this.searchAnalytics = searchAnalytics;
@@ -107,7 +104,6 @@ public class BottomNavigationNavigator {
       checkAndReplaceItem(newItem);
       Collections.rotate(bottomNavigationItens, 1);
       fragmentNavigator.navigateToCleaningBackStack(fragment, true);
-      requestFocus(newItem);
     }
   }
 
@@ -135,12 +131,7 @@ public class BottomNavigationNavigator {
     }
     if (fragment != null && position != -1) {
       fragmentNavigator.navigateToCleaningBackStack(fragment, true);
-      requestFocus(position);
     }
-  }
-
-  private void requestFocus(int position) {
-    aptoideBottomNavigator.setFocusOnBottomNavigationItem(position);
   }
 
   private Event getStoreEvent() {

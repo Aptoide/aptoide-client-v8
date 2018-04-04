@@ -30,6 +30,28 @@ public class BottomNavigationMapper {
     return bottomNavigationItem;
   }
 
+  public int mapToBottomNavigationPosition(BottomNavigationItem bottomNavigationItem) {
+    int bottomNavigationPosition = -1;
+    switch (bottomNavigationItem) {
+      case HOME:
+        bottomNavigationPosition = 0;
+        break;
+      case SEARCH:
+        bottomNavigationPosition = 1;
+        break;
+      case STORES:
+        bottomNavigationPosition = 2;
+        break;
+      case APPS:
+        bottomNavigationPosition = 3;
+        break;
+    }
+    if (bottomNavigationPosition == -1) {
+      throw new IllegalStateException("The selected bottomNavigationItem is not supported");
+    }
+    return bottomNavigationPosition;
+  }
+
   public int mapToBottomNavigationPosition(Integer menuItemId) {
     int bottomNavigationPosition = -1;
     switch (menuItemId) {

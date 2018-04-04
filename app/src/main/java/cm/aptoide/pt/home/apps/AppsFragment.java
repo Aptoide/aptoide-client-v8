@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -19,7 +20,8 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.home.BottomNavigationFragmentView;
+import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -44,9 +46,9 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  * Created by filipegoncalves on 3/7/18.
  */
 
-public class AppsFragment extends NavigationTrackFragment
-    implements AppsFragmentView, BottomNavigationFragmentView {
+public class AppsFragment extends NavigationTrackFragment implements AppsFragmentView {
 
+  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject InstallAnalytics installAnalytics;
   @Inject UpdatesAnalytics updatesAnalytics;
@@ -58,6 +60,7 @@ public class AppsFragment extends NavigationTrackFragment
   private PublishSubject<Void> updateAll;
   private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
+  private BottomNavigationActivity bottomNavigationActivity;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -72,7 +75,9 @@ public class AppsFragment extends NavigationTrackFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
     adapter =
         new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));
@@ -97,6 +102,13 @@ public class AppsFragment extends NavigationTrackFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+    if (activity instanceof BottomNavigationActivity) {
+      bottomNavigationActivity = ((BottomNavigationActivity) activity);
+    }
   }
 
   @Override public void onDestroy() {
@@ -281,5 +293,10 @@ public class AppsFragment extends NavigationTrackFragment
     recyclerView = null;
     adapter = null;
     userAvatar = null;
+  }
+
+  @Override public void onDetach() {
+    bottomNavigationActivity = null;
+    super.onDetach();
   }
 }
