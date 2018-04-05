@@ -300,7 +300,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void hidePullToRefresh() {
-    Log.d("testesfilipe", "hidePullToRefresh: i am inside the hidePullToRefresh on the fragment ");
     if (swipeRefreshLayout.isRefreshing()) {
       swipeRefreshLayout.setRefreshing(false);
     }
