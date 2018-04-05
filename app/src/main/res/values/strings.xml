@@ -61,7 +61,7 @@
   <string name="appview_rate_this_app_text">Rate this app</string>
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
-  <string name="appcardview_title_no_starts" translatable="false">- -</string>
+  <string name="appcardview_title_no_stars" translatable="false">- -</string>
   <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
   <string name="appview_button_recommend">Recommend</string>
 
