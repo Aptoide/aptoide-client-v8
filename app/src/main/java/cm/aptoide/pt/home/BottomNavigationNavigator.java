@@ -24,14 +24,14 @@ public class BottomNavigationNavigator {
   private final String defaultStoreName;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
-  private ArrayList<Integer> bottomNavigationItens;
+  private ArrayList<Integer> bottomNavigationItems;
 
   public BottomNavigationNavigator(FragmentNavigator fragmentNavigator, String defaultStoreName,
       BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
     this.defaultStoreName = defaultStoreName;
     this.bottomNavigationAnalytics = bottomNavigationAnalytics;
     this.searchAnalytics = searchAnalytics;
-    bottomNavigationItens = new ArrayList<>();
+    bottomNavigationItems = new ArrayList<>();
     this.fragmentNavigator = fragmentNavigator;
   }
 
@@ -80,29 +80,29 @@ public class BottomNavigationNavigator {
   }
 
   public void navigateBack() {
-    int bottomNavigationPosition = bottomNavigationItens.get(1);
-    bottomNavigationItens.remove(0);
+    int bottomNavigationPosition = bottomNavigationItems.get(1);
+    bottomNavigationItems.remove(0);
     navigateBackToBottomNavigationItem(bottomNavigationPosition);
   }
 
   public boolean canNavigateBack() {
-    return bottomNavigationItens.size() > 1;
+    return bottomNavigationItems.size() > 1;
   }
 
   private void checkAndReplaceItem(int newItem) {
-    for (int i = 0; i < bottomNavigationItens.size(); i++) {
-      if (newItem == bottomNavigationItens.get(i)) {
-        bottomNavigationItens.remove(i);
+    for (int i = 0; i < bottomNavigationItems.size(); i++) {
+      if (newItem == bottomNavigationItems.get(i)) {
+        bottomNavigationItems.remove(i);
       }
     }
-    bottomNavigationItens.add(newItem);
+    bottomNavigationItems.add(newItem);
   }
 
   private void navigateToSelectedFragment(int newItem, Fragment fragment) {
     Fragment currentFragment = fragmentNavigator.getFragment();
     if (currentFragment == null || currentFragment.getClass() != fragment.getClass()) {
       checkAndReplaceItem(newItem);
-      Collections.rotate(bottomNavigationItens, 1);
+      Collections.rotate(bottomNavigationItems, 1);
       fragmentNavigator.navigateToCleaningBackStack(fragment, true);
     }
   }
@@ -143,11 +143,11 @@ public class BottomNavigationNavigator {
     return event;
   }
 
-  public ArrayList<Integer> getBottomNavigationItens() {
-    return bottomNavigationItens;
+  public ArrayList<Integer> getBottomNavigationItems() {
+    return bottomNavigationItems;
   }
 
-  public void setBottomNavigationItens(ArrayList<Integer> savedBottomNavigationItens) {
-    bottomNavigationItens = savedBottomNavigationItens;
+  public void setBottomNavigationItems(ArrayList<Integer> savedBottomNavigationItens) {
+    bottomNavigationItems = savedBottomNavigationItens;
   }
 }

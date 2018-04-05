@@ -36,7 +36,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
     if (savedInstanceState != null) {
-      bottomNavigationNavigator.setBottomNavigationItens(
+      bottomNavigationNavigator.setBottomNavigationItems(
           savedInstanceState.getIntegerArrayList(ITENS_LIST_KEY));
     }
     BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -102,6 +102,6 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
   @Override protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putIntegerArrayList(ITENS_LIST_KEY,
-        bottomNavigationNavigator.getBottomNavigationItens());
+        bottomNavigationNavigator.getBottomNavigationItems());
   }
 }
