@@ -265,9 +265,23 @@ public class DeepLinkIntentReceiver extends ActivityView {
      * a store
      * or a app view
      * or home (tab/website)
-     * or bundle with format store/apps/group
+     * or bundle with format store/apps/group/group-id
+     * or thank you page: https://en.aptoide.com/thank-you?app_id=34998126&store_name=superuser4k
      */
     if (u.getPath() != null && u.getPath()
+        .contains("thank-you")) {
+      /**
+       * thank you page
+       */
+      deepLinkAnalytics.websiteFromThankYouWebPage();
+      String appId = u.getQueryParameter("app_id");
+      Logger.v(TAG, "aptoide thank you: app id: " + appId);
+      if (TextUtils.isEmpty(appId)) {
+        return null;
+      } else {
+        return startFromAppView(Long.parseLong(appId), "", false);
+      }
+    } else if (u.getPath() != null && u.getPath()
         .contains("store/apps/group")) {
       /**
        * Bundles
