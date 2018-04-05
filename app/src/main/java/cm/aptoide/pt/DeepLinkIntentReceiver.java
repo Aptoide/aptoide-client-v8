@@ -202,9 +202,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
       }
 
       if (ad != null) {
-        Intent i = new Intent(this, startClass);
-        i.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
-        return i;
+        Intent intent = new Intent(this, startClass);
+        intent.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
+        return intent;
       }
     }
     return null;
@@ -247,9 +247,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private Intent dealWithAptoideXml(String uri) {
     String repo = uri.substring(13);
     parseXmlString(repo);
-    Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-    i.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
-    return i;
+    Intent intent = new Intent(DeepLinkIntentReceiver.this, startClass);
+    intent.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
+    return intent;
   }
 
   private Intent dealWithAptoideRepo(String uri) {
@@ -386,17 +386,17 @@ public class DeepLinkIntentReceiver extends ActivityView {
   }
 
   private Intent openUserScreen(Long userId) {
-    Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-    i.putExtra(DeepLinksTargets.USER_DEEPLINK, userId);
-    return i;
+    Intent intent = new Intent(DeepLinkIntentReceiver.this, startClass);
+    intent.putExtra(DeepLinksTargets.USER_DEEPLINK, userId);
+    return intent;
   }
 
   public Intent startWithRepo(ArrayList<String> repo) {
-    Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-    i.putExtra(DeepLinksTargets.NEW_REPO, repo);
+    Intent intent = new Intent(DeepLinkIntentReceiver.this, startClass);
+    intent.putExtra(DeepLinksTargets.NEW_REPO, repo);
     // TODO: 10-08-2016 jdandrade
     deepLinkAnalytics.newRepo();
-    return i;
+    return intent;
   }
 
   private void parseXmlString(String file) {
@@ -444,43 +444,40 @@ public class DeepLinkIntentReceiver extends ActivityView {
   }
 
   public Intent startAppView(String uname) {
-    Intent i = new Intent(this, startClass);
-    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    i.putExtra(DeepLinksKeys.UNAME, uname);
-    return i;
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinksKeys.UNAME, uname);
+    return intent;
   }
 
   public Intent startFromAppView(long id, String packageName, boolean showPopup) {
-    Intent i = new Intent(this, startClass);
-
-    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
-    i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
-    i.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
-
-    return i;
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinksKeys.APP_ID_KEY, id);
+    intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+    intent.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
+    return intent;
   }
 
   public Intent startFromAppsTimeline(String cardId) {
-    Intent i = new Intent(this, startClass);
-    i.putExtra(DeepLinksTargets.TIMELINE_DEEPLINK, true);
-    i.putExtra(DeepLinksKeys.CARD_ID, cardId);
-    if (shortcutNavigation) i.putExtra(FROM_SHORTCUT, shortcutNavigation);
-
-    return i;
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.TIMELINE_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.CARD_ID, cardId);
+    if (shortcutNavigation) intent.putExtra(FROM_SHORTCUT, shortcutNavigation);
+    return intent;
   }
 
   public Intent startFromBundle(String bundleId) {
-    Intent i = new Intent(this, startClass);
-    i.putExtra(DeepLinksTargets.BUNDLE, true);
-    i.putExtra(DeepLinksKeys.BUNDLE_ID, bundleId);
-    return i;
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.BUNDLE, true);
+    intent.putExtra(DeepLinksKeys.BUNDLE_ID, bundleId);
+    return intent;
   }
 
   public Intent startFromHome() {
-    Intent i = new Intent(this, startClass);
-    i.putExtra(DeepLinksTargets.HOME_DEEPLINK, true);
-    return i;
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.HOME_DEEPLINK, true);
+    return intent;
   }
 
   private void downloadMyApp() {
@@ -506,22 +503,18 @@ public class DeepLinkIntentReceiver extends ActivityView {
   }
 
   public Intent startFromAppView(String packageName) {
-    Intent i = new Intent(this, startClass);
-
-    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
-
-    return i;
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+    return intent;
   }
 
   public Intent startFromSearch(String query) {
-    Intent i = new Intent(this, startClass);
-
-    i.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
-    i.putExtra(SearchManager.QUERY, query);
-    i.putExtra(FROM_SHORTCUT, shortcutNavigation);
-
-    return i;
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
+    intent.putExtra(SearchManager.QUERY, query);
+    intent.putExtra(FROM_SHORTCUT, shortcutNavigation);
+    return intent;
   }
 
   private Intent startFromAppview(String repo, String packageName, boolean showPopup) {

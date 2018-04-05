@@ -118,7 +118,7 @@ public class DeepLinkManager {
       searchDeepLink(intent.getStringExtra(SearchManager.QUERY),
           intent.getBooleanExtra(FROM_SHORTCUT, false));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
-      newrepoDeepLink(intent, intent.getExtras()
+      newRepoDeepLink(intent, intent.getExtras()
           .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO), storeAccessor);
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
@@ -196,7 +196,7 @@ public class DeepLinkManager {
     }
   }
 
-  private void newrepoDeepLink(Intent intent, ArrayList<String> repos,
+  private void newRepoDeepLink(Intent intent, ArrayList<String> repos,
       StoreAccessor storeAccessor) {
     if (repos != null) {
       subscriptions.add(Observable.from(repos)
