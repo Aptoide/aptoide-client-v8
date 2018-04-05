@@ -24,6 +24,10 @@ public class BottomNavigationNavigator {
   private final String defaultStoreName;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
+  private final int homePosition = 0;
+  private final int searchPosition = 1;
+  private final int storesPosition = 2;
+  private final int appsPosition = 3;
   private ArrayList<Integer> bottomNavigationItems;
 
   public BottomNavigationNavigator(FragmentNavigator fragmentNavigator, String defaultStoreName,
@@ -37,25 +41,25 @@ public class BottomNavigationNavigator {
 
   public void navigateToBottomNavigationItem(int bottomNavigationPosition) {
     switch (bottomNavigationPosition) {
-      case 0:
+      case homePosition:
         bottomNavigationAnalytics.sendNavigateToHomeClickEvent();
         BottomHomeFragment bottomHomeFragment = new BottomHomeFragment();
         navigateToHome(bottomHomeFragment);
         break;
-      case 1:
+      case searchPosition:
         bottomNavigationAnalytics.sendNavigateToSearchClickEvent();
         searchAnalytics.searchStart(SearchSource.BOTTOM_NAVIGATION, true);
         SearchResultFragment searchResultFragment =
             SearchResultFragment.newInstance(defaultStoreName, true);
         navigateToSearch(searchResultFragment);
         break;
-      case 2:
+      case storesPosition:
         bottomNavigationAnalytics.sendNavigateToStoresClickEvent();
         MyStoresFragment myStoresFragment =
             MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
         navigateToStore(myStoresFragment);
         break;
-      case 3:
+      case appsPosition:
         bottomNavigationAnalytics.sendNavigateToAppsClickEvent();
         AppsFragment appsFragment = new AppsFragment();
         navigateToApps(appsFragment);
@@ -90,10 +94,14 @@ public class BottomNavigationNavigator {
   }
 
   private void checkAndReplaceItem(int newItem) {
+    int listPosition = -1;
     for (int i = 0; i < bottomNavigationItems.size(); i++) {
       if (newItem == bottomNavigationItems.get(i)) {
-        bottomNavigationItems.remove(i);
+        listPosition = i;
       }
+    }
+    if (listPosition != -1) {
+      bottomNavigationItems.get(listPosition);
     }
     bottomNavigationItems.add(newItem);
   }
@@ -111,20 +119,20 @@ public class BottomNavigationNavigator {
     Fragment fragment = null;
     int position = -1;
     switch (bottomNavigationPosition) {
-      case 0:
+      case homePosition:
         fragment = new BottomHomeFragment();
         position = 0;
         break;
-      case 1:
+      case searchPosition:
         fragment = SearchResultFragment.newInstance(defaultStoreName, true);
         position = 1;
         break;
-      case 2:
+      case storesPosition:
         fragment =
             MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
         position = 2;
         break;
-      case 3:
+      case appsPosition:
         fragment = new AppsFragment();
         position = 3;
         break;
