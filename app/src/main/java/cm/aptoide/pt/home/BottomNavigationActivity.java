@@ -21,7 +21,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     implements AptoideBottomNavigator {
 
   protected static final int LAYOUT = R.layout.frame_layout;
-  private final String ITENS_LIST_KEY = "BN_ITENS";
+  private final String ITEMS_LIST_KEY = "BN_ITEMS";
   protected BottomNavigationView bottomNavigationView;
   @Inject BottomNavigationMapper bottomNavigationMapper;
   @Inject BottomNavigationNavigator bottomNavigationNavigator;
@@ -37,7 +37,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     getActivityComponent().inject(this);
     if (savedInstanceState != null) {
       bottomNavigationNavigator.setBottomNavigationItems(
-          savedInstanceState.getIntegerArrayList(ITENS_LIST_KEY));
+          savedInstanceState.getIntegerArrayList(ITEMS_LIST_KEY));
     }
     BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
     bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -101,7 +101,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
 
   @Override protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putIntegerArrayList(ITENS_LIST_KEY,
+    outState.putIntegerArrayList(ITEMS_LIST_KEY,
         bottomNavigationNavigator.getBottomNavigationItems());
   }
 }
