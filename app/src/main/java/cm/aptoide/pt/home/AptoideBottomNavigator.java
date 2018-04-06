@@ -25,7 +25,7 @@ public interface AptoideBottomNavigator {
   /**
    * Hides or shows the BottomNavigation depending on the fragment
    */
-  void toogleBottomNavigation();
+  void toggleBottomNavigation();
 
   /**
    * Puts the focus on the button of the BottomNavigation request by the fragment that calls this

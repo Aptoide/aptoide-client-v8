@@ -18,7 +18,6 @@ import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
-import cm.aptoide.pt.view.settings.NewAccountFragment;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -54,7 +53,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     });
     animationup = AnimationUtils.loadAnimation(this, R.anim.slide_up);
     animationdown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
-    toogleBottomNavigation(); //Here because of the SettingsFragment that doesn't extend the BaseFragment
+    toggleBottomNavigation(); //Here because of the SettingsFragment that doesn't extend the BaseFragment
   }
 
   @Override protected void onDestroy() {
@@ -106,7 +105,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     }
   }
 
-  @Override public void toogleBottomNavigation() {
+  @Override public void toggleBottomNavigation() {
     Fragment fragment = getFragmentNavigator().getFragment();
     if (fragment instanceof NotBottomNavigationView) {
       if (bottomNavigationView.getVisibility() != View.GONE) {
