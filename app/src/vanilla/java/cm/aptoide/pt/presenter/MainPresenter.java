@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.Install;
@@ -175,7 +174,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void showHome() {
-    bottomNavigationNavigator.navigateToHome(new BottomHomeFragment());
+    bottomNavigationNavigator.navigateToHome();
   }
 
   private void watchInstalls(List<Install> installs) {
