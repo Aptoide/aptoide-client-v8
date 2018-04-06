@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +64,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private ImageView userAvatar;
   private BottomNavigationActivity bottomNavigationActivity;
   private SwipeRefreshLayout swipeRefreshLayout;
+  private boolean showDownloads;
+  private boolean showUpdates;
+  private boolean showInstalled;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -148,15 +150,36 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesList(List<App> list) {
-    adapter.addUpdateAppsList(list);
+    if (list != null && !list.isEmpty()) {
+      adapter.addUpdateAppsList(list);
+    }
+    showUpdates = true;
+    if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      recyclerView.setVisibility(View.VISIBLE);
+      recyclerView.smoothScrollToPosition(0);
+    }
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
-    adapter.addInstalledAppsList(installedApps);
+    if (installedApps != null && !installedApps.isEmpty()) {
+      adapter.addInstalledAppsList(installedApps);
+    }
+    showInstalled = true;
+    if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      recyclerView.setVisibility(View.VISIBLE);
+      recyclerView.smoothScrollToPosition(0);
+    }
   }
 
   @Override public void showDownloadsList(List<App> list) {
-    adapter.addDownloadAppsList(list);
+    if (list != null && !list.isEmpty()) {
+      adapter.addDownloadAppsList(list);
+    }
+    showDownloads = true;
+    if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      recyclerView.setVisibility(View.VISIBLE);
+      recyclerView.smoothScrollToPosition(0);
+    }
   }
 
   @Override public Observable<App> retryDownload() {
@@ -227,6 +250,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showUpdatesDownloadList(List<App> updatesDownloadList) {
     adapter.addUpdateAppsList(updatesDownloadList);
+    showUpdates = true;
+    if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      recyclerView.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override public Observable<Void> updateAll() {
@@ -302,6 +329,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     if (swipeRefreshLayout.isRefreshing()) {
       swipeRefreshLayout.setRefreshing(false);
     }
+  }
+
+  private boolean canShowListOfApps() {
+    return showDownloads && showUpdates && showInstalled;
   }
 
   @Override public void onDestroyView() {
