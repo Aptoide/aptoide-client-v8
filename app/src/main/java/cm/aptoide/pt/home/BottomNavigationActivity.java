@@ -46,7 +46,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     });
     animationup = AnimationUtils.loadAnimation(this, R.anim.slide_up);
     animationdown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
-    toogleBottomNavigation(); //Here because of the SettingsFragment that doesn't extend the BaseFragment
+    toggleBottomNavigation(); //Here because of the SettingsFragment that doesn't extend the BaseFragment
   }
 
   @Override protected void onDestroy() {
@@ -68,7 +68,7 @@ public abstract class BottomNavigationActivity extends TabNavigatorActivity
     bottomNavigationNavigator.navigateToBottomNavigationItem(bottomNavigationPosition);
   }
 
-  @Override public void toogleBottomNavigation() {
+  @Override public void toggleBottomNavigation() {
     Fragment fragment = getFragmentNavigator().getFragment();
     if (fragment instanceof NotBottomNavigationView) {
       if (bottomNavigationView.getVisibility() != View.GONE) {

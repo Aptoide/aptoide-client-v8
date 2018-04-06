@@ -9,7 +9,7 @@ import cm.aptoide.pt.R;
 public class BottomNavigationMapper {
 
   public BottomNavigationItem mapItemClicked(Integer menuItemId) {
-    BottomNavigationItem bottomNavigationItem = null;
+    BottomNavigationItem bottomNavigationItem;
     switch (menuItemId) {
       case R.id.action_home:
         bottomNavigationItem = BottomNavigationItem.HOME;
@@ -23,15 +23,14 @@ public class BottomNavigationMapper {
       case R.id.action_apps:
         bottomNavigationItem = BottomNavigationItem.APPS;
         break;
-    }
-    if (bottomNavigationItem == null) {
-      throw new IllegalStateException("The selected menuItem is not supported");
+      default:
+        throw new IllegalStateException("The selected menuItem is not supported");
     }
     return bottomNavigationItem;
   }
 
   public int mapToBottomNavigationPosition(BottomNavigationItem bottomNavigationItem) {
-    int bottomNavigationPosition = -1;
+    int bottomNavigationPosition;
     switch (bottomNavigationItem) {
       case HOME:
         bottomNavigationPosition = 0;
@@ -45,15 +44,14 @@ public class BottomNavigationMapper {
       case APPS:
         bottomNavigationPosition = 3;
         break;
-    }
-    if (bottomNavigationPosition == -1) {
-      throw new IllegalStateException("The selected bottomNavigationItem is not supported");
+      default:
+        throw new IllegalStateException("The selected bottomNavigationItem is not supported");
     }
     return bottomNavigationPosition;
   }
 
   public int mapToBottomNavigationPosition(Integer menuItemId) {
-    int bottomNavigationPosition = -1;
+    int bottomNavigationPosition;
     switch (menuItemId) {
       case R.id.action_home:
         bottomNavigationPosition = 0;
@@ -67,9 +65,8 @@ public class BottomNavigationMapper {
       case R.id.action_apps:
         bottomNavigationPosition = 3;
         break;
-    }
-    if (bottomNavigationPosition == -1) {
-      throw new IllegalStateException("The selected menuItem is not supported");
+      default:
+        throw new IllegalStateException("The selected menuItem is not supported");
     }
     return bottomNavigationPosition;
   }

@@ -68,19 +68,19 @@ public class BottomNavigationNavigator {
   }
 
   public void navigateToHome(BottomHomeFragment bottomHomeFragment) {
-    navigateToSelectedFragment(0, bottomHomeFragment);
+    navigateToSelectedFragment(homePosition, bottomHomeFragment);
   }
 
-  public void navigateToSearch(SearchResultFragment searchResultFragment) {
-    navigateToSelectedFragment(1, searchResultFragment);
+  private void navigateToSearch(SearchResultFragment searchResultFragment) {
+    navigateToSelectedFragment(searchPosition, searchResultFragment);
   }
 
-  public void navigateToStore(MyStoresFragment myStoresFragment) {
-    navigateToSelectedFragment(2, myStoresFragment);
+  private void navigateToStore(MyStoresFragment myStoresFragment) {
+    navigateToSelectedFragment(storesPosition, myStoresFragment);
   }
 
-  public void navigateToApps(AppsFragment appsFragment) {
-    navigateToSelectedFragment(3, appsFragment);
+  private void navigateToApps(AppsFragment appsFragment) {
+    navigateToSelectedFragment(appsPosition, appsFragment);
   }
 
   public void navigateBack() {
@@ -93,15 +93,10 @@ public class BottomNavigationNavigator {
     return bottomNavigationItems.size() > 1;
   }
 
-  private void checkAndReplaceItem(int newItem) {
-    int listPosition = -1;
-    for (int i = 0; i < bottomNavigationItems.size(); i++) {
-      if (newItem == bottomNavigationItems.get(i)) {
-        listPosition = i;
-      }
-    }
-    if (listPosition != -1) {
-      bottomNavigationItems.get(listPosition);
+  private void updateBottomNavigationItemsList(int newItem) {
+    int newItemPosition = bottomNavigationItems.indexOf(newItem);
+    if (newItemPosition != -1) {
+      bottomNavigationItems.remove(newItemPosition);
     }
     bottomNavigationItems.add(newItem);
   }
@@ -109,7 +104,7 @@ public class BottomNavigationNavigator {
   private void navigateToSelectedFragment(int newItem, Fragment fragment) {
     Fragment currentFragment = fragmentNavigator.getFragment();
     if (currentFragment == null || currentFragment.getClass() != fragment.getClass()) {
-      checkAndReplaceItem(newItem);
+      updateBottomNavigationItemsList(newItem);
       Collections.rotate(bottomNavigationItems, 1);
       fragmentNavigator.navigateToCleaningBackStack(fragment, true);
     }
@@ -117,27 +112,22 @@ public class BottomNavigationNavigator {
 
   private void navigateBackToBottomNavigationItem(int bottomNavigationPosition) {
     Fragment fragment = null;
-    int position = -1;
     switch (bottomNavigationPosition) {
       case homePosition:
         fragment = new BottomHomeFragment();
-        position = 0;
         break;
       case searchPosition:
         fragment = SearchResultFragment.newInstance(defaultStoreName, true);
-        position = 1;
         break;
       case storesPosition:
         fragment =
             MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
-        position = 2;
         break;
       case appsPosition:
         fragment = new AppsFragment();
-        position = 3;
         break;
     }
-    if (fragment != null && position != -1) {
+    if (fragment != null) {
       fragmentNavigator.navigateToCleaningBackStack(fragment, true);
     }
   }
