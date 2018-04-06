@@ -85,8 +85,10 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     super.onViewCreated(view, savedInstanceState);
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     registerForViewChanges();
     userAvatar = (ImageView) getView().findViewById(R.id.user_actionbar_icon);
     attachPresenter(myStoresPresenter);

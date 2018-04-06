@@ -19,7 +19,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -55,7 +54,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject InstallAnalytics installAnalytics;
-  @Inject NavigationTracker navigationTracker;
   @Inject UpdatesAnalytics updatesAnalytics;
   @Inject AptoideAccountManager accountManager;
   @Inject AppsNavigator appsNavigator;
@@ -80,9 +78,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     super.onViewCreated(view, savedInstanceState);
-
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
     adapter =
         new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));

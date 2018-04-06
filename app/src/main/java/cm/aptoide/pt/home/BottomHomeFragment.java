@@ -89,10 +89,10 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
-    super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     if (savedInstanceState != null) {
       if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
