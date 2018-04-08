@@ -44,6 +44,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -128,7 +129,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       } else if ("aptoidesearch".equalsIgnoreCase(u.getScheme())) {
         intent = startFromPackageName(uri.split("aptoidesearch://")[1]);
       } else if ("market".equalsIgnoreCase(u.getScheme())) {
-        intent = dealWithMArketSchema(uri, u);
+        intent = dealWithMarketSchema(uri, u);
       } else if (u.getHost()
           .contains("market.android.com")) {
         intent = startFromPackageName(u.getQueryParameter("id"));
@@ -220,7 +221,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return startFromPackageName(param);
   }
 
-  private Intent dealWithMArketSchema(String uri, Uri u) {
+  private Intent dealWithMarketSchema(String uri, Uri u) {
   /*
    * market schema:
    * could come from a search or a to open an app
@@ -279,7 +280,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       if (TextUtils.isEmpty(appId)) {
         return null;
       } else {
-        return startFromAppView(Long.parseLong(appId), "", false);
+        return parseAptoideInstallUri(appId);
       }
     } else if (u.getPath() != null && u.getPath()
         .contains("store/apps/group")) {
@@ -290,9 +291,20 @@ public class DeepLinkIntentReceiver extends ActivityView {
       String bundleId = u.getLastPathSegment();
       Logger.v(TAG, "aptoide web site: bundle: " + bundleId);
       if (!TextUtils.isEmpty(bundleId)
-          && bundleId.contains("-")
-          && bundleId.indexOf("-") < bundleId.length()) {
-        return startFromBundle(bundleId.substring(bundleId.indexOf("-") + 1));
+              && bundleId.contains("-")
+              && bundleId.indexOf("-") < bundleId.length()) {
+        try {
+          Uri uri=Uri.parse("aptoide://cm.aptoide.pt/deeplink?name=listApps&layout=GRID&type=API&title=bundle&action="
+                  + URLEncoder.encode("https://ws75.aptoide.com/api/7/listApps/group_id="
+                          + bundleId.substring(bundleId.indexOf("-") + 1)
+                          + "/limit=30","utf-8")+
+                  "&storetheme=default");
+          Logger.v(TAG, "aptoide web site: bundle: " + uri.toString());
+          return  dealWithAptoideSchema(uri);
+        } catch (Exception e) {
+          Logger.e(TAG, "dealWithAptoideWebsite: ", e);
+          return null;
+        }
       }
     } else if (u.getPath() != null && u.getPath()
         .contains("store")) {
@@ -498,9 +510,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
     asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
   }
 
-  private Intent parseAptoideInstallUri(String substring) {
+  private Intent parseAptoideInstallUri(String host) {
     AptoideInstallParser parser = new AptoideInstallParser();
-    AptoideInstall aptoideInstall = parser.parse(substring);
+    AptoideInstall aptoideInstall = parser.parse(host);
     if (aptoideInstall.getAppId() > 0) {
       return startFromAppView(aptoideInstall.getAppId(), aptoideInstall.getPackageName(), false);
     } else {
