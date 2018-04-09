@@ -22,15 +22,19 @@ import cm.aptoide.pt.account.view.user.CreateUserErrorMapper;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
+import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
+import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
+import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
@@ -146,9 +150,10 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
-      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager) {
+      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
+      HomeAnalytics homeAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager);
+        CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
@@ -161,10 +166,6 @@ import rx.schedulers.Schedulers;
     return new Home(bundlesRepository);
   }
 
-  @FragmentScope @Provides BottomNavigationMapper providesBottomNavigationMapper() {
-    return new BottomNavigationMapper();
-  }
-
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
       AptoideAccountManager aptoideAccountManager, MyStoresNavigator navigator) {
     return new MyStoresPresenter((MyStoresView) fragment, AndroidSchedulers.mainThread(),
@@ -174,6 +175,17 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides MyStoresNavigator providesMyStoreNavigator(
       FragmentNavigator fragmentNavigator, BottomNavigationMapper bottomNavigationMapper) {
     return new MyStoresNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
+        bottomNavigationMapper);
+  }
+
+  @FragmentScope @Provides HomeAnalytics providesHomeAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new HomeAnalytics(navigationTracker, analyticsManager);
+  }
+
+  @FragmentScope @Provides AppsNavigator providesAppsNavigator(FragmentNavigator fragmentNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
+    return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
   }
 }

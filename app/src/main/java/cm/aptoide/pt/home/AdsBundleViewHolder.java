@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final PublishSubject<HomeMoreClick> uiEventsListener;
 
   public AdsBundleViewHolder(View view, PublishSubject<HomeMoreClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<GetAdsResponse.Ad> adClickedEvents) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<AdClick> adClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
@@ -46,13 +45,13 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     appsList.setAdapter(appsInBundleAdapter);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     if (!(homeBundle instanceof AdBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");
     }
     bundleTitle.setText(homeBundle.getTitle());
-    appsInBundleAdapter.update((List<GetAdsResponse.Ad>) homeBundle.getContent());
+    appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
     moreButton.setOnClickListener(v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle)));
   }

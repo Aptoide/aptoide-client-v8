@@ -99,7 +99,8 @@ public class InstallManager {
     return installedRepository.get(packageName, versionCode)
         .map(installed -> new Install(100, Install.InstallationStatus.INSTALLED,
             Install.InstallationType.INSTALLED, false, -1, null, installed.getPackageName(),
-            installed.getVersionCode(), installed.getName(), installed.getIcon()));
+            installed.getVersionCode(), installed.getVersionName(), installed.getName(),
+            installed.getIcon()));
   }
 
   public Observable<List<Install>> getInstallations() {
@@ -181,8 +182,16 @@ public class InstallManager {
     return new Install(mapInstallation(download),
         mapInstallationStatus(download, installationState), installationType,
         mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
-        versioncode, getAppName(download, installationState),
-        getAppIcon(download, installationState));
+        versioncode, getVersionName(download, installationState),
+        getAppName(download, installationState), getAppIcon(download, installationState));
+  }
+
+  private String getVersionName(Download download, InstallationState installationState) {
+    if (download != null) {
+      return download.getVersionName();
+    } else {
+      return installationState.getVersionName();
+    }
   }
 
   private String getAppIcon(Download download, InstallationState installationState) {
@@ -495,5 +504,34 @@ public class InstallManager {
                 })))
         .toList()
         .toCompletable();
+  }
+
+  public Observable<List<Installed>> fetchInstalled() {
+    return installedRepository.getAllInstalledSorted()
+        .first()
+        .flatMapIterable(list -> list)
+        .filter(item -> !item.isSystemApp())
+        .toList();
+  }
+
+  public Observable<Install> filterInstalled(Install item) {
+    return Observable.just(installedRepository.contains(item.getPackageName()))
+        .flatMap(isInstalled -> {
+          if (isInstalled) {
+            return Observable.empty();
+          }
+          return Observable.just(item);
+        });
+  }
+
+  public Observable<Install> filterNonInstalled(Install item) {
+    return Observable.just(installedRepository.contains(item.getPackageName()))
+        .flatMap(isInstalled -> {
+          if (isInstalled) {
+            return Observable.just(item);
+          } else {
+            return Observable.empty();
+          }
+        });
   }
 }

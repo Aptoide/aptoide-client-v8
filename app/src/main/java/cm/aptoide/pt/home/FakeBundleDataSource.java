@@ -30,48 +30,57 @@ public class FakeBundleDataSource implements BundleDataSource {
   }
 
   public List<HomeBundle> getFakeBundles() {
-    List<Application> tmp = new ArrayList<>();
+    List<Application> appsList = new ArrayList<>();
     String icon = "https://placeimg.com/640/480/any";
-    Application aptoide = new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300);
-    tmp.add(aptoide);
+    Application aptoide = new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, "");
+    appsList.add(aptoide);
     Application facebook =
-        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30);
-    tmp.add(facebook);
-    tmp.add(aptoide);
-    tmp.add(facebook);
-    tmp.add(aptoide);
-    tmp.add(facebook);
-    tmp.add(aptoide);
-    tmp.add(facebook);
+        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30, "");
+    appsList.add(facebook);
+    appsList.add(aptoide);
+    appsList.add(facebook);
+    appsList.add(aptoide);
+    appsList.add(facebook);
+    appsList.add(aptoide);
+    appsList.add(facebook);
 
-    List<Application> tmp1 = new ArrayList<>();
+    List<Application> appsForEditorsList = new ArrayList<>();
     FeatureGraphicApplication aptoideFeatureGraphic =
-        new FeatureGraphicApplication("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, icon);
-    tmp.add(aptoideFeatureGraphic);
+        new FeatureGraphicApplication("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, icon, "");
+    appsList.add(aptoideFeatureGraphic);
     FeatureGraphicApplication facebookFeatureGraphic =
         new FeatureGraphicApplication("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com",
-            30, icon);
-    tmp1.add(facebookFeatureGraphic);
-    tmp1.add(aptoideFeatureGraphic);
-    tmp1.add(facebookFeatureGraphic);
-    tmp1.add(aptoideFeatureGraphic);
-    tmp1.add(facebookFeatureGraphic);
-    tmp1.add(aptoideFeatureGraphic);
-    tmp1.add(facebookFeatureGraphic);
-    tmp1.add(aptoideFeatureGraphic);
-    tmp1.add(facebookFeatureGraphic);
+            30, icon, "");
+    appsForEditorsList.add(facebookFeatureGraphic);
+    appsForEditorsList.add(aptoideFeatureGraphic);
+    appsForEditorsList.add(facebookFeatureGraphic);
+    appsForEditorsList.add(aptoideFeatureGraphic);
+    appsForEditorsList.add(facebookFeatureGraphic);
+    appsForEditorsList.add(aptoideFeatureGraphic);
+    appsForEditorsList.add(facebookFeatureGraphic);
+    appsForEditorsList.add(aptoideFeatureGraphic);
+    appsForEditorsList.add(facebookFeatureGraphic);
     AppBundle appBundle =
-        new AppBundle("As escolhas do filipe", tmp1, AppBundle.BundleType.EDITORS, null, "");
+        new AppBundle("As escolhas do filipe", appsForEditorsList, AppBundle.BundleType.EDITORS,
+            null, "");
     AppBundle appBundle1 =
-        new AppBundle("piores apps locais", tmp, AppBundle.BundleType.APPS, null, "");
+        new AppBundle("piores apps locais", appsList, AppBundle.BundleType.APPS, null, "");
     AppBundle appBundle2 =
-        new AppBundle("um pouco melhor apps", tmp, AppBundle.BundleType.APPS, null, "");
+        new AppBundle("um pouco melhor apps", appsList, AppBundle.BundleType.APPS, null, "");
 
     List<HomeBundle> appBundles = new ArrayList<>();
     appBundles.add(appBundle);
     appBundles.add(appBundle1);
     appBundles.add(appBundle2);
-    appBundles.add(new AdBundle("Highlighted", Collections.emptyList(), null, ""));
+    appBundles.add(
+        new AdBundle("Highlighted", new AdsTagWrapper(Collections.emptyList(), ""), null, ""));
+    List<Application> apps = new ArrayList<>();
+    apps.add(new Application("asf wallet",
+        "http://pool.img.aptoide.com/asf-store/ace60f6352f6dd9289843b5b0b2ab3d4_icon.png", 5,
+        1000000, "asf.wallet.android.com", 36057221, ""));
+    appBundles.add(new SocialBundle(apps, HomeBundle.BundleType.SOCIAL, null, "TAG",
+        "http://pool.img.aptoide.com/asf-store/3bf5adf05843f9f28c486d5ddef8f873_ravatar.jpg",
+        "asf-store"));
     return appBundles;
   }
 }

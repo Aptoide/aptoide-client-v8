@@ -141,8 +141,8 @@ public class DefaultInstaller implements Installer {
         .map(installed -> {
           if (installed != null) {
             return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                installed.getStatus(), installed.getType(), installed.getName(),
-                installed.getIcon());
+                installed.getVersionName(), installed.getStatus(), installed.getType(),
+                installed.getName(), installed.getIcon());
           } else {
             return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
                 Installed.TYPE_UNKNOWN);

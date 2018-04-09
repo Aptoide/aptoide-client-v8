@@ -22,7 +22,7 @@ public enum Type {
   //Reviews Screen
   REVIEWS_GROUP(1, false), //widget to create the user's store
   MY_STORE_META(1, true), MY_STORES_SUBSCRIBED(3, false), STORES_RECOMMENDED(3, false), MY_STORE(1,
-      true), APP_META(1, true);
+      true), APP_META(1, true), TIMELINE_CARD(1, true);
 
   private int defaultPerLineCount;
   private boolean fixedPerLineCount;

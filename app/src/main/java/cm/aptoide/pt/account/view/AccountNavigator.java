@@ -16,11 +16,12 @@ import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.share.NotLoggedInShareFragment;
-import cm.aptoide.pt.store.view.home.HomeFragment;
+import cm.aptoide.pt.view.settings.NewAccountFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -46,15 +47,13 @@ public class AccountNavigator {
   private final GoogleApiClient client;
   private final PublishRelay<FacebookLoginResult> facebookLoginSubject;
   private final String recoverPasswordUrl;
-  private final String defaultStore;
-  private final String defaultTheme;
   private final AccountAnalytics accountAnalytics;
 
   public AccountNavigator(FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       ActivityNavigator activityNavigator, LoginManager facebookLoginManager,
       CallbackManager callbackManager, GoogleApiClient client,
-      PublishRelay<FacebookLoginResult> facebookLoginSubject, String defaultStore,
-      String defaultTheme, String recoverPasswordUrl, AccountAnalytics accountAnalytics) {
+      PublishRelay<FacebookLoginResult> facebookLoginSubject, String recoverPasswordUrl,
+      AccountAnalytics accountAnalytics) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
     this.activityNavigator = activityNavigator;
@@ -62,8 +61,6 @@ public class AccountNavigator {
     this.callbackManager = callbackManager;
     this.client = client;
     this.facebookLoginSubject = facebookLoginSubject;
-    this.defaultStore = defaultStore;
-    this.defaultTheme = defaultTheme;
     this.recoverPasswordUrl = recoverPasswordUrl;
     this.accountAnalytics = accountAnalytics;
   }
@@ -74,7 +71,7 @@ public class AccountNavigator {
 
   public void navigateToAccountView(AccountAnalytics.AccountOrigins accountOrigins) {
     if (accountManager.isLoggedIn()) {
-      fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
+      fragmentNavigator.navigateTo(NewAccountFragment.newInstance(), true);
     } else {
       accountAnalytics.enterAccountScreen(accountOrigins);
       fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false), true);
@@ -142,8 +139,7 @@ public class AccountNavigator {
   }
 
   public void navigateToHomeView() {
-    fragmentNavigator.navigateToCleaningBackStack(
-        HomeFragment.newInstance(defaultStore, defaultTheme), true);
+    fragmentNavigator.navigateToCleaningBackStack(new BottomHomeFragment(), true);
   }
 
   public void popView() {

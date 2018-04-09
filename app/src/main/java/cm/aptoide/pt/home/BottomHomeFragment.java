@@ -14,10 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.app.Application;
-import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -32,7 +33,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/03/2018.
  */
 
-public class BottomHomeFragment extends FragmentView implements HomeView {
+public class BottomHomeFragment extends NavigationTrackFragment implements HomeView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
 
@@ -47,7 +48,8 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
   private BundlesAdapter adapter;
   private PublishSubject<HomeMoreClick> uiEventsListener;
   private PublishSubject<Application> appClickedEvents;
-  private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
+  private PublishSubject<AppClick> recommendsClickedEvents;
+  private PublishSubject<AdClick> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericErrorView;
@@ -67,42 +69,30 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     }
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    uiEventsListener = PublishSubject.create();
-    appClickedEvents = PublishSubject.create();
-    adClickedEvents = PublishSubject.create();
-    oneDecimalFormatter = new DecimalFormat("#.#");
-  }
-
   @Override public void onDestroy() {
     uiEventsListener = null;
     oneDecimalFormatter = null;
     adClickedEvents = null;
     appClickedEvents = null;
+    recommendsClickedEvents = null;
     userAvatar = null;
     super.onDestroy();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_home, container, false);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    if (bundlesList != null) {
-      outState.putParcelable(LIST_STATE_KEY, bundlesList.getLayoutManager()
-          .onSaveInstanceState());
-    }
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    uiEventsListener = PublishSubject.create();
+    appClickedEvents = PublishSubject.create();
+    recommendsClickedEvents = PublishSubject.create();
+    adClickedEvents = PublishSubject.create();
+    oneDecimalFormatter = new DecimalFormat("#.#");
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
-    super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     if (savedInstanceState != null) {
       if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
@@ -121,11 +111,29 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, appClickedEvents, adClickedEvents);
+        oneDecimalFormatter, appClickedEvents, adClickedEvents, recommendsClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
     attachPresenter(presenter);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build("HomeFragment", "", StoreContext.home);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_home, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (bundlesList != null) {
+      outState.putParcelable(LIST_STATE_KEY, bundlesList.getLayoutManager()
+          .onSaveInstanceState());
+    }
   }
 
   @Override public void onDestroyView() {
@@ -199,7 +207,11 @@ public class BottomHomeFragment extends FragmentView implements HomeView {
     return appClickedEvents;
   }
 
-  @Override public Observable<GetAdsResponse.Ad> adClicked() {
+  @Override public Observable<AppClick> recommendedAppClicked() {
+    return recommendsClickedEvents;
+  }
+
+  @Override public Observable<AdClick> adClicked() {
     return adClickedEvents;
   }
 

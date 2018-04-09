@@ -46,7 +46,7 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
     appsList.setAdapter(appsInBundleAdapter);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     if (!(homeBundle instanceof AppBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");

@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -15,6 +14,7 @@ import rx.subjects.PublishSubject;
  */
 
 public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
+  private static final int SOCIAL = R.layout.social_recommends_bundle_item;
   private static final int EDITORS = R.layout.editors_choice_bundle_item;
   private static final int APPS = R.layout.apps_bundle_item;
   private static final int STORE = R.layout.store_bundle_item;
@@ -24,19 +24,21 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<Application> appClickedEvents;
   private final PublishSubject<HomeMoreClick> uiEventsListener;
+  private final PublishSubject<AppClick> recommendsClickedEvents;
   private List<HomeBundle> bundles;
-  private PublishSubject<GetAdsResponse.Ad> adClickedEvents;
+  private PublishSubject<AdClick> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeMoreClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<Application> appClickedEvents,
-      PublishSubject<GetAdsResponse.Ad> adPublishSubject) {
+      PublishSubject<Application> appClickedEvents, PublishSubject<AdClick> adPublishSubject,
+      PublishSubject<AppClick> recommendsClickedEvents) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
     this.adClickedEvents = adPublishSubject;
+    this.recommendsClickedEvents = recommendsClickedEvents;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,6 +47,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return new EditorsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter,
             appClickedEvents);
+      case SOCIAL:
+        return new SocialBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(SOCIAL, parent, false), recommendsClickedEvents);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter, appClickedEvents);
@@ -63,12 +68,14 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   @Override public void onBindViewHolder(AppBundleViewHolder appBundleViewHolder, int position) {
-    appBundleViewHolder.setBundle(bundles.get(position));
+    appBundleViewHolder.setBundle(bundles.get(position), position);
   }
 
   @Override public int getItemViewType(int position) {
     switch (bundles.get(position)
         .getType()) {
+      case SOCIAL:
+        return SOCIAL;
       case APPS:
         return APPS;
       case EDITORS:

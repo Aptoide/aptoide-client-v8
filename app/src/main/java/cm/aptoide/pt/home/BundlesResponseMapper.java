@@ -1,6 +1,6 @@
 package cm.aptoide.pt.home;
 
-import android.support.annotation.NonNull;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -8,21 +8,24 @@ import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
+import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import rx.functions.Func1;
 
 /**
  * Created by jdandrade on 08/03/2018.
  */
 
 public class BundlesResponseMapper {
-  @NonNull Func1<GetStoreWidgets, List<HomeBundle>> map() {
-    return bundlesResponse -> fromWidgetsToBundles(bundlesResponse.getDataList()
-        .getList());
+
+  private final String marketName;
+
+  public BundlesResponseMapper(String marketName) {
+    this.marketName = marketName;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
@@ -37,15 +40,38 @@ public class BundlesResponseMapper {
       Event event = getEvent(widget);
 
       try {
+        String widgetTag = widget.getTag();
+        Object viewObject = widget.getViewObject();
+        String title = widget.getTitle();
         if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
 
-          appBundles.add(new AppBundle(widget.getTitle(), applicationsToApps(
-              ((ListApps) widget.getViewObject()).getDataList()
-                  .getList(), type), type, event, widget.getTag()));
+          appBundles.add(new AppBundle(title, applicationsToApps(
+              ((ListApps) viewObject).getDataList()
+                  .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
-          appBundles.add(
-              new AdBundle(widget.getTitle(), ((GetAdsResponse) widget.getViewObject()).getAds(),
-                  new Event().setName(Event.Name.getAds), widget.getTag()));
+          appBundles.add(new AdBundle(title,
+              new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
+              new Event().setName(Event.Name.getAds), widgetTag));
+        } else if (type.equals(HomeBundle.BundleType.SOCIAL)) {
+          List<Card> list = ((SocialResponse) viewObject).getDataList()
+              .getList();
+          if (!list.isEmpty()) {
+            List<App> apps = new ArrayList<>();
+            Card card = list.get(0);
+            App app = card.getApp();
+            apps.add(app);
+            if (card.hasUser()) {
+              appBundles.add(
+                  new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
+                      widgetTag, card.getUser()
+                      .getAvatar(), card.getUser()
+                      .getName()));
+            } else {
+              appBundles.add(
+                  new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
+                      widgetTag, R.mipmap.ic_launcher, marketName));
+            }
+          }
         }
       } catch (Exception ignore) {
       }
@@ -78,12 +104,15 @@ public class BundlesResponseMapper {
         }
       case ADS:
         return HomeBundle.BundleType.ADS;
+      case TIMELINE_CARD:
+        return HomeBundle.BundleType.SOCIAL;
       default:
         return HomeBundle.BundleType.APPS;
     }
   }
 
-  private List<Application> applicationsToApps(List<App> apps, AppBundle.BundleType type) {
+  private List<Application> applicationsToApps(List<App> apps, AppBundle.BundleType type,
+      String tag) {
     if (apps == null || apps.isEmpty()) {
       return Collections.emptyList();
     }
@@ -93,12 +122,12 @@ public class BundlesResponseMapper {
         applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic()));
+            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag));
       } else {
         applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId()));
+            .getPdownloads(), app.getPackageName(), app.getId(), tag));
       }
     }
 
