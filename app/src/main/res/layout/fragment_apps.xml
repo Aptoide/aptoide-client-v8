@@ -7,18 +7,24 @@
     >
 
   <include layout="@layout/action_bar"/>
-  <android.support.v4.widget.SwipeRefreshLayout
-      android:id="@+id/fragment_apps_swipe_container"
+  <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_apps_recycler_view"
+    <include layout="@layout/partial_view_progress_bar"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_apps_swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:visibility="gone"
-        />
-
-  </android.support.v4.widget.SwipeRefreshLayout>
+        >
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/fragment_apps_recycler_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:scrollbars="vertical"
+          android:visibility="gone"
+          />
+    </android.support.v4.widget.SwipeRefreshLayout>
+  </FrameLayout>
 </LinearLayout>

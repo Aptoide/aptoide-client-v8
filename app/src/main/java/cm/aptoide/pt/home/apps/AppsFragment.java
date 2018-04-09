@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -62,6 +63,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<Void> updateAll;
   private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
+  private ProgressBar progressBar;
   private BottomNavigationActivity bottomNavigationActivity;
   private SwipeRefreshLayout swipeRefreshLayout;
   private boolean showDownloads;
@@ -90,6 +92,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    progressBar.setVisibility(View.VISIBLE);
     setupRecyclerView();
     buildIgnoreUpdatesDialog();
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
@@ -155,6 +159,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
     showUpdates = true;
     if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      hideLoadingProgressBar();
       recyclerView.setVisibility(View.VISIBLE);
       recyclerView.smoothScrollToPosition(0);
     }
@@ -166,6 +171,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
     showInstalled = true;
     if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      hideLoadingProgressBar();
       recyclerView.setVisibility(View.VISIBLE);
       recyclerView.smoothScrollToPosition(0);
     }
@@ -177,6 +183,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
     showDownloads = true;
     if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      hideLoadingProgressBar();
       recyclerView.setVisibility(View.VISIBLE);
       recyclerView.smoothScrollToPosition(0);
     }
@@ -252,7 +259,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.addUpdateAppsList(updatesDownloadList);
     showUpdates = true;
     if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      hideLoadingProgressBar();
       recyclerView.setVisibility(View.VISIBLE);
+      recyclerView.smoothScrollToPosition(0);
     }
   }
 
@@ -335,8 +344,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     return showDownloads && showUpdates && showInstalled;
   }
 
+  private void hideLoadingProgressBar() {
+    progressBar.setVisibility(View.GONE);
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
+    progressBar = null;
     swipeRefreshLayout = null;
     ignoreUpdateDialog = null;
     recyclerView = null;
