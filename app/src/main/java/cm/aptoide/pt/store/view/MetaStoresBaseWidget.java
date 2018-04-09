@@ -43,10 +43,10 @@ public abstract class MetaStoresBaseWidget<T extends Displayable> extends Widget
             socialChannelsLayout.getChildCount() - 1));
         switch (socialChannel.getType()) {
           case FACEBOOK:
-            imageButton.setImageDrawable(getDrawable(R.drawable.facebook_logo));
+            imageButton.setImageDrawable(getDrawable(R.drawable.logo_facebook_large));
             break;
           case TWITTER:
-            imageButton.setImageDrawable(getDrawable(R.drawable.logo_twitch_large));
+            imageButton.setImageDrawable(getDrawable(R.drawable.logo_twitter_large));
             break;
           case YOUTUBE:
             imageButton.setImageDrawable(getDrawable(R.drawable.logo_youtube_large));
