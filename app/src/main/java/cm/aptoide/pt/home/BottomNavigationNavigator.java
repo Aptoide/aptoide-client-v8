@@ -43,8 +43,7 @@ public class BottomNavigationNavigator {
     switch (bottomNavigationPosition) {
       case homePosition:
         bottomNavigationAnalytics.sendNavigateToHomeClickEvent();
-        BottomHomeFragment bottomHomeFragment = new BottomHomeFragment();
-        navigateToHome(bottomHomeFragment);
+        navigateToHome();
         break;
       case searchPosition:
         bottomNavigationAnalytics.sendNavigateToSearchClickEvent();
@@ -55,31 +54,32 @@ public class BottomNavigationNavigator {
         break;
       case storesPosition:
         bottomNavigationAnalytics.sendNavigateToStoresClickEvent();
-        MyStoresFragment myStoresFragment =
-            MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
-        navigateToStore(myStoresFragment);
+        navigateToStore();
         break;
       case appsPosition:
         bottomNavigationAnalytics.sendNavigateToAppsClickEvent();
-        AppsFragment appsFragment = new AppsFragment();
-        navigateToApps(appsFragment);
+        navigateToApps();
         break;
     }
   }
 
-  public void navigateToHome(BottomHomeFragment bottomHomeFragment) {
+  public void navigateToHome() {
+    BottomHomeFragment bottomHomeFragment = new BottomHomeFragment();
     navigateToSelectedFragment(homePosition, bottomHomeFragment);
   }
 
-  private void navigateToSearch(SearchResultFragment searchResultFragment) {
+  public void navigateToSearch(SearchResultFragment searchResultFragment) {
     navigateToSelectedFragment(searchPosition, searchResultFragment);
   }
 
-  private void navigateToStore(MyStoresFragment myStoresFragment) {
+  public void navigateToStore() {
+    MyStoresFragment myStoresFragment =
+        MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
     navigateToSelectedFragment(storesPosition, myStoresFragment);
   }
 
-  private void navigateToApps(AppsFragment appsFragment) {
+  public void navigateToApps() {
+    AppsFragment appsFragment = new AppsFragment();
     navigateToSelectedFragment(appsPosition, appsFragment);
   }
 
