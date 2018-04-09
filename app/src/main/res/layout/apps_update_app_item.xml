@@ -32,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="16dp"
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@id/apps_updates_app_icon"
         android:layout_toLeftOf="@+id/apps_updates_update_button"
