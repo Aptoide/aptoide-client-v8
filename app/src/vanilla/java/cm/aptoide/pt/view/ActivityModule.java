@@ -135,13 +135,14 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
       NotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
+      BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
       AdsRepository adsRepository) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
-        (AptoideBottomNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity,
+        bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
         sharedPreferences, storeAccessor, defaultTheme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
         adsRepository);

@@ -37,7 +37,7 @@ public class SearchNavigator {
     navigator.navigateTo(resolveFragment(query), true);
   }
 
-  private Fragment resolveFragment(String query) {
+  public SearchResultFragment resolveFragment(String query) {
     if (storeName != null && storeName.length() > 0) {
       return SearchResultFragment.newInstance(query, storeName, defaultStoreName);
     }
