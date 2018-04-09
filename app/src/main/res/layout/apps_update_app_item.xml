@@ -73,6 +73,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxLines="1"
             tools:text="1239123ojd"
             style="@style/Aptoide.TextView.Medium.XS.Grey"
             />
