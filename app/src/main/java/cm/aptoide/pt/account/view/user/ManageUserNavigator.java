@@ -1,6 +1,6 @@
 package cm.aptoide.pt.account.view.user;
 
-import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 
 public class ManageUserNavigator {
@@ -17,8 +17,7 @@ public class ManageUserNavigator {
   }
 
   public void goToHome() {
-    navigator.navigateToCleaningBackStack(new BottomHomeFragment(),
-        true);
+    navigator.navigateToCleaningBackStack(new HomeFragment(), true);
   }
 
   public void goBack() {

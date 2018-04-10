@@ -33,7 +33,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/03/2018.
  */
 
-public class BottomHomeFragment extends NavigationTrackFragment implements HomeView {
+public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
 

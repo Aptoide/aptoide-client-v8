@@ -16,7 +16,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -139,7 +139,7 @@ public class AccountNavigator {
   }
 
   public void navigateToHomeView() {
-    fragmentNavigator.navigateToCleaningBackStack(new BottomHomeFragment(), true);
+    fragmentNavigator.navigateToCleaningBackStack(new HomeFragment(), true);
   }
 
   public void popView() {

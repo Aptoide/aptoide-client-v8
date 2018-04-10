@@ -61,7 +61,6 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
-import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
@@ -84,7 +83,6 @@ import rx.subjects.PublishSubject;
  */
 public class StoreFragment extends BasePagerToolbarFragment {
 
-  private static final String TAG = StoreFragment.class.getName();
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.STORES;
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
@@ -98,9 +96,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
       new AptoideViewPager.SimpleOnPageChangeListener() {
         @Override public void onPageSelected(int position) {
           if (position == 0) {
-            navigationTracker.registerScreen(
-                ScreenTagHistory.Builder.build(HomeFragment.class.getSimpleName(), "home",
-                    storeContext));
+            navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
+                .getSimpleName(), "home", storeContext));
           }
         }
       };
