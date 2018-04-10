@@ -194,8 +194,9 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
 
   @Override public Observable<Object> reachesBottom() {
     return RxRecyclerView.scrollEvents(bundlesList)
-        .filter(scroll -> isEndReached())
+        .map(scroll -> isEndReached())
         .distinctUntilChanged()
+        .filter(isEnd -> isEnd)
         .cast(Object.class);
   }
 
