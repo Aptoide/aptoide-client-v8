@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -329,8 +331,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
-    privacyPolicy = (TextView) view.findViewById(R.id.privacy_policy);
     separator = view.findViewById(R.id.separator);
+
+    termsAndConditions.setText(Html.fromHtml(
+        "By joining Aptoide you agree to our <a href=\'http://terms.aptoide.com\'>Terms and Conditions</a> and <a href=\'http://privacy.aptoide.com\'>Privacy Policy</a>"));
+    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.facebook_email_permission_regected_message)
