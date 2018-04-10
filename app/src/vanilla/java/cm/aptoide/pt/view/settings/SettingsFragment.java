@@ -86,6 +86,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String EXCLUDED_UPDATES_PREFERENCE_KEY = "excludedUpdates";
   private static final String SEND_FEEDBACK_PREFERENCE_KEY = "sendFeedback";
   private static final String TERMS_AND_CONDITIONS_PREFERENCE_KEY = "termsConditions";
+  private static final String PRIVACY_POLICY_PREFERENCE_KEY = "privacyPolicy";
 
   protected Toolbar toolbar;
   private Context context;
@@ -106,6 +107,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Preference excludedUpdates;
   private Preference sendFeedback;
   private Preference termsAndConditions;
+  private Preference privacyPolicy;
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
@@ -218,6 +220,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     excludedUpdates = findPreference(EXCLUDED_UPDATES_PREFERENCE_KEY);
     sendFeedback = findPreference(SEND_FEEDBACK_PREFERENCE_KEY);
     termsAndConditions = findPreference(TERMS_AND_CONDITIONS_PREFERENCE_KEY);
+    privacyPolicy = findPreference(PRIVACY_POLICY_PREFERENCE_KEY);
 
     setupClickHandlers();
   }
@@ -269,8 +272,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     subscriptions.add(RxPreference.clicks(termsAndConditions)
         .subscribe(clicked -> fragmentNavigator.navigateTo(
-            GenericWebviewFragment.newInstance(getString(R.string.terms_conditions_navigation_url)),
+            GenericWebviewFragment.newInstance(getString(R.string.terms_conditions_navigation_url),
+                getString(R.string.settings_terms_conditions)),
             true)));
+
+    subscriptions.add(RxPreference.clicks(privacyPolicy)
+        .subscribe(clicked -> fragmentNavigator.navigateTo(
+            GenericWebviewFragment.newInstance(getString(R.string.privacy_policy_navigation_url),
+                getString(R.string.settings_privacy_policy)), true)));
 
     subscriptions.add(accountManager.enabled()
         .observeOn(AndroidSchedulers.mainThread())

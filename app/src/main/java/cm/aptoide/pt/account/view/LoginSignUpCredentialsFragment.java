@@ -56,6 +56,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private Button loginSelectionButton;
   private Button signUpSelectionButton;
   private TextView termsAndConditions;
+  private TextView privacyPolicy;
   private View separator;
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
@@ -153,6 +154,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return RxView.clicks(termsAndConditions);
   }
 
+  @Override public Observable<Void> privacyPolicyClick() {
+    return RxView.clicks(privacyPolicy);
+  }
+
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
     return RxView.clicks(buttonLogin)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.LOGIN,
@@ -173,6 +178,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     signUpArea.setVisibility(View.VISIBLE);
     separator.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.VISIBLE);
+    privacyPolicy.setVisibility(View.VISIBLE);
   }
 
   @Override public void showAptoideLoginArea() {
@@ -181,6 +187,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     signUpArea.setVisibility(View.GONE);
     separator.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.GONE);
+    privacyPolicy.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
@@ -242,6 +249,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       signUpArea.setVisibility(View.GONE);
       separator.setVisibility(View.VISIBLE);
       termsAndConditions.setVisibility(View.VISIBLE);
+      privacyPolicy.setVisibility(View.VISIBLE);
       return true;
     }
     return false;
@@ -321,6 +329,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
+    privacyPolicy = (TextView) view.findViewById(R.id.privacy_policy);
     separator = view.findViewById(R.id.separator);
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(

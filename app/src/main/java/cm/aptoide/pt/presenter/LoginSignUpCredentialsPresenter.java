@@ -58,6 +58,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     handleGoogleSignUpResult();
 
     handleClickOnTermsAndConditions();
+    handleClickOnTPrivacyPolicy();
 
     handleFacebookSignUpResult();
     handleFacebookSignUpEvent();
@@ -284,6 +285,18 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.termsAndConditionsClick())
         .doOnNext(__ -> accountNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          crashReport.log(throwable);
+        });
+  }
+
+  private void handleClickOnTPrivacyPolicy() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.privacyPolicyClick())
+        .doOnNext(__ -> accountNavigator.navigateToPrivacyPolicy())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
