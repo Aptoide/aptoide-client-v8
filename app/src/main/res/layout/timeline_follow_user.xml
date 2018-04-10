@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="87dp"
     android:orientation="vertical"
@@ -14,7 +13,7 @@
       android:layout_width="60dp"
       android:layout_height="60dp"
       android:layout_centerVertical="true"
-      app:srcCompat="@drawable/ic_avatar_apps"
+      android:src="@drawable/ic_avatar_apps"
       />
 
   <ImageView
@@ -24,7 +23,6 @@
       android:layout_alignBottom="@+id/main_icon"
       android:layout_toLeftOf="@+id/names_layout"
       android:layout_toStartOf="@+id/names_layout"
-      tools:src="@drawable/ic_store"
       />
 
 
@@ -66,6 +64,7 @@
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_marginEnd="107dp"
+      android:layout_marginRight="107dp"
       tools:visibility="gone"
       />
 
