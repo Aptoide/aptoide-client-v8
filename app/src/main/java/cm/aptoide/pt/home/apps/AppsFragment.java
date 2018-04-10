@@ -159,9 +159,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
     showUpdates = true;
     if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      recyclerView.scrollToPosition(0);
       hideLoadingProgressBar();
       recyclerView.setVisibility(View.VISIBLE);
-      recyclerView.smoothScrollToPosition(0);
     }
   }
 
@@ -171,9 +171,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
     showInstalled = true;
     if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      recyclerView.scrollToPosition(0);
       hideLoadingProgressBar();
       recyclerView.setVisibility(View.VISIBLE);
-      recyclerView.smoothScrollToPosition(0);
     }
   }
 
@@ -183,9 +183,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
     showDownloads = true;
     if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      recyclerView.scrollToPosition(0);
       hideLoadingProgressBar();
       recyclerView.setVisibility(View.VISIBLE);
-      recyclerView.smoothScrollToPosition(0);
     }
   }
 
@@ -259,9 +259,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.addUpdateAppsList(updatesDownloadList);
     showUpdates = true;
     if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
+      recyclerView.scrollToPosition(0);
       hideLoadingProgressBar();
       recyclerView.setVisibility(View.VISIBLE);
-      recyclerView.smoothScrollToPosition(0);
     }
   }
 
