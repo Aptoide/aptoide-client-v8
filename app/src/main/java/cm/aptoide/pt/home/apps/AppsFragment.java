@@ -158,10 +158,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       adapter.addUpdateAppsList(list);
     }
     showUpdates = true;
-    if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
-      recyclerView.scrollToPosition(0);
-      hideLoadingProgressBar();
-      recyclerView.setVisibility(View.VISIBLE);
+    if (shouldShowAppsList()) {
+      showAppsList();
     }
   }
 
@@ -170,10 +168,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       adapter.addInstalledAppsList(installedApps);
     }
     showInstalled = true;
-    if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
-      recyclerView.scrollToPosition(0);
-      hideLoadingProgressBar();
-      recyclerView.setVisibility(View.VISIBLE);
+    if (shouldShowAppsList()) {
+      showAppsList();
     }
   }
 
@@ -182,10 +178,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       adapter.addDownloadAppsList(list);
     }
     showDownloads = true;
-    if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
-      recyclerView.scrollToPosition(0);
-      hideLoadingProgressBar();
-      recyclerView.setVisibility(View.VISIBLE);
+    if (shouldShowAppsList()) {
+      showAppsList();
     }
   }
 
@@ -256,12 +250,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesDownloadList(List<App> updatesDownloadList) {
-    adapter.addUpdateAppsList(updatesDownloadList);
+    if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
+      adapter.addUpdateAppsList(updatesDownloadList);
+    }
     showUpdates = true;
-    if (canShowListOfApps() && recyclerView.getVisibility() != View.VISIBLE) {
-      recyclerView.scrollToPosition(0);
-      hideLoadingProgressBar();
-      recyclerView.setVisibility(View.VISIBLE);
+    if (shouldShowAppsList()) {
+      showAppsList();
     }
   }
 
@@ -340,8 +334,17 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
   }
 
-  private boolean canShowListOfApps() {
-    return showDownloads && showUpdates && showInstalled;
+  private void showAppsList() {
+    recyclerView.scrollToPosition(0);
+    hideLoadingProgressBar();
+    recyclerView.setVisibility(View.VISIBLE);
+  }
+
+  private boolean shouldShowAppsList() {
+    return showDownloads
+        && showUpdates
+        && showInstalled
+        && recyclerView.getVisibility() != View.VISIBLE;
   }
 
   private void hideLoadingProgressBar() {
