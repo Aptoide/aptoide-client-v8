@@ -290,17 +290,16 @@ public class DeepLinkIntentReceiver extends ActivityView {
       deepLinkAnalytics.websiteFromBundlesWebPage();
       String bundleId = u.getLastPathSegment();
       Logger.v(TAG, "aptoide web site: bundle: " + bundleId);
-      if (!TextUtils.isEmpty(bundleId)
-              && bundleId.contains("-")
-              && bundleId.indexOf("-") < bundleId.length()) {
+      if (!TextUtils.isEmpty(bundleId)) {
         try {
-          Uri uri=Uri.parse("aptoide://cm.aptoide.pt/deeplink?name=listApps&layout=GRID&type=API&title=bundle&action="
-                  + URLEncoder.encode("https://ws75.aptoide.com/api/7/listApps/group_id="
-                          + bundleId.substring(bundleId.indexOf("-") + 1)
-                          + "/limit=30","utf-8")+
-                  "&storetheme=default");
+          Uri uri = Uri.parse(
+              "aptoide://cm.aptoide.pt/deeplink?name=listApps&layout=GRID&type=API&title=bundle&action="
+                  + URLEncoder.encode("https://ws75.aptoide.com/api/7/listApps/group_name="
+                  + bundleId
+                  + "/store_name=apps/limit=30", "utf-8")
+                  + "&storetheme=default");
           Logger.v(TAG, "aptoide web site: bundle: " + uri.toString());
-          return  dealWithAptoideSchema(uri);
+          return dealWithAptoideSchema(uri);
         } catch (Exception e) {
           Logger.e(TAG, "dealWithAptoideWebsite: ", e);
           return null;
