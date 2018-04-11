@@ -83,7 +83,7 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides @Named("facebookEvents") Collection<String> provideFacebookEvents() {
-    return Arrays.asList(   InstallAnalytics.APPLICATION_INSTALL,
+    return Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         InstallAnalytics.NOTIFICATION_APPLICATION_INSTALL,
         InstallAnalytics.EDITORS_APPLICATION_INSTALL,
         AddressBookAnalytics.FOLLOW_FRIENDS_CHOOSE_NETWORK,
