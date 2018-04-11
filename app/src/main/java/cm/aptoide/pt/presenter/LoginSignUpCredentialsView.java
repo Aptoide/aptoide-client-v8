@@ -26,10 +26,6 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   Observable<Void> facebookSignUpEvent();
 
-  Observable<Void> termsAndConditionsClick();
-
-  Observable<Void> privacyPolicyClick();
-
   Observable<AptoideCredentials> aptoideLoginEvent();
 
   Observable<AptoideCredentials> aptoideSignUpEvent();

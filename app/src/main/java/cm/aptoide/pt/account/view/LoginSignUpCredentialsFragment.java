@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -58,7 +57,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private Button loginSelectionButton;
   private Button signUpSelectionButton;
   private TextView termsAndConditions;
-  private TextView privacyPolicy;
   private View separator;
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
@@ -152,13 +150,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
             getStartupClickOrigin()));
   }
 
-  @Override public Observable<Void> termsAndConditionsClick() {
-    return RxView.clicks(termsAndConditions);
-  }
-
-  @Override public Observable<Void> privacyPolicyClick() {
-    return RxView.clicks(privacyPolicy);
-  }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
     return RxView.clicks(buttonLogin)
@@ -180,7 +171,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     signUpArea.setVisibility(View.VISIBLE);
     separator.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.VISIBLE);
-    privacyPolicy.setVisibility(View.VISIBLE);
   }
 
   @Override public void showAptoideLoginArea() {
@@ -189,7 +179,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     signUpArea.setVisibility(View.GONE);
     separator.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.GONE);
-    privacyPolicy.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
@@ -251,7 +240,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       signUpArea.setVisibility(View.GONE);
       separator.setVisibility(View.VISIBLE);
       termsAndConditions.setVisibility(View.VISIBLE);
-      privacyPolicy.setVisibility(View.VISIBLE);
       return true;
     }
     return false;
@@ -330,11 +318,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
-    termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
     separator = view.findViewById(R.id.separator);
 
-    termsAndConditions.setText(Html.fromHtml(
-        "By joining Aptoide you agree to our <a href=\'http://terms.aptoide.com\'>Terms and Conditions</a> and <a href=\'http://privacy.aptoide.com\'>Privacy Policy</a>"));
+    termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
+    termsAndConditions.setText(getText(R.string.terms_and_conditions_privacy_sign_up_message));
     termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
