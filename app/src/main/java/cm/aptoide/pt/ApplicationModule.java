@@ -1050,8 +1050,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides TimelineAnalytics providesTimelineAnalytics(
-      AnalyticsManager analyticsManager, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker, ReadPostsPersistence readPostsPersistence) {
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     return new TimelineAnalytics(navigationTracker, analyticsManager);
   }
 
