@@ -30,6 +30,10 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   Observable<AptoideCredentials> aptoideSignUpEvent();
 
+  Observable<Void> termsAndConditionsClickEvent();
+
+  Observable<Void> privacyPolicyClickEvent();
+
   void showAptoideSignUpArea();
 
   void showAptoideLoginArea();
