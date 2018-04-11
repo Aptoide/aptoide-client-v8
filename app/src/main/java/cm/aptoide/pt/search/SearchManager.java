@@ -2,6 +2,9 @@ package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.Database;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
@@ -12,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.store.StoreUtils;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -26,22 +30,22 @@ import rx.Single;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final HashMapNotNull<String, List<String>> subscribedStoresAuthMap;
-  private final List<Long> subscribedStoresIds;
   private final AdsRepository adsRepository;
+  private final Database database;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, List<Long> subscribedStoresIds,
-      AdsRepository adsRepository) {
+      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
+      Database database) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.subscribedStoresAuthMap = subscribedStoresAuthMap;
-    this.subscribedStoresIds = subscribedStoresIds;
     this.adsRepository = adsRepository;
+    this.database = database;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -51,7 +55,8 @@ import rx.Single;
 
   public Single<List<SearchAppResult>> searchInNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
-    return ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps, subscribedStoresIds,
+    return ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
+        StoreUtils.getSubscribedStoresIds(AccessorFactory.getAccessorFor(database, Store.class)),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .filter(listSearchApps -> hasResults(listSearchApps))
@@ -66,7 +71,8 @@ import rx.Single;
 
   public Single<List<SearchAppResult>> searchInFollowedStores(String query, boolean onlyTrustedApps,
       int offset) {
-    return ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps, subscribedStoresIds,
+    return ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps,
+        StoreUtils.getSubscribedStoresIds(AccessorFactory.getAccessorFor(database, Store.class)),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .filter(listSearchApps -> hasResults(listSearchApps))
