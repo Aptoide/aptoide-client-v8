@@ -52,7 +52,6 @@ public class CommentDialogFragment
   private Long previousCommentId;
   private TextInputLayout textInputLayout;
   private Button commentButton;
-  private boolean reply;
   private CommentDialogCallbackContract commentDialogCallbackContract;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private OkHttpClient httpClient;
@@ -186,8 +185,7 @@ public class CommentDialogFragment
     this.idAsString = args.getString(RESOURCE_ID_AS_STRING);
     this.idAsLong = args.getLong(RESOURCE_ID_AS_LONG);
 
-    this.reply = args.containsKey(PREVIOUS_COMMENT_ID);
-    if (this.reply) {
+    if (args.containsKey(PREVIOUS_COMMENT_ID)) {
       this.previousCommentId = args.getLong(PREVIOUS_COMMENT_ID);
     }
   }
