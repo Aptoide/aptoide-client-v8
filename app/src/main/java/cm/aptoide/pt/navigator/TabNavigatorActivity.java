@@ -29,8 +29,4 @@ public abstract class TabNavigatorActivity extends LoginBottomSheetActivity
       return Observable.empty();
     }));
   }
-
-  @Override public void clearNavigation() {
-    cache = null;
-  }
 }

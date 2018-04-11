@@ -19,7 +19,6 @@ import cm.aptoide.pt.remotebootconfig.datamodel.BootConfig;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.timeline.post.PostAnalytics;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.fasterxml.jackson.databind.DeserializationFeature;

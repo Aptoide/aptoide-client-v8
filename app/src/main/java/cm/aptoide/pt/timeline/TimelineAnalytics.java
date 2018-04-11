@@ -2,11 +2,7 @@ package cm.aptoide.pt.timeline;
 
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
-import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.social.data.ReadPostsPersistence;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,20 +53,12 @@ public class TimelineAnalytics {
   private static final String SOURCE = "source";
   private static final String APPS_SHORTCUTS = "apps_shortcuts";
   private static final String EXTERNAL = "EXTERNAL";
-  private final NotificationAnalytics notificationAnalytics;
   private final NavigationTracker navigationTracker;
-  private final ReadPostsPersistence readPostsPersistence;
-  private final List<Map<String, Object>> openTimelineEventsData;
   private final AnalyticsManager analyticsManager;
 
-  public TimelineAnalytics(NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker, ReadPostsPersistence readPostsPersistence,
-      AnalyticsManager analyticsManager) {
-    this.notificationAnalytics = notificationAnalytics;
+  public TimelineAnalytics(NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
     this.navigationTracker = navigationTracker;
-    this.readPostsPersistence = readPostsPersistence;
     this.analyticsManager = analyticsManager;
-    this.openTimelineEventsData = new ArrayList<>();
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {

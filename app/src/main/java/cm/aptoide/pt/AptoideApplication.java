@@ -938,8 +938,7 @@ public abstract class AptoideApplication extends Application {
 
   public TimelineAnalytics getTimelineAnalytics() {
     if (timelineAnalytics == null) {
-      timelineAnalytics = new TimelineAnalytics(getNotificationAnalytics(), getNavigationTracker(),
-          getReadPostsPersistence(), analyticsManager);
+      timelineAnalytics = new TimelineAnalytics(getNavigationTracker(), analyticsManager);
     }
     return timelineAnalytics;
   }
