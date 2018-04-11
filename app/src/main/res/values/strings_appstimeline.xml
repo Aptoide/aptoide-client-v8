@@ -9,7 +9,7 @@
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
   <string name="appstimeline_update_app">app</string>
   <string name="customtabs_open_native_app">Open in app</string>
-  <string name="social_timeline_you_will_share">What your followers will see:</string>
+  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
   <string name="social_timeline_you_will_share_comment">Your followers will see your comment:</string>
   <string name="social_timeline_you_will_share_like">Your followers will see your like:</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in timeline. Only show/share my store info.</string>
