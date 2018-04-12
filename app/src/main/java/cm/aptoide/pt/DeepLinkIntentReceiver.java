@@ -24,11 +24,9 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.link.AptoideInstall;
 import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -78,7 +76,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
   private AsyncTask<String, Void, Void> asyncTask;
-  private InstalledRepository installedRepository;
   private MinimalAdMapper adMapper;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -91,7 +88,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     analyticsManager = application.getAnalyticsManager();
     navigationTracker = application.getNavigationTracker();
     deepLinkAnalytics = new DeepLinkAnalytics(analyticsManager, navigationTracker);
-    installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
 
     adMapper = new MinimalAdMapper();
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
@@ -284,7 +280,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
         return parseAptoideInstallUri(appId);
       }
     } else if (u.getPath() != null && u.getPath()
-        .contains("store") && u.getPath()
         .contains("group")) {
       /**
        * Bundles
@@ -293,9 +288,20 @@ public class DeepLinkIntentReceiver extends ActivityView {
       List<String> path = u.getPathSegments();
       String bundleId = "";
       String storeName = "apps";
-      if (path != null && path.size() >= 4) {
-        bundleId = path.get(3);
-        storeName = path.get(2);
+      if (u.getPath()
+          .contains("store")) {
+        /**
+         * TYPE 2
+         */
+        if (path != null && path.size() >= 4) {
+          bundleId = path.get(3);
+          storeName = path.get(2);
+        }
+      } else {
+        /**
+         * TYPE 1
+         */
+        bundleId = u.getLastPathSegment();
       }
       Logger.v(TAG, "aptoide web site: bundle: " + bundleId);
       if (!TextUtils.isEmpty(bundleId)) {
