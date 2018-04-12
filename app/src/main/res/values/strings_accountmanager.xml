@@ -93,7 +93,7 @@
   <string name="twitch">Twitch</string>
   <string name="youtube">Youtube</string>
   <string name="edit_store_facebook_helper_text">Enter Facebook page</string>
-  <string name="edit_store_youtube_helper_text">Enter Your user or Channel</string>
+  <string name="edit_store_youtube_helper_text">Enter your username or channel</string>
 
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Sign in or register to get the most out of Aptoide</string>
