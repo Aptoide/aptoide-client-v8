@@ -243,22 +243,9 @@ public class VanillaFragmentProvider implements FragmentProvider {
         storeContext);
   }
 
-  @Override
-  public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId,
-      StoreContext storeContext) {
-    return CommentListFragment.newInstance(commentType, elementId, storeContext);
-  }
-
   @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
       String storeAnalyticsAction, StoreContext storeContext) {
     return CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction, storeContext);
-  }
-
-  @Override
-  public Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
-      String elementId, StoreContext storeContext) {
-    return CommentListFragment.newInstanceWithCommentDialogOpen(commentType, elementId,
-        storeContext);
   }
 
   @Override public Fragment newAddressBookFragment() {

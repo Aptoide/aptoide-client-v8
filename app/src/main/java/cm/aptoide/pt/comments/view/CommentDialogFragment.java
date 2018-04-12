@@ -106,28 +106,6 @@ public class CommentDialogFragment
     return fragment;
   }
 
-  public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId) {
-    Bundle args = new Bundle();
-    args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
-    args.putString(RESOURCE_ID_AS_STRING, timelineArticleId);
-
-    CommentDialogFragment fragment = new CommentDialogFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId,
-      long previousCommentId) {
-    Bundle args = new Bundle();
-    args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
-    args.putString(RESOURCE_ID_AS_STRING, timelineArticleId);
-    args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
-
-    CommentDialogFragment fragment = new CommentDialogFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
@@ -154,9 +132,6 @@ public class CommentDialogFragment
 
     switch (commentType) {
       case REVIEW:
-        titleTextView.setText(getString(R.string.dialog_title_comment));
-        break;
-      case TIMELINE:
         titleTextView.setText(getString(R.string.dialog_title_comment));
         break;
       case STORE:
