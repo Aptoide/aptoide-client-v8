@@ -26,7 +26,7 @@ public class AppViewSuggestedAppDisplayable extends GridAppDisplayable {
       AppViewSimilarAppAnalytics appViewSimilarAppAnalytics, NavigationTracker navigationTracker,
       StoreContext storeContext) {
     // TODO: 01-08-2017 neuro tags
-    super(app, null, true, navigationTracker, storeContext);
+    super(app, null, navigationTracker, storeContext);
 
     this.appViewSimilarAppAnalytics = appViewSimilarAppAnalytics;
   }

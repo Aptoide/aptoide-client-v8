@@ -1,17 +1,19 @@
 package cm.aptoide.pt.app.view.widget;
 
+import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.view.displayable.AppViewAdDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAdDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -40,7 +42,8 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
     List<Displayable> displayables = new LinkedList<>();
     for (MinimalAd minimalAd : minimalAds) {
       // TODO: 01-08-2017 neuro fill ad tag
-      displayables.add(new AppViewAdDisplayable(minimalAd, displayable.getNavigationTracker()));
+      displayables.add(
+          new AppViewSuggestedAdDisplayable(minimalAd, displayable.getNavigationTracker()));
     }
 
     for (App app : appsList) {
@@ -58,6 +61,13 @@ public class AppViewSuggestedAppsWidget extends Widget<AppViewSuggestedAppsDispl
       }
     };
 
+    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+      @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+          RecyclerView.State state) {
+        int margin = AptoideUtils.ScreenU.getPixelsForDip(5, getContext().getResources());
+        outRect.set(margin, margin, margin, margin);
+      }
+    });
     recyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), GridLayoutManager.HORIZONTAL, false));
     recyclerView.setNestedScrollingEnabled(false);

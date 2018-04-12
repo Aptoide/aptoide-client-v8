@@ -40,7 +40,7 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
 
     float rating = featureGraphicApplication.getRating();
     if (rating == 0) {
-      this.rating.setText(R.string.appcardview_title_no_starts);
+      this.rating.setText(R.string.appcardview_title_no_stars);
     } else {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }

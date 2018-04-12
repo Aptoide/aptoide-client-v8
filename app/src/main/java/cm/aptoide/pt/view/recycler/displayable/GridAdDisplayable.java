@@ -31,7 +31,7 @@ public class GridAdDisplayable extends DisplayablePojo<MinimalAd> {
   }
 
   @Override public int getViewLayout() {
-    return R.layout.displayable_grid_sponsored;
+    return R.layout.displayable_grid_ad;
   }
 
   public NavigationTracker getNavigationTracker() {
