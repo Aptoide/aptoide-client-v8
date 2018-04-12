@@ -336,13 +336,13 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     separator = view.findViewById(R.id.separator);
 
-    ClickableSpan clickableSpan = new ClickableSpan() {
+    ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
         termsAndConditionsClicked.onNext(null);
       }
     };
 
-    ClickableSpan clickableSpan2 = new ClickableSpan() {
+    ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
         privacyPolicyClicked.onNext(null);
       }
@@ -351,19 +351,21 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
     String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
     String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
-    String compositeString =
+    String privacyAndTerms =
         String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
 
-    SpannableString compositeSpan = new SpannableString(compositeString);
-    compositeSpan.setSpan(clickableSpan, compositeString.indexOf(termsAndConditionsPlaceHolder),
-        compositeString.indexOf(termsAndConditionsPlaceHolder)
+    SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
+    privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder),
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder)
             + termsAndConditionsPlaceHolder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    compositeSpan.setSpan(clickableSpan2, compositeString.indexOf(privacyPolicyPlaceHolder),
-        compositeString.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
+    privacyAndTermsSpan.setSpan(privacyPolicyClickListener,
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder),
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
-    termsAndConditions.setText(compositeSpan);
+    termsAndConditions.setText(privacyAndTermsSpan);
     termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
