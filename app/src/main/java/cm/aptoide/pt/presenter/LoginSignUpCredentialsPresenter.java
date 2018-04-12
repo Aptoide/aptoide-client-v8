@@ -76,9 +76,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.termsAndConditionsClickEvent())
-        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> accountNavigator.navigateToTermsAndConditions())
-        .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -88,9 +86,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.privacyPolicyClickEvent())
-        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(__ -> accountNavigator.navigateToPrivacyPolicy())
-        .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
