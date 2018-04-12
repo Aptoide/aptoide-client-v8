@@ -890,8 +890,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       Database database, AdsRepository adsRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
-        AccessorFactory.getAccessorFor(database, Store.class)), StoreUtils.getSubscribedStoresIds(
-        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), adsRepository);
+        AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
