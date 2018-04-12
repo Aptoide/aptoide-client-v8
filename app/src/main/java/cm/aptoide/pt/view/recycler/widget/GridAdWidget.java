@@ -52,7 +52,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
       DecimalFormat oneDecimalFormatter = new DecimalFormat("#.#");
       rating.setText(oneDecimalFormatter.format(pojo.getStars()));
     } catch (Exception e) {
-      rating.setText(R.string.appcardview_title_no_starts);
+      rating.setText(R.string.appcardview_title_no_stars);
     }
   }
 }

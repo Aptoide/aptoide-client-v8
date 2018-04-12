@@ -61,7 +61,7 @@
   <string name="appview_rate_this_app_text">Rate this app</string>
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
-  <string name="appcardview_title_no_starts" translatable="false">- -</string>
+  <string name="appcardview_title_no_stars" translatable="false">- -</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>

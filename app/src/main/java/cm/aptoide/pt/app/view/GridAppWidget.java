@@ -54,7 +54,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
           .getRating()
           .getAvg()));
     } catch (Exception e) {
-      rating.setText(R.string.appcardview_title_no_starts);
+      rating.setText(R.string.appcardview_title_no_stars);
     }
     storeName = pojo.getStore()
         .getName();

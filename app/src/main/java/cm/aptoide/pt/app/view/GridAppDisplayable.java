@@ -27,8 +27,8 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
   public GridAppDisplayable() {
   }
 
-  public GridAppDisplayable(App pojo, String tag, boolean totalDownloads,
-      NavigationTracker navigationTracker, StoreContext storeContext) {
+  public GridAppDisplayable(App pojo, String tag, NavigationTracker navigationTracker,
+      StoreContext storeContext) {
     super(pojo);
     this.tag = tag;
     this.navigationTracker = navigationTracker;
@@ -55,5 +55,4 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
   public String getTag() {
     return this.tag;
   }
-
 }
