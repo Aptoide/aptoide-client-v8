@@ -133,7 +133,7 @@
   <string name="appview_button_close">Close</string>
   <string name="appview_button_dont_show_again">Don\'t show \n again</string>
 
-  <string name="appview_not_logged_in_share_title_connect_with">Connect with</string>
+  <string name="appview_not_logged_in_share_title_connect_with">Connect with:</string>
   <string name="appview_not_logged_in_share_title_fragment">You are one step away from sharing this app with your followers</string>
   <string name="appview_not_logged_in_share_message_posts_warning">This is what your followers will see</string>
 
