@@ -252,8 +252,6 @@ public class MyAccountPresenterTest {
     myAccountPresenter.present();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    //Then should navigate to the Notification
-    verify(myAccountNavigator).navigateToNotification(aptoideNotification);
     //Then send the analytics
     verify(analytics).sendNotificationTouchEvent(anyString());
     //Then register the screen
