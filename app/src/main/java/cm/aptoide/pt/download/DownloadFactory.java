@@ -15,7 +15,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.install.AutoUpdate;
-import cm.aptoide.pt.social.data.AppUpdate;
 import cm.aptoide.pt.updates.view.UpdateDisplayable;
 import io.realm.RealmList;
 
@@ -210,35 +209,6 @@ public class DownloadFactory {
         .getMd5sum(), appToDownload.getPackageName(), downloadPaths.path, appToDownload.getFile()
         .getMd5sum(), appToDownload.getObb(), downloadPaths.altPath, appToDownload.getFile()
         .getVercode(), appToDownload.getFile()
-        .getVername()));
-    return download;
-  }
-
-  public Download create(AppUpdate app, int downloadAction) {
-    final File file = app.getFile();
-    validateApp(app.getFile()
-            .getMd5sum(), app.getObb(), app.getPackageName(), app.getAppUpdateName(),
-        file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
-    String path = app.getFile()
-        .getPath();
-    String altPath = app.getFile()
-        .getPathAlt();
-    ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
-    Download download = new Download();
-    download.setMd5(app.getFile()
-        .getMd5sum());
-    download.setIcon(app.getAppUpdateIcon());
-    download.setAction(downloadAction);
-    download.setAppName(app.getAppUpdateName());
-    download.setPackageName(app.getPackageName());
-    download.setVersionCode(app.getFile()
-        .getVercode());
-    download.setVersionName(app.getFile()
-        .getVername());
-    download.setFilesToDownload(createFileList(app.getFile()
-        .getMd5sum(), app.getPackageName(), downloadPaths.path, app.getFile()
-        .getMd5sum(), app.getObb(), downloadPaths.altPath, app.getFile()
-        .getVercode(), app.getFile()
         .getVername()));
     return download;
   }

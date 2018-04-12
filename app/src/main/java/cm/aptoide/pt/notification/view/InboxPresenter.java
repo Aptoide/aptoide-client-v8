@@ -12,7 +12,6 @@ import rx.Scheduler;
 public class InboxPresenter implements Presenter {
 
   private final InboxView view;
-  private final InboxNavigator inboxNavigator;
   private final NotificationCenter notificationCenter;
   private final NotificationAnalytics analytics;
   private final CrashReport crashReport;
@@ -20,12 +19,10 @@ public class InboxPresenter implements Presenter {
   private final int NUMBER_OF_NOTIFICATIONS = 50;
   private final Scheduler viewScheduler;
 
-  public InboxPresenter(InboxView view, InboxNavigator inboxNavigator,
-      NotificationCenter notificationCenter, CrashReport crashReport,
-      NavigationTracker navigationTracker, NotificationAnalytics analytics,
+  public InboxPresenter(InboxView view, NotificationCenter notificationCenter,
+      CrashReport crashReport, NavigationTracker navigationTracker, NotificationAnalytics analytics,
       Scheduler viewScheduler) {
     this.view = view;
-    this.inboxNavigator = inboxNavigator;
     this.notificationCenter = notificationCenter;
     this.crashReport = crashReport;
     this.navigationTracker = navigationTracker;
@@ -54,7 +51,6 @@ public class InboxPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.notificationSelection())
         .doOnNext(notification -> {
-          inboxNavigator.navigateToNotification(notification);
           analytics.sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
           navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
               .getSimpleName()));

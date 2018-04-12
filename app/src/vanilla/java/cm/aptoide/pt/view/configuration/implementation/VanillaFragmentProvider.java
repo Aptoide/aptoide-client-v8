@@ -19,7 +19,6 @@ import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.GetStoreFragment;
 import cm.aptoide.pt.store.view.GetStoreWidgetsFragment;
@@ -172,11 +171,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return new ListStoresFragment();
   }
 
-  @Override public Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
-      StoreContext storeContext) {
-    return TimelineFragment.newInstance(action, userId, storeId, storeContext);
-  }
-
   @Override public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
       StoreContext storeName) {
     return MyStoresFragment.newInstance(event, storeTheme, tag, storeName);
@@ -249,22 +243,9 @@ public class VanillaFragmentProvider implements FragmentProvider {
         storeContext);
   }
 
-  @Override
-  public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId,
-      StoreContext storeContext) {
-    return CommentListFragment.newInstance(commentType, elementId, storeContext);
-  }
-
   @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
       String storeAnalyticsAction, StoreContext storeContext) {
     return CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction, storeContext);
-  }
-
-  @Override
-  public Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
-      String elementId, StoreContext storeContext) {
-    return CommentListFragment.newInstanceWithCommentDialogOpen(commentType, elementId,
-        storeContext);
   }
 
   @Override public Fragment newAddressBookFragment() {

@@ -30,15 +30,6 @@ public class GetFollowersRequest extends V7<GetFollowers, GetFollowersRequest.Bo
         tokenInvalidator, sharedPreferences);
   }
 
-  public static GetFollowersRequest ofStore(BodyInterceptor<BaseBody> bodyInterceptor, Long storeId,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    Body body = new Body();
-    body.setStoreId(storeId);
-    return new GetFollowersRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
-  }
-
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getTimelineFollowers(body, bypassCache);

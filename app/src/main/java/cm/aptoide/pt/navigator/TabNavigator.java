@@ -10,6 +10,4 @@ public interface TabNavigator {
   void navigate(TabNavigation tabNavigation);
 
   Observable<TabNavigation> navigation();
-
-  void clearNavigation();
 }

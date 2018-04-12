@@ -128,18 +128,6 @@
         android:value="GlideModule"/>
 
     <activity
-        android:name=".timeline.post.PostActivity"
-        android:launchMode="singleInstance"
-        android:windowSoftInputMode="adjustPan"
-        >
-      <intent-filter>
-        <action android:name="android.intent.action.SEND"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-        <data android:mimeType="text/plain"/>
-      </intent-filter>
-    </activity>
-
-    <activity
         android:name=".billing.view.BillingActivity"
         android:launchMode="singleInstance"
         android:screenOrientation="sensor"

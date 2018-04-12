@@ -224,11 +224,6 @@ public class HomeFragment extends StoreFragment {
       updatesBadge = new BadgeView(getContext(), layout);
     }
 
-    layout = getTabLayout(adapter, Event.Name.getUserTimeline);
-    if (layout != null) {
-      notificationsBadge = new BadgeView(getContext(), layout);
-    }
-
     ((AptoideApplication) getContext().getApplicationContext()).getNotificationCenter()
         .getUnreadNotifications()
         .flatMap(aptoideNotifications -> accountManager.accountStatus()
@@ -428,9 +423,6 @@ public class HomeFragment extends StoreFragment {
         return Event.Name.myDownloads;
       case TabNavigation.STORES:
         return Event.Name.myStores;
-      case TabNavigation.TIMELINE:
-      case TabNavigation.COMMENTS:
-        return Event.Name.getUserTimeline;
       case TabNavigation.UPDATES:
         return Event.Name.myUpdates;
       case TabNavigation.HOME:

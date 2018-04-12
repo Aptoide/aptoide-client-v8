@@ -64,7 +64,6 @@ import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
 import cm.aptoide.pt.link.AptoideInstallParser;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
@@ -87,10 +86,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
-import cm.aptoide.pt.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.social.data.ReadPostsPersistence;
-import cm.aptoide.pt.social.data.TimelineRepository;
-import cm.aptoide.pt.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -190,7 +186,6 @@ public abstract class AptoideApplication extends Application {
   private EntryPointChooser entryPointChooser;
   private FileManager fileManager;
   private NotificationProvider notificationProvider;
-  private TimelineRepositoryFactory timelineRepositoryFactory;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResulMap;
   private BillingPool billingPool;
@@ -856,20 +851,6 @@ public abstract class AptoideApplication extends Application {
     return syncStorage;
   }
 
-  public TimelineRepository getTimelineRepository(String action, Context context) {
-    if (timelineRepositoryFactory == null) {
-      timelineRepositoryFactory =
-          new TimelineRepositoryFactory(new HashMap<>(), getAccountSettingsBodyInterceptorPoolV7(),
-              getDefaultClient(), getDefaultSharedPreferences(), getTokenInvalidator(),
-              new LinksHandlerFactory(this), getPackageRepository(),
-              WebService.getDefaultConverter(),
-              new TimelineResponseCardMapper(accountManager, getInstallManager(), getMarketName()),
-              RepositoryFactory.getUpdateRepository(context,
-                  ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences()));
-    }
-    return timelineRepositoryFactory.create(action);
-  }
-
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     if (fragmentResultRelay == null) {
       fragmentResultRelay = BehaviorRelay.create();
@@ -957,8 +938,7 @@ public abstract class AptoideApplication extends Application {
 
   public TimelineAnalytics getTimelineAnalytics() {
     if (timelineAnalytics == null) {
-      timelineAnalytics = new TimelineAnalytics(getNotificationAnalytics(), getNavigationTracker(),
-          getReadPostsPersistence(), analyticsManager);
+      timelineAnalytics = new TimelineAnalytics(getNavigationTracker(), analyticsManager);
     }
     return timelineAnalytics;
   }
