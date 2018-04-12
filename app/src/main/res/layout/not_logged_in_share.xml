@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/not_logged_in_share_title_fragment"
+            android:text="@string/appview_not_logged_in_share_title_fragment"
             style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
             />
 
@@ -242,7 +242,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/not_logged_in_share_title_connect_with"
+            android:text="@string/appview_not_logged_in_share_title_connect_with"
             style="@style/Aptoide.TextView.Medium.S.Black"
             />
 
@@ -280,7 +280,7 @@
             android:layout_gravity="end"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="@string/not_logged_in_share_message_posts_warning"
+            android:text="@string/appview_not_logged_in_share_message_posts_warning"
             />
 
       </LinearLayout>

@@ -82,16 +82,17 @@
   <!--Delete account-->
   <string name="deleteaccount_message_delete">You are about to permanently delete your user account and store (if you have one) on Aptoide. This cannot be undone.</string>
   <string name="deleteaccount_message_confirm_delete">Type your account password below to confirm</string>
-  <string name="deleteaccount_message_insert_password">your password here...</string>
+  <string name="deleteaccount_message_insert_password">your password here…</string>
   <string name="deleteaccount_button_delete">Permanently delete</string>
   <string name="deleteaccount_message_general_error">Oops… Something went wrong. Try again!</string>
-  <string name="deleteaccount_message_error_password">Oops... Wrong password. Please try again!</string>
+  <string name="deleteaccount_message_error_password">Oops… Wrong password. Please try again!</string>
   <string name="deleteaccount_messege_success">Your account has been deleted!</string>
   <string name="deleteaccount_message_subtitle_success">We hope to see you soon.</string>
   <string name="deleteaccount_message_24_h">For security reasons, it can take up to 24 hours for your account to be deleted. We will keep you updated via email along the process.</string>
-  <string name="deleteaccount_message_insert_delete">Type DELETE below to confirm </string>
-  <string name="deleteaccount_message_subtitle_insert_delete">Type DELETE here</string>
+  <string name="deleteaccount_message_insert_delete">Type %s below to confirm</string>
+  <string name="deleteaccount_message_subtitle_insert_delete">Type %s here</string>
+  <string name="deleteaccount_short_delete" translatable="false">DELETE</string>
   <string name="deleteaccount_message_success_repeated">You already requested your account to be deleted!</string>
-  <string name="deleteaccount_message_24_h_repeated">This process might take up to 24 hours to be completed and you'll be notified once it's done.</string>
+  <string name="deleteaccount_message_24_h_repeated">This process might take up to 24 hours to be completed and you\'ll be notified once it\'s done.</string>
 
 </resources>
