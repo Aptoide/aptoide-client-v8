@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -11,12 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -29,9 +31,9 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +54,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject InstallAnalytics installAnalytics;
-  @Inject NavigationTracker navigationTracker;
   @Inject UpdatesAnalytics updatesAnalytics;
   @Inject AptoideAccountManager accountManager;
   @Inject AppsNavigator appsNavigator;
@@ -62,7 +63,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<Void> updateAll;
   private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
+  private ProgressBar progressBar;
   private BottomNavigationActivity bottomNavigationActivity;
+  private SwipeRefreshLayout swipeRefreshLayout;
+  private boolean showDownloads;
+  private boolean showUpdates;
+  private boolean showInstalled;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -76,16 +82,20 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     super.onViewCreated(view, savedInstanceState);
-
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
     adapter =
         new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
+    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    progressBar.setVisibility(View.VISIBLE);
     setupRecyclerView();
-
     buildIgnoreUpdatesDialog();
-
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
 
     attachPresenter(new AppsPresenter(this, new AppsManager(new UpdatesManager(
@@ -139,19 +149,38 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_apps, container, false);
   }
 
   @Override public void showUpdatesList(List<App> list) {
-    adapter.addUpdateAppsList(list);
+    if (list != null && !list.isEmpty()) {
+      adapter.addUpdateAppsList(list);
+    }
+    showUpdates = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
-    adapter.addInstalledAppsList(installedApps);
+    if (installedApps != null && !installedApps.isEmpty()) {
+      adapter.addInstalledAppsList(installedApps);
+    }
+    showInstalled = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public void showDownloadsList(List<App> list) {
-    adapter.addDownloadAppsList(list);
+    if (list != null && !list.isEmpty()) {
+      adapter.addDownloadAppsList(list);
+    }
+    showDownloads = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public Observable<App> retryDownload() {
@@ -221,7 +250,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesDownloadList(List<App> updatesDownloadList) {
-    adapter.addUpdateAppsList(updatesDownloadList);
+    if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
+      adapter.addUpdateAppsList(updatesDownloadList);
+    }
+    showUpdates = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public Observable<Void> updateAll() {
@@ -244,7 +279,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUnknownErrorMessage() {
-    ShowMessage.asSnack(this, R.string.unknown_error);
+    Snackbar.make(this.getView(), R.string.unknown_error, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void removeExcludedUpdates(List<App> excludedUpdatesList) {
@@ -288,8 +324,37 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.removeUpdatesList(installedUpdatesList);
   }
 
+  @Override public Observable<Void> refreshApps() {
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
+  @Override public void hidePullToRefresh() {
+    if (swipeRefreshLayout.isRefreshing()) {
+      swipeRefreshLayout.setRefreshing(false);
+    }
+  }
+
+  private void showAppsList() {
+    recyclerView.scrollToPosition(0);
+    hideLoadingProgressBar();
+    recyclerView.setVisibility(View.VISIBLE);
+  }
+
+  private boolean shouldShowAppsList() {
+    return showDownloads
+        && showUpdates
+        && showInstalled
+        && recyclerView.getVisibility() != View.VISIBLE;
+  }
+
+  private void hideLoadingProgressBar() {
+    progressBar.setVisibility(View.GONE);
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
+    progressBar = null;
+    swipeRefreshLayout = null;
     ignoreUpdateDialog = null;
     recyclerView = null;
     adapter = null;

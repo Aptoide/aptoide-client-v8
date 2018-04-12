@@ -61,7 +61,7 @@
   <string name="appview_rate_this_app_text">Rate this app</string>
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
-  <string name="appcardview_title_no_starts" translatable="false">- -</string>
+  <string name="appcardview_title_no_stars" translatable="false">- -</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -478,9 +478,6 @@
   <string name="hello_follow_me_on_aptoide">Hello! Follow me on %s</string>
 
   <!-- Not Logged in Fragment -->
-  <string name="not_logged_in_share_title_fragment">You are one step away from sharing this App in Aptoide timeline with your friends:</string>
-  <string name="not_logged_in_share_title_connect_with">Connect with</string>
-  <string name="not_logged_in_share_message_posts_warning">No posts on your behalf will be done</string>
   <string name="not_logged_in_share_short_start_interacting">Start interacting:</string>
   <string name="fragment_payment_login_description">To complete your purchase please log in</string>
   <string name="fragment_payment_login_separator_description">Or using your email</string>
@@ -526,10 +523,9 @@
 
   <string name="all_button_ok">OK</string>
   <string name="home_recommends">%s recommends</string>
-  <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
-  <string name="appview_button_recommend">Recommend</string>
 
   <!--Terms and Conditions URL navigation-->
   <string name="terms_conditions_navigation_url" translatable="false">https://terms.aptoide.com</string>
+
 </resources>
 

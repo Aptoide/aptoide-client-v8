@@ -14,6 +14,6 @@
     android:text="@string/all_title_ad"
     android:textColor="@color/white"
     android:textStyle="bold"
-    tools:showIn="@layout/displayable_app_view_ad"
+    tools:showIn="@layout/displayable_app_view_suggested_ad"
     style="@style/Aptoide.TextView.Regular.XXS"
     />

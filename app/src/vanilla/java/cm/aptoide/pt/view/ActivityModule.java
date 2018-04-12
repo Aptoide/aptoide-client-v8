@@ -23,10 +23,14 @@ import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.BottomNavigationAnalytics;
+import cm.aptoide.pt.home.BottomNavigationMapper;
+import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
@@ -129,13 +133,14 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
       NotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
       StoreRepository storeRepository, FragmentNavigator fragmentNavigator,
+      BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
       @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
       AdsRepository adsRepository) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
-        (AptoideBottomNavigator) activity, (DeepLinkManager.DeepLinkMessages) activity,
+        bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
         sharedPreferences, storeAccessor, defaultTheme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
         adsRepository);
@@ -145,7 +150,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy, AutoUpdate autoUpdate,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
-      FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager) {
+      FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager,
+      BottomNavigationNavigator bottomNavigationNavigator) {
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     InstallManager installManager = application.getInstallManager();
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
@@ -154,7 +160,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
-        AndroidSchedulers.mainThread());
+        AndroidSchedulers.mainThread(), bottomNavigationNavigator);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
@@ -216,5 +222,21 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       FragmentNavigator fragmentNavigator, MyAccountNavigator myAccountNavigator,
       AccountNavigator accountNavigator) {
     return new NewAccountNavigator(fragmentNavigator, myAccountNavigator, accountNavigator);
+  }
+
+  @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
+    return new BottomNavigationMapper();
+  }
+
+  @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
+      FragmentNavigator fragmentNavigator, @Named("defaultStoreName") String defaultStoreName,
+      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
+    return new BottomNavigationNavigator(fragmentNavigator, defaultStoreName,
+        bottomNavigationAnalytics, searchAnalytics);
+  }
+
+  @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
+      AnalyticsManager manager, NavigationTracker tracker) {
+    return new BottomNavigationAnalytics(manager, tracker);
   }
 }

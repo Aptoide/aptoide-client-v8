@@ -91,7 +91,6 @@ import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
-import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
@@ -890,8 +889,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       Database database, AdsRepository adsRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
-        AccessorFactory.getAccessorFor(database, Store.class)), StoreUtils.getSubscribedStoresIds(
-        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), adsRepository);
+        AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1113,10 +1111,5 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName) {
     return new BundlesResponseMapper(marketName);
-  }
-
-  @Singleton @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
-      AnalyticsManager manager, NavigationTracker tracker) {
-    return new BottomNavigationAnalytics(manager, tracker);
   }
 }

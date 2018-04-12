@@ -229,8 +229,7 @@ public class DisplayablesFactory {
 
       for (App app : apps) {
         DisplayablePojo<App> diplayable =
-            new GridAppDisplayable(app, wsWidget.getTag(), storeContext == StoreContext.home,
-                navigationTracker, storeContext);
+            new GridAppDisplayable(app, wsWidget.getTag(), navigationTracker, storeContext);
         displayables.add(diplayable);
       }
     }

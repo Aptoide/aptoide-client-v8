@@ -1,8 +1,17 @@
 <resources>
   <!-- Timeline Fragment -->
+  <string name="displayable_social_timeline_app_update_name">App %1$s</string>
   <string name="displayable_social_timeline_article_get_app_button">Get app %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">Update %1$s</string>
+  <string name="displayable_social_timeline_app_update_updated">Updated</string>
+  <string name="displayable_social_timeline_app_update_updating">Updating</string>
+  <string name="displayable_social_timeline_app_update_error">Update Error</string>
+  <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
+  <string name="appstimeline_update_app">app</string>
   <string name="customtabs_open_native_app">Open in app</string>
-  <string name="social_timeline_you_will_share">What your followers will see:</string>
+  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
+  <string name="social_timeline_you_will_share_comment">Your followers will see your comment:</string>
+  <string name="social_timeline_you_will_share_like">Your followers will see your like:</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in timeline. Only show/share my store info.</string>
   <string name="social_timeline_share_dialog_title">Thank you for sharing</string>
   <string name="social_timeline_share_bar_following">Follow more stores and connect with your friends.</string>
@@ -55,10 +64,78 @@
   <string name="addressbook_about">About address book</string>
   <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to make a connection</string>
 
-  <string name="timeline_short_like_present_singular">%s likes it</string>
+  <string name="timeline_short_related_to">Related to</string>
+  <string name="timeline_title_popular_app_among_friends">Popular app among friends</string>
 
+  <string name="timeline_short_card_sub_title_share_past_plural">shared</string>
+  <string name="timeline_short_plus" translatable="false">%s+</string>
+
+
+  <string name="timeline_title_likes">Likes</string>
+
+  <string name="timeline_short_like_present_singular">%s likes it</string>
+  <string name="timeline_short_like_present_plural">%d likes</string>
+
+  <plurals
+      name="timeline_short_comment">
+    <item quantity="one">1 comment</item>
+    <item quantity="other">%d  comments</item>
+  </plurals>
   <string name="timeline_button_like">Like</string>
   <string name="timeline_button_comment">Comment</string>
   <string name="timeline_button_share">Share</string>
+
+
+  <string name="timeline_title_card_title_recommend_present_singular">%s recommends</string>
+  <string name="timeline_title_card_title_has_update_present_singular">%s has an update</string>
+
+  <string name="timeline_title_card_title_post_past_singular">%s posted</string>
+
+  <string name="timeline_title_card_title_share_past_singular">%s shared</string>
+
+  <string name="timeline_title_card_title_install_past_singular">%s installed</string>
+
+  <string name="timeline_title_card_title_has_new_apps_present_singular">%s store has new apps</string>
+
+  <!--Error Messages regarding access level of the users/stores-->
+  <string name="timeline_message_error_you_need_to_create_store_with_social_action">You need to create a store to like, comment or share</string>
+  <string name="timeline_message_error_you_need_to_set_store_or_user_to_public">You need to set your store or user to public. Go to https://www.aptoide.com</string>
+
+  <!--post-->
+  <string name="timeline_title_new_post">New Post</string>
+  <string name="timeline_button_post">Post</string>
+  <string name="timeline_message_share_on_timeline">Share your thoughts or a link related to an app</string>
+  <string name="timeline_title_related_app">Related app</string>
+  <string name="timeline_message_write_something">Write something</string>
+  <string name="timeline_message_pick_an_app">Pick an app related to your post</string>
+  <string name="timeline_button_open_uploader">Open</string>
+  <string name="timeline_message_upload_app">Upload this app to Aptoide</string>
+  <string name="timeline_message_share_on_timeline_external">Write something (optional)</string>
+  <string name="timeline_title_sponsored">Sponsored</string>
+  <string name="timeline_title_header_notifications">Notifications</string>
+  <string name="timeline_title_header_add_friend">Follow Friend</string>
+  <string name="timeline_button_get_started">Get started</string>
+  <string name="timeline_message_timeline_description">Timeline makes it easy to create posts about apps, learn about your friends activity, and connect with people. All in one place.</string>
+
+  <!--overflow button for card-->
+  <string name="timeline_button_unfollow_user">Unfollow user</string>
+  <string name="timeline_button_unfollow_store">Unfollow store</string>
+  <string name="timeline_button_report_abuse">Report abuse</string>
+  <string name="timeline_button_delete_post">Delete post</string>
+  <string name="timeline_short_unfollow_user">Unfollowing %s</string>
+
+  <!-- social recommend flow -->
+  <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
+  <string name="appview_button_recommend">Recommend</string>
+  <string name="appview_message_preview_timeline_recommends">This is what your followers will see</string>
+  <string name="appview_button_continue">Continue</string>
+  <string name="appview_button_cancel">Cancel</string>
+  <string name="appview_button_close">Close</string>
+  <string name="appview_button_dont_show_again">Don\'t show \n again</string>
+
+  <string name="appview_not_logged_in_share_title_connect_with">Connect with:</string>
+  <string name="appview_not_logged_in_share_title_fragment">You are one step away from sharing this app with your followers</string>
+  <string name="appview_not_logged_in_share_message_posts_warning">This is what your followers will see</string>
+
 
 </resources>

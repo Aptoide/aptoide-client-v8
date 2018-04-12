@@ -20,8 +20,8 @@
   <string name="please_wait_upload">If you\'re uploading, it may take a while…</string>
 
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">New App Navigation</string>
-  <string name="wizard_sub_title_viewpager_one">An easy and comfortable way to discover the best apps</string>
+  <string name="wizard_title_viewpager_one">Discover the Best Apps</string>
+  <string name="wizard_sub_title_viewpager_one">No content restrictions for you to find top apps</string>
 
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two">Create a Personal Store</string>
@@ -93,7 +93,7 @@
   <string name="twitch">Twitch</string>
   <string name="youtube">Youtube</string>
   <string name="edit_store_facebook_helper_text">Enter Facebook page</string>
-  <string name="edit_store_youtube_helper_text">Enter Your user or Channel</string>
+  <string name="edit_store_youtube_helper_text">Enter your username or channel</string>
 
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Sign in or register to get the most out of Aptoide</string>

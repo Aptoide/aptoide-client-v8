@@ -41,6 +41,10 @@ import javax.inject.Singleton;
     return new LoginPreferences(application, GoogleApiAvailability.getInstance());
   }
 
+  @Singleton @Provides @Named("defaultStoreName") String provideStoreName() {
+    return "apps";
+  }
+
   @Singleton @Provides @Named("extraID") String provideExtraID() {
     return "";
   }
