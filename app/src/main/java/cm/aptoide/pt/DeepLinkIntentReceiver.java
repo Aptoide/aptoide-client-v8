@@ -47,6 +47,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -283,12 +284,19 @@ public class DeepLinkIntentReceiver extends ActivityView {
         return parseAptoideInstallUri(appId);
       }
     } else if (u.getPath() != null && u.getPath()
-        .contains("store/apps/group")) {
+        .contains("store") && u.getPath()
+        .contains("group")) {
       /**
        * Bundles
        */
       deepLinkAnalytics.websiteFromBundlesWebPage();
-      String bundleId = u.getLastPathSegment();
+      List<String> path = u.getPathSegments();
+      String bundleId = "";
+      String storeName = "apps";
+      if (path != null && path.size() >= 4) {
+        bundleId = path.get(3);
+        storeName = path.get(2);
+      }
       Logger.v(TAG, "aptoide web site: bundle: " + bundleId);
       if (!TextUtils.isEmpty(bundleId)) {
         try {
@@ -296,7 +304,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
               "aptoide://cm.aptoide.pt/deeplink?name=listApps&layout=GRID&type=API&title=bundle&action="
                   + URLEncoder.encode("https://ws75.aptoide.com/api/7/listApps/group_name="
                   + bundleId
-                  + "/store_name=apps/limit=30", "utf-8")
+                  + "/store_name="
+                  + storeName
+                  + "apps/limit=30", "utf-8")
                   + "&storetheme=default");
           Logger.v(TAG, "aptoide web site: bundle: " + uri.toString());
           return dealWithAptoideSchema(uri);
