@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -111,7 +112,7 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
               ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
               tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
               versionCodeProvider, bypassServerCache,
-              Type.ADS.getPerLineCount(resources, windowManager));
+              Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList());
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getNodes()

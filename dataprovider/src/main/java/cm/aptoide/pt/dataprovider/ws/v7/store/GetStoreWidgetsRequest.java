@@ -20,6 +20,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -136,7 +137,7 @@ public class GetStoreWidgetsRequest
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
             connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager)))
+            Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList()))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())
