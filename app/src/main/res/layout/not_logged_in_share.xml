@@ -25,6 +25,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="15dp"
         android:text="@string/appview_not_logged_in_share_title_fragment"
         style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
@@ -55,33 +56,24 @@
         android:text="@string/appview_not_logged_in_share_message_posts_warning"
         />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.v7.widget.AppCompatCheckBox
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="19dp"
-        android:orientation="horizontal"
-        >
-      <android.support.v7.widget.AppCompatCheckBox
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:checked="true"
-          tools:checked="true"
-          />
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          tools:text="@string/appview_button_dont_show_again"
-          />
-    </LinearLayout>
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:checked="true"
+        android:text="@string/appview_button_dont_show_again"
+        tools:checked="true"
+        />
 
     <TextView
         android:id="@+id/connect_with"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="21dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="21dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:text="@string/appview_not_logged_in_share_title_connect_with"
         style="@style/Aptoide.TextView.Medium.S.Black"
         />
@@ -94,7 +86,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="12dp"
         android:orientation="horizontal"
         android:weightSum="1"
         >
@@ -104,6 +96,7 @@
           android:layout_width="wrap_content"
           android:layout_weight="0.50"
           android:text="@string/facebook"
+          android:textAllCaps="false"
           android:theme="@style/Aptoide.Button.Facebook"
           style="@style/Aptoide.Button.Facebook"
           />
@@ -116,8 +109,9 @@
           android:layout_marginStart="8dp"
           android:layout_weight="0.50"
           android:text="@string/google"
-          android:theme="@style/Aptoide.Button.Google"
-          style="@style/Aptoide.Button.Google"
+          android:textAllCaps="false"
+          android:theme="@style/Aptoide.Button.Ghost.GreyFogLight.Google"
+          style="@style/Aptoide.Button.Ghost.GreyFogLight.Google"
           />
 
     </LinearLayout>
@@ -132,6 +126,7 @@
         android:layout_marginTop="14dp"
         android:text="@string/appview_button_close"
         android:textAllCaps="true"
+        android:textColor="@color/grey_medium"
         style="@style/Widget.Aptoide.Button.Borderless.Colored"
         />
 
