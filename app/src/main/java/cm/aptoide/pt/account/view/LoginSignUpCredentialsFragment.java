@@ -68,8 +68,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View rootView;
   private String marketName;
 
-  private PublishSubject<Void> privacyPolicyClicked;
-  private PublishSubject<Void> termsAndConditionsClicked;
+  private PublishSubject<Void> privacyPolicySubject;
+  private PublishSubject<Void> termsAndConditionsSubject;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -87,13 +87,19 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
-    privacyPolicyClicked = PublishSubject.create();
-    termsAndConditionsClicked = PublishSubject.create();
+    privacyPolicySubject = PublishSubject.create();
+    termsAndConditionsSubject = PublishSubject.create();
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Override public void onDestroy() {
+    privacyPolicySubject = null;
+    termsAndConditionsSubject = null;
+    super.onDestroy();
   }
 
   @Override public void hideKeyboard() {
@@ -174,11 +180,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public Observable<Void> termsAndConditionsClickEvent() {
-    return termsAndConditionsClicked;
+    return termsAndConditionsSubject;
   }
 
   @Override public Observable<Void> privacyPolicyClickEvent() {
-    return privacyPolicyClicked;
+    return privacyPolicySubject;
   }
 
   @Override public void showAptoideSignUpArea() {
@@ -338,13 +344,17 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
     ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
-        termsAndConditionsClicked.onNext(null);
+        if (termsAndConditionsSubject != null) {
+          termsAndConditionsSubject.onNext(null);
+        }
       }
     };
 
     ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
-        privacyPolicyClicked.onNext(null);
+        if (privacyPolicySubject != null) {
+          privacyPolicySubject.onNext(null);
+        }
       }
     };
 
