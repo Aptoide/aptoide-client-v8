@@ -104,6 +104,14 @@
     <item name="android:textColor">@color/black</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XXS.BlackAlpha">
+    <item name="android:textColor">@color/black_87_alpha</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XXS.GreyMedium">
+    <item name="android:textColor">@color/grey_medium</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XS.BlackAlpha">
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
@@ -113,6 +121,10 @@
   </style>
 
   <style name="Aptoide.TextView.Medium.S.BlackAlpha">
+    <item name="android:textColor">@color/black_87_alpha</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.M.BlackAlpha">
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
@@ -126,6 +138,10 @@
 
   <style name="Aptoide.TextView.Medium.XS.Grey">
     <item name="android:textColor">@color/grey</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.XS.GreyMedium">
+    <item name="android:textColor">@color/grey_medium</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.XS.Red700">

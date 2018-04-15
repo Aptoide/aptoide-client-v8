@@ -27,7 +27,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="15dp"
         android:text="@string/appview_not_logged_in_share_title_fragment"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
 
 
@@ -54,6 +54,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/appview_not_logged_in_share_message_posts_warning"
+        style="@style/Aptoide.TextView.Regular.XXS.GreyMedium"
         />
 
     <android.support.v7.widget.AppCompatCheckBox
@@ -65,6 +66,7 @@
         android:checked="true"
         android:text="@string/appview_button_dont_show_again"
         tools:checked="true"
+        style="@style/Aptoide.TextView.Medium.XS.GreyMedium"
         />
 
     <TextView
@@ -75,7 +77,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/appview_not_logged_in_share_title_connect_with"
-        style="@style/Aptoide.TextView.Medium.S.Black"
+        style="@style/Aptoide.TextView.Regular.XXS.BlackAlpha"
         />
 
     <LinearLayout
@@ -127,7 +129,7 @@
         android:text="@string/appview_button_close"
         android:textAllCaps="true"
         android:textColor="@color/grey_medium"
-        style="@style/Widget.Aptoide.Button.Borderless.Colored"
+        style="@style/Widget.Aptoide.Button.Borderless.Colored.Medium.S.GreyMedium"
         />
 
   </LinearLayout>

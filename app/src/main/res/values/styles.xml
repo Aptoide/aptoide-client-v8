@@ -500,6 +500,12 @@
     <item name="android:textColor">@color/fragment_payment_dark_gray</item>
   </style>
 
+  <style name="Widget.Aptoide.Button.Borderless.Colored.Medium.S.GreyMedium" parent="@style/Widget.Aptoide.Button.Borderless.Colored">
+    <item name="android:textColor">@color/grey_medium</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:lineSpacingExtra">5dp</item>
+  </style>
+
   <style name="Widget.Aptoide.Button.Borderless" parent="@style/Widget.AppCompat.Button.Borderless">
     <item name="android:textColor">@color/fragment_payment_light_gray</item>
   </style>
