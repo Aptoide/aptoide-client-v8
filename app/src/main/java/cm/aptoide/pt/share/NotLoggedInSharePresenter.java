@@ -56,20 +56,8 @@ public class NotLoggedInSharePresenter implements Presenter {
     handleFacebookSignInWithRequiredPermissionsEvent();
 
     handleCloseEvent();
-    handleFakeToolbarEvent();
-    handleFakeTimelineEvent();
     handleBackEvent();
     handleOutsideEvent();
-  }
-
-  private void handleFakeToolbarEvent() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(viewCreated -> view.getFakeToolbarClick()
-            .doOnNext(click -> analytics.sendTapOnFakeToolbar()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleOutsideEvent() {
@@ -77,16 +65,6 @@ public class NotLoggedInSharePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getOutsideClick()
             .doOnNext(click -> analytics.sendTapOutside()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
-  private void handleFakeTimelineEvent() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(viewCreated -> view.getFakeTimelineClick()
-            .doOnNext(click -> analytics.sendTapOnFakeTimeline()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));

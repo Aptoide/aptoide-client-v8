@@ -173,14 +173,6 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     googleLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Void> getFakeToolbarClick() {
-    return Observable.empty();
-  }
-
-  @Override public Observable<Void> getFakeTimelineClick() {
-    return Observable.empty();
-  }
-
   @Override public Observable<Void> backEvent() {
     return backButtonPress;
   }
