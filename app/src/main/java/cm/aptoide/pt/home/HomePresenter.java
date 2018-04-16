@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -64,7 +65,7 @@ public class HomePresenter implements Presenter {
     handleUserImageClick();
   }
 
-  private void onCreateLoadBundles() {
+  @VisibleForTesting public void onCreateLoadBundles() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -99,7 +100,7 @@ public class HomePresenter implements Presenter {
     }
   }
 
-  private void handleAppClick() {
+  @VisibleForTesting public void handleAppClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
@@ -123,7 +124,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleRecommendedAppClick() {
+  @VisibleForTesting public void handleRecommendedAppClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.recommendedAppClicked()
@@ -156,7 +157,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleAdClick() {
+  @VisibleForTesting public void handleAdClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
@@ -171,7 +172,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleMoreClick() {
+  @VisibleForTesting public void handleMoreClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
@@ -190,7 +191,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleBottomReached() {
+  @VisibleForTesting public void handleBottomReached() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reachesBottom()
@@ -222,7 +223,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handlePullToRefresh() {
+  @VisibleForTesting public void handlePullToRefresh() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
@@ -250,7 +251,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleRetryClick() {
+  @VisibleForTesting public void handleRetryClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
@@ -263,7 +264,7 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void loadUserImage() {
+  @VisibleForTesting public void loadUserImage() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> accountManager.accountStatus()
@@ -283,7 +284,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleUserImageClick() {
+  @VisibleForTesting public void handleUserImageClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.imageClick()

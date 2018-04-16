@@ -6,6 +6,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AppClick;
+import cm.aptoide.pt.home.AppHomeClick;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
@@ -47,7 +48,7 @@ public class HomePresenterTest {
   private HomePresenter presenter;
   private HomeBundlesModel bundlesModel;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
-  private PublishSubject<Application> appClickEvent;
+  private PublishSubject<AppHomeClick> appClickEvent;
   private PublishSubject<AdClick> adClickEvent;
   private PublishSubject<AppClick> recommendedClickEvent;
   private PublishSubject<HomeClick> moreClickEvent;
@@ -97,7 +98,7 @@ public class HomePresenterTest {
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
     //Given an initialised HomePresenter
-    presenter.present();
+    presenter.onCreateLoadBundles();
     //When the user clicks the Home menu item
     //And loading of bundlesModel are requested
     when(home.loadHomeBundles()).thenReturn(Single.just(bundlesModel));
@@ -112,7 +113,7 @@ public class HomePresenterTest {
 
   @Test public void errorLoadingBundles_ShowsError() {
     //Given an initialised HomePresenter
-    presenter.present();
+    presenter.onCreateLoadBundles();
     //When the loading of bundlesModel is requested
     //And an unexpected error occured
     when(home.loadHomeBundles()).thenReturn(
@@ -124,10 +125,10 @@ public class HomePresenterTest {
 
   @Test public void appClicked_NavigateToAppView() {
     //Given an initialised HomePresenter
-    presenter.present();
+    presenter.handleAppClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an app is clicked
-    appClickEvent.onNext(aptoide);
+    appClickEvent.onNext(new AppHomeClick(aptoide, 1, localTopAppsBundle, 3, HomeClick.Type.APP));
     //then it should navigate to the App's detail View
     verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
         aptoide.getTag());
@@ -135,7 +136,7 @@ public class HomePresenterTest {
 
   @Test public void adClicked_NavigateToAppView() {
     //Given an initialised HomePresenter
-    presenter.present();
+    presenter.handleAdClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an app is clicked
     adClickEvent.onNext(null);
@@ -143,10 +144,21 @@ public class HomePresenterTest {
     verify(homeNavigator).navigateToAppView(any());
   }
 
+  @Test public void recommendsClicked_NavigateToAppView() {
+    //Given an initialised HomePresenter
+    presenter.handleRecommendedAppClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an app is clicked
+    recommendedClickEvent.onNext(new AppClick(aptoide, 3, AppClick.Type.SOCIAL_CLICK));
+    //then it should navigate to the App's detail View
+    verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
+        aptoide.getTag());
+  }
+
   @Test public void moreClicked_NavigateToActionView() {
     HomeClick click = new HomeClick(localTopAppsBundle, 0, HomeClick.Type.MORE);
     //Given an initialised HomePresenter
-    presenter.present();
+    presenter.handleMoreClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When more in a bundle is clicked
     moreClickEvent.onNext(click);
@@ -160,7 +172,7 @@ public class HomePresenterTest {
 
   @Test public void bottomReached_ShowNextBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
-    presenter.present();
+    presenter.handleBottomReached();
     when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
     when(home.hasMore()).thenReturn(true);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -179,7 +191,7 @@ public class HomePresenterTest {
 
   @Test public void bottomReached_NoMoreBundlesAvailableToShow() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
-    presenter.present();
+    presenter.handleBottomReached();
     when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
     when(home.hasMore()).thenReturn(false);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -195,7 +207,7 @@ public class HomePresenterTest {
 
   @Test public void pullToRefresh_GetFreshBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
-    presenter.present();
+    presenter.handlePullToRefresh();
     when(home.loadFreshHomeBundles()).thenReturn(Single.just(bundlesModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When pull to refresh is done
@@ -224,7 +236,7 @@ public class HomePresenterTest {
     when(account.getAvatar()).thenReturn("A string");
     when(account.isLoggedIn()).thenReturn(true);
     //Given an initialised HomePresenter
-    presenter.present();
+    presenter.loadUserImage();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And AccountManager returns an account
     accountStatusEvent.onNext(account);
@@ -237,7 +249,7 @@ public class HomePresenterTest {
     //When the user is logged in
     when(account.isLoggedIn()).thenReturn(false);
     //Given an initialised HomePresenter
-    presenter.present();
+    presenter.loadUserImage();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And AccountManager returns an account
     accountStatusEvent.onNext(account);
@@ -245,9 +257,9 @@ public class HomePresenterTest {
     verify(view).showAvatar();
   }
 
-  @Test public void handeUserImageClick() {
+  @Test public void handleUserImageClick() {
     //Given an initialised HomePresenter
-    presenter.present();
+    presenter.handleUserImageClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an user clicks the profile image
     imageClickEvent.onNext(null);
