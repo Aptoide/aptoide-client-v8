@@ -12,12 +12,23 @@ import java.util.Map;
 public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
+  private static final String TAP_ON_MORE = "tap on more";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
   public HomeAnalytics(NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
     this.navigationTracker = navigationTracker;
     this.analyticsManager = analyticsManager;
+  }
+
+  public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleName) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP_ON_MORE);
+    data.put("section_name", bundleName);
+    data.put("section_position", bundlePosition);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 
   public void sendRecommendedAppInteractEvent(double appRating, String packageName, int position,

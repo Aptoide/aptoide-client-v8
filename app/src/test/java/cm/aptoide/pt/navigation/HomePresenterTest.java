@@ -144,12 +144,14 @@ public class HomePresenterTest {
   }
 
   @Test public void moreClicked_NavigateToActionView() {
-    HomeMoreClick click = new HomeMoreClick(localTopAppsBundle);
+    HomeMoreClick click = new HomeMoreClick(localTopAppsBundle, 0);
     //Given an initialised HomePresenter
     presenter.present();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When more in a bundle is clicked
     moreClickEvent.onNext(click);
+    //Then it should send a more clicked analytics event
+    verify(homeAnalytics).sendTapOnMoreInteractEvent(0, localTopAppsBundle.getTitle());
     //Then it should navigate with the specific action behaviour
     verify(homeNavigator).navigateWithAction(click);
   }

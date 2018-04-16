@@ -54,6 +54,7 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(homeBundle.getTitle());
     appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
 
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle)));
+    moreButton.setOnClickListener(
+        v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle, position)));
   }
 }

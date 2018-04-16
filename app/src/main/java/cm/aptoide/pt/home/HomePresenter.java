@@ -165,6 +165,9 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
+            .doOnNext(homeMoreClick -> homeAnalytics.sendTapOnMoreInteractEvent(
+                homeMoreClick.getPosition(), homeMoreClick.getBundle()
+                    .getTitle()))
             .observeOn(viewScheduler)
             .doOnNext(homeNavigator::navigateWithAction)
             .retry())
