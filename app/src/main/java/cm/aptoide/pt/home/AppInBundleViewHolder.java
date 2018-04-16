@@ -28,7 +28,7 @@ public class AppInBundleViewHolder extends AppViewHolder {
     this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
-  public void setApp(Application app, HomeBundle homeBundle, int bundlePosition) {
+  public void setApp(Application app, HomeBundle homeBundle, int bundlePosition, int position) {
     nameTextView.setText(app.getName());
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, iconView, R.drawable.placeholder_square);
@@ -39,6 +39,6 @@ public class AppInBundleViewHolder extends AppViewHolder {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
     itemView.setOnClickListener(v -> appClicks.onNext(
-        new AppHomeClick(app, homeBundle, bundlePosition, HomeClick.Type.APP)));
+        new AppHomeClick(app, position, homeBundle, bundlePosition, HomeClick.Type.APP)));
   }
 }

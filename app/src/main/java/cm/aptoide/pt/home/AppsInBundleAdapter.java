@@ -36,7 +36,7 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
   }
 
   @Override public void onBindViewHolder(AppInBundleViewHolder viewHolder, int position) {
-    viewHolder.setApp(apps.get(position), homeBundle, bundlePosition);
+    viewHolder.setApp(apps.get(position), homeBundle, bundlePosition, position);
   }
 
   @Override public int getItemCount() {
@@ -48,7 +48,8 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
     notifyDataSetChanged();
   }
 
-  public void updateBundle(HomeBundle homeBundle) {
+  public void updateBundle(HomeBundle homeBundle, int position) {
     this.homeBundle = homeBundle;
+    this.bundlePosition = position;
   }
 }

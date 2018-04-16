@@ -205,11 +205,10 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
         .equals(HomeClick.Type.MORE));
   }
 
-  @Override public Observable<Application> appClicked() {
+  @Override public Observable<AppHomeClick> appClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getClickType()
         .equals(HomeClick.Type.APP))
-        .cast(AppHomeClick.class)
-        .map(appHomeClick -> appHomeClick.getApp());
+        .cast(AppHomeClick.class);
   }
 
   @Override public Observable<AppClick> recommendedAppClicked() {

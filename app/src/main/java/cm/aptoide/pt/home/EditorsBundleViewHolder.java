@@ -52,7 +52,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
           .getName() + " is getting non AppBundle instance!");
     }
     bundleTitle.setText(homeBundle.getTitle());
-    graphicAppsAdapter.updateBundle(homeBundle);
+    graphicAppsAdapter.updateBundle(homeBundle, position);
     graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
 
     moreButton.setOnClickListener(

@@ -6,6 +6,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.app.Application;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -102,9 +103,18 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
+            .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
+                    .getRating(), click.getApp()
+                    .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
+                click.getBundle()
+                    .getTitle(), click.getBundle()
+                    .getContent()
+                    .size()))
             .observeOn(viewScheduler)
-            .doOnNext(app -> homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(),
-                app.getTag()))
+            .doOnNext(click -> {
+              Application app = click.getApp();
+              homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -166,7 +176,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
             .doOnNext(homeMoreClick -> homeAnalytics.sendTapOnMoreInteractEvent(
-                homeMoreClick.getPosition(), homeMoreClick.getBundle()
+                homeMoreClick.getBundlePosition(), homeMoreClick.getBundle()
                     .getTitle(), homeMoreClick.getBundle()
                     .getContent()
                     .size()))

@@ -32,7 +32,7 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setFeatureGraphicApplication(FeatureGraphicApplication featureGraphicApplication,
-      HomeBundle homeBundle, int bundlePosition) {
+      HomeBundle homeBundle, int bundlePosition, int graphicPosition) {
     nameTextView.setText(featureGraphicApplication.getName());
     ImageLoader.with(itemView.getContext())
         .load(featureGraphicApplication.getFeatureGraphic(), R.drawable.placeholder_brick,
@@ -45,7 +45,7 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
     itemView.setOnClickListener(v -> appClickedEvents.onNext(
-        new AppHomeClick(featureGraphicApplication, homeBundle, bundlePosition,
+        new AppHomeClick(featureGraphicApplication, graphicPosition, homeBundle, bundlePosition,
             HomeClick.Type.APP)));
   }
 }

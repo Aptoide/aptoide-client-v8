@@ -33,13 +33,13 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendTapOnAppInteractEvent(double appRating, String packageName, int position,
+  public void sendTapOnAppInteractEvent(double appRating, String packageName, int appPosition,
       int bundlePosition, String bundleName, int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_APP);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
-    data.put("app_position", position);
+    data.put("app_position", appPosition);
     data.put("bundle_name", bundleName);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);

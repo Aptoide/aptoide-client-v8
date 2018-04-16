@@ -40,7 +40,7 @@ class EditorsAppsAdapter extends RecyclerView.Adapter<FeatureGraphicInBundleView
   @Override
   public void onBindViewHolder(FeatureGraphicInBundleViewHolder viewHolder, int position) {
     viewHolder.setFeatureGraphicApplication((FeatureGraphicApplication) apps.get(position),
-        homeBundle, bundlePosition);
+        homeBundle, bundlePosition, position);
   }
 
   @Override public int getItemCount() {
@@ -52,7 +52,8 @@ class EditorsAppsAdapter extends RecyclerView.Adapter<FeatureGraphicInBundleView
     notifyDataSetChanged();
   }
 
-  public void updateBundle(HomeBundle homeBundle) {
+  public void updateBundle(HomeBundle homeBundle, int position) {
     this.homeBundle = homeBundle;
+    this.bundlePosition = position;
   }
 }

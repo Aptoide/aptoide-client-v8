@@ -6,12 +6,12 @@ package cm.aptoide.pt.home;
 
 public class HomeClick {
   private final HomeBundle bundle;
-  private final int position;
+  private final int bundlePosition;
   private final Type clickType;
 
-  public HomeClick(HomeBundle bundle, int position, Type clickType) {
+  public HomeClick(HomeBundle bundle, int bundlePosition, Type clickType) {
     this.bundle = bundle;
-    this.position = position;
+    this.bundlePosition = bundlePosition;
     this.clickType = clickType;
   }
 
@@ -19,8 +19,8 @@ public class HomeClick {
     return bundle;
   }
 
-  public int getPosition() {
-    return position;
+  public int getBundlePosition() {
+    return bundlePosition;
   }
 
   public Type getClickType() {

@@ -52,7 +52,7 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
           .getName() + " is getting non AppBundle instance!");
     }
     bundleTitle.setText(homeBundle.getTitle());
-    appsInBundleAdapter.updateBundle(homeBundle);
+    appsInBundleAdapter.updateBundle(homeBundle, position);
     appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
 
     moreButton.setOnClickListener(

@@ -8,13 +8,20 @@ import cm.aptoide.pt.view.app.Application;
 
 public class AppHomeClick extends HomeClick {
   private final Application app;
+  private final int appPosition;
 
-  public AppHomeClick(Application app, HomeBundle bundle, int position, Type clickType) {
-    super(bundle, position, clickType);
+  public AppHomeClick(Application app, int appPosition, HomeBundle bundle, int bundlePosition,
+      Type clickType) {
+    super(bundle, bundlePosition, clickType);
     this.app = app;
+    this.appPosition = appPosition;
   }
 
   public Application getApp() {
     return app;
+  }
+
+  public int getAppPosition() {
+    return appPosition;
   }
 }
