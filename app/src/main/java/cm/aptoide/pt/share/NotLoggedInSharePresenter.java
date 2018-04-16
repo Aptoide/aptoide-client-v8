@@ -1,6 +1,5 @@
 package cm.aptoide.pt.share;
 
-import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
@@ -19,7 +18,6 @@ public class NotLoggedInSharePresenter implements Presenter {
 
   private static final int RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE = 5;
   private final NotLoggedInShareView view;
-  private final SharedPreferences sharedPreferences;
   private final CrashReport crashReport;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
@@ -29,13 +27,11 @@ public class NotLoggedInSharePresenter implements Presenter {
   private final ThrowableToStringMapper errorMapper;
   private final NotLoggedInShareAnalytics analytics;
 
-  public NotLoggedInSharePresenter(NotLoggedInShareView view, SharedPreferences sharedPreferences,
-      CrashReport crashReport, AptoideAccountManager accountManager,
-      AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions, int requestCode, ThrowableToStringMapper errorMapper,
-      NotLoggedInShareAnalytics analytics) {
+  public NotLoggedInSharePresenter(NotLoggedInShareView view, CrashReport crashReport,
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator,
+      Collection<String> permissions, Collection<String> requiredPermissions, int requestCode,
+      ThrowableToStringMapper errorMapper, NotLoggedInShareAnalytics analytics) {
     this.view = view;
-    this.sharedPreferences = sharedPreferences;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;

@@ -100,9 +100,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
       return true;
     });
 
-    attachPresenter(new NotLoggedInSharePresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        CrashReport.getInstance(), accountManager,
+    attachPresenter(new NotLoggedInSharePresenter(this, CrashReport.getInstance(), accountManager,
         ((ActivityResultNavigator) getContext()).getAccountNavigator(),
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
         ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()));
