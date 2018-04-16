@@ -21,17 +21,18 @@ import rx.subjects.PublishSubject;
 class EditorsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
-  private final EditorsAppsAdapter appsAdapter;
-  private final PublishSubject<HomeMoreClick> uiEventsListener;
+  private final EditorsAppsAdapter graphicAppsAdapter;
+  private final PublishSubject<HomeClick> uiEventsListener;
 
-  public EditorsBundleViewHolder(View view, PublishSubject<HomeMoreClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
+  public EditorsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
+      DecimalFormat oneDecimalFormatter) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     RecyclerView graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
-    appsAdapter = new EditorsAppsAdapter(new ArrayList<>(), oneDecimalFormatter, appClickedEvents);
+    graphicAppsAdapter =
+        new EditorsAppsAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     graphicsList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -42,7 +43,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
       }
     });
     graphicsList.setLayoutManager(layoutManager);
-    graphicsList.setAdapter(appsAdapter);
+    graphicsList.setAdapter(graphicAppsAdapter);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -51,9 +52,10 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
           .getName() + " is getting non AppBundle instance!");
     }
     bundleTitle.setText(homeBundle.getTitle());
-    appsAdapter.update((List<Application>) homeBundle.getContent());
+    graphicAppsAdapter.updateBundle(homeBundle);
+    graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
 
     moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle, position)));
+        v -> uiEventsListener.onNext(new HomeClick(homeBundle, position, HomeClick.Type.MORE)));
   }
 }

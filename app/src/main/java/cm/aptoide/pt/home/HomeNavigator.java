@@ -32,7 +32,7 @@ public class HomeNavigator {
         true);
   }
 
-  public void navigateWithAction(HomeMoreClick click) {
+  public void navigateWithAction(HomeClick click) {
     fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
         .getEvent(), click.getBundle()
         .getTitle(), "default", click.getBundle()

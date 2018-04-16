@@ -46,7 +46,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
-  private PublishSubject<HomeMoreClick> uiEventsListener;
+  private PublishSubject<HomeClick> uiEventsListener;
   private PublishSubject<Application> appClickedEvents;
   private PublishSubject<AppClick> recommendsClickedEvents;
   private PublishSubject<AdClick> adClickedEvents;
@@ -111,7 +111,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, appClickedEvents, adClickedEvents, recommendsClickedEvents);
+        oneDecimalFormatter, adClickedEvents, recommendsClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
@@ -200,12 +200,16 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
         .cast(Object.class);
   }
 
-  @Override public Observable<HomeMoreClick> moreClicked() {
-    return uiEventsListener;
+  @Override public Observable<HomeClick> moreClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getClickType()
+        .equals(HomeClick.Type.MORE));
   }
 
   @Override public Observable<Application> appClicked() {
-    return appClickedEvents;
+    return uiEventsListener.filter(homeClick -> homeClick.getClickType()
+        .equals(HomeClick.Type.APP))
+        .cast(AppHomeClick.class)
+        .map(appHomeClick -> appHomeClick.getApp());
   }
 
   @Override public Observable<AppClick> recommendedAppClicked() {

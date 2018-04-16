@@ -22,17 +22,17 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
   private final AppsInBundleAdapter appsInBundleAdapter;
-  private final PublishSubject<HomeMoreClick> uiEventsListener;
+  private final PublishSubject<HomeClick> uiEventsListener;
 
-  public AppsBundleViewHolder(View view, PublishSubject<HomeMoreClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
+  public AppsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
+      DecimalFormat oneDecimalFormatter) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     RecyclerView appsList = (RecyclerView) view.findViewById(R.id.apps_list);
     appsInBundleAdapter =
-        new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, appClickedEvents);
+        new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     appsList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -52,9 +52,10 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
           .getName() + " is getting non AppBundle instance!");
     }
     bundleTitle.setText(homeBundle.getTitle());
+    appsInBundleAdapter.updateBundle(homeBundle);
     appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
 
     moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle, position)));
+        v -> uiEventsListener.onNext(new HomeClick(homeBundle, position, HomeClick.Type.MORE)));
   }
 }
