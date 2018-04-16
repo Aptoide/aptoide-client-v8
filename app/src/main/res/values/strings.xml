@@ -526,6 +526,6 @@
 
   <!--Terms and Conditions URL navigation-->
   <string name="terms_conditions_navigation_url" translatable="false">https://terms.aptoide.com</string>
-
+  <string name="privacy_policy_navigation_url" translatable="false">https://privacy.aptoide.com/</string>
 </resources>
 
