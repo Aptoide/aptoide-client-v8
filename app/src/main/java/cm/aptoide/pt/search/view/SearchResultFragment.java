@@ -737,6 +737,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     searchMenuItem = menu.findItem(R.id.menu_item_search);
     searchView = (SearchView) searchMenuItem.getActionView();
+    searchView.setMaxWidth(Integer.MAX_VALUE);
     AutoCompleteTextView autoCompleteTextView =
         (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);

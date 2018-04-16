@@ -13,6 +13,7 @@
   <string name="facebook_grant_permission_button">Grant permission</string>
   <string name="facebook_email_permission_regected_message">We need your email to create an account</string>
   <string name="user_cancelled">Cancelled by user</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">By joining Aptoide you agree to our %1$s and %2$s</string>
 
   <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
 

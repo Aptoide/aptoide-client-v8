@@ -54,10 +54,11 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
     handleAptoideLoginEvent();
 
+    handleClickOnTermsAndConditions();
+    handleClickOnPrivacyPolicy();
+
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
-
-    handleClickOnTermsAndConditions();
 
     handleFacebookSignUpResult();
     handleFacebookSignUpEvent();
@@ -69,6 +70,26 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     handleAccountStatusChangeWhileShowingView();
     handleForgotPasswordClick();
     handleTogglePasswordVisibility();
+  }
+
+  private void handleClickOnTermsAndConditions() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsClickEvent())
+        .doOnNext(__ -> accountNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickOnPrivacyPolicy() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.privacyPolicyClickEvent())
+        .doOnNext(__ -> accountNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private void handleTogglePasswordVisibility() {
@@ -276,18 +297,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
           view.hideLoading();
           view.showError(errorMapper.map(err));
           crashReport.log(err);
-        });
-  }
-
-  private void handleClickOnTermsAndConditions() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.termsAndConditionsClick())
-        .doOnNext(__ -> accountNavigator.navigateToTermsAndConditions())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          crashReport.log(throwable);
         });
   }
 

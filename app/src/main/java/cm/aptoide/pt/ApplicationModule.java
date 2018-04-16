@@ -1080,7 +1080,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager) {
+      @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager,
+      PackageRepository packageRepository) {
     return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -1096,7 +1097,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE),
         (ConnectivityManager) getApplicationContext().getSystemService(
             Context.CONNECTIVITY_SERVICE),
-        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider());
+        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider(), packageRepository,
+        10, 10);
   }
 
   @Singleton @Provides BundlesRepository providesBundleRepository(
