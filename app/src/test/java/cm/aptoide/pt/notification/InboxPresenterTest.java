@@ -4,7 +4,6 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.notification.view.InboxFragment;
-import cm.aptoide.pt.notification.view.InboxNavigator;
 import cm.aptoide.pt.notification.view.InboxPresenter;
 import cm.aptoide.pt.presenter.View;
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class InboxPresenterTest {
   private static int NUMBER_OF_NOTIFICATIONS_TEST = 50;
 
   @Mock private InboxFragment view;
-  @Mock private InboxNavigator navigator;
   @Mock private NotificationCenter notificationCenter;
   @Mock private NotificationAnalytics analytics;
   @Mock private CrashReport crashReport;
@@ -46,9 +44,8 @@ public class InboxPresenterTest {
 
     notifications = new ArrayList<>();
     lifecycleEvent = PublishSubject.create();
-    presenter =
-        new InboxPresenter(view, navigator, notificationCenter, crashReport, tracker, analytics,
-            Schedulers.immediate());
+    presenter = new InboxPresenter(view, notificationCenter, crashReport, tracker, analytics,
+        Schedulers.immediate());
 
     notification = new AptoideNotification("Image", "Title", "URL", "URLTrack", "Graphic",
         AptoideNotification.LIKE, 0, 100, "my_id");
@@ -79,7 +76,6 @@ public class InboxPresenterTest {
     when(view.notificationSelection()).thenReturn(Observable.just(notification));
     presenter.present();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    verify(navigator).navigateToNotification(notification);
     verify(analytics).sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
     verify(tracker).registerScreen(any(ScreenTagHistory.class));
   }

@@ -124,6 +124,10 @@
         android:key="termsConditions"
         android:title="@string/settings_terms_conditions"/>
     <Preference
+        android:key="privacyPolicy"
+        android:title="@string/settings_privacy_policy"/>
+
+    <Preference
         android:key="hwspecs"
         android:summary="@string/setting_hwspecssum"
         android:title="@string/setting_hwspecstitle"/>

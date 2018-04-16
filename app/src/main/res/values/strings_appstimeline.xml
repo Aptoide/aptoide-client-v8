@@ -9,7 +9,7 @@
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
   <string name="appstimeline_update_app">app</string>
   <string name="customtabs_open_native_app">Open in app</string>
-  <string name="social_timeline_you_will_share">What your followers will see:</string>
+  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
   <string name="social_timeline_you_will_share_comment">Your followers will see your comment:</string>
   <string name="social_timeline_you_will_share_like">Your followers will see your like:</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in timeline. Only show/share my store info.</string>
@@ -123,6 +123,19 @@
   <string name="timeline_button_report_abuse">Report abuse</string>
   <string name="timeline_button_delete_post">Delete post</string>
   <string name="timeline_short_unfollow_user">Unfollowing %s</string>
+
+  <!-- social recommend flow -->
+  <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
+  <string name="appview_button_recommend">Recommend</string>
+  <string name="appview_message_preview_timeline_recommends">This is what your followers will see</string>
+  <string name="appview_button_continue">Continue</string>
+  <string name="appview_button_cancel">Cancel</string>
+  <string name="appview_button_close">Close</string>
+  <string name="appview_button_dont_show_again">Don\'t show this again</string>
+
+  <string name="appview_not_logged_in_share_title_connect_with">Connect with:</string>
+  <string name="appview_not_logged_in_share_title_fragment">You are one step away from sharing this app with your followers</string>
+  <string name="appview_not_logged_in_share_message_posts_warning">This is what your followers will see</string>
 
 
 </resources>

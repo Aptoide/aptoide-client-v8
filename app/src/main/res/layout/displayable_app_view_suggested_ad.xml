@@ -48,30 +48,40 @@
           />
 
       <LinearLayout
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginEnd="1dp"
           android:layout_marginLeft="1dp"
+          android:layout_marginRight="1dp"
           android:layout_marginStart="1dp"
           android:layout_marginTop="2dp"
+          android:gravity="center_vertical"
           android:orientation="horizontal"
           >
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
-            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_star_black"
             />
         <TextView
             android:id="@+id/rating_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
-            android:textSize="10sp"
             tools:ignore="SmallSp"
             tools:text="2.3"
+            style="@style/Aptoide.TextView.Regular.XXS.Black"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="@string/all_title_ad"
+            tools:ignore="SmallSp"
+            tools:text="Ad"
             style="@style/Aptoide.TextView.Regular.XXS.Black"
             />
 

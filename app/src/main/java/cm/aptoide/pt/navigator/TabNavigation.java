@@ -15,11 +15,9 @@ public interface TabNavigation {
 
   int DOWNLOADS = 1;
   int UPDATES = 2;
-  int TIMELINE = 3;
-  int STORES = 4;
-  int COMMENTS = 5;
-  int HOME = 6;
-  int BUNDLES = 7;
+  int STORES = 3;
+  int HOME = 4;
+  int BUNDLES = 5;
 
   Bundle getBundle();
 

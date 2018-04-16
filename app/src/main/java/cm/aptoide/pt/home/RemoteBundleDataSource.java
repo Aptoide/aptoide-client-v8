@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
+import cm.aptoide.pt.install.PackageRepository;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -44,6 +45,9 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final int limit;
+  private final PackageRepository packageRepository;
+  private final int latestPackagesCount;
+  private final int randomPackagesCount;
   private int total;
   private boolean loading;
 
@@ -55,7 +59,8 @@ public class RemoteBundleDataSource implements BundleDataSource {
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       AptoideAccountManager accountManager, String filters, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
+      int latestPackagesCount, int randomPackagesCount) {
     this.limit = limit;
     this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
@@ -75,6 +80,9 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.windowManager = windowManager;
     this.connectivityManager = connectivityManager;
     this.versionCodeProvider = versionCodeProvider;
+    this.packageRepository = packageRepository;
+    this.latestPackagesCount = latestPackagesCount;
+    this.randomPackagesCount = randomPackagesCount;
   }
 
   private Single<HomeBundlesModel> getBundles(int offset, int limit, boolean invalidateHttpCache) {
@@ -87,17 +95,25 @@ public class RemoteBundleDataSource implements BundleDataSource {
         .toBlocking()
         .value();
 
-    return GetHomeBundlesRequest.of(limit, offset, okHttpClient, converterFactory, bodyInterceptor,
-        tokenInvalidator, sharedPreferences, widgetsUtils, storeCredentials, clientUniqueId,
-        isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters, resources,
-        windowManager, connectivityManager, versionCodeProvider)
-        .observe(invalidateHttpCache, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
-        .flatMap(this::mapHomeResponse)
-        .toSingle()
-        .onErrorReturn(this::createErrorAppsList);
+    return getPackages().flatMap(
+        packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient, converterFactory,
+            bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils, storeCredentials,
+            clientUniqueId, isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters,
+            resources, windowManager, connectivityManager, versionCodeProvider, packageNames)
+            .observe(invalidateHttpCache, false)
+            .doOnSubscribe(() -> loading = true)
+            .doOnUnsubscribe(() -> loading = false)
+            .doOnTerminate(() -> loading = false)
+            .flatMap(this::mapHomeResponse)
+            .toSingle()
+            .onErrorReturn(this::createErrorAppsList));
+  }
+
+  private Single<List<String>> getPackages() {
+    return Observable.concat(packageRepository.getLatestInstalledPackages(latestPackagesCount),
+        packageRepository.getRandomInstalledPackages(randomPackagesCount))
+        .toList()
+        .toSingle();
   }
 
   @NonNull private HomeBundlesModel createErrorAppsList(Throwable throwable) {

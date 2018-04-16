@@ -65,4 +65,8 @@ public interface AppsFragmentView extends View {
   void scrollToTop();
 
   void removeInstalledUpdates(List<App> installedUpdatesList);
+
+  Observable<Void> refreshApps();
+
+  void hidePullToRefresh();
 }

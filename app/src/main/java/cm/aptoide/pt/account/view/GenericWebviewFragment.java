@@ -18,10 +18,12 @@ import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 public class GenericWebviewFragment extends BaseToolbarFragment implements NotBottomNavigationView {
 
   private String url;
+  private String title;
 
-  public static GenericWebviewFragment newInstance(String url) {
+  public static GenericWebviewFragment newInstance(String url, String title) {
     Bundle args = new Bundle();
     args.putString("url", url);
+    args.putString("title", title);
     GenericWebviewFragment fragment = new GenericWebviewFragment();
     fragment.setArguments(args);
     return fragment;
@@ -50,6 +52,7 @@ public class GenericWebviewFragment extends BaseToolbarFragment implements NotBo
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     url = args.getString("url");
+    title = args.getString("title");
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -63,7 +66,7 @@ public class GenericWebviewFragment extends BaseToolbarFragment implements NotBo
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     super.setupToolbarDetails(toolbar);
-    toolbar.setTitle(R.string.settings_terms_conditions);
+    toolbar.setTitle(title);
   }
 
   @Override public int getContentViewId() {

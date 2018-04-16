@@ -5,6 +5,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -51,5 +52,9 @@ public class UpdatesManager {
 
   public Observable<Void> excludeUpdate(String packageName) {
     return updateRepository.setExcluded(packageName, true);
+  }
+
+  public Completable refreshUpdates() {
+    return updateRepository.sync(true, false);
   }
 }

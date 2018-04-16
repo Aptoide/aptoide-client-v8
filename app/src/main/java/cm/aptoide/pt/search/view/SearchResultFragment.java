@@ -656,12 +656,14 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    if (bottomNavigationActivity != null) {
+      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+    }
     findChildViews(view);
     attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
     setupToolbar();
     setupTheme();
-    bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
 
     suggestionsResultList.setLayoutManager(new LinearLayoutManager(getContext()));
     trendingResultList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -735,6 +737,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     searchMenuItem = menu.findItem(R.id.menu_item_search);
     searchView = (SearchView) searchMenuItem.getActionView();
+    searchView.setMaxWidth(Integer.MAX_VALUE);
     AutoCompleteTextView autoCompleteTextView =
         (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);

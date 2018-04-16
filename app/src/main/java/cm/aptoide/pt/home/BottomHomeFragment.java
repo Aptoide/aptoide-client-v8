@@ -89,10 +89,10 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
-    super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     if (savedInstanceState != null) {
       if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
@@ -194,8 +194,9 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
 
   @Override public Observable<Object> reachesBottom() {
     return RxRecyclerView.scrollEvents(bundlesList)
-        .filter(scroll -> isEndReached())
+        .map(scroll -> isEndReached())
         .distinctUntilChanged()
+        .filter(isEnd -> isEnd)
         .cast(Object.class);
   }
 
