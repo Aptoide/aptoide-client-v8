@@ -75,7 +75,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private String TMP_MYAPP_FILE;
   private Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
-  private AsyncTask<String, Void, Void> asyncTask;
   private MinimalAdMapper adMapper;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -312,7 +311,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
                   + storeName
                   + "/group_name="
                   + bundleId
-                  + "/limit=30", "utf-8")
+                  + "/limit=30/sort=downloads7d", "utf-8")
                   + "&storetheme=default");
           Logger.v(TAG, "aptoide web site: bundle: " + uri.toString());
           return dealWithAptoideSchema(uri);
@@ -397,7 +396,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return null;
   }
 
-  private Intent dealWithShortcuts() {
+  private void dealWithShortcuts() {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
 
       ShortcutManager shortcutManager =
@@ -421,9 +420,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
           }
         }
       }
-      return fromShortcut;
     }
-    return null;
+    return;
   }
 
   private Intent openUserScreen(Long userId) {
@@ -522,7 +520,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
   }
 
   private void downloadMyApp() {
-    asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
+    new MyAppDownloader().execute(getIntent().getDataString());
   }
 
   private Intent parseAptoideInstallUri(String host) {

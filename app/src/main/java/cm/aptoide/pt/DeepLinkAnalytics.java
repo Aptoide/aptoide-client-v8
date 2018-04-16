@@ -96,11 +96,6 @@ public class DeepLinkAnalytics {
         AnalyticsManager.Action.AUTO, getViewName(true));
   }
 
-  public void timelineNotification() {
-    analyticsManager.logEvent(createMap(SOURCE, TIMELINE_NOTIFICATION), APP_LAUNCH,
-        AnalyticsManager.Action.AUTO, getViewName(true));
-  }
-
   public void newRepo() {
     analyticsManager.logEvent(createMap(SOURCE, NEW_REPO), APP_LAUNCH, AnalyticsManager.Action.AUTO,
         getViewName(true));
