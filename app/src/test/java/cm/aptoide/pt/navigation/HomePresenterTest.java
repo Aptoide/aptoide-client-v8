@@ -151,7 +151,9 @@ public class HomePresenterTest {
     //When more in a bundle is clicked
     moreClickEvent.onNext(click);
     //Then it should send a more clicked analytics event
-    verify(homeAnalytics).sendTapOnMoreInteractEvent(0, localTopAppsBundle.getTitle());
+    verify(homeAnalytics).sendTapOnMoreInteractEvent(0, localTopAppsBundle.getTitle(),
+        localTopAppsBundle.getContent()
+            .size());
     //Then it should navigate with the specific action behaviour
     verify(homeNavigator).navigateWithAction(click);
   }

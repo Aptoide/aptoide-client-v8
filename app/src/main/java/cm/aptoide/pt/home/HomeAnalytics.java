@@ -21,11 +21,12 @@ public class HomeAnalytics {
     this.analyticsManager = analyticsManager;
   }
 
-  public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleName) {
+  public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleName, int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_MORE);
     data.put("bundle_name", bundleName);
     data.put("bundle_position", bundlePosition);
+    data.put("bundle_total_items", itemsInBundle);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));

@@ -167,7 +167,9 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.moreClicked()
             .doOnNext(homeMoreClick -> homeAnalytics.sendTapOnMoreInteractEvent(
                 homeMoreClick.getPosition(), homeMoreClick.getBundle()
-                    .getTitle()))
+                    .getTitle(), homeMoreClick.getBundle()
+                    .getContent()
+                    .size()))
             .observeOn(viewScheduler)
             .doOnNext(homeNavigator::navigateWithAction)
             .retry())
