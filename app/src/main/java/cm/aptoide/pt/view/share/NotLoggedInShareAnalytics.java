@@ -85,16 +85,6 @@ public class NotLoggedInShareAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  public void sendTapOnFakeToolbar() {
-    analyticsManager.logEvent(createMap("Tap on Install - Login - Share image", NONE_PARAMETER),
-        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void sendTapOnFakeTimeline() {
-    analyticsManager.logEvent(createMap("Tap on Timeline image", NONE_PARAMETER),
-        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
   public void sendShareSuccess() {
     loginEventMap.put(STATUS_PARAMETER_NAME, SHARE_SUCCESS_PARAMETER);
     analyticsManager.logEvent(loginEventMap, POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK,

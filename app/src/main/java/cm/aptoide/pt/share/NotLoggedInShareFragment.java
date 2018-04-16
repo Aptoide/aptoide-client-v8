@@ -1,8 +1,6 @@
 package cm.aptoide.pt.share;
 
 import android.app.ProgressDialog;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -41,7 +39,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private ProgressDialog progressDialog;
   private Button facebookLoginButton;
   private Button googleLoginButton;
-  private View closeButton;
+  private Button closeButton;
   private ThrowableToStringMapper errorMapper;
   private RxAlertDialog facebookEmailRequiredDialog;
   private AptoideAccountManager accountManager;
@@ -84,6 +82,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    closeButton = (Button) view.findViewById(R.id.close_button);
     facebookLoginButton = (Button) view.findViewById(R.id.not_logged_in_share_facebook_button);
     googleLoginButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
 
@@ -101,9 +100,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
       return true;
     });
 
-    attachPresenter(new NotLoggedInSharePresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        CrashReport.getInstance(), accountManager,
+    attachPresenter(new NotLoggedInSharePresenter(this, CrashReport.getInstance(), accountManager,
         ((ActivityResultNavigator) getContext()).getAccountNavigator(),
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
         ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()));
@@ -173,25 +170,11 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     googleLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Void> getFakeToolbarClick() {
-    return Observable.empty();
-  }
-
-  @Override public Observable<Void> getFakeTimelineClick() {
-    return Observable.empty();
-  }
-
   @Override public Observable<Void> backEvent() {
     return backButtonPress;
   }
 
   @Override public Observable<Void> getOutsideClick() {
     return RxView.clicks(outerLayout);
-  }
-
-  private ColorMatrixColorFilter getColorMatrixColorFilter(float saturation) {
-    final ColorMatrix matrix = new ColorMatrix();
-    matrix.setSaturation(saturation);
-    return new ColorMatrixColorFilter(matrix);
   }
 }
