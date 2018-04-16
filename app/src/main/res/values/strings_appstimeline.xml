@@ -129,6 +129,8 @@
   <string name="appview_button_recommend">Recommend</string>
   <string name="appview_message_preview_timeline_recommends">This is what your followers will see</string>
   <string name="appview_button_continue">Continue</string>
+  <string name="appview_button_skip">Skip</string>
+
   <string name="appview_button_cancel">Cancel</string>
   <string name="appview_button_close">Close</string>
   <string name="appview_button_dont_show_again">Don\'t show this again</string>
