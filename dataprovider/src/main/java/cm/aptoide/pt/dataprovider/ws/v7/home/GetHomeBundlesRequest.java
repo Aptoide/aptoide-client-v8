@@ -40,6 +40,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
   private final WindowManager windowManager;
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final List<String> packageNames;
   private boolean bypassServerCache;
 
   private GetHomeBundlesRequest(Body body, OkHttpClient httpClient,
@@ -49,7 +50,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.widgetsUtils = widgetsUtils;
@@ -64,6 +65,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
     this.windowManager = windowManager;
     this.connectivityManager = connectivityManager;
     this.versionCodeProvider = versionCodeProvider;
+    this.packageNames = packageNames;
   }
 
   public static GetHomeBundlesRequest of(int limit, int offset, OkHttpClient httpClient,
@@ -73,12 +75,12 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames) {
     return new GetHomeBundlesRequest(
         new Body(limit, offset, WidgetsArgs.createDefault(resources, windowManager)), httpClient,
         converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
         storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-        filters, resources, windowManager, connectivityManager, versionCodeProvider);
+        filters, resources, windowManager, connectivityManager, versionCodeProvider, packageNames);
   }
 
   private Observable<List<GetStoreWidgets.WSWidget>> loadAppsInBundles(
@@ -91,7 +93,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
             connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager) * 3))
+            Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())
