@@ -24,8 +24,8 @@ public class HomeAnalytics {
   public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleName) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_MORE);
-    data.put("section_name", bundleName);
-    data.put("section_position", bundlePosition);
+    data.put("bundle_name", bundleName);
+    data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -36,8 +36,8 @@ public class HomeAnalytics {
     final Map<String, Object> data = new HashMap<>();
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
-    data.put("section_name", "recommendation card");
-    data.put("section_position", position);
+    data.put("bundle_name", "recommendation card");
+    data.put("bundle_position", position);
 
     analyticsManager.logEvent(data, HOME_INTERACT, parseAction(type),
         navigationTracker.getViewName(true));
