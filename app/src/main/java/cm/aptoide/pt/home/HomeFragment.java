@@ -119,7 +119,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build("HomeFragment", "", StoreContext.home);
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", StoreContext.home);
   }
 
   @Nullable @Override
