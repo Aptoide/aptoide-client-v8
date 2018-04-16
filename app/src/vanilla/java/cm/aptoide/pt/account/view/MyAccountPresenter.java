@@ -162,7 +162,6 @@ public class MyAccountPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.notificationSelection())
         .doOnNext(notification -> {
-          navigator.navigateToNotification(notification);
           analytics.sendNotificationTouchEvent(notification.getNotificationCenterUrlTrack());
           navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
         })

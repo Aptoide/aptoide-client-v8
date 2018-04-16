@@ -15,9 +15,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
-import cm.aptoide.pt.comments.CommentBeforeSubmissionCallback;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
-import cm.aptoide.pt.comments.CommentOnErrorCallbackContract;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -26,7 +24,6 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
-import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -55,10 +52,7 @@ public class CommentDialogFragment
   private Long previousCommentId;
   private TextInputLayout textInputLayout;
   private Button commentButton;
-  private boolean reply;
   private CommentDialogCallbackContract commentDialogCallbackContract;
-  private CommentBeforeSubmissionCallback commentBeforeSubmissionCallback;
-  private CommentOnErrorCallbackContract commentOnErrorCallbackContract;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
@@ -112,28 +106,6 @@ public class CommentDialogFragment
     return fragment;
   }
 
-  public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId) {
-    Bundle args = new Bundle();
-    args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
-    args.putString(RESOURCE_ID_AS_STRING, timelineArticleId);
-
-    CommentDialogFragment fragment = new CommentDialogFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId,
-      long previousCommentId) {
-    Bundle args = new Bundle();
-    args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
-    args.putString(RESOURCE_ID_AS_STRING, timelineArticleId);
-    args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
-
-    CommentDialogFragment fragment = new CommentDialogFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
@@ -162,9 +134,6 @@ public class CommentDialogFragment
       case REVIEW:
         titleTextView.setText(getString(R.string.dialog_title_comment));
         break;
-      case TIMELINE:
-        titleTextView.setText(getString(R.string.dialog_title_comment));
-        break;
       case STORE:
         titleTextView.setText(
             TextUtils.isEmpty(appOrStoreName) ? getString(R.string.comment_store_title)
@@ -173,12 +142,7 @@ public class CommentDialogFragment
     }
 
     Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
-    cancelButton.setOnClickListener(a -> {
-      if (commentOnErrorCallbackContract != null) {
-        commentOnErrorCallbackContract.onError(idAsString);
-      }
-      CommentDialogFragment.this.dismiss();
-    });
+    cancelButton.setOnClickListener(a -> CommentDialogFragment.this.dismiss());
 
     textInputLayout = (TextInputLayout) view.findViewById(R.id.input_layout_title);
     commentButton = (Button) view.findViewById(R.id.comment_button);
@@ -196,8 +160,7 @@ public class CommentDialogFragment
     this.idAsString = args.getString(RESOURCE_ID_AS_STRING);
     this.idAsLong = args.getLong(RESOURCE_ID_AS_LONG);
 
-    this.reply = args.containsKey(PREVIOUS_COMMENT_ID);
-    if (this.reply) {
+    if (args.containsKey(PREVIOUS_COMMENT_ID)) {
       this.previousCommentId = args.getLong(PREVIOUS_COMMENT_ID);
     }
   }
@@ -230,34 +193,20 @@ public class CommentDialogFragment
         .filter(inputText -> {
           if (TextUtils.isEmpty(inputText)) {
             enableError(onEmptyTextError);
-            if (commentOnErrorCallbackContract != null) {
-              commentOnErrorCallbackContract.onError(idAsString);
-            }
             return false;
           }
           disableError();
           return true;
         })
-        .flatMap(inputText -> {
-          if (commentBeforeSubmissionCallback != null) {
-            commentBeforeSubmissionCallback.onCommentBeforeSubmission(inputText);
-            this.dismiss();
-            return Observable.empty();
-          }
-
-          return submitComment(inputText, idAsLong, previousCommentId, idAsString).observeOn(
-              AndroidSchedulers.mainThread())
-              .doOnError(e -> {
-                CrashReport.getInstance()
-                    .log(e);
-                if (commentOnErrorCallbackContract != null) {
-                  commentOnErrorCallbackContract.onError(idAsString);
-                }
-                ShowMessage.asSnack(this, R.string.error_occured);
-              })
-              .retry()
-              .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW));
-        })
+        .flatMap(inputText -> submitComment(inputText, idAsLong, previousCommentId).observeOn(
+            AndroidSchedulers.mainThread())
+            .doOnError(e -> {
+              CrashReport.getInstance()
+                  .log(e);
+              ShowMessage.asSnack(this, R.string.error_occured);
+            })
+            .retry()
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)))
         .subscribe(resp -> {
           if (resp.isOk()) {
             this.dismiss();
@@ -267,17 +216,9 @@ public class CommentDialogFragment
             }
           } else {
             ShowMessage.asSnack(this, R.string.error_occured);
-            if (commentOnErrorCallbackContract != null) {
-              commentOnErrorCallbackContract.onError(idAsString);
-            }
           }
-        }, throwable -> {
-          if (commentOnErrorCallbackContract != null) {
-            commentOnErrorCallbackContract.onError(idAsString);
-          }
-          CrashReport.getInstance()
-              .log(throwable);
-        });
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable));
   }
 
   private void disableError() {
@@ -298,7 +239,7 @@ public class CommentDialogFragment
   }
 
   private Observable<? extends BaseV7Response> submitComment(String inputText, long idAsLong,
-      Long previousCommentId, String idAsString) {
+      Long previousCommentId) {
     switch (commentType) {
       case REVIEW:
         // new comment on a review
@@ -319,18 +260,6 @@ public class CommentDialogFragment
             baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences)
             .observe(true, true);
-
-      case TIMELINE:
-        // check if this is a new comment on a article or a reply to a previous one
-        if (previousCommentId == null) {
-          return PostCommentForTimelineArticle.of(idAsString, inputText, baseBodyBodyInterceptor,
-              httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-              .observe(true, true);
-        }
-        return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-            sharedPreferences)
-            .observe(true, true);
     }
     // default case
     Logger.e(this.getTag(), "Unable to create reply due to missing comment type");
@@ -340,13 +269,5 @@ public class CommentDialogFragment
   public void setCommentDialogCallbackContract(
       CommentDialogCallbackContract commentDialogCallbackContract) {
     this.commentDialogCallbackContract = commentDialogCallbackContract;
-  }
-
-  public void setCommentBeforeSubmissionCallbackContract(CommentBeforeSubmissionCallback callback) {
-    this.commentBeforeSubmissionCallback = callback;
-  }
-
-  public void setCommentOnErrorCallbackContract(CommentOnErrorCallbackContract callback) {
-    this.commentOnErrorCallbackContract = callback;
   }
 }

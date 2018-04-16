@@ -40,11 +40,9 @@ import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
-import cm.aptoide.pt.navigator.TabNavigator;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.permission.PermissionProvider;
@@ -207,15 +205,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
-      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
-      NotificationNavigator notificationNavigator) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator, notificationNavigator);
-  }
-
-  @ActivityScope @Provides NotificationNavigator provideNotificationNavigator(
-      LinksHandlerFactory linksHandlerFactory, FragmentNavigator fragmentNavigator) {
-    return new NotificationNavigator((TabNavigator) activity, linksHandlerFactory,
-        fragmentNavigator);
+      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator);
   }
 
   @ActivityScope @Provides LinksHandlerFactory provideLinksHandlerFactory() {

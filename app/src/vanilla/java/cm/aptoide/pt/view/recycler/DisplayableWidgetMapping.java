@@ -12,7 +12,6 @@ import cm.aptoide.pt.app.view.GridAppWidget;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppWidget;
 import cm.aptoide.pt.app.view.OtherVersionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewAdDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
@@ -22,9 +21,9 @@ import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateResultsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAdDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
-import cm.aptoide.pt.app.view.widget.AppViewAdWidget;
 import cm.aptoide.pt.app.view.widget.AppViewDescriptionWidget;
 import cm.aptoide.pt.app.view.widget.AppViewDeveloperWidget;
 import cm.aptoide.pt.app.view.widget.AppViewFlagThisWidget;
@@ -34,6 +33,7 @@ import cm.aptoide.pt.app.view.widget.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewRateResultsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewScreenshotsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewStoreWidget;
+import cm.aptoide.pt.app.view.widget.AppViewSuggestedAdWidget;
 import cm.aptoide.pt.app.view.widget.AppViewSuggestedAppWidget;
 import cm.aptoide.pt.app.view.widget.AppViewSuggestedAppsWidget;
 import cm.aptoide.pt.app.view.widget.OtherVersionWidget;
@@ -238,8 +238,8 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppWidget.class,
         AppViewSuggestedAppDisplayable.class));
 
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AppViewAdWidget.class, AppViewAdDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAdWidget.class,
+        AppViewSuggestedAdDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(OtherVersionWidget.class, OtherVersionDisplayable.class));

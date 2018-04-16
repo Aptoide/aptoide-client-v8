@@ -32,7 +32,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="16dp"
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@id/apps_installed_icon"
         android:layout_toRightOf="@id/apps_installed_icon"
@@ -43,6 +42,8 @@
           android:id="@+id/apps_installed_app_name"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="1"
           tools:text="Aptoide"
           style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
@@ -51,6 +52,8 @@
           android:id="@+id/apps_installed_app_version"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="1"
           tools:text="1994"
           style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           />

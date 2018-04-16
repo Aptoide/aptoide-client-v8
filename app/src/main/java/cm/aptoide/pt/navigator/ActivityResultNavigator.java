@@ -15,9 +15,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
-import cm.aptoide.pt.link.LinksHandlerFactory;
-import cm.aptoide.pt.notification.view.InboxNavigator;
-import cm.aptoide.pt.notification.view.NotificationNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -37,9 +34,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   private BillingNavigator billingNavigator;
   private ScreenOrientationManager screenOrientationManager;
   private MyAccountNavigator myAccountNavigator;
-  private InboxNavigator inboxNavigator;
-  private NotificationNavigator notificationNavigator;
-  private LinksHandlerFactory linksHandlerFactory;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
@@ -177,31 +171,8 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
 
   public MyAccountNavigator getMyAccountNavigator() {
     if (myAccountNavigator == null) {
-      myAccountNavigator = new MyAccountNavigator(getFragmentNavigator(), getAccountNavigator(),
-          getNotificationNavigator());
+      myAccountNavigator = new MyAccountNavigator(getFragmentNavigator(), getAccountNavigator());
     }
     return myAccountNavigator;
-  }
-
-  public InboxNavigator getInboxNavigator() {
-    if (inboxNavigator == null) {
-      inboxNavigator = new InboxNavigator(getNotificationNavigator());
-    }
-    return inboxNavigator;
-  }
-
-  private NotificationNavigator getNotificationNavigator() {
-    if (notificationNavigator == null) {
-      notificationNavigator =
-          new NotificationNavigator((TabNavigator) this, getLinkFactory(), getFragmentNavigator());
-    }
-    return notificationNavigator;
-  }
-
-  private LinksHandlerFactory getLinkFactory() {
-    if (linksHandlerFactory == null) {
-      linksHandlerFactory = new LinksHandlerFactory(this);
-    }
-    return linksHandlerFactory;
   }
 }

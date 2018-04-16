@@ -30,7 +30,6 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -310,10 +309,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body ListSearchAppsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST Observable<GetUserTimeline> getUserTimeline(@Url String url,
-        @Body GetUserTimelineRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(
         @Body ListAppVersionsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
@@ -344,10 +339,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setComment") Observable<SetComment> postStoreComment(@Body PostCommentForStore.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("setComment") Observable<SetComment> postTimelineComment(
-        @Body PostCommentForTimelineArticle.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(

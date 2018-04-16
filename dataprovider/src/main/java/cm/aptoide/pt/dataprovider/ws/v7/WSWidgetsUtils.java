@@ -49,7 +49,8 @@ import rx.schedulers.Schedulers;
       Converter.Factory converterFactory, String q, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache, int limit) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache, int limit,
+      List<String> packageNames) {
     if (wsWidget.getType() != null) {
 
       String url = null;
@@ -191,7 +192,7 @@ import rx.schedulers.Schedulers;
               .map(listApps -> wsWidget);
         case TIMELINE_CARD:
           return GetSocialRecommendsRequest.ofAction(url, bodyInterceptor, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences)
+              converterFactory, tokenInvalidator, sharedPreferences, packageNames)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))

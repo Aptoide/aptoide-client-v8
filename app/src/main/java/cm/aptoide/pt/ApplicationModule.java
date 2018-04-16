@@ -149,7 +149,6 @@ import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.timeline.post.PostAnalytics;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -890,8 +889,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       Database database, AdsRepository adsRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
-        AccessorFactory.getAccessorFor(database, Store.class)), StoreUtils.getSubscribedStoresIds(
-        AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)), adsRepository);
+        AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -996,16 +994,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("aptoideEvents") Collection<String> provideAptoideEvents() {
-    return Arrays.asList(PostAnalytics.OPEN_EVENT_NAME, PostAnalytics.POST,
-        AppViewAnalytics.OPEN_APP_VIEW, NotificationAnalytics.NOTIFICATION_EVENT_NAME,
-        TimelineAnalytics.OPEN_APP, TimelineAnalytics.UPDATE_APP, TimelineAnalytics.OPEN_STORE,
-        TimelineAnalytics.OPEN_ARTICLE, TimelineAnalytics.LIKE, TimelineAnalytics.OPEN_BLOG,
-        TimelineAnalytics.OPEN_VIDEO, TimelineAnalytics.OPEN_CHANNEL,
-        TimelineAnalytics.OPEN_STORE_PROFILE, TimelineAnalytics.COMMENT, TimelineAnalytics.SHARE,
-        TimelineAnalytics.SHARE_SEND, TimelineAnalytics.COMMENT_SEND, TimelineAnalytics.FAB,
-        TimelineAnalytics.SCROLLING_EVENT, TimelineAnalytics.OPEN_TIMELINE_EVENT,
-        AccountAnalytics.APTOIDE_EVENT_NAME, DownloadAnalytics.DOWNLOAD_EVENT,
-        DownloadAnalytics.DOWNLOAD_EVENT_NAME, InstallAnalytics.INSTALL_EVENT_NAME);
+    return Arrays.asList(AppViewAnalytics.OPEN_APP_VIEW,
+        NotificationAnalytics.NOTIFICATION_EVENT_NAME, TimelineAnalytics.OPEN_APP,
+        TimelineAnalytics.UPDATE_APP, TimelineAnalytics.OPEN_STORE, TimelineAnalytics.OPEN_ARTICLE,
+        TimelineAnalytics.LIKE, TimelineAnalytics.OPEN_BLOG, TimelineAnalytics.OPEN_VIDEO,
+        TimelineAnalytics.OPEN_CHANNEL, TimelineAnalytics.OPEN_STORE_PROFILE,
+        TimelineAnalytics.COMMENT, TimelineAnalytics.SHARE, TimelineAnalytics.SHARE_SEND,
+        TimelineAnalytics.COMMENT_SEND, TimelineAnalytics.FAB, TimelineAnalytics.SCROLLING_EVENT,
+        TimelineAnalytics.OPEN_TIMELINE_EVENT, AccountAnalytics.APTOIDE_EVENT_NAME,
+        DownloadAnalytics.DOWNLOAD_EVENT, DownloadAnalytics.DOWNLOAD_EVENT_NAME,
+        InstallAnalytics.INSTALL_EVENT_NAME);
   }
 
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
@@ -1050,10 +1048,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides TimelineAnalytics providesTimelineAnalytics(
-      AnalyticsManager analyticsManager, NotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker, ReadPostsPersistence readPostsPersistence) {
-    return new TimelineAnalytics(notificationAnalytics, navigationTracker, readPostsPersistence,
-        analyticsManager);
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new TimelineAnalytics(navigationTracker, analyticsManager);
   }
 
   @Singleton @Provides StoreAnalytics providesStoreAnalytics(AnalyticsManager analyticsManager,
@@ -1084,7 +1080,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager) {
+      @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager,
+      PackageRepository packageRepository) {
     return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
@@ -1100,7 +1097,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE),
         (ConnectivityManager) getApplicationContext().getSystemService(
             Context.CONNECTIVITY_SERVICE),
-        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider());
+        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider(), packageRepository,
+        10, 10);
   }
 
   @Singleton @Provides BundlesRepository providesBundleRepository(

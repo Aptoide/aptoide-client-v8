@@ -9,11 +9,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -63,8 +63,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private PublishSubject<Void> updateAll;
   private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
+  private ProgressBar progressBar;
   private BottomNavigationActivity bottomNavigationActivity;
   private SwipeRefreshLayout swipeRefreshLayout;
+  private boolean showDownloads;
+  private boolean showUpdates;
+  private boolean showInstalled;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -88,6 +92,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    progressBar.setVisibility(View.VISIBLE);
     setupRecyclerView();
     buildIgnoreUpdatesDialog();
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
@@ -148,15 +154,33 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesList(List<App> list) {
-    adapter.addUpdateAppsList(list);
+    if (list != null && !list.isEmpty()) {
+      adapter.addUpdateAppsList(list);
+    }
+    showUpdates = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
-    adapter.addInstalledAppsList(installedApps);
+    if (installedApps != null && !installedApps.isEmpty()) {
+      adapter.addInstalledAppsList(installedApps);
+    }
+    showInstalled = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public void showDownloadsList(List<App> list) {
-    adapter.addDownloadAppsList(list);
+    if (list != null && !list.isEmpty()) {
+      adapter.addDownloadAppsList(list);
+    }
+    showDownloads = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public Observable<App> retryDownload() {
@@ -226,7 +250,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesDownloadList(List<App> updatesDownloadList) {
-    adapter.addUpdateAppsList(updatesDownloadList);
+    if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
+      adapter.addUpdateAppsList(updatesDownloadList);
+    }
+    showUpdates = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public Observable<Void> updateAll() {
@@ -304,8 +334,26 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
   }
 
+  private void showAppsList() {
+    recyclerView.scrollToPosition(0);
+    hideLoadingProgressBar();
+    recyclerView.setVisibility(View.VISIBLE);
+  }
+
+  private boolean shouldShowAppsList() {
+    return showDownloads
+        && showUpdates
+        && showInstalled
+        && recyclerView.getVisibility() != View.VISIBLE;
+  }
+
+  private void hideLoadingProgressBar() {
+    progressBar.setVisibility(View.GONE);
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
+    progressBar = null;
     swipeRefreshLayout = null;
     ignoreUpdateDialog = null;
     recyclerView = null;

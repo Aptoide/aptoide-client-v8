@@ -6,7 +6,6 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
 import cm.aptoide.pt.store.view.featured.AppBrickListDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -50,8 +49,7 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
             for (App app : list) {
               app.getStore()
                   .setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new GridAppDisplayable(app, tag, storeContext == StoreContext.home,
-                  navigationTracker, storeContext));
+              displayables.add(new GridAppDisplayable(app, tag, navigationTracker, storeContext));
             }
             break;
         }
@@ -59,9 +57,7 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
         for (App app : list) {
           app.getStore()
               .setAppearance(new Store.Appearance(storeTheme, null));
-          displayables.add(
-              new GridAppDisplayable(app, tag, storeContext == StoreContext.home, navigationTracker,
-                  storeContext));
+          displayables.add(new GridAppDisplayable(app, tag, navigationTracker, storeContext));
         }
       }
 

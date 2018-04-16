@@ -15,6 +15,7 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -83,7 +84,7 @@ public class AppsManager {
     return installManager.getInstallations()
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
-            return Observable.empty();
+            return Observable.just(Collections.emptyList());
           }
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)

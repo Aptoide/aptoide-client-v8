@@ -93,9 +93,6 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newListStoresFragment();
 
-  @Deprecated Fragment newAppsTimelineFragment(String action, Long userId, Long storeId,
-      StoreContext storeContext);
-
   @Deprecated Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
       StoreContext storeName);
 
@@ -134,14 +131,8 @@ public interface FragmentProvider {
   @Deprecated Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes,
       String storeTheme, String title, StoreContext storeContext);
 
-  @Deprecated Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId,
-      StoreContext storeContext);
-
   @Deprecated Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
       String storeAnalyticsAction, StoreContext storeContext);
-
-  @Deprecated Fragment newCommentGridRecyclerFragmentWithCommentDialogOpen(CommentType commentType,
-      String elementId, StoreContext storeContext);
 
   @Deprecated Fragment newAddressBookFragment();
 

@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -55,7 +54,6 @@ import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.share.ShareStoreHelper;
-import cm.aptoide.pt.social.view.TimelineFragment;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -282,26 +280,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
       pagerSlidingTabStrip.setViewPager(viewPager);
     }
 
-    /*
-     *  Click on tab listener
-     */
-    StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
-    pagerSlidingTabStrip.setOnTabReselectedListener(position -> {
-      if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
-        //TODO We should not call fragment public methods since we do NOT know about its internal
-        //life cycle. A fragment A should call its activity in order to communicate with
-        //fragment B. Then when fragment B is ready it should register a listener
-        //with its activity in order receive external communication. Activity
-        //should buffer calls if there is no listener registered and deliver them
-        //after registration happens.
-        for (Fragment fragment : getChildFragmentManager().getFragments()) {
-          if (fragment != null && fragment instanceof TimelineFragment) {
-            ((TimelineFragment) fragment).goToTop();
-          }
-        }
-      }
-    });
-
     /* Be careful maintaining this code
      * this affects both the main view pager when we open app
      * and the view pager inside the StoresView
@@ -311,10 +289,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     viewPager.addOnPageChangeListener(new AptoideViewPager.SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
         StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
-        if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
-          timelineAnalytics.sendTimelineTabOpened();
-        }
-
         if (storeContext.equals(StoreContext.meta)) {
           storeAnalytics.sendStoreInteractEvent("Open Tab", adapter.getPageTitle(position)
               .toString(), storeName);

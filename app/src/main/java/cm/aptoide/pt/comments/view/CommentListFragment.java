@@ -53,8 +53,6 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.timeline.TimelineSocialActionData;
 import cm.aptoide.pt.util.CommentOperations;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
@@ -84,15 +82,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   // consts
   //
   private static final String COMMENT_TYPE = "comment_type";
-  private static final String ELEMENT_ID_AS_STRING = "element_id_as_string";
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
-  private static final String SHOW_INPUT_DIALOG_FIRST_RUN = "show_input_dialog_first_run";
   private static final String STORE_ANALYTICS_ACTION = "store_analytics_action";
   private static final String STORE_CONTEXT = "store_context";
-  private static final String BLANK = "(blank)";
-  // control setComment retry
-  protected long lastTotal;
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   //
@@ -102,8 +95,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private List<Displayable> displayables;
   private CommentType commentType;
   private String url;
-  // timeline card comments vars
-  private String elementIdAsString;
   private List<CommentNode> comments;
   // store comments vars
   private long elementIdAsLong;
@@ -118,26 +109,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
-  private boolean showCommentInputDialogOnFirstRun;
-  private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private String storeAnalyticsAction;
   private StoreAnalytics storeAnalytics;
   private StoreContext storeContext;
-
-  public static Fragment newInstance(CommentType commentType, String timelineArticleId,
-      StoreContext storeContext) {
-    Bundle args = new Bundle();
-    args.putString(ELEMENT_ID_AS_STRING, timelineArticleId);
-    args.putSerializable(STORE_CONTEXT, storeContext);
-    args.putString(COMMENT_TYPE, commentType.name());
-    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
-
-    CommentListFragment fragment = new CommentListFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
 
   public static Fragment newInstanceUrl(CommentType commentType, String url,
       String storeAnalyticsAction, StoreContext storeContext) {
@@ -145,20 +121,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     args.putString(URL_VAL, url);
     args.putSerializable(STORE_CONTEXT, storeContext);
     args.putString(COMMENT_TYPE, commentType.name());
-    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, false);
     args.putString(STORE_ANALYTICS_ACTION, storeAnalyticsAction);
-    CommentListFragment fragment = new CommentListFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  public static Fragment newInstanceWithCommentDialogOpen(CommentType commentType, String elementId,
-      StoreContext storeContext) {
-    Bundle args = new Bundle();
-    args.putString(ELEMENT_ID_AS_STRING, elementId);
-    args.putSerializable(STORE_CONTEXT, storeContext);
-    args.putString(COMMENT_TYPE, commentType.name());
-    args.putBoolean(SHOW_INPUT_DIALOG_FIRST_RUN, true);
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
     return fragment;
@@ -175,8 +138,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             .getApplicationContext()).getDatabase(), Store.class));
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    timelineAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getTimelineAnalytics();
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
   }
@@ -227,12 +188,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    elementIdAsString = args.getString(ELEMENT_ID_AS_STRING);
     storeContext = ((StoreContext) args.getSerializable(STORE_CONTEXT));
     elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
     url = args.getString(URL_VAL);
     commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
-    showCommentInputDialogOnFirstRun = args.getBoolean(SHOW_INPUT_DIALOG_FIRST_RUN);
     storeAnalyticsAction = args.getString(STORE_ANALYTICS_ACTION);
 
     // extracting store data from the URL...
@@ -270,10 +229,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       floatingActionButton.setVisibility(View.VISIBLE);
     }
     final CrashReport crashReport = CrashReport.getInstance();
-    if (showCommentInputDialogOnFirstRun) {
-      createNewCommentFragment(elementIdAsString).subscribe(() -> {
-      }, throwable -> crashReport.log(throwable));
-    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -298,54 +253,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   }
 
   void refreshData() {
-    if (commentType == CommentType.TIMELINE) {
-      timelineAnalytics.sendSocialActionEvent(
-          new TimelineSocialActionData(BLANK, BLANK, "Comment", BLANK, BLANK, BLANK));
-      caseListSocialTimelineComments(true, true);
-    } else {
-      caseListStoreComments(url,
-          StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider), true);
-    }
-  }
-
-  void caseListSocialTimelineComments(boolean refresh, boolean bypassServerCache) {
-    ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofTimeline(url, 0, 30, refresh, elementIdAsString, bodyDecorator,
-            httpClient, converterFactory, tokenInvalidator,
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-
-    Action1<ListComments> listCommentsAction = (listComments -> {
-      if (listComments != null
-          && listComments.getDataList() != null
-          && listComments.getDataList()
-          .getList() != null) {
-        comments = commentOperations.flattenByDepth(commentOperations.transform(
-            listComments.getDataList()
-                .getList()));
-
-        ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
-        for (CommentNode commentNode : comments) {
-          displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
-              createNewCommentFragment(elementIdAsString, commentNode.getComment()
-                  .getId())), getFragmentNavigator(),
-              ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
-        }
-
-        this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new DisplayableGroup(displayables,
-            (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-            getContext().getResources()));
-
-        addDisplayables(this.displayables);
-      }
-    });
-    getRecyclerView().clearOnScrollListeners();
-    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            err -> err.printStackTrace(), true, false);
-
-    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh, bypassServerCache);
+    caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url, storeCredentialsProvider),
+        true);
   }
 
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
@@ -400,32 +309,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh, refresh);
-  }
-
-  public Completable createNewCommentFragment(final String timelineArticleId,
-      final long previousCommentId) {
-
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .flatMapCompletable(account -> {
-          if (account.isLoggedIn()) {
-            // show fragment CommentDialog
-            FragmentManager fm = CommentListFragment.this.getActivity()
-                .getSupportFragmentManager();
-            CommentDialogFragment commentDialogFragment =
-                CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
-                    previousCommentId);
-            commentDialogFragment.setCommentDialogCallbackContract(this);
-
-            return commentDialogFragment.lifecycle()
-                .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
-                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-                .toCompletable();
-          }
-
-          return showSignInMessage();
-        });
   }
 
   private Completable createNewCommentFragment(long storeId, long previousCommentId,
@@ -484,12 +367,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     setupToolbar();
 
     RxView.clicks(floatingActionButton)
-        .flatMap(a -> {
-          if (commentType == CommentType.TIMELINE) {
-            return createNewCommentFragment(elementIdAsString).toObservable();
-          }
-          return createNewCommentFragment(elementIdAsLong, storeName).toObservable();
-        })
+        .flatMap(a -> createNewCommentFragment(elementIdAsLong, storeName).toObservable())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(a -> {
           // no-op
@@ -502,31 +380,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override protected RecyclerView.ItemDecoration getItemDecoration() {
     return new HorizontalDividerItemDecoration(getContext(), 0);
-  }
-
-  public Completable createNewCommentFragment(String timelineArticleId) {
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .flatMapCompletable(account -> {
-          if (account.isLoggedIn()) {
-            // show fragment CommentDialog
-            FragmentManager fm = CommentListFragment.this.getActivity()
-                .getSupportFragmentManager();
-            CommentDialogFragment commentDialogFragment =
-                CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
-            commentDialogFragment.setCommentDialogCallbackContract(this);
-
-            return commentDialogFragment.lifecycle()
-                .doOnSubscribe(() -> {
-                  commentDialogFragment.show(fm, "fragment_comment_dialog");
-                })
-                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-                .toCompletable();
-          }
-
-          return showSignInMessage();
-        });
   }
 
   public Completable createNewCommentFragment(long storeCommentId, String storeName) {
@@ -581,8 +434,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     ArrayList<Displayable> displayables = new ArrayList<>(comments.size() + 1);
     for (CommentNode commentNode : comments) {
       displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
-          createNewCommentFragment(elementIdAsString, commentNode.getComment()
-              .getId())), getFragmentNavigator(),
+          createNewCommentFragment(elementIdAsLong, commentNode.getComment()
+              .getId(), storeName)), getFragmentNavigator(),
           ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()));
       if (commentNode.getComment()
           .getId() == complexComment.getParent()
@@ -630,14 +483,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
       comment.setParent(parent);
       commentNode.setLevel(2);
     }
-    if (elementIdAsLong != 0) {
-      return new ComplexComment(commentNode, createNewCommentFragment(elementIdAsLong,
-          commentNode.getComment()
-              .getId(), storeName));
-    } else {
-      return new ComplexComment(commentNode, createNewCommentFragment(elementIdAsString,
-          commentNode.getComment()
-              .getId()));
-    }
+    return new ComplexComment(commentNode, createNewCommentFragment(elementIdAsLong,
+        commentNode.getComment()
+            .getId(), storeName));
   }
 }

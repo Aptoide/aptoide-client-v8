@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    tools:showIn="@layout/displayable_social_timeline_social_video"
+    android:focusable="true"
     >
 
   <FrameLayout
@@ -21,6 +21,7 @@
       android:layout_marginRight="15dp"
       android:layout_marginStart="12dp"
       android:clickable="true"
+      android:focusable="true"
       android:gravity="center"
       style="@style/focusableBackground"
       >

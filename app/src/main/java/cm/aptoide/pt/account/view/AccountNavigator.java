@@ -161,6 +161,13 @@ public class AccountNavigator {
 
   public void navigateToTermsAndConditions() {
     fragmentNavigator.navigateTo(GenericWebviewFragment.newInstance(activityNavigator.getActivity()
-        .getString(R.string.terms_conditions_navigation_url)), true);
+        .getString(R.string.terms_conditions_navigation_url), activityNavigator.getActivity()
+        .getString(R.string.settings_terms_conditions)), true);
+  }
+
+  public void navigateToPrivacyPolicy() {
+    fragmentNavigator.navigateTo(GenericWebviewFragment.newInstance(activityNavigator.getActivity()
+        .getString(R.string.privacy_policy_navigation_url), activityNavigator.getActivity()
+        .getString(R.string.settings_privacy_policy)), true);
   }
 }

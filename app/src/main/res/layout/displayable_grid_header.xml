@@ -23,7 +23,7 @@
       android:gravity="center_vertical"
       android:maxLines="1"
       tools:text="Local Top Apps"
-      style="?android:attr/textAppearanceMedium"
+      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
 
   <Button
@@ -36,8 +36,9 @@
       android:gravity="center"
       android:text="@string/button_header_more"
       android:textAllCaps="true"
+      android:textColor="@color/orange_700"
       android:textSize="12sp"
-      style="?attr/customButton"
+      style="@style/Widget.Aptoide.Button.Borderless.Colored"
       />
 
 </RelativeLayout>

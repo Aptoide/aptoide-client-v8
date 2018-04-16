@@ -114,7 +114,7 @@ public class Event {
     // Api
     listApps, listStores, getUser, getStore, getStoreWidgets, //getReviews,
     //getApkComments,
-    getUserTimeline, listReviews, listComments, getMyStoresSubscribed, getStoresRecommended,
+    listReviews, listComments, getMyStoresSubscribed, getStoresRecommended,
 
     // Client
     myStores, myUpdates, myExcludedUpdates, getAds, myDownloads,
