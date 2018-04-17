@@ -25,7 +25,7 @@ public interface HomeView extends View {
 
   Observable<AppHomeClick> appClicked();
 
-  Observable<AppClick> recommendedAppClicked();
+  Observable<AppHomeClick> recommendedAppClicked();
 
   Observable<AdClick> adClicked();
 

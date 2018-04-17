@@ -22,19 +22,17 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeClick> uiEventsListener;
-  private final PublishSubject<AppClick> recommendsClickedEvents;
   private List<HomeBundle> bundles;
   private PublishSubject<AdClick> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<AdClick> adPublishSubject, PublishSubject<AppClick> recommendsClickedEvents) {
+      PublishSubject<AdClick> adPublishSubject) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adPublishSubject;
-    this.recommendsClickedEvents = recommendsClickedEvents;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,7 +42,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter);
       case SOCIAL:
         return new SocialBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(SOCIAL, parent, false), recommendsClickedEvents);
+            .inflate(SOCIAL, parent, false), uiEventsListener);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter);

@@ -5,7 +5,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdMapper;
-import cm.aptoide.pt.home.AppClick;
 import cm.aptoide.pt.home.AppHomeClick;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.FakeBundleDataSource;
@@ -50,7 +49,6 @@ public class HomePresenterTest {
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<AppHomeClick> appClickEvent;
   private PublishSubject<AdClick> adClickEvent;
-  private PublishSubject<AppClick> recommendedClickEvent;
   private PublishSubject<HomeClick> moreClickEvent;
   private PublishSubject<Object> bottomReachedEvent;
   private PublishSubject<Void> pullToRefreshEvent;
@@ -65,7 +63,6 @@ public class HomePresenterTest {
 
     lifecycleEvent = PublishSubject.create();
     appClickEvent = PublishSubject.create();
-    recommendedClickEvent = PublishSubject.create();
     adClickEvent = PublishSubject.create();
     moreClickEvent = PublishSubject.create();
     bottomReachedEvent = PublishSubject.create();
@@ -86,7 +83,7 @@ public class HomePresenterTest {
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
-    when(view.recommendedAppClicked()).thenReturn(recommendedClickEvent);
+    when(view.recommendedAppClicked()).thenReturn(appClickEvent);
     when(view.adClicked()).thenReturn(adClickEvent);
     when(view.moreClicked()).thenReturn(moreClickEvent);
     when(view.reachesBottom()).thenReturn(bottomReachedEvent);
@@ -149,7 +146,8 @@ public class HomePresenterTest {
     presenter.handleRecommendedAppClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an app is clicked
-    recommendedClickEvent.onNext(new AppClick(aptoide, 3, AppClick.Type.SOCIAL_CLICK));
+    appClickEvent.onNext(
+        new AppHomeClick(aptoide, 3, localTopAppsBundle, 0, HomeClick.Type.SOCIAL_CLICK));
     //then it should navigate to the App's detail View
     verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
         aptoide.getTag());

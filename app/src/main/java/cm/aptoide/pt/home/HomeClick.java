@@ -28,6 +28,6 @@ public class HomeClick {
   }
 
   public enum Type {
-    MORE, APP, AD
+    MORE, APP, AD, SOCIAL_CLICK, SOCIAL_INSTALL
   }
 }

@@ -17,7 +17,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -47,8 +46,6 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeClick> uiEventsListener;
-  private PublishSubject<Application> appClickedEvents;
-  private PublishSubject<AppClick> recommendsClickedEvents;
   private PublishSubject<AdClick> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
@@ -73,8 +70,6 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     uiEventsListener = null;
     oneDecimalFormatter = null;
     adClickedEvents = null;
-    appClickedEvents = null;
-    recommendsClickedEvents = null;
     userAvatar = null;
     super.onDestroy();
   }
@@ -82,8 +77,6 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     uiEventsListener = PublishSubject.create();
-    appClickedEvents = PublishSubject.create();
-    recommendsClickedEvents = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("#.#");
   }
@@ -111,7 +104,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents, recommendsClickedEvents);
+        oneDecimalFormatter, adClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
@@ -211,8 +204,11 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
         .cast(AppHomeClick.class);
   }
 
-  @Override public Observable<AppClick> recommendedAppClicked() {
-    return recommendsClickedEvents;
+  @Override public Observable<AppHomeClick> recommendedAppClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getClickType()
+        .equals(HomeClick.Type.SOCIAL_CLICK) || homeClick.getClickType()
+        .equals(HomeClick.Type.SOCIAL_INSTALL))
+        .cast(AppHomeClick.class);
   }
 
   @Override public Observable<AdClick> adClicked() {
