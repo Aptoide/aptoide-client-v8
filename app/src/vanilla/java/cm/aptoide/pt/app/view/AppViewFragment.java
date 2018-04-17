@@ -439,8 +439,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
           crashReport.log(throwable);
         });
 
-    SuggestionCursorAdapter suggestionCursorAdapter = new SuggestionCursorAdapter(getContext());
-
     final Toolbar toolbar = getToolbar();
     final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
