@@ -15,6 +15,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -119,13 +120,15 @@ public class DeepLinkManager {
       searchDeepLink(intent.getStringExtra(SearchManager.QUERY),
           intent.getBooleanExtra(FROM_SHORTCUT, false));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
-      newrepoDeepLink(intent, intent.getExtras()
+      newRepoDeepLink(intent, intent.getExtras()
           .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO), storeAccessor);
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.HOME_DEEPLINK)) {
       fromHomeDeepLink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.BUNDLE)) {
+      fromBundleDeepLink(intent);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
@@ -195,7 +198,7 @@ public class DeepLinkManager {
     }
   }
 
-  private void newrepoDeepLink(Intent intent, ArrayList<String> repos,
+  private void newRepoDeepLink(Intent intent, ArrayList<String> repos,
       StoreAccessor storeAccessor) {
     if (repos != null) {
       subscriptions.add(Observable.from(repos)
@@ -247,6 +250,15 @@ public class DeepLinkManager {
   private void downloadNotificationDeepLink() {
     deepLinkAnalytics.downloadingUpdates();
     bottomNavigationNavigator.navigateToApps();
+  }
+
+  private void fromBundleDeepLink(Intent intent) {
+    Event event = new Event();
+    event.setType(Event.Type.API);
+    event.setName(Event.Name.listApps);
+    fragmentNavigator.navigateTo(ListAppsFragment.newInstance(event, "",
+        intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.BUNDLE_ID), StoreContext.home,
+        true), true);
   }
 
   private void fromHomeDeepLink() {

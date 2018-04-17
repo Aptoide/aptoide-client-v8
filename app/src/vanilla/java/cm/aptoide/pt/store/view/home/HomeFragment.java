@@ -427,6 +427,8 @@ public class HomeFragment extends StoreFragment {
         return Event.Name.myUpdates;
       case TabNavigation.HOME:
         return Event.Name.getStoreWidgets;
+      case TabNavigation.BUNDLES:
+        return Event.Name.listApps;
       default:
         throw new IllegalArgumentException("Invalid tab.");
     }
