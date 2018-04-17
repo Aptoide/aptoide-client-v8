@@ -63,6 +63,8 @@ public class HomePresenter implements Presenter {
     handleRetryClick();
 
     handleUserImageClick();
+
+    handleBundleScrolledRight();
   }
 
   @VisibleForTesting public void onCreateLoadBundles() {
@@ -186,6 +188,20 @@ public class HomePresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleBundleScrolledRight() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.bundleScrolled()
+            .doOnNext(__ -> homeAnalytics.sendScrollRightInteractEvent())
+            .doOnError(crashReporter::log)
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(scroll -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });

@@ -12,7 +12,7 @@ import java.util.Map;
 public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
-  public static final String SCROLL_RIGHT = "scroll right";
+  static final String SCROLL_RIGHT = "scroll right";
   static final String TAP_ON_APP = "tap on app";
   static final String PULL_REFRESH = "pull refresh";
   static final String PUSH_LOAD_MORE = "push load more";

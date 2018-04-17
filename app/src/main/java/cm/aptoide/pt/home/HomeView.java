@@ -48,4 +48,6 @@ public interface HomeView extends View {
   Observable<Void> imageClick();
 
   void showAvatar();
+
+  Observable<Void> bundleScrolled();
 }

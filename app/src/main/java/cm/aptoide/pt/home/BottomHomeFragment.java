@@ -270,6 +270,11 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     userAvatar.setVisibility(View.VISIBLE);
   }
 
+  @Override public Observable<Void> bundleScrolled() {
+    // TODO: 17/04/2018 implement view
+    return null;
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;

@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import static cm.aptoide.pt.home.HomeAnalytics.PULL_REFRESH;
 import static cm.aptoide.pt.home.HomeAnalytics.PUSH_LOAD_MORE;
+import static cm.aptoide.pt.home.HomeAnalytics.SCROLL_RIGHT;
 import static cm.aptoide.pt.home.HomeAnalytics.TAP_ON_APP;
 import static cm.aptoide.pt.home.HomeAnalytics.TAP_ON_MORE;
 import static org.mockito.Matchers.eq;
@@ -98,5 +99,16 @@ public class HomeAnalyticsTest {
     data.put("bundle_total_items", 9);
     verify(analyticsManager).logEvent(eq(data), eq("Home_Interact"),
         eq(AnalyticsManager.Action.CLICK), eq("home"));
+  }
+
+  @Test public void sendScrollRightInteractEvent() throws Exception {
+    //Given an initialized HomeAnalytics
+    //When user scrolls right in a bundle with items
+    homeAnalytics.sendScrollRightInteractEvent();
+    //Then an Home_Interact event with 'scroll right' action is logged to the analytics manager
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("action", SCROLL_RIGHT);
+    verify(analyticsManager).logEvent(eq(data), eq("Home_Interact"),
+        eq(AnalyticsManager.Action.SCROLL), eq("home"));
   }
 }

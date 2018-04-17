@@ -57,6 +57,7 @@ public class HomePresenterTest {
   private Application aptoide;
   private PublishSubject<Void> imageClickEvent;
   private PublishSubject<Account> accountStatusEvent;
+  private PublishSubject<Void> bundleScrolledEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -69,6 +70,7 @@ public class HomePresenterTest {
     pullToRefreshEvent = PublishSubject.create();
     retryClickedEvent = PublishSubject.create();
     imageClickEvent = PublishSubject.create();
+    bundleScrolledEvent = PublishSubject.create();
     accountStatusEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
@@ -90,6 +92,7 @@ public class HomePresenterTest {
     when(view.refreshes()).thenReturn(pullToRefreshEvent);
     when(view.retryClicked()).thenReturn(retryClickedEvent);
     when(view.imageClick()).thenReturn(imageClickEvent);
+    when(view.bundleScrolled()).thenReturn(bundleScrolledEvent);
     when(aptoideAccountManager.accountStatus()).thenReturn(accountStatusEvent);
   }
 
@@ -267,5 +270,15 @@ public class HomePresenterTest {
     imageClickEvent.onNext(null);
     //Then it should navigate to the Settings Fragment
     verify(homeNavigator).navigateToMyAccount();
+  }
+
+  @Test public void onBundleScrolledRight_SendScrollEvent() {
+    //Given an initialised HomePresenter
+    presenter.handleBundleScrolledRight();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an user scrolls a bundle with items to the right
+    bundleScrolledEvent.onNext(null);
+    //Then a scroll right analytics event should be sent
+    verify(homeAnalytics).sendScrollRightInteractEvent();
   }
 }
