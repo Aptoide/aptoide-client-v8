@@ -22,15 +22,16 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
   private final EditorsAppsAdapter graphicAppsAdapter;
-  private final PublishSubject<HomeClick> uiEventsListener;
+  private final PublishSubject<HomeEvent> uiEventsListener;
+  private final RecyclerView graphicsList;
 
-  public EditorsBundleViewHolder(View view, PublishSubject<HomeClick> uiEventsListener,
+  public EditorsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
-    RecyclerView graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
+    graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
     graphicAppsAdapter =
         new EditorsAppsAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
     LinearLayoutManager layoutManager =
@@ -54,8 +55,15 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(homeBundle.getTitle());
     graphicAppsAdapter.updateBundle(homeBundle, position);
     graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
-
+    graphicsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+        if (dx > 0) {
+          uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.SCROLL_RIGHT));
+        }
+      }
+    });
     moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeClick(homeBundle, position, HomeClick.Type.MORE)));
+        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
   }
 }

@@ -5,14 +5,14 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdMapper;
-import cm.aptoide.pt.home.AppHomeClick;
+import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeBundlesModel;
-import cm.aptoide.pt.home.HomeClick;
+import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
@@ -47,9 +47,9 @@ public class HomePresenterTest {
   private HomePresenter presenter;
   private HomeBundlesModel bundlesModel;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
-  private PublishSubject<AppHomeClick> appClickEvent;
+  private PublishSubject<AppHomeEvent> appClickEvent;
   private PublishSubject<AdClick> adClickEvent;
-  private PublishSubject<HomeClick> moreClickEvent;
+  private PublishSubject<HomeEvent> moreClickEvent;
   private PublishSubject<Object> bottomReachedEvent;
   private PublishSubject<Void> pullToRefreshEvent;
   private PublishSubject<Void> retryClickedEvent;
@@ -57,7 +57,7 @@ public class HomePresenterTest {
   private Application aptoide;
   private PublishSubject<Void> imageClickEvent;
   private PublishSubject<Account> accountStatusEvent;
-  private PublishSubject<Void> bundleScrolledEvent;
+  private PublishSubject<HomeEvent> bundleScrolledEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -128,7 +128,7 @@ public class HomePresenterTest {
     presenter.handleAppClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an app is clicked
-    appClickEvent.onNext(new AppHomeClick(aptoide, 1, localTopAppsBundle, 3, HomeClick.Type.APP));
+    appClickEvent.onNext(new AppHomeEvent(aptoide, 1, localTopAppsBundle, 3, HomeEvent.Type.APP));
     //then it should navigate to the App's detail View
     verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
         aptoide.getTag());
@@ -150,14 +150,14 @@ public class HomePresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an app is clicked
     appClickEvent.onNext(
-        new AppHomeClick(aptoide, 3, localTopAppsBundle, 0, HomeClick.Type.SOCIAL_CLICK));
+        new AppHomeEvent(aptoide, 3, localTopAppsBundle, 0, HomeEvent.Type.SOCIAL_CLICK));
     //then it should navigate to the App's detail View
     verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
         aptoide.getTag());
   }
 
   @Test public void moreClicked_NavigateToActionView() {
-    HomeClick click = new HomeClick(localTopAppsBundle, 0, HomeClick.Type.MORE);
+    HomeEvent click = new HomeEvent(localTopAppsBundle, 0, HomeEvent.Type.MORE);
     //Given an initialised HomePresenter
     presenter.handleMoreClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -277,7 +277,7 @@ public class HomePresenterTest {
     presenter.handleBundleScrolledRight();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an user scrolls a bundle with items to the right
-    bundleScrolledEvent.onNext(null);
+    bundleScrolledEvent.onNext(new HomeEvent(localTopAppsBundle, 2, HomeEvent.Type.SCROLL_RIGHT));
     //Then a scroll right analytics event should be sent
     verify(homeAnalytics).sendScrollRightInteractEvent();
   }

@@ -15,10 +15,10 @@ public class AppInBundleViewHolder extends AppViewHolder {
   private final TextView nameTextView;
   private final ImageView iconView;
   private final TextView rating;
-  private final PublishSubject<HomeClick> appClicks;
+  private final PublishSubject<HomeEvent> appClicks;
   private final DecimalFormat oneDecimalFormatter;
 
-  public AppInBundleViewHolder(View itemView, PublishSubject<HomeClick> appClicks,
+  public AppInBundleViewHolder(View itemView, PublishSubject<HomeEvent> appClicks,
       DecimalFormat oneDecimalFormatter) {
     super(itemView);
     nameTextView = ((TextView) itemView.findViewById(R.id.name));
@@ -39,6 +39,6 @@ public class AppInBundleViewHolder extends AppViewHolder {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
     itemView.setOnClickListener(v -> appClicks.onNext(
-        new AppHomeClick(app, position, homeBundle, bundlePosition, HomeClick.Type.APP)));
+        new AppHomeEvent(app, position, homeBundle, bundlePosition, HomeEvent.Type.APP)));
   }
 }

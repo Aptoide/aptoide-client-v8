@@ -17,7 +17,7 @@ import rx.subjects.PublishSubject;
 
 class SocialBundleViewHolder extends AppBundleViewHolder {
 
-  private final PublishSubject<HomeClick> appClickedEvents;
+  private final PublishSubject<HomeEvent> appClickedEvents;
   private final TextView appName;
   private final TextView userName;
   private final ImageView icon;
@@ -26,7 +26,7 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
   private final View appLayout;
   private final Button install;
 
-  public SocialBundleViewHolder(View view, PublishSubject<HomeClick> appClickedEvents) {
+  public SocialBundleViewHolder(View view, PublishSubject<HomeEvent> appClickedEvents) {
     super(view);
     this.appClickedEvents = appClickedEvents;
     this.appName = (TextView) view.findViewById(R.id.recommended_app_name);
@@ -58,9 +58,9 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
           .load(app.getIcon(), icon);
       setRecommenderImage(bundle);
       appLayout.setOnClickListener(v -> appClickedEvents.onNext(
-          new AppHomeClick(app, position, homeBundle, position, HomeClick.Type.SOCIAL_CLICK)));
+          new AppHomeEvent(app, position, homeBundle, position, HomeEvent.Type.SOCIAL_CLICK)));
       install.setOnClickListener(v -> appClickedEvents.onNext(
-          new AppHomeClick(app, position, homeBundle, position, HomeClick.Type.SOCIAL_INSTALL)));
+          new AppHomeEvent(app, position, homeBundle, position, HomeEvent.Type.SOCIAL_INSTALL)));
     }
   }
 

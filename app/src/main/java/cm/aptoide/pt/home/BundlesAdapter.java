@@ -21,12 +21,12 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int LOADING = R.layout.progress_item;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<HomeClick> uiEventsListener;
+  private final PublishSubject<HomeEvent> uiEventsListener;
   private List<HomeBundle> bundles;
   private PublishSubject<AdClick> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
-      PublishSubject<HomeClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
+      PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
       PublishSubject<AdClick> adPublishSubject) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;

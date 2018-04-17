@@ -75,7 +75,7 @@ public class HomeAnalyticsTest {
     //Given an initialized HomeAnalytics
     //When user clicks on a recommended App
     homeAnalytics.sendRecommendedAppInteractEvent(4.7, "cm.aptoide.pt", 0,
-        HomeClick.Type.SOCIAL_CLICK);
+        HomeEvent.Type.SOCIAL_CLICK);
     //Then an Home_Interact event with 'tap on app' action,  app_rating, package_name, bundle_name, bundle_position is logged to the analytics manager
     HashMap<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_APP);

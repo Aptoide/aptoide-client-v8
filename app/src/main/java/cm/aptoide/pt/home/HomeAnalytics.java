@@ -73,7 +73,7 @@ public class HomeAnalytics {
   }
 
   public void sendRecommendedAppInteractEvent(double appRating, String packageName,
-      int bundlePosition, HomeClick.Type type) {
+      int bundlePosition, HomeEvent.Type type) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_APP);
     data.put("app_rating", appRating);
@@ -85,10 +85,10 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  private AnalyticsManager.Action parseAction(HomeClick.Type type) {
-    if (type.equals(HomeClick.Type.SOCIAL_CLICK)) {
+  private AnalyticsManager.Action parseAction(HomeEvent.Type type) {
+    if (type.equals(HomeEvent.Type.SOCIAL_CLICK)) {
       return AnalyticsManager.Action.OPEN;
-    } else if (type.equals(HomeClick.Type.SOCIAL_INSTALL)) {
+    } else if (type.equals(HomeEvent.Type.SOCIAL_INSTALL)) {
       return AnalyticsManager.Action.INSTALL;
     }
     throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");

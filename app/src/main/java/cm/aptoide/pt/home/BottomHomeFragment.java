@@ -24,6 +24,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -45,7 +46,7 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
-  private PublishSubject<HomeClick> uiEventsListener;
+  private PublishSubject<HomeEvent> uiEventsListener;
   private PublishSubject<AdClick> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
@@ -193,22 +194,22 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
         .cast(Object.class);
   }
 
-  @Override public Observable<HomeClick> moreClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getClickType()
-        .equals(HomeClick.Type.MORE));
+  @Override public Observable<HomeEvent> moreClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.MORE));
   }
 
-  @Override public Observable<AppHomeClick> appClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getClickType()
-        .equals(HomeClick.Type.APP))
-        .cast(AppHomeClick.class);
+  @Override public Observable<AppHomeEvent> appClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.APP))
+        .cast(AppHomeEvent.class);
   }
 
-  @Override public Observable<AppHomeClick> recommendedAppClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getClickType()
-        .equals(HomeClick.Type.SOCIAL_CLICK) || homeClick.getClickType()
-        .equals(HomeClick.Type.SOCIAL_INSTALL))
-        .cast(AppHomeClick.class);
+  @Override public Observable<AppHomeEvent> recommendedAppClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
+        .equals(HomeEvent.Type.SOCIAL_INSTALL))
+        .cast(AppHomeEvent.class);
   }
 
   @Override public Observable<AdClick> adClicked() {
@@ -270,9 +271,10 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
     userAvatar.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<Void> bundleScrolled() {
-    // TODO: 17/04/2018 implement view
-    return null;
+  @Override public Observable<HomeEvent> bundleScrolled() {
+    return uiEventsListener.filter(click -> click.getType()
+        .equals(HomeEvent.Type.SCROLL_RIGHT))
+        .debounce(200, TimeUnit.MILLISECONDS);
   }
 
   private boolean isEndReached() {

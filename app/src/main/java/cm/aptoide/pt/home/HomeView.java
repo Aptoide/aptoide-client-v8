@@ -21,11 +21,11 @@ public interface HomeView extends View {
 
   Observable<Object> reachesBottom();
 
-  Observable<HomeClick> moreClicked();
+  Observable<HomeEvent> moreClicked();
 
-  Observable<AppHomeClick> appClicked();
+  Observable<AppHomeEvent> appClicked();
 
-  Observable<AppHomeClick> recommendedAppClicked();
+  Observable<AppHomeEvent> recommendedAppClicked();
 
   Observable<AdClick> adClicked();
 
@@ -49,5 +49,5 @@ public interface HomeView extends View {
 
   void showAvatar();
 
-  Observable<Void> bundleScrolled();
+  Observable<HomeEvent> bundleScrolled();
 }

@@ -16,13 +16,13 @@ import rx.subjects.PublishSubject;
 
 class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<HomeClick> appClickedEvents;
+  private final PublishSubject<HomeEvent> appClickedEvents;
   private final TextView nameTextView;
   private final ImageView featureGraphic;
   private final TextView rating;
 
   public FeatureGraphicInBundleViewHolder(View view, DecimalFormat oneDecimalFormatter,
-      PublishSubject<HomeClick> appClickedEvents) {
+      PublishSubject<HomeEvent> appClickedEvents) {
     super(view);
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
@@ -45,7 +45,7 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
     itemView.setOnClickListener(v -> appClickedEvents.onNext(
-        new AppHomeClick(featureGraphicApplication, graphicPosition, homeBundle, bundlePosition,
-            HomeClick.Type.APP)));
+        new AppHomeEvent(featureGraphicApplication, graphicPosition, homeBundle, bundlePosition,
+            HomeEvent.Type.APP)));
   }
 }

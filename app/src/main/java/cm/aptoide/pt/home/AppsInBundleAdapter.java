@@ -16,13 +16,13 @@ import rx.subjects.PublishSubject;
 class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
 
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<HomeClick> appClickedEvents;
+  private final PublishSubject<HomeEvent> appClickedEvents;
   private HomeBundle homeBundle;
   private int bundlePosition;
   private List<Application> apps;
 
   AppsInBundleAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter,
-      PublishSubject<HomeClick> appClickedEvents) {
+      PublishSubject<HomeEvent> appClickedEvents) {
     this.apps = apps;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
