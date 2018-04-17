@@ -13,6 +13,7 @@ public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
   public static final String TAP_ON_APP = "tap on app";
+  public static final String PULL_REFRESH = "pull refresh";
   private static final String TAP_ON_MORE = "tap on more";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
@@ -30,6 +31,13 @@ public class HomeAnalytics {
     data.put("bundle_total_items", itemsInBundle);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPullRefreshInteractEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", PULL_REFRESH);
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.SCROLL,
         navigationTracker.getViewName(true));
   }
 

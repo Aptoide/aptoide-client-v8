@@ -210,6 +210,8 @@ public class HomePresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When pull to refresh is done
     pullToRefreshEvent.onNext(null);
+    //Then a pull refresh analytics event should be sent
+    verify(homeAnalytics).sendPullRefreshInteractEvent();
     //Then the progress indicator should be hidden
     verify(view).hideRefresh();
   }
