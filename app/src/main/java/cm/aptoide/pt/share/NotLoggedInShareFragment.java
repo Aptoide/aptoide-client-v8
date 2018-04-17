@@ -1,8 +1,6 @@
 package cm.aptoide.pt.share;
 
 import android.app.ProgressDialog;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -10,9 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -25,7 +20,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -45,18 +39,11 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private ProgressDialog progressDialog;
   private Button facebookLoginButton;
   private Button googleLoginButton;
-  private RatingBar appRating;
-  private TextView appTitle;
-  private ImageView appIcon;
-  private View closeButton;
+  private Button closeButton;
   private ThrowableToStringMapper errorMapper;
   private RxAlertDialog facebookEmailRequiredDialog;
-  private ImageView previewSocialContent;
-  private ImageView fakeToolbar;
-  private ImageView loginProgressIndicator;
   private AptoideAccountManager accountManager;
   private int requestCode;
-  private View fakeTimeline;
   private PublishRelay<Void> backButtonPress;
   private View outerLayout;
 
@@ -95,19 +82,11 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    closeButton = (Button) view.findViewById(R.id.close_button);
     facebookLoginButton = (Button) view.findViewById(R.id.not_logged_in_share_facebook_button);
     googleLoginButton = (Button) view.findViewById(R.id.not_logged_in_share_google_button);
-    appIcon = (ImageView) view.findViewById(R.id.not_logged_in_app_icon);
-    appTitle = (TextView) view.findViewById(R.id.not_logged_int_app_title);
-    closeButton = view.findViewById(R.id.not_logged_in_close);
-    appRating = (RatingBar) view.findViewById(R.id.not_logged_in_app_rating);
-    appTitle.setText(getArguments().getString(APP_NAME));
-    appRating.setRating(getArguments().getFloat(APP_RATING));
+
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
-    previewSocialContent = (ImageView) view.findViewById(R.id.not_logged_in_preview_social_content);
-    fakeToolbar = (ImageView) view.findViewById(R.id.fake_toolbar);
-    loginProgressIndicator = (ImageView) view.findViewById(R.id.login_progress_indicator);
-    fakeTimeline = view.findViewById(R.id.fake_timeline);
     outerLayout = view.findViewById(R.id.outer_layout);
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
@@ -116,24 +95,12 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
         .setNegativeButton(android.R.string.cancel)
         .build();
 
-    final ColorMatrixColorFilter zeroSaturationFilter = getColorMatrixColorFilter(0);
-    appIcon.setColorFilter(zeroSaturationFilter);
-    previewSocialContent.setColorFilter(zeroSaturationFilter);
-    fakeToolbar.setColorFilter(zeroSaturationFilter);
-    appRating.getProgressDrawable()
-        .setColorFilter(zeroSaturationFilter);
-    loginProgressIndicator.setColorFilter(getColorMatrixColorFilter(0.3f));
-
-    ImageLoader.with(getContext())
-        .load(getArguments().getString(APP_ICON), appIcon);
     registerClickHandler(() -> {
       backButtonPress.call(null);
       return true;
     });
 
-    attachPresenter(new NotLoggedInSharePresenter(this,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        CrashReport.getInstance(), accountManager,
+    attachPresenter(new NotLoggedInSharePresenter(this, CrashReport.getInstance(), accountManager,
         ((ActivityResultNavigator) getContext()).getAccountNavigator(),
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
         ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()));
@@ -203,25 +170,11 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     googleLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Void> getFakeToolbarClick() {
-    return RxView.clicks(fakeToolbar);
-  }
-
-  @Override public Observable<Void> getFakeTimelineClick() {
-    return RxView.clicks(fakeTimeline);
-  }
-
   @Override public Observable<Void> backEvent() {
     return backButtonPress;
   }
 
   @Override public Observable<Void> getOutsideClick() {
     return RxView.clicks(outerLayout);
-  }
-
-  private ColorMatrixColorFilter getColorMatrixColorFilter(float saturation) {
-    final ColorMatrix matrix = new ColorMatrix();
-    matrix.setSaturation(saturation);
-    return new ColorMatrixColorFilter(matrix);
   }
 }

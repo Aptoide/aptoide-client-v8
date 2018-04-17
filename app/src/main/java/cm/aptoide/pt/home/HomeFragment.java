@@ -17,7 +17,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -25,6 +24,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -45,9 +45,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
-  private PublishSubject<HomeMoreClick> uiEventsListener;
-  private PublishSubject<Application> appClickedEvents;
-  private PublishSubject<AppClick> recommendsClickedEvents;
+  private PublishSubject<HomeEvent> uiEventsListener;
   private PublishSubject<AdClick> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
@@ -72,8 +70,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     uiEventsListener = null;
     oneDecimalFormatter = null;
     adClickedEvents = null;
-    appClickedEvents = null;
-    recommendsClickedEvents = null;
     userAvatar = null;
     super.onDestroy();
   }
@@ -81,8 +77,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     uiEventsListener = PublishSubject.create();
-    appClickedEvents = PublishSubject.create();
-    recommendsClickedEvents = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("#.#");
   }
@@ -110,7 +104,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, appClickedEvents, adClickedEvents, recommendsClickedEvents);
+        oneDecimalFormatter, adClickedEvents);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
@@ -200,16 +194,22 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(Object.class);
   }
 
-  @Override public Observable<HomeMoreClick> moreClicked() {
-    return uiEventsListener;
+  @Override public Observable<HomeEvent> moreClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.MORE));
   }
 
-  @Override public Observable<Application> appClicked() {
-    return appClickedEvents;
+  @Override public Observable<AppHomeEvent> appClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.APP))
+        .cast(AppHomeEvent.class);
   }
 
-  @Override public Observable<AppClick> recommendedAppClicked() {
-    return recommendsClickedEvents;
+  @Override public Observable<AppHomeEvent> recommendedAppClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
+        .equals(HomeEvent.Type.SOCIAL_INSTALL))
+        .cast(AppHomeEvent.class);
   }
 
   @Override public Observable<AdClick> adClicked() {
@@ -269,6 +269,12 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void showAvatar() {
     userAvatar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<HomeEvent> bundleScrolled() {
+    return uiEventsListener.filter(click -> click.getType()
+        .equals(HomeEvent.Type.SCROLL_RIGHT))
+        .debounce(200, TimeUnit.MILLISECONDS);
   }
 
   private boolean isEndReached() {

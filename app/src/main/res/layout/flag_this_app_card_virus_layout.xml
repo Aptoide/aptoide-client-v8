@@ -14,7 +14,7 @@
       android:layout_width="@dimen/appview_frags_size"
       android:layout_height="@dimen/appview_frags_size"
       android:layout_gravity="center_horizontal"
-      android:src="@drawable/virus"
+      android:src="@drawable/ic_virus"
       />
 
   <TextView

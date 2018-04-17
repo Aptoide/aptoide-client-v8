@@ -24,7 +24,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/icon_user"
+        android:src="@drawable/ic_user_circle"
         tools:scaleX="0.7"
         tools:scaleY="0.7"
         />

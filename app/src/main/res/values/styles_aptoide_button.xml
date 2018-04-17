@@ -47,7 +47,7 @@
   <style name="Aptoide.Button.Facebook">
     <item name="colorButtonNormal">@color/facebook</item>
     <item name="colorControlHighlight">@color/facebook_highlight</item>
-    <item name="android:drawableLeft">@drawable/com_facebook_button_icon_white</item>
+    <item name="android:drawableLeft">@drawable/f_copy</item>
     <item name="android:text">@string/connect_with_facebook</item>
     <item name="android:contentDescription">@string/com_facebook_loginview_log_in_button_long</item>
   </style>
@@ -61,4 +61,10 @@
     <item name="android:contentDescription">@string/google</item>
   </style>
 
+  <style name="Aptoide.Button.Ghost.GreyFogLight.Google">
+    <item name="android:drawableLeft">@drawable/google_icon_copy</item>
+    <item name="android:text">@string/google</item>
+    <item name="android:textColor">@color/grey_700</item>
+    <item name="android:contentDescription">@string/google</item>
+  </style>
 </resources>

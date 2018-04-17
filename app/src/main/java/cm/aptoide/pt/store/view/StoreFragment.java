@@ -59,7 +59,6 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -559,9 +558,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(title);
     if (userId != null) {
-      toolbar.setLogo(R.drawable.ic_user_icon);
+      toolbar.setLogo(R.drawable.ic_user_shape_white);
     } else {
-      toolbar.setLogo(R.drawable.ic_store);
+      toolbar.setLogo(R.drawable.ic_store_white);
     }
   }
 

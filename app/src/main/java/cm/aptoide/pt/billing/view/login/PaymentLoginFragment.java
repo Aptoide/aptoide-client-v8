@@ -371,11 +371,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private void togglePasswordVisibility(boolean showPassword) {
     if (showPassword) {
       passwordEditText.setTransformationMethod(null);
-      passwordShowHideToggle.setBackgroundResource(R.drawable.icon_open_eye);
+      passwordShowHideToggle.setBackgroundResource(R.drawable.ic_open_eye);
       passwordVisible = true;
     } else {
       passwordEditText.setTransformationMethod(new PasswordTransformationMethod());
-      passwordShowHideToggle.setBackgroundResource(R.drawable.icon_closed_eye);
+      passwordShowHideToggle.setBackgroundResource(R.drawable.ic_closed_eye);
       passwordVisible = false;
     }
   }

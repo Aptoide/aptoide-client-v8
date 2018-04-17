@@ -22,18 +22,29 @@
       android:src="@drawable/ic_avatar_apps"
       />
 
-  <TextView
-      android:id="@+id/store_name_row"
+  <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
-      android:drawablePadding="5dp"
-      android:drawableStart="@drawable/icon_store"
-      android:ellipsize="end"
-      android:gravity="center_horizontal"
-      android:maxLines="1"
-      android:textColor="@color/followed_stores_store_name_color"
-      android:textSize="12sp"
-      tools:text="@string/apps"
-      />
+      android:gravity="center"
+      android:orientation="horizontal"
+      >
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/ic_store"
+        />
+    <TextView
+        android:id="@+id/store_name_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/grey_700"
+        tools:text="@string/apps"
+        style="@style/Aptoide.TextView.Regular.XS"
+        />
+  </LinearLayout>
 </LinearLayout>

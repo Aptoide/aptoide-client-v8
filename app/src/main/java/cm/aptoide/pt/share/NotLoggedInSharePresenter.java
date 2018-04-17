@@ -1,6 +1,5 @@
 package cm.aptoide.pt.share;
 
-import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
@@ -19,7 +18,6 @@ public class NotLoggedInSharePresenter implements Presenter {
 
   private static final int RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE = 5;
   private final NotLoggedInShareView view;
-  private final SharedPreferences sharedPreferences;
   private final CrashReport crashReport;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
@@ -29,13 +27,11 @@ public class NotLoggedInSharePresenter implements Presenter {
   private final ThrowableToStringMapper errorMapper;
   private final NotLoggedInShareAnalytics analytics;
 
-  public NotLoggedInSharePresenter(NotLoggedInShareView view, SharedPreferences sharedPreferences,
-      CrashReport crashReport, AptoideAccountManager accountManager,
-      AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions, int requestCode, ThrowableToStringMapper errorMapper,
-      NotLoggedInShareAnalytics analytics) {
+  public NotLoggedInSharePresenter(NotLoggedInShareView view, CrashReport crashReport,
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator,
+      Collection<String> permissions, Collection<String> requiredPermissions, int requestCode,
+      ThrowableToStringMapper errorMapper, NotLoggedInShareAnalytics analytics) {
     this.view = view;
-    this.sharedPreferences = sharedPreferences;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
@@ -56,20 +52,8 @@ public class NotLoggedInSharePresenter implements Presenter {
     handleFacebookSignInWithRequiredPermissionsEvent();
 
     handleCloseEvent();
-    handleFakeToolbarEvent();
-    handleFakeTimelineEvent();
     handleBackEvent();
     handleOutsideEvent();
-  }
-
-  private void handleFakeToolbarEvent() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(viewCreated -> view.getFakeToolbarClick()
-            .doOnNext(click -> analytics.sendTapOnFakeToolbar()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleOutsideEvent() {
@@ -77,16 +61,6 @@ public class NotLoggedInSharePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getOutsideClick()
             .doOnNext(click -> analytics.sendTapOutside()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
-  private void handleFakeTimelineEvent() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(viewCreated -> view.getFakeTimelineClick()
-            .doOnNext(click -> analytics.sendTapOnFakeTimeline()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));

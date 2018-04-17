@@ -25,6 +25,7 @@ public class NotLoggedInShareAnalytics {
   public static final String LOGIN_INCOMPLETE_PARAMETER = "Login incomplete";
   public static final String LOGIN_GOOGLE_PARAMETER = "Login Google";
   public static final String LOGIN_FACEBOOK_PARAMETER = "Login Facebook";
+  public static final String ALTERNATIVE_FLOW = "alternative_flow";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final AccountAnalytics accountAnalytics;
@@ -85,16 +86,6 @@ public class NotLoggedInShareAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  public void sendTapOnFakeToolbar() {
-    analyticsManager.logEvent(createMap("Tap on Install - Login - Share image", NONE_PARAMETER),
-        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void sendTapOnFakeTimeline() {
-    analyticsManager.logEvent(createMap("Tap on Timeline image", NONE_PARAMETER),
-        POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
   public void sendShareSuccess() {
     loginEventMap.put(STATUS_PARAMETER_NAME, SHARE_SUCCESS_PARAMETER);
     analyticsManager.logEvent(loginEventMap, POP_UP_SHARE_TIMELINE, AnalyticsManager.Action.CLICK,
@@ -114,6 +105,7 @@ public class NotLoggedInShareAnalytics {
     map.put(SOURCE_PARAMETER_NAME, APP_VIEW_PARAMETER);
     map.put(ACTION_PARAMETER_NAME, action);
     map.put(STATUS_PARAMETER_NAME, status);
+    map.put(ALTERNATIVE_FLOW, true);
     return map;
   }
 

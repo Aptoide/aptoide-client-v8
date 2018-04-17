@@ -61,6 +61,7 @@
               android:layout_marginLeft="7dp"
               android:layout_marginStart="7dp"
               android:src="@drawable/ic_appview_version"
+              android:tint="@color/aptoide_orange"
               />
 
           <TextView

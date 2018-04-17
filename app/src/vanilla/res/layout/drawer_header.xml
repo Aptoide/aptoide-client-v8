@@ -36,7 +36,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginTop="23dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/user_account_white"
+        android:src="@drawable/ic_user_circle"
+        android:tint="@color/white"
         />
 
     <TextView

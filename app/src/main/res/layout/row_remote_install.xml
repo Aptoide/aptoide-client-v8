@@ -15,7 +15,7 @@
       android:layout_marginRight="14dp"
       android:layout_marginStart="0dp"
       android:layout_marginTop="6dp"
-      android:src="@drawable/img_tvicon"
+      android:src="@drawable/ic_tv"
       />
 
   <TextView

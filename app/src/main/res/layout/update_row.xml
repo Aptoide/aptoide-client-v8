@@ -69,6 +69,7 @@
               android:layout_marginLeft="7dp"
               android:layout_marginStart="7dp"
               android:src="@drawable/ic_appview_version"
+              android:tint="@color/aptoide_orange"
               />
 
           <TextView
@@ -154,7 +155,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:src="@drawable/update_darkgrey"
+            android:src="@drawable/ic_refresh"
+            android:tint="@color/grey_medium"
             />
 
         <TextView

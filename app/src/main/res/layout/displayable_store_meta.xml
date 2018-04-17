@@ -16,7 +16,7 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      tools:src="@drawable/icon_user"
+      tools:src="@drawable/ic_user_circle"
       />
   <ImageView
       android:id="@+id/secondary_icon"
@@ -25,7 +25,7 @@
       app:layout_constraintBottom_toBottomOf="@+id/main_icon"
       app:layout_constraintEnd_toEndOf="@id/main_icon"
       app:layout_constraintRight_toRightOf="@+id/main_icon"
-      tools:src="@drawable/icon_user"
+      tools:src="@drawable/ic_user_circle"
       />
   <TextView
       android:id="@+id/main_name"
@@ -100,7 +100,7 @@
       app:layout_constraintEnd_toStartOf="@id/action_button_layout"
       app:layout_constraintRight_toLeftOf="@+id/action_button_layout"
       app:layout_constraintTop_toTopOf="@+id/action_button_layout"
-      tools:src="@drawable/icon_user"
+      tools:src="@drawable/ic_user_circle"
       />
 
   <TextView
