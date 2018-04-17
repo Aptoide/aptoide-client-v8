@@ -99,8 +99,8 @@
           android:layout_weight="0.50"
           android:text="@string/google"
           android:textAllCaps="false"
-          android:theme="@style/Aptoide.Button.Ghost.GreyFogLight.Google"
-          style="@style/Aptoide.Button.Ghost.GreyFogLight.Google"
+          android:theme="@style/Aptoide.Button.Google"
+          style="@style/Aptoide.Button.Google"
           />
 
     </LinearLayout>
