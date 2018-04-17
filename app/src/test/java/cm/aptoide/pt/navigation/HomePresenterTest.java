@@ -279,6 +279,8 @@ public class HomePresenterTest {
     //When an user scrolls a bundle with items to the right
     bundleScrolledEvent.onNext(new HomeEvent(localTopAppsBundle, 2, HomeEvent.Type.SCROLL_RIGHT));
     //Then a scroll right analytics event should be sent
-    verify(homeAnalytics).sendScrollRightInteractEvent();
+    verify(homeAnalytics).sendScrollRightInteractEvent(2, localTopAppsBundle.getTitle(),
+        localTopAppsBundle.getContent()
+            .size());
   }
 }

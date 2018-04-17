@@ -104,10 +104,13 @@ public class HomeAnalyticsTest {
   @Test public void sendScrollRightInteractEvent() throws Exception {
     //Given an initialized HomeAnalytics
     //When user scrolls right in a bundle with items
-    homeAnalytics.sendScrollRightInteractEvent();
+    homeAnalytics.sendScrollRightInteractEvent(5, "Best Apps", 9);
     //Then an Home_Interact event with 'scroll right' action is logged to the analytics manager
     HashMap<String, Object> data = new HashMap<>();
     data.put("action", SCROLL_RIGHT);
+    data.put("bundle_name", "Best Apps");
+    data.put("bundle_position", 5);
+    data.put("bundle_total_items", 9);
     verify(analyticsManager).logEvent(eq(data), eq("Home_Interact"),
         eq(AnalyticsManager.Action.SCROLL), eq("home"));
   }

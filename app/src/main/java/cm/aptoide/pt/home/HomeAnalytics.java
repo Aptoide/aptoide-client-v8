@@ -36,9 +36,13 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendScrollRightInteractEvent() {
+  public void sendScrollRightInteractEvent(int bundlePosition, String bundleName,
+      int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", SCROLL_RIGHT);
+    data.put("bundle_name", bundleName);
+    data.put("bundle_position", bundlePosition);
+    data.put("bundle_total_items", itemsInBundle);
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.SCROLL,
         navigationTracker.getViewName(true));
   }

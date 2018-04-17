@@ -197,7 +197,11 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.bundleScrolled()
-            .doOnNext(__ -> homeAnalytics.sendScrollRightInteractEvent())
+            .doOnNext(click -> homeAnalytics.sendScrollRightInteractEvent(click.getBundlePosition(),
+                click.getBundle()
+                    .getTitle(), click.getBundle()
+                    .getContent()
+                    .size()))
             .doOnError(crashReporter::log)
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
