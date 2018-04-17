@@ -37,7 +37,7 @@ public class HomeAnalytics {
   public void sendPullRefreshInteractEvent() {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", PULL_REFRESH);
-    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.SCROLL,
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.PULL_REFRESH,
         navigationTracker.getViewName(true));
   }
 

@@ -218,7 +218,7 @@ public class HomePresenterTest {
 
   @Test public void retryClicked_LoadNextBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
-    presenter.present();
+    presenter.handleRetryClick();
     when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When pull to refresh is done
