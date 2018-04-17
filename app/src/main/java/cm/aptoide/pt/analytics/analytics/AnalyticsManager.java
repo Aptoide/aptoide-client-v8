@@ -100,7 +100,7 @@ public class AnalyticsManager {
    * <p>Possible actions, that were performed by the user, to log</p>
    */
   public enum Action {
-    CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, PULL_REFRESH, DISMISS
+    CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, PULL_REFRESH, DISMISS, ENDLESS_SCROLL
   }
 
   /**

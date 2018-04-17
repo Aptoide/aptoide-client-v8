@@ -181,6 +181,8 @@ public class HomePresenterTest {
     verify(view).showLoadMore();
     //Then it should request the next bundlesModel to the bundlesModel repository
     verify(home).loadNextHomeBundles();
+    //Then it should send a endless scroll analytics event
+    verify(homeAnalytics).sendLoadMoreInteractEvent();
     //Then it should hide the load more progress indicator
     verify(view).hideShowMore();
     //Then it should show the view again with old bundlesModel and added bundlesModel, retaining list position

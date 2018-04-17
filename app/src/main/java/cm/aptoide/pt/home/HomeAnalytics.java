@@ -12,9 +12,10 @@ import java.util.Map;
 public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
-  public static final String TAP_ON_APP = "tap on app";
-  public static final String PULL_REFRESH = "pull refresh";
-  private static final String TAP_ON_MORE = "tap on more";
+  static final String TAP_ON_APP = "tap on app";
+  static final String PULL_REFRESH = "pull refresh";
+  static final String PUSH_LOAD_MORE = "push load more";
+  static final String TAP_ON_MORE = "tap on more";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -31,6 +32,13 @@ public class HomeAnalytics {
     data.put("bundle_total_items", itemsInBundle);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendLoadMoreInteractEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", PUSH_LOAD_MORE);
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.ENDLESS_SCROLL,
         navigationTracker.getViewName(true));
   }
 
@@ -59,6 +67,7 @@ public class HomeAnalytics {
   public void sendRecommendedAppInteractEvent(double appRating, String packageName,
       int bundlePosition, HomeClick.Type type) {
     final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP_ON_APP);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
     data.put("bundle_name", "recommendation card");

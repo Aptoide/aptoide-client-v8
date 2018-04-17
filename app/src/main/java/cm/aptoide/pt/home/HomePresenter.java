@@ -199,6 +199,7 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
             .flatMapSingle(bottomReached -> loadNextBundles())
+            .doOnNext(__ -> homeAnalytics.sendLoadMoreInteractEvent())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
