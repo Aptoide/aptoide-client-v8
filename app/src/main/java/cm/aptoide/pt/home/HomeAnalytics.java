@@ -12,6 +12,7 @@ import java.util.Map;
 public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
+  public static final String SCROLL_RIGHT = "scroll right";
   static final String TAP_ON_APP = "tap on app";
   static final String PULL_REFRESH = "pull refresh";
   static final String PUSH_LOAD_MORE = "push load more";
@@ -32,6 +33,13 @@ public class HomeAnalytics {
     data.put("bundle_total_items", itemsInBundle);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendScrollRightInteractEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", SCROLL_RIGHT);
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.SCROLL,
         navigationTracker.getViewName(true));
   }
 
