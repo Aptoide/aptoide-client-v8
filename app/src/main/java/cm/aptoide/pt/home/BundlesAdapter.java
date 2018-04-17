@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -22,37 +21,31 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int LOADING = R.layout.progress_item;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<Application> appClickedEvents;
-  private final PublishSubject<HomeMoreClick> uiEventsListener;
-  private final PublishSubject<AppClick> recommendsClickedEvents;
+  private final PublishSubject<HomeEvent> uiEventsListener;
   private List<HomeBundle> bundles;
   private PublishSubject<AdClick> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
-      PublishSubject<HomeMoreClick> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<Application> appClickedEvents, PublishSubject<AdClick> adPublishSubject,
-      PublishSubject<AppClick> recommendsClickedEvents) {
+      PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
+      PublishSubject<AdClick> adPublishSubject) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
-    this.appClickedEvents = appClickedEvents;
     this.adClickedEvents = adPublishSubject;
-    this.recommendsClickedEvents = recommendsClickedEvents;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
       case EDITORS:
         return new EditorsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter,
-            appClickedEvents);
+            .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter);
       case SOCIAL:
         return new SocialBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(SOCIAL, parent, false), recommendsClickedEvents);
+            .inflate(SOCIAL, parent, false), uiEventsListener);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter, appClickedEvents);
+            .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter);
       case STORE:
         return new StoreBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(STORE, parent, false));

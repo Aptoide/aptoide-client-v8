@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
@@ -17,13 +16,13 @@ import rx.subjects.PublishSubject;
 
 class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<Application> appClickedEvents;
+  private final PublishSubject<HomeEvent> appClickedEvents;
   private final TextView nameTextView;
   private final ImageView featureGraphic;
   private final TextView rating;
 
   public FeatureGraphicInBundleViewHolder(View view, DecimalFormat oneDecimalFormatter,
-      PublishSubject<Application> appClickedEvents) {
+      PublishSubject<HomeEvent> appClickedEvents) {
     super(view);
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
@@ -32,7 +31,8 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
     rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
-  public void setFeatureGraphicApplication(FeatureGraphicApplication featureGraphicApplication) {
+  public void setFeatureGraphicApplication(FeatureGraphicApplication featureGraphicApplication,
+      HomeBundle homeBundle, int bundlePosition, int graphicPosition) {
     nameTextView.setText(featureGraphicApplication.getName());
     ImageLoader.with(itemView.getContext())
         .load(featureGraphicApplication.getFeatureGraphic(), R.drawable.placeholder_brick,
@@ -44,6 +44,8 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
     } else {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
-    itemView.setOnClickListener(v -> appClickedEvents.onNext(featureGraphicApplication));
+    itemView.setOnClickListener(v -> appClickedEvents.onNext(
+        new AppHomeEvent(featureGraphicApplication, graphicPosition, homeBundle, bundlePosition,
+            HomeEvent.Type.APP)));
   }
 }
