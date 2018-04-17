@@ -109,7 +109,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private Long storeId;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
-  private TimelineAnalytics timelineAnalytics;
   private TokenInvalidator tokenInvalidator;
   private StoreAnalytics storeAnalytics;
   private ShareStoreHelper shareStoreHelper;
@@ -222,7 +221,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     sharedPreferences = application.getDefaultSharedPreferences();
-    timelineAnalytics = application.getTimelineAnalytics();
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);

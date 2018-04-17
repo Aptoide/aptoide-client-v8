@@ -42,7 +42,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
    */
   private static final int VISIBLE_THRESHOLD = 2;
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
-  @Inject Home home;
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
