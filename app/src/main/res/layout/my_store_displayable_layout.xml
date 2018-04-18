@@ -1,106 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/white_card"
-    android:orientation="vertical"
     >
-  <RelativeLayout
-      android:id="@+id/store_layout"
+
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:padding="8dp"
-      tools:background="@drawable/my_store_background"
+      android:background="@drawable/white_card"
+      android:orientation="vertical"
       >
-
-    <ImageView
-        android:id="@+id/store_icon"
-        android:layout_width="63dp"
-        android:layout_height="63dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_avatar_apps"
-        />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/store_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_toEndOf="@id/store_icon"
-        android:layout_toRightOf="@+id/store_icon"
-        android:orientation="vertical"
+        android:padding="8dp"
+        tools:background="@drawable/my_store_background"
+        >
+
+      <ImageView
+          android:id="@+id/store_icon"
+          android:layout_width="63dp"
+          android:layout_height="63dp"
+          android:layout_marginBottom="8dp"
+          android:layout_marginTop="8dp"
+          android:src="@drawable/ic_avatar_apps"
+          />
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="8dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="8dp"
+          android:layout_toEndOf="@id/store_icon"
+          android:layout_toRightOf="@+id/store_icon"
+          android:orientation="vertical"
+          >
+        <TextView
+            android:id="@+id/store_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_medium_large"
+            android:textStyle="bold"
+            tools:text="Sameveda store"
+            style="@style/Aptoide.TextView.Medium.S"
+            />
+        <TextView
+            android:id="@+id/create_store_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_store_displayable_explore_message"
+            android:textSize="@dimen/text_size_medium"
+            style="@style/Aptoide.TextView.Regular.S"
+            />
+
+      </LinearLayout>
+
+    </RelativeLayout>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
         >
       <TextView
-          android:id="@+id/store_name"
+          android:id="@+id/following"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textSize="@dimen/text_size_medium_large"
-          android:textStyle="bold"
-          tools:text="Sameveda store"
-          style="@style/Aptoide.TextView.Medium.S"
+          android:background="?attr/selectableItemBackgroundBorderless"
+          android:gravity="center"
+          android:text="@string/storetab_short_followings"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toStartOf="@id/followers"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toLeftOf="@+id/followers"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
           />
       <TextView
-          android:id="@+id/create_store_text"
+          android:id="@+id/followers"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/create_store_displayable_explore_message"
-          android:textSize="@dimen/text_size_medium"
-          style="@style/Aptoide.TextView.Regular.S"
+          android:layout_toEndOf="@id/following"
+          android:layout_toRightOf="@id/following"
+          android:background="?attr/selectableItemBackgroundBorderless"
+          android:gravity="center"
+          android:text="@string/storetab_short_followers"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/explore_button"
+          app:layout_constraintRight_toLeftOf="@+id/explore_button"
+          app:layout_constraintStart_toEndOf="@id/following"
+          app:layout_constraintTop_toTopOf="parent"
           />
-
-    </LinearLayout>
-
-  </RelativeLayout>
-  <android.support.constraint.ConstraintLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:paddingBottom="16dp"
-      >
-    <TextView
-        android:id="@+id/following"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:gravity="center"
-        android:text="@string/storetab_short_followings"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/followers"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/followers"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-    <TextView
-        android:id="@+id/followers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/following"
-        android:layout_toRightOf="@id/following"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:gravity="center"
-        android:text="@string/storetab_short_followers"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/explore_button"
-        app:layout_constraintRight_toLeftOf="@+id/explore_button"
-        app:layout_constraintStart_toEndOf="@id/following"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-    <Button
-        android:id="@+id/explore_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="@string/create_store_displayable_explore_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Aptoide.Button.S"
-        />
-  </android.support.constraint.ConstraintLayout>
-</LinearLayout>
+      <Button
+          android:id="@+id/explore_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="16dp"
+          android:layout_marginRight="16dp"
+          android:text="@string/create_store_displayable_explore_button"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          style="@style/Aptoide.Button.S"
+          />
+    </android.support.constraint.ConstraintLayout>
+  </LinearLayout>
+</android.support.v7.widget.CardView>
