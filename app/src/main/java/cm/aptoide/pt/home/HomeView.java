@@ -1,7 +1,6 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.view.app.Application;
 import java.util.List;
 import rx.Observable;
 
@@ -22,11 +21,11 @@ public interface HomeView extends View {
 
   Observable<Object> reachesBottom();
 
-  Observable<HomeMoreClick> moreClicked();
+  Observable<HomeEvent> moreClicked();
 
-  Observable<Application> appClicked();
+  Observable<AppHomeEvent> appClicked();
 
-  Observable<AppClick> recommendedAppClicked();
+  Observable<AppHomeEvent> recommendedAppClicked();
 
   Observable<AdClick> adClicked();
 
@@ -49,4 +48,6 @@ public interface HomeView extends View {
   Observable<Void> imageClick();
 
   void showAvatar();
+
+  Observable<HomeEvent> bundleScrolled();
 }

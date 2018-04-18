@@ -506,13 +506,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
-  public Intent startFromBundle(String bundleId) {
-    Intent intent = new Intent(this, startClass);
-    intent.putExtra(DeepLinksTargets.BUNDLE, true);
-    intent.putExtra(DeepLinksKeys.BUNDLE_ID, bundleId);
-    return intent;
-  }
-
   public Intent startFromHome() {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.HOME_DEEPLINK, true);
@@ -653,7 +646,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String HOME_DEEPLINK = "home_tab";
     public static final String MY_STORE_DEEPLINK = "my_store";
     public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
-    public static final String BUNDLE = "bundle";
   }
 
   public static class DeepLinksKeys {
@@ -667,7 +659,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String URI = "uri";
     public static final String CARD_ID = "cardId";
     public static final String OPEN_MODE = "openMode";
-    public static final String BUNDLE_ID = "bundle_id";
 
     //deep link query parameters
     public static final String ACTION = "action";

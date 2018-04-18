@@ -157,7 +157,7 @@ public class HomeFragment extends StoreFragment {
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
     ImageLoader.with(getContext())
-        .loadWithCircleTransform(R.drawable.user_account_white, userAvatarImage);
+        .loadWithCircleTransform(R.drawable.ic_user_circle, userAvatarImage);
   }
 
   private void setVisibleUserImageAndName(Account account) {
@@ -167,7 +167,7 @@ public class HomeFragment extends StoreFragment {
     userUsername.setText(account.getNickname());
     ImageLoader.with(getContext())
         .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
-            R.drawable.user_account_white);
+            R.drawable.ic_user_circle);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

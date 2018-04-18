@@ -120,7 +120,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:padding="5dp"
-        android:src="@drawable/reload"
+        android:src="@drawable/ic_refresh"
+        android:tint="@color/white"
         />
 
     <android.support.v7.widget.AppCompatButton
@@ -172,7 +173,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:padding="5dp"
-        android:src="@drawable/reload"
+        android:src="@drawable/ic_refresh"
+        android:tint="@color/white"
         />
 
     <android.support.v7.widget.AppCompatButton
@@ -236,7 +238,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:padding="5dp"
-        android:src="@drawable/reload"
+        android:src="@drawable/ic_refresh"
+        android:tint="@color/white"
         />
 
   </RelativeLayout>

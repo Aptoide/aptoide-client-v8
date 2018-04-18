@@ -20,14 +20,16 @@
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
-        tools:src="@drawable/icon_check"
+        android:tint="@color/aptoide_orange"
+        tools:src="@drawable/ic_check"
         />
     <ImageView
         android:id="@+id/check_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/app_image"
-        android:src="@drawable/icon_check"
+        android:src="@drawable/ic_check"
+        android:tint="@color/aptoide_orange"
         android:visibility="gone"
         tools:visibility="visible"
         />

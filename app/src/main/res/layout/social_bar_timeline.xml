@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:drawablePadding="5dp"
-        android:drawableTop="@drawable/timeline_share"
+        android:drawableTop="@drawable/ic_timeline_share"
         android:focusable="true"
         android:gravity="center"
         android:orientation="vertical"

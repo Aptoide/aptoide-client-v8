@@ -38,19 +38,6 @@
         android:orientation="horizontal"
         >
 
-      <!--
-      <com.makeramen.roundedimageview.RoundedImageView
-          android:id="@+id/store_avatar"
-          android:layout_width="@dimen/appview_store_icon_size"
-          android:layout_height="@dimen/appview_store_icon_size"
-          android:layout_marginLeft="18.4dp"
-          android:layout_marginStart="18.4dp"
-          android:scaleType="centerInside"
-          app:riv_corner_radius="15dp"
-          tools:src="@drawable/ic_avatar_apps"
-          />
-      -->
-
       <ImageView
           android:id="@+id/store_avatar"
           android:layout_width="@dimen/appview_store_icon_size"
@@ -58,7 +45,7 @@
           android:layout_marginLeft="18.4dp"
           android:layout_marginStart="18.4dp"
           android:scaleType="centerInside"
-          tools:src="@drawable/ic_avatar_apps"
+          android:src="@drawable/ic_avatar_apps"
           />
 
       <LinearLayout

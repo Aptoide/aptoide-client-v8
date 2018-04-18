@@ -14,7 +14,6 @@ public class DeepLinkAnalytics {
   public static final String APP_LAUNCH = "Application Launch";
   private static final String NEW_UPDATES_NOTIFICATION = "New Updates Available";
   private static final String DOWNLOADING_UPDATES = "Downloading Updates";
-  private static final String TIMELINE_NOTIFICATION = "Timeline Notification";
   private static final String NEW_REPO = "New Repository";
   private static final String WEBSITE = "Website";
   private static final String URI = "Uri";

@@ -201,7 +201,7 @@ public class AddressBookFragment extends UIComponentFragment
     if (checked) {
       imageView.setImageResource(R.drawable.check);
     } else {
-      imageView.setImageResource(R.drawable.reload);
+      imageView.setImageResource(R.drawable.ic_refresh);
     }
   }
 

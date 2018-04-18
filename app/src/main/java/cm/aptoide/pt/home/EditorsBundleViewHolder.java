@@ -21,17 +21,19 @@ import rx.subjects.PublishSubject;
 class EditorsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
-  private final EditorsAppsAdapter appsAdapter;
-  private final PublishSubject<HomeMoreClick> uiEventsListener;
+  private final EditorsAppsAdapter graphicAppsAdapter;
+  private final PublishSubject<HomeEvent> uiEventsListener;
+  private final RecyclerView graphicsList;
 
-  public EditorsBundleViewHolder(View view, PublishSubject<HomeMoreClick> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<Application> appClickedEvents) {
+  public EditorsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
+      DecimalFormat oneDecimalFormatter) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
-    RecyclerView graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
-    appsAdapter = new EditorsAppsAdapter(new ArrayList<>(), oneDecimalFormatter, appClickedEvents);
+    graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
+    graphicAppsAdapter =
+        new EditorsAppsAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     graphicsList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -42,7 +44,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
       }
     });
     graphicsList.setLayoutManager(layoutManager);
-    graphicsList.setAdapter(appsAdapter);
+    graphicsList.setAdapter(graphicAppsAdapter);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -51,8 +53,17 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
           .getName() + " is getting non AppBundle instance!");
     }
     bundleTitle.setText(homeBundle.getTitle());
-    appsAdapter.update((List<Application>) homeBundle.getContent());
-
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle)));
+    graphicAppsAdapter.updateBundle(homeBundle, position);
+    graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
+    graphicsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+        if (dx > 0) {
+          uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.SCROLL_RIGHT));
+        }
+      }
+    });
+    moreButton.setOnClickListener(
+        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
   }
 }

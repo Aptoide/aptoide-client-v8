@@ -21,15 +21,16 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final TextView bundleTitle;
   private final Button moreButton;
   private final AdsInBundleAdapter appsInBundleAdapter;
-  private final PublishSubject<HomeMoreClick> uiEventsListener;
+  private final PublishSubject<HomeEvent> uiEventsListener;
+  private final RecyclerView appsList;
 
-  public AdsBundleViewHolder(View view, PublishSubject<HomeMoreClick> uiEventsListener,
+  public AdsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<AdClick> adClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
-    RecyclerView appsList = (RecyclerView) view.findViewById(R.id.apps_list);
+    appsList = (RecyclerView) view.findViewById(R.id.apps_list);
     appsInBundleAdapter =
         new AdsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, adClickedEvents);
     LinearLayoutManager layoutManager =
@@ -53,6 +54,16 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(homeBundle.getTitle());
     appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(new HomeMoreClick(homeBundle)));
+    appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+        if (dx > 0) {
+          uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.SCROLL_RIGHT));
+        }
+      }
+    });
+
+    moreButton.setOnClickListener(
+        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
   }
 }
