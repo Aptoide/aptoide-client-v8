@@ -20,7 +20,7 @@
       android:layout_width="77dp"
       android:layout_height="77dp"
       android:layout_margin="4dp"
-      android:background="@drawable/working_well"
+      android:background="@drawable/ic_working_well"
       android:clickable="true"
       android:orientation="vertical"
       >

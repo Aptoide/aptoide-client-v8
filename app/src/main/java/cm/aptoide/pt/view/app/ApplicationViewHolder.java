@@ -13,7 +13,7 @@ import rx.subjects.PublishSubject;
  * Created by trinkes on 18/10/2017.
  */
 
-public class ApplicationViewHolder extends AppViewHolder {
+public class ApplicationViewHolder extends ListStoreAppViewHolder {
 
   private final TextView nameTextView;
   private final ImageView iconView;

@@ -16,14 +16,18 @@ import rx.subjects.PublishSubject;
 
 class EditorsAppsAdapter extends RecyclerView.Adapter<FeatureGraphicInBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<Application> appClickedEvents;
+  private final PublishSubject<HomeEvent> appClickedEvents;
   private List<Application> apps;
+  private HomeBundle homeBundle;
+  private int bundlePosition;
 
   public EditorsAppsAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter,
-      PublishSubject<Application> appClickedEvents) {
+      PublishSubject<HomeEvent> appClickedEvents) {
     this.apps = apps;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
+    this.homeBundle = null;
+    this.bundlePosition = -1;
   }
 
   @Override
@@ -35,7 +39,8 @@ class EditorsAppsAdapter extends RecyclerView.Adapter<FeatureGraphicInBundleView
 
   @Override
   public void onBindViewHolder(FeatureGraphicInBundleViewHolder viewHolder, int position) {
-    viewHolder.setFeatureGraphicApplication((FeatureGraphicApplication) apps.get(position));
+    viewHolder.setFeatureGraphicApplication((FeatureGraphicApplication) apps.get(position),
+        homeBundle, bundlePosition, position);
   }
 
   @Override public int getItemCount() {
@@ -45,5 +50,10 @@ class EditorsAppsAdapter extends RecyclerView.Adapter<FeatureGraphicInBundleView
   public void update(List<Application> apps) {
     this.apps = apps;
     notifyDataSetChanged();
+  }
+
+  public void updateBundle(HomeBundle homeBundle, int position) {
+    this.homeBundle = homeBundle;
+    this.bundlePosition = position;
   }
 }

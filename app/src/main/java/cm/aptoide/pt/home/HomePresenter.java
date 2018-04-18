@@ -1,11 +1,13 @@
 package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.app.Application;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -61,9 +63,11 @@ public class HomePresenter implements Presenter {
     handleRetryClick();
 
     handleUserImageClick();
+
+    handleBundleScrolledRight();
   }
 
-  private void onCreateLoadBundles() {
+  @VisibleForTesting public void onCreateLoadBundles() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -98,13 +102,22 @@ public class HomePresenter implements Presenter {
     }
   }
 
-  private void handleAppClick() {
+  @VisibleForTesting public void handleAppClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
+            .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
+                    .getRating(), click.getApp()
+                    .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
+                click.getBundle()
+                    .getTitle(), click.getBundle()
+                    .getContent()
+                    .size()))
             .observeOn(viewScheduler)
-            .doOnNext(app -> homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(),
-                app.getTag()))
+            .doOnNext(click -> {
+              Application app = click.getApp();
+              homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -113,7 +126,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleRecommendedAppClick() {
+  @VisibleForTesting public void handleRecommendedAppClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.recommendedAppClicked()
@@ -124,7 +137,7 @@ public class HomePresenter implements Presenter {
                 .getTag()))
             .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
                 .getRating(), click.getApp()
-                .getPackageName(), click.getPosition(), click.getType()))
+                .getPackageName(), click.getBundlePosition(), click.getType()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -146,7 +159,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleAdClick() {
+  @VisibleForTesting public void handleAdClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
@@ -161,10 +174,15 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleMoreClick() {
+  @VisibleForTesting public void handleMoreClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
+            .doOnNext(homeMoreClick -> homeAnalytics.sendTapOnMoreInteractEvent(
+                homeMoreClick.getBundlePosition(), homeMoreClick.getBundle()
+                    .getTitle(), homeMoreClick.getBundle()
+                    .getContent()
+                    .size()))
             .observeOn(viewScheduler)
             .doOnNext(homeNavigator::navigateWithAction)
             .retry())
@@ -175,7 +193,25 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleBottomReached() {
+  @VisibleForTesting public void handleBundleScrolledRight() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.bundleScrolled()
+            .doOnNext(click -> homeAnalytics.sendScrollRightInteractEvent(click.getBundlePosition(),
+                click.getBundle()
+                    .getTitle(), click.getBundle()
+                    .getContent()
+                    .size()))
+            .doOnError(crashReporter::log)
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(scroll -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleBottomReached() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reachesBottom()
@@ -183,6 +219,7 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
             .flatMapSingle(bottomReached -> loadNextBundles())
+            .doOnNext(__ -> homeAnalytics.sendLoadMoreInteractEvent())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -207,10 +244,11 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handlePullToRefresh() {
+  @VisibleForTesting public void handlePullToRefresh() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
+            .doOnNext(__ -> homeAnalytics.sendPullRefreshInteractEvent())
             .flatMapSingle(refreshed -> loadFreshBundles())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -235,7 +273,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleRetryClick() {
+  @VisibleForTesting public void handleRetryClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
@@ -248,7 +286,7 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void loadUserImage() {
+  @VisibleForTesting public void loadUserImage() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> accountManager.accountStatus()
@@ -268,7 +306,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleUserImageClick() {
+  @VisibleForTesting public void handleUserImageClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.imageClick()

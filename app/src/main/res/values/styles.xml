@@ -78,7 +78,7 @@
 
   <style name="RatingBarLargeSelectable">
     <!--<item name="android:progressDrawable">@drawable/rating_bar_big</item>-->
-    <item name="android:progressDrawable">@drawable/rating_bar_medium</item>
+    <item name="android:progressDrawable">@drawable/rating_bar_review</item>
     <item name="android:minHeight">26dp</item>
     <item name="android:maxHeight">26dp</item>
   </style>

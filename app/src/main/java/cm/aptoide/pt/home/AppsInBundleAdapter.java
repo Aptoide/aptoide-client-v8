@@ -16,14 +16,18 @@ import rx.subjects.PublishSubject;
 class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
 
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<Application> appClickedEvents;
+  private final PublishSubject<HomeEvent> appClickedEvents;
+  private HomeBundle homeBundle;
+  private int bundlePosition;
   private List<Application> apps;
 
   AppsInBundleAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter,
-      PublishSubject<Application> appClickedEvents) {
+      PublishSubject<HomeEvent> appClickedEvents) {
     this.apps = apps;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
+    this.homeBundle = null;
+    this.bundlePosition = -1;
   }
 
   @Override public AppInBundleViewHolder onCreateViewHolder(ViewGroup parent, int position) {
@@ -32,7 +36,7 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
   }
 
   @Override public void onBindViewHolder(AppInBundleViewHolder viewHolder, int position) {
-    viewHolder.setApp(apps.get(position));
+    viewHolder.setApp(apps.get(position), homeBundle, bundlePosition, position);
   }
 
   @Override public int getItemCount() {
@@ -42,5 +46,10 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
   public void update(List<Application> apps) {
     this.apps = apps;
     notifyDataSetChanged();
+  }
+
+  public void updateBundle(HomeBundle homeBundle, int position) {
+    this.homeBundle = homeBundle;
+    this.bundlePosition = position;
   }
 }

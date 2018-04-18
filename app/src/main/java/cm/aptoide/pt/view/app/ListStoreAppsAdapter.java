@@ -11,7 +11,7 @@ import rx.subjects.PublishSubject;
  * Created by trinkes on 17/10/2017.
  */
 
-class ListStoreAppsAdapter extends RecyclerView.Adapter<AppViewHolder> {
+class ListStoreAppsAdapter extends RecyclerView.Adapter<ListStoreAppViewHolder> {
   private final PublishSubject<Application> appClicks;
   private List<Application> list;
 
@@ -20,7 +20,7 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<AppViewHolder> {
     this.appClicks = appClicks;
   }
 
-  @Override public AppViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override public ListStoreAppViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     if (viewType == R.layout.search_ad_loading_list_item) {
       return new AppLoadingViewHolder(LayoutInflater.from(parent.getContext())
           .inflate(R.layout.search_ad_loading_list_item, parent, false));
@@ -30,7 +30,7 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<AppViewHolder> {
     }
   }
 
-  @Override public void onBindViewHolder(AppViewHolder holder, int position) {
+  @Override public void onBindViewHolder(ListStoreAppViewHolder holder, int position) {
     holder.setApp(list.get(position));
   }
 

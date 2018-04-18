@@ -85,7 +85,7 @@
           android:layout_height="25dp"
           android:layout_gravity="center_vertical"
           android:scaleType="fitCenter"
-          tools:src="@drawable/icon_user"
+          tools:src="@drawable/ic_user_circle"
           />
 
       <TextView

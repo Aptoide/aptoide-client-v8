@@ -14,7 +14,6 @@ public class DeepLinkAnalytics {
   public static final String APP_LAUNCH = "Application Launch";
   private static final String NEW_UPDATES_NOTIFICATION = "New Updates Available";
   private static final String DOWNLOADING_UPDATES = "Downloading Updates";
-  private static final String TIMELINE_NOTIFICATION = "Timeline Notification";
   private static final String NEW_REPO = "New Repository";
   private static final String WEBSITE = "Website";
   private static final String URI = "Uri";
@@ -23,6 +22,8 @@ public class DeepLinkAnalytics {
   private static final String SOURCE_GROUP_OPTION_APP_VIEW = "aptoide app view";
   private static final String SOURCE_GROUP_OPTION_HOME = "aptoide homepage";
   private static final String SOURCE_GROUP_OPTION_STORE = "aptoide store";
+  private static final String SOURCE_GROUP_OPTION_BUNDLES = "aptoide bundle";
+  private static final String SOURCE_GROUP_OPTION_THANK_YOU = "aptoide thank you page";
   private static final String SOURCE_GROUP_ATTRIBUTE = "source_group";
   private HashMap<String, Object> map = new HashMap<>();
 
@@ -72,8 +73,16 @@ public class DeepLinkAnalytics {
     websiteSourceGroup(SOURCE_GROUP_OPTION_APP_VIEW);
   }
 
+  public void websiteFromBundlesWebPage() {
+    websiteSourceGroup(SOURCE_GROUP_OPTION_BUNDLES);
+  }
+
   public void websiteFromStoreWebPage() {
     websiteSourceGroup(SOURCE_GROUP_OPTION_STORE);
+  }
+
+  public void websiteFromThankYouWebPage() {
+    websiteSourceGroup(SOURCE_GROUP_OPTION_THANK_YOU);
   }
 
   public void newUpdatesNotification() {
@@ -83,11 +92,6 @@ public class DeepLinkAnalytics {
 
   public void downloadingUpdates() {
     analyticsManager.logEvent(createMap(SOURCE, DOWNLOADING_UPDATES), APP_LAUNCH,
-        AnalyticsManager.Action.AUTO, getViewName(true));
-  }
-
-  public void timelineNotification() {
-    analyticsManager.logEvent(createMap(SOURCE, TIMELINE_NOTIFICATION), APP_LAUNCH,
         AnalyticsManager.Action.AUTO, getViewName(true));
   }
 

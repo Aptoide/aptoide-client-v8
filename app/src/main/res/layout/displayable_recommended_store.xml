@@ -52,10 +52,10 @@
         >
 
       <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
+          android:layout_width="12dp"
+          android:layout_height="12dp"
           android:layout_gravity="center_vertical|center_horizontal"
-          android:src="@drawable/icon_store"
+          android:src="@drawable/ic_store"
           />
 
       <TextView
@@ -65,7 +65,7 @@
           android:layout_marginLeft="10dp"
           android:layout_marginStart="10dp"
           android:text="@string/apps"
-          android:textColor="@color/followed_stores_store_name_color"
+          android:textColor="@color/grey_700"
           />
 
     </LinearLayout>
@@ -77,10 +77,10 @@
         >
 
       <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
+          android:layout_width="12dp"
+          android:layout_height="12dp"
           android:layout_gravity="center_vertical|center_horizontal"
-          android:src="@drawable/user_shape"
+          android:src="@drawable/ic_user_shape"
           />
 
       <TextView
@@ -90,7 +90,7 @@
           android:layout_marginLeft="10dp"
           android:layout_marginStart="10dp"
           android:text="xxx"
-          android:textColor="@color/recommended_stores_numbers_color"
+          android:textColor="@color/grey"
           />
 
     </LinearLayout>
@@ -102,10 +102,10 @@
         >
 
       <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
+          android:layout_width="12dp"
+          android:layout_height="12dp"
           android:layout_gravity="center_vertical|center_horizontal"
-          android:src="@drawable/number_of_apps"
+          android:src="@drawable/ic_number_of_apps"
           />
 
       <TextView
@@ -115,12 +115,11 @@
           android:layout_marginLeft="10dp"
           android:layout_marginStart="10dp"
           android:text="xxxx"
-          android:textColor="@color/recommended_stores_numbers_color"
+          android:textColor="@color/grey"
           />
 
     </LinearLayout>
 
   </LinearLayout>
-
 
 </RelativeLayout>
