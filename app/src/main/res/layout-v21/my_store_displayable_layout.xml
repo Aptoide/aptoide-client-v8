@@ -70,6 +70,7 @@
               android:layout_height="wrap_content"
               android:layout_marginTop="7dp"
               android:text="@string/create_store_displayable_explore_message"
+              android:textAlignment="center"
               style="@style/Aptoide.TextView.Regular.XS"
               />
 

@@ -1,125 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:gravity="center_vertical|center"
-    android:padding="10dp"
-    style="?attr/backgroundCard"
     >
-
-  <!-- can be follow or open?! -->
-
-  <android.support.v7.widget.AppCompatButton
-      android:id="@+id/recommended_store_action"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:layout_centerVertical="true"
-      style="?attr/customButton"
-      />
-
-
-  <ImageView
-      android:id="@+id/store_avatar_row"
-      android:layout_width="64dp"
-      android:layout_height="64dp"
-      android:layout_marginLeft="2dp"
-      android:layout_marginStart="2dp"
-      android:layout_marginTop="2dp"
-      android:contentDescription="@null"
-      android:scaleType="fitCenter"
-      android:src="@drawable/ic_avatar_apps"
-      />
-
-  <LinearLayout
+  <RelativeLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="9dp"
-      android:layout_marginStart="9dp"
-      android:layout_toEndOf="@id/store_avatar_row"
-      android:layout_toLeftOf="@id/recommended_store_action"
-      android:layout_toRightOf="@+id/store_avatar_row"
-      android:layout_toStartOf="@id/recommended_store_action"
-      android:orientation="vertical"
+      android:gravity="center_vertical|center"
+      android:padding="10dp"
+      style="?attr/backgroundCard"
       >
 
-    <LinearLayout
+    <!-- can be follow or open?! -->
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/recommended_store_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/aptoide_gradient"
+        android:textAllCaps="true"
+        style="@style/Aptoide.TextView.Regular.XS"
+        />
+
+
+    <ImageView
+        android:id="@+id/store_avatar_row"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_avatar_apps"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="9dp"
+        android:layout_marginStart="9dp"
+        android:layout_toEndOf="@id/store_avatar_row"
+        android:layout_toLeftOf="@id/recommended_store_action"
+        android:layout_toRightOf="@+id/store_avatar_row"
+        android:layout_toStartOf="@id/recommended_store_action"
+        android:orientation="vertical"
         >
 
-      <ImageView
-          android:layout_width="12dp"
-          android:layout_height="12dp"
-          android:layout_gravity="center_vertical|center_horizontal"
-          android:src="@drawable/ic_store"
-          />
 
       <TextView
           android:id="@+id/recommended_store_name"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="10dp"
-          android:layout_marginStart="10dp"
+          android:ellipsize="end"
+          android:maxLines="1"
           android:text="@string/apps"
-          android:textColor="@color/grey_700"
+          style="@style/Aptoide.TextView.Medium.S.Black"
           />
 
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-      <ImageView
-          android:layout_width="12dp"
-          android:layout_height="12dp"
-          android:layout_gravity="center_vertical|center_horizontal"
-          android:src="@drawable/ic_user_shape"
-          />
-
-      <TextView
-          android:id="@+id/recommended_store_users"
+      <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="10dp"
-          android:layout_marginStart="10dp"
-          android:text="xxx"
-          android:textColor="@color/grey"
-          />
+          android:orientation="horizontal"
+          >
 
-    </LinearLayout>
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:src="@drawable/ic_user_shape"
+            />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        <TextView
+            android:id="@+id/recommended_store_users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/grey"
+            tools:text="xxx"
+            />
 
-      <ImageView
-          android:layout_width="12dp"
-          android:layout_height="12dp"
-          android:layout_gravity="center_vertical|center_horizontal"
-          android:src="@drawable/ic_number_of_apps"
-          />
+      </LinearLayout>
 
-      <TextView
-          android:id="@+id/recommended_store_apps"
+      <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="10dp"
-          android:layout_marginStart="10dp"
-          android:text="xxxx"
-          android:textColor="@color/grey"
-          />
+          android:orientation="horizontal"
+          >
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:src="@drawable/ic_number_of_apps"
+            />
+
+        <TextView
+            android:id="@+id/recommended_store_apps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/grey"
+            tools:text="xxxx"
+            />
+
+      </LinearLayout>
 
     </LinearLayout>
 
-  </LinearLayout>
-
-</RelativeLayout>
+  </RelativeLayout>
+</android.support.v7.widget.CardView>
