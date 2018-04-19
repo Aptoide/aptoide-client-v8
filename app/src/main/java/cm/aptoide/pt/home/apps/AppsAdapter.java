@@ -165,7 +165,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       notifyItemInserted(headerPosition + 1);
       headerPosition++;
     }
-    addApps(installedApps, headerPosition);
+    listOfApps.addAll(headerPosition + 1, installedApps);
   }
 
   private int findLastUpdatePosition() {
