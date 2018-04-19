@@ -70,8 +70,7 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
                   .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
     } else {
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar, StoreTheme.get(store)
-              .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
+          .loadUsingCircleTransform(store.getAvatar(), storeAvatar);
     }
   }
 }
