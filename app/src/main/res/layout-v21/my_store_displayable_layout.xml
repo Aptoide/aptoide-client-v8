@@ -150,6 +150,8 @@
             android:id="@+id/explore_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="@string/create_store_displayable_explore_button"
             android:textColor="@color/default_color"
             android:textSize="12sp"
