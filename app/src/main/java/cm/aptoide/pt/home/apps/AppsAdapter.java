@@ -247,4 +247,12 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     }
     return appsByType;
   }
+
+  public void removeCanceledDownload(App app) {
+    if (listOfApps.contains(app)) {
+      int indexOfCanceledDownload = listOfApps.indexOf(app);
+      listOfApps.remove(app);
+      notifyItemRemoved(indexOfCanceledDownload);
+    }
+  }
 }

@@ -334,6 +334,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
   }
 
+  @Override public void removeCanceledDownload(App app) {
+    adapter.removeCanceledDownload(app);
+  }
+
   private void showAppsList() {
     recyclerView.scrollToPosition(0);
     hideLoadingProgressBar();
