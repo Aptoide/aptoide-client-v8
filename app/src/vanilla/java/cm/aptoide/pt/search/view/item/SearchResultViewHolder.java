@@ -8,7 +8,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -23,14 +22,14 @@ import rx.subscriptions.CompositeSubscription;
 
 public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult> {
 
-  public static final int LAYOUT = R.layout.search_app_row;
+  public static final int LAYOUT = R.layout.new_search_app_row;
   private final PublishRelay<SearchAppResult> onItemViewClick;
   private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClick;
 
   private TextView nameTextView;
   private ImageView iconImageView;
   private TextView downloadsTextView;
-  private RatingBar ratingBar;
+  private TextView ratingBar;
   private TextView timeTextView;
   private TextView storeTextView;
   private ImageView icTrustedImageView;
@@ -53,12 +52,12 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     setAppName();
     setDownloadCount();
     setAverageValue();
-    setDateModified();
-    setBackground();
+    //setDateModified();
+    //setBackground();
     setStoreName();
     setIconView();
-    setTrustedBadge();
-    setOverflowMenu();
+    //setTrustedBadge();
+    //setOverflowMenu();
   }
 
   public void prepareToRecycle() {
@@ -123,10 +122,10 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private void setAverageValue() {
     float avg = searchApp.getAverageRating();
     if (avg <= 0) {
-      ratingBar.setVisibility(View.GONE);
+      ratingBar.setText("- -");
     } else {
       ratingBar.setVisibility(View.VISIBLE);
-      ratingBar.setRating(avg);
+      ratingBar.setText(Float.toString(avg));
     }
   }
 
@@ -143,22 +142,22 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void bindViews(View itemView) {
-    nameTextView = (TextView) itemView.findViewById(R.id.name);
-    iconImageView = (ImageView) itemView.findViewById(R.id.icon);
+    nameTextView = (TextView) itemView.findViewById(R.id.app_name);
+    iconImageView = (ImageView) itemView.findViewById(R.id.app_icon);
     downloadsTextView = (TextView) itemView.findViewById(R.id.downloads);
-    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
-    timeTextView = (TextView) itemView.findViewById(R.id.search_time);
-    storeTextView = (TextView) itemView.findViewById(R.id.search_store);
-    icTrustedImageView = (ImageView) itemView.findViewById(R.id.ic_trusted_search);
-    bottomView = itemView.findViewById(R.id.bottom_view);
-    overflowImageView = (ImageView) itemView.findViewById(R.id.overflow);
+    ratingBar = (TextView) itemView.findViewById(R.id.rating);
+    //timeTextView = (TextView) itemView.findViewById(R.id.search_time);
+    storeTextView = (TextView) itemView.findViewById(R.id.store_name);
+    //icTrustedImageView = (ImageView) itemView.findViewById(R.id.ic_trusted_search);
+    bottomView = itemView;
+    //overflowImageView = (ImageView) itemView.findViewById(R.id.overflow);
 
     subscriptions.add(RxView.clicks(itemView)
         .map(__ -> searchApp)
         .subscribe(data -> onItemViewClick.call(data)));
 
-    subscriptions.add(RxView.clicks(overflowImageView)
-        .map(__ -> new Pair<>(searchApp, (View) overflowImageView))
-        .subscribe(data -> onOpenPopupMenuClick.call(data)));
+    //subscriptions.add(RxView.clicks(overflowImageView)
+    //    .map(__ -> new Pair<>(searchApp, (View) overflowImageView))
+    //    .subscribe(data -> onOpenPopupMenuClick.call(data)));
   }
 }

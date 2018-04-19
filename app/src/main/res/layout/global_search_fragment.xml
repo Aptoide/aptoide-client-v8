@@ -95,6 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+        android:layout_marginTop="5dp"
         android:visibility="invisible"
         />
 
@@ -103,6 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+        android:layout_marginTop="5dp"
         android:visibility="visible"
         />
 

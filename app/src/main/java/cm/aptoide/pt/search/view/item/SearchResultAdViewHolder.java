@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -16,13 +15,13 @@ import java.util.Date;
 
 public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResult> {
 
-  public static final int LAYOUT = R.layout.search_ad;
+  public static final int LAYOUT = R.layout.new_search_ad;
   private final PublishRelay<SearchAdResult> onItemViewClickRelay;
 
   private TextView name;
   private ImageView icon;
   private TextView downloadsTextView;
-  private RatingBar ratingBar;
+  private TextView ratingBar;
   private TextView timeTextView;
   private SearchAdResult adResult;
 
@@ -34,11 +33,11 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
   }
 
   private void bind(View itemView) {
-    name = (TextView) itemView.findViewById(R.id.name);
-    icon = (ImageView) itemView.findViewById(R.id.icon);
+    name = (TextView) itemView.findViewById(R.id.app_name);
+    icon = (ImageView) itemView.findViewById(R.id.app_icon);
     downloadsTextView = (TextView) itemView.findViewById(R.id.downloads);
-    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
-    timeTextView = (TextView) itemView.findViewById(R.id.search_time);
+    ratingBar = (TextView) itemView.findViewById(R.id.rating);
+    //timeTextView = (TextView) itemView.findViewById(R.id.search_time);
     RxView.clicks(itemView)
         .map(__ -> adResult)
         .subscribe(data -> onItemViewClickRelay.call(data));
@@ -52,7 +51,7 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
     setIcon(searchAd, context);
     setDownloadsCount(searchAd, resources);
     setRatingStars(searchAd);
-    setModifiedDate(searchAd, resources);
+    //setModifiedDate(searchAd, resources);
   }
 
   private void setIcon(SearchAdResult searchAd, Context context) {
@@ -72,7 +71,13 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
   }
 
   private void setRatingStars(SearchAdResult searchAd) {
-    ratingBar.setRating(searchAd.getStarRating());
+    float avg = searchAd.getStarRating();
+    if (avg <= 0) {
+      ratingBar.setText("- -");
+    } else {
+      ratingBar.setVisibility(View.VISIBLE);
+      ratingBar.setText(Float.toString(avg));
+    }
   }
 
   private void setModifiedDate(SearchAdResult searchAd, Resources resources) {
