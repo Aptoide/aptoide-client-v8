@@ -696,8 +696,8 @@ public class SearchResultFragment extends BackButtonFragment
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
       ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
-      toolbar.setBackgroundColor(getResources().getColor(StoreTheme.get(defaultThemeName)
-          .getPrimaryColor()));
+      toolbar.setBackgroundResource(StoreTheme.get(defaultThemeName)
+          .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),

@@ -32,125 +32,158 @@ import java.util.List;
 public enum StoreTheme {
 
   DEFAULT(R.style.AptoideThemeDefault, R.color.default_color, R.color.default_color_700,
-      R.drawable.button_border_orange, R.drawable.create_store_theme_shape_default, 8),
+      R.drawable.button_border_orange, R.drawable.create_store_theme_shape_default,
+      R.drawable.main_orange_gradient, 8),
 
   GREEN(R.style.AptoideThemeDefaultGreen, R.color.green, R.color.green_700,
-      R.drawable.button_border_green, R.drawable.create_store_theme_shape_green, 8),
+      R.drawable.button_border_green, R.drawable.create_store_theme_shape_green,
+      R.drawable.green_gradient, 8),
 
   TEAL(R.style.AptoideThemeDefaultTeal, R.color.teal, R.color.teal_700,
-      R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal, 8),
+      R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal,
+      R.drawable.teal_gradient, 8),
 
   RED(R.style.AptoideThemeDefaultRed, R.color.red, R.color.red_700, R.drawable.button_border_red,
-      R.drawable.create_store_theme_shape_red, 8),
+      R.drawable.create_store_theme_shape_red, R.drawable.red_gradient, 8),
 
   INDIGO(R.style.AptoideThemeDefaultIndigo, R.color.indigo, R.color.indigo_700,
-      R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo, 8),
+      R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo,
+      R.drawable.indigo_gradient, 8),
 
   PINK(R.style.AptoideThemeDefaultPink, R.color.pink, R.color.pink_700,
-      R.drawable.button_border_pink, R.drawable.create_store_theme_shape_pink, 8),
+      R.drawable.button_border_pink, R.drawable.create_store_theme_shape_pink,
+      R.drawable.pink_gradient, 8),
 
   ORANGE(R.style.AptoideThemeDefaultOrange, R.color.orange, R.color.orange_700,
-      R.drawable.button_border_orange, R.drawable.create_store_theme_shape_orange, 8),
+      R.drawable.button_border_orange, R.drawable.create_store_theme_shape_orange,
+      R.drawable.orange_gradient, 8),
 
   BROWN(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_700,
-      R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown, 8),
+      R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown,
+      R.drawable.brown_gradient, 8),
 
   BLUE_GREY(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
-      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey, 8),
+      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey,
+      R.drawable.blue_grey_gradient, 8),
 
   GREY(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_700,
-      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey, 8),
+      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey,
+      R.drawable.grey_gradient, 8),
 
   BLACK(R.style.AptoideThemeDefaultBlack, R.color.black, R.color.grey,
-      R.drawable.button_border_black, R.drawable.create_store_theme_shape_black, 8),
+      R.drawable.button_border_black, R.drawable.create_store_theme_shape_black,
+      R.drawable.black_gradient, 8),
 
   DEEP_PURPLE(R.style.AptoideThemeDefaultDeepPurple, R.color.deep_purple, R.color.deep_purple_700,
-      R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple, 8),
+      R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple,
+      R.drawable.deep_purple_gradient, 8),
 
   AMBER(R.style.AptoideThemeDefaultAmber, R.color.amber, R.color.amber_700,
-      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber, 8),
+      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber,
+      R.drawable.amber_gradient, 8),
 
   LIGHT_GREEN(R.style.AptoideThemeDefaultLightgreen, R.color.light_green, R.color.light_green_700,
-      R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green, 8),
+      R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green,
+      R.drawable.light_green_gradient, 8),
 
   LIME(R.style.AptoideThemeDefaultLime, R.color.lime, R.color.lime_700,
-      R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime, 8),
+      R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime,
+      R.drawable.lime_gradient, 8),
 
   LIGHT_BLUE(R.style.AptoideThemeDefaultLightblue, R.color.light_blue, R.color.light_blue_700,
-      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue, 8),
+      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue,
+      R.drawable.light_blue_gradient, 8),
 
   //Translated themes to new version
   //SEAGREEN TO GREEN
   SEA_GREEN(R.style.AptoideThemeDefaultGreen, R.color.green, R.color.green_700,
-      R.drawable.button_border_green, R.drawable.create_store_theme_shape_green, 7),
+      R.drawable.button_border_green, R.drawable.create_store_theme_shape_green,
+      R.drawable.light_green_gradient, 7),
 
   //SLATEGRAY TO TEAL
   SLATE_GRAY(R.style.AptoideThemeDefaultTeal, R.color.teal, R.color.teal_700,
-      R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal, 7),
+      R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal,
+      R.drawable.teal_gradient, 7),
 
   //BLUE TO INDIGO
   BLUE(R.style.AptoideThemeDefaultIndigo, R.color.indigo, R.color.indigo_700,
-      R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo, 7),
+      R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo,
+      R.drawable.indigo_gradient, 7),
 
   //MAROON TO BROWN
   MAROON(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_700,
-      R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown, 7),
+      R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown,
+      R.drawable.brown_gradient, 7),
 
   //MIDNIGHT TO BLUE_GREY
   MIDNIGHT(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
-      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey, 7),
+      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey,
+      R.drawable.blue_grey_gradient, 7),
 
   BLUE_GRAY(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
-      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey, 7),
+      R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey,
+      R.drawable.blue_grey_gradient, 7),
 
   //SILVER AND DIMGREY TO GREY
   SILVER(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_700,
-      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey, 7),
+      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey,
+      R.drawable.blue_grey_gradient, 7),
 
   DIM_GRAY(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_700,
-      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey, 7),
+      R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey,
+      R.drawable.blue_grey_gradient, 7),
 
   //MAGENTA TO DEEPPURPLE
   MAGENTA(R.style.AptoideThemeDefaultDeepPurple, R.color.deep_purple, R.color.deep_purple_700,
-      R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple, 7),
+      R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple,
+      R.drawable.deep_purple_gradient, 7),
 
   //YELLOW AND GOLD TO AMBER
   YELLOW(R.style.AptoideThemeDefaultAmber, R.color.amber, R.color.amber_700,
-      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber, 7),
+      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber,
+      R.drawable.amber_gradient, 7),
 
   GOLD(R.style.AptoideThemeDefaultAmber, R.color.amber, R.color.amber_700,
-      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber, 7),
+      R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber,
+      R.drawable.amber_gradient, 7),
 
   //SPRINGGREEN TO LIGHTGREEN
   SPRING_GREEN(R.style.AptoideThemeDefaultLightgreen, R.color.light_green, R.color.light_green_700,
-      R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green, 7),
+      R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green,
+      R.drawable.light_green_gradient, 7),
 
   //GREENAPPLE TO LIME
   GREEN_APPLE(R.style.AptoideThemeDefaultLime, R.color.lime, R.color.lime_700,
-      R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime, 7),
+      R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime,
+      R.drawable.lime_gradient, 7),
 
   //LIGHTSKY AND LIGHTSKY TO LIGHTBLUE
   LIGHT_SKY(R.style.AptoideThemeDefaultLightblue, R.color.light_blue, R.color.light_blue_700,
-      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue, 7),
+      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue,
+      R.drawable.light_blue_gradient, 7),
 
   //LIGHTSKY AND HAPPYBLUE TO LIGHTBLUE
   HAPPY_BLUE(R.style.AptoideThemeDefaultLightblue, R.color.light_blue, R.color.light_blue_700,
-      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue, 7);
+      R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue,
+      R.drawable.light_blue_gradient, 7);
 
   @ColorRes private final int darkerColor;
   @DrawableRes private final int buttonDrawable;
   @DrawableRes private final int roundDrawable;
   @ColorRes private int storeStyle;
   @ColorRes private int primaryColor;
+  @DrawableRes private int gradientDrawable;
   private int version;
 
   StoreTheme(@StyleRes int storeStyle, @ColorRes int primaryColor, @ColorRes int darkerColor,
-      @DrawableRes int buttonDrawable, @DrawableRes int roundDrawable, int version) {
+      @DrawableRes int buttonDrawable, @DrawableRes int roundDrawable,
+      @DrawableRes int gradientDrawable, int version) {
     this.storeStyle = storeStyle;
     this.primaryColor = primaryColor;
     this.darkerColor = darkerColor;
     this.buttonDrawable = buttonDrawable;
     this.roundDrawable = roundDrawable;
+    this.gradientDrawable = gradientDrawable;
     this.version = version;
   }
 
@@ -259,4 +292,9 @@ public enum StoreTheme {
     return name().toLowerCase()
         .replace('_', '-');
   }
+
+  @DrawableRes public int getGradientDrawable() {
+    return gradientDrawable;
+  }
+
 }

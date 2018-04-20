@@ -37,5 +37,10 @@
   <color name="red_700">#d32f2f</color>
   <color name="teal_700">#00796b</color>
 
+  <!-- Letters themes -->
+
+  <color name="defaul_color_letters">#FF6600</color>
+
+
 </resources>
 

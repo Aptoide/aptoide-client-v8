@@ -1,6 +1,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-  <solid
-      android:color="@color/pink">
-  </solid>
+  <gradient
+      android:angle="0"
+      android:endColor="@color/pink_700"
+      android:startColor="@color/pink"
+      android:type="linear"/>
 </shape>

@@ -219,63 +219,63 @@
   </style>
 
   <style name="ToolbarGreyTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/grey_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarTealTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/teal_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarBrownTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/brown_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarBluegreyTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/blue_grey_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarLightgreenTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/light_green_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarAmberTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/amber_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarLimeTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/lime_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarOrangeTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/orange_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarPinkTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/pink_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarIndigoTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/indigo_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarRedTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/red_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarGreenTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/green_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarDeeppurpleTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/deep_purple_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarBlackTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/grey_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
   <style name="ToolbarLightblueTransparent" parent="@style/Theme.AppCompat">
-    <item name="pstsIndicatorColor">@color/light_blue_700</item>
+    <item name="pstsIndicatorColor">@color/white</item>
   </style>
 
 
