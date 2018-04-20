@@ -24,11 +24,10 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/aptoide_gradient"
         android:textAllCaps="true"
-        style="@style/Aptoide.TextView.Regular.XS"
+        tools:text="follow"
+        style="@style/Aptoide.Button.S.Gradient"
         />
-
 
     <ImageView
         android:id="@+id/store_avatar_row"

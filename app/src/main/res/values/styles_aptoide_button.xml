@@ -38,6 +38,10 @@
     <item name="android:textSize">10sp</item>
   </style>
 
+  <style name="Aptoide.Button.S.Gradient">
+    <item name="android:background">@drawable/aptoide_gradient</item>
+  </style>
+
   <style name="Aptoide.Button.Ghost.S">
     <item name="android:layout_height">@dimen/button_small_height</item>
     <item name="android:textSize">10sp</item>
