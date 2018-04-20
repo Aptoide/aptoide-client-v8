@@ -576,28 +576,29 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
     alertDialogView.findViewById(R.id.continue_button)
         .setOnClickListener(view -> {
-      socialRepository.share(packageName, displayable.getPojo()
-          .getNodes()
-          .getMeta()
-          .getData()
-          .getStore()
-          .getId(), "install");
-      ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
-      displayable.getTimelineAnalytics()
-          .sendRecommendedAppInteractEvent(packageName, "Recommend");
-      displayable.getTimelineAnalytics()
-          .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
+          socialRepository.share(packageName, displayable.getPojo()
+              .getNodes()
+              .getMeta()
+              .getData()
+              .getStore()
+              .getId(), "install");
+          ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
+          displayable.getTimelineAnalytics()
+              .sendRecommendedAppInteractEvent(packageName, "Recommend");
+          displayable.getTimelineAnalytics()
+              .sendSocialCardPreviewActionEvent(
+                  TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
           alertDialog.dismiss();
-    });
+        });
 
     alertDialogView.findViewById(R.id.skip_button)
         .setOnClickListener(view -> {
-      displayable.getTimelineAnalytics()
-          .sendRecommendedAppInteractEvent(packageName, "Skip");
-      displayable.getTimelineAnalytics()
-          .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
+          displayable.getTimelineAnalytics()
+              .sendRecommendedAppInteractEvent(packageName, "Skip");
+          displayable.getTimelineAnalytics()
+              .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
           alertDialog.dismiss();
-    });
+        });
 
     alertDialogView.findViewById(R.id.dont_show_button)
         .setOnClickListener(view -> {
