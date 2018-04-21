@@ -19,7 +19,7 @@ public class AptoideApplicationAnalytics {
 
   public void setPackageDimension(String packageName) {
     Bundle bundle = new Bundle();
-    bundle.putString("package", packageName);
+    bundle.putString("aptoide_package", packageName);
     AppEventsLogger.updateUserProperties(bundle,
         response -> Logger.d("Facebook Analytics: ", response.toString()));
   }
