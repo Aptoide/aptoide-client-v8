@@ -323,6 +323,7 @@ public abstract class AptoideApplication extends Application {
     startNotificationCleaner();
     getRootInstallationRetryHandler().start();
     AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+    aptoideApplicationAnalytics.setPackageDimension(getPackageName());
     accountManager.accountStatus()
         .map(account -> account.isLoggedIn())
         .distinctUntilChanged()
