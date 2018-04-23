@@ -120,6 +120,10 @@
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XS.BlackAlpha">
+    <item name="android:textColor">@color/black_87_alpha</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.S.BlackAlpha">
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>

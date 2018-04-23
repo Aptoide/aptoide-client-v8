@@ -16,9 +16,6 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
-/**
- * Created by neuro on 11-05-2016. //todo: código duplicado, se cair a reflexão, deixa de o ser.
- */
 public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
 
   private ImageView storeAvatar;
