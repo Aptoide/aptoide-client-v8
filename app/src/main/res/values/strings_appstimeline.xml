@@ -128,10 +128,12 @@
   <string name="appview_message_recommend_app">Do you want to recommend this app to your followers?</string>
   <string name="appview_button_recommend">Recommend</string>
   <string name="appview_message_preview_timeline_recommends">This is what your followers will see</string>
+  <string name="appview_button_skip">Skip</string>
   <string name="appview_button_continue">Continue</string>
+
   <string name="appview_button_cancel">Cancel</string>
   <string name="appview_button_close">Close</string>
-  <string name="appview_button_dont_show_again">Don\'t show this again</string>
+  <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
 
   <string name="appview_not_logged_in_share_title_connect_with">Connect with:</string>
   <string name="appview_not_logged_in_share_title_fragment">You are one step away from sharing this app with your followers</string>

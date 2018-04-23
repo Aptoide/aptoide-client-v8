@@ -62,7 +62,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     return storeRepository.isSubscribed(getPojo().getId());
   }
 
-  public void subscribeStore(Context context) {
+  public void subscribeStore() {
     storeUtilsProxy.subscribeStore(getPojo().getName());
   }
 

@@ -37,5 +37,47 @@
   <color name="red_700">#d32f2f</color>
   <color name="teal_700">#00796b</color>
 
+  <!-- StartGradientColors -->
+
+  <color name="default_orange_gradient_start">#FE9150</color>
+
+  <!-- EndGradientColors -->
+
+  <color name="default_orange_gradient_end">#FE6446</color>
+  <color name="amber_gradient_end">#ffa000</color>
+  <color name="blue_grey_gradient_end">#455a64</color>
+  <color name="brown_gradient_end">#5d4037</color>
+  <color name="deep_purple_gradient_end">#512da8</color>
+  <color name="green_gradient_end">#388e3c</color>
+  <color name="grey_gradient_end">#616161</color>
+  <color name="indigo_gradient_end">#303f9f</color>
+  <color name="light_blue_gradient_end">#007eb7</color>
+  <color name="light_green_gradient_end">#689f38</color>
+  <color name="lime_gradient_end">#AFB42B</color>
+  <color name="orange_gradient_end">#f57c00</color>
+  <color name="pink_gradient_end">#c2185b</color>
+  <color name="red_gradient_end">#d32f2f</color>
+  <color name="teal_gradient_end">#00796b</color>
+
+
+  <!-- Letters themes -->
+
+  <color name="defaul_color_letters">#FF6600</color>
+  <color name="amber_letters">#ffc107</color>
+  <color name="black_letters">#000000</color>
+  <color name="blue_grey_letters">#607D8B</color>
+  <color name="brown_letters">#795548</color>
+  <color name="deep_purple_letters">#673ab7</color>
+  <color name="green_letters">#4caf50</color>
+  <color name="grey_letters">#9E9E9E</color>
+  <color name="indigo_letters">#3f51b5</color>
+  <color name="light_blue_letters">#03a9f4</color>
+  <color name="light_green_letters">#8bc34a</color>
+  <color name="lime_letters">#CDDC39</color>
+  <color name="orange_letters">#ff9800</color>
+  <color name="pink_letters">#e91e63</color>
+  <color name="red_letters">#f44336</color>
+  <color name="teal_letters">#009688</color>
+
 </resources>
 
