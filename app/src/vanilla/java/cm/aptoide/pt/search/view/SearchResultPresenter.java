@@ -243,7 +243,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onAdClicked())
         .doOnNext(data -> {
-          analytics.searchAppClick(view.getViewModel()
+          analytics.searchAdClick(view.getViewModel()
               .getCurrentQuery(), data.getPackageName());
           navigator.goToAppView(data);
         })
