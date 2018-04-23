@@ -85,7 +85,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareAppHelper;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -444,7 +443,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
         .autoConnect();
-
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
