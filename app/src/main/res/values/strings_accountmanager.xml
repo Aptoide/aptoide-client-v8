@@ -71,7 +71,7 @@
   <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow your store and see the apps you share!</string>
   <string name="create_profile_pub_pri">Aptoide\'s Community</string>
   <string name="create_profile_pub_pri_sub_text_1">Your friends can get app recommendations based on your downloads!</string>
-  <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend's taste,</string>
+  <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend\'s taste,</string>
   <string name="create_profile_pub_pri_sub_text_3">but you can also make your profile private.</string>
   <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
   <string name="create_profile_logged_in_activity_title">Create Account</string>
