@@ -47,7 +47,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
     switch (viewType) {
       case SearchResultViewHolder.LAYOUT: {
-        return new SearchResultViewHolder(view, onItemViewClick, onOpenPopupMenuClick);
+        return new SearchResultViewHolder(view, onItemViewClick);
       }
 
       case SearchResultAdViewHolder.LAYOUT: {

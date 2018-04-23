@@ -561,7 +561,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void setFollowedStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-      followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
+      followedStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
@@ -569,9 +569,8 @@ public class SearchResultFragment extends BackButtonFragment
     }
     viewModel.setAllStoresSelected(false);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      followedStoresButton.getBackground()
-          .setColorFilter(getResources().getColor(StoreTheme.get(defaultThemeName)
-              .getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
+      followedStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+          .getRoundGradientButtonDrawable());
     }
   }
 
@@ -582,13 +581,12 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.white));
-      allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+      allStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
     }
     viewModel.setAllStoresSelected(true);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      allStoresButton.getBackground()
-          .setColorFilter(getResources().getColor(StoreTheme.get(defaultThemeName)
-              .getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
+      allStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+          .getRoundGradientButtonDrawable());
     }
   }
 

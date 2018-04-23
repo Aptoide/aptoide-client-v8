@@ -50,6 +50,15 @@ public class SearchAnalytics {
     Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
     map.put(AttributeKey.PACKAGE_NAME, packageName);
+    map.put(AttributeKey.IS_AD, false);
+    analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void searchAdClick(String query, String packageName) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(AttributeKey.QUERY, query);
+    map.put(AttributeKey.PACKAGE_NAME, packageName);
+    map.put(AttributeKey.IS_AD, true);
     analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
@@ -74,5 +83,7 @@ public class SearchAnalytics {
     private static final String PACKAGE_NAME = "package_name";
     private static final String IS_SUGGESTION = "is_suggestion";
     private static final String SUGGESTION_POSITION = "suggestion_position";
+    private static final String IS_AD = "is_ad";
+    private static final String POSITION = "position";
   }
 }
