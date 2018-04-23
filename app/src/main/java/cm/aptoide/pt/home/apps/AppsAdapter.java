@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -246,5 +247,26 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       }
     }
     return appsByType;
+  }
+
+  public List<App> getUpdateApps() {
+    List<App> updateApps = new ArrayList<>();
+    for (App app : listOfApps) {
+      if (app.getType() == App.Type.UPDATE) {
+        updateApps.add(app);
+      }
+    }
+    return updateApps;
+  }
+
+  public void setAvailableUpdatesList(List<App> availableUpdates) {
+    listOfApps.removeAll(getUpdatesToRemove(availableUpdates));
+    addUpdateAppsList(availableUpdates);
+  }
+
+  private List<App> getUpdatesToRemove(List<App> updatesList) {
+    List<App> updatesToRemove = getUpdateApps();
+    updatesToRemove.removeAll(updatesList);
+    return updatesToRemove;
   }
 }

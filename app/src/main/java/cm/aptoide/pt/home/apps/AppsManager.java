@@ -238,22 +238,6 @@ public class AppsManager {
         });
   }
 
-  public Observable<List<App>> getInstalledUpdates() {
-    return installManager.getInstallations()
-        .flatMap(installations -> {
-          if (installations == null || installations.isEmpty()) {
-            return Observable.empty();
-          }
-          return Observable.just(installations)
-              .flatMapIterable(installs -> installs)
-              .filter(install -> install.getType() == UPDATE)
-              .flatMap(install -> filterNonInstalled(install))
-              .toList()
-              .filter(updatesList -> !updatesList.isEmpty())
-              .map(updatesList -> appMapper.getUpdatesList(updatesList));
-        });
-  }
-
   private Observable<Install> filterNonInstalled(Install install) {
     return installManager.fetchInstalled()
         .flatMapIterable(list -> list)
@@ -278,4 +262,41 @@ public class AppsManager {
   public Completable refreshAllUpdates() {
     return updatesManager.refreshUpdates();
   }
+
+  public Observable<List<App>> getInstalledUpdateApps() {
+    return installManager.fetchInstalled()
+        .flatMapIterable(list -> list)
+        .flatMap(installedApp -> getUpdates(installedApp))
+        .toList()
+        .map(installedUpdates -> appMapper.getUpdatesList(installedUpdates));
+  }
+
+  private Observable<Install> getUpdates(Installed installedApp) {
+    return installManager.getInstallations()
+        .flatMap(installations -> {
+          if (installations == null || installations.isEmpty()) {
+            return Observable.empty();
+          }
+          return Observable.just(installations)
+              .flatMapIterable(installs -> installs)
+              .filter(install -> install.getType() == UPDATE)
+              .toList()
+              .flatMap(updates -> getMatchingInstalledUpdate(updates, installedApp));
+        });
+  }
+
+  private Observable<Install> getMatchingInstalledUpdate(List<Install> updates,
+      Installed installedApp) {
+    for (Install update : updates) {
+      if (installedApp.getPackageName()
+          .equals(update.getPackageName())
+          && installedApp.getVersionName()
+          .equals(update.getVersionName())
+          && installedApp.getVersionCode() == update.getVersionCode()) {
+        return Observable.just(update);
+      }
+    }
+    return Observable.empty();
+  }
 }
+
