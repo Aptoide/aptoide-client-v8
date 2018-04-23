@@ -238,27 +238,6 @@ public class AppsManager {
         });
   }
 
-  private Observable<Install> filterNonInstalled(Install install) {
-    return installManager.fetchInstalled()
-        .flatMapIterable(list -> list)
-        .flatMap(item -> updatesManager.filterUpdates(item))
-        .toList()
-        .flatMap(installeds -> confirmInstallation(installeds, install));
-  }
-
-  private Observable<Install> confirmInstallation(List<Installed> installeds, Install install) {
-    for (Installed installed : installeds) {
-      if (installed.getPackageName()
-          .equals(install.getPackageName())
-          && installed.getVersionCode() == install.getVersionCode()
-          && installed.getVersionName()
-          .equals(install.getVersionName())) {
-        return Observable.just(install);
-      }
-    }
-    return Observable.empty();
-  }
-
   public Completable refreshAllUpdates() {
     return updatesManager.refreshUpdates();
   }
