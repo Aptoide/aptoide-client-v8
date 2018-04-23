@@ -42,6 +42,20 @@ public class StoreAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
+  public void sendFollowersStoresInteractEvent() {
+    Map<String, Object> map = new HashMap<>();
+    map.put(ACTION, "Open Followers");
+    analyticsManager.logEvent(map, STORES_TAB_INTERACT, AnalyticsManager.Action.CLICK,
+        getViewName(true));
+  }
+
+  public void sendFollowingStoresInteractEvent() {
+    Map<String, Object> map = new HashMap<>();
+    map.put(ACTION, "Open Following");
+    analyticsManager.logEvent(map, STORES_TAB_INTERACT, AnalyticsManager.Action.CLICK,
+        getViewName(true));
+  }
+
   public void sendStoreOpenEvent(String source, String storeName, boolean isCurrent) {
     analyticsManager.logEvent(createStoreOpenDataMap(source, storeName), STORES_OPEN,
         AnalyticsManager.Action.CLICK, getViewName(isCurrent));
