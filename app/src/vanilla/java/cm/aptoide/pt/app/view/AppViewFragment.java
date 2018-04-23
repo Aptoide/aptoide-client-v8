@@ -165,6 +165,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   private PublishRelay installAppRelay;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
+  private Observable<MenuItem> toolbarMenuItemClick;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -440,11 +441,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
         });
 
     final Toolbar toolbar = getToolbar();
-    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+    toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
         .autoConnect();
 
-    handleMenuItemClick(toolbarMenuItemClick);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -514,6 +514,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   }
 
   @Override public void onResume() {
+    handleMenuItemClick(toolbarMenuItemClick);
+
     super.onResume();
 
     // restore download bar status
