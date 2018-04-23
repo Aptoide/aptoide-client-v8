@@ -617,8 +617,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     final boolean appHasStore = getApp() != null && getApp().getStore() != null;
     final Long storeId = appHasStore ? getApp().getStore()
         .getId() : null;
-    shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-        (getApp() == null ? null : getApp().getIcon()), averageRating, storeId);
+    shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(), storeId);
     appViewAnalytics.sendAppShareEvent();
   }
 
