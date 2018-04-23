@@ -303,6 +303,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   public void setAvailableUpdatesList(List<App> availableUpdates) {
     listOfApps.removeAll(getUpdatesToRemove(availableUpdates));
+    notifyDataSetChanged();
     addUpdateAppsList(availableUpdates);
   }
 
