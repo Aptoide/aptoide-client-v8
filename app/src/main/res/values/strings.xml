@@ -7,7 +7,7 @@
 
   <string name="feedback_subject">Subject</string>
   <string name="feedback_to_write2">Write here to send us your feedback…\n\n
-        Please give us all the details you can:
+        Please give us all the details you can (in English):
         \n\• Steps you have done
         \n\• Errors you are seeing</string>
   <string name="feedback_include_logs">Include screenshot and logs</string>
@@ -301,7 +301,7 @@
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>
   <string name="onboarding_button_join_us">Join us</string>
-  <string name="login">Login</string>
+  <string name="login">Log In</string>
   <string name="connect_with_facebook">Connect with Facebook</string>
   <string name="connect_with_google">Connect with Google</string>
   <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
@@ -449,7 +449,7 @@
 
   <string name="share">Share</string>
   <string name="share_store">Share Store</string>
-  <string name="share_on_timeline">Share on timeline</string>
+  <string name="share_on_timeline">Share with your followers</string>
 
   <!-- Search Widget-->
   <string name="manually_reviewed">Good app guaranteed: this application passed the security tests for virus, malware and other malicious attacks and doesn\'t contain any threats</string>
@@ -527,5 +527,8 @@
   <!--Terms and Conditions URL navigation-->
   <string name="terms_conditions_navigation_url" translatable="false">https://terms.aptoide.com</string>
   <string name="privacy_policy_navigation_url" translatable="false">https://privacy.aptoide.com/</string>
+
+  <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
+
 </resources>
 
