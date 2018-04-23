@@ -291,6 +291,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelDownload())
         .doOnNext(app -> appsManager.cancelDownload(app))
+        .doOnNext(app -> view.removeCanceledDownload(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
