@@ -69,4 +69,6 @@ public interface AppsFragmentView extends View {
   Observable<Void> refreshApps();
 
   void hidePullToRefresh();
+
+  void removeCanceledDownload(App app);
 }
