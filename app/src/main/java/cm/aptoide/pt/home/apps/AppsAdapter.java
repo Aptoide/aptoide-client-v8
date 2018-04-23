@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,15 +121,23 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   private void addApps(List<App> list, int offset) {
     for (int i = 0; i < list.size(); i++) {
-      if (listOfApps.contains(list.get(i))) {
-        //update
-        int itemIndex = listOfApps.indexOf(list.get(i));
-        listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
-        notifyItemChanged(itemIndex);
+      if (isValid(list.get(i))) {
+        if (listOfApps.contains(list.get(i))) {
+          //update
+          int itemIndex = listOfApps.indexOf(list.get(i));
+          listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
+          notifyItemChanged(itemIndex);
+        } else {
+          //add new element
+          listOfApps.add(offset + 1, list.get(i));
+          notifyItemInserted(offset + 1);
+        }
       } else {
-        //add new element
-        listOfApps.add(offset + 1, list.get(i));
-        notifyItemInserted(offset + 1);
+        if (listOfApps.contains(list.get(i))) {
+          int itemIndex = listOfApps.indexOf(list.get(i));
+          listOfApps.remove(itemIndex);
+          notifyItemRemoved(itemIndex);
+        }
       }
     }
   }
@@ -247,6 +256,39 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       }
     }
     return appsByType;
+  }
+
+  public void removeCanceledDownload(App app) {
+    if (listOfApps.contains(app)) {
+      int indexOfCanceledDownload = listOfApps.indexOf(app);
+      listOfApps.remove(app);
+      notifyItemRemoved(indexOfCanceledDownload);
+    }
+  }
+
+  private boolean isValid(App app) {
+    boolean isValid;
+    switch (app.getType()) {
+      case HEADER_DOWNLOADS:
+      case HEADER_INSTALLED:
+      case HEADER_UPDATES:
+        isValid = true;
+        break;
+      case DOWNLOAD:
+        isValid = !TextUtils.isEmpty(((DownloadApp) app).getAppName());
+        break;
+      case UPDATE:
+        isValid = !TextUtils.isEmpty(((UpdateApp) app).getName());
+        break;
+      case INSTALLED:
+      case INSTALLING:
+        isValid = !TextUtils.isEmpty(((InstalledApp) app).getAppName());
+        break;
+      default:
+        isValid = false;
+        break;
+    }
+    return isValid;
   }
 
   public List<App> getUpdateApps() {

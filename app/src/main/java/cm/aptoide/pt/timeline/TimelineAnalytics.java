@@ -90,6 +90,7 @@ public class TimelineAnalytics {
 
   private Map<String, Object> createMapData(String key, String value) {
     final Map<String, Object> data = new HashMap<>();
+    data.put("alternative_flow", true);
     data.put(key, value);
     return data;
   }
@@ -114,6 +115,7 @@ public class TimelineAnalytics {
     data.put("fragment", getViewName(true));
     data.put("package_name", packageName);
     data.put("action", action);
+    data.put("alternative_flow", true);
 
     analyticsManager.logEvent(data, MESSAGE_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));

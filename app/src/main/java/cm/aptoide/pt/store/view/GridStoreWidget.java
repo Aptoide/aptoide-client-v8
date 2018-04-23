@@ -16,7 +16,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
@@ -65,13 +64,10 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
     final FragmentActivity context = getContext();
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
-              StoreTheme.get(store)
-                  .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
+          .loadUsingCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
     } else {
       ImageLoader.with(context)
-          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar, StoreTheme.get(store)
-              .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
+          .loadUsingCircleTransform(store.getAvatar(), storeAvatar);
     }
   }
 }

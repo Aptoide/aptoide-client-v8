@@ -200,11 +200,7 @@ public class FirstLaunchAnalytics {
   }
 
   public void setGmsPresent(boolean isPlayServicesAvailable) {
-    if (isPlayServicesAvailable) {
-      setUserProperties(GMS, HAS_HGMS);
-    } else {
-      setUserProperties(GMS, NO_GMS);
-    }
+    setUserProperties(GMS, isPlayServicesAvailable ? HAS_HGMS : NO_GMS);
   }
 
   /**

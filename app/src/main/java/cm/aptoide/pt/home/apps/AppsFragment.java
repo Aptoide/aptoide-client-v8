@@ -69,6 +69,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private boolean showDownloads;
   private boolean showUpdates;
   private boolean showInstalled;
+  private List<App> blackListDownloads;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -79,6 +80,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     getFragmentComponent(savedInstanceState).inject(this);
     appItemClicks = PublishSubject.create();
     updateAll = PublishSubject.create();
+    blackListDownloads = new ArrayList<>();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -125,6 +127,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void onDestroy() {
     updateAll = null;
     appItemClicks = null;
+    blackListDownloads = null;
     super.onDestroy();
   }
 
@@ -174,6 +177,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showDownloadsList(List<App> list) {
+    list.removeAll(blackListDownloads);
     if (list != null && !list.isEmpty()) {
       adapter.addDownloadAppsList(list);
     }
@@ -198,7 +202,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public Observable<App> cancelDownload() {
     return appItemClicks.filter(
         appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_DOWNLOAD)
-        .map(appClick -> appClick.getApp());
+        .map(appClick -> appClick.getApp())
+        .doOnNext(app -> blackListDownloads.add(app));
   }
 
   @Override public Observable<App> resumeDownload() {
@@ -332,6 +337,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     if (swipeRefreshLayout.isRefreshing()) {
       swipeRefreshLayout.setRefreshing(false);
     }
+  }
+
+  @Override public void removeCanceledDownload(App app) {
+    adapter.removeCanceledDownload(app);
   }
 
   private void showAppsList() {
