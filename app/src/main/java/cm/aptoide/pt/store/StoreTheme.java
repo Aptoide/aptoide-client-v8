@@ -98,74 +98,74 @@ public enum StoreTheme {
   //SEAGREEN TO GREEN
   SEA_GREEN(R.style.AptoideThemeDefaultGreen, R.color.green, R.color.green_700,
       R.drawable.button_border_green, R.drawable.create_store_theme_shape_green,
-      R.drawable.light_green_gradient, R.color.light_green_letters, 8),
+      R.drawable.light_green_gradient, R.color.light_green_letters, 7),
 
   //SLATEGRAY TO TEAL
   SLATE_GRAY(R.style.AptoideThemeDefaultTeal, R.color.teal, R.color.teal_700,
       R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal,
-      R.drawable.teal_gradient, R.color.teal_letters, 8),
+      R.drawable.teal_gradient, R.color.teal_letters, 7),
 
   //BLUE TO INDIGO
   BLUE(R.style.AptoideThemeDefaultIndigo, R.color.indigo, R.color.indigo_700,
       R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo,
-      R.drawable.indigo_gradient, R.color.blue_grey_letters, 8),
+      R.drawable.indigo_gradient, R.color.blue_grey_letters, 7),
 
   //MAROON TO BROWN
   MAROON(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_700,
       R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown,
-      R.drawable.brown_gradient, R.color.brown_letters, 8),
+      R.drawable.brown_gradient, R.color.brown_letters, 7),
 
   //MIDNIGHT TO BLUE_GREY
   MIDNIGHT(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
       R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey,
-      R.drawable.blue_grey_gradient, R.color.blue_grey_letters, 8),
+      R.drawable.blue_grey_gradient, R.color.blue_grey_letters, 7),
 
   BLUE_GRAY(R.style.AptoideThemeDefaultBluegrey, R.color.blue_grey, R.color.blue_grey_700,
       R.drawable.button_border_bluegrey, R.drawable.create_store_theme_shape_blue_grey,
-      R.drawable.blue_grey_gradient, R.color.blue_grey_letters, 8),
+      R.drawable.blue_grey_gradient, R.color.blue_grey_letters, 7),
 
   //SILVER AND DIMGREY TO GREY
   SILVER(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_700,
       R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey,
-      R.drawable.grey_gradient, R.color.grey_letters, 8),
+      R.drawable.grey_gradient, R.color.grey_letters, 7),
 
   DIM_GRAY(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_700,
       R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey,
-      R.drawable.grey_gradient, R.color.grey_letters, 8),
+      R.drawable.grey_gradient, R.color.grey_letters, 7),
 
   //MAGENTA TO DEEPPURPLE
   MAGENTA(R.style.AptoideThemeDefaultDeepPurple, R.color.deep_purple, R.color.deep_purple_700,
       R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple,
-      R.drawable.deep_purple_gradient, R.color.deep_purple_letters, 8),
+      R.drawable.deep_purple_gradient, R.color.deep_purple_letters, 7),
 
   //YELLOW AND GOLD TO AMBER
   YELLOW(R.style.AptoideThemeDefaultAmber, R.color.amber, R.color.amber_700,
       R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber,
-      R.drawable.amber_gradient, R.color.amber_letters, 8),
+      R.drawable.amber_gradient, R.color.amber_letters, 7),
 
   GOLD(R.style.AptoideThemeDefaultAmber, R.color.amber, R.color.amber_700,
       R.drawable.button_border_amber, R.drawable.create_store_theme_shape_amber,
-      R.drawable.amber_gradient, R.color.amber_letters, 8),
+      R.drawable.amber_gradient, R.color.amber_letters, 7),
 
   //SPRINGGREEN TO LIGHTGREEN
   SPRING_GREEN(R.style.AptoideThemeDefaultLightgreen, R.color.light_green, R.color.light_green_700,
       R.drawable.button_border_lightgreen, R.drawable.create_store_theme_shape_light_green,
-      R.drawable.light_green_gradient, R.color.light_green_letters, 8),
+      R.drawable.light_green_gradient, R.color.light_green_letters, 7),
 
   //GREENAPPLE TO LIME
   GREEN_APPLE(R.style.AptoideThemeDefaultLime, R.color.lime, R.color.lime_700,
       R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime,
-      R.drawable.lime_gradient, R.color.lime_letters, 8),
+      R.drawable.lime_gradient, R.color.lime_letters, 7),
 
   //LIGHTSKY AND LIGHTSKY TO LIGHTBLUE
   LIGHT_SKY(R.style.AptoideThemeDefaultLightblue, R.color.light_blue, R.color.light_blue_700,
       R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue,
-      R.drawable.light_blue_gradient, R.color.light_blue_letters, 8),
+      R.drawable.light_blue_gradient, R.color.light_blue_letters, 7),
 
   //LIGHTSKY AND HAPPYBLUE TO LIGHTBLUE
   HAPPY_BLUE(R.style.AptoideThemeDefaultLightblue, R.color.light_blue, R.color.light_blue_700,
       R.drawable.button_border_lightblue, R.drawable.create_store_theme_shape_lightblue,
-      R.drawable.light_blue_gradient, R.color.light_blue_letters, 8);
+      R.drawable.light_blue_gradient, R.color.light_blue_letters, 7);
 
   @ColorRes private final int darkerColor;
   @DrawableRes private final int buttonDrawable;
