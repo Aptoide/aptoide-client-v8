@@ -7,7 +7,7 @@
 
   <string name="feedback_subject">Subject</string>
   <string name="feedback_to_write2">Write here to send us your feedback…\n\n
-        Please give us all the details you can:
+        Please give us all the details you can (in English):
         \n\• Steps you have done
         \n\• Errors you are seeing</string>
   <string name="feedback_include_logs">Include screenshot and logs</string>
@@ -301,7 +301,7 @@
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>
   <string name="onboarding_button_join_us">Join us</string>
-  <string name="login">Login</string>
+  <string name="login">Log In</string>
   <string name="connect_with_facebook">Connect with Facebook</string>
   <string name="connect_with_google">Connect with Google</string>
   <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
