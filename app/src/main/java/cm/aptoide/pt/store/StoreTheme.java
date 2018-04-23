@@ -72,7 +72,7 @@ public enum StoreTheme {
 
   BLACK(R.style.AptoideThemeDefaultBlack, R.color.black, R.color.grey,
       R.drawable.button_border_black, R.drawable.create_store_theme_shape_black,
-      R.drawable.black_gradient, 8, 8),
+      R.drawable.black_gradient, R.color.black_letters, 8),
 
   DEEP_PURPLE(R.style.AptoideThemeDefaultDeepPurple, R.color.deep_purple, R.color.deep_purple_700,
       R.drawable.button_border_deeppurple, R.drawable.create_store_theme_shape_deep_purple,
