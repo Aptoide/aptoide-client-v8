@@ -53,7 +53,7 @@
       android:layout_height="match_parent"
       android:layout_marginTop="?attr/actionBarSize"
       android:visibility="gone"
-      tools:visibility="gone"
+      tools:visibility="visible"
       >
 
 
@@ -82,7 +82,7 @@
           android:id="@+id/fragment_search_result_all_stores_button"
           android:layout_width="128dp"
           android:layout_height="match_parent"
-          android:background="@drawable/search_button_background"
+          android:background="@drawable/default_search_button_background"
           android:text="@string/all_stores"
           android:textColor="@color/white"
           android:textSize="12sp"
