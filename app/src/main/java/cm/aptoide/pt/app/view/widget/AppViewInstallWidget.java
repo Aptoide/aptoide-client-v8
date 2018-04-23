@@ -564,34 +564,52 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private void showRecommendsDialog(AppViewInstallDisplayable displayable, Context context) {
-    AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-    alertDialog.setMessage(R.string.appview_message_recommend_app);
+    LayoutInflater inflater = LayoutInflater.from(getContext());
+    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+    View alertDialogView = inflater.inflate(R.layout.logged_in_share, null);
+    alertDialog.setView(alertDialogView);
     String packageName = displayable.getPojo()
         .getNodes()
         .getMeta()
         .getData()
         .getPackageName();
-    alertDialog.setPositiveButton(context.getString(R.string.appview_button_recommend)
-        .toUpperCase(), (dialog, which) -> {
-      socialRepository.share(packageName, displayable.getPojo()
-          .getNodes()
-          .getMeta()
-          .getData()
-          .getStore()
-          .getId(), "install");
-      ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
-      displayable.getTimelineAnalytics()
-          .sendRecommendedAppInteractEvent(packageName, "Recommend");
-      displayable.getTimelineAnalytics()
-          .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
-    });
-    alertDialog.setNegativeButton(context.getString(R.string.skip)
-        .toUpperCase(), (dialog, which) -> {
-      displayable.getTimelineAnalytics()
-          .sendRecommendedAppInteractEvent(packageName, "Skip");
-      displayable.getTimelineAnalytics()
-          .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
-    });
+
+    alertDialogView.findViewById(R.id.continue_button)
+        .setOnClickListener(view -> {
+          socialRepository.share(packageName, displayable.getPojo()
+              .getNodes()
+              .getMeta()
+              .getData()
+              .getStore()
+              .getId(), "install");
+          ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
+          displayable.getTimelineAnalytics()
+              .sendRecommendedAppInteractEvent(packageName, "Recommend");
+          displayable.getTimelineAnalytics()
+              .sendSocialCardPreviewActionEvent(
+                  TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
+          alertDialog.dismiss();
+        });
+
+    alertDialogView.findViewById(R.id.skip_button)
+        .setOnClickListener(view -> {
+          displayable.getTimelineAnalytics()
+              .sendRecommendedAppInteractEvent(packageName, "Skip");
+          displayable.getTimelineAnalytics()
+              .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
+          alertDialog.dismiss();
+        });
+
+    alertDialogView.findViewById(R.id.dont_show_button)
+        .setOnClickListener(view -> {
+          ManagerPreferences.setShowPreviewDialog(false, sharedPreferences);
+          displayable.getTimelineAnalytics()
+              .sendRecommendedAppInteractEvent(packageName, "Don't show again");
+          displayable.getTimelineAnalytics()
+              .sendSocialCardPreviewActionEvent(TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
+          alertDialog.dismiss();
+        });
+
     alertDialog.show();
     displayable.getTimelineAnalytics()
         .sendRecommendedAppImpressionEvent(packageName);
