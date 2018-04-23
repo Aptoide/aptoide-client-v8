@@ -7,7 +7,7 @@
 
   <string name="feedback_subject">Subject</string>
   <string name="feedback_to_write2">Write here to send us your feedback…\n\n
-        Please give us all the details you can:
+        Please give us all the details you can (in English):
         \n\• Steps you have done
         \n\• Errors you are seeing</string>
   <string name="feedback_include_logs">Include screenshot and logs</string>
