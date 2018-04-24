@@ -530,5 +530,10 @@
 
   <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
 
+  <!--APPC-->
+  <string name="appc_title_iab">Spend you AppCoins</string>
+  <string name="appc_title_ads">Get rewarded with AppCoins</string>
+
+
 </resources>
 
