@@ -349,7 +349,7 @@ public class AppsPresenter implements Presenter {
   private void getAvailableUpdatesList() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(viewScheduler)
+        .observeOn(computation)
         .flatMap(__ -> appsManager.getUpdatesList(false))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showUpdatesList(list))
