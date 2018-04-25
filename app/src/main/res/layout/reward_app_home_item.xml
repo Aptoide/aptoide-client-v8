@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="0.056 APPC"
-            style="@style/Aptoide.TextView.Medium"
+            style="@style/Aptoide.TextView.Medium.XXS.Orange"
             />
 
       </LinearLayout>

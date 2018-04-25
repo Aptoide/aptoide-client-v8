@@ -165,6 +165,11 @@
     <item name="android:textColor">@color/red_700</item>
   </style>
 
+
+  <style name="Aptoide.TextView.Medium.XXS.Orange">
+    <item name="android:textColor">@color/orange</item>
+  </style>
+
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
     <item name="android:textAllCaps">true</item>
