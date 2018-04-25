@@ -70,6 +70,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case SOCIAL:
         return SOCIAL;
       case APPS:
+      case APPCOINS_REWARD:
         return APPS;
       case EDITORS:
         return EDITORS;
