@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.view.app.AppViewHolder;
 import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -13,7 +14,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 07/03/2018.
  */
 
-class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
+class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> appClickedEvents;
@@ -30,13 +31,18 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<AppInBundleViewHolder> {
     this.bundlePosition = -1;
   }
 
-  @Override public AppInBundleViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+    if (apps.get(position) instanceof RewardApp) {
+      return new RewardAppInBundleViewHolder(LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.reward_app_home_item, parent, false), appClickedEvents,
+          new DecimalFormat("#.##"));
+    }
     return new AppInBundleViewHolder(LayoutInflater.from(parent.getContext())
         .inflate(R.layout.app_home_item, parent, false), appClickedEvents, oneDecimalFormatter);
   }
 
-  @Override public void onBindViewHolder(AppInBundleViewHolder viewHolder, int position) {
-    viewHolder.setApp(apps.get(position), homeBundle, bundlePosition, position);
+  @Override public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    ((AppViewHolder) viewHolder).setApp(apps.get(position), homeBundle, bundlePosition, position);
   }
 
   @Override public int getItemCount() {

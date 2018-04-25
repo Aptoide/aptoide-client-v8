@@ -523,6 +523,7 @@
 
   <string name="all_button_ok">OK</string>
   <string name="home_recommends">%s recommends</string>
+  <string name="bundles_short_reward_app_appc" translatable="false">%s APPC</string>
 
   <!--Terms and Conditions URL navigation-->
   <string name="terms_conditions_navigation_url" translatable="false">https://terms.aptoide.com</string>
