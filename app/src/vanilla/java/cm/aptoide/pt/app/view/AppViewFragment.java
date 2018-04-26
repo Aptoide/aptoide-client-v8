@@ -8,6 +8,7 @@ package cm.aptoide.pt.app.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -1236,8 +1237,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
           break;
       }
 
-      ImageLoader.with(context)
-          .load(badgeResId, badge);
+      Drawable icon = ContextCompat.getDrawable(context, badgeResId);
+      badge.setImageDrawable(icon);
+
       badgeText.setText(badgeMessageId);
 
       if (getEditorsBrickPosition() != null) {
