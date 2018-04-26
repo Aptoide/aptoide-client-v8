@@ -97,6 +97,14 @@ import rx.schedulers.Schedulers;
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
+        case APPCOINS_ADS:
+          return new GetAppCoinsAdsRequest(new GetAppCoinsAdsRequest.Body(0, limit), httpClient,
+              converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(
+              bypassCache, bypassServerCache)
+              .observeOn(Schedulers.io())
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listAppCoinsRewardApps -> wsWidget);
         case HOME_META:
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)
