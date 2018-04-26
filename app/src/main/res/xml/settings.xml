@@ -15,7 +15,7 @@
         />
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="true"
-        android:key="generalnetworkmobile"
+        android:key="downloadwifionly"
         android:title="@string/setting_mobile"
         />
   </PreferenceCategory>
