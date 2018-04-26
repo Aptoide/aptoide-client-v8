@@ -99,24 +99,6 @@ public class BundlesResponseMapper {
     return rewardAppsList;
   }
 
-  private List<Application> createCustomRewardApps() {
-    List<Application> rewardApps = new ArrayList<>();
-
-    rewardApps.add(new RewardApp("Facebook",
-        "http://pool.img.aptoide.com/marsmedia/2d3772031010461fb1653d469f666c38_icon.png", 5, 22,
-        "cm.aptoide.facebook", 5628081, "widget tag", 0.056));
-
-    rewardApps.add(new RewardApp("Instagram",
-        "http://pool.img.aptoide.com/marsmedia/2d3772031010461fb1653d469f666c38_icon.png", 5, 22,
-        "cm.aptoide.instagram", 5628082, "widget tag", 0.04));
-
-    rewardApps.add(new RewardApp("Twitter",
-        "http://pool.img.aptoide.com/marsmedia/2d3772031010461fb1653d469f666c38_icon.png", 5, 22,
-        "cm.aptoide.twitter", 5628083, "widget tag", 1));
-
-    return rewardApps;
-  }
-
   private Event getEvent(GetStoreWidgets.WSWidget widget) {
     return widget.getActions()
         .size() > 0 ? widget.getActions()
