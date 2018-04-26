@@ -21,8 +21,8 @@ public class AppCoinsRewardApp extends App {
     this.appcoins = appcoins;
   }
 
-  private static class AppCoins {
-    private double reward;
+  public static class AppCoins {
+    public double reward;
 
     public AppCoins() {
     }

@@ -2,12 +2,14 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
 import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.view.app.Application;
@@ -48,8 +50,9 @@ public class BundlesResponseMapper {
               ((ListApps) viewObject).getDataList()
                   .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
-          appBundles.add(new AppBundle("Reward Apps", createCustomRewardApps(),
-              HomeBundle.BundleType.APPCOINS_ADS, new Event(), "CustomWidgetTag"));
+          appBundles.add(new AppBundle(title, appToRewardApp(
+              ((BaseV7EndlessDataListResponse<AppCoinsRewardApp>) viewObject).getDataList()
+                  .getList(), widgetTag), HomeBundle.BundleType.APPCOINS_ADS, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
@@ -80,6 +83,20 @@ public class BundlesResponseMapper {
     }
 
     return appBundles;
+  }
+
+  private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag) {
+    List<Application> rewardAppsList = new ArrayList<>();
+    for (AppCoinsRewardApp appCoinsRewardApp : appsList) {
+      rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
+          appCoinsRewardApp.getStats()
+              .getRating()
+              .getAvg(), appCoinsRewardApp.getStats()
+          .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), tag,
+          appCoinsRewardApp.getAppcoins()
+              .getReward()));
+    }
+    return rewardAppsList;
   }
 
   private List<Application> createCustomRewardApps() {
