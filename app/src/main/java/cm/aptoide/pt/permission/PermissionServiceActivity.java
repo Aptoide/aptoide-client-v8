@@ -158,7 +158,7 @@ import rx.functions.Action0;
     if ((AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .equals("mobile") && !ManagerPreferences.getDownloadsWifiOnly(sharedPreferences))) {
 
-        message = R.string.general_downloads_dialog_only_wifi_message;
+      message = R.string.general_downloads_dialog_only_wifi_message;
 
       showMessageOKCancel(message, new SimpleSubscriber<GenericDialogs.EResponse>() {
 

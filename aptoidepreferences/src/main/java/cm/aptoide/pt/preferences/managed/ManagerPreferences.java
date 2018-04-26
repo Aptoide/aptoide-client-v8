@@ -51,10 +51,6 @@ public class ManagerPreferences {
         .apply();
   }
 
-  public static boolean getGeneralDownloadsWifi(SharedPreferences sharedPreferences) {
-    return sharedPreferences.getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI, true);
-  }
-
   public static boolean getDownloadsWifiOnly(SharedPreferences sharedPreferences) {
     //returning the opposite because of the copy text on the preference was reverted from a version to another
     return !sharedPreferences.getBoolean(ManagedKeys.GENERAL_DOWNLOADS_WIFI_ONLY, true);
