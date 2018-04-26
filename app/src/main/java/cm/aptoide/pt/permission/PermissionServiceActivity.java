@@ -153,26 +153,12 @@ import rx.functions.Action0;
 
   @Override public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
-    int message = R.string.general_downloads_dialog_no_download_rule_message;
+    int message;
 
     if ((AptoideUtils.SystemU.getConnectionType(connectivityManager)
-        .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) || (
-        AptoideUtils.SystemU.getConnectionType(connectivityManager)
-            .equals("wifi")
-            && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences))) {
-      if ((AptoideUtils.SystemU.getConnectionType(connectivityManager)
-          .equals("wifi") || AptoideUtils.SystemU.getConnectionType(connectivityManager)
-          .equals("mobile"))
-          && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences)
-          && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) {
-        message = R.string.general_downloads_dialog_no_download_rule_message;
-      } else if (AptoideUtils.SystemU.getConnectionType(connectivityManager)
-          .equals("wifi") && !ManagerPreferences.getGeneralDownloadsWifi(sharedPreferences)) {
-        message = R.string.general_downloads_dialog_only_mobile_message;
-      } else if (AptoideUtils.SystemU.getConnectionType(connectivityManager)
-          .equals("mobile") && !ManagerPreferences.getGeneralDownloadsMobile(sharedPreferences)) {
+        .equals("mobile") && !ManagerPreferences.getDownloadsWifiOnly(sharedPreferences))) {
+
         message = R.string.general_downloads_dialog_only_wifi_message;
-      }
 
       showMessageOKCancel(message, new SimpleSubscriber<GenericDialogs.EResponse>() {
 

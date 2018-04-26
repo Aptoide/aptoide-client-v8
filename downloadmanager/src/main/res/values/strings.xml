@@ -2,9 +2,7 @@
   <string name="aptoide_downloading">%s is downloading</string>
   <string name="pause_download">Pause</string>
   <string name="resume_download">Resume</string>
-  <string name="general_downloads_dialog_only_mobile_message">"You chose to download only on Mobile 3G/4G. Change settings?"</string>
   <string name="general_downloads_dialog_only_wifi_message">"You chose to download only on Wi-Fi. Change settings?"</string>
-  <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Change settings?</string>
 
   <!-- DownloadManager -->
   <string name="timeout">Network connection timeout</string>
