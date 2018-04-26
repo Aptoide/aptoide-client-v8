@@ -104,7 +104,7 @@
   <string name="newaccount_create_store">create a store</string>
   <string name="newaccount_create_store_message">Create an Aptoide store to share apps with the community.</string>
   <string name="newaccount_find_friends">find friends</string>
-  <string name="newaccount_log_out">logout</string>
+  <string name="newaccount_log_out">log out</string>
   <string name="newaccount_notification_history">Notification history</string>
   <string name="newaccount_settings">Settings</string>
   <string name="newaccount_edit">Edit</string>

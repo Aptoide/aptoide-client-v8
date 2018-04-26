@@ -158,7 +158,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showUpdatesList(List<App> list) {
     if (list != null && !list.isEmpty()) {
-      adapter.addUpdateAppsList(list);
+      adapter.setAvailableUpdatesList(list);
     }
     showUpdates = true;
     if (shouldShowAppsList()) {

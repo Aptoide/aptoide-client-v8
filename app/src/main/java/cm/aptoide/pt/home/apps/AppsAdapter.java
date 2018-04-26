@@ -3,6 +3,8 @@ package cm.aptoide.pt.home.apps;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.ViewGroup;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -288,5 +290,35 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         break;
     }
     return isValid;
+  }
+
+  public List<App> getUpdateApps() {
+    List<App> updateApps = new ArrayList<>();
+    for (App app : listOfApps) {
+      if (app.getType() == App.Type.UPDATE) {
+        updateApps.add(app);
+      }
+    }
+    return updateApps;
+  }
+
+  public void setAvailableUpdatesList(List<App> availableUpdates) {
+    listOfApps.removeAll(getUpdatesToRemove(availableUpdates));
+    notifyDataSetChanged();
+    addUpdateAppsList(availableUpdates);
+    Collections.sort(listOfApps, (app1, app2) -> {
+      if (app1.getType() == App.Type.UPDATE && app2.getType() == App.Type.UPDATE) {
+        return ((UpdateApp) app1).getName()
+            .compareTo(((UpdateApp) app2).getName());
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  private List<App> getUpdatesToRemove(List<App> updatesList) {
+    List<App> updatesToRemove = getUpdateApps();
+    updatesToRemove.removeAll(updatesList);
+    return updatesToRemove;
   }
 }

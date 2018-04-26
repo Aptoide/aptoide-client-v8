@@ -449,7 +449,6 @@
 
   <string name="share">Share</string>
   <string name="share_store">Share Store</string>
-  <string name="share_on_timeline">Share on timeline</string>
 
   <!-- Search Widget-->
   <string name="manually_reviewed">Good app guaranteed: this application passed the security tests for virus, malware and other malicious attacks and doesn\'t contain any threats</string>
@@ -530,6 +529,11 @@
   <string name="privacy_policy_navigation_url" translatable="false">https://privacy.aptoide.com/</string>
 
   <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
+
+  <!--APPC-->
+  <string name="appc_title_iab">Spend your AppCoins</string>
+  <string name="appc_title_ads">Get Rewarded with AppCoins</string>
+
 
 </resources>
 

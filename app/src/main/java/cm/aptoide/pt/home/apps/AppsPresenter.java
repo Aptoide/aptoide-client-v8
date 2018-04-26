@@ -84,9 +84,24 @@ public class AppsPresenter implements Presenter {
 
     handleBottomNavigationEvents();
 
-    observeUpdateInstallations();
-
     handleRefreshApps();
+
+    removeInstalledUpdates();
+  }
+
+  private void removeInstalledUpdates() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(computation)
+        .flatMap(__ -> appsManager.getInstalledUpdateApps())
+        .observeOn(viewScheduler)
+        .filter(installedUpdatesList -> !installedUpdatesList.isEmpty())
+        .doOnNext(installedUpdatesList -> view.removeInstalledUpdates(installedUpdatesList))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          crashReport.log(error);
+        });
   }
 
   private void handleRefreshApps() {
@@ -106,21 +121,6 @@ public class AppsPresenter implements Presenter {
           view.hidePullToRefresh();
         }, error -> {
           view.hidePullToRefresh();
-          crashReport.log(error);
-        });
-  }
-
-  private void observeUpdateInstallations() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(computation)
-        .flatMap(__ -> appsManager.getInstalledUpdates())
-        .observeOn(viewScheduler)
-        .filter(installedUpdatesList -> !installedUpdatesList.isEmpty())
-        .doOnNext(installedUpdatesList -> view.removeInstalledUpdates(installedUpdatesList))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
           crashReport.log(error);
         });
   }
@@ -349,7 +349,6 @@ public class AppsPresenter implements Presenter {
   private void getAvailableUpdatesList() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(viewScheduler)
         .flatMap(__ -> appsManager.getUpdatesList(false))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showUpdatesList(list))

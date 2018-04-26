@@ -8,6 +8,7 @@ package cm.aptoide.pt.app.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -617,8 +618,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     final boolean appHasStore = getApp() != null && getApp().getStore() != null;
     final Long storeId = appHasStore ? getApp().getStore()
         .getId() : null;
-    shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-        (getApp() == null ? null : getApp().getIcon()), averageRating, storeId);
+    shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(), storeId);
     appViewAnalytics.sendAppShareEvent();
   }
 
@@ -1237,8 +1237,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
           break;
       }
 
-      ImageLoader.with(context)
-          .load(badgeResId, badge);
+      Drawable icon = ContextCompat.getDrawable(context, badgeResId);
+      badge.setImageDrawable(icon);
+
       badgeText.setText(badgeMessageId);
 
       if (getEditorsBrickPosition() != null) {

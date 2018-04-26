@@ -11,10 +11,10 @@
     <item name="android:windowBackground">@color/default_background_color</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
-    <item name="colorPrimary">@color/default_color</item>
-    <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
+    <item name="colorPrimary">@color/default_orange_gradient_start</item>
+    <item name="colorPrimaryDark">@color/default_orange_gradient_end</item>
     <item name="colorAccent">@color/aptoide_color_focused</item>
-    <item name="customColor">@color/default_color</item>
+    <item name="customColor">@color/default_orange_gradient_start</item>
 
     <!--toolbar-->
     <item name="toolbarTheme">@style/Toolbar</item>

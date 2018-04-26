@@ -58,7 +58,6 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   }
 
   @Override public void bindView(MyStoreDisplayable displayable) {
-
     final FragmentActivity context = getContext();
     Store store = displayable.getMeta()
         .getData()
@@ -95,18 +94,26 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
         String.valueOf(displayable.getFollowings())));
 
     compositeSubscription.add(RxView.clicks(followers)
-        .subscribe(click -> getFragmentNavigator().navigateTo(
-            TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
-                AptoideUtils.StringU.getFormattedString(
-                    R.string.social_timeline_followers_fragment_title, getContext().getResources(),
-                    displayable.getFollowers()), displayable.getStoreContext()), true)));
+        .subscribe(click -> {
+          storeAnalytics.sendFollowersStoresInteractEvent();
+          getFragmentNavigator().navigateTo(
+              TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
+                  AptoideUtils.StringU.getFormattedString(
+                      R.string.social_timeline_followers_fragment_title,
+                      getContext().getResources(), displayable.getFollowers()),
+                  displayable.getStoreContext()), true);
+        }));
 
     compositeSubscription.add(RxView.clicks(following)
-        .subscribe(click -> getFragmentNavigator().navigateTo(
-            TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
-                AptoideUtils.StringU.getFormattedString(
-                    R.string.social_timeline_following_fragment_title, getContext().getResources(),
-                    displayable.getFollowings()), displayable.getStoreContext()), true)));
+        .subscribe(click -> {
+          storeAnalytics.sendFollowingStoresInteractEvent();
+          getFragmentNavigator().navigateTo(
+              TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
+                  AptoideUtils.StringU.getFormattedString(
+                      R.string.social_timeline_following_fragment_title,
+                      getContext().getResources(), displayable.getFollowings()),
+                  displayable.getStoreContext()), true);
+        }));
   }
 
   private @ColorInt int getTextColor() {
