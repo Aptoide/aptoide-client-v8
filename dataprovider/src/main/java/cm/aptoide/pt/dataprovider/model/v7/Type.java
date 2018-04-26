@@ -17,7 +17,7 @@ public enum Type {
 
   // Server
   APPS_GROUP(3, false), STORES_GROUP(3, false), FOLLOW_STORE(3, false), DISPLAYS(2, true), ADS(3,
-      false), HOME_META(1, true), COMMENTS_GROUP(1, true),
+      false), HOME_META(1, true), COMMENTS_GROUP(1, true), APPCOINS_ADS(3, false),
 
   //Reviews Screen
   REVIEWS_GROUP(1, false), //widget to create the user's store

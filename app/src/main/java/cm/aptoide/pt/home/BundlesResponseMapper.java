@@ -32,9 +32,6 @@ public class BundlesResponseMapper {
 
     List<HomeBundle> appBundles = new ArrayList<>();
 
-    appBundles.add(new AppBundle("Reward Apps", createCustomRewardApps(),
-        HomeBundle.BundleType.APPCOINS_REWARD, new Event(), "CustomWidgetTag"));
-
     for (GetStoreWidgets.WSWidget widget : widgetBundles) {
       AppBundle.BundleType type = bundleTypeMapper(widget.getType(), widget.getData());
 
@@ -47,10 +44,12 @@ public class BundlesResponseMapper {
         Object viewObject = widget.getViewObject();
         String title = widget.getTitle();
         if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
-
           appBundles.add(new AppBundle(title, applicationsToApps(
               ((ListApps) viewObject).getDataList()
                   .getList(), type, widgetTag), type, event, widgetTag));
+        } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
+          appBundles.add(new AppBundle("Reward Apps", createCustomRewardApps(),
+              HomeBundle.BundleType.APPCOINS_ADS, new Event(), "CustomWidgetTag"));
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
@@ -123,6 +122,8 @@ public class BundlesResponseMapper {
         } else {
           return HomeBundle.BundleType.APPS;
         }
+      case APPCOINS_ADS:
+        return HomeBundle.BundleType.APPCOINS_ADS;
       case ADS:
         return HomeBundle.BundleType.ADS;
       case TIMELINE_CARD:
