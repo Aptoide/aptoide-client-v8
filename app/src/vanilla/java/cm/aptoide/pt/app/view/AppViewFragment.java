@@ -132,6 +132,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   private static final int PAY_APP_REQUEST_CODE = 12;
   private static final String ORIGIN_TAG = "TAG";
   private static final String EDITORS_CHOICE_POSITION = "editorsBrickPosition";
+  private static final String APP_REWARD_APPCOINS = "appcoinsReward";
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
@@ -167,6 +168,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private Observable<MenuItem> toolbarMenuItemClick;
+  private double appRewardAppcoins;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -193,6 +195,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType,
+      String tag, double appRewardAppc) {
+    Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
+    bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putDouble(APP_REWARD_APPCOINS, appRewardAppc);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -317,10 +332,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    appRewardAppcoins = -1;
     appViewModel = new AppViewModel();
     getFragmentComponent(savedInstanceState).inject(this);
     super.onCreate(savedInstanceState);
-
     handleSavedInstance(savedInstanceState);
 
     final AptoideApplication application =
@@ -399,6 +414,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     setStoreTheme(args.getString(BundleKeys.STORE_THEME.name()));
     this.appViewModel.setOriginTag(args.getString(ORIGIN_TAG, null));
     this.appViewModel.setEditorsBrickPosition(args.getString(EDITORS_CHOICE_POSITION, null));
+    this.appRewardAppcoins = args.getDouble(APP_REWARD_APPCOINS);
   }
 
   @Override public int getContentViewId() {
@@ -831,7 +847,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
             notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
             fragmentNames);
     displayables.add(installDisplayable);
-    displayables.add(new AppViewRewardAppDisplayable(1.3));
+    if (appRewardAppcoins > -1) {
+      displayables.add(new AppViewRewardAppDisplayable(appRewardAppcoins));
+    }
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
