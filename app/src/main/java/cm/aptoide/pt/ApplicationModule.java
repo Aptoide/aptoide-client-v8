@@ -1099,7 +1099,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         (ConnectivityManager) getApplicationContext().getSystemService(
             Context.CONNECTIVITY_SERVICE),
         ((AptoideApplication) getApplicationContext()).getVersionCodeProvider(), packageRepository,
-        10, 10);
+        10, 10, application.getInstallManager());
   }
 
   @Singleton @Provides BundlesRepository providesBundleRepository(

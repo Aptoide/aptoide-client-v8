@@ -534,4 +534,20 @@ public class InstallManager {
           }
         });
   }
+
+  public boolean wasAppEverInstalled(String packageName) {
+    return installedRepository.getInstallationsHistory()
+        .flatMapIterable(installation -> installation)
+        .filter(installation -> packageName.equals(installation.getPackageName()))
+        .toList()
+        .flatMap(installations -> {
+          if (installations.isEmpty()) {
+            return Observable.just(Boolean.FALSE);
+          } else {
+            return Observable.just(Boolean.TRUE);
+          }
+        })
+        .toBlocking()
+        .first();
+  }
 }

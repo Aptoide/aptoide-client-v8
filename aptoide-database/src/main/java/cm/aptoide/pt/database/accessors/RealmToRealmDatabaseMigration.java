@@ -374,5 +374,16 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .removeField("scheduled");
       oldVersion++;
     }
+
+    if (oldVersion == 8093) {
+      schema.create("Installation")
+          .addField("packageName", String.class, FieldAttribute.PRIMARY_KEY)
+          .addField("icon", String.class)
+          .addField("name", String.class)
+          .addField("versionCode", int.class)
+          .addField("versionName", String.class);
+
+      oldVersion++;
+    }
   }
 }

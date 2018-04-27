@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.PackageRepository;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -48,6 +49,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final PackageRepository packageRepository;
   private final int latestPackagesCount;
   private final int randomPackagesCount;
+  private final InstallManager installManager;
   private int total;
   private boolean loading;
 
@@ -60,7 +62,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       AptoideAccountManager accountManager, String filters, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
-      int latestPackagesCount, int randomPackagesCount) {
+      int latestPackagesCount, int randomPackagesCount, InstallManager installManager) {
     this.limit = limit;
     this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
@@ -83,6 +85,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.packageRepository = packageRepository;
     this.latestPackagesCount = latestPackagesCount;
     this.randomPackagesCount = randomPackagesCount;
+    this.installManager = installManager;
   }
 
   private Single<HomeBundlesModel> getBundles(int offset, int limit, boolean invalidateHttpCache) {
@@ -127,7 +130,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   @NonNull private Observable<HomeBundlesModel> mapHomeResponse(GetStoreWidgets homeResponse) {
     if (homeResponse.isOk()) {
       List<HomeBundle> homeBundles = mapper.fromWidgetsToBundles(homeResponse.getDataList()
-          .getList());
+          .getList(), installManager);
       total = homeResponse.getDataList()
           .getTotal();
       return Observable.just(new HomeBundlesModel(homeBundles, false, homeResponse.getDataList()

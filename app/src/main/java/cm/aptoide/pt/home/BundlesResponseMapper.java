@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
 import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
@@ -30,7 +31,8 @@ public class BundlesResponseMapper {
     this.marketName = marketName;
   }
 
-  public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
+  public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles,
+      InstallManager installManager) {
 
     List<HomeBundle> appBundles = new ArrayList<>();
 
@@ -52,7 +54,8 @@ public class BundlesResponseMapper {
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
           appBundles.add(new AppBundle(title, appToRewardApp(
               ((BaseV7EndlessDataListResponse<AppCoinsRewardApp>) viewObject).getDataList()
-                  .getList(), widgetTag), HomeBundle.BundleType.APPCOINS_ADS, event, widgetTag));
+                  .getList(), widgetTag, installManager), HomeBundle.BundleType.APPCOINS_ADS, event,
+              widgetTag));
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
@@ -85,16 +88,19 @@ public class BundlesResponseMapper {
     return appBundles;
   }
 
-  private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag) {
+  private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag,
+      InstallManager installManager) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsRewardApp appCoinsRewardApp : appsList) {
-      rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
-          appCoinsRewardApp.getStats()
-              .getRating()
-              .getAvg(), appCoinsRewardApp.getStats()
-          .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), tag,
-          appCoinsRewardApp.getAppcoins()
-              .getReward()));
+      if (installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {
+        rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
+            appCoinsRewardApp.getStats()
+                .getRating()
+                .getAvg(), appCoinsRewardApp.getStats()
+            .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), tag,
+            appCoinsRewardApp.getAppcoins()
+                .getReward()));
+      }
     }
     return rewardAppsList;
   }
