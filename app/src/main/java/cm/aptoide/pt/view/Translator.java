@@ -283,6 +283,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
       case "Featured Stores":
         translated = context.getString(R.string.featured_stores);
         break;
+      case "Spend your AppCoins":
+        translated = context.getString(R.string.appc_title_iab);
+        break;
+      case "Get rewarded with AppCoins":
+        translated = context.getString(R.string.appc_title_ads);
+        break;
       default:
         translated = string;
         break;
