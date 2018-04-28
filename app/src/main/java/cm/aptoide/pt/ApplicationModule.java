@@ -129,6 +129,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.repository.request.GetRewardAppCoinsAppsRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchManager;
@@ -820,6 +821,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         application.getApplicationContext(), connectivityManager, application.getResources(),
         adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
         application::getPartnerId, new MinimalAdMapper());
+  }
+
+  @Singleton @Provides GetRewardAppCoinsAppsRepository providesGetRewardAppCoinsAppsRepository(
+      @Named("default") OkHttpClient okHttpClient, @Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new GetRewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences);
   }
 
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
