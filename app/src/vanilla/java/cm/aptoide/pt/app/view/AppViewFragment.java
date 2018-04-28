@@ -332,7 +332,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    appRewardAppcoins = -1;
+    appRewardAppcoins = 0;
     appViewModel = new AppViewModel();
     getFragmentComponent(savedInstanceState).inject(this);
     super.onCreate(savedInstanceState);
@@ -847,7 +847,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
             notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
             fragmentNames);
     displayables.add(installDisplayable);
-    if (appRewardAppcoins > -1) {
+    if (appRewardAppcoins > 0) {
       displayables.add(new AppViewRewardAppDisplayable(appRewardAppcoins));
     }
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
