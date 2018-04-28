@@ -9,6 +9,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import java.text.DecimalFormat;
 
 /**
  * Created by filipegoncalves on 4/27/18.
@@ -18,9 +19,11 @@ public class AppViewRewardAppWidget extends Widget<AppViewRewardAppDisplayable> 
 
   private TextView appcoinsRewardMessage;
   private AppViewRewardAppDisplayable displayable;
+  private DecimalFormat twoDecimalFormat;
 
   public AppViewRewardAppWidget(@NonNull View itemView) {
     super(itemView);
+    this.twoDecimalFormat = new DecimalFormat("#.##");
   }
 
   @Override protected void assignViews(View itemView) {
@@ -30,6 +33,7 @@ public class AppViewRewardAppWidget extends Widget<AppViewRewardAppDisplayable> 
   @Override public void unbindView() {
     super.unbindView();
     displayable = null;
+    twoDecimalFormat = null;
   }
 
   @Override public void bindView(AppViewRewardAppDisplayable displayable) {
@@ -38,7 +42,7 @@ public class AppViewRewardAppWidget extends Widget<AppViewRewardAppDisplayable> 
   }
 
   private SpannableString buildRewardMessage(double appcoinsReward) {
-    String reward = String.valueOf(appcoinsReward) + " APPC";
+    String reward = String.valueOf(twoDecimalFormat.format(appcoinsReward)) + " APPC";
     String tryAppMessage = itemView.getResources()
         .getString(R.string.appc_message_appview_appcoins_reward, reward);
 
