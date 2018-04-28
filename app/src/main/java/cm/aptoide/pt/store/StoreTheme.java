@@ -65,7 +65,7 @@ public enum StoreTheme {
       R.drawable.orange_gradient, R.color.orange_letters,
       R.drawable.default_search_button_background, 8),
 
-  BROWN(R.style.AptoideThemeDefaultBrown, R.color.brown_gradient_start, R.color.brown_gradient_end,
+  BROWN(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_gradient_end,
       R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown,
       R.drawable.brown_gradient, R.color.brown_letters, R.drawable.default_search_button_background,
       8),
@@ -130,7 +130,7 @@ public enum StoreTheme {
       R.drawable.default_search_button_background, 7),
 
   //MAROON TO BROWN
-  MAROON(R.style.AptoideThemeDefaultBrown, R.color.brown_gradient_start, R.color.brown_gradient_end,
+  MAROON(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_gradient_end,
       R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown,
       R.drawable.brown_gradient, R.color.brown_letters, R.drawable.default_search_button_background,
       7),
