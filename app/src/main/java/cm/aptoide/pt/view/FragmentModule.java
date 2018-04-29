@@ -29,6 +29,7 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
+import cm.aptoide.pt.home.GetRewardAppCoinsAppsNavigator;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeNavigator;
@@ -187,5 +188,10 @@ import rx.schedulers.Schedulers;
       BottomNavigationMapper bottomNavigationMapper) {
     return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
+  }
+
+  @FragmentScope @Provides GetRewardAppCoinsAppsNavigator providesGetRewardAppCoinsAppsNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new GetRewardAppCoinsAppsNavigator(fragmentNavigator);
   }
 }

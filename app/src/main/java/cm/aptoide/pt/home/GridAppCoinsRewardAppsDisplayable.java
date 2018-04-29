@@ -13,15 +13,18 @@ public class GridAppCoinsRewardAppsDisplayable extends DisplayablePojo<Applicati
 
   private String tag;
   private NavigationTracker navigationTracker;
+  private GetRewardAppCoinsAppsNavigator rewardAppCoinsAppsNavigator;
 
   public GridAppCoinsRewardAppsDisplayable() {
   }
 
   public GridAppCoinsRewardAppsDisplayable(Application app, String tag,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker,
+      GetRewardAppCoinsAppsNavigator rewardAppCoinsAppsNavigator) {
     super(app);
     this.tag = tag;
     this.navigationTracker = navigationTracker;
+    this.rewardAppCoinsAppsNavigator = rewardAppCoinsAppsNavigator;
   }
 
   @Override protected Configs getConfig() {
@@ -38,5 +41,10 @@ public class GridAppCoinsRewardAppsDisplayable extends DisplayablePojo<Applicati
 
   public String getTag() {
     return this.tag;
+  }
+
+  public void openAppView() {
+    rewardAppCoinsAppsNavigator.navigateToRewardAppView(getPojo().getAppId(),
+        getPojo().getPackageName(), tag, ((RewardApp) getPojo()).getRewardValue());
   }
 }

@@ -23,6 +23,7 @@ import rx.Observable;
 public class GetRewardAppCoinsAppsFragment extends StoreTabGridRecyclerFragment {
 
   @Inject GetRewardAppCoinsAppsRepository rewardAppsRepository;
+  @Inject GetRewardAppCoinsAppsNavigator rewardAppCoinsAppsNavigator;
 
   public static Fragment newInstance() {
     return new GetRewardAppCoinsAppsFragment();
@@ -40,7 +41,8 @@ public class GetRewardAppCoinsAppsFragment extends StoreTabGridRecyclerFragment 
         .map(rewardApps -> {
           List<Displayable> displayables = new LinkedList<>();
           for (Application app : rewardApps) {
-            displayables.add(new GridAppCoinsRewardAppsDisplayable(app, tag, navigationTracker));
+            displayables.add(new GridAppCoinsRewardAppsDisplayable(app, tag, navigationTracker,
+                rewardAppCoinsAppsNavigator));
           }
 
           return Collections.singletonList(new DisplayableGroup(displayables,

@@ -5,9 +5,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;
 import cm.aptoide.pt.home.RewardApp;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 
 /**
@@ -40,5 +42,11 @@ public class GridAppCoinsRewardAppsWidget extends Widget<GridAppCoinsRewardAppsD
     appReward.setText(itemView.getResources()
         .getString(R.string.bundles_short_reward_app_appc,
             twoDecimalFormat.format(app.getRewardValue())));
+
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(v -> {
+          displayable.openAppView();
+        }, throwable -> CrashReport.getInstance()
+            .log(throwable)));
   }
 }
