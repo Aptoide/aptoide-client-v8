@@ -112,12 +112,12 @@ public class Event {
 
   public enum Name {
     // Api
-    listApps, listStores, getUser, getStore, getStoreWidgets, getAppCoinsAds,  //getReviews,
+    listApps, listStores, getUser, getStore, getStoreWidgets, //getReviews,
     //getApkComments,
     listReviews, listComments, getMyStoresSubscribed, getStoresRecommended,
 
     // Client
-    myStores, myUpdates, myExcludedUpdates, getAds, myDownloads,
+    myStores, myUpdates, myExcludedUpdates, getAds, myDownloads, getAppCoinsAds,
 
     // Displays
     facebook, twitch, twitter, youtube,

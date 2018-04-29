@@ -52,7 +52,8 @@ public class BundlesResponseMapper {
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
           appBundles.add(new AppBundle(title, appToRewardApp(
               ((BaseV7EndlessDataListResponse<AppCoinsRewardApp>) viewObject).getDataList()
-                  .getList(), widgetTag), HomeBundle.BundleType.APPCOINS_ADS, event, widgetTag));
+                  .getList(), widgetTag), HomeBundle.BundleType.APPCOINS_ADS,
+              new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
