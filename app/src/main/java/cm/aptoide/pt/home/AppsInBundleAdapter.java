@@ -16,6 +16,8 @@ import rx.subjects.PublishSubject;
 
 class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+  private static final int REWARD_APP = R.layout.reward_app_home_item;
+  private static final int APP = R.layout.app_home_item;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> appClickedEvents;
   private HomeBundle homeBundle;
@@ -31,18 +33,30 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     this.bundlePosition = -1;
   }
 
-  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
-    if (apps.get(position) instanceof RewardApp) {
-      return new RewardAppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-          .inflate(R.layout.reward_app_home_item, parent, false), appClickedEvents,
-          new DecimalFormat("#.##"));
+  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    switch (viewType) {
+      case REWARD_APP:
+        return new RewardAppInBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.reward_app_home_item, parent, false), appClickedEvents,
+            new DecimalFormat("#.##"));
+      case APP:
+        return new AppInBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.app_home_item, parent, false), appClickedEvents, oneDecimalFormatter);
+      default:
+        throw new IllegalArgumentException("Wrong type of App");
     }
-    return new AppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.app_home_item, parent, false), appClickedEvents, oneDecimalFormatter);
   }
 
   @Override public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
     ((AppViewHolder) viewHolder).setApp(apps.get(position), homeBundle, bundlePosition, position);
+  }
+
+  @Override public int getItemViewType(int position) {
+    if (apps.get(position) instanceof RewardApp) {
+      return REWARD_APP;
+    } else {
+      return APP;
+    }
   }
 
   @Override public int getItemCount() {

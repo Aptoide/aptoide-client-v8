@@ -26,14 +26,14 @@ import java.util.List;
 public class BundlesResponseMapper {
 
   private final String marketName;
+  private final InstallManager installManager;
 
-  public BundlesResponseMapper(String marketName) {
+  public BundlesResponseMapper(String marketName, InstallManager installManager) {
     this.marketName = marketName;
+    this.installManager = installManager;
   }
 
-  public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles,
-      InstallManager installManager) {
-
+  public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
     List<HomeBundle> appBundles = new ArrayList<>();
 
     for (GetStoreWidgets.WSWidget widget : widgetBundles) {
@@ -54,8 +54,8 @@ public class BundlesResponseMapper {
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
           appBundles.add(new AppBundle(title, appToRewardApp(
               ((BaseV7EndlessDataListResponse<AppCoinsRewardApp>) viewObject).getDataList()
-                  .getList(), widgetTag, installManager), HomeBundle.BundleType.APPCOINS_ADS, event,
-              widgetTag));
+                  .getList(), widgetTag), HomeBundle.BundleType.APPCOINS_ADS,
+              new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
@@ -88,8 +88,7 @@ public class BundlesResponseMapper {
     return appBundles;
   }
 
-  private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag,
-      InstallManager installManager) {
+  private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsRewardApp appCoinsRewardApp : appsList) {
       if (installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {

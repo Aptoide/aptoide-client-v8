@@ -129,6 +129,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchManager;
@@ -822,6 +823,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         application::getPartnerId, new MinimalAdMapper());
   }
 
+  @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
+      @Named("default") OkHttpClient okHttpClient, @Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences);
+  }
+
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
       PackageRepository packageRepository) {
     return new PackageRepositoryVersionCodeProvider(packageRepository,
@@ -1099,7 +1108,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         (ConnectivityManager) getApplicationContext().getSystemService(
             Context.CONNECTIVITY_SERVICE),
         ((AptoideApplication) getApplicationContext()).getVersionCodeProvider(), packageRepository,
-        10, 10, application.getInstallManager());
+        10, 10);
   }
 
   @Singleton @Provides BundlesRepository providesBundleRepository(
@@ -1113,6 +1122,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName) {
-    return new BundlesResponseMapper(marketName);
+    return new BundlesResponseMapper(marketName, application.getInstallManager());
   }
 }

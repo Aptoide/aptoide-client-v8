@@ -41,6 +41,6 @@ public class RewardAppInBundleViewHolder extends AppViewHolder {
         .getString(R.string.bundles_short_reward_app_appc,
             twoDecimalFormat.format(((RewardApp) app).getRewardValue())));
     itemView.setOnClickListener(v -> appClicks.onNext(
-        new AppHomeEvent(app, position, homeBundle, bundlePosition, HomeEvent.Type.APP)));
+        new AppHomeEvent(app, position, homeBundle, bundlePosition, HomeEvent.Type.REWARD_APP)));
   }
 }

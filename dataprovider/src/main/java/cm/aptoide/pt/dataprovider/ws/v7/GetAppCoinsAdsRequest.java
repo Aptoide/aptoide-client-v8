@@ -17,7 +17,7 @@ import rx.Observable;
 public class GetAppCoinsAdsRequest
     extends V7<BaseV7EndlessDataListResponse<AppCoinsRewardApp>, GetAppCoinsAdsRequest.Body> {
 
-  protected GetAppCoinsAdsRequest(Body body, OkHttpClient httpClient,
+  public GetAppCoinsAdsRequest(Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
