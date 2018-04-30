@@ -537,6 +537,7 @@ public class InstallManager {
 
   public boolean wasAppEverInstalled(String packageName) {
     return installedRepository.getInstallationsHistory()
+        .first()
         .flatMapIterable(installation -> installation)
         .filter(installation -> packageName.equals(installation.getPackageName()))
         .toList()

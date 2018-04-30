@@ -91,7 +91,7 @@ public class BundlesResponseMapper {
   private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsRewardApp appCoinsRewardApp : appsList) {
-      if (installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {
+      if (!installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {
         rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
             appCoinsRewardApp.getStats()
                 .getRating()
