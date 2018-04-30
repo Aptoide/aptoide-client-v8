@@ -16,12 +16,13 @@ public class Installation extends RealmObject {
   public Installation() {
   }
 
-  public Installation(Installed installed) {
-    this.packageName = installed.getPackageName();
-    this.name = installed.getName();
-    this.icon = installed.getIcon();
-    this.versionCode = installed.getVersionCode();
-    this.versionName = installed.getVersionName();
+  public Installation(String packageName, String name, String icon, int versionCode,
+      String versionName) {
+    this.packageName = packageName;
+    this.name = name;
+    this.icon = icon;
+    this.versionCode = versionCode;
+    this.versionName = versionName;
   }
 
   public String getIcon() {

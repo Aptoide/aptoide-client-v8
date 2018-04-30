@@ -133,13 +133,17 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   public void insertAll(List<Installed> installedList) {
     database.insertAll(installedList);
     for (Installed installed : installedList) {
-      database.insert(new Installation(installed));
+      database.insert(
+          new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
+              installed.getVersionCode(), installed.getVersionName()));
     }
   }
 
   public void insert(Installed installed) {
     database.insert(installed);
-    database.insert(new Installation(installed));
+    database.insert(
+        new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
+            installed.getVersionCode(), installed.getVersionName()));
   }
 
   public Observable<List<Installed>> getAllAsList(String packageName) {
