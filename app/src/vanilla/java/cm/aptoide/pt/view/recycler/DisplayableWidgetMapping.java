@@ -19,6 +19,7 @@ import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewOtherVersionsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateResultsDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAdDisplayable;
@@ -31,6 +32,7 @@ import cm.aptoide.pt.app.view.widget.AppViewInstallWidget;
 import cm.aptoide.pt.app.view.widget.AppViewOtherVersionsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewRateResultsWidget;
+import cm.aptoide.pt.app.view.widget.AppViewRewardAppWidget;
 import cm.aptoide.pt.app.view.widget.AppViewScreenshotsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewStoreWidget;
 import cm.aptoide.pt.app.view.widget.AppViewSuggestedAdWidget;
@@ -217,6 +219,9 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AppViewInstallWidget.class, AppViewInstallDisplayable.class));
 
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((AppViewRewardAppWidget.class),
+        AppViewRewardAppDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewRateAndReviewsWidget.class,
         AppViewRateAndCommentsDisplayable.class));
 
@@ -306,7 +311,6 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((LoginWidget.class), LoginDisplayable.class));
-
     return displayableWidgetMappings;
   }
 

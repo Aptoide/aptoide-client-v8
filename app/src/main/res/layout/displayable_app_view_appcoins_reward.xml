@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="9dp"
+    android:layout_marginLeft="9dp"
+    android:layout_marginRight="9dp"
+    android:layout_marginStart="9dp"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/grey_message_background_border"
+    android:orientation="horizontal"
+    >
+
+  <ImageView
+      android:id="@+id/appcoins_logo"
+      android:layout_width="36dp"
+      android:layout_height="36dp"
+      android:layout_marginBottom="10dp"
+      android:layout_marginEnd="21dp"
+      android:layout_marginLeft="15dp"
+      android:layout_marginRight="21dp"
+      android:layout_marginStart="15dp"
+      android:layout_marginTop="10dp"
+      android:src="@drawable/ic_appcoins"
+      />
+
+  <TextView
+      android:id="@+id/appcoins_reward_message"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      tools:text="try this app and get a 100000 appcoins"
+      style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
+      />
+
+
+</LinearLayout>

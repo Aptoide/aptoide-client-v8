@@ -53,4 +53,11 @@ public class HomeNavigator {
   public void navigateToMyAccount() {
     fragmentNavigator.navigateTo(NewAccountFragment.newInstance(), true);
   }
+
+  public void navigateToRewardAppView(long appId, String packageName, String tag,
+      double rewardAppCoins) {
+    fragmentNavigator.navigateTo(
+        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag,
+            rewardAppCoins), true);
+  }
 }
