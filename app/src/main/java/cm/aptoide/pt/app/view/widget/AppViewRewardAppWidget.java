@@ -18,12 +18,10 @@ import java.text.DecimalFormat;
 public class AppViewRewardAppWidget extends Widget<AppViewRewardAppDisplayable> {
 
   private TextView appcoinsRewardMessage;
-  private AppViewRewardAppDisplayable displayable;
   private DecimalFormat twoDecimalFormat;
 
   public AppViewRewardAppWidget(@NonNull View itemView) {
     super(itemView);
-    this.twoDecimalFormat = new DecimalFormat("#.##");
   }
 
   @Override protected void assignViews(View itemView) {
@@ -32,12 +30,11 @@ public class AppViewRewardAppWidget extends Widget<AppViewRewardAppDisplayable> 
 
   @Override public void unbindView() {
     super.unbindView();
-    displayable = null;
     twoDecimalFormat = null;
   }
 
   @Override public void bindView(AppViewRewardAppDisplayable displayable) {
-    this.displayable = displayable;
+    this.twoDecimalFormat = new DecimalFormat("#.##");
     appcoinsRewardMessage.setText(buildRewardMessage(displayable.getAppcoinsReward()));
   }
 
