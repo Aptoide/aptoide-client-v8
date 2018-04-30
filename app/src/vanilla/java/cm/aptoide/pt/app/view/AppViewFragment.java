@@ -529,9 +529,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   }
 
   @Override public void onResume() {
-    handleMenuItemClick(toolbarMenuItemClick);
 
     super.onResume();
+    handleMenuItemClick(toolbarMenuItemClick);
 
     // restore download bar status
     // TODO: 04/08/16 restore download bar status
