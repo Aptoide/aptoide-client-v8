@@ -43,7 +43,6 @@
   <color name="teal_gradient_end">#00655C</color>
 
 
-
   <!-- Stores themes - 700 colors -->
   <color name="default_color_700">#bf6113</color>
   <color name="amber_700">#ffa000</color>
@@ -60,7 +59,6 @@
   <color name="pink_700">#c2185b</color>
   <color name="red_700">#d32f2f</color>
   <color name="teal_700">#00796b</color>
-
 
 
   <!-- Letters themes -->

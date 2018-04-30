@@ -27,9 +27,9 @@ public class RewardAppCoinsAppsRepository {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
 
-  public RewardAppCoinsAppsRepository(OkHttpClient httpClient,
-      Converter.Factory converterFactory, BodyInterceptor<BaseBody> bodyInterceptor,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+  public RewardAppCoinsAppsRepository(OkHttpClient httpClient, Converter.Factory converterFactory,
+      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.bodyInterceptor = bodyInterceptor;

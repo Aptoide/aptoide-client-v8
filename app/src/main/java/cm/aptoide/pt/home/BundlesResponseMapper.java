@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
 import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
@@ -25,13 +26,14 @@ import java.util.List;
 public class BundlesResponseMapper {
 
   private final String marketName;
+  private final InstallManager installManager;
 
-  public BundlesResponseMapper(String marketName) {
+  public BundlesResponseMapper(String marketName, InstallManager installManager) {
     this.marketName = marketName;
+    this.installManager = installManager;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
-
     List<HomeBundle> appBundles = new ArrayList<>();
 
     for (GetStoreWidgets.WSWidget widget : widgetBundles) {
@@ -89,13 +91,15 @@ public class BundlesResponseMapper {
   private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsRewardApp appCoinsRewardApp : appsList) {
-      rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
-          appCoinsRewardApp.getStats()
-              .getRating()
-              .getAvg(), appCoinsRewardApp.getStats()
-          .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), tag,
-          appCoinsRewardApp.getAppcoins()
-              .getReward()));
+      if (!installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {
+        rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
+            appCoinsRewardApp.getStats()
+                .getRating()
+                .getAvg(), appCoinsRewardApp.getStats()
+            .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), tag,
+            appCoinsRewardApp.getAppcoins()
+                .getReward()));
+      }
     }
     return rewardAppsList;
   }
