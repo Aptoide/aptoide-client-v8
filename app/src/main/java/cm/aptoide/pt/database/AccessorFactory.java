@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.accessors.InstallationAccessor;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -27,7 +28,7 @@ import io.realm.RealmObject;
       Class<T> clazz) {
 
     if (clazz.equals(Installed.class)) {
-      return (A) new InstalledAccessor(database);
+      return (A) new InstalledAccessor(database, new InstallationAccessor(database));
     } else if (clazz.equals(Download.class)) {
       return (A) new DownloadAccessor(database);
     } else if (clazz.equals(Update.class)) {

@@ -20,8 +20,11 @@ import rx.schedulers.Schedulers;
  */
 public class InstalledAccessor extends SimpleAccessor<Installed> {
 
-  public InstalledAccessor(Database db) {
+  private final InstallationAccessor installationAccessor;
+
+  public InstalledAccessor(Database db, InstallationAccessor installationAccessor) {
     super(db, Installed.class);
+    this.installationAccessor = installationAccessor;
   }
 
   public Observable<List<Installed>> getAllInstalled() {
@@ -127,13 +130,13 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
   }
 
   public Observable<List<Installation>> getInstallationsHistory() {
-    return database.getAll(Installation.class);
+    return installationAccessor.getInstallationsHistory();
   }
 
   public void insertAll(List<Installed> installedList) {
     database.insertAll(installedList);
     for (Installed installed : installedList) {
-      database.insert(
+      installationAccessor.insert(
           new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
               installed.getVersionCode(), installed.getVersionName()));
     }
@@ -141,7 +144,7 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
 
   public void insert(Installed installed) {
     database.insert(installed);
-    database.insert(
+    installationAccessor.insert(
         new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
             installed.getVersionCode(), installed.getVersionName()));
   }

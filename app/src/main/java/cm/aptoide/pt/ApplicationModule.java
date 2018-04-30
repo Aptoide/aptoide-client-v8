@@ -64,6 +64,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
+import cm.aptoide.pt.database.accessors.InstallationAccessor;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
@@ -366,8 +367,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DownloadFactory(marketName);
   }
 
-  @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database) {
-    return new InstalledAccessor(database);
+  @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,
+      InstallationAccessor installationAccessor) {
+    return new InstalledAccessor(database, installationAccessor);
+  }
+
+  @Singleton @Provides InstallationAccessor providesInstallationAccessor(Database database) {
+    return new InstallationAccessor(database);
   }
 
   @Singleton @Provides DownloadAccessor provideDownloadAccessor(Database database) {
