@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.WindowManager;
-import cm.aptoide.pt.repository.request.GetRewardAppCoinsAppsRepository;
+import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -22,7 +22,7 @@ import rx.Observable;
 
 public class GetRewardAppCoinsAppsFragment extends StoreTabGridRecyclerFragment {
 
-  @Inject GetRewardAppCoinsAppsRepository rewardAppsRepository;
+  @Inject RewardAppCoinsAppsRepository rewardAppsRepository;
   @Inject GetRewardAppCoinsAppsNavigator rewardAppCoinsAppsNavigator;
 
   public static Fragment newInstance() {

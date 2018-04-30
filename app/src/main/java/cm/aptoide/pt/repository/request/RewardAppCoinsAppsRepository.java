@@ -18,7 +18,7 @@ import rx.Observable;
  * Created by filipegoncalves on 4/27/18.
  */
 
-public class GetRewardAppCoinsAppsRepository {
+public class RewardAppCoinsAppsRepository {
 
   private static final int APPCOINS_REWARD_LIMIT = 30;
   private OkHttpClient httpClient;
@@ -27,7 +27,7 @@ public class GetRewardAppCoinsAppsRepository {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
 
-  public GetRewardAppCoinsAppsRepository(OkHttpClient httpClient,
+  public RewardAppCoinsAppsRepository(OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor<BaseBody> bodyInterceptor,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.httpClient = httpClient;
