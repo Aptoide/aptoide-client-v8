@@ -18,14 +18,13 @@ import java.text.DecimalFormat;
 
 public class GridAppCoinsRewardAppsWidget extends Widget<GridAppCoinsRewardAppsDisplayable> {
 
-  private final DecimalFormat twoDecimalFormat;
+  private DecimalFormat twoDecimalFormat;
   private ImageView appIcon;
   private TextView appName;
   private TextView appReward;
 
   public GridAppCoinsRewardAppsWidget(@NonNull View itemView) {
     super(itemView);
-    this.twoDecimalFormat = new DecimalFormat("#.##");
   }
 
   @Override protected void assignViews(View itemView) {
@@ -34,7 +33,13 @@ public class GridAppCoinsRewardAppsWidget extends Widget<GridAppCoinsRewardAppsD
     appReward = (TextView) itemView.findViewById(R.id.reward_appc);
   }
 
+  @Override public void unbindView() {
+    super.unbindView();
+    this.twoDecimalFormat = null;
+  }
+
   @Override public void bindView(GridAppCoinsRewardAppsDisplayable displayable) {
+    this.twoDecimalFormat = new DecimalFormat("#.##");
     RewardApp app = ((RewardApp) displayable.getPojo());
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
