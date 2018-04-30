@@ -2,7 +2,6 @@ package cm.aptoide.pt.search.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
   private final PublishRelay<SearchAdResult> onAdClickRelay;
   private final PublishRelay<SearchAppResult> onItemViewClick;
-  private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClick;
   private final List<SearchAdResult> searchAdResults;
   private final List<SearchAppResult> searchResults;
   private boolean adsLoaded = false;
@@ -28,13 +26,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private CrashReport crashReport;
 
   public SearchResultAdapter(PublishRelay<SearchAdResult> onAdClickRelay,
-      PublishRelay<SearchAppResult> onItemViewClick,
-      PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClick,
-      List<SearchAppResult> searchResults, List<SearchAdResult> searchAdResults,
-      CrashReport crashReport) {
+      PublishRelay<SearchAppResult> onItemViewClick, List<SearchAppResult> searchResults,
+      List<SearchAdResult> searchAdResults, CrashReport crashReport) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
-    this.onOpenPopupMenuClick = onOpenPopupMenuClick;
     this.searchResults = searchResults;
     this.searchAdResults = searchAdResults;
     this.crashReport = crashReport;
