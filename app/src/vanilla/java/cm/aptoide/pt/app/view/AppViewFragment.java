@@ -332,7 +332,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    appRewardAppcoins = 0;
     appViewModel = new AppViewModel();
     getFragmentComponent(savedInstanceState).inject(this);
     super.onCreate(savedInstanceState);
