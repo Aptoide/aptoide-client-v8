@@ -72,9 +72,18 @@ public class HomePresenter implements Presenter {
   private void handleRewardAppClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.rewardAppClicked())
-        .doOnNext(rewardApp -> homeNavigator.navigateToRewardAppView(rewardApp.getAppId(),
-            rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getRewardValue()))
+        .flatMap(__ -> view.rewardAppClicked()
+            .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
+                    .getRating(), click.getApp()
+                    .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
+                click.getBundle()
+                    .getTitle(), click.getBundle()
+                    .getContent()
+                    .size()))
+            .map(appClick -> ((RewardApp) appClick.getApp()))
+            .doOnNext(rewardApp -> homeNavigator.navigateToRewardAppView(rewardApp.getAppId(),
+                rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getRewardValue()))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReporter.log(throwable));

@@ -205,12 +205,10 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
         .cast(AppHomeEvent.class);
   }
 
-  @Override public Observable<RewardApp> rewardAppClicked() {
+  @Override public Observable<AppHomeEvent> rewardAppClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.REWARD_APP))
-        .cast(AppHomeEvent.class)
-        .map(event -> event.getApp())
-        .cast(RewardApp.class);
+        .cast(AppHomeEvent.class);
   }
 
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {
