@@ -140,10 +140,6 @@ import rx.schedulers.Schedulers;
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager,
         ((AptoideApplication) fragment.getContext()
-            .getApplicationContext()).hasMultiStoreSearch(),
-        ((AptoideApplication) fragment.getContext()
-            .getApplicationContext()).getDefaultStoreName(),
-        ((AptoideApplication) fragment.getContext()
             .getApplicationContext()).getDefaultThemeName(), trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
