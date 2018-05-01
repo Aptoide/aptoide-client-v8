@@ -87,14 +87,14 @@ android {
     internal {
       dimension "mode"
       applicationIdSuffix "internal"
-      versionName "9.0.0." + getDate() + "Beta"
+      versionName "9.0.0." + getDate()
       versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
     }
 
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
-      versionName "9.0.0." + getDate() + "Beta"
+      versionName "9.0.0." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
     }
 
