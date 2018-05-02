@@ -466,9 +466,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
       try {
 
-        app = GetAppRequest.of(packageName, ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-            ((AptoideApplication) getApplicationContext()).getDefaultClient(), WebService.getDefaultConverter(),
-            ((AptoideApplication) getApplicationContext()).getTokenInvalidator(), ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
+        app = GetAppRequest.of(packageName,
+            ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
+            ((AptoideApplication) getApplicationContext()).getDefaultClient(),
+            WebService.getDefaultConverter(),
+            ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
+            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
             .observe()
             .toBlocking()
             .first();
