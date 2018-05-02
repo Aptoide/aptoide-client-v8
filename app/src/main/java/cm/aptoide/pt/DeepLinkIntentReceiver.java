@@ -21,6 +21,7 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -463,15 +464,18 @@ public class DeepLinkIntentReceiver extends ActivityView {
     GetApp app = null;
     if (packageName != null) {
 
-      app = GetAppRequest.of(packageName,
-          ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-          ((AptoideApplication) getApplicationContext()).getDefaultClient(),
-          WebService.getDefaultConverter(),
-          ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
-          ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
-          .observe()
-          .toBlocking()
-          .first();
+      try {
+
+        app = GetAppRequest.of(packageName, ((AptoideApplication) getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
+            ((AptoideApplication) getApplicationContext()).getDefaultClient(), WebService.getDefaultConverter(),
+            ((AptoideApplication) getApplicationContext()).getTokenInvalidator(), ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
+            .observe()
+            .toBlocking()
+            .first();
+      } catch (NoNetworkConnectionException exception) {
+        intent = startFromHome();
+        return intent;
+      }
     }
 
     if (app != null && app.isOk()) {
