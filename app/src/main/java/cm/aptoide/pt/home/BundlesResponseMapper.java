@@ -52,10 +52,13 @@ public class BundlesResponseMapper {
               ((ListApps) viewObject).getDataList()
                   .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
-          appBundles.add(new AppBundle(title, appToRewardApp(
+          List<Application> applicationList = appToRewardApp(
               ((BaseV7EndlessDataListResponse<AppCoinsRewardApp>) viewObject).getDataList()
-                  .getList(), widgetTag), HomeBundle.BundleType.APPCOINS_ADS,
-              new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
+                  .getList(), widgetTag);
+          if (!applicationList.isEmpty()) {
+            appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
+                new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
+          }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
