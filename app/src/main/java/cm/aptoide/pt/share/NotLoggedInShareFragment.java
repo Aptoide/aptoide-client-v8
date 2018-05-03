@@ -46,6 +46,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private int requestCode;
   private PublishRelay<Void> backButtonPress;
   private View outerLayout;
+  private ClickHandler backClickHandler;
 
   public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
@@ -95,15 +96,31 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
         .setNegativeButton(android.R.string.cancel)
         .build();
 
-    registerClickHandler(() -> {
-      backButtonPress.call(null);
-      return true;
-    });
+    setupBackClick();
 
     attachPresenter(new NotLoggedInSharePresenter(this, CrashReport.getInstance(), accountManager,
         ((ActivityResultNavigator) getContext()).getAccountNavigator(),
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
         ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()));
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    unregisterClickHandler(backClickHandler);
+    backClickHandler = null;
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    backButtonPress = null;
+  }
+
+  private void setupBackClick() {
+    backClickHandler = () -> {
+      backButtonPress.call(null);
+      return true;
+    };
+    registerClickHandler(backClickHandler);
   }
 
   private AccountAnalytics.StartupClickOrigin getStartupClickOrigin() {
