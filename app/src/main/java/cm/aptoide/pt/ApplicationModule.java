@@ -834,7 +834,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
-        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences);
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences,
+        application.getInstallManager());
   }
 
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(

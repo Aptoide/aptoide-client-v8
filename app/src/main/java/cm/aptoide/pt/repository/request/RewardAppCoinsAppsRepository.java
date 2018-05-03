@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsAdsRequest;
 import cm.aptoide.pt.home.RewardApp;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.app.Application;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +27,17 @@ public class RewardAppCoinsAppsRepository {
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private InstallManager installManager;
 
   public RewardAppCoinsAppsRepository(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, InstallManager installManager) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.bodyInterceptor = bodyInterceptor;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.installManager = installManager;
   }
 
   public Observable<List<Application>> getAppCoinsRewardAppsFromHomeMore(boolean refresh) {
@@ -48,13 +51,15 @@ public class RewardAppCoinsAppsRepository {
   private Observable<List<Application>> mapToRewardApp(List<AppCoinsRewardApp> list) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsRewardApp appCoinsRewardApp : list) {
-      rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
-          appCoinsRewardApp.getStats()
-              .getRating()
-              .getAvg(), appCoinsRewardApp.getStats()
-          .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), "",
-          appCoinsRewardApp.getAppcoins()
-              .getReward()));
+      if (!installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {
+        rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
+            appCoinsRewardApp.getStats()
+                .getRating()
+                .getAvg(), appCoinsRewardApp.getStats()
+            .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), "",
+            appCoinsRewardApp.getAppcoins()
+                .getReward()));
+      }
     }
     return Observable.just(rewardAppsList);
   }
