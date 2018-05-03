@@ -193,7 +193,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
   @Override public void setUserImage(String userAvatarUrl) {
     ImageLoader.with(getContext())
         .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
-            R.drawable.my_account_placeholder);
+            R.drawable.ic_account_circle);
   }
 
   @Override public Observable<Void> imageClick() {
