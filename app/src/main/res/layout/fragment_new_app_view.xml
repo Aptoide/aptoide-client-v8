@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        >
+
+      <include
+          layout="@layout/toolbar"
+          android:id="@+id/toolbar"
+          />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="104dp"
+        android:layout_marginTop="14dp"
+        >
+      <ImageView
+          android:id="@+id/app_icon"
+          android:layout_width="104dp"
+          android:layout_height="104dp"
+          android:layout_centerHorizontal="true"
+          android:src="@mipmap/ic_launcher"
+          />
+      <TextView
+          android:id="@+id/trusted_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true"
+          android:layout_marginLeft="48dp"
+          android:layout_marginStart="48dp"
+          android:layout_toEndOf="@id/app_icon"
+          android:layout_toRightOf="@id/app_icon"
+          android:text="@string/appview_header_trusted_text"
+          android:textAllCaps="true"
+          android:textColor="#4a4a4a"
+          android:textSize="10sp"
+          />
+
+      <ImageView
+          android:layout_width="23dp"
+          android:layout_height="26dp"
+          android:layout_above="@id/trusted_text"
+          android:layout_marginBottom="6dp"
+          android:layout_marginLeft="60dp"
+          android:layout_marginStart="60dp"
+          android:layout_toEndOf="@id/app_icon"
+          android:layout_toRightOf="@id/app_icon"
+          android:src="@drawable/ic_badge_trusted"
+          />
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="18dp"
+        android:text="Clash Royale"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="9dp"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:layout_width="6dp"
+          android:layout_height="8dp"
+          android:layout_gravity="center_vertical"
+          android:src="@drawable/ic_appview_download_icon"
+          />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="3dp"
+          android:layout_marginStart="3dp"
+          android:text="5 M"
+          android:textColor="@color/black"
+          android:textSize="8sp"
+          />
+      <ImageView
+          android:layout_width="6dp"
+          android:layout_height="8dp"
+          android:layout_gravity="center_vertical"
+          android:layout_marginLeft="15dp"
+          android:layout_marginStart="15dp"
+          android:src="@drawable/ic_dimension"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="3dp"
+          android:layout_marginStart="3dp"
+          android:text="90.7 MB"
+          android:textColor="@color/black"
+          android:textSize="8sp"
+          />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="249dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="@string/install"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        style="@style/Aptoide.Button.S.Gradient.Rounded"
+        />
+  </LinearLayout>
+</ScrollView>
