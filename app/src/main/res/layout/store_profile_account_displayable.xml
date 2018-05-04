@@ -10,8 +10,6 @@
       android:layout_width="56dp"
       android:layout_height="56dp"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="16dp"
-      android:layout_marginStart="16dp"
       android:src="@mipmap/ic_launcher"
       />
   <LinearLayout
@@ -33,10 +31,11 @@
         />
     <TextView
         android:id="@+id/description"
-        android:layout_width="180dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
+        android:maxWidth="180dp"
         tools:text="Batatas"
         style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         />
@@ -49,8 +48,6 @@
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
-      android:layout_marginEnd="16dp"
-      android:layout_marginRight="16dp"
       android:text="@string/newaccount_edit"
       style="@style/Aptoide.Button.Ghost.S"
       />
