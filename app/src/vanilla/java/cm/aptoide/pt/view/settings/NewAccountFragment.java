@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -77,6 +78,8 @@ public class NewAccountFragment extends BackButtonFragment
   private Button editStoreButton;
   private Button editProfileButton;
 
+  //private CardView
+
   //Navigation buttons
   private View notificationHistory;
   private View settings;
@@ -108,11 +111,27 @@ public class NewAccountFragment extends BackButtonFragment
 
     setAccountViews(view);
     setupToolbar();
+    setupProductCardViews(view);
 
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new NewAccountPresenter(this, accountManager, CrashReport.getInstance(),
         application.getDefaultSharedPreferences(), AndroidSchedulers.mainThread(),
         newAccountNavigator, accountAnalytics));
+  }
+
+  private void setupProductCardViews(View view)
+  {
+    //Aptoide TV
+    ((TextView)view.findViewById(R.id.product_aptoideTv_cardview).findViewById(R.id.product_title_textview)).setText("Aptoide Tv");
+    ((TextView)view.findViewById(R.id.product_aptoideTv_cardview).findViewById(R.id.product_subtitle_textview)).setText("The best solution for your Set Top Box and Smart TV");
+
+    //Aptoide Uploader
+    ((TextView)view.findViewById(R.id.product_uploader_cardview).findViewById(R.id.product_title_textview)).setText("Aptoide Uploader");
+    ((TextView)view.findViewById(R.id.product_uploader_cardview).findViewById(R.id.product_subtitle_textview)).setText("Perfect tool to get your favorite apps in your Aptoide Store");
+
+    //Aptoide Backup
+    ((TextView)view.findViewById(R.id.product_backup_cardview).findViewById(R.id.product_title_textview)).setText("Aptoide Backup Apps");
+    ((TextView)view.findViewById(R.id.product_backup_cardview).findViewById(R.id.product_subtitle_textview)).setText("Easily backup your apps into your Aptoide store");
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

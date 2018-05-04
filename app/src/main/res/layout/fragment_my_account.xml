@@ -207,6 +207,60 @@
           android:text="@string/newaccount_settings"
           style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
+
     </LinearLayout>
+
+
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="sans-serif"
+          android:lineSpacingExtra="7sp"
+          android:text="Aptoide products"
+          android:textColor="@color/black_87_alpha"
+          android:textSize="17sp"
+          android:textStyle="normal"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="10dp"
+          />
+
+      <include
+          layout="@layout/my_account_product_cardview"
+          android:id="@+id/product_aptoideTv_cardview"
+          android:layout_width="match_parent"
+          android:layout_height="63dp"
+          android:layout_marginTop="19dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          />
+      <include
+          layout="@layout/my_account_product_cardview"
+          android:id="@+id/product_uploader_cardview"
+          android:layout_width="match_parent"
+          android:layout_height="63dp"
+          android:layout_marginTop="9dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          />
+      <include
+          layout="@layout/my_account_product_cardview"
+          android:id="@+id/product_backup_cardview"
+          android:layout_width="match_parent"
+          android:layout_height="63dp"
+          android:layout_marginTop="9dp"
+          android:layout_marginBottom="9dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          />
   </LinearLayout>
 </ScrollView>
