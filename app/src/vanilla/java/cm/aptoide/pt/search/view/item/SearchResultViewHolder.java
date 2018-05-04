@@ -5,16 +5,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.subscriptions.CompositeSubscription;
 
-public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult> {
+public class SearchResultViewHolder extends SearchResultItemView<SearchAppResultWrapper> {
 
   public static final int LAYOUT = R.layout.search_app_row;
-  private final PublishRelay<SearchAppResult> onItemViewClick;
+  private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
 
   private TextView nameTextView;
   private ImageView iconImageView;
@@ -22,18 +22,19 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private TextView ratingBar;
   private TextView storeTextView;
   private View bottomView;
-  private SearchAppResult searchApp;
+  private SearchAppResultWrapper searchApp;
   private CompositeSubscription subscriptions;
 
-  public SearchResultViewHolder(View itemView, PublishRelay<SearchAppResult> onItemViewClick) {
+  public SearchResultViewHolder(View itemView,
+      PublishRelay<SearchAppResultWrapper> onItemViewClick) {
     super(itemView);
     subscriptions = new CompositeSubscription();
     this.onItemViewClick = onItemViewClick;
     bindViews(itemView);
   }
 
-  @Override public void setup(SearchAppResult searchApp) {
-    this.searchApp = searchApp;
+  @Override public void setup(SearchAppResultWrapper wrapper) {
+    this.searchApp = wrapper;
     setAppName();
     setDownloadCount();
     setAverageValue();
@@ -47,18 +48,20 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     }
   }
 
-
   private void setIconView() {
     ImageLoader.with(iconImageView.getContext())
-        .load(searchApp.getIcon(), iconImageView);
+        .load(searchApp.getSearchAppResult()
+            .getIcon(), iconImageView);
   }
 
   private void setStoreName() {
-    storeTextView.setText(searchApp.getStoreName());
+    storeTextView.setText(searchApp.getSearchAppResult()
+        .getStoreName());
   }
 
   private void setAverageValue() {
-    float avg = searchApp.getAverageRating();
+    float avg = searchApp.getSearchAppResult()
+        .getAverageRating();
     if (avg <= 0) {
       ratingBar.setText(R.string.appcardview_title_no_stars);
     } else {
@@ -68,15 +71,16 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void setDownloadCount() {
-    String downloadNumber =
-        String.format("%s %s", AptoideUtils.StringU.withSuffix(searchApp.getTotalDownloads()),
-            bottomView.getContext()
-                .getString(R.string.downloads));
+    String downloadNumber = String.format("%s %s", AptoideUtils.StringU.withSuffix(
+        searchApp.getSearchAppResult()
+            .getTotalDownloads()), bottomView.getContext()
+        .getString(R.string.downloads));
     downloadsTextView.setText(downloadNumber);
   }
 
   private void setAppName() {
-    nameTextView.setText(searchApp.getAppName());
+    nameTextView.setText(searchApp.getSearchAppResult()
+        .getAppName());
   }
 
   private void bindViews(View itemView) {

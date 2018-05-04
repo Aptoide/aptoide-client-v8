@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.view.item.SearchLoadingViewHolder;
 import cm.aptoide.pt.search.view.item.SearchResultAdViewHolder;
 import cm.aptoide.pt.search.view.item.SearchResultItemView;
@@ -17,16 +19,16 @@ import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemView> {
 
-  private final PublishRelay<SearchAdResult> onAdClickRelay;
-  private final PublishRelay<SearchAppResult> onItemViewClick;
+  private final PublishRelay<SearchAdResultWrapper> onAdClickRelay;
+  private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
   private final List<SearchAdResult> searchAdResults;
   private final List<SearchAppResult> searchResults;
   private boolean adsLoaded = false;
   private boolean isLoadingMore = false;
   private CrashReport crashReport;
 
-  public SearchResultAdapter(PublishRelay<SearchAdResult> onAdClickRelay,
-      PublishRelay<SearchAppResult> onItemViewClick, List<SearchAppResult> searchResults,
+  public SearchResultAdapter(PublishRelay<SearchAdResultWrapper> onAdClickRelay,
+      PublishRelay<SearchAppResultWrapper> onItemViewClick, List<SearchAppResult> searchResults,
       List<SearchAdResult> searchAdResults, CrashReport crashReport) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
@@ -58,7 +60,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   @SuppressWarnings("unchecked") @Override
   public void onBindViewHolder(SearchResultItemView holder, int position) {
     try {
-      holder.setup(getItem(position));
+      if (getItem(position) instanceof SearchAppResult) {
+        holder.setup(new SearchAppResultWrapper((SearchAppResult) getItem(position), position));
+      } else if (getItem(position) instanceof SearchAdResult) {
+        holder.setup(new SearchAdResultWrapper((SearchAdResult) getItem(position), position));
+      }
     } catch (ClassCastException e) {
       crashReport.log(e);
     }

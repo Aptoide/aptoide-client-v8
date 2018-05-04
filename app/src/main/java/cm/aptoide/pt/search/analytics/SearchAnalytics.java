@@ -46,19 +46,21 @@ public class SearchAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
-  public void searchAppClick(String query, String packageName) {
+  public void searchAppClick(String query, String packageName, int position) {
     Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
     map.put(AttributeKey.PACKAGE_NAME, packageName);
     map.put(AttributeKey.IS_AD, false);
+    map.put(AttributeKey.POSITION, position);
     analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  public void searchAdClick(String query, String packageName) {
+  public void searchAdClick(String query, String packageName, int position) {
     Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
     map.put(AttributeKey.PACKAGE_NAME, packageName);
     map.put(AttributeKey.IS_AD, true);
+    map.put(AttributeKey.POSITION, position);
     analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 

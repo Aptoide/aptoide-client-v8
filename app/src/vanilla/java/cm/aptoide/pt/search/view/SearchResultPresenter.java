@@ -14,6 +14,7 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
@@ -238,8 +239,9 @@ import rx.exceptions.OnErrorNotImplementedException;
         .flatMap(__ -> view.onAdClicked())
         .doOnNext(data -> {
           analytics.searchAdClick(view.getViewModel()
-              .getCurrentQuery(), data.getPackageName());
-          navigator.goToAppView(data);
+              .getCurrentQuery(), data.getSearchAdResult()
+              .getPackageName(), data.getPosition());
+          navigator.goToAppView(data.getSearchAdResult());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -259,12 +261,15 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void openAppView(SearchAppResult searchApp) {
-    final String packageName = searchApp.getPackageName();
-    final long appId = searchApp.getAppId();
-    final String storeName = searchApp.getStoreName();
+  private void openAppView(SearchAppResultWrapper searchApp) {
+    final String packageName = searchApp.getSearchAppResult()
+        .getPackageName();
+    final long appId = searchApp.getSearchAppResult()
+        .getAppId();
+    final String storeName = searchApp.getSearchAppResult()
+        .getStoreName();
     analytics.searchAppClick(view.getViewModel()
-        .getCurrentQuery(), packageName);
+        .getCurrentQuery(), packageName, searchApp.getPosition());
     navigator.goToAppView(appId, packageName, defaultThemeName, storeName);
   }
 
