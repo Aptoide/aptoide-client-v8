@@ -13,7 +13,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 
-public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResultWrapper> {
+public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResult> {
 
   public static final int LAYOUT = R.layout.search_ad;
   private final PublishRelay<SearchAdResultWrapper> onItemViewClickRelay;
@@ -22,7 +22,8 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
   private ImageView icon;
   private TextView downloadsTextView;
   private TextView ratingBar;
-  private SearchAdResultWrapper adResult;
+  private SearchAdResult adResult;
+  private int position;
 
   public SearchResultAdViewHolder(View itemView,
       PublishRelay<SearchAdResultWrapper> onItemViewClickRelay) {
@@ -38,17 +39,18 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
     ratingBar = (TextView) itemView.findViewById(R.id.rating);
     RxView.clicks(itemView)
         .map(__ -> adResult)
-        .subscribe(data -> onItemViewClickRelay.call(data));
+        .subscribe(data -> onItemViewClickRelay.call(new SearchAdResultWrapper(data, position)));
   }
 
-  @Override public void setup(SearchAdResultWrapper searchAd) {
+  @Override public void setup(SearchAdResult searchAd, int position) {
     final Context context = itemView.getContext();
     final Resources resources = itemView.getResources();
     this.adResult = searchAd;
-    setName(searchAd.getSearchAdResult());
-    setIcon(searchAd.getSearchAdResult(), context);
-    setDownloadsCount(searchAd.getSearchAdResult(), resources);
-    setRatingStars(searchAd.getSearchAdResult());
+    this.position = position;
+    setName(searchAd);
+    setIcon(searchAd, context);
+    setDownloadsCount(searchAd, resources);
+    setRatingStars(searchAd);
   }
 
   private void setIcon(SearchAdResult searchAd, Context context) {

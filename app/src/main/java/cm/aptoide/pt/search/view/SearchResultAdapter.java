@@ -61,9 +61,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   public void onBindViewHolder(SearchResultItemView holder, int position) {
     try {
       if (getItem(position) instanceof SearchAppResult) {
-        holder.setup(new SearchAppResultWrapper((SearchAppResult) getItem(position), position));
+        holder.setup(getItem(position), position);
       } else if (getItem(position) instanceof SearchAdResult) {
-        holder.setup(new SearchAdResultWrapper((SearchAdResult) getItem(position), position));
+        holder.setup(getItem(position), position);
       }
     } catch (ClassCastException e) {
       crashReport.log(e);
