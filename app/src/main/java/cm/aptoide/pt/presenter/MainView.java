@@ -23,4 +23,8 @@ public interface MainView extends View {
   Observable<Void> getInstallErrorsDismiss();
 
   Intent getIntentAfterCreate();
+
+  void setUpdatesNumber(Integer updates);
+
+  void hideUpdatesBadge();
 }
