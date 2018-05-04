@@ -36,14 +36,14 @@ import static org.mockito.Mockito.when;
 public class NewAccountPresenterTest {
 
   private static final int EDIT_STORE_REQUEST_CODE = 1230;
-  @Mock Account account;
-  @Mock GetStore getStore;
-  @Mock Store store;
-  @Mock cm.aptoide.accountmanager.Store amStore;
-  @Mock StoreUserAbstraction.Nodes nodes;
-  @Mock GetStoreMeta getMeta;
-  @Mock SharedPreferences.Editor editor;
-  @Mock cm.aptoide.accountmanager.Store accountManagerStore;
+  @Mock private Account account;
+  @Mock private GetStore getStore;
+  @Mock private Store store;
+  @Mock private cm.aptoide.accountmanager.Store amStore;
+  @Mock private StoreUserAbstraction.Nodes nodes;
+  @Mock private GetStoreMeta getMeta;
+  @Mock private SharedPreferences.Editor editor;
+  @Mock private cm.aptoide.accountmanager.Store accountManagerStore;
   @Mock private NewAccountFragment view;
   @Mock private AptoideAccountManager accountManager;
   @Mock private CrashReport crashReport;
@@ -64,19 +64,23 @@ public class NewAccountPresenterTest {
   }
 
   @Test public void populateAccountViewsTest() {
+    //Given an initialized MyAccountPresenter
+    //And a user Account,
+    //When an account is requested
+    when(accountManager.accountStatus()).thenReturn(Observable.just(account));
 
     newAccountPresenter.populateAccountViews();
-    when(accountManager.accountStatus()).thenReturn(Observable.just(account));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then the account information is shown in the UI
     verify(view).showAccount(account);
   }
 
   @Test public void checkIfStoreIsInvalidAndRefreshTest() {
-
-    newAccountPresenter.checkIfStoreIsInvalidAndRefresh();
-
+    //Given an initialized MyAccountPresenter
+    //And a user Account with Store
+    //When the store is not in AccountManager (getId == 0),
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
     when(account.getStore()).thenReturn(amStore);
     when(amStore.getId()).thenReturn(0L);
@@ -86,22 +90,32 @@ public class NewAccountPresenterTest {
     when(nodes.getMeta()).thenReturn(getMeta);
     when(getMeta.getData()).thenReturn(store);
 
+    newAccountPresenter.checkIfStoreIsInvalidAndRefresh();
+
+
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then it should update the view
     verify(view).refreshUI(store);
+    //Then it should update the accountManager
     verify(accountManager).updateAccount();
   }
 
   @Test public void handleLoginClickTest() {
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the login button
     when(view.loginClick()).thenReturn(Observable.just(null));
 
     newAccountPresenter.handleLoginClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then it should navigate the user to the login view
     verify(navigator).navigateToLoginView(AccountAnalytics.AccountOrigins.MY_ACCOUNT);
   }
 
   @Test public void handleLogoutClickTest() {
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the logout button
     when(view.signOutClick()).thenReturn(Observable.just(null));
     when(accountManager.logout()).thenReturn(Completable.complete());
     when(sharedPreferences.edit()).thenReturn(editor);
@@ -110,32 +124,43 @@ public class NewAccountPresenterTest {
     newAccountPresenter.handleLogOutClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then address book related shared preferences should be set to false (reset)
     verify(sharedPreferences).edit();
     verify(editor, times(3)).putBoolean(anyString(), eq(false));
     verify(editor).apply();
+    //Then show the login displayables
     verify(view).showLoginAccountDisplayable();
   }
 
   @Test public void handleCreateStoreClick() {
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the create store button
     when(view.createStoreClick()).thenReturn(Observable.just(null));
 
     newAccountPresenter.handleCreateStoreClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then the user should navigate to the create store view
     verify(navigator).navigateToCreateStore();
   }
 
   @Test public void handleFindFriendsClickTest() {
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the find friends button
     when(view.findFriendsClick()).thenReturn(Observable.just(null));
 
     newAccountPresenter.handleFindFriendsClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     verify(analytics).sendFollowFriendsClickEvent();
+    //Then the user should navigate to the find friends view
     verify(navigator).navigateToFindFriends();
   }
 
   @Test public void handleStoreEditClickTest() {
+    //Given an initialized MyAccountPresenter
+    //And a user Account with a store created
+    //When the user clicks the "Edit" Button from the store
     when(view.editStoreClick()).thenReturn(Observable.just(null));
     when(view.getStore()).thenReturn(Observable.just(getStore));
     when(getStore.getNodes()).thenReturn(nodes);
@@ -145,10 +170,14 @@ public class NewAccountPresenterTest {
     newAccountPresenter.handleStoreEditClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then the user should navigate to the edit store view
     verify(navigator).navigateToEditStoreView(store, EDIT_STORE_REQUEST_CODE);
   }
 
   @Test public void handleStoreEditResultTest() {
+    //Given an initialized MyAccountPresenter
+    //And an user account
+    //When the user navigates back from the edit store screen
     when(navigator.editStoreResult(EDIT_STORE_REQUEST_CODE)).thenReturn(Observable.just(null));
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
 
@@ -158,66 +187,82 @@ public class NewAccountPresenterTest {
     InOrder order = Mockito.inOrder(navigator, view);
     order.verify(navigator)
         .editStoreResult(EDIT_STORE_REQUEST_CODE);
+
+    //Then the account information is shown in the UI
     order.verify(view)
         .showAccount(account);
   }
 
   @Test public void handleStoreDisplayableClickTest() {
-    newAccountPresenter.handleStoreDisplayableClick();
-
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the the store view
     when(view.storeClick()).thenReturn(Observable.just(null));
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
     when(account.getStore()).thenReturn(accountManagerStore);
     when(accountManagerStore.getName()).thenReturn("name");
     when(accountManagerStore.getTheme()).thenReturn("theme");
 
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    newAccountPresenter.handleStoreDisplayableClick();
 
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //Then the user should navigate to his store view
     verify(navigator).navigateToStoreView("name", "theme");
   }
 
   @Test public void handleProfileEditClickTest() {
-    newAccountPresenter.handleProfileEditClick();
-
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the edit profile button
     when(view.editUserProfileClick()).thenReturn(Observable.just(null));
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
 
+    newAccountPresenter.handleProfileEditClick();
+
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then the user should navigate to his edit profile view
     verify(navigator).navigateToEditProfileView();
   }
 
   @Test public void handleProfileDisplayableClickTest() {
-    newAccountPresenter.handleProfileDisplayableClick();
-
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the profile view
     when(view.userClick()).thenReturn(Observable.just(null));
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
     when(account.getId()).thenReturn("id");
     when(account.getStore()).thenReturn(accountManagerStore);
     when(accountManagerStore.getTheme()).thenReturn("theme");
 
+    newAccountPresenter.handleProfileDisplayableClick();
+
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then the user should navigate to his profile view
     verify(navigator).navigateToUserView("id", "theme");
   }
 
   @Test public void handleSettingsClickedTest() {
-    newAccountPresenter.handleSettingsClicked();
-
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the settings button
     when(view.settingsClicked()).thenReturn(Observable.just(null));
+
+    newAccountPresenter.handleSettingsClicked();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then the user should navigate to the settings view
     verify(navigator).navigateToSettings();
   }
 
   @Test public void handleNotificationHistoryClickedTest() {
-    newAccountPresenter.handleNotificationHistoryClicked();
-
+    //Given an initialized MyAccountPresenter
+    //When a user clicks the notifications button
     when(view.notificationsClicked()).thenReturn(Observable.just(null));
+
+    newAccountPresenter.handleNotificationHistoryClicked();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //Then the user should navigate to the notification center view
     verify(navigator).navigateToNotificationHistory();
   }
 }
