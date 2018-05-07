@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/description"
+      android:textColor="@color/black"
+      android:textSize="16sp"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:ellipsize="end"
+      android:maxLines="3"
+      android:textSize="12sp"
+      tools:text="As a data-driven company, we rely heavily on experiments to guide products and features. At any given time, we have around 1,000 experiments running, and we’re adding more every day. Because we’re constantly increasing the number of experiments and logging corresponding data, we need a reliable, simple to use platform engineers can use without error"
+      />
+
+  <Button
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="@string/read_more"
+      style="@style/Aptoide.Button.Ghost.GreyFogLight"
+      />
+
+</LinearLayout>
