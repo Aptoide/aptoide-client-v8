@@ -36,7 +36,9 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -97,8 +99,8 @@ public class SearchResultFragment extends BackButtonFragment
   private SearchSuggestionsAdapter searchSuggestionsAdapter;
   private SearchSuggestionsAdapter searchTrendingAdapter;
   private Toolbar toolbar;
-  private PublishRelay<SearchAppResult> onItemViewClickRelay;
-  private PublishRelay<SearchAdResult> onAdClickRelay;
+  private PublishRelay<SearchAppResultWrapper> onItemViewClickRelay;
+  private PublishRelay<SearchAdResultWrapper> onAdClickRelay;
   private PublishSubject<SearchQueryEvent> suggestionClickedPublishSubject;
   private PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
   private float listItemPadding;
@@ -392,11 +394,11 @@ public class SearchResultFragment extends BackButtonFragment
         .filter(item -> item.getItemId() == searchMenuItem.getItemId());
   }
 
-  @Override public Observable<SearchAdResult> onAdClicked() {
+  @Override public Observable<SearchAdResultWrapper> onAdClicked() {
     return onAdClickRelay;
   }
 
-  @Override public Observable<SearchAppResult> onViewItemClicked() {
+  @Override public Observable<SearchAppResultWrapper> onViewItemClicked() {
     return onItemViewClickRelay;
   }
 
