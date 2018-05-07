@@ -87,6 +87,8 @@ public class NewAccountFragment extends BackButtonFragment
   private View notificationHistory;
   private View settings;
 
+  private final String WHAT_IS_APTOIDETV_URL = "https://blog.aptoide.com/what-is-aptoidetv/";
+
   public static Fragment newInstance() {
     return new NewAccountFragment();
   }
@@ -191,7 +193,7 @@ public class NewAccountFragment extends BackButtonFragment
 
   @Override public void startAptoideTvWebView()
   {
-    CustomTabsHelper.getInstance().openInChromeCustomTab("https://blog.aptoide.com/what-is-aptoidetv/", getContext());
+    CustomTabsHelper.getInstance().openInChromeCustomTab(WHAT_IS_APTOIDETV_URL, getContext());
   }
 
   @Override public Observable<Void> aptoideTvCardViewClick()

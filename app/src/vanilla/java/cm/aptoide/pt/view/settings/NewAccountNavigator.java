@@ -22,6 +22,9 @@ public class NewAccountNavigator {
   private final MyAccountNavigator accountNavigator;
   private final AccountNavigator navigator;
 
+  private final String UPLOADER_UNAME = "aptoide-uploader";
+  private final String BACKUP_APPS_UNAME = "aptoide-backup-apps";
+
   public NewAccountNavigator(FragmentNavigator fragmentNavigator,
       MyAccountNavigator accountNavigator, AccountNavigator navigator) {
     this.fragmentNavigator = fragmentNavigator;
@@ -31,6 +34,14 @@ public class NewAccountNavigator {
 
   public void navigateToAppView(String uname) {
     fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(uname), true);
+  }
+
+  public void navigateToUploader() {
+    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(UPLOADER_UNAME), true);
+  }
+
+  public void navigateToBackupApps() {
+    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(BACKUP_APPS_UNAME), true);
   }
 
   public void navigateToEditStoreView(Store store, int requestCode) {

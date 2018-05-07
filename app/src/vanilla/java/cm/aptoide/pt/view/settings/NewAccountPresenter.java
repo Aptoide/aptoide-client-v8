@@ -250,7 +250,7 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideUploaderCardViewClick())
-        .doOnNext(__ -> newAccountNavigator.navigateToAppView("aptoide-uploader"))
+        .doOnNext(__ -> newAccountNavigator.navigateToUploader())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
           }, throwable -> crashReport.log(throwable));
@@ -261,7 +261,7 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideBackupCardViewClick())
-        .doOnNext(__ -> newAccountNavigator.navigateToAppView("aptoide-backup-apps"))
+        .doOnNext(__ -> newAccountNavigator.navigateToBackupApps())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
