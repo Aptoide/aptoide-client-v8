@@ -127,16 +127,16 @@ public class NewAccountFragment extends BackButtonFragment
   private void setupProductCardViews(View view)
   {
     //Aptoide TV
-    ((TextView)aptoideTvCardView.findViewById(R.id.product_title_textview)).setText("Aptoide Tv");
-    ((TextView)aptoideTvCardView.findViewById(R.id.product_subtitle_textview)).setText("The best solution for your Set Top Box and Smart TV");
+    ((TextView)aptoideTvCardView.findViewById(R.id.product_title_textview)).setText(getString(R.string.product_card_aptoide_tv_title));
+    ((TextView)aptoideTvCardView.findViewById(R.id.product_subtitle_textview)).setText(getString(R.string.product_card_aptoide_tv_subtitle));
 
     //Aptoide Uploader
-    ((TextView)aptoideUploaderCardView.findViewById(R.id.product_title_textview)).setText("Aptoide Uploader");
-    ((TextView)aptoideUploaderCardView.findViewById(R.id.product_subtitle_textview)).setText("Perfect tool to get your favorite apps in your Aptoide Store");
+    ((TextView)aptoideUploaderCardView.findViewById(R.id.product_title_textview)).setText(getString(R.string.product_card_aptoide_uploader_title));
+    ((TextView)aptoideUploaderCardView.findViewById(R.id.product_subtitle_textview)).setText(getString(R.string.product_card_aptoide_uploader_subtitle));
 
     //Aptoide Backup
-    ((TextView)aptoideBackupAppsCardView.findViewById(R.id.product_title_textview)).setText("Aptoide Backup Apps");
-    ((TextView)aptoideBackupAppsCardView.findViewById(R.id.product_subtitle_textview)).setText("Easily backup your apps into your Aptoide store");
+    ((TextView)aptoideBackupAppsCardView.findViewById(R.id.product_title_textview)).setText(getString(R.string.product_card_aptoide_backup_apps_title));
+    ((TextView)aptoideBackupAppsCardView.findViewById(R.id.product_subtitle_textview)).setText(getString(R.string.product_card_aptoide_backup_apps_subtitle));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
