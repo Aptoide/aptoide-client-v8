@@ -69,6 +69,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -96,6 +97,7 @@ import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
+import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -151,6 +153,7 @@ import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -743,6 +746,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new StoreAccessor(database);
   }
 
+  @Singleton @Provides UpdateAccessor providesUpdateAccessor(Database database) {
+    return new UpdateAccessor(database);
+  }
+
   @Singleton @Provides SecureCoderDecoder provideSecureCoderDecoder(
       @Named("default") SharedPreferences sharedPreferences) {
     return new SecureCoderDecoder.Builder(application, sharedPreferences).create();
@@ -1130,5 +1137,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName) {
     return new BundlesResponseMapper(marketName, application.getInstallManager());
+  }
+
+  @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
+    return new UpdatesManager(updateRepository);
+  }
+
+  @Singleton @Provides UpdateRepository providesUpdateRepository(UpdateAccessor updateAccessor,
+      StoreAccessor storeAccessor, IdsRepository idsRepository, @Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new UpdateRepository(updateAccessor, storeAccessor, idsRepository, bodyInterceptorPoolV7,
+        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        application.getPackageManager());
   }
 }

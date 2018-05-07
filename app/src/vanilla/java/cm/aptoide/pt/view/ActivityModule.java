@@ -31,6 +31,7 @@ import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
+import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
@@ -151,7 +152,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager,
-      BottomNavigationNavigator bottomNavigationNavigator) {
+      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager) {
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     InstallManager installManager = application.getInstallManager();
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
@@ -160,7 +161,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
-        AndroidSchedulers.mainThread(), bottomNavigationNavigator);
+        AndroidSchedulers.mainThread(), bottomNavigationNavigator, updatesManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(

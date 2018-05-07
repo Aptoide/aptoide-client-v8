@@ -8,6 +8,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -15,16 +16,17 @@ import com.jakewharton.rxrelay.PublishRelay;
 public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResult> {
 
   public static final int LAYOUT = R.layout.search_ad;
-  private final PublishRelay<SearchAdResult> onItemViewClickRelay;
+  private final PublishRelay<SearchAdResultWrapper> onItemViewClickRelay;
 
   private TextView name;
   private ImageView icon;
   private TextView downloadsTextView;
   private TextView ratingBar;
   private SearchAdResult adResult;
+  private int position;
 
   public SearchResultAdViewHolder(View itemView,
-      PublishRelay<SearchAdResult> onItemViewClickRelay) {
+      PublishRelay<SearchAdResultWrapper> onItemViewClickRelay) {
     super(itemView);
     this.onItemViewClickRelay = onItemViewClickRelay;
     bind(itemView);
@@ -37,13 +39,14 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
     ratingBar = (TextView) itemView.findViewById(R.id.rating);
     RxView.clicks(itemView)
         .map(__ -> adResult)
-        .subscribe(data -> onItemViewClickRelay.call(data));
+        .subscribe(data -> onItemViewClickRelay.call(new SearchAdResultWrapper(data, position)));
   }
 
-  @Override public void setup(SearchAdResult searchAd) {
+  @Override public void setup(SearchAdResult searchAd, int position) {
     final Context context = itemView.getContext();
     final Resources resources = itemView.getResources();
     this.adResult = searchAd;
+    this.position = position;
     setName(searchAd);
     setIcon(searchAd, context);
     setDownloadsCount(searchAd, resources);
