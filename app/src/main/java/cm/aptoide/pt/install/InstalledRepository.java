@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install;
 
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.realm.Installation;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
@@ -76,6 +77,10 @@ public class InstalledRepository {
 
   public Observable<Installed> get(String packageName, int versionCode) {
     return accessor.get(packageName, versionCode);
+  }
+
+  public Observable<List<Installation>> getInstallationsHistory() {
+    return accessor.getInstallationsHistory();
   }
 
   public Observable<List<Installed>> getInstalled(String[] packageNames) {

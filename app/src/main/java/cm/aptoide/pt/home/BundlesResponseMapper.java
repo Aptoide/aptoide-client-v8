@@ -2,14 +2,17 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
 import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
@@ -23,13 +26,14 @@ import java.util.List;
 public class BundlesResponseMapper {
 
   private final String marketName;
+  private final InstallManager installManager;
 
-  public BundlesResponseMapper(String marketName) {
+  public BundlesResponseMapper(String marketName, InstallManager installManager) {
     this.marketName = marketName;
+    this.installManager = installManager;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
-
     List<HomeBundle> appBundles = new ArrayList<>();
 
     for (GetStoreWidgets.WSWidget widget : widgetBundles) {
@@ -44,10 +48,17 @@ public class BundlesResponseMapper {
         Object viewObject = widget.getViewObject();
         String title = widget.getTitle();
         if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
-
           appBundles.add(new AppBundle(title, applicationsToApps(
               ((ListApps) viewObject).getDataList()
                   .getList(), type, widgetTag), type, event, widgetTag));
+        } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
+          List<Application> applicationList = appToRewardApp(
+              ((BaseV7EndlessDataListResponse<AppCoinsRewardApp>) viewObject).getDataList()
+                  .getList(), widgetTag);
+          if (!applicationList.isEmpty()) {
+            appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
+                new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
+          }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
@@ -80,6 +91,22 @@ public class BundlesResponseMapper {
     return appBundles;
   }
 
+  private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag) {
+    List<Application> rewardAppsList = new ArrayList<>();
+    for (AppCoinsRewardApp appCoinsRewardApp : appsList) {
+      if (!installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {
+        rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
+            appCoinsRewardApp.getStats()
+                .getRating()
+                .getAvg(), appCoinsRewardApp.getStats()
+            .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), tag,
+            appCoinsRewardApp.getAppcoins()
+                .getReward()));
+      }
+    }
+    return rewardAppsList;
+  }
+
   private Event getEvent(GetStoreWidgets.WSWidget widget) {
     return widget.getActions()
         .size() > 0 ? widget.getActions()
@@ -102,6 +129,8 @@ public class BundlesResponseMapper {
         } else {
           return HomeBundle.BundleType.APPS;
         }
+      case APPCOINS_ADS:
+        return HomeBundle.BundleType.APPCOINS_ADS;
       case ADS:
         return HomeBundle.BundleType.ADS;
       case TIMELINE_CARD:

@@ -10,6 +10,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
+import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -47,6 +48,7 @@ public class MainPresenter implements Presenter {
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final Scheduler viewScheduler;
   private final BottomNavigationNavigator bottomNavigationNavigator;
+  private final UpdatesManager updatesManager;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -56,7 +58,7 @@ public class MainPresenter implements Presenter {
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, boolean firstCreated,
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler,
-      BottomNavigationNavigator bottomNavigationNavigator) {
+      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -74,6 +76,7 @@ public class MainPresenter implements Presenter {
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.viewScheduler = viewScheduler;
     this.bottomNavigationNavigator = bottomNavigationNavigator;
+    this.updatesManager = updatesManager;
   }
 
   @Override public void present() {
@@ -102,6 +105,26 @@ public class MainPresenter implements Presenter {
 
     setupInstallErrorsDisplay();
     shortcutManagement();
+    setupUpdatesNumber();
+  }
+
+  private void setupUpdatesNumber() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> updatesManager.getUpdatesNumber())
+        .observeOn(viewScheduler)
+        .doOnNext(updates -> {
+          if (updates > 0) {
+            view.showUpdatesNumber(updates);
+          } else {
+            view.hideUpdatesBadge();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private void setupInstallErrorsDisplay() {

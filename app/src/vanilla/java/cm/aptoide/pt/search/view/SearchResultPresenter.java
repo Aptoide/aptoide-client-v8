@@ -1,7 +1,7 @@
 package cm.aptoide.pt.search.view;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.R;
+import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationItem;
@@ -14,6 +14,7 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
@@ -35,9 +36,7 @@ import rx.exceptions.OnErrorNotImplementedException;
   private final CrashReport crashReport;
   private final Scheduler viewScheduler;
   private final SearchManager searchManager;
-  private final String defaultStoreName;
   private final String defaultThemeName;
-  private final boolean isMultiStoreSearch;
   private final TrendingManager trendingManager;
   private final SearchSuggestionManager suggestionManager;
   private final AptoideBottomNavigator bottomNavigator;
@@ -45,8 +44,7 @@ import rx.exceptions.OnErrorNotImplementedException;
 
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
-      SearchManager searchManager, boolean isMultiStoreSearch, String defaultStoreName,
-      String defaultThemeName, TrendingManager trendingManager,
+      SearchManager searchManager, String defaultThemeName, TrendingManager trendingManager,
       SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator,
       BottomNavigationMapper bottomNavigationMapper) {
     this.view = view;
@@ -55,8 +53,6 @@ import rx.exceptions.OnErrorNotImplementedException;
     this.crashReport = crashReport;
     this.viewScheduler = viewScheduler;
     this.searchManager = searchManager;
-    this.isMultiStoreSearch = isMultiStoreSearch;
-    this.defaultStoreName = defaultStoreName;
     this.defaultThemeName = defaultThemeName;
     this.trendingManager = trendingManager;
     this.suggestionManager = suggestionManager;
@@ -78,7 +74,6 @@ import rx.exceptions.OnErrorNotImplementedException;
     handleClickEverywhereSearchButton();
     handleClickToOpenAppViewFromItem();
     handleClickToOpenAppViewFromAdd();
-    handleClickToOpenPopupMenu();
     handleClickOnNoResultsImage();
     handleAllStoresListReachedBottom();
     handleFollowedStoresListReachedBottom();
@@ -90,7 +85,7 @@ import rx.exceptions.OnErrorNotImplementedException;
     listenToSearchQueries();
   }
 
-  private void handleFragmentRestorationVisibility() {
+  @VisibleForTesting public void handleFragmentRestorationVisibility() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
@@ -101,7 +96,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void getTrendingOnStart() {
+  @VisibleForTesting public void getTrendingOnStart() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
@@ -114,7 +109,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void focusInSearchBar() {
+  @VisibleForTesting public void focusInSearchBar() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
@@ -127,7 +122,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void stopLoadingMoreOnDestroy() {
+  @VisibleForTesting public void stopLoadingMoreOnDestroy() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.DESTROY))
         .first()
@@ -136,7 +131,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         .subscribe(__ -> view.hideLoadingMore(), e -> crashReport.log(e));
   }
 
-  private void handleAllStoresListReachedBottom() {
+  @VisibleForTesting public void handleAllStoresListReachedBottom() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -167,7 +162,7 @@ import rx.exceptions.OnErrorNotImplementedException;
     return data != null ? data.size() : 0;
   }
 
-  private void handleFollowedStoresListReachedBottom() {
+  @VisibleForTesting public void handleFollowedStoresListReachedBottom() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -194,7 +189,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void firstAdsDataLoad() {
+  @VisibleForTesting public void firstAdsDataLoad() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
@@ -221,12 +216,12 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private boolean hasValidQuery(SearchResultView.Model viewModel) {
+  @VisibleForTesting public boolean hasValidQuery(SearchResultView.Model viewModel) {
     return viewModel.getCurrentQuery() != null && !viewModel.getCurrentQuery()
         .isEmpty();
   }
 
-  private void handleClickToOpenAppViewFromItem() {
+  @VisibleForTesting public void handleClickToOpenAppViewFromItem() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -237,53 +232,23 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void handleClickToOpenAppViewFromAdd() {
+  @VisibleForTesting public void handleClickToOpenAppViewFromAdd() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onAdClicked())
         .doOnNext(data -> {
-          analytics.searchAppClick(view.getViewModel()
-              .getCurrentQuery(), data.getPackageName());
-          navigator.goToAppView(data);
+          analytics.searchAdClick(view.getViewModel()
+              .getCurrentQuery(), data.getSearchAdResult()
+              .getPackageName(), data.getPosition());
+          navigator.goToAppView(data.getSearchAdResult());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
 
-  private void handleClickToOpenPopupMenu() {
-    view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.onOpenPopUpMenuClicked())
-        .flatMap(pair -> {
-          final SearchAppResult data = pair.first;
-          final boolean hasVersions = data.hasOtherVersions();
-          final String appName = data.getAppName();
-          final String appIcon = data.getIcon();
-          final String packageName = data.getPackageName();
-          final String storeName = data.getStoreName();
-
-          return view.showPopup(hasVersions, pair.second)
-              .doOnNext(optionId -> {
-                if (optionId == R.id.versions) {
-                  if (isMultiStoreSearch) {
-                    navigator.goToOtherVersions(appName, appIcon, packageName);
-                  } else {
-                    navigator.goToOtherVersions(appName, appIcon, packageName, defaultStoreName);
-                  }
-                } else if (optionId == R.id.go_to_store) {
-                  navigator.goToStoreFragment(storeName, defaultThemeName);
-                }
-              });
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  private void handleClickOnNoResultsImage() {
+  @VisibleForTesting public void handleClickOnNoResultsImage() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -296,16 +261,19 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void openAppView(SearchAppResult searchApp) {
-    final String packageName = searchApp.getPackageName();
-    final long appId = searchApp.getAppId();
-    final String storeName = searchApp.getStoreName();
+  private void openAppView(SearchAppResultWrapper searchApp) {
+    final String packageName = searchApp.getSearchAppResult()
+        .getPackageName();
+    final long appId = searchApp.getSearchAppResult()
+        .getAppId();
+    final String storeName = searchApp.getSearchAppResult()
+        .getStoreName();
     analytics.searchAppClick(view.getViewModel()
-        .getCurrentQuery(), packageName);
+        .getCurrentQuery(), packageName, searchApp.getPosition());
     navigator.goToAppView(appId, packageName, defaultThemeName, storeName);
   }
 
-  private void handleClickFollowedStoresSearchButton() {
+  @VisibleForTesting public void handleClickFollowedStoresSearchButton() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -316,7 +284,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void handleClickEverywhereSearchButton() {
+  @VisibleForTesting public void handleClickEverywhereSearchButton() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -391,7 +359,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         });
   }
 
-  private void doFirstSearch() {
+  @VisibleForTesting public void doFirstSearch() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
@@ -404,7 +372,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         .flatMapSingle(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
             viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
           crashReport.log(err);
-          return Single.just(Integer.valueOf(0));
+          return Single.just(0);
         })
             .observeOn(viewScheduler)
             .doOnSuccess(__2 -> view.hideLoading())
@@ -426,7 +394,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void handleQueryTextCleaned() {
+  @VisibleForTesting public void handleQueryTextCleaned() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges().filter(
@@ -441,15 +409,14 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void handleQueryTextChanged() {
+  @VisibleForTesting public void handleQueryTextChanged() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
         .first()
         .flatMap(__ -> getDebouncedQueryChanges())
         .filter(data -> data.hasQuery() && !data.isSubmitted())
-        .map(data -> data.getQuery()
-            .toString())
+        .map(data -> data.getQuery())
         .doOnNext(query -> view.setUnsubmittedQuery(query))
         .flatMapSingle(query -> suggestionManager.getSuggestionsForApp(query)
             .onErrorResumeNext(err -> {
@@ -468,7 +435,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void handleQueryTextSubmitted() {
+  @VisibleForTesting public void handleQueryTextSubmitted() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
@@ -491,7 +458,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void handleSuggestionClicked() {
+  @VisibleForTesting public void handleSuggestionClicked() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.listenToSuggestionClick())
@@ -507,7 +474,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
-  private void handleToolbarClick() {
+  @VisibleForTesting public void handleToolbarClick() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.toolbarClick())
@@ -522,7 +489,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, err -> crashReport.log(err));
   }
 
-  private void handleSearchMenuItemClick() {
+  @VisibleForTesting public void handleSearchMenuItemClick() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.RESUME)
         .flatMap(__ -> view.searchMenuItemClick())
@@ -535,7 +502,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, err -> crashReport.log(err));
   }
 
-  private void handleClickOnBottomNavWithResults() {
+  @VisibleForTesting public void handleClickOnBottomNavWithResults() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> bottomNavigator.navigationEvent()
@@ -552,7 +519,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         });
   }
 
-  private void handleClickOnBottomNavWithoutResults() {
+  @VisibleForTesting public void handleClickOnBottomNavWithoutResults() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> bottomNavigator.navigationEvent()
@@ -569,7 +536,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         });
   }
 
-  private void listenToSearchQueries() {
+  @VisibleForTesting public void listenToSearchQueries() {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.RESUME)
         .flatMap(__ -> view.searchSetup())

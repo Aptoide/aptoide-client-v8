@@ -8,8 +8,12 @@ package cm.aptoide.pt.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.Snackbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.BottomNavigationActivity;
@@ -30,6 +34,8 @@ public class MainActivity extends BottomNavigationActivity
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
   private Snackbar snackbar;
+  private View updatesBadge;
+  private TextView updatesNumber;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -38,7 +44,22 @@ public class MainActivity extends BottomNavigationActivity
     installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
+
+    setupUpdatesNotification();
+
     attachPresenter(presenter);
+  }
+
+  private void setupUpdatesNotification() {
+    BottomNavigationMenuView appsView =
+        (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+    BottomNavigationItemView itemView = (BottomNavigationItemView) appsView.getChildAt(3);
+
+    updatesBadge = LayoutInflater.from(this)
+        .inflate(R.layout.updates_badge, appsView, false);
+
+    updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
+    itemView.addView(updatesBadge);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {
@@ -83,6 +104,15 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override public Intent getIntentAfterCreate() {
     return getIntent();
+  }
+
+  @Override public void showUpdatesNumber(Integer updates) {
+    updatesBadge.setVisibility(View.VISIBLE);
+    updatesNumber.setText(String.valueOf(updates));
+  }
+
+  @Override public void hideUpdatesBadge() {
+    updatesBadge.setVisibility(View.GONE);
   }
 
   @Override public void showStoreAlreadyAdded() {

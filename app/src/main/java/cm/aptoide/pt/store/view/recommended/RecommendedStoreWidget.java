@@ -13,7 +13,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -60,8 +59,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
         .getApps()));
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
-        .loadWithShadowCircleTransform(store.getAvatar(), storeIcon, StoreTheme.get(store)
-            .getStoreHeaderColorResource(context.getResources(), context.getTheme()));
+        .loadUsingCircleTransform(store.getAvatar(), storeIcon);
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)
@@ -96,7 +94,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
                 if (isSubscribed) {
                   displayable.unsubscribeStore(getContext().getApplicationContext());
                 } else {
-                  displayable.subscribeStore(getContext());
+                  displayable.subscribeStore();
                 }
                 return !isSubscribed;
               });

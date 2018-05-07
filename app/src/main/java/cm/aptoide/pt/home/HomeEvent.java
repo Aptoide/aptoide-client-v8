@@ -28,6 +28,6 @@ public class HomeEvent {
   }
 
   public enum Type {
-    MORE, APP, AD, SOCIAL_CLICK, SCROLL_RIGHT, SOCIAL_INSTALL
+    MORE, APP, AD, SOCIAL_CLICK, SCROLL_RIGHT, REWARD_APP, SOCIAL_INSTALL
   }
 }

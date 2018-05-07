@@ -45,11 +45,8 @@ public class PullSocialNotificationRequest
     options.put("aptoide_version", versionName);
 
     if (isLoggedIn) {
-      pretendedNotificationTypes.add(1);
-      pretendedNotificationTypes.add(2);
       pretendedNotificationTypes.add(4);
       pretendedNotificationTypes.add(5);
-      pretendedNotificationTypes.add(6);
     }
     pretendedNotificationTypes.add(3);
 

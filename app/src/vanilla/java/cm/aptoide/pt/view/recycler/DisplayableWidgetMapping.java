@@ -19,6 +19,7 @@ import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewOtherVersionsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateResultsDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAdDisplayable;
@@ -31,6 +32,7 @@ import cm.aptoide.pt.app.view.widget.AppViewInstallWidget;
 import cm.aptoide.pt.app.view.widget.AppViewOtherVersionsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewRateResultsWidget;
+import cm.aptoide.pt.app.view.widget.AppViewRewardAppWidget;
 import cm.aptoide.pt.app.view.widget.AppViewScreenshotsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewStoreWidget;
 import cm.aptoide.pt.app.view.widget.AppViewSuggestedAdWidget;
@@ -52,6 +54,7 @@ import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderWidget;
 import cm.aptoide.pt.download.view.completed.CompletedDownloadDisplayable;
 import cm.aptoide.pt.download.view.completed.CompletedDownloadWidget;
+import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterDisplayable;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterWidget;
@@ -106,6 +109,7 @@ import cm.aptoide.pt.view.recycler.widget.EmptyWidget;
 import cm.aptoide.pt.view.recycler.widget.FooterRowWidget;
 import cm.aptoide.pt.view.recycler.widget.FooterWidget;
 import cm.aptoide.pt.view.recycler.widget.GridAdWidget;
+import cm.aptoide.pt.view.recycler.widget.GridAppCoinsRewardAppsWidget;
 import cm.aptoide.pt.view.recycler.widget.GridDisplayWidget;
 import cm.aptoide.pt.view.recycler.widget.MessageWhiteBgWidget;
 import cm.aptoide.pt.view.recycler.widget.ProgressBarWidget;
@@ -180,6 +184,8 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(GridStoreMetaWidget.class, GridStoreMetaDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(GridAdWidget.class, GridAdDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(GridAppCoinsRewardAppsWidget.class,
+        GridAppCoinsRewardAppsDisplayable.class));
 
     // Multi Layout
     displayableWidgetMappings.add(
@@ -216,6 +222,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AppViewInstallWidget.class, AppViewInstallDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((AppViewRewardAppWidget.class),
+        AppViewRewardAppDisplayable.class));
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewRateAndReviewsWidget.class,
         AppViewRateAndCommentsDisplayable.class));
@@ -306,7 +315,6 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((LoginWidget.class), LoginDisplayable.class));
-
     return displayableWidgetMappings;
   }
 

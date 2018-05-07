@@ -1,114 +1,90 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginStart="4dp"
     android:clickable="true"
-    tools:layout_height="180dp"
-    style="?attr/backgroundCard"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
     >
-
-  <ImageView
-      android:id="@+id/icon"
-      android:layout_width="96dp"
-      android:layout_height="96dp"
-      android:layout_centerVertical="true"
-      android:layout_margin="8dp"
-      android:src="@color/activity_payment_green"
-      />
-  <include
-      layout="@layout/ad_badge_layout"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBottom="@id/icon"
-      android:layout_alignStart="@+id/icon"
-      />
-
-  <LinearLayout
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignTop="@+id/icon"
-      android:layout_toEndOf="@+id/icon"
-      android:layout_toRightOf="@+id/icon"
-      android:orientation="vertical"
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
       >
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-      <ImageView
-          android:id="@+id/ic_trusted_search"
-          android:layout_width="@dimen/trusted_badge_size"
-          android:layout_height="@dimen/trusted_badge_size"
-          android:layout_alignParentEnd="true"
-          android:layout_alignParentRight="true"
-          android:layout_centerVertical="true"
-          android:layout_gravity="center_vertical"
-          android:layout_marginEnd="20dp"
-          android:src="@drawable/ic_badge_trusted"
-          />
-
-      <TextView
-          android:id="@+id/name"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:layout_gravity="center_vertical"
-          android:layout_toLeftOf="@id/ic_trusted_search"
-          android:layout_toStartOf="@id/ic_trusted_search"
-          android:ellipsize="end"
-          android:maxLines="1"
-          android:singleLine="true"
-          android:textStyle="bold"
-          style="?android:attr/textAppearanceMedium"
-          />
-    </RelativeLayout>
-
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="79dp"
+        android:layout_height="79dp"
+        android:layout_margin="12dp"
+        android:src="@mipmap/ic_launcher"
+        />
     <TextView
-        android:id="@+id/downloads"
+        android:id="@+id/app_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_small"
+        android:layout_alignTop="@+id/app_icon"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_toEndOf="@+id/app_icon"
+        android:layout_toRightOf="@+id/app_icon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="Clash Royale"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
+    <ImageView
+        android:id="@+id/star_icon"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_below="@id/app_name"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/app_icon"
+        android:layout_toRightOf="@id/app_icon"
+        android:src="@drawable/ic_star_black"
+        />
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@id/star_icon"
+        android:layout_toRightOf="@id/star_icon"
+        android:textSize="10sp"
+        tools:text="4.2"
+        style="@style/Aptoide.TextView.Medium.S.Black"
+        />
+    <TextView
+        android:id="@+id/downloads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rating"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@id/app_icon"
+        android:layout_toRightOf="@id/app_icon"
+        android:textSize="12sp"
+        tools:text="1M Downloads"
+        style="@style/Aptoide.TextView.Regular.XS.Grey"
+        />
+
 
     <TextView
-        android:id="@+id/search_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_small"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/downloads"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/all_title_ad"
+        style="@style/Aptoide.TextView.Regular.XXS.Black"
         />
 
-    <RatingBar
-        android:id="@+id/ratingbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        style="@style/RatingBarExtraSmall"
-        />
-
-  </LinearLayout>
-
-
-  <View
-      android:id="@+id/bottom_view"
-      android:layout_width="fill_parent"
-      android:layout_height="5dp"
-      android:layout_alignParentBottom="true"
-      android:background="@drawable/custom_sponsored_label"
-      />
-
-  <FrameLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:layout_marginEnd="10dp"
-      android:layout_marginRight="10dp"
-      >
-
-  </FrameLayout>
-
-</RelativeLayout>
+  </RelativeLayout>
+</android.support.v7.widget.CardView>

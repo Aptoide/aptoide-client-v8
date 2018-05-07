@@ -6,6 +6,7 @@
 package cm.aptoide.pt.database.accessors;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.database.realm.Installation;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Sort;
@@ -19,8 +20,11 @@ import rx.schedulers.Schedulers;
  */
 public class InstalledAccessor extends SimpleAccessor<Installed> {
 
-  public InstalledAccessor(Database db) {
+  private final InstallationAccessor installationAccessor;
+
+  public InstalledAccessor(Database db, InstallationAccessor installationAccessor) {
     super(db, Installed.class);
+    this.installationAccessor = installationAccessor;
   }
 
   public Observable<List<Installed>> getAllInstalled() {
@@ -125,12 +129,24 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .flatMap(installs -> filterCompleted(installs));
   }
 
+  public Observable<List<Installation>> getInstallationsHistory() {
+    return installationAccessor.getInstallationsHistory();
+  }
+
   public void insertAll(List<Installed> installedList) {
     database.insertAll(installedList);
+    for (Installed installed : installedList) {
+      installationAccessor.insert(
+          new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
+              installed.getVersionCode(), installed.getVersionName()));
+    }
   }
 
   public void insert(Installed installed) {
     database.insert(installed);
+    installationAccessor.insert(
+        new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
+            installed.getVersionCode(), installed.getVersionName()));
   }
 
   public Observable<List<Installed>> getAllAsList(String packageName) {

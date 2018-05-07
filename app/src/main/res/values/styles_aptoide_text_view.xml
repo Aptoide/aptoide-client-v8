@@ -63,6 +63,11 @@
     <item name="android:lineSpacingExtra">5dp</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XXS">
+    <item name="android:textSize">10sp</item>
+    <item name="android:lineSpacingExtra">5dp</item>
+  </style>
+
   <!-- Colors-->
   <style name="Aptoide.TextView.Regular.XS.GreyFog">
     <item name="android:textColor">@color/grey_fog_dark</item>
@@ -120,6 +125,14 @@
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.S.Black">
+    <item name="android:textColor">@color/black</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.XS.BlackAlpha">
+    <item name="android:textColor">@color/black_87_alpha</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.S.BlackAlpha">
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
@@ -150,6 +163,11 @@
 
   <style name="Aptoide.TextView.Regular.S.Red700">
     <item name="android:textColor">@color/red_700</item>
+  </style>
+
+
+  <style name="Aptoide.TextView.Medium.XXS.Orange">
+    <item name="android:textColor">@color/orange</item>
   </style>
 
   <!-- Text Style -->

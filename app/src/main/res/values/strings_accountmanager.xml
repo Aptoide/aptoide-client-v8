@@ -18,7 +18,7 @@
   <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
 
   <!-- WIZARD -->
-  <string name="please_wait_upload">If you\'re uploading, it may take a while…</string>
+  <string name="please_wait_upload">Processing, it may take a while…</string>
 
   <!-- WIZARD PAGE 1 -->
   <string name="wizard_title_viewpager_one">Discover the Best Apps</string>
@@ -67,14 +67,14 @@
   <string name="upload_dialog_gallery">Select from gallery</string>
 
   <!--Public/Private-->
-  <string name="create_profile_pub_pri_suc_login">You\'re successfully logged in</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow you and see your shares on the timeline!</string>
-  <string name="create_profile_pub_pri">Aptoide\'s Timeline</string>
-  <string name="create_profile_pub_pri_sub_text_1">Allows you to follow your friends and family</string>
-  <string name="create_profile_pub_pri_sub_text_2">Share app recommendations and articles with your followers on the timeline.</string>
-  <string name="create_profile_pub_pri_sub_text_3">You can choose to make your profile private, losing sharing features.</string>
+  <string name="create_profile_pub_pri_suc_login">Welcome!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow your store and see the apps you share!</string>
+  <string name="create_profile_pub_pri">Aptoide\'s Community</string>
+  <string name="create_profile_pub_pri_sub_text_1">Your friends can get app recommendations based on your downloads!</string>
+  <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend\'s taste,</string>
+  <string name="create_profile_pub_pri_sub_text_3">but you can also make your profile private.</string>
   <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
-  <string name="create_profile_logged_in_activity_title">Logged in</string>
+  <string name="create_profile_logged_in_activity_title">Create Account</string>
   <string name="image_requirements_popup_message">The image has the following problems:\n</string>
   <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
   <string name="image_requirements_error_max_height">- Maximum height is higher than 1024px\n</string>
@@ -98,13 +98,13 @@
 
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Sign in or register to get the most out of Aptoide</string>
-  <string name="newaccount_signin">login/register</string>
+  <string name="newaccount_signin">log in/register</string>
   <string name="newaccount_my_profile">My profile</string>
   <string name="newaccount_my_store">My store</string>
   <string name="newaccount_create_store">create a store</string>
   <string name="newaccount_create_store_message">Create an Aptoide store to share apps with the community.</string>
   <string name="newaccount_find_friends">find friends</string>
-  <string name="newaccount_log_out">logout</string>
+  <string name="newaccount_log_out">log out</string>
   <string name="newaccount_notification_history">Notification history</string>
   <string name="newaccount_settings">Settings</string>
   <string name="newaccount_edit">Edit</string>

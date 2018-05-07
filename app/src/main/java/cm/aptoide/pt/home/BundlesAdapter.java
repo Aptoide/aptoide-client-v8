@@ -42,7 +42,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter);
       case SOCIAL:
         return new SocialBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(SOCIAL, parent, false), uiEventsListener);
+            .inflate(SOCIAL, parent, false), uiEventsListener, oneDecimalFormatter);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter);
@@ -70,6 +70,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case SOCIAL:
         return SOCIAL;
       case APPS:
+      case APPCOINS_ADS:
         return APPS;
       case EDITORS:
         return EDITORS;

@@ -205,6 +205,12 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(AppHomeEvent.class);
   }
 
+  @Override public Observable<AppHomeEvent> rewardAppClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.REWARD_APP))
+        .cast(AppHomeEvent.class);
+  }
+
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
@@ -260,7 +266,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void setUserImage(String userAvatarUrl) {
     ImageLoader.with(getContext())
         .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
-            R.drawable.my_account_placeholder);
+            R.drawable.ic_account_circle);
   }
 
   @Override public Observable<Void> imageClick() {

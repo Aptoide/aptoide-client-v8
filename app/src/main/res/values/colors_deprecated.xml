@@ -68,7 +68,6 @@
   <color name="bottom_nav_non_selected_item_color">#8A000000</color>
 
   <!-- Default Window Color -->
-  <color name="default_background_color">#FFF3F2F2</color>
-
+  <color name="default_background_color">#F9F9F9</color>
 
 </resources>

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.search.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -15,11 +14,9 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +36,9 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -59,7 +58,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.parceler.Parcels;
-import rx.Emitter;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -101,14 +99,12 @@ public class SearchResultFragment extends BackButtonFragment
   private SearchSuggestionsAdapter searchSuggestionsAdapter;
   private SearchSuggestionsAdapter searchTrendingAdapter;
   private Toolbar toolbar;
-  private PublishRelay<SearchAppResult> onItemViewClickRelay;
-  private PublishRelay<Pair<SearchAppResult, View>> onOpenPopupMenuClickRelay;
-  private PublishRelay<SearchAdResult> onAdClickRelay;
+  private PublishRelay<SearchAppResultWrapper> onItemViewClickRelay;
+  private PublishRelay<SearchAdResultWrapper> onAdClickRelay;
   private PublishSubject<SearchQueryEvent> suggestionClickedPublishSubject;
   private PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
   private float listItemPadding;
   private String defaultThemeName;
-  private CrashReport crashReport;
   private MenuItem searchMenuItem;
   private SearchView searchView;
   private String currentQuery;
@@ -321,39 +317,6 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultAdapter.setAdsLoaded();
   }
 
-  @Override public Observable<Integer> showPopup(boolean hasVersions, View anchor) {
-
-    return Observable.create(emitter -> {
-
-      final Context context = getContext();
-      final PopupMenu popupMenu = new PopupMenu(context, anchor);
-
-      MenuInflater inflater = popupMenu.getMenuInflater();
-      inflater.inflate(R.menu.menu_search_item, popupMenu.getMenu());
-
-      if (hasVersions) {
-        MenuItem menuItemVersions = popupMenu.getMenu()
-            .findItem(R.id.versions);
-        menuItemVersions.setVisible(true);
-      }
-
-      popupMenu.setOnMenuItemClickListener(item -> {
-        emitter.onNext(item.getItemId());
-        emitter.onCompleted();
-        return true;
-      });
-
-      popupMenu.setOnDismissListener(__ -> emitter.onCompleted());
-
-      emitter.setCancellation(() -> {
-        popupMenu.setOnMenuItemClickListener(null);
-        popupMenu.dismiss();
-      });
-
-      popupMenu.show();
-    }, Emitter.BackpressureMode.ERROR);
-  }
-
   @Override public Observable<Void> followedStoresResultReachedBottom() {
     return recyclerViewReachedBottom(followedStoresResultList);
   }
@@ -431,16 +394,12 @@ public class SearchResultFragment extends BackButtonFragment
         .filter(item -> item.getItemId() == searchMenuItem.getItemId());
   }
 
-  @Override public Observable<SearchAdResult> onAdClicked() {
+  @Override public Observable<SearchAdResultWrapper> onAdClicked() {
     return onAdClickRelay;
   }
 
-  @Override public Observable<SearchAppResult> onViewItemClicked() {
+  @Override public Observable<SearchAppResultWrapper> onViewItemClicked() {
     return onItemViewClickRelay;
-  }
-
-  @Override public Observable<Pair<SearchAppResult, View>> onOpenPopUpMenuClicked() {
-    return onOpenPopupMenuClickRelay;
   }
 
   @Override public Observable<SearchViewQueryTextEvent> queryChanged() {
@@ -514,10 +473,6 @@ public class SearchResultFragment extends BackButtonFragment
         .equals(getResources().getString(R.string.search_hint_title));
   }
 
-  @Override public boolean getNoResultsViewState() {
-    return noResults;
-  }
-
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -561,7 +516,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void setFollowedStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-      followedStoresButton.setBackgroundResource(R.drawable.search_button_background);
+      followedStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
@@ -569,9 +524,8 @@ public class SearchResultFragment extends BackButtonFragment
     }
     viewModel.setAllStoresSelected(false);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      followedStoresButton.getBackground()
-          .setColorFilter(getResources().getColor(StoreTheme.get(defaultThemeName)
-              .getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
+      followedStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+          .getRoundGradientButtonDrawable());
     }
   }
 
@@ -582,13 +536,12 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.white));
-      allStoresButton.setBackgroundResource(R.drawable.search_button_background);
+      allStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
     }
     viewModel.setAllStoresSelected(true);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      allStoresButton.getBackground()
-          .setColorFilter(getResources().getColor(StoreTheme.get(defaultThemeName)
-              .getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
+      allStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+          .getRoundGradientButtonDrawable());
     }
   }
 
@@ -600,7 +553,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    crashReport = CrashReport.getInstance();
+    CrashReport crashReport = CrashReport.getInstance();
 
     if (viewModel == null && savedInstanceState != null && savedInstanceState.containsKey(
         VIEW_MODEL)) {
@@ -624,7 +577,6 @@ public class SearchResultFragment extends BackButtonFragment
     noResults = false;
 
     onItemViewClickRelay = PublishRelay.create();
-    onOpenPopupMenuClickRelay = PublishRelay.create();
     onAdClickRelay = PublishRelay.create();
     suggestionClickedPublishSubject = PublishSubject.create();
     searchSetupPublishSubject = PublishSubject.create();
@@ -634,8 +586,8 @@ public class SearchResultFragment extends BackButtonFragment
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
 
     followedStoresResultAdapter =
-        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
-            searchResultFollowedStores, searchResultAdsFollowedStores, crashReport);
+        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultFollowedStores,
+            searchResultAdsFollowedStores, crashReport);
 
     listItemPadding = getResources().getDimension(R.dimen.padding_very_very_small);
 
@@ -643,8 +595,8 @@ public class SearchResultFragment extends BackButtonFragment
     final List<SearchAdResult> searchResultAdsAllStores = new ArrayList<>();
 
     allStoresResultAdapter =
-        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, onOpenPopupMenuClickRelay,
-            searchResultAllStores, searchResultAdsAllStores, crashReport);
+        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultAllStores,
+            searchResultAdsAllStores, crashReport);
 
     searchSuggestionsAdapter =
         new SearchSuggestionsAdapter(new ArrayList<>(), suggestionClickedPublishSubject);
@@ -696,8 +648,8 @@ public class SearchResultFragment extends BackButtonFragment
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
       ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
-      toolbar.setBackgroundColor(getResources().getColor(StoreTheme.get(defaultThemeName)
-          .getPrimaryColor()));
+      toolbar.setBackgroundResource(StoreTheme.get(defaultThemeName)
+          .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),

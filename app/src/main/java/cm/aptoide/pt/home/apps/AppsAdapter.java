@@ -1,7 +1,10 @@
 package cm.aptoide.pt.home.apps;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.ViewGroup;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -119,15 +122,23 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   private void addApps(List<App> list, int offset) {
     for (int i = 0; i < list.size(); i++) {
-      if (listOfApps.contains(list.get(i))) {
-        //update
-        int itemIndex = listOfApps.indexOf(list.get(i));
-        listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
-        notifyItemChanged(itemIndex);
+      if (isValid(list.get(i))) {
+        if (listOfApps.contains(list.get(i))) {
+          //update
+          int itemIndex = listOfApps.indexOf(list.get(i));
+          listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
+          notifyItemChanged(itemIndex);
+        } else {
+          //add new element
+          listOfApps.add(offset + 1, list.get(i));
+          notifyItemInserted(offset + 1);
+        }
       } else {
-        //add new element
-        listOfApps.add(offset + 1, list.get(i));
-        notifyItemInserted(offset + 1);
+        if (listOfApps.contains(list.get(i))) {
+          int itemIndex = listOfApps.indexOf(list.get(i));
+          listOfApps.remove(itemIndex);
+          notifyItemRemoved(itemIndex);
+        }
       }
     }
   }
@@ -165,7 +176,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       notifyItemInserted(headerPosition + 1);
       headerPosition++;
     }
-    addApps(installedApps, headerPosition);
+    listOfApps.addAll(headerPosition + 1, installedApps);
   }
 
   private int findLastUpdatePosition() {
@@ -246,5 +257,68 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       }
     }
     return appsByType;
+  }
+
+  public void removeCanceledDownload(App app) {
+    if (listOfApps.contains(app)) {
+      int indexOfCanceledDownload = listOfApps.indexOf(app);
+      listOfApps.remove(app);
+      notifyItemRemoved(indexOfCanceledDownload);
+    }
+  }
+
+  private boolean isValid(App app) {
+    boolean isValid;
+    switch (app.getType()) {
+      case HEADER_DOWNLOADS:
+      case HEADER_INSTALLED:
+      case HEADER_UPDATES:
+        isValid = true;
+        break;
+      case DOWNLOAD:
+        isValid = !TextUtils.isEmpty(((DownloadApp) app).getAppName());
+        break;
+      case UPDATE:
+        isValid = !TextUtils.isEmpty(((UpdateApp) app).getName());
+        break;
+      case INSTALLED:
+      case INSTALLING:
+        isValid = !TextUtils.isEmpty(((InstalledApp) app).getAppName());
+        break;
+      default:
+        isValid = false;
+        break;
+    }
+    return isValid;
+  }
+
+  public List<App> getUpdateApps() {
+    List<App> updateApps = new ArrayList<>();
+    for (App app : listOfApps) {
+      if (app.getType() == App.Type.UPDATE) {
+        updateApps.add(app);
+      }
+    }
+    return updateApps;
+  }
+
+  public void setAvailableUpdatesList(List<App> availableUpdates) {
+    listOfApps.removeAll(getUpdatesToRemove(availableUpdates));
+    notifyDataSetChanged();
+    addUpdateAppsList(availableUpdates);
+    Collections.sort(listOfApps, (app1, app2) -> {
+      if (app1.getType() == App.Type.UPDATE && app2.getType() == App.Type.UPDATE) {
+        return ((UpdateApp) app1).getName()
+            .compareTo(((UpdateApp) app2).getName());
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  private List<App> getUpdatesToRemove(List<App> updatesList) {
+    List<App> updatesToRemove = getUpdateApps();
+    updatesToRemove.removeAll(updatesList);
+    return updatesToRemove;
   }
 }

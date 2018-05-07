@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -32,12 +33,13 @@ import rx.Single;
   private final HashMapNotNull<String, List<String>> subscribedStoresAuthMap;
   private final AdsRepository adsRepository;
   private final Database database;
+  private final AptoideAccountManager accountManager;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
-      Database database) {
+      Database database, AptoideAccountManager accountManager) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -46,6 +48,7 @@ import rx.Single;
     this.subscribedStoresAuthMap = subscribedStoresAuthMap;
     this.adsRepository = adsRepository;
     this.database = database;
+    this.accountManager = accountManager;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -55,10 +58,13 @@ import rx.Single;
 
   public Single<List<SearchAppResult>> searchInNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
-    return ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
-        StoreUtils.getSubscribedStoresIds(AccessorFactory.getAccessorFor(database, Store.class)),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
+    return accountManager.accountStatus()
+        .first()
+        .flatMap(account -> ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
+            StoreUtils.getSubscribedStoresIds(
+                AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor, httpClient,
+            converterFactory, tokenInvalidator, sharedPreferences, account.isAdultContentEnabled())
+            .observe(true))
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
@@ -71,10 +77,13 @@ import rx.Single;
 
   public Single<List<SearchAppResult>> searchInFollowedStores(String query, boolean onlyTrustedApps,
       int offset) {
-    return ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps,
-        StoreUtils.getSubscribedStoresIds(AccessorFactory.getAccessorFor(database, Store.class)),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
+    return accountManager.accountStatus()
+        .first()
+        .flatMap(account -> ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps,
+            StoreUtils.getSubscribedStoresIds(
+                AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor, httpClient,
+            converterFactory, tokenInvalidator, sharedPreferences, account.isAdultContentEnabled())
+            .observe(true))
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())

@@ -74,16 +74,16 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       boolean trustedOnly, List<Long> subscribedStoresIds,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, Boolean isMature) {
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
           new Body(Endless.DEFAULT_LIMIT, offset, query, subscribedStoresIds, null, trustedOnly,
-              sharedPreferences), getHost(sharedPreferences), bodyInterceptor, httpClient,
+              sharedPreferences, isMature), getHost(sharedPreferences), bodyInterceptor, httpClient,
           converterFactory, tokenInvalidator);
     } else {
       return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, offset, query, trustedOnly, sharedPreferences),
+          new Body(Endless.DEFAULT_LIMIT, offset, query, trustedOnly, sharedPreferences, isMature),
           getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
           tokenInvalidator);
     }
@@ -116,6 +116,19 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       this.trusted = trusted;
     }
 
+    public Body(Integer limit, int offset, String query, List<Long> storeIds,
+        HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
+        SharedPreferences sharedPreferences, Boolean isMature) {
+      super(sharedPreferences);
+      this.limit = limit;
+      this.offset = offset;
+      this.query = query;
+      this.storeIds = storeIds;
+      this.storesAuthMap = storesAuthMap;
+      this.trusted = trusted;
+      this.setMature(isMature);
+    }
+
     public Body(Integer limit, int offset, String query, List<String> storeNames, Boolean trusted,
         SharedPreferences sharedPreferences) {
       super(sharedPreferences);
@@ -145,6 +158,16 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       this.offset = offset;
       this.query = query;
       this.trusted = trusted;
+    }
+
+    public Body(Integer limit, int offset, String query, Boolean trusted,
+        SharedPreferences sharedPreferences, Boolean isMature) {
+      super(sharedPreferences);
+      this.limit = limit;
+      this.offset = offset;
+      this.query = query;
+      this.trusted = trusted;
+      this.setMature(isMature);
     }
 
     public String getQuery() {

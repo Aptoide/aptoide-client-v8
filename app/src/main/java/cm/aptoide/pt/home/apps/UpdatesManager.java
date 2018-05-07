@@ -57,4 +57,8 @@ public class UpdatesManager {
   public Completable refreshUpdates() {
     return updateRepository.sync(true, false);
   }
+
+  public Observable<Integer> getUpdatesNumber() {
+    return getUpdatesList(false).map(list -> list.size());
+  }
 }

@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -40,6 +41,9 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
         marketName));
 
     StoreGridHeaderDisplayable.Model model = displayable.getModel();
+    more.setTextColor(getContext().getResources()
+        .getColor(StoreTheme.get(model.getStoreTheme())
+            .getColorLetters()));
     more.setVisibility(moreIsVisible && model.isMoreVisible() ? View.VISIBLE : View.GONE);
 
     if (moreIsVisible) {

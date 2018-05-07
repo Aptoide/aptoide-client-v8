@@ -1,81 +1,53 @@
 package cm.aptoide.pt.search.view.item;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAppResult;
-import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
-import java.util.Date;
 import rx.subscriptions.CompositeSubscription;
 
 public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult> {
 
   public static final int LAYOUT = R.layout.search_app_row;
-  private final PublishRelay<SearchAppResult> onItemViewClick;
-  private final PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClick;
+  private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
 
   private TextView nameTextView;
   private ImageView iconImageView;
   private TextView downloadsTextView;
-  private RatingBar ratingBar;
-  private TextView timeTextView;
+  private TextView ratingBar;
   private TextView storeTextView;
-  private ImageView icTrustedImageView;
-  private ImageView overflowImageView;
   private View bottomView;
   private SearchAppResult searchApp;
+  private int position;
   private CompositeSubscription subscriptions;
 
-  public SearchResultViewHolder(View itemView, PublishRelay<SearchAppResult> onItemViewClick,
-      PublishRelay<Pair<SearchAppResult, android.view.View>> onOpenPopupMenuClick) {
+  public SearchResultViewHolder(View itemView,
+      PublishRelay<SearchAppResultWrapper> onItemViewClick) {
     super(itemView);
     subscriptions = new CompositeSubscription();
     this.onItemViewClick = onItemViewClick;
-    this.onOpenPopupMenuClick = onOpenPopupMenuClick;
     bindViews(itemView);
   }
 
-  @Override public void setup(SearchAppResult searchApp) {
-    this.searchApp = searchApp;
+  @Override public void setup(SearchAppResult result, int position) {
+    this.searchApp = result;
+    this.position = position;
     setAppName();
     setDownloadCount();
     setAverageValue();
-    setDateModified();
-    setBackground();
     setStoreName();
     setIconView();
-    setTrustedBadge();
-    setOverflowMenu();
   }
 
   public void prepareToRecycle() {
     if (subscriptions.hasSubscriptions() && !subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();
-    }
-  }
-
-  private void setOverflowMenu() {
-    overflowImageView.setVisibility(View.VISIBLE);
-  }
-
-  private void setTrustedBadge() {
-    if (Malware.Rank.TRUSTED.ordinal() == searchApp.getRank()) {
-      icTrustedImageView.setVisibility(View.VISIBLE);
-    } else {
-      icTrustedImageView.setVisibility(View.GONE);
     }
   }
 
@@ -88,45 +60,13 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     storeTextView.setText(searchApp.getStoreName());
   }
 
-  private void setBackground() {
-    final Resources resources = itemView.getResources();
-    final StoreTheme theme = StoreTheme.get(searchApp.getStoreTheme());
-    Drawable background = bottomView.getBackground();
-
-    if (background instanceof ShapeDrawable) {
-      ((ShapeDrawable) background).getPaint()
-          .setColor(resources.getColor(theme.getPrimaryColor()));
-    } else if (background instanceof GradientDrawable) {
-      ((GradientDrawable) background).setColor(resources.getColor(theme.getPrimaryColor()));
-    }
-
-    background = storeTextView.getBackground();
-    if (background instanceof ShapeDrawable) {
-      ((ShapeDrawable) background).getPaint()
-          .setColor(resources.getColor(theme.getPrimaryColor()));
-    } else if (background instanceof GradientDrawable) {
-      ((GradientDrawable) background).setColor(resources.getColor(theme.getPrimaryColor()));
-    }
-  }
-
-  private void setDateModified() {
-    final Date modified = new Date(searchApp.getModifiedDate());
-    final Resources resources = itemView.getResources();
-    final Context context = itemView.getContext();
-    String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(context)
-        .getTimeDiffAll(context, modified.getTime(), resources);
-    if (timeSinceUpdate != null && !timeSinceUpdate.equals("")) {
-      timeTextView.setText(timeSinceUpdate);
-    }
-  }
-
   private void setAverageValue() {
     float avg = searchApp.getAverageRating();
     if (avg <= 0) {
-      ratingBar.setVisibility(View.GONE);
+      ratingBar.setText(R.string.appcardview_title_no_stars);
     } else {
       ratingBar.setVisibility(View.VISIBLE);
-      ratingBar.setRating(avg);
+      ratingBar.setText(Float.toString(avg));
     }
   }
 
@@ -143,22 +83,15 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void bindViews(View itemView) {
-    nameTextView = (TextView) itemView.findViewById(R.id.name);
-    iconImageView = (ImageView) itemView.findViewById(R.id.icon);
+    nameTextView = (TextView) itemView.findViewById(R.id.app_name);
+    iconImageView = (ImageView) itemView.findViewById(R.id.app_icon);
     downloadsTextView = (TextView) itemView.findViewById(R.id.downloads);
-    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
-    timeTextView = (TextView) itemView.findViewById(R.id.search_time);
-    storeTextView = (TextView) itemView.findViewById(R.id.search_store);
-    icTrustedImageView = (ImageView) itemView.findViewById(R.id.ic_trusted_search);
-    bottomView = itemView.findViewById(R.id.bottom_view);
-    overflowImageView = (ImageView) itemView.findViewById(R.id.overflow);
+    ratingBar = (TextView) itemView.findViewById(R.id.rating);
+    storeTextView = (TextView) itemView.findViewById(R.id.store_name);
+    bottomView = itemView;
 
     subscriptions.add(RxView.clicks(itemView)
         .map(__ -> searchApp)
-        .subscribe(data -> onItemViewClick.call(data)));
-
-    subscriptions.add(RxView.clicks(overflowImageView)
-        .map(__ -> new Pair<>(searchApp, (View) overflowImageView))
-        .subscribe(data -> onOpenPopupMenuClick.call(data)));
+        .subscribe(data -> onItemViewClick.call(new SearchAppResultWrapper(data, position))));
   }
 }

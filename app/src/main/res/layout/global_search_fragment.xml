@@ -53,7 +53,7 @@
       android:layout_height="match_parent"
       android:layout_marginTop="?attr/actionBarSize"
       android:visibility="gone"
-      tools:visibility="gone"
+      tools:visibility="visible"
       >
 
 
@@ -82,7 +82,7 @@
           android:id="@+id/fragment_search_result_all_stores_button"
           android:layout_width="128dp"
           android:layout_height="match_parent"
-          android:background="@drawable/search_button_background"
+          android:background="@drawable/default_search_button_background"
           android:text="@string/all_stores"
           android:textColor="@color/white"
           android:textSize="12sp"
@@ -95,6 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+        android:layout_marginTop="5dp"
         android:visibility="invisible"
         />
 
@@ -103,6 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+        android:layout_marginTop="5dp"
         android:visibility="visible"
         />
 
@@ -117,6 +119,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/main_orange_gradient"
         android:elevation="4dp"
         android:theme="?attr/toolbarTheme"
         app:layout_scrollFlags="scroll|enterAlways"

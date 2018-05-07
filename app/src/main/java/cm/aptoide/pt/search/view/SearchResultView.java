@@ -1,10 +1,10 @@
 package cm.aptoide.pt.search.view;
 
-import android.util.Pair;
 import android.view.MenuItem;
-import android.view.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
@@ -44,8 +44,6 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void setAllStoresAdsEmpty();
 
-  Observable<Integer> showPopup(boolean hasVersions, android.view.View anchor);
-
   String getDefaultTheme();
 
   Observable<Void> followedStoresResultReachedBottom();
@@ -78,11 +76,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<MenuItem> searchMenuItemClick();
 
-  Observable<SearchAdResult> onAdClicked();
+  Observable<SearchAdResultWrapper> onAdClicked();
 
-  Observable<SearchAppResult> onViewItemClicked();
-
-  Observable<Pair<SearchAppResult, View>> onOpenPopUpMenuClicked();
+  Observable<SearchAppResultWrapper> onViewItemClicked();
 
   Observable<SearchViewQueryTextEvent> queryChanged();
 
@@ -105,8 +101,6 @@ public interface SearchResultView extends SearchSuggestionsView {
   void setVisibilityOnRestore();
 
   boolean shouldShowSuggestions();
-
-  boolean getNoResultsViewState();
 
   interface Model {
 

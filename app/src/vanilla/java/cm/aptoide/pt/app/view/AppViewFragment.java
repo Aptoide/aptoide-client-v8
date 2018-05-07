@@ -8,6 +8,7 @@ package cm.aptoide.pt.app.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -48,6 +49,7 @@ import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
+import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
@@ -130,6 +132,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   private static final int PAY_APP_REQUEST_CODE = 12;
   private static final String ORIGIN_TAG = "TAG";
   private static final String EDITORS_CHOICE_POSITION = "editorsBrickPosition";
+  private static final String APP_REWARD_APPCOINS = "appcoinsReward";
   private final String key_appId = "appId";
   private final String key_packageName = "packageName";
   private final String key_uname = "uname";
@@ -164,6 +167,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   private PublishRelay installAppRelay;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
+  private Observable<MenuItem> toolbarMenuItemClick;
+  private double appRewardAppcoins;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -190,6 +195,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
     bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType,
+      String tag, double appRewardAppc) {
+    Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
+    bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putDouble(APP_REWARD_APPCOINS, appRewardAppc);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -317,7 +335,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     appViewModel = new AppViewModel();
     getFragmentComponent(savedInstanceState).inject(this);
     super.onCreate(savedInstanceState);
-
     handleSavedInstance(savedInstanceState);
 
     final AptoideApplication application =
@@ -396,6 +413,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     setStoreTheme(args.getString(BundleKeys.STORE_THEME.name()));
     this.appViewModel.setOriginTag(args.getString(ORIGIN_TAG, null));
     this.appViewModel.setEditorsBrickPosition(args.getString(EDITORS_CHOICE_POSITION, null));
+    this.appRewardAppcoins = args.getDouble(APP_REWARD_APPCOINS);
   }
 
   @Override public int getContentViewId() {
@@ -439,11 +457,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
         });
 
     final Toolbar toolbar = getToolbar();
-    final Observable<MenuItem> toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
+    toolbarMenuItemClick = RxToolbar.itemClicks(toolbar)
         .publish()
         .autoConnect();
-
-    handleMenuItemClick(toolbarMenuItemClick);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -513,7 +529,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   }
 
   @Override public void onResume() {
+
     super.onResume();
+    handleMenuItemClick(toolbarMenuItemClick);
 
     // restore download bar status
     // TODO: 04/08/16 restore download bar status
@@ -616,8 +634,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     final boolean appHasStore = getApp() != null && getApp().getStore() != null;
     final Long storeId = appHasStore ? getApp().getStore()
         .getId() : null;
-    shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(),
-        (getApp() == null ? null : getApp().getIcon()), averageRating, storeId);
+    shareAppHelper.shareApp(getAppName(), getPackageName(), appViewModel.getwUrl(), storeId);
     appViewAnalytics.sendAppShareEvent();
   }
 
@@ -829,6 +846,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
             notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
             fragmentNames);
     displayables.add(installDisplayable);
+    if (appRewardAppcoins > 0) {
+      displayables.add(new AppViewRewardAppDisplayable(appRewardAppcoins));
+    }
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics, storeAnalytics));
     displayables.add(
         new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider, appViewAnalytics,
@@ -1236,8 +1256,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
           break;
       }
 
-      ImageLoader.with(context)
-          .load(badgeResId, badge);
+      Drawable icon = ContextCompat.getDrawable(context, badgeResId);
+      badge.setImageDrawable(icon);
+
       badgeText.setText(badgeMessageId);
 
       if (getEditorsBrickPosition() != null) {
