@@ -2,7 +2,9 @@ package cm.aptoide.pt.search.view;
 
 import android.view.MenuItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
@@ -74,9 +76,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<MenuItem> searchMenuItemClick();
 
-  Observable<SearchAdResult> onAdClicked();
+  Observable<SearchAdResultWrapper> onAdClicked();
 
-  Observable<SearchAppResult> onViewItemClicked();
+  Observable<SearchAppResultWrapper> onViewItemClicked();
 
   Observable<SearchViewQueryTextEvent> queryChanged();
 

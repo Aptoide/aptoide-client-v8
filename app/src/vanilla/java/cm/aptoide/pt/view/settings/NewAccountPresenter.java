@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.settings;
 
 import android.content.SharedPreferences;
+import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -58,7 +59,7 @@ public class NewAccountPresenter implements Presenter {
     handleAptoideBackupCardViewClick();
   }
 
-  private void handleLoginClick() {
+  @VisibleForTesting public void handleLoginClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.loginClick())
@@ -69,7 +70,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void populateAccountViews() {
+  @VisibleForTesting public void populateAccountViews() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> accountManager.accountStatus()
@@ -81,7 +82,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleProfileDisplayableClick() {
+  @VisibleForTesting public void handleProfileDisplayableClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.userClick())
@@ -95,7 +96,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleProfileEditClick() {
+  @VisibleForTesting public void handleProfileEditClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.editUserProfileClick()
@@ -107,7 +108,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleStoreDisplayableClick() {
+  @VisibleForTesting public void handleStoreDisplayableClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.storeClick())
@@ -121,7 +122,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleStoreEditClick() {
+  @VisibleForTesting public void handleStoreEditClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(click -> view.editStoreClick()
@@ -136,7 +137,7 @@ public class NewAccountPresenter implements Presenter {
             throwable -> crashReport.log(throwable));
   }
 
-  private void handleStoreEditResult() {
+  @VisibleForTesting public void handleStoreEditResult() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -150,7 +151,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleFindFriendsClick() {
+  @VisibleForTesting public void handleFindFriendsClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.findFriendsClick())
@@ -163,7 +164,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleCreateStoreClick() {
+  @VisibleForTesting public void handleCreateStoreClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.createStoreClick())
@@ -173,7 +174,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void checkIfStoreIsInvalidAndRefresh() {
+  @VisibleForTesting public void checkIfStoreIsInvalidAndRefresh() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> accountManager.accountStatus())
@@ -192,7 +193,7 @@ public class NewAccountPresenter implements Presenter {
             .log(throwable));
   }
 
-  private void handleLogOutClick() {
+  @VisibleForTesting public void handleLogOutClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(resumed -> signOutClick())
@@ -201,7 +202,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleSettingsClicked() {
+  @VisibleForTesting public void handleSettingsClicked() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.settingsClicked())
@@ -211,7 +212,7 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleNotificationHistoryClicked() {
+  @VisibleForTesting public void handleNotificationHistoryClicked() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.notificationsClicked())
