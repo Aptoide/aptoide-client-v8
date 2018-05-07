@@ -6,6 +6,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -14,7 +15,7 @@ import rx.subscriptions.CompositeSubscription;
 public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult> {
 
   public static final int LAYOUT = R.layout.search_app_row;
-  private final PublishRelay<SearchAppResult> onItemViewClick;
+  private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
 
   private TextView nameTextView;
   private ImageView iconImageView;
@@ -23,17 +24,20 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private TextView storeTextView;
   private View bottomView;
   private SearchAppResult searchApp;
+  private int position;
   private CompositeSubscription subscriptions;
 
-  public SearchResultViewHolder(View itemView, PublishRelay<SearchAppResult> onItemViewClick) {
+  public SearchResultViewHolder(View itemView,
+      PublishRelay<SearchAppResultWrapper> onItemViewClick) {
     super(itemView);
     subscriptions = new CompositeSubscription();
     this.onItemViewClick = onItemViewClick;
     bindViews(itemView);
   }
 
-  @Override public void setup(SearchAppResult searchApp) {
-    this.searchApp = searchApp;
+  @Override public void setup(SearchAppResult result, int position) {
+    this.searchApp = result;
+    this.position = position;
     setAppName();
     setDownloadCount();
     setAverageValue();
@@ -46,7 +50,6 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
       subscriptions.unsubscribe();
     }
   }
-
 
   private void setIconView() {
     ImageLoader.with(iconImageView.getContext())
@@ -89,6 +92,6 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
 
     subscriptions.add(RxView.clicks(itemView)
         .map(__ -> searchApp)
-        .subscribe(data -> onItemViewClick.call(data)));
+        .subscribe(data -> onItemViewClick.call(new SearchAppResultWrapper(data, position))));
   }
 }

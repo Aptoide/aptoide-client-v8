@@ -9,7 +9,7 @@ public abstract class SearchResultItemView<T> extends RecyclerView.ViewHolder {
     super(itemView);
   }
 
-  public void setup(T item) {
+  public void setup(T item, int position) {
   }
 
   public void prepareToRecycle() {

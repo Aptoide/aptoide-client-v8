@@ -4,10 +4,13 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.GetApp;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
+import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by trinkes on 18/10/2017.
@@ -92,5 +96,30 @@ public class AppService {
     } else {
       return new AppsList(AppsList.Error.GENERIC);
     }
+  }
+
+  public Single<DetailedApp> loadDetailedApp(long appId, String packageName) {
+    return GetAppRequest.of(packageName, bodyInterceptor, appId, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe(true, false)
+        .doOnSubscribe(() -> loading = true)
+        .doOnUnsubscribe(() -> loading = false)
+        .doOnTerminate(() -> loading = false)
+        .flatMap(getApp -> mapAppToDetailedApp(getApp))
+        .toSingle()
+        .onErrorReturn(throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private Observable<DetailedApp> mapAppToDetailedApp(GetApp getApp) {
+    GetAppMeta.App app = getApp.getNodes()
+        .getMeta()
+        .getData();
+    DetailedApp detailedApp =
+        new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
+            app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getDeveloper(),
+            app.getStore(), app.getMedia(), app.getStats(), app.getObb(), app.getPay());
+    return Observable.just(detailedApp);
   }
 }

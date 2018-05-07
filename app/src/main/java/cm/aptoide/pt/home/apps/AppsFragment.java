@@ -26,8 +26,8 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -57,6 +57,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Inject UpdatesAnalytics updatesAnalytics;
   @Inject AptoideAccountManager accountManager;
   @Inject AppsNavigator appsNavigator;
+  @Inject UpdatesManager updatesManager;
+  @Inject InstallManager installManager;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
@@ -100,13 +102,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     buildIgnoreUpdatesDialog();
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
 
-    attachPresenter(new AppsPresenter(this, new AppsManager(new UpdatesManager(
-        RepositoryFactory.getUpdateRepository(getContext(),
-            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
-        ((AptoideApplication) getContext().getApplicationContext()).getInstallManager(),
-        new AppMapper(), downloadAnalytics, installAnalytics, updatesAnalytics,
-        getContext().getPackageManager(), getContext(), new DownloadFactory(
-        ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
+    attachPresenter(new AppsPresenter(this,
+        new AppsManager(updatesManager, installManager, new AppMapper(), downloadAnalytics,
+            installAnalytics, updatesAnalytics, getContext().getPackageManager(), getContext(),
+            new DownloadFactory(
+                ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
         AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
         new PermissionManager(), ((PermissionService) getContext()), accountManager,
         appsNavigator));
