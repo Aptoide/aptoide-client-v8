@@ -53,6 +53,9 @@ public class NewAccountPresenter implements Presenter {
     handleProfileDisplayableClick();
     handleSettingsClicked();
     handleNotificationHistoryClicked();
+    handleAptoideTvCardViewClick();
+    handleAptoideUploaderCardViewClick();
+    handleAptoideBackupCardViewClick();
   }
 
   private void handleLoginClick() {
@@ -228,6 +231,39 @@ public class NewAccountPresenter implements Presenter {
             })
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();
+  }
+
+  private void handleAptoideTvCardViewClick() {
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.aptoideTvCardViewClick())
+        .doOnNext(__ -> view.startAptoideTvWebView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleAptoideUploaderCardViewClick()
+  {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.aptoideUploaderCardViewClick())
+        .doOnNext(__ -> newAccountNavigator.navigateToAppView("aptoide-uploader"))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+          }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleAptoideBackupCardViewClick()
+  {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.aptoideBackupCardViewClick())
+        .doOnNext(__ -> newAccountNavigator.navigateToAppView("aptoide-backup-apps"))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void resetAddressBookValues() {

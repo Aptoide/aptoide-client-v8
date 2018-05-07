@@ -6,6 +6,7 @@ import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.addressbook.view.AddressBookFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.view.InboxFragment;
@@ -26,6 +27,10 @@ public class NewAccountNavigator {
     this.fragmentNavigator = fragmentNavigator;
     this.accountNavigator = accountNavigator;
     this.navigator = navigator;
+  }
+
+  public void navigateToAppView(String uname) {
+    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(uname), true);
   }
 
   public void navigateToEditStoreView(Store store, int requestCode) {
