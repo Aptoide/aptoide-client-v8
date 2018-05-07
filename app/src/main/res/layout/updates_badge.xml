@@ -1,0 +1,27 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <TextView
+      android:id="@+id/updates_badge"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="top|center_horizontal"
+      android:layout_marginLeft="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="6dp"
+      android:background="@drawable/updates_badge_circle"
+      android:gravity="center"
+      android:paddingEnd="3dp"
+      android:paddingLeft="3dp"
+      android:paddingRight="3dp"
+      android:paddingStart="3dp"
+      android:textColor="@color/white"
+      android:textSize="10sp"
+      android:textStyle="bold"
+      tools:text="9+"
+      />
+
+</FrameLayout>
