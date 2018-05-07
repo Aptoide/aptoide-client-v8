@@ -24,4 +24,8 @@ public class AppCenter {
   public Single<AppsList> getApps(long storeId, int limit) {
     return appCenterRepository.getApplications(storeId, limit);
   }
+
+  public Single<DetailedApp> getDetailedApp(long appId, String packageName) {
+    return appCenterRepository.getDetailedApp(appId, packageName);
+  }
 }

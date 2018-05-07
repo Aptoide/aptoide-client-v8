@@ -90,4 +90,8 @@ public class AppCenterRepository {
           appsList -> new AppsList(new ArrayList<>(cache.getValue()), false, cache.getKey()));
     }
   }
+
+  public Single<DetailedApp> getDetailedApp(long appId, String packageName) {
+    return appService.loadDetailedApp(appId, packageName, true, false);
+  }
 }
