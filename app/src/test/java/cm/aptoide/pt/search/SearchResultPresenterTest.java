@@ -9,7 +9,9 @@ import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -64,10 +66,16 @@ public class SearchResultPresenterTest {
   @Mock private SearchAdResult searchAdResult;
   @Mock private SearchAppResult searchAppResult;
 
+  private SearchAppResultWrapper searchAppResultWrapper;
+  private SearchAdResultWrapper searchAdResultWrapper;
+
   @Before public void setupSearchResultPresenter() {
     MockitoAnnotations.initMocks(this);
 
     lifecycleEvent = PublishSubject.create();
+
+    searchAdResultWrapper = new SearchAdResultWrapper(searchAdResult, 1);
+    searchAppResultWrapper = new SearchAppResultWrapper(searchAppResult, 1);
 
     presenter =
         new SearchResultPresenter(searchResultView, searchAnalytics, searchNavigator, crashReport,
@@ -300,7 +308,7 @@ public class SearchResultPresenterTest {
 
     //When the user clicks on an item from the search result list
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultView.onViewItemClicked()).thenReturn(Observable.just(searchAppResult));
+    when(searchResultView.onViewItemClicked()).thenReturn(Observable.just(searchAppResultWrapper));
     when(searchAppResult.getPackageName()).thenReturn("random");
     when(searchAppResult.getAppId()).thenReturn((long) 0);
     when(searchAppResult.getStoreName()).thenReturn("random");
@@ -309,7 +317,7 @@ public class SearchResultPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should send the necessary analytics and navigate to the app's App view
-    verify(searchAnalytics).searchAppClick("non-empty", "random");
+    verify(searchAnalytics).searchAppClick("non-empty", "random", 1);
     verify(searchNavigator).goToAppView(anyLong(), eq("random"), anyString(), eq("random"));
   }
 
@@ -317,7 +325,7 @@ public class SearchResultPresenterTest {
     presenter.handleClickToOpenAppViewFromAdd();
 
     //When the user clicks on an Ad
-    when(searchResultView.onAdClicked()).thenReturn(Observable.just(searchAdResult));
+    when(searchResultView.onAdClicked()).thenReturn(Observable.just(searchAdResultWrapper));
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
     when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
     when(searchAdResult.getPackageName()).thenReturn("random");
@@ -325,7 +333,7 @@ public class SearchResultPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should send the necessary analytics and navigate to the app's App view
-    verify(searchAnalytics).searchAdClick("non-empty", "random");
+    verify(searchAnalytics).searchAdClick("non-empty", "random", 1);
     verify(searchNavigator).goToAppView(searchAdResult);
   }
 
