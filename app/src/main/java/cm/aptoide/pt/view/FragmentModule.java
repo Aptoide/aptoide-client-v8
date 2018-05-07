@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -22,9 +23,20 @@ import cm.aptoide.pt.account.view.user.CreateUserErrorMapper;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.ReviewsRepository;
+import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationMapper;
@@ -36,6 +48,8 @@ import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
 import cm.aptoide.pt.home.apps.AppsNavigator;
+import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
@@ -48,12 +62,16 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
+import cm.aptoide.pt.view.app.AppCenter;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
+import javax.inject.Named;
+import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -189,5 +207,35 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides GetRewardAppCoinsAppsNavigator providesGetRewardAppCoinsAppsNavigator(
       FragmentNavigator fragmentNavigator) {
     return new GetRewardAppCoinsAppsNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides ReviewsManager providesReviewsManager(
+      ReviewsRepository reviewsRepository) {
+    return new ReviewsManager(reviewsRepository);
+  }
+
+  @FragmentScope @Provides ReviewsRepository providesReviewsRepository(
+      ReviewsService reviewsService) {
+    return new ReviewsRepository(reviewsService);
+  }
+
+  @FragmentScope @Provides ReviewsService providesReviewsService(
+      StoreCredentialsProvider storeCredentialsProvider,
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new ReviewsService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
+        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
+  }
+
+  @FragmentScope @Provides AdsManager providesAdsManager(AdsRepository adsRepository) {
+    return new AdsManager(adsRepository);
+  }
+
+  @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
+      InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
+      ReviewsManager reviewsManager, AdsManager adsManager) {
+    return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
+        reviewsManager, adsManager);
   }
 }

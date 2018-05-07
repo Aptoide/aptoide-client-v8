@@ -100,6 +100,7 @@ import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
@@ -229,6 +230,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   public ApplicationModule(AptoideApplication application, String aptoideMd5sum) {
     this.application = application;
     this.aptoideMd5sum = aptoideMd5sum;
+  }
+
+  @Singleton @Provides InstallManager providesInstallManager() {
+    return application.getInstallManager();
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(

@@ -92,6 +92,6 @@ public class AppCenterRepository {
   }
 
   public Single<DetailedApp> getDetailedApp(long appId, String packageName) {
-    return appService.loadDetailedApp(appId, packageName, true, false);
+    return appService.loadDetailedApp(appId, packageName);
   }
 }

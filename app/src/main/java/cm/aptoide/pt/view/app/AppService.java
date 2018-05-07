@@ -98,11 +98,10 @@ public class AppService {
     }
   }
 
-  public Single<DetailedApp> loadDetailedApp(long appId, String packageName, boolean bypassCache,
-      boolean bypassServerCache) {
-    GetAppRequest.of(packageName, bodyInterceptor, appId, httpClient, converterFactory,
+  public Single<DetailedApp> loadDetailedApp(long appId, String packageName) {
+    return GetAppRequest.of(packageName, bodyInterceptor, appId, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(bypassCache, bypassServerCache)
+        .observe(true, false)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
@@ -111,7 +110,6 @@ public class AppService {
         .onErrorReturn(throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
-    return null;
   }
 
   private Observable<DetailedApp> mapAppToDetailedApp(GetApp getApp) {
