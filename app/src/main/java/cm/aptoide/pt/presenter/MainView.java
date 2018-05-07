@@ -24,7 +24,7 @@ public interface MainView extends View {
 
   Intent getIntentAfterCreate();
 
-  void setUpdatesNumber(Integer updates);
+  void showUpdatesNumber(Integer updates);
 
   void hideUpdatesBadge();
 }

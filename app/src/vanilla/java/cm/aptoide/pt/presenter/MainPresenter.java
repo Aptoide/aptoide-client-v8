@@ -115,7 +115,7 @@ public class MainPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(updates -> {
           if (updates > 0) {
-            view.setUpdatesNumber(updates);
+            view.showUpdatesNumber(updates);
           } else {
             view.hideUpdatesBadge();
           }

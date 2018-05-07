@@ -106,7 +106,8 @@ public class MainActivity extends BottomNavigationActivity
     return getIntent();
   }
 
-  @Override public void setUpdatesNumber(Integer updates) {
+  @Override public void showUpdatesNumber(Integer updates) {
+    updatesBadge.setVisibility(View.VISIBLE);
     updatesNumber.setText(String.valueOf(updates));
   }
 
