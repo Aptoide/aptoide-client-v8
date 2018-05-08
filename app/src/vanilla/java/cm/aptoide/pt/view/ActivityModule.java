@@ -167,10 +167,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
       FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       CallbackManager callbackManager, GoogleApiClient googleApiClient,
-      AccountAnalytics accountAnalytics) {
-    return new AccountNavigator(fragmentNavigator, accountManager, ((ActivityNavigator) activity),
-        LoginManager.getInstance(), callbackManager, googleApiClient, PublishRelay.create(),
-        "http://m.aptoide.com/account/password-recovery", accountAnalytics);
+      AccountAnalytics accountAnalytics, BottomNavigationNavigator bottomNavigationNavigator) {
+    return new AccountNavigator(bottomNavigationNavigator, fragmentNavigator, accountManager,
+        ((ActivityNavigator) activity), LoginManager.getInstance(), callbackManager,
+        googleApiClient, PublishRelay.create(), "http://m.aptoide.com/account/password-recovery",
+        accountAnalytics);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {
@@ -196,13 +197,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides ManageStoreNavigator provideManageStoreNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new ManageStoreNavigator(fragmentNavigator);
+      FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator) {
+    return new ManageStoreNavigator(fragmentNavigator, bottomNavigationNavigator);
   }
 
   @ActivityScope @Provides ManageUserNavigator provideManageUserNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new ManageUserNavigator(fragmentNavigator);
+      FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator) {
+    return new ManageUserNavigator(fragmentNavigator, bottomNavigationNavigator);
   }
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(

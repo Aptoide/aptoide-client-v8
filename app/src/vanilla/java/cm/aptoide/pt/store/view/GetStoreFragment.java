@@ -3,8 +3,6 @@ package cm.aptoide.pt.store.view;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
-import cm.aptoide.pt.store.view.home.AdultRowDisplayable;
-import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
 import rx.Observable;
@@ -24,13 +22,7 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
       boolean bypassServerCache) {
     return getStoreObservable(refresh, url, bypassServerCache).observeOn(Schedulers.io())
         .flatMap(getStore -> parseDisplayables(getStore.getNodes()
-            .getWidgets()))
-        .doOnNext(displayables -> {
-          // We only want one Adult Switch in Home Fragment.
-          if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
-            displayables.add(new AdultRowDisplayable(GetStoreFragment.this));
-          }
-        });
+            .getWidgets()));
   }
 
   private Observable<GetStore> getStoreObservable(boolean refresh, String url,
