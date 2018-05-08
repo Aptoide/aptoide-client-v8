@@ -234,7 +234,7 @@ import rx.schedulers.Schedulers;
     return new AdsManager(adsRepository);
   }
 
-  @FragmentScope @Provides UserPreferencesPersister userPreferencesPersister(
+  @FragmentScope @Provides UserPreferencesPersister providesUserPreferencesPersister(
       @Named("default") SharedPreferences sharedPreferences) {
     return new UserPreferencesPersister(sharedPreferences);
   }
