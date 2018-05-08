@@ -18,6 +18,7 @@ import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
+import android.util.EventLog;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
@@ -49,6 +50,7 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsNormalizer;
 import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventService;
+import cm.aptoide.pt.analytics.analytics.Event;
 import cm.aptoide.pt.analytics.analytics.EventLogger;
 import cm.aptoide.pt.analytics.analytics.EventsPersistence;
 import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
@@ -987,12 +989,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new FirstLaunchAnalytics(analyticsManager);
   }
 
-  @Singleton @Provides @Named("aptoide") EventLogger providesAptoideEventLogger(
-      EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport) {
-    return new AptoideBiEventLogger(
-        new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
-            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport));
+  @Singleton @Provides @Named("aptoideLogger") EventLogger providesAptoideEventLogger(@Named("aptoide")AptoideBiEventLogger aptoideBiEventLogger) {
+    return aptoideBiEventLogger;
+  }
+
+  @Singleton @Provides @Named("aptoideSession") SessionLogger providesAptoideSessionLogger(@Named("aptoide")AptoideBiEventLogger aptoideBiEventLogger) {
+    return aptoideBiEventLogger;
   }
 
   @Singleton @Provides @Named("facebook") EventLogger providesFacebookEventLogger(
@@ -1000,12 +1002,24 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new FacebookEventLogger(facebook);
   }
 
-  @Singleton @Provides @Named("flurry") EventLogger providesFlurryEventLogger() {
+  @Singleton @Provides @Named("flurry") FlurryEventLogger providesFlurryLogger() {
     return new FlurryEventLogger(application);
   }
 
-  @Singleton @Provides @Named("flurrySession") SessionLogger providesFlurrySessionLogger() {
-    return new FlurryEventLogger(application);
+  @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(@Named("flurry")FlurryEventLogger eventLogger) {
+    return eventLogger;
+  }
+
+  @Singleton @Provides @Named("flurrySession") SessionLogger providesFlurrySessionLogger(@Named("flurry")FlurryEventLogger eventLogger) {
+    return eventLogger;
+  }
+
+  @Singleton @Provides @Named("aptoide") AptoideBiEventLogger providesAptoideBILogger(
+    EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport, @Named("default")SharedPreferences preferences) {
+      return new AptoideBiEventLogger(
+          new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
+              Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
+              BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport, preferences));
   }
 
   @Singleton @Provides @Named("fabric") EventLogger providesFabricEventLogger(Answers fabric) {
@@ -1038,15 +1052,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AnalyticsManager providesAnalyticsManager(
-      @Named("aptoide") EventLogger aptoideBiEventLogger,
+      @Named("aptoideLogger") EventLogger aptoideBiEventLogger,
       @Named("facebook") EventLogger facebookEventLogger,
       @Named("fabric") EventLogger fabricEventLogger,
-      @Named("flurry") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger,
+      @Named("flurryLogger") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger,
       @Named("aptoideEvents") Collection<String> aptoideEvents,
       @Named("facebookEvents") Collection<String> facebookEvents,
       @Named("fabricEvents") Collection<String> fabricEvents,
       @Named("flurryEvents") Collection<String> flurryEvents,
       @Named("flurrySession") SessionLogger flurrySessionLogger,
+      @Named("aptoideSession") SessionLogger aptoideSessionLogger,
       @Named("normalizer") AnalyticsNormalizer analyticsNormalizer) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
@@ -1054,6 +1069,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .addLogger(fabricEventLogger, fabricEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addSessionLogger(flurrySessionLogger)
+        .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
         .setAnalyticsNormalizer(analyticsNormalizer)
         .build();

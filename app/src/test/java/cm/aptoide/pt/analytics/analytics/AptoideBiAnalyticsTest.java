@@ -37,7 +37,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 0, 200, crashReport);
+            new CompositeSubscription(), scheduler, 0, 200, crashReport, preferences);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -64,7 +64,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 0, 200, crashReport);
+            new CompositeSubscription(), scheduler, 0, 200, crashReport, preferences);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -93,7 +93,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 200000, 20000, crashReport);
+            new CompositeSubscription(), scheduler, 200000, 20000, crashReport, preferences);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();

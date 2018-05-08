@@ -212,4 +212,8 @@ public class ManagerPreferences {
   public static String getNotificationType(SharedPreferences sharedPreferences) {
     return sharedPreferences.getString(ManagedKeys.NOTIFICATION_TYPE, "");
   }
+
+  public static String getSessionTimestamp(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getString(ManagedKeys.SESSION_TIMESTAMP, "");
+  }
 }

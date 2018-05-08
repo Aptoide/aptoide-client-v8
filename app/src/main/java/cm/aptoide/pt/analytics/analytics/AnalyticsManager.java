@@ -4,14 +4,18 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.ApplicationModule;
 import cm.aptoide.pt.FlavourApplicationModule;
 import cm.aptoide.pt.logger.Logger;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
   private final SessionLogger sessionLogger;
+  private List<SessionLogger> sessionLoggers;
   private final AnalyticsNormalizer analyticsNormalizer;
 
   private Map<EventLogger, Collection<String>> eventLoggers;
@@ -19,6 +23,7 @@ public class AnalyticsManager {
   private AnalyticsManager(HttpKnockEventLogger knockLogger,
       Map<EventLogger, Collection<String>> eventLoggers, SessionLogger sessionLogger,
       AnalyticsNormalizer analyticsNormalizer) {
+    sessionLoggers = new ArrayList<>();
     this.knockEventLogger = knockLogger;
     this.eventLoggers = eventLoggers;
     this.sessionLogger = sessionLogger;
@@ -86,6 +91,7 @@ public class AnalyticsManager {
    * <p> Starts the Flurry session allowing to log events.</p>
    */
   public void startSession() {
+
     sessionLogger.startSession();
   }
 
@@ -111,6 +117,7 @@ public class AnalyticsManager {
     private final Map<EventLogger, Collection<String>> eventLoggers;
     private HttpKnockEventLogger httpKnockEventLogger;
     private SessionLogger sessionLogger;
+    private List<SessionLogger> sessionLoggers = new ArrayList<>();
     private AnalyticsNormalizer analyticsNormalizer;
 
     /**
@@ -156,7 +163,8 @@ public class AnalyticsManager {
      * @see NullPointerException
      */
     public Builder addSessionLogger(SessionLogger sessionLogger) {
-      this.sessionLogger = sessionLogger;
+      this.sessionLogger = sessionLogger; //será lista
+      sessionLoggers.add(sessionLogger);
       return this;
     }
 
