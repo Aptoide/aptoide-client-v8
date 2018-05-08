@@ -27,10 +27,14 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.view.AppViewNavigator;
+import cm.aptoide.pt.app.view.AppViewPresenter;
+import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -237,5 +241,12 @@ import rx.schedulers.Schedulers;
       ReviewsManager reviewsManager, AdsManager adsManager) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager);
+  }
+
+  @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
+      AccountNavigator accountNavigator, AppViewAnalytics analytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager, CrashReport crashReport) {
+    return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
+        appViewNavigator, appViewManager, AndroidSchedulers.mainThread(), crashReport);
   }
 }

@@ -50,6 +50,12 @@ public class AppViewNavigator {
     fragmentNavigator.navigateTo(fragment, true);
   }
 
+  public void navigateToDescriptionReadMore(String name, String description, String theme) {
+    Fragment fragment = AptoideApplication.getFragmentProvider()
+        .newDescriptionFragment(name, description, theme);
+    fragmentNavigator.navigateTo(fragment, true);
+  }
+
   public void navigateToSearch(String appName, boolean onlyShowTrustedApps) {
     Fragment fragment =
         SearchResultFragment.newInstance(appName, onlyShowTrustedApps, defaultStoreName);

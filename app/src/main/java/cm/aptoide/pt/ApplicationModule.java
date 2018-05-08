@@ -1157,4 +1157,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
         application.getPackageManager());
   }
+
+  @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
+      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
 }

@@ -15,6 +15,7 @@
       />
 
   <TextView
+      android:id="@+id/description_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -25,6 +26,7 @@
       />
 
   <Button
+      android:id="@+id/description_see_more"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="16dp"
