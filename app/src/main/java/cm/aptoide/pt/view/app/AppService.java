@@ -118,8 +118,9 @@ public class AppService {
         .getData();
     DetailedApp detailedApp =
         new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-            app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getDeveloper(),
-            app.getStore(), app.getMedia(), app.getStats(), app.getObb(), app.getPay());
+            app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file,
+            app.getDeveloper(), app.getStore(), app.getMedia(), app.getStats(), app.getObb(),
+            app.getPay());
     return Observable.just(detailedApp);
   }
 }

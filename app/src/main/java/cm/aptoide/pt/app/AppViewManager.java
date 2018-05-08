@@ -1,6 +1,8 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
@@ -8,6 +10,7 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.DetailedApp;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -22,16 +25,18 @@ public class AppViewManager {
   private final AppCenter appCenter;
   private final ReviewsManager reviewsManager;
   private final AdsManager adsManager;
+  private final StoreManager storeManager;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
-      AdsManager adsManager) {
+      AdsManager adsManager, StoreManager storeManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
     this.reviewsManager = reviewsManager;
     this.adsManager = adsManager;
+    this.storeManager = storeManager;
   }
 
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
@@ -55,6 +60,18 @@ public class AppViewManager {
           .doOnSuccess(ads -> similarApps.addAll(ads));
     })
         .map(listBuilt -> new AdsViewModel(similarApps));
+  }
+
+  public Observable<Boolean> isStoreFollowed(long storeId) {
+    return storeManager.isSubscribed(storeId);
+  }
+
+  public Observable<Boolean> isStoreFollowed(String storeName) {
+    return storeManager.isSubscribed(storeName);
+  }
+
+  public Observable<GetStoreMeta> subscribeStore(String storeName) {
+    return storeManager.subscribeStore(storeName);
   }
 
   private Single<MinimalAd> getAd(String packageName, String storeName) {

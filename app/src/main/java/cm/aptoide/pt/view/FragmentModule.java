@@ -19,6 +19,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.store.ManageStorePresenter;
 import cm.aptoide.pt.account.view.store.ManageStoreView;
+import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.CreateUserErrorMapper;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
@@ -234,8 +235,8 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
-      ReviewsManager reviewsManager, AdsManager adsManager) {
+      ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager);
+        reviewsManager, adsManager, storeManager);
   }
 }
