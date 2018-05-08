@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import java.util.ArrayList;
@@ -118,9 +119,16 @@ public class AppService {
         .getData();
     DetailedApp detailedApp =
         new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-            app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file,
+            app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getFile(),
             app.getDeveloper(), app.getStore(), app.getMedia(), app.getStats(), app.getObb(),
             app.getPay());
     return Observable.just(detailedApp);
+  }
+
+  public Single<ListApps> loadRecommendedApps(int limit, String packageName) {
+    return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences).observe()
+        .toSingle();
   }
 }

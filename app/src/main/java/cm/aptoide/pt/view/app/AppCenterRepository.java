@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,5 +94,9 @@ public class AppCenterRepository {
 
   public Single<DetailedApp> getDetailedApp(long appId, String packageName) {
     return appService.loadDetailedApp(appId, packageName);
+  }
+
+  public Single<ListApps> loadRecommendedApps(int limit, String packageName) {
+    return appService.loadRecommendedApps(limit, packageName);
   }
 }

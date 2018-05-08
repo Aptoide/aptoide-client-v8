@@ -10,7 +10,6 @@ import cm.aptoide.pt.account.view.exception.StoreCreationException;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
-import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -21,7 +20,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.store.StoreTheme;
-import cm.aptoide.pt.store.StoreUtilsProxy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +48,6 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
   private final RequestBodyFactory requestBodyFactory;
   private final ObjectMapper objectMapper;
   private final StoreRepository storeRepository;
-  private final StoreUtilsProxy storeUtilsProxy;
 
   public StoreManager(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
@@ -58,7 +55,7 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7,
       SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       RequestBodyFactory requestBodyFactory, ObjectMapper objectMapper,
-      StoreRepository storeRepository, StoreUtilsProxy storeUtilsProxy) {
+      StoreRepository storeRepository) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.multipartBodyInterceptor = multipartBodyInterceptor;
@@ -69,7 +66,6 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
     this.requestBodyFactory = requestBodyFactory;
     this.objectMapper = objectMapper;
     this.storeRepository = storeRepository;
-    this.storeUtilsProxy = storeUtilsProxy;
   }
 
   public Completable createOrUpdate(String storeName, String storeDescription,
@@ -92,10 +88,6 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
 
   public Observable<Boolean> isSubscribed(String storeName) {
     return storeRepository.isSubscribed(storeName);
-  }
-
-  public Observable<GetStoreMeta> subscribeStore(String storeName) {
-    return storeUtilsProxy.subscribeStoreObservable(storeName);
   }
 
   @NonNull private Completable getOnErrorCompletable(Throwable err) {

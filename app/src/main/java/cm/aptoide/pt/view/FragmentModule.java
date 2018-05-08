@@ -29,6 +29,8 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.FlagManager;
+import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
@@ -64,6 +66,7 @@ import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
+import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
@@ -233,10 +236,22 @@ import rx.schedulers.Schedulers;
     return new AdsManager(adsRepository);
   }
 
+  @FragmentScope @Provides FlagManager providesFlagManager(FlagService flagService) {
+    return new FlagManager(flagService);
+  }
+
+  @FragmentScope @Provides FlagService providesFlagService(@Named("defaultInterceptorV3")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
-      ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager) {
+      ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
+      FlagManager flagManager, StoreUtilsProxy storeUtilsProxy) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager, storeManager);
+        reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy);
   }
 }

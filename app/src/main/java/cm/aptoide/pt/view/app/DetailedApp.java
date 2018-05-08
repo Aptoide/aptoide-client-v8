@@ -3,7 +3,6 @@ package cm.aptoide.pt.view.app;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by D01 on 04/05/18.
@@ -13,7 +12,7 @@ public class DetailedApp {
 
   private long id;
   private String name;
-  @JsonProperty("package") private String packageName;
+  private String packageName;
   private long size;
   private String icon;
   private String graphic;

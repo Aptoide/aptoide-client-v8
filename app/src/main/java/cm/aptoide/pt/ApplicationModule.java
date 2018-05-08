@@ -823,12 +823,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
-      @Named("default") ObjectMapper nonNullObjectMapper, StoreRepository storeRepository,
-      StoreUtilsProxy storeUtilsProxy) {
+      @Named("default") ObjectMapper nonNullObjectMapper, StoreRepository storeRepository) {
     return new StoreManager(okHttpClient, WebService.getDefaultConverter(),
         multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper,
-        storeRepository, storeUtilsProxy);
+        storeRepository);
   }
 
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,

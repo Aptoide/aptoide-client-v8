@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import rx.Single;
 
 /**
@@ -27,5 +28,9 @@ public class AppCenter {
 
   public Single<DetailedApp> getDetailedApp(long appId, String packageName) {
     return appCenterRepository.getDetailedApp(appId, packageName);
+  }
+
+  public Single<ListApps> loadRecommendedApps(int limit, String packageName) {
+    return appCenterRepository.loadRecommendedApps(limit, packageName);
   }
 }
