@@ -42,6 +42,9 @@ public class InstallAppViewPresenter implements Presenter {
               }
               return Observable.just(true);
             })
+            .flatMap(rootDialog -> permissionManager.requestDownloadAccess(permissionService)
+                .flatMap(success -> permissionManager.requestExternalStoragePermission(
+                    permissionService)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
