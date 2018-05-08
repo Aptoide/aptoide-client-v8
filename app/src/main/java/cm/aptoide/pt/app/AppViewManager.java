@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -22,16 +23,18 @@ public class AppViewManager {
   private final AppCenter appCenter;
   private final ReviewsManager reviewsManager;
   private final AdsManager adsManager;
+  private PreferencesManager preferencesManager;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
-      AdsManager adsManager) {
+      AdsManager adsManager, PreferencesManager preferencesManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
     this.reviewsManager = reviewsManager;
     this.adsManager = adsManager;
+    this.preferencesManager = preferencesManager;
   }
 
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
@@ -59,5 +62,9 @@ public class AppViewManager {
 
   private Single<MinimalAd> getAd(String packageName, String storeName) {
     return adsManager.loadAd(packageName, storeName);
+  }
+
+  public void increaseInstallClick() {
+    preferencesManager.setNotLoggedInInstallClicks();
   }
 }

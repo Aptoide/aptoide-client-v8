@@ -31,6 +31,8 @@ import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.appview.PreferencesManager;
+import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -232,10 +234,20 @@ import rx.schedulers.Schedulers;
     return new AdsManager(adsRepository);
   }
 
+  @FragmentScope @Provides UserPreferencesPersister userPreferencesPersister(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new UserPreferencesPersister(sharedPreferences);
+  }
+
+  @FragmentScope @Provides PreferencesManager providesPreferencesManager(
+      UserPreferencesPersister userPreferencesPersister) {
+    return new PreferencesManager(userPreferencesPersister);
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
-      ReviewsManager reviewsManager, AdsManager adsManager) {
+      ReviewsManager reviewsManager, AdsManager adsManager, PreferencesManager preferencesManager) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager);
+        reviewsManager, adsManager, preferencesManager);
   }
 }

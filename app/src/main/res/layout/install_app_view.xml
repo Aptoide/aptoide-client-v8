@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <Button
+      android:id="@+id/appview_install_button"
+      android:layout_width="249dp"
+      android:layout_height="48dp"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="13dp"
+      android:text="@string/install"
+      android:textAllCaps="true"
+      android:textSize="16sp"
+      android:visibility="visible"
+      style="@style/Aptoide.Button.S.Gradient.Rounded"
+      />
+
+  <LinearLayout
+      android:id="@+id/appview_transfer_info"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:weightSum="3"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="18dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+
+      <RelativeLayout
+          android:id="@+id/apps_download_download_info_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          >
+
+        <TextView
+            android:id="@+id/apps_downloads_download_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Installing ... "
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
+            />
+
+        <TextView
+            android:id="@+id/apps_download_progress_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="start"
+            tools:text="80%"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
+            />
+      </RelativeLayout>
+
+
+      <FrameLayout
+          android:layout_width="fill_parent"
+          android:layout_height="4dp"
+          android:layout_marginBottom="4dp"
+          >
+
+        <ProgressBar
+            android:id="@+id/apps_downloads_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="4dp"
+            android:indeterminate="false"
+            style="?android:attr/progressBarStyleHorizontal"
+            />
+      </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="2"
+        android:gravity="end"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:id="@+id/apps_download_cancel_button"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="center"
+          android:src="@drawable/ic_clear_action_black"
+          />
+
+      <ImageView
+          android:id="@+id/apps_download_resume_download"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="fitCenter"
+          android:src="@drawable/ic_play_arrow_action_black"
+          />
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+
+</LinearLayout>
