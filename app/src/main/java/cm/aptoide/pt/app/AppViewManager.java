@@ -67,4 +67,12 @@ public class AppViewManager {
   public void increaseInstallClick() {
     preferencesManager.setNotLoggedInInstallClicks();
   }
+
+  public boolean showRootInstallWarningPopup() {
+    return installManager.showWarning();
+  }
+
+  public void saveRootInstallWarning(Boolean answer) {
+    installManager.rootInstallAllowed(answer);
+  }
 }

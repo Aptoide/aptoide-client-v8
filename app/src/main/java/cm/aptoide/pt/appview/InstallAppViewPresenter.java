@@ -5,6 +5,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import rx.Observable;
 
 /**
  * Created by filipegoncalves on 5/7/18.
@@ -32,11 +33,15 @@ public class InstallAppViewPresenter implements Presenter {
   private void installApp() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.installAppClick()
-            .doOnNext(__1 -> appViewManager.increaseInstallClick())
-            //verify on install manager if should show
-            .doOnNext(__2 -> view.showRootInstallWarningPopup())
-
+        .flatMap(create -> view.installAppClick()
+            .doOnNext(click -> appViewManager.increaseInstallClick())
+            .flatMap(__1 -> {
+              if (appViewManager.showRootInstallWarningPopup()) {
+                return view.showRootInstallWarningPopup()
+                    .doOnNext(answer -> appViewManager.saveRootInstallWarning(answer));
+              }
+              return Observable.just(true);
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

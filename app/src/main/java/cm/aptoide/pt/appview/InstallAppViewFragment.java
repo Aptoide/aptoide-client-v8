@@ -15,10 +15,13 @@ import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import rx.Observable;
+
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
  * Created by filipegoncalves on 5/7/18.
@@ -49,7 +52,7 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
-    install = ((Button) view.findViewById(R.id.app_install_button));
+    install = ((Button) view.findViewById(R.id.appview_install_button));
     downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
 
     attachPresenter(new InstallAppViewPresenter(this, appViewManager, new PermissionManager(),
@@ -90,7 +93,9 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     return RxView.clicks(install);
   }
 
-  @Override public void showRootInstallWarningPopup() {
-
+  @Override public Observable<Boolean> showRootInstallWarningPopup() {
+    return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
+        getResources().getString(R.string.root_access_dialog))
+        .map(response -> (response.equals(YES)));
   }
 }

@@ -11,5 +11,5 @@ public interface InstallAppView extends View {
 
   Observable<Void> installAppClick();
 
-  void showRootInstallWarningPopup();
+  Observable<Boolean> showRootInstallWarningPopup();
 }
