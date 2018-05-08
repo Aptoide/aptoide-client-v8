@@ -108,7 +108,6 @@ import javax.inject.Singleton;
         StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
         AccountAnalytics.LOGIN_EVENT_NAME, AccountAnalytics.FOLLOW_FRIENDS,
         UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
-        DrawerAnalytics.DRAWER_OPEN_EVENT, DrawerAnalytics.DRAWER_INTERACT_EVENT,
         FirstLaunchAnalytics.FIRST_LAUNCH, InstallFabricEvents.ROOT_V2_COMPLETE,
         InstallFabricEvents.ROOT_V2_START, AppViewSimilarAppAnalytics.APP_VIEW_SIMILAR_APP_SLIDE_IN,
         AppViewSimilarAppAnalytics.SIMILAR_APP_INTERACT,

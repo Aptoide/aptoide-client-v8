@@ -15,7 +15,6 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import java.util.List;
