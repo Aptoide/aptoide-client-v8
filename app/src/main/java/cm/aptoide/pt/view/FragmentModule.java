@@ -254,9 +254,11 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
       ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
-      FlagManager flagManager, StoreUtilsProxy storeUtilsProxy) {
+      FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
+      AptoideAccountManager aptoideAccountManager) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy);
+        reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy,
+        aptoideAccountManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
