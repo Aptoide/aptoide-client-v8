@@ -18,7 +18,6 @@ import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.util.EventLog;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
@@ -50,7 +49,6 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsNormalizer;
 import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventService;
-import cm.aptoide.pt.analytics.analytics.Event;
 import cm.aptoide.pt.analytics.analytics.EventLogger;
 import cm.aptoide.pt.analytics.analytics.EventsPersistence;
 import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
@@ -989,11 +987,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new FirstLaunchAnalytics(analyticsManager);
   }
 
-  @Singleton @Provides @Named("aptoideLogger") EventLogger providesAptoideEventLogger(@Named("aptoide")AptoideBiEventLogger aptoideBiEventLogger) {
+  @Singleton @Provides @Named("aptoideLogger") EventLogger providesAptoideEventLogger(
+      @Named("aptoide") AptoideBiEventLogger aptoideBiEventLogger) {
     return aptoideBiEventLogger;
   }
 
-  @Singleton @Provides @Named("aptoideSession") SessionLogger providesAptoideSessionLogger(@Named("aptoide")AptoideBiEventLogger aptoideBiEventLogger) {
+  @Singleton @Provides @Named("aptoideSession") SessionLogger providesAptoideSessionLogger(
+      @Named("aptoide") AptoideBiEventLogger aptoideBiEventLogger) {
     return aptoideBiEventLogger;
   }
 
@@ -1006,20 +1006,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new FlurryEventLogger(application);
   }
 
-  @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(@Named("flurry")FlurryEventLogger eventLogger) {
+  @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
+      @Named("flurry") FlurryEventLogger eventLogger) {
     return eventLogger;
   }
 
-  @Singleton @Provides @Named("flurrySession") SessionLogger providesFlurrySessionLogger(@Named("flurry")FlurryEventLogger eventLogger) {
+  @Singleton @Provides @Named("flurrySession") SessionLogger providesFlurrySessionLogger(
+      @Named("flurry") FlurryEventLogger eventLogger) {
     return eventLogger;
   }
 
   @Singleton @Provides @Named("aptoide") AptoideBiEventLogger providesAptoideBILogger(
-    EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport, @Named("default")SharedPreferences preferences) {
-      return new AptoideBiEventLogger(
-          new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
-              Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-              BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport, preferences));
+      EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport,
+      @Named("default") SharedPreferences preferences) {
+    return new AptoideBiEventLogger(
+        new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
+            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport, preferences));
   }
 
   @Singleton @Provides @Named("fabric") EventLogger providesFabricEventLogger(Answers fabric) {

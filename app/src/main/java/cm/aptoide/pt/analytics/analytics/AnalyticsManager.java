@@ -6,7 +6,6 @@ import cm.aptoide.pt.FlavourApplicationModule;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.Map;
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
-  //private  SessionLogger sessionLogger;
   private List<SessionLogger> sessionLoggers;
   private final AnalyticsNormalizer analyticsNormalizer;
 
@@ -93,7 +91,6 @@ public class AnalyticsManager {
     for (SessionLogger sessionLogger : sessionLoggers) {
       sessionLogger.startSession();
     }
-  //  sessionLogger.startSession();
   }
 
   /**
@@ -103,7 +100,6 @@ public class AnalyticsManager {
     for (SessionLogger sessionLogger : sessionLoggers) {
       sessionLogger.endSession();
     }
-   // sessionLogger.endSession();
   }
 
   /**
@@ -168,7 +164,6 @@ public class AnalyticsManager {
      * @see NullPointerException
      */
     public Builder addSessionLogger(SessionLogger sessionLogger) {
-    //  this.sessionLogger = sessionLogger; //será lista
       this.sessionLoggers.add(sessionLogger);
       return this;
     }

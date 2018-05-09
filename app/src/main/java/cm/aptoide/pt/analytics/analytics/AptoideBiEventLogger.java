@@ -1,8 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
-import android.content.SharedPreferences;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.util.Map;
 
 /**
@@ -12,6 +10,9 @@ import java.util.Map;
 public class AptoideBiEventLogger implements EventLogger, SessionLogger {
   private static final String TAG = AptoideBiEventLogger.class.getSimpleName();
   private final AptoideBiAnalytics service;
+
+  private final String EVENT_NAME = "SESSION";
+  private final String CONTEXT_NAME = "APPLICATION";
 
   public AptoideBiEventLogger(AptoideBiAnalytics service) {
     this.service = service;
@@ -33,9 +34,10 @@ public class AptoideBiEventLogger implements EventLogger, SessionLogger {
     long currentTimeElapsed = System.currentTimeMillis() - service.getTimestamp();
     if (currentTimeElapsed < thirtySeconds) {
       Logger.d(TAG, "startSession currentTimeElapsed: " + currentTimeElapsed);
-    }  else {
+    } else {
       Logger.d(TAG, "startSession: " + service.getTimestamp());
-      service.log("SESSION", null, AnalyticsManager.Action.OPEN, "APPLICATION", System.currentTimeMillis());
+      service.log(EVENT_NAME, null, AnalyticsManager.Action.OPEN, CONTEXT_NAME,
+          System.currentTimeMillis());
     }
   }
 
