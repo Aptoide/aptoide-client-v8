@@ -24,6 +24,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -239,5 +240,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
       AnalyticsManager manager, NavigationTracker tracker) {
     return new BottomNavigationAnalytics(manager, tracker);
+  }
+
+  @ActivityScope @Provides AppViewNavigator providesAppViewNavigator(
+      FragmentNavigator fragmentNavigator) {
+    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+
+    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity,
+        application.hasMultiStoreSearch(), application.getDefaultStoreName());
   }
 }

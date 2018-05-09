@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -28,7 +29,7 @@ public class HomeNavigator {
 
   public void navigateToAppView(long appId, String packageName, String tag) {
     fragmentNavigator.navigateTo(
-        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag),
+        NewAppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag),
         true);
   }
 

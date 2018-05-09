@@ -9,7 +9,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ebebeb"
     android:orientation="vertical"
     >
 
@@ -27,8 +26,8 @@
       android:paddingRight="17.3dp"
       android:paddingStart="13.3dp"
       android:text="@string/additional_information"
-      android:textColor="#403f3d"
-      android:textSize="18sp"
+      android:textColor="@color/black"
+      android:textSize="16sp"
       />
 
   <LinearLayout

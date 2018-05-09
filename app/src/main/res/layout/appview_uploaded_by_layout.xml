@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/appview_uploaded_by"
+      android:textColor="@color/black"
+      android:textSize="16sp"
+      />
+
+  <include
+      layout="@layout/separator_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="9dp"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:orientation="horizontal"
+      >
+
+    <ImageView
+        android:id="@+id/store_icon"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        tools:src="@mipmap/ic_launcher"
+        />
+
+    <RelativeLayout
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        >
+
+      <TextView
+          android:id="@+id/store_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:textColor="@color/black"
+          android:textSize="16sp"
+          tools:text="Dead Pirates store"
+          />
+
+      <ImageView
+          android:id="@+id/user_shape"
+          android:layout_width="9dp"
+          android:layout_height="10dp"
+          android:layout_below="@id/store_name"
+          android:layout_marginTop="5dp"
+          android:src="@drawable/ic_user_shape"
+          android:tint="@color/grey_700"
+          />
+
+      <TextView
+          android:id="@+id/user_count"
+          android:layout_width="26dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/store_name"
+          android:layout_marginLeft="3dp"
+          android:layout_marginStart="3dp"
+          android:layout_marginTop="3dp"
+          android:layout_toEndOf="@id/user_shape"
+          android:layout_toRightOf="@id/user_shape"
+          android:textColor="@color/grey_700"
+          android:textSize="10sp"
+          tools:text="348 K"
+          />
+
+      <ImageView
+          android:id="@+id/downloads_shape"
+          android:layout_width="9dp"
+          android:layout_height="10dp"
+          android:layout_below="@id/store_name"
+          android:layout_marginLeft="17dp"
+          android:layout_marginStart="17dp"
+          android:layout_marginTop="5dp"
+          android:layout_toEndOf="@id/user_count"
+          android:layout_toRightOf="@id/user_count"
+          android:src="@drawable/ic_action_download"
+          android:tint="@color/grey_700"
+          />
+
+      <TextView
+          android:id="@+id/download_count"
+          android:layout_width="26dp"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/store_name"
+          android:layout_marginLeft="3dp"
+          android:layout_marginStart="3dp"
+          android:layout_marginTop="3dp"
+          android:layout_toEndOf="@id/downloads_shape"
+          android:layout_toRightOf="@id/downloads_shape"
+          android:textColor="@color/grey_700"
+          android:textSize="10sp"
+          tools:text="348 K"
+          />
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:text="@string/follow"
+        android:textSize="10sp"
+        style="@style/Aptoide.Button.Ghost"
+        />
+  </LinearLayout>
+
+  <include
+      layout="@layout/separator_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="9dp"
+      />
+
+</LinearLayout>
