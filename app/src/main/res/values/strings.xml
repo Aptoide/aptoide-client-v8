@@ -170,7 +170,7 @@
         credibility and other user comments. Aptoide always recommends that you only install %1$s trusted apps.</string>
   <string name="dialog_install_warning_trusted_version_button">Trusted version</string>
   <string name="dialog_install_warning_get_trusted_version_button">Get</string>
-  <string name="flag_results">Flag results</string>
+  <string name="flag_results">Flag this app</string>
   <string name="helpful">Helpful</string>
   <string name="not_helpful">Not Helpful</string>
   <string name="description_not_available">No available description for this app</string>

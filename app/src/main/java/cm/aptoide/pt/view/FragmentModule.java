@@ -261,8 +261,10 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
-      AppViewNavigator appViewNavigator, AppViewManager appViewManager, CrashReport crashReport) {
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
-        appViewNavigator, appViewManager, AndroidSchedulers.mainThread(), crashReport);
+        appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
+        crashReport);
   }
 }

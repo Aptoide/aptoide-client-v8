@@ -14,16 +14,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.AdsViewModel;
+import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import com.jakewharton.rxbinding.view.RxView;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.Single;
 import rx.subjects.PublishSubject;
 
 /**
@@ -59,9 +66,18 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private RecyclerView commentsView;
   private Button rateAppButton;
   private Button showAllCommentsButton;
-  /*
-  TODO:Flag this app stuff missing here!
-   */
+
+  private View goodAppLayoutWrapper;
+  private View flagsLayoutWrapper;
+  private View workingWellLayout;
+  private View needsLicenseLayout;
+  private View fakeAppLayout;
+  private View virusLayout;
+  private TextView workingWellText;
+  private TextView needsLicenceText;
+  private TextView fakeAppText;
+  private TextView virusText;
+
   private ImageView storeIcon;
   private TextView storeName;
   private TextView storeFollowers;
@@ -137,6 +153,19 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     commentsView = (RecyclerView) view.findViewById(R.id.top_comments_list);
     rateAppButton = (Button) view.findViewById(R.id.rate_this_button);
     showAllCommentsButton = (Button) view.findViewById(R.id.read_all_button);
+
+    goodAppLayoutWrapper = view.findViewById(R.id.good_app_layout);
+    flagsLayoutWrapper = view.findViewById(R.id.rating_flags_layout);
+    workingWellLayout = view.findViewById(R.id.working_well_layout);
+    needsLicenseLayout = view.findViewById(R.id.needs_licence_layout);
+    fakeAppLayout = view.findViewById(R.id.fake_app_layout);
+    virusLayout = view.findViewById(R.id.virus_layout);
+
+    workingWellText = (TextView) view.findViewById(R.id.working_well_count);
+    needsLicenceText = (TextView) view.findViewById(R.id.needs_licence_count);
+    fakeAppText = (TextView) view.findViewById(R.id.fake_app_count);
+    virusText = (TextView) view.findViewById(R.id.virus_count);
+
     storeIcon = (ImageView) view.findViewById(R.id.store_icon);
     storeName = (TextView) view.findViewById(R.id.store_name);
     storeFollowers = (TextView) view.findViewById(R.id.user_count);
@@ -208,6 +237,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
         .getVideos());
     setDescription(detailedApp.getMedia()
         .getDescription());
+    setAppFlags(detailedApp.getFile());
     setReadMoreClickListener(detailedApp);
     showAppview();
   }
@@ -218,6 +248,30 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
   @Override public Observable<ReadMoreClickEvent> clickedReadMore() {
     return readMoreClick;
+  }
+
+  @Override public Single<Void> populateReviewsAndAds(ReviewsViewModel reviews, AdsViewModel ads) {
+    return Single.just(null);
+  }
+
+  @Override public Observable<Void> clickWorkingFlag() {
+    return RxView.clicks(workingWellLayout);
+  }
+
+  @Override public Observable<Void> clickLicenseFlag() {
+    return RxView.clicks(needsLicenseLayout);
+  }
+
+  @Override public Observable<Void> clickFakeFlag() {
+    return RxView.clicks(fakeAppLayout);
+  }
+
+  @Override public Observable<Void> clickVirusFlag() {
+    return RxView.clicks(virusLayout);
+  }
+
+  @Override public void displayNotLoggedInSnack() {
+
   }
 
   private void setDescription(String description) {
@@ -236,5 +290,63 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
             .getDescription(), detailedApp.getStore()
             .getAppearance()
             .getTheme())));
+  }
+
+  private void setAppFlags(GetAppMeta.GetAppMetaFile file) {
+    if (file.isGoodApp()) {
+      goodAppLayoutWrapper.setVisibility(View.VISIBLE);
+      flagsLayoutWrapper.setVisibility(View.GONE);
+    } else {
+      goodAppLayoutWrapper.setVisibility(View.GONE);
+      flagsLayoutWrapper.setVisibility(View.VISIBLE);
+      setFlagValues(file);
+    }
+  }
+
+  private void setFlagValues(GetAppMeta.GetAppMetaFile file) {
+    try {
+      GetAppMeta.GetAppMetaFile.Flags flags = file.getFlags();
+
+      if (flags != null && flags.getVotes() != null && !flags.getVotes()
+          .isEmpty()) {
+        for (final GetAppMeta.GetAppMetaFile.Flags.Vote vote : flags.getVotes()) {
+          applyCount(vote.getType(), vote.getCount());
+        }
+      }
+    } catch (NullPointerException ex) {
+      CrashReport.getInstance()
+          .log(ex);
+    }
+  }
+
+  private void applyCount(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type, int count) {
+    String countAsString = Integer.toString(count);
+    switch (type) {
+      case GOOD:
+        workingWellText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(countAsString)));
+        break;
+
+      case VIRUS:
+        virusText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(countAsString)));
+        break;
+
+      case FAKE:
+        fakeAppText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(countAsString)));
+        break;
+
+      case LICENSE:
+        needsLicenceText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(countAsString)));
+        break;
+
+      case FREEZE:
+        break;
+
+      default:
+        throw new IllegalArgumentException("Unable to find Type " + type.name());
+    }
   }
 }
