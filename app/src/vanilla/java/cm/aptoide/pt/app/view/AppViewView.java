@@ -39,4 +39,22 @@ public interface AppViewView extends View {
   Observable<Void> clickVirusFlag();
 
   void displayNotLoggedInSnack();
+
+  Observable<Void> clickDeveloperWebsite();
+
+  Observable<Void> clickDeveloperEmail();
+
+  Observable<Void> clickDeveloperPrivacy();
+
+  Observable<Void> clickDeveloperPermissions();
+
+  Observable<Void> clickStoreLayout();
+
+  void navigateToDeveloperWebsite(DetailedApp app);
+
+  void navigateToDeveloperEmail(DetailedApp app);
+
+  void navigateToDeveloperPrivacy(DetailedApp app);
+
+  void navigateToDeveloperPermissions(DetailedApp app);
 }

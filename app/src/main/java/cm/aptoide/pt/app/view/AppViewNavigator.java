@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.view.SearchResultFragment;
@@ -67,5 +68,11 @@ public class AppViewNavigator {
     if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
       ((AppViewFragment) fragment).buyApp(app);
     }
+  }
+
+  public void navigateToStore(Store store) {
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
+        .newStoreFragment(store.getName(), store.getAppearance()
+            .getTheme()), true);
   }
 }

@@ -1,10 +1,15 @@
 package cm.aptoide.pt.app.view;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -22,6 +27,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
@@ -77,7 +83,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private TextView needsLicenceText;
   private TextView fakeAppText;
   private TextView virusText;
-
+  private View storeLayout;
   private ImageView storeIcon;
   private TextView storeName;
   private TextView storeFollowers;
@@ -86,6 +92,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private TextView infoWebsite;
   private TextView infoEmail;
   private TextView infoPrivacy;
+  private TextView infoPermissions;
 
   private ProgressBar viewProgress;
   private View appview;
@@ -165,7 +172,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     needsLicenceText = (TextView) view.findViewById(R.id.needs_licence_count);
     fakeAppText = (TextView) view.findViewById(R.id.fake_app_count);
     virusText = (TextView) view.findViewById(R.id.virus_count);
-
+    storeLayout = view.findViewById(R.id.store_uploaded_layout);
     storeIcon = (ImageView) view.findViewById(R.id.store_icon);
     storeName = (TextView) view.findViewById(R.id.store_name);
     storeFollowers = (TextView) view.findViewById(R.id.user_count);
@@ -174,6 +181,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     infoWebsite = (TextView) view.findViewById(R.id.website_label);
     infoEmail = (TextView) view.findViewById(R.id.email_label);
     infoPrivacy = (TextView) view.findViewById(R.id.privacy_policy_label);
+    infoPermissions = (TextView) view.findViewById(R.id.permissions_label);
 
     viewProgress = (ProgressBar) view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
@@ -218,6 +226,8 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     downloadsTop.setText(String.format("%s", AptoideUtils.StringU.withSuffix(detailedApp.getStats()
         .getPdownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(detailedApp.getSize(), false));
+    latestVersion.setText(detailedApp.getFile()
+        .getVername());
     storeName.setText(detailedApp.getStore()
         .getName());
     ImageLoader.with(getContext())
@@ -239,6 +249,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
         .getDescription());
     setAppFlags(detailedApp.getFile());
     setReadMoreClickListener(detailedApp);
+    setDeveloperDetails(detailedApp);
     showAppview();
   }
 
@@ -272,6 +283,51 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
   @Override public void displayNotLoggedInSnack() {
 
+  }
+
+  @Override public Observable<Void> clickDeveloperWebsite() {
+    return RxView.clicks(infoWebsite);
+  }
+
+  @Override public Observable<Void> clickDeveloperEmail() {
+    return RxView.clicks(infoEmail);
+  }
+
+  @Override public Observable<Void> clickDeveloperPrivacy() {
+    return RxView.clicks(infoPrivacy);
+  }
+
+  @Override public Observable<Void> clickDeveloperPermissions() {
+    return RxView.clicks(infoPermissions);
+  }
+
+  @Override public Observable<Void> clickStoreLayout() {
+    return RxView.clicks(storeLayout);
+  }
+
+  @Override public void navigateToDeveloperWebsite(DetailedApp app) {
+    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
+        .getWebsite()));
+    getContext().startActivity(browserIntent);
+  }
+
+  @Override public void navigateToDeveloperEmail(DetailedApp app) {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    Uri data = Uri.parse("mailto:" + app.getDeveloper()
+        .getEmail() + "?subject=" + "Feedback" + "&body=" + "");
+    intent.setData(data);
+    getContext().startActivity(intent);
+  }
+
+  @Override public void navigateToDeveloperPrivacy(DetailedApp app) {
+    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
+        .getPrivacy()));
+    getContext().startActivity(browserIntent);
+  }
+
+  @Override public void navigateToDeveloperPermissions(DetailedApp app) {
+    DialogPermissions dialogPermissions = DialogPermissions.newInstance(app);
+    dialogPermissions.show(getActivity().getSupportFragmentManager(), "");
   }
 
   private void setDescription(String description) {
@@ -347,6 +403,56 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
       default:
         throw new IllegalArgumentException("Unable to find Type " + type.name());
+    }
+  }
+
+  private void setDeveloperDetails(DetailedApp app) {
+    if (!TextUtils.isEmpty(app.getDeveloper()
+        .getWebsite())) {
+      String website = app.getDeveloper()
+          .getWebsite();
+      String websiteCompositeString = String.format(getString(R.string.developer_website), website);
+      SpannableString compositeSpan = new SpannableString(websiteCompositeString);
+      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
+          websiteCompositeString.indexOf(website),
+          websiteCompositeString.indexOf(website) + website.length(),
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      infoWebsite.setText(compositeSpan);
+    } else {
+      infoWebsite.setText(
+          String.format(getString(R.string.developer_website), getString(R.string.not_available)));
+    }
+
+    if (!TextUtils.isEmpty(app.getDeveloper()
+        .getEmail())) {
+      String email = app.getDeveloper()
+          .getEmail();
+      String emailCompositeString = String.format(getString(R.string.developer_email), email);
+      SpannableString compositeSpan = new SpannableString(emailCompositeString);
+      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
+          emailCompositeString.indexOf(email), emailCompositeString.indexOf(email) + email.length(),
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      infoEmail.setText(compositeSpan);
+    } else {
+      infoEmail.setText(
+          String.format(getString(R.string.developer_email), getString(R.string.not_available)));
+    }
+
+    if (!TextUtils.isEmpty(app.getDeveloper()
+        .getPrivacy())) {
+      String privacy = app.getDeveloper()
+          .getPrivacy();
+      String privacyCompositeString =
+          String.format(getString(R.string.developer_privacy_policy), privacy);
+      SpannableString compositeSpan = new SpannableString(privacyCompositeString);
+      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
+          privacyCompositeString.indexOf(privacy),
+          privacyCompositeString.indexOf(privacy) + privacy.length(),
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      infoPrivacy.setText(compositeSpan);
+    } else {
+      infoPrivacy.setText(String.format(getString(R.string.developer_privacy_policy),
+          getString(R.string.not_available)));
     }
   }
 }

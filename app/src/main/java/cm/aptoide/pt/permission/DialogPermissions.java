@@ -25,6 +25,7 @@ import cm.aptoide.pt.permissions.ApkPermission;
 import cm.aptoide.pt.permissions.ApkPermissionGroup;
 import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.app.DetailedApp;
 import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ import java.util.List;
 public class DialogPermissions extends DialogFragment {
 
   private GetApp getApp;
+  private DetailedApp app;
   private String appName;
   private String versionName;
   private String icon;
@@ -49,6 +51,18 @@ public class DialogPermissions extends DialogFragment {
         .getData();
     DialogPermissions dialog = new DialogPermissions();
     dialog.getApp = getApp;
+    dialog.appName = app.getName();
+    dialog.versionName = app.getFile()
+        .getVername();
+    dialog.icon = app.getIcon();
+    dialog.size = AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFile()
+        .getFilesize(), app.getObb()), false);
+    return dialog;
+  }
+
+  public static DialogPermissions newInstance(DetailedApp app) {
+    DialogPermissions dialog = new DialogPermissions();
+    dialog.app = app;
     dialog.appName = app.getName();
     dialog.versionName = app.getFile()
         .getVername();
@@ -97,11 +111,18 @@ public class DialogPermissions extends DialogFragment {
 
     final TableLayout tableLayout = (TableLayout) v.findViewById(R.id.dialog_table_permissions);
 
-    final List<String> usedPermissions = getApp.getNodes()
-        .getMeta()
-        .getData()
-        .getFile()
-        .getUsedPermissions();
+    final List<String> usedPermissions;
+
+    if (getApp != null) {
+      usedPermissions = getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getFile()
+          .getUsedPermissions();
+    } else {
+      usedPermissions = app.getFile()
+          .getUsedPermissions();
+    }
 
     List<ApkPermission> apkPermissions =
         AptoideUtils.SystemU.parsePermissions(getContext(), usedPermissions);
