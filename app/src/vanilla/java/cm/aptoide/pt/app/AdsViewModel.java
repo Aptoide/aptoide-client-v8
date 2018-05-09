@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import java.util.List;
 
 /**
@@ -9,14 +10,19 @@ import java.util.List;
 
 public class AdsViewModel {
 
-  private final List<MinimalAd> minimalAds;
+  private final MinimalAd ad;
+  private final List<App> recommendedApps;
 
-  public AdsViewModel(List<MinimalAd> minimalAds) {
-
-    this.minimalAds = minimalAds;
+  public AdsViewModel(MinimalAd ad, List<App> recommendedApps) {
+    this.ad = ad;
+    this.recommendedApps = recommendedApps;
   }
 
-  public List<MinimalAd> getMinimalAds() {
-    return minimalAds;
+  public MinimalAd getAd() {
+    return ad;
+  }
+
+  public List<App> getRecommendedApps() {
+    return recommendedApps;
   }
 }

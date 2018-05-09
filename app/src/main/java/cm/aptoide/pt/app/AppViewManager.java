@@ -3,7 +3,7 @@ package cm.aptoide.pt.app;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-import cm.aptoide.pt.dataprovider.model.v7.ListApps;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -48,12 +48,8 @@ public class AppViewManager {
 
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
     return appCenter.getDetailedApp(appId, packageName)
-        .map(app -> new DetailedAppViewModel(app));
-  }
-
-  //TODO join with 1st app from similar apps method
-  public Single<ListApps> loadRecommended(int limit, String packageName) {
-    return appCenter.loadRecommendedApps(limit, packageName);
+        .flatMap(app -> isStoreFollowed(app.getStore()
+            .getId()).map(isStoreFollowed -> new DetailedAppViewModel(app, isStoreFollowed)));
   }
 
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
@@ -63,13 +59,14 @@ public class AppViewManager {
         .map(reviews -> new ReviewsViewModel(reviews));
   }
 
-  public Single<AdsViewModel> getSimilarApps(String packageName, String storeName,
-      List<String> keyWords) {
-    return adsManager.loadSuggestedApps(packageName, keyWords)
-        .map(similarApps -> new AdsViewModel(similarApps));
+  public Single<AdsViewModel> loadSimilarApps(String packageName, String storeName,
+      List<String> keyWords, int limit) {
+    return loadAdForSimilarApps(packageName, storeName, keyWords).flatMap(
+        ad -> loadRecommended(limit, packageName).map(
+            recommendedApps -> new AdsViewModel(ad, recommendedApps)));
   }
 
-  public Single<MinimalAd> getAd(String packageName, String storeName) {
+  public Single<MinimalAd> loadAd(String packageName, String storeName) {
     return adsManager.loadAd(packageName, storeName);
   }
 
@@ -80,15 +77,27 @@ public class AppViewManager {
         .map(response -> (response.isOk() && !response.hasErrors()));
   }
 
-  public Observable<Boolean> isStoreFollowed(long storeId) {
-    return storeManager.isSubscribed(storeId);
+  public Observable<GetStoreMeta> subscribeStore(DetailedApp app) {
+    return storeUtilsProxy.subscribeStoreObservable(app.getStore().getName());
   }
 
-  public Observable<Boolean> isStoreFollowed(String storeName) {
-    return storeManager.isSubscribed(storeName);
+  private Single<List<App>> loadRecommended(int limit, String packageName) {
+    return appCenter.loadRecommendedApps(limit, packageName);
   }
 
-  public Observable<GetStoreMeta> subscribeStore(String storeName) {
-    return storeUtilsProxy.subscribeStoreObservable(storeName);
+  private Single<MinimalAd> loadAdForSimilarApps(String packageName, String storeName,
+      List<String> keyWords) {
+    return adsManager.loadSuggestedApps(packageName, keyWords)
+        .map(adsForSimilarApps -> adsForSimilarApps.get(0));
+  }
+
+  private Single<Boolean> isStoreFollowed(long storeId) {
+    return storeManager.isSubscribed(storeId)
+        .toSingle();
+  }
+
+  private Single<Boolean> isStoreFollowed(String storeName) {
+    return storeManager.isSubscribed(storeName)
+        .toSingle();
   }
 }

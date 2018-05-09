@@ -125,10 +125,12 @@ public class AppService {
     return Observable.just(detailedApp);
   }
 
-  public Single<ListApps> loadRecommendedApps(int limit, String packageName) {
+  public Single<List<App>> loadRecommendedApps(int limit, String packageName) {
     return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences).observe()
+        .map(listApps -> listApps.getDataList()
+            .getList())
         .toSingle();
   }
 }
