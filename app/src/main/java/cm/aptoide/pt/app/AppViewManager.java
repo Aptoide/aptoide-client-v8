@@ -48,8 +48,7 @@ public class AppViewManager {
 
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
     return appCenter.getDetailedApp(appId, packageName)
-        .flatMap(app -> isStoreFollowed(app.getStore()
-            .getId()).map(isStoreFollowed -> new DetailedAppViewModel(app, isStoreFollowed)));
+        .map(app -> new DetailedAppViewModel(app, false));
   }
 
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
@@ -59,9 +58,9 @@ public class AppViewManager {
         .map(reviews -> new ReviewsViewModel(reviews));
   }
 
-  public Single<AdsViewModel> loadSimilarApps(String packageName, String storeName,
-      List<String> keyWords, int limit) {
-    return loadAdForSimilarApps(packageName, storeName, keyWords).flatMap(
+  public Single<AdsViewModel> loadSimilarApps(String packageName, List<String> keyWords,
+      int limit) {
+    return loadAdForSimilarApps(packageName, keyWords).flatMap(
         ad -> loadRecommended(limit, packageName).map(
             recommendedApps -> new AdsViewModel(ad, recommendedApps)));
   }
@@ -78,26 +77,20 @@ public class AppViewManager {
   }
 
   public Observable<GetStoreMeta> subscribeStore(DetailedApp app) {
-    return storeUtilsProxy.subscribeStoreObservable(app.getStore().getName());
+    return storeUtilsProxy.subscribeStoreObservable(app.getStore()
+        .getName());
   }
 
   private Single<List<App>> loadRecommended(int limit, String packageName) {
     return appCenter.loadRecommendedApps(limit, packageName);
   }
 
-  private Single<MinimalAd> loadAdForSimilarApps(String packageName, String storeName,
-      List<String> keyWords) {
+  private Single<MinimalAd> loadAdForSimilarApps(String packageName, List<String> keyWords) {
     return adsManager.loadSuggestedApps(packageName, keyWords)
         .map(adsForSimilarApps -> adsForSimilarApps.get(0));
   }
 
-  private Single<Boolean> isStoreFollowed(long storeId) {
-    return storeManager.isSubscribed(storeId)
-        .toSingle();
-  }
-
-  private Single<Boolean> isStoreFollowed(String storeName) {
-    return storeManager.isSubscribed(storeName)
-        .toSingle();
+  private Observable<Boolean> isStoreFollowed(long storeId) {
+    return storeManager.isSubscribed(storeId);
   }
 }

@@ -86,10 +86,6 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
     return storeRepository.isSubscribed(storeId);
   }
 
-  public Observable<Boolean> isSubscribed(String storeName) {
-    return storeRepository.isSubscribed(storeName);
-  }
-
   @NonNull private Completable getOnErrorCompletable(Throwable err) {
     if (err instanceof StoreCreationException || err instanceof InvalidImageException) {
       return Completable.error(err);
