@@ -1,18 +1,17 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.app.AppCenter;
-import cm.aptoide.pt.view.app.DetailedApp;
 import java.util.List;
-import rx.Observable;
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -30,11 +29,12 @@ public class AppViewManager {
   private final StoreManager storeManager;
   private final FlagManager flagManager;
   private final StoreUtilsProxy storeUtilsProxy;
+  private final AptoideAccountManager aptoideAccountManager;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
-      StoreUtilsProxy storeUtilsProxy) {
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -44,11 +44,13 @@ public class AppViewManager {
     this.storeManager = storeManager;
     this.flagManager = flagManager;
     this.storeUtilsProxy = storeUtilsProxy;
+    this.aptoideAccountManager = aptoideAccountManager;
   }
 
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
     return appCenter.getDetailedApp(appId, packageName)
-        .map(app -> new DetailedAppViewModel(app, false));
+        .flatMap(app -> isStoreFollowed(app.getStore()
+            .getId()).map(isStoreFollowed -> new DetailedAppViewModel(app, isStoreFollowed)));
   }
 
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
@@ -57,7 +59,7 @@ public class AppViewManager {
         .map(reviews -> new ReviewsViewModel(reviews));
   }
 
-  public Single<Boolean> setReviewRatingRequest(long reviewId, boolean helpful) {
+  public Single<Boolean> addReviewRatingRequestAction(long reviewId, boolean helpful) {
     return reviewsManager.doReviewRatingRequest(reviewId, helpful)
         .map(response -> (response.isOk() && response.getErrors()
             .isEmpty()));
@@ -74,16 +76,16 @@ public class AppViewManager {
     return adsManager.loadAd(packageName, storeName);
   }
 
-  public Single<Boolean> addApkFlag(String storeName, String md5,
+  public Single<Boolean> addApkFlagRequestAction(String storeName, String md5,
       GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
     return flagManager.loadAddApkFlagRequest(storeName, md5, type.name()
         .toLowerCase())
         .map(response -> (response.isOk() && !response.hasErrors()));
   }
 
-  public Observable<GetStoreMeta> subscribeStore(DetailedApp app) {
-    return storeUtilsProxy.subscribeStoreObservable(app.getStore()
-        .getName());
+  public Completable subscribeStore(String storeName) {
+    return Completable.fromAction(
+        () -> storeUtilsProxy.subscribeStore(storeName, null, null, aptoideAccountManager));
   }
 
   private Single<List<App>> loadRecommended(int limit, String packageName) {
@@ -95,7 +97,9 @@ public class AppViewManager {
         .map(adsForSimilarApps -> adsForSimilarApps.get(0));
   }
 
-  private Observable<Boolean> isStoreFollowed(long storeId) {
-    return storeManager.isSubscribed(storeId);
+  private Single<Boolean> isStoreFollowed(long storeId) {
+    return storeManager.isSubscribed(storeId)
+        .first()
+        .toSingle();
   }
 }
