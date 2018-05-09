@@ -52,10 +52,15 @@ public class AppViewManager {
   }
 
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
-      int maxReviews, String languagesFilterSort, DetailedApp detailedApp) {
-    return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort,
-        detailedApp)
+      int maxReviews, String languagesFilterSort) {
+    return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort)
         .map(reviews -> new ReviewsViewModel(reviews));
+  }
+
+  public Single<Boolean> setReviewRatingRequest(long reviewId, boolean helpful) {
+    return reviewsManager.doReviewRatingRequest(reviewId, helpful)
+        .map(response -> (response.isOk() && response.getErrors()
+            .isEmpty()));
   }
 
   public Single<AdsViewModel> loadSimilarApps(String packageName, List<String> keyWords,

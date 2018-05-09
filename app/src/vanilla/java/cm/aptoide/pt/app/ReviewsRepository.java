@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.Review;
-import cm.aptoide.pt.view.app.DetailedApp;
 import java.util.List;
 import rx.Single;
 
@@ -19,8 +19,11 @@ public class ReviewsRepository {
   }
 
   public Single<List<Review>> loadListReviews(String storeName, String packageName, int maxReviews,
-      String languagesFilterSort, DetailedApp detailedApp) {
-    return reviewsService.loadListReviews(storeName, packageName, maxReviews, languagesFilterSort,
-        detailedApp);
+      String languagesFilterSort) {
+    return reviewsService.loadListReviews(storeName, packageName, maxReviews, languagesFilterSort);
+  }
+
+  public Single<BaseV7Response> doReviewRatingRequest(long reviewId, boolean helpful) {
+    return reviewsService.doReviewRatingRequest(reviewId, helpful);
   }
 }

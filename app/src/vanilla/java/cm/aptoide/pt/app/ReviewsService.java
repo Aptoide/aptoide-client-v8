@@ -2,13 +2,14 @@ package cm.aptoide.pt.app;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.view.app.DetailedApp;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -42,10 +43,9 @@ public class ReviewsService {
   }
 
   public Single<List<Review>> loadListReviews(String storeName, String packageName, int maxReviews,
-      String languagesFilterSort, DetailedApp detailedApp) {
-    BaseRequestWithStore.StoreCredentials storeCredentials = storeCredentialsProvider.get(
-        detailedApp.getStore()
-            .getName());
+      String languagesFilterSort) {
+    BaseRequestWithStore.StoreCredentials storeCredentials =
+        storeCredentialsProvider.get(storeName);
     return ListReviewsRequest.ofTopReviews(storeName, packageName, maxReviews, storeCredentials,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         languagesFilterSort)
@@ -56,5 +56,12 @@ public class ReviewsService {
         .onErrorReturn(throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  public Single<BaseV7Response> doReviewRatingRequest(long reviewId, boolean helpful) {
+    return SetReviewRatingRequest.of(reviewId, helpful, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
+        .observe()
+        .toSingle();
   }
 }
