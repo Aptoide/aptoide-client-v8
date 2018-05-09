@@ -213,7 +213,11 @@ public class ManagerPreferences {
     return sharedPreferences.getString(ManagedKeys.NOTIFICATION_TYPE, "");
   }
 
-  public static String getSessionTimestamp(SharedPreferences sharedPreferences) {
-    return sharedPreferences.getString(ManagedKeys.SESSION_TIMESTAMP, "");
+  public static long getSessionTimestamp(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getLong(ManagedKeys.SESSION_TIMESTAMP, 0);
+  }
+
+  public static void setSessionTimestamp(long value, SharedPreferences sharedPreferences) {
+    sharedPreferences.edit().putLong(ManagedKeys.SESSION_TIMESTAMP, value).apply();
   }
 }

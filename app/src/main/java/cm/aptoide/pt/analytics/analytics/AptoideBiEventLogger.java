@@ -28,9 +28,15 @@ public class AptoideBiEventLogger implements EventLogger, SessionLogger {
   }
 
   @Override public void startSession() {
-    service.getTimestamp(); //todo
-    //Logger.d(TAG, "startSession: " + ManagerPreferences.getSessionTimestamp(sharedPreferences));
-  //  service.log("SESSION",null, AnalyticsManager.Action.OPEN,"APPLICATION");
+    //service.getTimestamp(); //todo
+    long thirtySeconds = 30 * 1000;
+    long currentTimeElapsed = System.currentTimeMillis() - service.getTimestamp();
+    if (currentTimeElapsed < thirtySeconds) {
+      Logger.d(TAG, "startSession currentTimeElapsed: " + currentTimeElapsed);
+    }  else {
+      Logger.d(TAG, "startSession: " + service.getTimestamp());
+      service.log("SESSION", null, AnalyticsManager.Action.OPEN, "APPLICATION", System.currentTimeMillis());
+    }
   }
 
   @Override public void endSession() {

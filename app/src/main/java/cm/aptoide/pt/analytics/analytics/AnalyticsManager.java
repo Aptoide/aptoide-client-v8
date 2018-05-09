@@ -14,19 +14,18 @@ import java.util.Map;
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
-  private final SessionLogger sessionLogger;
+  //private  SessionLogger sessionLogger;
   private List<SessionLogger> sessionLoggers;
   private final AnalyticsNormalizer analyticsNormalizer;
 
   private Map<EventLogger, Collection<String>> eventLoggers;
 
   private AnalyticsManager(HttpKnockEventLogger knockLogger,
-      Map<EventLogger, Collection<String>> eventLoggers, SessionLogger sessionLogger,
+      Map<EventLogger, Collection<String>> eventLoggers, List<SessionLogger> sessionLoggers,
       AnalyticsNormalizer analyticsNormalizer) {
-    sessionLoggers = new ArrayList<>();
     this.knockEventLogger = knockLogger;
     this.eventLoggers = eventLoggers;
-    this.sessionLogger = sessionLogger;
+    this.sessionLoggers = sessionLoggers;
     this.analyticsNormalizer = analyticsNormalizer;
   }
 
@@ -91,15 +90,20 @@ public class AnalyticsManager {
    * <p> Starts the Flurry session allowing to log events.</p>
    */
   public void startSession() {
-
-    sessionLogger.startSession();
+    for (SessionLogger sessionLogger : sessionLoggers) {
+      sessionLogger.startSession();
+    }
+  //  sessionLogger.startSession();
   }
 
   /**
    * <p> Ends Flurry session. </p>
    */
   public void endSession() {
-    sessionLogger.endSession();
+    for (SessionLogger sessionLogger : sessionLoggers) {
+      sessionLogger.endSession();
+    }
+   // sessionLogger.endSession();
   }
 
   /**
@@ -117,13 +121,14 @@ public class AnalyticsManager {
     private final Map<EventLogger, Collection<String>> eventLoggers;
     private HttpKnockEventLogger httpKnockEventLogger;
     private SessionLogger sessionLogger;
-    private List<SessionLogger> sessionLoggers = new ArrayList<>();
+    private List<SessionLogger> sessionLoggers;
     private AnalyticsNormalizer analyticsNormalizer;
 
     /**
      * <p>Start the builder.</p>
      */
     public Builder() {
+      sessionLoggers = new ArrayList<>();
       eventLoggers = new HashMap<>();
     }
 
@@ -163,8 +168,8 @@ public class AnalyticsManager {
      * @see NullPointerException
      */
     public Builder addSessionLogger(SessionLogger sessionLogger) {
-      this.sessionLogger = sessionLogger; //será lista
-      sessionLoggers.add(sessionLogger);
+    //  this.sessionLogger = sessionLogger; //será lista
+      this.sessionLoggers.add(sessionLogger);
       return this;
     }
 
@@ -226,7 +231,7 @@ public class AnalyticsManager {
       if (eventLoggers.size() < 1) {
         throw new IllegalArgumentException("Analytics manager need at least one logger");
       }
-      return new AnalyticsManager(httpKnockEventLogger, eventLoggers, sessionLogger,
+      return new AnalyticsManager(httpKnockEventLogger, eventLoggers, sessionLoggers,
           analyticsNormalizer);
     }
   }

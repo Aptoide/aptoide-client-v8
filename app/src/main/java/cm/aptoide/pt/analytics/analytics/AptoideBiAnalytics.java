@@ -53,12 +53,13 @@ public class AptoideBiAnalytics {
 
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context, long timestamp) {
+    ManagerPreferences.setSessionTimestamp(timestamp, sharedPreferences);
     persistence.save(new Event(eventName, data, action, context, timestamp))
         .subscribe(() -> {
         }, throwable -> Logger.w(TAG, "cannot save the event due to " + throwable.getMessage()));
   }
 
-  public String getTimestamp() {
+  public long getTimestamp() {
     return ManagerPreferences.getSessionTimestamp(sharedPreferences);
   }
 
