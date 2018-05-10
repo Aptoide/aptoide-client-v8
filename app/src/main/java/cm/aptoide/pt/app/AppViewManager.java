@@ -11,6 +11,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.DetailedApp;
+import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -52,15 +53,10 @@ public class AppViewManager {
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
     if (cachedApp != null && cachedApp.getId() == appId && cachedApp.getPackageName()
         .equals(packageName)) {
-      return isStoreFollowed(cachedApp.getStore()
-          .getId()).map(isStoreFollowed -> createDetailedAppViewModel(cachedApp, isStoreFollowed));
+      return createDetailedAppViewModel(cachedApp);
     }
     return appCenter.getDetailedApp(appId, packageName)
-        .flatMap(app -> isStoreFollowed(app.getStore()
-            .getId()).map(isStoreFollowed -> {
-          cachedApp = app;
-          return createDetailedAppViewModel(app, isStoreFollowed);
-        }));
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
   }
 
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
@@ -113,13 +109,28 @@ public class AppViewManager {
         .toSingle();
   }
 
-  private DetailedAppViewModel createDetailedAppViewModel(DetailedApp app,
-      boolean isStoreFollowed) {
+  private Single<DetailedAppViewModel> createDetailedAppViewModel(DetailedApp app) {
     GetAppMeta.Stats stats = app.getStats();
-    return new DetailedAppViewModel(app, app.getId(), app.getName(), app.getStore(), app.getFile(),
-        app.getPackageName(), app.getSize(), stats.getDownloads(), stats.getGlobalRating(),
-        stats.getPdownloads(), stats.getRating(), app.getDeveloper(), app.getGraphic(),
-        app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(), app.getObb(),
-        app.getPay(), isStoreFollowed);
+    cachedApp = app;
+    return isStoreFollowed(cachedApp.getStore()
+        .getId()).map(
+        isStoreFollowed -> new DetailedAppViewModel(app, app.getId(), app.getName(), app.getStore(),
+            app.getFile(), app.getPackageName(), app.getSize(), stats.getDownloads(),
+            stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(), app.getDeveloper(),
+            app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(),
+            app.getObb(), app.getPay(), isStoreFollowed));
+  }
+
+  private Single<DetailedAppViewModel> mapResultToCorrectDetailedAppViewModel(
+      DetailedAppRequestResult requestResult) {
+    if (requestResult.getDetailedApp() != null) {
+      return createDetailedAppViewModel(requestResult.getDetailedApp());
+    } else if (requestResult.isLoading()) {
+      return Single.just(new DetailedAppViewModel(requestResult.isLoading()));
+    } else if (requestResult.hasError()) {
+      return Single.just(new DetailedAppViewModel(requestResult.getError()));
+    } else {
+      return Single.just(new DetailedAppViewModel(DetailedAppRequestResult.Error.GENERIC));
+    }
   }
 }

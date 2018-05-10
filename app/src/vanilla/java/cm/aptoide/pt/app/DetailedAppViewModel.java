@@ -4,6 +4,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.view.app.DetailedApp;
+import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 
 /**
  * Created by D01 on 07/05/18.
@@ -31,6 +32,8 @@ public class DetailedAppViewModel {
   private final GetAppMeta.Developer developer;
   private final String graphic;
   private final String added;
+  private final boolean loading;
+  private final DetailedAppRequestResult.Error error;
 
   public DetailedAppViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
       GetAppMeta.GetAppMetaFile file, String packageName, long size, int downloads,
@@ -57,6 +60,60 @@ public class DetailedAppViewModel {
     this.obb = obb;
     this.pay = pay;
     this.isStoreFollowed = isStoreFollowed;
+    this.loading = false;
+    this.error = null;
+  }
+
+  public DetailedAppViewModel(boolean loading) {
+
+    this.loading = loading;
+    this.detailedApp = null;
+    this.appId = -1;
+    this.appName = "";
+    this.store = null;
+    this.file = null;
+    this.packageName = "";
+    this.size = -1;
+    this.downloads = -1;
+    this.globalRating = null;
+    this.pDownloads = -1;
+    this.rating = null;
+    this.developer = null;
+    this.graphic = null;
+    this.added = null;
+    this.media = null;
+    this.modified = null;
+    this.appAdded = null;
+    this.obb = null;
+    this.pay = null;
+    this.isStoreFollowed = false;
+    this.error = null;
+  }
+
+  public DetailedAppViewModel(DetailedAppRequestResult.Error error) {
+
+    this.error = error;
+    this.detailedApp = null;
+    this.appId = -1;
+    this.appName = "";
+    this.store = null;
+    this.file = null;
+    this.packageName = "";
+    this.size = -1;
+    this.downloads = -1;
+    this.globalRating = null;
+    this.pDownloads = -1;
+    this.rating = null;
+    this.developer = null;
+    this.graphic = null;
+    this.added = null;
+    this.media = null;
+    this.modified = null;
+    this.appAdded = null;
+    this.obb = null;
+    this.pay = null;
+    this.isStoreFollowed = false;
+    this.loading = false;
   }
 
   public boolean isStoreFollowed() {
@@ -137,5 +194,17 @@ public class DetailedAppViewModel {
 
   public GetAppMeta.Stats.Rating getRating() {
     return rating;
+  }
+
+  public boolean isLoading() {
+    return loading;
+  }
+
+  public DetailedAppRequestResult.Error getError() {
+    return error;
+  }
+
+  public boolean hasError() {
+    return (error != null);
   }
 }

@@ -92,7 +92,7 @@ public class AppCenterRepository {
     }
   }
 
-  public Single<DetailedApp> getDetailedApp(long appId, String packageName) {
+  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String packageName) {
     return appService.loadDetailedApp(appId, packageName);
   }
 
