@@ -10,7 +10,7 @@ import rx.Observable;
 
 public interface InstallAppView extends View {
 
-  Observable<Void> installAppClick();
+  Observable<DownloadAppViewModel.Action> installAppClick();
 
   Observable<Boolean> showRootInstallWarningPopup();
 

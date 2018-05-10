@@ -70,7 +70,7 @@ public class AppViewManager {
     return adsManager.loadAd(packageName, storeName);
   }
 
-  public void increaseInstallClick() {
+  private void increaseInstallClick() {
     preferencesManager.setNotLoggedInInstallClicks();
   }
 
@@ -125,7 +125,7 @@ public class AppViewManager {
   }
 
   public void downloadApp() {
-
+    increaseInstallClick();
   }
 
   public Observable<DownloadAppViewModel> getDownloadAppViewModel(String md5, String packageName,

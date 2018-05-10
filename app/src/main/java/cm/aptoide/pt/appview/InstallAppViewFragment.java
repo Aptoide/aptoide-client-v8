@@ -41,6 +41,7 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
   private ImageView cancelDownload;
   private ImageView pauseDownload;
   private ImageView resumeDownload;
+  private DownloadAppViewModel.Action action;
 
   public static InstallAppViewFragment newInstance() {
     Bundle args = new Bundle();
@@ -100,8 +101,9 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     super.onDetach();
   }
 
-  @Override public Observable<Void> installAppClick() {
-    return RxView.clicks(install);
+  @Override public Observable<DownloadAppViewModel.Action> installAppClick() {
+    return RxView.clicks(install)
+        .map(__ -> action);
   }
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
@@ -114,11 +116,11 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     if (model.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
-      setButtonText(model.getAction());
+      setDownloadState(model.getProgress(), model.getDownloadState());
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
-      setDownloadState(model.getProgress(), model.getDownloadState());
+      setButtonText(model.getAction());
     }
   }
 
@@ -155,6 +157,7 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
   }
 
   private void setButtonText(DownloadAppViewModel.Action action) {
+    this.action = action;
     switch (action) {
       case UPDATE:
         install.setText(getResources().getString(R.string.appview_button_update));

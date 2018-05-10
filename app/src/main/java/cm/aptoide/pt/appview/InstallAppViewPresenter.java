@@ -3,6 +3,7 @@ package cm.aptoide.pt.appview;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -38,7 +39,7 @@ public class InstallAppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.installAppClick()
-            .doOnNext(click -> appViewManager.increaseInstallClick())
+            .filter(action -> action.equals(DownloadAppViewModel.Action.INSTALL))
             .flatMap(__1 -> {
               if (appViewManager.showRootInstallWarningPopup()) {
                 return view.showRootInstallWarningPopup()
