@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AptoideBiAnalyticsTest {
+
+  SharedPreferences preferences = mock(SharedPreferences.class);
 
   @Test public void logTimeReached() throws Exception {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
