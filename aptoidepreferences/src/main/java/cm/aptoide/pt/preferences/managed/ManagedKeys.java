@@ -37,4 +37,5 @@ public class ManagedKeys {
       "notification_campaign_and_social";
   public static final String NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS =
       "not_logged_in_install_clicks";
+  public static final String SESSION_TIMESTAMP = "session_timestamp";
 }

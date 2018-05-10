@@ -136,6 +136,13 @@
   <string name="remote_install_help">Help</string>
   <string name="remote_install_help_url" translatable="false">http://blog.aptoide.com/remote-tv-install</string>
 
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
+  <string name="product_card_aptoide_uploader_subtitle">Perfect tool to get your favorite apps in your Aptoide store</string>
+  <string name="product_card_aptoide_backup_apps_title">Aptoide Backup Apps</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">Easily backup your apps into your Aptoide store</string>
 
   <!--Stores subscription-->
   <string name="followed">Following</string>

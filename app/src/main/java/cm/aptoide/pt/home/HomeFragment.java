@@ -265,8 +265,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void setUserImage(String userAvatarUrl) {
     ImageLoader.with(getContext())
-        .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
-            R.drawable.ic_account_circle);
+        .loadWithShadowCircleTransform(userAvatarUrl, userAvatar);
   }
 
   @Override public Observable<Void> imageClick() {

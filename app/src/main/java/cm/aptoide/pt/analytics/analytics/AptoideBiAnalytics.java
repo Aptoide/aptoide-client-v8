@@ -1,8 +1,10 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +24,16 @@ public class AptoideBiAnalytics {
   private final Scheduler timerScheduler;
   private final long initialDelay;
   private final CrashReport crashReport;
+  private final SharedPreferences sharedPreferences;
 
   /**
    * @param sendInterval max time(in milliseconds) interval between event sends
    * @param crashReport
+   * @param preferences
    */
   public AptoideBiAnalytics(EventsPersistence persistence, AptoideBiEventService service,
       CompositeSubscription subscriptions, Scheduler timerScheduler, long initialDelay,
-      long sendInterval, CrashReport crashReport) {
+      long sendInterval, CrashReport crashReport, SharedPreferences preferences) {
     this.persistence = persistence;
     this.service = service;
     this.subscriptions = subscriptions;
@@ -37,6 +41,7 @@ public class AptoideBiAnalytics {
     this.sendInterval = sendInterval;
     this.initialDelay = initialDelay;
     this.crashReport = crashReport;
+    this.sharedPreferences = preferences;
   }
 
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
@@ -44,6 +49,14 @@ public class AptoideBiAnalytics {
     persistence.save(new Event(eventName, data, action, context, System.currentTimeMillis()))
         .subscribe(() -> {
         }, throwable -> Logger.w(TAG, "cannot save the event due to " + throwable.getMessage()));
+  }
+
+  public long getTimestamp() {
+    return ManagerPreferences.getSessionTimestamp(sharedPreferences);
+  }
+
+  public void saveTimestamp(long timestamp) {
+    ManagerPreferences.saveSessionTimestamp(timestamp, sharedPreferences);
   }
 
   public void setup() {
