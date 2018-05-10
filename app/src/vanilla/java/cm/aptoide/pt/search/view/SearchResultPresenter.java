@@ -26,6 +26,7 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
+import rx.functions.Func2;
 
 @SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
     implements Presenter {
@@ -306,21 +307,24 @@ import rx.exceptions.OnErrorNotImplementedException;
     // search every store. followed and not followed
     return Single.zip(loadDataFromFollowedStores(query, onlyTrustedApps, 0),
         loadDataFromNonFollowedStores(query, onlyTrustedApps, 0),
-        (followedStoresCount, nonFollowedStoresCount) -> {
-          int result = 0;
-          if (followedStoresCount != null && followedStoresCount.size() > 0) {
-            result += followedStoresCount.size();
-          } else {
-            view.hideFollowedStoresTab();
-          }
+        new Func2<List<SearchAppResult>, List<SearchAppResult>, Integer>() {
+          @Override public Integer call(List<SearchAppResult> followedStoresCount,
+              List<SearchAppResult> nonFollowedStoresCount) {
+            int result = 0;
+            if (followedStoresCount != null && followedStoresCount.size() > 0) {
+              result += followedStoresCount.size();
+            } else {
+              view.hideFollowedStoresTab();
+            }
 
-          if (nonFollowedStoresCount != null && nonFollowedStoresCount.size() > 0) {
-            result += nonFollowedStoresCount.size();
-          } else {
-            view.hideNonFollowedStoresTab();
-          }
+            if (nonFollowedStoresCount != null && nonFollowedStoresCount.size() > 0) {
+              result += nonFollowedStoresCount.size();
+            } else {
+              view.hideNonFollowedStoresTab();
+            }
 
-          return result;
+            return result;
+          }
         });
   }
 

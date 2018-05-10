@@ -27,6 +27,9 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationAnalytics;
@@ -36,6 +39,7 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -59,6 +63,7 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
+import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.settings.NewAccountNavigator;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
@@ -69,6 +74,8 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
@@ -248,5 +255,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
     return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity,
         application.hasMultiStoreSearch(), application.getDefaultStoreName());
+  }
+
+  @ActivityScope @Provides DialogUtils providesDialogUtils(AptoideAccountManager accountManager,
+      AccountNavigator accountNavigator,
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptor,
+      @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
+      InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, Resources resources) {
+    return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
+        converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources);
   }
 }

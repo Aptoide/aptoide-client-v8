@@ -8,6 +8,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
@@ -32,22 +34,26 @@ import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
+import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Inject;
 import rx.Observable;
-import rx.Single;
 import rx.subjects.PublishSubject;
 
 /**
@@ -59,6 +65,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
 
   @Inject AppViewPresenter presenter;
+  @Inject DialogUtils dialogUtils;
   private Menu menu;
   private long appId;
   private String packageName;
@@ -81,8 +88,15 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private RecyclerView screenshots;
   private TextView descriptionText;
   private Button descriptionReadMore;
+  private ContentLoadingProgressBar topReviewsProgress;
+  private View ratingLayout;
+  private View emptyReviewsLayout;
+  private View commentsLayout;
+  private Button rateAppButtonLarge;
+  private TextView emptyReviewTextView;
   private TextView reviewUsers;
   private TextView avgReviewScore;
+  private RatingBar avgReviewScoreBar;
   private RecyclerView commentsView;
   private Button rateAppButton;
   private Button showAllCommentsButton;
@@ -172,8 +186,15 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
     descriptionText = (TextView) view.findViewById(R.id.description_text);
     descriptionReadMore = (Button) view.findViewById(R.id.description_see_more);
+    topReviewsProgress = (ContentLoadingProgressBar) view.findViewById(R.id.top_comments_progress);
+    ratingLayout = view.findViewById(R.id.rating_layout);
+    emptyReviewsLayout = view.findViewById(R.id.empty_reviews_layout);
+    commentsLayout = view.findViewById(R.id.comments_layout);
+    rateAppButtonLarge = (Button) view.findViewById(R.id.rate_this_button2);
+    emptyReviewTextView = (TextView) view.findViewById(R.id.empty_review_text);
     reviewUsers = (TextView) view.findViewById(R.id.users_voted);
     avgReviewScore = (TextView) view.findViewById(R.id.rating_value);
+    avgReviewScoreBar = (RatingBar) view.findViewById(R.id.rating_bar);
     commentsView = (RecyclerView) view.findViewById(R.id.top_comments_list);
     rateAppButton = (Button) view.findViewById(R.id.rate_this_button);
     showAllCommentsButton = (Button) view.findViewById(R.id.read_all_button);
@@ -274,6 +295,11 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
             .getSubscribers())));
     storeFollow.setBackgroundDrawable(
         storeThemeEnum.getButtonLayoutDrawable(getResources(), getContext().getTheme()));
+    if (detailedApp.isStoreFollowed()) {
+      storeFollow.setText(R.string.followed);
+    } else {
+      storeFollow.setText(R.string.follow);
+    }
     if ((detailedApp.getDetailedApp()
         .getMedia()
         .getScreenshots() != null && !detailedApp.getDetailedApp()
@@ -313,8 +339,30 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     return readMoreClick;
   }
 
-  @Override public Single<Void> populateReviewsAndAds(ReviewsViewModel reviews, AdsViewModel ads) {
-    return Single.just(null);
+  @Override public Void populateReviewsAndAds(ReviewsViewModel reviewsModel, AdsViewModel ads,
+      DetailedApp app) {
+    List<Review> reviews = reviewsModel.getReviewsList();
+    TopReviewsAdapter adapter;
+
+    LinearLayoutManagerWithSmoothScroller layoutManager =
+        new LinearLayoutManagerWithSmoothScroller(getContext(), LinearLayoutManager.HORIZONTAL,
+            false);
+    commentsView.setLayoutManager(layoutManager);
+    // because otherwise the AppBar won't be collapsed
+    commentsView.setNestedScrollingEnabled(false);
+
+    if (reviews != null && !reviews.isEmpty()) {
+      showReviews(true, app);
+
+      adapter = new TopReviewsAdapter(reviews.toArray(new Review[reviews.size()]));
+    } else {
+      showReviews(false, app);
+      adapter = new TopReviewsAdapter();
+    }
+
+    commentsView.setAdapter(adapter);
+
+    return null;
   }
 
   @Override public Observable<Void> clickWorkingFlag() {
@@ -375,6 +423,26 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     return RxView.clicks(trustedLayout);
   }
 
+  @Override public Observable<Void> clickRateApp() {
+    return RxView.clicks(rateAppButton);
+  }
+
+  @Override public Observable<Void> clickRateAppLarge() {
+    return RxView.clicks(rateAppButtonLarge);
+  }
+
+  @Override public Observable<Void> clickRateAppLayout() {
+    return RxView.clicks(ratingLayout);
+  }
+
+  @Override public Observable<Void> clickCommentsLayout() {
+    return RxView.clicks(commentsLayout);
+  }
+
+  @Override public Observable<Void> clickReadAllComments() {
+    return RxView.clicks(showAllCommentsButton);
+  }
+
   @Override public void navigateToDeveloperWebsite(DetailedApp app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getWebsite()));
@@ -401,11 +469,8 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   }
 
   @Override public void setFollowButton(boolean isFollowing) {
-    if (isFollowing) {
-      storeFollow.setText(R.string.follow);
-    } else {
+    if (!isFollowing)
       storeFollow.setText(R.string.followed);
-    }
   }
 
   @Override public void showTrustedDialog(DetailedApp app) {
@@ -422,6 +487,13 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
             .getCountryCodes();
     return countryCodes.get(0);
   }
+
+  @Override
+  public Observable<GenericDialogs.EResponse> showRateDialog(String appName, String packageName,
+      String storeName) {
+    return dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
+  }
+
 
   private void setTrustedBadge(DetailedApp app) {
     @DrawableRes int badgeResId;
@@ -582,6 +654,37 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     } else {
       infoPrivacy.setText(String.format(getString(R.string.developer_privacy_policy),
           getString(R.string.not_available)));
+    }
+  }
+
+  private void showReviews(boolean hasReviews, DetailedApp app) {
+    topReviewsProgress.setVisibility(View.GONE);
+    int usersToVote = app.getStats()
+        .getGlobalRating()
+        .getTotal();
+    float ratingAvg = app.getStats()
+        .getRating()
+        .getAvg();
+    reviewUsers.setText(AptoideUtils.StringU.withSuffix(usersToVote));
+    avgReviewScore.setText(String.format(Locale.getDefault(), "%.1f", ratingAvg));
+    avgReviewScoreBar.setRating(ratingAvg);
+
+    if (hasReviews) {
+      ratingLayout.setVisibility(View.VISIBLE);
+      emptyReviewsLayout.setVisibility(View.GONE);
+      commentsLayout.setVisibility(View.VISIBLE);
+      rateAppButtonLarge.setVisibility(View.GONE);
+      rateAppButton.setVisibility(View.VISIBLE);
+    } else {
+      ratingLayout.setVisibility(View.VISIBLE);
+      emptyReviewsLayout.setVisibility(View.VISIBLE);
+      commentsLayout.setVisibility(View.GONE);
+      rateAppButtonLarge.setVisibility(View.VISIBLE);
+      rateAppButton.setVisibility(View.INVISIBLE);
+
+      if (usersToVote == 0) {
+        emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
+      }
     }
   }
 }
