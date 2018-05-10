@@ -24,13 +24,17 @@ public class DetailedAppViewModel {
   private final GetAppMeta.GetAppMetaFile file;
   private final String packageName;
   private final long size;
-  private final GetAppMeta.Stats stats;
+  private final int downloads;
+  private final GetAppMeta.Stats.Rating globalRating;
+  private final int pDownloads;
+  private final GetAppMeta.Stats.Rating rating;
   private final GetAppMeta.Developer developer;
   private final String graphic;
   private final String added;
 
   public DetailedAppViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
-      GetAppMeta.GetAppMetaFile file, String packageName, long size, GetAppMeta.Stats stats,
+      GetAppMeta.GetAppMetaFile file, String packageName, long size, int downloads,
+      GetAppMeta.Stats.Rating globalRating, int pDownloads, GetAppMeta.Stats.Rating rating,
       GetAppMeta.Developer developer, String graphic, String added, GetAppMeta.Media media,
       String modified, String appAdded, Obb obb, GetAppMeta.Pay pay, Boolean isStoreFollowed) {
     this.detailedApp = detailedApp;
@@ -40,7 +44,10 @@ public class DetailedAppViewModel {
     this.file = file;
     this.packageName = packageName;
     this.size = size;
-    this.stats = stats;
+    this.downloads = downloads;
+    this.globalRating = globalRating;
+    this.pDownloads = pDownloads;
+    this.rating = rating;
     this.developer = developer;
     this.graphic = graphic;
     this.added = added;
@@ -80,10 +87,6 @@ public class DetailedAppViewModel {
     return size;
   }
 
-  public GetAppMeta.Stats getStats() {
-    return stats;
-  }
-
   public GetAppMeta.Developer getDeveloper() {
     return developer;
   }
@@ -118,5 +121,21 @@ public class DetailedAppViewModel {
 
   public DetailedApp getDetailedApp() {
     return detailedApp;
+  }
+
+  public int getDownloads() {
+    return downloads;
+  }
+
+  public GetAppMeta.Stats.Rating getGlobalRating() {
+    return globalRating;
+  }
+
+  public int getpDownloads() {
+    return pDownloads;
+  }
+
+  public GetAppMeta.Stats.Rating getRating() {
+    return rating;
   }
 }

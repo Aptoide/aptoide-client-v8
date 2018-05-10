@@ -115,8 +115,10 @@ public class AppViewManager {
 
   private DetailedAppViewModel createDetailedAppViewModel(DetailedApp app,
       boolean isStoreFollowed) {
+    GetAppMeta.Stats stats = app.getStats();
     return new DetailedAppViewModel(app, app.getId(), app.getName(), app.getStore(), app.getFile(),
-        app.getPackageName(), app.getSize(), app.getStats(), app.getDeveloper(), app.getGraphic(),
+        app.getPackageName(), app.getSize(), stats.getDownloads(), stats.getGlobalRating(),
+        stats.getPdownloads(), stats.getRating(), app.getDeveloper(), app.getGraphic(),
         app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(), app.getObb(),
         app.getPay(), isStoreFollowed);
   }
