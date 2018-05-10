@@ -62,7 +62,8 @@ public class AppViewManager {
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
     return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort)
-        .map(reviews -> new ReviewsViewModel(reviews));
+        .map(reviewsRequestResult -> new ReviewsViewModel(reviewsRequestResult.getReviewList(),
+            reviewsRequestResult.isLoading(), reviewsRequestResult.getError()));
   }
 
   public Single<AdsViewModel> loadSimilarApps(String packageName, List<String> keyWords,
