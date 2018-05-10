@@ -55,33 +55,37 @@
             android:layout_centerHorizontal="true"
             android:src="@mipmap/ic_launcher"
             />
-        <TextView
-            android:id="@+id/trusted_text"
+        <RelativeLayout
+            android:id="@+id/trusted_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="48dp"
-            android:layout_marginStart="48dp"
             android:layout_toEndOf="@id/app_icon"
             android:layout_toRightOf="@id/app_icon"
-            android:text="@string/appview_header_trusted_text"
-            android:textAllCaps="true"
-            android:textColor="#4a4a4a"
-            android:textSize="10sp"
-            />
+            >
+          <TextView
+              android:id="@+id/trusted_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_marginLeft="48dp"
+              android:layout_marginStart="48dp"
+              android:text="@string/appview_header_trusted_text"
+              android:textAllCaps="true"
+              android:textColor="#4a4a4a"
+              android:textSize="10sp"
+              />
+          <ImageView
+              android:id="@+id/trusted_badge"
+              android:layout_width="23dp"
+              android:layout_height="26dp"
+              android:layout_above="@id/trusted_text"
+              android:layout_marginBottom="6dp"
+              android:layout_marginLeft="60dp"
+              android:layout_marginStart="60dp"
+              android:src="@drawable/ic_badge_trusted"
+              />
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/trusted_badge"
-            android:layout_width="23dp"
-            android:layout_height="26dp"
-            android:layout_above="@id/trusted_text"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginStart="60dp"
-            android:layout_toEndOf="@id/app_icon"
-            android:layout_toRightOf="@id/app_icon"
-            android:src="@drawable/ic_badge_trusted"
-            />
       </RelativeLayout>
 
 
