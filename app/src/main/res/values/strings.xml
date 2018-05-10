@@ -137,6 +137,7 @@
   <string name="remote_install_help_url" translatable="false">http://blog.aptoide.com/remote-tv-install</string>
 
   <!-- Product cards -->
+  <string name="my_account_product_card_section_title">Aptoide products</string>
   <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>

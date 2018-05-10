@@ -215,17 +215,13 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:fontFamily="sans-serif"
-          android:lineSpacingExtra="7sp"
-          android:text="Aptoide products"
-          android:textColor="@color/black_87_alpha"
-          android:textSize="17sp"
-          android:textStyle="normal"
+          android:text="@string/my_account_product_card_section_title"
           android:layout_marginEnd="16dp"
           android:layout_marginLeft="16dp"
           android:layout_marginRight="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="10dp"
+          style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
           />
 
       <include
