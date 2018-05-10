@@ -127,8 +127,11 @@ public class AppService {
 
   public Single<List<App>> loadRecommendedApps(int limit, String packageName) {
     return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences).observe()
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences).observe(
+        true, false)
+        .doOnSubscribe(() -> loading = true)
+        .doOnUnsubscribe(() -> loading = false)
+        .doOnTerminate(() -> loading = false)
         .map(listApps -> listApps.getDataList()
             .getList())
         .toSingle();
