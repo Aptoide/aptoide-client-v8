@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -35,6 +37,10 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
   private BottomNavigationActivity bottomNavigationActivity;
   private Button install;
   private LinearLayout downloadInfoLayout;
+  private ProgressBar downloadProgressBar;
+  private ImageView cancelDownload;
+  private ImageView pauseDownload;
+  private ImageView resumeDownload;
 
   public static InstallAppViewFragment newInstance() {
     Bundle args = new Bundle();
@@ -55,6 +61,10 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     }
     install = ((Button) view.findViewById(R.id.appview_install_button));
     downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
+    downloadProgressBar = ((ProgressBar) view.findViewById(R.id.appview_download_progress_bar));
+    cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
+    resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
+    pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
 
     attachPresenter(new InstallAppViewPresenter(this, appViewManager, new PermissionManager(),
         ((PermissionService) getContext())));
@@ -108,6 +118,39 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
+      setDownloadState(model.getProgress(), model.getDownloadState());
+    }
+  }
+
+  private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
+    switch (downloadState) {
+      case ACTIVE:
+        downloadProgressBar.setProgress(progress);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        break;
+      case INDETERMINATE:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        break;
+      case PAUSE:
+        downloadProgressBar.setProgress(progress);
+        pauseDownload.setVisibility(View.GONE);
+        cancelDownload.setVisibility(View.VISIBLE);
+        resumeDownload.setVisibility(View.VISIBLE);
+        break;
+      case COMPLETE:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        break;
+      case ERROR:
+        // TODO: 5/10/18 define error state
+        break;
     }
   }
 

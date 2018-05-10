@@ -7,10 +7,10 @@ package cm.aptoide.pt.app;
 public class DownloadAppViewModel {
 
   private final Action action;
-  private final long progress;
+  private final int progress;
   private final DownloadState downloadState;
 
-  public DownloadAppViewModel(Action action, long progress, DownloadState downloadState) {
+  public DownloadAppViewModel(Action action, int progress, DownloadState downloadState) {
     this.action = action;
     this.progress = progress;
     this.downloadState = downloadState;
@@ -20,7 +20,7 @@ public class DownloadAppViewModel {
     return action;
   }
 
-  public long getProgress() {
+  public int getProgress() {
     return progress;
   }
 

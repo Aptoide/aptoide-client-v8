@@ -41,14 +41,14 @@
 
 
       <RelativeLayout
-          android:id="@+id/apps_download_download_info_layout"
+          android:id="@+id/appview_download_info_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="5dp"
           >
 
         <TextView
-            android:id="@+id/apps_downloads_download_state"
+            android:id="@+id/appview_download_download_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -58,7 +58,7 @@
             />
 
         <TextView
-            android:id="@+id/apps_download_progress_number"
+            android:id="@+id/appview_download_progress_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -77,7 +77,7 @@
           >
 
         <ProgressBar
-            android:id="@+id/apps_downloads_progress_bar"
+            android:id="@+id/appview_download_progress_bar"
             android:layout_width="fill_parent"
             android:layout_height="4dp"
             android:indeterminate="false"
@@ -100,7 +100,7 @@
         >
 
       <ImageView
-          android:id="@+id/apps_download_cancel_button"
+          android:id="@+id/appview_download_cancel_button"
           android:layout_width="48dp"
           android:layout_height="48dp"
           android:layout_gravity="center"
@@ -108,10 +108,11 @@
           android:padding="12dp"
           android:scaleType="center"
           android:src="@drawable/ic_clear_action_black"
+          android:visibility="gone"
           />
 
       <ImageView
-          android:id="@+id/apps_download_resume_download"
+          android:id="@+id/appview_download_resume_download"
           android:layout_width="48dp"
           android:layout_height="48dp"
           android:layout_gravity="center"
@@ -119,6 +120,18 @@
           android:padding="12dp"
           android:scaleType="fitCenter"
           android:src="@drawable/ic_play_arrow_action_black"
+          android:visibility="gone"
+          />
+
+      <ImageView
+          android:id="@+id/appview_download_pause_download"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="fitCenter"
+          android:src="@drawable/ic_pause_action_black"
           />
 
     </LinearLayout>
