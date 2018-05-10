@@ -8,9 +8,9 @@ import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import java.util.Collections;
 import rx.Scheduler;
 import rx.Single;
+import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by franciscocalado on 08/05/18.
@@ -51,6 +51,9 @@ public class AppViewPresenter implements Presenter {
     handleClickOnDeveloperPrivacy();
     handleClickOnDeveloperPermissions();
     handleClickOnStoreLayout();
+    handleClickOnFollowStore();
+    handleClickOnOtherVersions();
+    handleClickOnTrustedBadge();
   }
 
   private void handleFirstLoad() {
@@ -60,12 +63,14 @@ public class AppViewPresenter implements Presenter {
         .flatMapSingle(
             __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
         .observeOn(scheduler)
-        .doOnNext(appViewModel -> view.populateAppDetails(appViewModel.getDetailedApp()))
+        .doOnNext(appViewModel -> view.populateAppDetails(appViewModel))
         .flatMapSingle(appViewModel -> Single.zip(appViewManager.getReviewsViewModel(
             appViewModel.getDetailedApp()
                 .getStore()
-                .getName(), view.getPackageName(), 5, getLanguageFilter()),
-            appViewManager.loadSimilarApps(view.getPackageName(), Collections.emptyList(), 2),
+                .getName(), view.getPackageName(), 5, view.getLanguageFilter()),
+            appViewManager.loadSimilarApps(view.getPackageName(), appViewModel.getDetailedApp()
+                .getMedia()
+                .getKeywords(), 2),
             (reviews, similar) -> view.populateReviewsAndAds(reviews, similar)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -185,7 +190,64 @@ public class AppViewPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private String getLanguageFilter() {
-    return null;
+  private void handleClickOnFollowStore() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickFollowStore())
+        .flatMapSingle(
+            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .observeOn(scheduler)
+        .doOnNext(model -> {
+          if (model.isStoreFollowed()) {
+            view.setFollowButton(true);
+            appViewAnalytics.sendOpenStoreEvent();
+            appViewNavigator.navigateToStore(model.getDetailedApp()
+                .getStore());
+          } else {
+            view.setFollowButton(false);
+            appViewAnalytics.sendFollowStoreEvent();
+            appViewManager.subscribeStore(model.getDetailedApp()
+                .getStore()
+                .getName());
+            view.displayStoreFollowedSnack(model.getDetailedApp()
+                .getStore()
+                .getName());
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void handleClickOnOtherVersions() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickOtherVersions())
+        .flatMapSingle(
+            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .doOnNext(model -> {
+          appViewAnalytics.sendOtherVersionsEvent();
+          appViewNavigator.navigateToOtherVersions(model.getDetailedApp()
+              .getName(), model.getDetailedApp()
+              .getIcon(), model.getDetailedApp()
+              .getPackageName());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickOnTrustedBadge() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickTrustedBadge())
+        .flatMapSingle(
+            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .doOnNext(model -> view.showTrustedDialog(model.getDetailedApp()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 }

@@ -1,9 +1,13 @@
 package cm.aptoide.pt.app.view;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -17,23 +21,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AdsViewModel;
+import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
+import cm.aptoide.pt.reviews.LanguageFilterHelper;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.DetailedApp;
+import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Single;
@@ -45,6 +56,7 @@ import rx.subjects.PublishSubject;
 
 public class NewAppViewFragment extends BaseToolbarFragment implements AppViewView {
   private static final String ORIGIN_TAG = "TAG";
+  private static final String BADGE_DIALOG_TAG = "badgeDialog";
 
   @Inject AppViewPresenter presenter;
   private Menu menu;
@@ -56,14 +68,16 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
   //Views
   private ImageView appIcon;
-  private ImageView trustedBadge;
   private TextView appName;
+  private View trustedLayout;
+  private ImageView trustedBadge;
   private TextView trustedText;
   private TextView downloadsTop;
   private TextView sizeInfo;
   private Button installButton;
   private TextView appcValue;
   private TextView latestVersion;
+  private TextView otherVersions;
   private RecyclerView screenshots;
   private TextView descriptionText;
   private Button descriptionReadMore;
@@ -88,6 +102,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private TextView storeName;
   private TextView storeFollowers;
   private TextView storeDownloads;
+  private Button storeFollow;
   private RecyclerView similarApps;
   private TextView infoWebsite;
   private TextView infoEmail;
@@ -139,6 +154,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     appIcon = (ImageView) view.findViewById(R.id.app_icon);
     trustedBadge = (ImageView) view.findViewById(R.id.trusted_badge);
     appName = (TextView) view.findViewById(R.id.app_name);
+    trustedLayout = view.findViewById(R.id.trusted_layout);
     trustedText = (TextView) view.findViewById(R.id.trusted_text);
     downloadsTop = (TextView) view.findViewById(R.id.header_downloads);
     sizeInfo = (TextView) view.findViewById(R.id.header_size);
@@ -147,6 +163,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
         .findViewById(R.id.appcoins_reward_message);
     latestVersion = (TextView) view.findViewById(R.id.versions_layout)
         .findViewById(R.id.latest_version);
+    otherVersions = (TextView) view.findViewById(R.id.other_versions);
 
     screenshots = (RecyclerView) view.findViewById(R.id.screenshots_list);
     screenshots.setLayoutManager(
@@ -177,6 +194,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     storeName = (TextView) view.findViewById(R.id.store_name);
     storeFollowers = (TextView) view.findViewById(R.id.user_count);
     storeDownloads = (TextView) view.findViewById(R.id.download_count);
+    storeFollow = (Button) view.findViewById(R.id.follow_button);
     similarApps = (RecyclerView) view.findViewById(R.id.similar_list);
     infoWebsite = (TextView) view.findViewById(R.id.website_label);
     infoEmail = (TextView) view.findViewById(R.id.email_label);
@@ -219,37 +237,71 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     return packageName;
   }
 
-  @Override public void populateAppDetails(DetailedApp detailedApp) {
-    appName.setText(detailedApp.getName());
-    ImageLoader.with(getContext())
-        .load(detailedApp.getIcon(), appIcon);
-    downloadsTop.setText(String.format("%s", AptoideUtils.StringU.withSuffix(detailedApp.getStats()
-        .getPdownloads())));
-    sizeInfo.setText(AptoideUtils.StringU.formatBytes(detailedApp.getSize(), false));
-    latestVersion.setText(detailedApp.getFile()
-        .getVername());
-    storeName.setText(detailedApp.getStore()
+  @Override public void populateAppDetails(DetailedAppViewModel detailedApp) {
+    StoreTheme storeThemeEnum = StoreTheme.get(detailedApp.getDetailedApp()
+        .getStore());
+
+    appName.setText(detailedApp.getDetailedApp()
         .getName());
     ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(detailedApp.getStore()
+        .load(detailedApp.getDetailedApp()
+            .getIcon(), appIcon);
+    downloadsTop.setText(String.format("%s", AptoideUtils.StringU.withSuffix(
+        detailedApp.getDetailedApp()
+            .getStats()
+        .getPdownloads())));
+    sizeInfo.setText(AptoideUtils.StringU.formatBytes(detailedApp.getDetailedApp()
+        .getSize(), false));
+    latestVersion.setText(detailedApp.getDetailedApp()
+        .getFile()
+        .getVername());
+    storeName.setText(detailedApp.getDetailedApp()
+        .getStore()
+        .getName());
+    ImageLoader.with(getContext())
+        .loadWithShadowCircleTransform(detailedApp.getDetailedApp()
+            .getStore()
             .getAvatar(), storeIcon);
     storeDownloads.setText(String.format("%s", AptoideUtils.StringU.withSuffix(
-        detailedApp.getStore()
+        detailedApp.getDetailedApp()
+            .getStore()
             .getStats()
             .getDownloads())));
     storeFollowers.setText(String.format("%s", AptoideUtils.StringU.withSuffix(
-        detailedApp.getStore()
+        detailedApp.getDetailedApp()
+            .getStore()
             .getStats()
             .getSubscribers())));
-    screenshotsAdapter.updateScreenshots(detailedApp.getMedia()
-        .getScreenshots());
-    screenshotsAdapter.updateVideos(detailedApp.getMedia()
-        .getVideos());
-    setDescription(detailedApp.getMedia()
+    storeFollow.setBackgroundDrawable(
+        storeThemeEnum.getButtonLayoutDrawable(getResources(), getContext().getTheme()));
+    if ((detailedApp.getDetailedApp()
+        .getMedia()
+        .getScreenshots() != null && !detailedApp.getDetailedApp()
+        .getMedia()
+        .getScreenshots()
+        .isEmpty()) || (detailedApp.getDetailedApp()
+        .getMedia()
+        .getVideos() != null && !detailedApp.getDetailedApp()
+        .getMedia()
+        .getVideos()
+        .isEmpty())) {
+      screenshotsAdapter.updateScreenshots(detailedApp.getDetailedApp()
+          .getMedia()
+          .getScreenshots());
+      screenshotsAdapter.updateVideos(detailedApp.getDetailedApp()
+          .getMedia()
+          .getVideos());
+    } else {
+      screenshots.setVisibility(View.GONE);
+    }
+    setTrustedBadge(detailedApp.getDetailedApp());
+    setDescription(detailedApp.getDetailedApp()
+        .getMedia()
         .getDescription());
-    setAppFlags(detailedApp.getFile());
-    setReadMoreClickListener(detailedApp);
-    setDeveloperDetails(detailedApp);
+    setAppFlags(detailedApp.getDetailedApp()
+        .getFile());
+    setReadMoreClickListener(detailedApp.getDetailedApp());
+    setDeveloperDetails(detailedApp.getDetailedApp());
     showAppview();
   }
 
@@ -285,6 +337,12 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
   }
 
+  @Override public void displayStoreFollowedSnack(String storeName) {
+    String messageToDisplay = String.format(getString(R.string.store_followed), storeName);
+    Toast.makeText(getContext(), messageToDisplay, Toast.LENGTH_SHORT)
+        .show();
+  }
+
   @Override public Observable<Void> clickDeveloperWebsite() {
     return RxView.clicks(infoWebsite);
   }
@@ -303,6 +361,18 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
   @Override public Observable<Void> clickStoreLayout() {
     return RxView.clicks(storeLayout);
+  }
+
+  @Override public Observable<Void> clickFollowStore() {
+    return RxView.clicks(storeFollow);
+  }
+
+  @Override public Observable<Void> clickOtherVersions() {
+    return RxView.clicks(otherVersions);
+  }
+
+  @Override public Observable<Void> clickTrustedBadge() {
+    return RxView.clicks(trustedLayout);
   }
 
   @Override public void navigateToDeveloperWebsite(DetailedApp app) {
@@ -328,6 +398,65 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   @Override public void navigateToDeveloperPermissions(DetailedApp app) {
     DialogPermissions dialogPermissions = DialogPermissions.newInstance(app);
     dialogPermissions.show(getActivity().getSupportFragmentManager(), "");
+  }
+
+  @Override public void setFollowButton(boolean isFollowing) {
+    if (isFollowing) {
+      storeFollow.setText(R.string.follow);
+    } else {
+      storeFollow.setText(R.string.followed);
+    }
+  }
+
+  @Override public void showTrustedDialog(DetailedApp app) {
+    DialogBadgeV7.newInstance(app.getFile()
+        .getMalware(), app.getName(), app.getFile()
+        .getMalware()
+        .getRank())
+        .show(getFragmentManager(), BADGE_DIALOG_TAG);
+  }
+
+  @Override public String getLanguageFilter() {
+    List<String> countryCodes =
+        new LanguageFilterHelper(getContext().getResources()).getCurrentLanguageFirst()
+            .getCountryCodes();
+    return countryCodes.get(0);
+  }
+
+  private void setTrustedBadge(DetailedApp app) {
+    @DrawableRes int badgeResId;
+    @StringRes int badgeMessageId;
+
+    Malware.Rank rank = app.getFile()
+        .getMalware()
+        .getRank() == null ? Malware.Rank.UNKNOWN : app.getFile()
+        .getMalware()
+        .getRank();
+    switch (rank) {
+      case TRUSTED:
+        badgeResId = R.drawable.ic_badge_trusted;
+        badgeMessageId = R.string.appview_header_trusted_text;
+        break;
+
+      case WARNING:
+        badgeResId = R.drawable.ic_badge_warning;
+        badgeMessageId = R.string.warning;
+        break;
+
+      case CRITICAL:
+        badgeResId = R.drawable.ic_badge_critical;
+        badgeMessageId = R.string.critical;
+        break;
+
+      default:
+      case UNKNOWN:
+        badgeResId = R.drawable.ic_badge_unknown;
+        badgeMessageId = R.string.unknown;
+        break;
+    }
+    Drawable icon = ContextCompat.getDrawable(getContext(), badgeResId);
+    trustedBadge.setImageDrawable(icon);
+    trustedText.setText(badgeMessageId);
   }
 
   private void setDescription(String description) {

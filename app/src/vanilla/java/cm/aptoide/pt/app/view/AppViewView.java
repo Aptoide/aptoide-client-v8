@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import cm.aptoide.pt.app.AdsViewModel;
+import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.presenter.View;
@@ -22,7 +23,7 @@ public interface AppViewView extends View {
 
   String getPackageName();
 
-  void populateAppDetails(DetailedApp detailedApp);
+  void populateAppDetails(DetailedAppViewModel detailedApp);
 
   Observable<ScreenShotClickEvent> getScreenshotClickEvent();
 
@@ -40,6 +41,8 @@ public interface AppViewView extends View {
 
   void displayNotLoggedInSnack();
 
+  void displayStoreFollowedSnack(String storeName);
+
   Observable<Void> clickDeveloperWebsite();
 
   Observable<Void> clickDeveloperEmail();
@@ -50,6 +53,12 @@ public interface AppViewView extends View {
 
   Observable<Void> clickStoreLayout();
 
+  Observable<Void> clickFollowStore();
+
+  Observable<Void> clickOtherVersions();
+
+  Observable<Void> clickTrustedBadge();
+
   void navigateToDeveloperWebsite(DetailedApp app);
 
   void navigateToDeveloperEmail(DetailedApp app);
@@ -57,4 +66,10 @@ public interface AppViewView extends View {
   void navigateToDeveloperPrivacy(DetailedApp app);
 
   void navigateToDeveloperPermissions(DetailedApp app);
+
+  void setFollowButton(boolean isFollowing);
+
+  void showTrustedDialog(DetailedApp app);
+
+  String getLanguageFilter();
 }

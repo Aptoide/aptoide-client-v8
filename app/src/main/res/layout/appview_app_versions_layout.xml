@@ -40,6 +40,7 @@
       />
 
   <TextView
+      android:id="@+id/other_versions"
       android:layout_width="48dp"
       android:layout_height="32dp"
       android:layout_marginEnd="65dp"
