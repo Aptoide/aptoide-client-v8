@@ -13,6 +13,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -97,5 +98,33 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
         getResources().getString(R.string.root_access_dialog))
         .map(response -> (response.equals(YES)));
+  }
+
+  @Override public void showDownloadAppModel(DownloadAppViewModel model) {
+    if (model.isDownloading()) {
+      downloadInfoLayout.setVisibility(View.VISIBLE);
+      install.setVisibility(View.GONE);
+      setButtonText(model.getAction());
+    } else {
+      downloadInfoLayout.setVisibility(View.GONE);
+      install.setVisibility(View.VISIBLE);
+    }
+  }
+
+  private void setButtonText(DownloadAppViewModel.Action action) {
+    switch (action) {
+      case UPDATE:
+        install.setText(getResources().getString(R.string.appview_button_update));
+        break;
+      case INSTALL:
+        install.setText(getResources().getString(R.string.appview_button_install));
+        break;
+      case OPEN:
+        install.setText(getResources().getString(R.string.appview_button_open));
+        break;
+      case DOWNGRADE:
+        install.setText(getResources().getString(R.string.appview_button_downgrade));
+        break;
+    }
   }
 }

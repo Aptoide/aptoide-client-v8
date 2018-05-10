@@ -28,6 +28,7 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
@@ -244,10 +245,15 @@ import rx.schedulers.Schedulers;
     return new PreferencesManager(userPreferencesPersister);
   }
 
+  @FragmentScope @Provides DownloadStateParser providesDownloadStateParser() {
+    return new DownloadStateParser();
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
-      ReviewsManager reviewsManager, AdsManager adsManager, PreferencesManager preferencesManager) {
+      ReviewsManager reviewsManager, AdsManager adsManager, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager, preferencesManager);
+        reviewsManager, adsManager, preferencesManager, downloadStateParser);
   }
 }
