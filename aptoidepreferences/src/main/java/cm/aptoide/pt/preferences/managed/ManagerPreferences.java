@@ -217,7 +217,7 @@ public class ManagerPreferences {
     return sharedPreferences.getLong(ManagedKeys.SESSION_TIMESTAMP, 0);
   }
 
-  public static void setSessionTimestamp(long value, SharedPreferences sharedPreferences) {
+  public static void saveSessionTimestamp(long value, SharedPreferences sharedPreferences) {
     sharedPreferences.edit().putLong(ManagedKeys.SESSION_TIMESTAMP, value).apply();
   }
 }

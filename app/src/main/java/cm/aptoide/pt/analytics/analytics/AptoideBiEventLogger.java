@@ -10,12 +10,14 @@ import java.util.Map;
 public class AptoideBiEventLogger implements EventLogger, SessionLogger {
   private static final String TAG = AptoideBiEventLogger.class.getSimpleName();
   private final AptoideBiAnalytics service;
+  private final long sessionInterval;
 
   private final String EVENT_NAME = "SESSION";
   private final String CONTEXT_NAME = "APPLICATION";
 
-  public AptoideBiEventLogger(AptoideBiAnalytics service) {
+  public AptoideBiEventLogger(AptoideBiAnalytics service, long sessionInterval) {
     this.service = service;
+    this.sessionInterval = sessionInterval;
   }
 
   @Override
@@ -29,16 +31,11 @@ public class AptoideBiEventLogger implements EventLogger, SessionLogger {
   }
 
   @Override public void startSession() {
-    //service.getTimestamp(); //todo
-    long thirtySeconds = 30 * 1000;
     long currentTimeElapsed = System.currentTimeMillis() - service.getTimestamp();
-    if (currentTimeElapsed < thirtySeconds) {
-      Logger.d(TAG, "startSession currentTimeElapsed: " + currentTimeElapsed);
-    } else {
-      Logger.d(TAG, "startSession: " + service.getTimestamp());
-      service.log(EVENT_NAME, null, AnalyticsManager.Action.OPEN, CONTEXT_NAME,
-          System.currentTimeMillis());
+    if (currentTimeElapsed > sessionInterval) {
+      service.log(EVENT_NAME, null, AnalyticsManager.Action.OPEN, CONTEXT_NAME);
     }
+    service.saveTimestamp(System.currentTimeMillis());
   }
 
   @Override public void endSession() {

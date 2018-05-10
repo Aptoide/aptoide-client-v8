@@ -1022,7 +1022,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
             Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport, preferences));
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport, preferences),
+        BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
   }
 
   @Singleton @Provides @Named("fabric") EventLogger providesFabricEventLogger(Answers fabric) {
