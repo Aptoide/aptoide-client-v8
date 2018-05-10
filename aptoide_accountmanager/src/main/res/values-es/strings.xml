@@ -4,20 +4,20 @@
   <string name="one_account_allowed">Solo se permite una cuenta</string>
   <string name="or">o</string>
   <string name="username">E-mail</string>
-  <string name="password">Contrasinal</string>
+  <string name="password">Contraseña</string>
   <string name="link_device_webinstall">Asociar cuenta con Webinstall</string>
   <string name="register">Regístrate</string>
-  <string name="login">Inicio de sesión</string>
+  <string name="login">Iniciar sesión</string>
   <string name="successful">Con éxito</string>
   <string name="login_successful">Inicio de sesión correcto</string>
-  <string name="forgot_passwd"><u>¿Olvidaste tu contraseña?</u></string>
+  <string name="forgot_passwd">¿Olvidaste tu contraseña?</string>
   <string name="fields_cannot_empty">Por favor, consulta tu correo electrónico y contraseña.</string>
   <string name="unknown_error">Error desconocido</string>
   <string name="accept_terms">Al registrarte estás aceptando los Términos de Servicio de Aptoide
-y la Política de Contenido de los Desarrolladores</string>
-  <string name="no_email_and_pass_error_message">Por favor, introduce un e-mail y una contraseña</string>
-  <string name="no_pass_error_message">Por favor, introduce una contraseña</string>
-  <string name="no_email_error_message">Por favor, introduce un e-mail</string>
+y la Política de Contenido de los Desarrolladores    </string>
+  <string name="no_email_and_pass_error_message">Por favor, introduce un email y una contraseña para registrarte.    </string>
+  <string name="no_pass_error_message">Por favor, introduce una contraseña para registrarte.</string>
+  <string name="no_email_error_message">Por favor, introduce un email para registrarte.</string>
   <string name="password_validation_text">La contraseña tiene que tener 8 caracteres como mínimo y
 al menos una letra y un número o caracteres especiales (!@#$%*)</string>
   <string name="logged_as">Has iniciado sesión como:</string>
@@ -29,12 +29,12 @@ al menos una letra y un número o caracteres especiales (!@#$%*)</string>
   <!--errors-->
   <string name="error_occured">Ha ocurrido un error. Por favor, inténtalo otra vez</string>
   <string name="error_invalid_grant">Combinación de nombre de usuario y contraseña no válida</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occurrido</string>
-  <string name="ws_error_MARG_204">\@string/error_occurrido</string>
-  <string name="ws_error_IARG_200">\@string/error_occurrido</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">¡Credenciales de inicio de sesión no válidas!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occurrido</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">No se pudo iniciar sesión con Google. Comprueba tu cuenta de Google (puede que tengas que validar tu dirección de e-mail)</string>
   <string name="ws_error_AUTH_101">No se pudo iniciar sesión en Google. Por favor, inténtalo de nuevo.</string>
   <string name="ws_error_AUTH_102">No se pudo iniciar sesión con Facebook. Comprueba tu cuenta de Facebook (puede que tengas que validar tu dirección de e-mail)</string>
@@ -43,7 +43,7 @@ al menos una letra y un número o caracteres especiales (!@#$%*)</string>
   <string name="ws_error_MARG_12">Falta o parámetro hmac</string>
   <string name="ws_error_MARG_109">Falta el parámetro de email</string>
   <string name="ws_error_MARG_110">Falta el parámetro passhash</string>
-  <string name="ws_error_MARG_111">Falta o parámetro nome</string>
+  <string name="ws_error_MARG_111">Falta el parámetro nome</string>
   <string name="ws_error_MARG_112">Falta el parámetro User-agent</string>
   <string name="ws_error_IARG_5">Formato hmac non válido</string>
   <string name="ws_error_IARG_106">La dirección de correo electrónico no es válida</string>
@@ -75,8 +75,8 @@ nombre.</string>
   <string name="create_user_header"><b>Crea tu perfil de usuario</b> para que puedas puntuar, comentar y compartir aplicaciones con tus amigos</string>
   <string name="create_user_take_picture">Elige una imagen para tu perfil</string>
   <string name="create_user_random_photo">O utiliza una imagen aleatoria</string>
-  <string name="create_user_choose_username">Elige un nombre de usuario</string>
-  <string name="create_user_username">Nombre de Utilizador</string>
+  <string name="create_user_choose_username">Elige tu nombre de usuario</string>
+  <string name="create_user_username">Nombre de usuario</string>
   <string name="create_user_hint">Aparece cuando puntúas, comentas y compartes aplicaciones.</string>
   <string name="create_user_create_button">Crear perfil</string>
   <string name="create_user_dialog_camera">Hacer foto</string>

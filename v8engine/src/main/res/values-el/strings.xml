@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Ο Λογαριασμός μου</string>
-  <string name="setting_schdwntitle">Προγραμματισμένες Λήψεις</string>
-  <string name="settings">Ρυθμίσεις</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Αντ. Ασφ. Εφαρμογών</string>
   <string name="dark">Σκοτεινό</string>
   <string name="light">Ανοιχτό</string>
   <string name="updates_filter_summary">Επιλέγοντας αυτό, δεν θα ενημερώνεστε για δοκιμαστικές εκδόσεις.</string>
@@ -131,21 +124,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>ΠΑΡΑΛΕΙΨΗ</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Τώρα με Timeline!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Τα καλύτερα app videos και νέα</b> σε ένα μέρος. \nΑνακάλυψε apps μέσω των <b>φίλων σου.</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Κάνε το δικό σου Store</string>
-  <string name="wizard_sub_title_viewpager_two">Εξατομίκευσε το store σου και <b>κοινοποίησε apps \n με φίλους</b> και το <b>Aptoide Community.</b></string>
+  <string name="wizard_title_viewpager_two"><b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Be a part</string>
-  <string name="wizard_sub_title_viewpager_three"><b>Βρες ανθρώπους</b> που μοιράζονται τα ίδια app ενδιαφέροντα με σένα. \n<b>Βαθμολόγησε και κοινοποίησε.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Γίνε μέλος!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Θα πρέπει να συνδεθείς</string>
   <string name="follow">Ακολούθησε</string>
   <!--need translation-->
   <string name="followed">Ακολουθείς</string>
   <string name="unfollow_yes_no">Σίγουρα θέλεις να σταματήσεις να ακολουθείς;</string>
   <string name="unfollow">Unfollow</string>
+  <string name="appview_follow_store_button_text">Συνδρομή;</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Ακολουθούνται Store %s</string>
   <string name="subscribers">Συνδρομητές</string>
@@ -173,7 +173,6 @@
   <string name="social_timeline">Κοινωνικό Χρονολόγιο</string>
   <string name="downloads">Λήψεις</string>
   <string name="apps_timeline"><b>Apps Timeline</b></string>
-  <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">Τελευταίες Κριτικές</string>
   <string name="latest_comments">Τελευταία Σχόλια</string>
   <string name="action">Δράση</string>
@@ -246,8 +245,6 @@
   <string name="essential_apps">Απαραίτητα Apps</string>
   <string name="summer_apps">Καλοκαιρινά Apps</string>
   <string name="play_it">Play-It!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Επιλεγμένα Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Σχετίζονται με %1$s</string>
   <string name="appstimeline_update_app">app</string>
@@ -270,10 +267,9 @@
   <string name="create_store_displayable_message">Δημιούργησε το Store σου και ξεκίνα να κοινοποιείς τα apps σου!</string>
   <string name="create_store_displayable_button">ΔΗΜΙΟΥΡΓΙΑ STORE</string>
   <string name="my_store_created_displayable_message">Το Android App store σου</string>
-  <string name="create_store_displayable_created_store_short_term_message">Μόλις δημιούργησες το Store σου!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Μπες και ανακάλυψε όλες τις δυνατότητες</string>
   <string name="create_store_displayable_explore_button">Εξερεύνηση</string>
-  <string name="follow_store">Ακολούθησε Store</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Το store σου δεν έχει ακόμα εφαρμογές.</string>
   <string name="install_app_outter_pt2">και ανέβασε apps για να τα μοιραστείς με τον κόσμο!</string>
@@ -286,8 +282,6 @@
   <string name="word_this">αυτό</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Τι θα δουν οι followers σου:</string>
-  <string name="social_timeline_you_will_share_comment">Οι followers σου θα δουν το Σχόλιό σου:</string>
-  <string name="social_timeline_you_will_share_like">Οι followers θα δουν το Like σου:</string>
   <string name="social_timeline_share_title">Κοινοποίηση προεπισκόπησης κάρτας</string>
   <string name="social_timeline_share_title_checkbox">Να γίνει το προφίλ χρήστη πριβέ σε Apps Timeline. Προβολή μόνο του store info.</string>
   <string name="social_timeline_share_title_checkbox_fb">Να γίνει δημόσιο (public) το προφίλ χρήστη σε Apps Timeline</string>
@@ -317,85 +311,21 @@
   <!-- Followers and following -->
   <string name="timeline_followers">Followers %d</string>
   <string name="timeline_followed">Following %d</string>
-  <string name="timeline_stats_followers">Followers</string>
+  <string name="timeline_stats_followers">Συνδρομητές</string>
   <string name="timeline_login_message">Τι εγκαθιστούν οι φίλοι σου;</string>
   <string name="private_followers_message">%d followers είναι πριβέ</string>
   <string name="private_following_message">ακολουθείς %d πριβέ χρήστες / stores</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Απαντήσεις</string>
   <string name="out_of_space_dialog_title">Δίχως χώρο</string>
   <string name="out_of_space_dialog_message">Θα πρέπει να ελευθερώσεις χώρο για να συνεχίσεις.</string>
-  <string name="setting_category_autoupdate">%s Ενημερώσεις</string>
-  <string name="setting_category_autoupdate_title">Λήψη ενημερωτικών ειδοποιήσεων %s</string>
-  <string name="setting_category_autoupdate_message">Θα πρέπει να τσεκάρεις τακτικά για νέες εκδόσεις %s</string>
-  <string name="store_added_long_time_suggestion_message">προβολή μακροχρόνια</string>
-  <string name="store_added_short_time_suggestion_message">προβολή φρεσκο-δημιουργημένων</string>
-  <string name="create_store_displayable_created_store_long_term_message">μακροχρόνια</string>
-  <string name="create_store_displayable_explore_long_term_button">Προβολή Store</string>
-  <string name="create_store_displayable_empty_description_message">Προσθήκη περιγραφής για το Store σου. Μια καλή περιγραφή θα σε βοηθήσει να αποκτήσεις περισσότερους followers και μεγαλύτερη διαδραστικότητα.</string>
-  <string name="fragment_spot_share_preview_start_button">Έναρξη</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Γίνε μέλος %s</string>
-  <string name="login">Σύνδεση</string>
-  <string name="login_company">Σύνδεση %s</string>
-  <string name="connect_with_facebook">Σύνδεση με Facebook</string>
-  <string name="connect_with_google">Σύνδεση με Google</string>
-  <string name="accept_terms_signup">Με την ένταξή σου στο Aptoide αποδέχεσαι τους Όρους και Προϋποθέσεις του Aptoide, καθώς και την Πολιτική Περιεχομένου για Developers.</string>
-  <string name="recover_password">Ανάκτηση κωδικού</string>
-  <string name="email">Email</string>
-  <string name="password">Κωδικός</string>
-  <string name="create_password">Δημιουργία Κωδικού</string>
-  <string name="store_suspended_message">Αναστολή του Store</string>
-  <string name="facebook_login_cancelled">Ακυρώθηκε η Facebook σύνδεση</string>
-  <string name="google_login_cancelled">Ακυρώθηκε η Google σύνδεση</string>
-  <string name="login_separator_text">Ή συνδέσου με το email σου</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Μπορείς να βρεις αποκλειστικά εξατομικευμένο περιεχόμενο σε διάφορα stores</string>
-  <string name="add_store_dialog_top_stores">ΑΝΑΚΑΛΥΨΗ ΚΟΡΥΦΑΙΩΝ STORES</string>
-  <string name="add_store_dialog_top_stores_small_text">και βρες αποκλειστικό περιεχόμενο!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Σύνδεση</string>
-  <string name="activity_login_forgot_password_button">Ξεχάσατε τον κωδικό?</string>
-  <string name="activity_login_button">Σύνδεση</string>
-  <string name="activity_login_sign_up_button">Εγγραφή</string>
-  <string name="view_credentials_username_hint">Email</string>
-  <string name="view_credentials_password_hint">Κωδικός</string>
-  <string name="permission_access_deny">δεν έγινε δεκτή η πρόσβαση ανάγνωσης και εγγραφής σε εξωτερικό αποθ. χώρο</string>
-  <string name="permission_account_deny">δεν έγινε δεκτή η πρόσβαση για λήψη λογαριασμών</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Αύξησε το δίκτυό σου.</string>
-  <string name="addressbook_connect_with_friends_message">Συνδέσου με φίλους.</string>
-  <string name="addressbook_sync">Sync με Βιβλίο Διευθύνσεων</string>
-  <string name="not_now">Όχι τώρα</string>
-  <string name="follow_friends">Ακολούθησε Φίλους</string>
-  <string name="addressbook_data_about"><b>Πώς το %1$s Χρησιμοποιεί τα Δεδομένα σου</b>
-\n\n Το %1$s θα αναζητήσει στο βιβλίο των διευθύνσεών σου φίλους και άτομα της οικογένειάς σου που χρησιμοποιούν το App Store μας.
-Θα
-χρησιμοποιήσουμε αυτά τα δεδομένα αποκλειστικά για βελτιστοποίηση της %1$s εμπειρίας σου, συνδέοντάς σε με περισσότερα άτομα τα οποία κοινοποιούν apps παρόμοια με τα δικά σου. 
-\n\n\n Για να προστατέψουμε το απόρρητο των προσωπικών σου δεδομένων, δε στέλνουμε ευαίσθητα προσωπικά δεδομένα σε %1$s servers. Τα δεδομένα θα είναι ανώνυμα και θα είναι αδύνατο να συσχετιστούν μαζί σου.</string>
-  <string name="addressbook_success">Τα κατάφερες!</string>
-  <string name="addressbook_allow_friends_find">Επέτρεψε στους φίλους σου να σε βρίσκουν</string>
-  <string name="google">Google</string>
-  <string name="done">Ολοκλήρωση</string>
-  <string name="addressbook_share_phone">Κοινοποίησε το τηλ. αριθμό σου για να σε βρουν οι φίλοι σου στο %s</string>
-  <string name="addressbook_phone_number">Τηλ. αριθμός</string>
-  <string name="addressbook_insuccess_connection">Δεν καταφέραμε να συνδεθούμε στο βιβλίο διευθύνσεων!</string>
-  <string name="addressbook_invite_friends">Προσκάλεσε φίλους!</string>
-  <string name="addressbook_thanks_for_connecting">Σε ευχαριστούμε για τη σύνδεση</string>
-  <string name="addressbook_success_connected_friends">Σε συνδέσαμε επιτυχώς με %1$s φίλους που χρησιμοποιούν %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Δε βρήκαμε επαφές που χρησιμοποιούν %1$s</string>
-  <string name="addressbook_2nd_msg">Το %1$s θα τσεκάρει το βιβλίο διευθύνσεων για φίλους και οικογένεια
-    που χρησιμοποιούν το App Store μας. Για προστασία του απορρήτου σου, δε θα σταλθούν
-    ευαίσθητα προσωπικά σου δεδομένα σε %1$s servers</string>
-  <string name="addressbook_3rd_msg">ΜΑΘΕ ΠΕΡΙΣΣΟΤΕΡΑ</string>
-  <string name="address_book_twitter_error">Σφάλμα άδειας Twitter</string>
-  <string name="follow_my_store">Hello, follow my %1$s Store here</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">Σχετικά με Βιβλίο Διευθύνσεων</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Δεν καταφέραμε να σε συνδέσουμε</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Μοιράσου apps με φίλους σου</string>
-  <string name="spot_share_line_2">Τηλ. προς Τηλ., χωρίς Internet</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

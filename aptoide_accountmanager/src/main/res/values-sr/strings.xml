@@ -4,19 +4,21 @@
   <string name="one_account_allowed">Samo jedan profil je dozvoljen</string>
   <string name="or">ili</string>
   <string name="username">Mejl</string>
-  <string name="password">Lozinka</string>
+  <string name="password">Лозинка</string>
   <string name="link_device_webinstall">Poveži profil sa Webinstall</string>
-  <string name="register">Пријављивање</string>
-  <string name="login">Login</string>
+  <string name="register">Registruj se</string>
+  <string name="login">Регистрација</string>
   <string name="successful">Uspešno</string>
   <string name="login_successful">Uspešno prijavljivanje</string>
-  <string name="forgot_passwd">Заборавили сте лозинку?</string>
+  <string name="forgot_passwd">Zaboravio/la si lozinku?</string>
   <string name="fields_cannot_empty">Molimo proveri svoj mejl i lozinku.</string>
   <string name="unknown_error">Nepoznata greška</string>
   <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-      Content Policy for Developers
-  </string>
-  <string name="no_email_and_pass_error_message">Молимо унесите имејл и лозинку ради регистрације.</string>
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">Молимо унесите лозинку ради регистрације.</string>
   <string name="no_email_error_message">Молимо унесите имејл ради регистрације.</string>
   <string name="password_validation_text">Лозинка мора да има бар 8 карактера и треба да има бар једно слово и један број или посебан карактер (!@#$%*) </string>
@@ -31,7 +33,12 @@
   <!--errors-->
   <string name="error_occured">Pojavila se greška. Molimo pokušaj ponovo</string>
   <string name="error_invalid_grant">Nevažeća kombinacija korisničkog imena i lozinke</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Pogrešne kredencije!</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Prijava sa Guglom nije bila moguća. Proverite svoj Gugl nalog (možda ćete morati da potvrdite svoju imejl adresu)</string>
   <string name="ws_error_AUTH_101">Ne može se prijaviti sa Gugla. Molimo pokušaj ponovo.</string>
   <string name="ws_error_AUTH_102">Prijava sa Fejsbukom nije bila moguća. Proverite svoj Fejsbuk nalog (možda ćete morati da potvrdite svoju imejl adresu)</string>
@@ -101,7 +108,7 @@
   <string name="create_store_description_title">Opis vaše prodavnice</string>
   <string name="create_store_description_hint">Opis vaše prodavnice</string>
   <string name="edit_store_title">Uredite vašu prodavnicu</string>
-  <string name="save_edit_store">Сачувајте</string>
+  <string name="save_edit_store">Sačuvajte</string>
   <string name="upload_dialog_title">Učitajte sliku</string>
   <string name="upload_dialog_photo">Slikajte se ponovo</string>
   <string name="upload_dialog_gallery">Odaberite iz galerije</string>

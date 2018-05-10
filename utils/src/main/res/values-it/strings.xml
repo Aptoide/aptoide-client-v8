@@ -6,7 +6,7 @@
   -->
 <resources>
   <string name="please_wait">Attendere prego…</string>
-  <string name="continue_option">Continua</string>
+  <string name="continue_option">Continuare</string>
   <string name="more_info">Altre info</string>
   <!-- DateUtils -->
   <string name="WidgetProvider_timestamp_today">Oggi</string>

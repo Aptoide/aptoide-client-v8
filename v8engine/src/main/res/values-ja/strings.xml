@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">マイアカウント</string>
-  <string name="setting_schdwntitle">スケジュールされたダウンロード</string>
-  <string name="settings">設定</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">アプリをバックアップ</string>
   <string name="dark">ダーク</string>
   <string name="light">ライト</string>
   <string name="updates_filter_summary">これをチェックした場合、ベータ版の通知は行いません。</string>
@@ -29,8 +22,8 @@
   <string name="developer_privacy_policy">プライバシーポリシー: %s</string>
   <string name="open">開く</string>
   <string name="button_header_more">さらに</string>
-  <string name="search">検索する</string>
-  <string name="update">更新する</string>
+  <string name="search">検索</string>
+  <string name="update">アップデート</string>
   <string name="uninstall">アンインストール</string>
   <string name="downgrade">ダウングレード</string>
   <string name="appview_followers_count_text">%1$s フォロワー</string>
@@ -128,29 +121,33 @@
   <string name="remote_install_nowifi_tip">Wi-Fi ネットワークを有効にして接続してください</string>
   <string name="remote_install_empty_list">検索しています…</string>
   <string name="remote_install_tip">AndroidTV をネットワークに接続していることを確認してください</string>
-  <string name="remote_install_retry">再試行</string>
+  <string name="remote_install_retry">やり直す</string>
   <string name="remote_install_help">ヘルプ</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>スキップ</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">タイムラインで!</string>
-  <string name="wizard_sub_title_viewpager_one">1 つの場所で <b>ビデオやニュースの最高のアプリ</b> を。 
-<b>友達</b> 経由でアプリを見つけましょう</string>
+  <string name="wizard_welcome_message"><b>ようこそ!</b></string>
+  <string name="wizard_sub_title_viewpager_one"><b>安全</b> で <b>楽しい</b> 旅を始めましょう。</string>
+  <string name="wizard_description_part_one_viewpager_one">安全なインストールのため\n信頼済バッジのあるアプリを\n<b>探してください</b>。</string>
+  <string name="wizard_description_part_two_viewpager_one">望んでいても\n見つからなかった\nアプリを <b>発見</b> します。</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">独自のストアを<b>アプリのタイムライン</b></string>
-  <string name="wizard_sub_title_viewpager_two">ストアをカスタマイズして <b>友達や</b>
-<b>Aptoide コミュニティ</b> とアプリを共有しましょう</string>
+  <string name="wizard_title_viewpager_two"><b>アプリのタイムライン</b></string>
+  <string name="wizard_sub_title_viewpager_two"><b>最新アプリ</b> の入手、<b>テーマ別ストア</b> を見つける\nそして <b>パーソナライズされたコンテンツ</b> にアクセス。</string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">参加する<b>コミュニティに参加</b></string>
-  <string name="wizard_sub_title_viewpager_three">あなたが興味を持ったアプリを共有する <b>人を見つけましょう</b> 。 
-<b>評価して共有しましょう。</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">ご参加ください!</string>
+  <string name="wizard_title_viewpager_three"><b>コミュニティに参加しましょう</b></string>
+  <string name="wizard_description_part_one_viewpager_three">友達を <b>フォロー</b></string>
+  <string name="wizard_description_part_two_viewpager_three"><b>レビュー</b> とアプリの評価</string>
+  <string name="wizard_description_part_three_viewpager_three">あなたのストアを <b>作成</b></string>
+  <string name="wizard_register_now_button">今すぐ登録</string>
+  <string name="wizard_be_a_part_of_aptoide">Aptoide の仲間になりましょう!</string>
+  <string name="wizard_or_login"><u>またはログイン</u></string>
   <string name="you_need_to_be_logged_in">ログインする必要があります</string>
   <string name="follow">フォロー</string>
   <!--need translation-->
   <string name="followed">フォローしている</string>
   <string name="unfollow_yes_no">本当にフォローを解除していいですか?</string>
   <string name="unfollow">フォロー解除</string>
+  <string name="appview_follow_store_button_text">フォローしますか?</string>
   <string name="unfollowing_store_message">%sをフォロー解除しています</string>
   <string name="store_followed">ストア%sをフォローしました</string>
   <string name="subscribers">購読者</string>
@@ -179,12 +176,11 @@
   <string name="social_timeline">ソーシャルタイムライン</string>
   <string name="downloads">ダウンロード</string>
   <string name="apps_timeline"><b>アプリのタイムライン</b></string>
-  <string name="timeline"><b>タイムライン</b></string>
   <string name="latest_reviews">最新のレビュー</string>
   <string name="latest_comments">最新のコメント</string>
   <string name="action">アクション</string>
-  <string name="adventure">冒険</string>
-  <string name="all">すべて</string>
+  <string name="adventure">アドベンチャー</string>
+  <string name="all">全て</string>
   <string name="applications">アプリ</string>
   <string name="arcade">アーケード</string>
   <string name="arcade_action">アーケード&amp;アクション</string>
@@ -202,7 +198,7 @@
   <string name="education">教育</string>
   <string name="educational">教育</string>
   <string name="entertainment">エンターテイメント</string>
-  <string name="family">家族</string>
+  <string name="family">ファミリー</string>
   <string name="finance">経済</string>
   <string name="games">ゲーム</string>
   <string name="health">健康</string>
@@ -216,13 +212,13 @@
   <string name="music">音楽</string>
   <string name="music_audio">音楽＆オーディオ</string>
   <string name="news_magazines">ニュース＆雑誌</string>
-  <string name="news_weather">ニュース＆天気情報</string>
+  <string name="news_weather">ニュースと天気</string>
   <string name="personalization">パーソナライズ</string>
   <string name="photography">写真</string>
   <string name="productivity">生産性</string>
   <string name="puzzle">パズル</string>
   <string name="racing">レース</string>
-  <string name="reference">参照</string>
+  <string name="reference">資料</string>
   <string name="role_playing">ロールプレイング</string>
   <string name="simulation">シミュレーション</string>
   <string name="social">社会</string>
@@ -252,8 +248,6 @@
   <string name="essential_apps">必須アプリ</string>
   <string name="summer_apps">夏アプリ</string>
   <string name="play_it">プレイしよう!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">注目のストア</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s に関連</string>
   <string name="appstimeline_update_app">アプリ</string>
@@ -276,10 +270,9 @@
   <string name="create_store_displayable_message">今すぐストアを作成して、アプリの共有を開始しましょう!</string>
   <string name="create_store_displayable_button">ストアを作成する</string>
   <string name="my_store_created_displayable_message">あなたの Android アプリ ストア</string>
-  <string name="create_store_displayable_created_store_short_term_message">ストアを作成しました!</string>
+  <string name="create_store_displayable_created_store_message">ストアを作成しました!</string>
   <string name="create_store_displayable_explore_message">すべての可能性を入力して探索します</string>
   <string name="create_store_displayable_explore_button">探索</string>
-  <string name="follow_store">ストアをフォロー</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">ストアは、まだアプリケーションがありません。</string>
   <string name="install_app_outter_pt2">世界と共有するアプリをアップロードしましょう!</string>
@@ -292,8 +285,6 @@
   <string name="word_this">これ</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">フォロワーが見るもの:</string>
-  <string name="social_timeline_you_will_share_comment">フォロワーは、あなたのコメントを参照します:</string>
-  <string name="social_timeline_you_will_share_like">フォロワーは、あなたのいいねを参照します:</string>
   <string name="social_timeline_share_title">カードのプレビューを共有</string>
   <string name="social_timeline_share_title_checkbox">アプリ タイムラインで自分のユーザー プロフィールを非公開にます。自分のストア情報のみ表示/共有します。</string>
   <string name="social_timeline_share_title_checkbox_fb">アプリ タイムライン上でユーザーのプロフィールの公開を許可</string>
@@ -323,90 +314,21 @@
   <!-- Followers and following -->
   <string name="timeline_followers">フォロワー %d</string>
   <string name="timeline_followed">フォロー中 %d</string>
-  <string name="timeline_stats_followers">フォロワー</string>
+  <string name="timeline_stats_followers">購読者</string>
   <string name="timeline_login_message">友達は何をインストールしていますか?</string>
   <string name="private_followers_message">%d のフォロワーが非公開</string>
   <string name="private_following_message">%d の非公開ユーザー/ストアをフォローしています</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">使用する</string>
+  <string name="item_payment_button_register">登録</string>
+  <string name="item_payment_approving_text">承認中...</string>
+  <string name="activity_payment_more_payments_button">別の支払い方法を使用する</string>
   <string name="reviews_expand_button">%d 件の返信</string>
   <string name="out_of_space_dialog_title">空き容量が不足</string>
   <string name="out_of_space_dialog_message">続行するために容量を空けてください。</string>
-  <string name="setting_category_autoupdate">%s の更新</string>
-  <string name="setting_category_autoupdate_title">%s の更新通知を取得</string>
-  <string name="setting_category_autoupdate_message">%s の新しいバージョンを定期的にチェック</string>
-  <string name="store_added_long_time_suggestion_message">長期間の表示</string>
-  <string name="store_added_short_time_suggestion_message">作成したばかりを表示</string>
-  <string name="create_store_displayable_created_store_long_term_message">長期間</string>
-  <string name="create_store_displayable_explore_long_term_button">ストアを表示</string>
-  <string name="create_store_displayable_empty_description_message">ストアの説明を追加します。良い説明をすると、多くのフォロワーと対話するのに役立ちます。</string>
-  <string name="fragment_spot_share_preview_start_button">開始</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">%s に参加</string>
-  <string name="login">ログイン</string>
-  <string name="login_company">%s にログイン</string>
-  <string name="connect_with_facebook">Facebook で接続</string>
-  <string name="connect_with_google">Google で接続</string>
-  <string name="accept_terms_signup">Aptoide に参加することによって、Aptoide の利用規約および開発者向けのコンテンツ ポリシーに同意します。</string>
-  <string name="recover_password">あなたのパスワードを回復します</string>
-  <string name="email">メール</string>
-  <string name="password">パスワード</string>
-  <string name="create_password">パスワードを作成</string>
-  <string name="store_suspended_message">ストアはサスペンドしました</string>
-  <string name="facebook_login_cancelled">Facebook のログインが取り消されました</string>
-  <string name="google_login_cancelled">Google ログインに失敗しました</string>
-  <string name="login_separator_text">またはメールアドレスを使用して接続します</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">別のストアで、あなたのためだけに作られたコンテンツを見つけることができます</string>
-  <string name="add_store_dialog_top_stores">トップストアを見つける</string>
-  <string name="add_store_dialog_top_stores_small_text">およびあなただけのコンテンツを見つける!</string>
-  <!-- Login -->
-  <string name="activity_login_title">ログイン</string>
-  <string name="activity_login_forgot_password_button">パスワードをお忘れですか？</string>
-  <string name="activity_login_button">ログイン</string>
-  <string name="activity_login_sign_up_button">登録</string>
-  <string name="view_credentials_username_hint">メール</string>
-  <string name="view_credentials_password_hint">パスワード</string>
-  <string name="permission_access_deny">外部ストレージへの読み書きのアクセスが拒否されました</string>
-  <string name="permission_account_deny">アカウントを取得するアクセスが拒否されました</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">ネットワークを増やします。</string>
-  <string name="addressbook_connect_with_friends_message">友達とつながります。</string>
-  <string name="addressbook_sync">アドレス帳を同期</string>
-  <string name="not_now">今はしない</string>
-  <string name="follow_friends">友達をフォロー</string>
-  <string name="addressbook_data_about"><b>%1$s があなたのデータを使用する仕組み</b>
- 
-
-%1$s は、アプリストアを使用している友達や家族をアドレス帳で検索します。%1$s の体験を改善するためにのみこの情報を使用して
-あなたとつながる、アプリを関連のコンテンツと共有することができる人を増やします。
-
-
-あなたのプライバシーを保護するために、%1$s サーバーに、明らかな個人データは送信されません。データは匿名署名 (ハッシュ) で作成され、元の連絡先情報にそのハッシュを戻すことはできません。
- </string>
-  <string name="addressbook_success">成功!</string>
-  <string name="addressbook_allow_friends_find">友達があなたを見つけられるようにする</string>
-  <string name="google">Google</string>
-  <string name="done">完了</string>
-  <string name="addressbook_share_phone">あなたの電話番号を共有して、%s で友達があなたを簡単に見つけられるようにします</string>
-  <string name="addressbook_phone_number">電話番号</string>
-  <string name="addressbook_insuccess_connection">お使いのアドレス帳に接続することができませんでした!</string>
-  <string name="addressbook_invite_friends">参加する友達を招待しましょう!</string>
-  <string name="addressbook_thanks_for_connecting">接続いただきありがとうございます</string>
-  <string name="addressbook_success_connected_friends">%2$s を使用している %1$s の友達に接続しました</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">%1$s を使用している連絡先が見つかりませんでした</string>
-  <string name="addressbook_2nd_msg">%1$s はあなたのアドレス帳でアプリストアを使用している友達や家族を参照します。あなたのプライバシーを保護するために、個人データは %1$s サーバーに送信しません</string>
-  <string name="addressbook_3rd_msg">もっと知る</string>
-  <string name="address_book_twitter_error">Twitter 認証エラー</string>
-  <string name="follow_my_store">こんにちは、ここで私の %1$s のストアをフォローしてください</string>
-  <string name="store_meta_apps">アプリ
-%s</string>
-  <string name="store_meta_following">フォロー中
-%s</string>
-  <string name="store_meta_followers">フォロワー
-%s</string>
-  <string name="addressbook_about">アドレス帳について</string>
-  <string name="addressbook_we_werent_able_to_connect_you">接続できませんでした</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">友達とアプリを共有</string>
-  <string name="spot_share_line_2">インターネットなしに電話から電話に</string>
+  <!--new setting options-->
+  <string name="languages">言語</string>
+  <string name="language_dialog">言語を選択</string>
+  <string name="topAppsNotification">トップアプリのおすすめ</string>
+  <string name="topAppsNotification_dialog">トップアプリの通知頻度を選択</string>
 </resources>

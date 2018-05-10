@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Mano paskyra</string>
-  <string name="setting_schdwntitle">Suplanuoti atsisiuntimai</string>
-  <string name="settings">Nustatymai</string>
-  <string name="facebook">\"Facebook\"</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Backup Apps</string>
   <string name="dark">Tamsus</string>
   <string name="light">Lengvas</string>
   <string name="updates_filter_summary">Tikrinant jums nebus pranešta apie beta versijas.</string>
@@ -93,7 +86,7 @@ programėlių registrą (per %s), įskaitant versiją ir įdiegimo datą.</strin
   <string name="top_comments">Top komentarai</string>
   <string name="rate">Reitingas</string>
   <string name="rate_app">Reitingas %s</string>
-  <string name="title">Pavadinimas</string>
+  <string name="title">PAVADINIMAS</string>
   <string name="tap_a_star">Paspauskite ant žvaigždelės, kad įvertintumėte</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
   <string name="other_versions_on_different_stores">Kitos versijos skirtingose parduotuvėse</string>
@@ -132,22 +125,28 @@ programėlių registrą (per %s), įskaitant versiją ir įdiegimo datą.</strin
   <!-- WIZARD -->
   <string name="wizard_skip"><b>PRALEISTI</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Now with a Timeline!</string>
-  <string name="wizard_sub_title_viewpager_one">Pradėkite <b>saugią</b> ir <b>malonią</b> kelionę.</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two"><b>Programėlių srautas</b></string>
-  <string name="wizard_sub_title_viewpager_two">Gaukite <b>naujausias programėles</b>, raskite <b>temines parduotuves</b>
-ir prieikite prie <b>asmeninio turinio.</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Prisijunkite prie bendruomenės</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Find people</b> who share your app interests. \n<b>Rate and share.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Join us!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Jūs turite būti prisijungęs</string>
   <string name="follow">Sekti</string>
   <!--need translation-->
   <string name="followed">Sekama</string>
   <string name="unfollow_yes_no">Ar tikrai norite nebesekti?</string>
   <string name="unfollow">Nebesekti</string>
+  <string name="appview_follow_store_button_text">Prenumeruoti?</string>
   <string name="unfollowing_store_message">Nebesekama %s</string>
   <string name="store_followed">Parduotuvės %s sekama</string>
   <string name="subscribers">Prenumeratoriai</string>
@@ -174,9 +173,8 @@ patikimumą ir kitų vartotojų komentarus. Aptoide visada rekomenduoja įdiegti
   <string name="stores">Parduotuvės</string>
   <string name="updates">Atnaujinimai</string>
   <string name="social_timeline">Socialinė chronologija</string>
-  <string name="downloads">Atsisiuntimai</string>
+  <string name="downloads">Parsisiuntimai</string>
   <string name="apps_timeline"><b>Programėlių srautas</b></string>
-  <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">Paskutiniai įvertinimai</string>
   <string name="latest_comments">Naujausi komentarai</string>
   <string name="action">Veiksmas</string>
@@ -249,8 +247,6 @@ patikimumą ir kitų vartotojų komentarus. Aptoide visada rekomenduoja įdiegti
   <string name="essential_apps">Būtinos programėlės</string>
   <string name="summer_apps">Vasaros programėlės</string>
   <string name="play_it">Paleiskite!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Featured Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Panašus į %1$s</string>
   <string name="appstimeline_update_app">programėlė</string>
@@ -273,24 +269,21 @@ patikimumą ir kitų vartotojų komentarus. Aptoide visada rekomenduoja įdiegti
   <string name="create_store_displayable_message">Create your Store now and start sharing your apps!</string>
   <string name="create_store_displayable_button">SUKURTI PARDUOTUVĘ</string>
   <string name="my_store_created_displayable_message">Your Android App store</string>
-  <string name="create_store_displayable_created_store_short_term_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
-  <string name="follow_store">Follow Store</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Your store doesn\'t have applications yet.</string>
   <string name="install_app_outter_pt2">and upload apps to share them with the world!</string>
   <string name="install_app_inner">\u0020Install %1$s\u0020</string>
   <string name="open_app_inner">\u0020Open %1$s\u0020</string>
-  <string name="downloads_count">Downloads: %1$s</string>
-  <string name="version_number">Version: %1$s</string>
-  <string name="app_size">Size: %1$s</string>
+  <string name="downloads_count">Atsisiuntimai: %1$s</string>
+  <string name="version_number">Versija: %1$s</string>
+  <string name="app_size">Dydis: %1$s</string>
   <string name="comment_on_store">Comment %1$s store</string>
   <string name="word_this">this</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">What your followers will see:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">Share card preview</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in Apps Timeline. Only show/share my store info.</string>
   <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
@@ -306,7 +299,7 @@ patikimumą ir kitų vartotojų komentarus. Aptoide visada rekomenduoja įdiegti
   <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
   <string name="social_timeline_following_fragment_title">Following %d person(s)</string>
   <string name="social_timeline_share_soon">The share will be published soon</string>
-  <string name="social_timeline_recommends">Recommends</string>
+  <string name="social_timeline_recommends">Rekomenduoja</string>
   <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
   <string name="social_timeline_shared_by">shared by %1$s</string>
   <string name="social_timeline_who_liked">Who liked</string>
@@ -320,87 +313,21 @@ patikimumą ir kitų vartotojų komentarus. Aptoide visada rekomenduoja įdiegti
   <!-- Followers and following -->
   <string name="timeline_followers">Followers %d</string>
   <string name="timeline_followed">Following %d</string>
-  <string name="timeline_stats_followers">Followers</string>
+  <string name="timeline_stats_followers">Prenumeratoriai</string>
   <string name="timeline_login_message">What are your friends installing?</string>
   <string name="private_followers_message">%d followers are private</string>
   <string name="private_following_message">you are following %d private users/stores</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
-  <string name="setting_category_autoupdate">%s Updates</string>
-  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
-  <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
-  <string name="store_added_long_time_suggestion_message">show long term</string>
-  <string name="store_added_short_time_suggestion_message">show just created</string>
-  <string name="create_store_displayable_created_store_long_term_message">long term</string>
-  <string name="create_store_displayable_explore_long_term_button">View Store</string>
-  <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
-  <string name="fragment_spot_share_preview_start_button">Pradžia</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Join %s</string>
-  <string name="login">Prisijungti</string>
-  <string name="login_company">Login %s</string>
-  <string name="connect_with_facebook">Connect with Facebook</string>
-  <string name="connect_with_google">Connect with Google</string>
-  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
-  <string name="recover_password">Recover your password</string>
-  <string name="email">El. paštas</string>
-  <string name="password">Slaptažodis</string>
-  <string name="create_password">Create Password</string>
-  <string name="store_suspended_message">Store suspended</string>
-  <string name="facebook_login_cancelled">Facebook login canceled</string>
-  <string name="google_login_cancelled">Google login failed</string>
-  <string name="login_separator_text">Or connect using your email</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
-  <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
-  <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Prisijungti</string>
-  <string name="activity_login_forgot_password_button">Pamiršote slaptažodį?</string>
-  <string name="activity_login_button">Prisijungti</string>
-  <string name="activity_login_sign_up_button">Registruotis</string>
-  <string name="view_credentials_username_hint">El. paštas</string>
-  <string name="view_credentials_password_hint">Slaptažodis</string>
-  <string name="permission_access_deny">access to read and write to external storage was denied</string>
-  <string name="permission_account_deny">access to get accounts was denied</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Increase your network.</string>
-  <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
-  <string name="addressbook_sync">Sync Address Book</string>
-  <string name="not_now">Not now</string>
-  <string name="follow_friends">Follow Friends</string>
-  <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
-    \n\n%1$s will search your address book for friends and family that are using our App Store. We\'ll
-    only use this information to improve your %1$s experience by connecting you to more people
-    that can share apps related content with you.\n\n\nTo protect your privacy, no clear private data
-    will be sent out to %1$s servers. An anonymous signature (hash) will be created with your data
-    and that hash cannot be reversed into the original contact info.
-  </string>
-  <string name="addressbook_success">Sėkmė!</string>
-  <string name="addressbook_allow_friends_find">Allow friends to find you</string>
-  <string name="google">Google</string>
-  <string name="done">Padaryta</string>
-  <string name="addressbook_share_phone">Share your phone number so your friends can easily find you on %s</string>
-  <string name="addressbook_phone_number">Telefono numeris</string>
-  <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
-  <string name="addressbook_invite_friends">Invite friends to join you!</string>
-  <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
-  <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s will browse your address book for friends and family
-    that are using our App Store. To protect your privacy, no private data will be sent out to %1$s
-    servers</string>
-  <string name="addressbook_3rd_msg">SUŽINOTI DAUGIAU</string>
-  <string name="address_book_twitter_error">Twitter authorization error</string>
-  <string name="follow_my_store">Hello, follow my %1$s Store here</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">About Address Book</string>
-  <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Share apps with your friends</string>
-  <string name="spot_share_line_2">Phone to phone, without Internet</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

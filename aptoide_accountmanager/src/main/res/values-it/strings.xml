@@ -3,23 +3,22 @@
 <resources>
   <string name="one_account_allowed">È permesso un solo account</string>
   <string name="or">o</string>
-  <string name="username">Posta elettronica</string>
+  <string name="username">E-mail</string>
   <string name="password">Password</string>
   <string name="link_device_webinstall">Collega account con Webinstall</string>
   <string name="register">Iscriviti</string>
   <string name="login">Login</string>
   <string name="successful">Effettuato con successo</string>
   <string name="login_successful">Login effettuato</string>
-  <string name="forgot_passwd"><u>Password dimenticata?</u></string>
+  <string name="forgot_passwd">Dimenticato la password?</string>
   <string name="fields_cannot_empty">Per favore controlla il tuo indirizzo e-mail e la password.</string>
   <string name="unknown_error">Errore sconosciuto</string>
-  <string name="accept_terms">\"Registrandoti accetti i Termini di Servizio e
-le Norme dei Contenuti per gli Sviluppatori di Aptoide
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Si prega di inserire indirizzo e-mail e password
- \"</string>
-  <string name="no_pass_error_message">Inserire una password</string>
-  <string name="no_email_error_message">Inserire una e-mail</string>
+  <string name="accept_terms">Registrandoti accetti i Termini di Servizio e
+  le Norme dei Contenuti per gli Sviluppatori di Aptoide
+    </string>
+  <string name="no_email_and_pass_error_message">Si prega di inserire un indirizzo e-mail e una password per registrarsi.    </string>
+  <string name="no_pass_error_message">Si prega di inserire una password per registrarsi.</string>
+  <string name="no_email_error_message">Si prega di inserire un indirizzo e-mail per registrarsi.</string>
   <string name="password_validation_text">\"La password deve essere lunga almeno 8 caratteri e dovrebbe
  contenere almeno una lettera e un numero o caratteri speciali (!@#$%*)
  \"</string>
@@ -34,12 +33,12 @@ account
   <!--errors-->
   <string name="error_occured">Si è verificato un errore. Si prega di riprovare</string>
   <string name="error_invalid_grant">Combinazione nome utente e password non valida</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/errore_incontrato</string>
-  <string name="ws_error_MARG_204">\@string/errore_incontrato</string>
-  <string name="ws_error_IARG_200">\@string/errore_incontrato</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Credenziali non valide!</string>
-  <string name="ws_error_AUTH_7">\@string/errore_incontrato</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Impossibile accedere con Google. Si prega di controllare l\'account Google (potrebbe essere necessario convalidare l\'indirizzo email)</string>
   <string name="ws_error_AUTH_101">Impossibile effettuare il login con Google. Per favore riprova.</string>
   <string name="ws_error_AUTH_102">Impossibile accedere con Facebook. Si prega di controllare l\'account Facebook (potrebbe essere necessario convalidare l\'indirizzo email)</string>

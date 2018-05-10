@@ -3,23 +3,21 @@
 <resources>
   <string name="one_account_allowed">Seul un compte est autorisé</string>
   <string name="or">ou</string>
-  <string name="username">E-mail</string>
+  <string name="username">Courriel</string>
   <string name="password">Mot de passe</string>
   <string name="link_device_webinstall">Lier le compte avec Webinstall</string>
   <string name="register">Inscription</string>
-  <string name="login">Ouverture de session</string>
+  <string name="login">Connexion</string>
   <string name="successful">Avec succès</string>
   <string name="login_successful">Connexion réussie</string>
-  <string name="forgot_passwd"><u>Mot de passe perdu ?</u></string>
+  <string name="forgot_passwd">Mot de passe oublié  ?</string>
   <string name="fields_cannot_empty">Veuillez vérifier votre e-mail et mot de passe.</string>
   <string name="unknown_error">Erreur inconnue</string>
-  <string name="accept_terms">\"En vous inscrivant vous acceptez les Conditions d\'Utilisation d\'Aptoide
-et la Politique de Contenu pour développeurs
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Merci de saisir une adresse courriel et un mot de passe
- \"</string>
-  <string name="no_pass_error_message">Merci de saisir un mot de passe</string>
-  <string name="no_email_error_message">Merci de saisir une adresse courriel</string>
+  <string name="accept_terms">En vous inscrivant vous acceptez les Conditions d\'Utilisation d\'Aptoide
+et la Politique de Contenu pour développeurs    </string>
+  <string name="no_email_and_pass_error_message">Merci de saisir une adresse email et un mot de passe pour vous inscrire.    </string>
+  <string name="no_pass_error_message">Merci de saisir un mot de passe pour vous inscrire.</string>
+  <string name="no_email_error_message">Merci de saisir une adresse email pour vous inscrire.</string>
   <string name="password_validation_text">\"Le mot de passe doit contenir au moins 8 caractères dont
 au moins une lettre et un chiffre ou un caractère spécial (!@#$%*)
  \"</string>
@@ -34,12 +32,12 @@ au moins une lettre et un chiffre ou un caractère spécial (!@#$%*)
   <!--errors-->
   <string name="error_occured">Une erreur s\'est produite. Merci de réessayer</string>
   <string name="error_invalid_grant">Combinaison utilisateur / mot de passe non valide</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Identifiants non valides !</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Impossible de se connecter via Google. Merci de vérifier votre compte Google (vous devrez peut-être confirmer votre adresse courriel)</string>
   <string name="ws_error_AUTH_101">Échec de l\'identification avec Google. Veuillez réessayer.</string>
   <string name="ws_error_AUTH_102">Impossible de se connecter via Facebook. Merci de vérifier votre compte Facebook (vous devrez peut-être confirmer votre adresse courriel)</string>
@@ -82,13 +80,13 @@ vous connecter (après mise à jour du nom)</string>
   <string name="create_user_header"><b>Créez votre profil utilisateur</b> afin de pouvoir évaluer, commenter et partager des applications avec vos amis</string>
   <string name="create_user_take_picture">Prenez une photo pour votre profil</string>
   <string name="create_user_random_photo">Ou utilisez une photo aléatoire</string>
-  <string name="create_user_choose_username">Définissez votre nom d\'utilisateur</string>
+  <string name="create_user_choose_username">Choisissez votre nom d\'utilisateur</string>
   <string name="create_user_username">Nom d\'utilisateur</string>
   <string name="create_user_hint">Apparaît sur vos évaluations, vos commentaires et les applications partagées.</string>
   <string name="create_user_create_button">Créer le profil</string>
   <string name="create_user_dialog_camera">Prendre la photo</string>
   <string name="create_user_dialog_gallery">Sélectionnez depuis la galerie</string>
-  <string name="create_user_dialog_cancel">Supprimer</string>
+  <string name="create_user_dialog_cancel">Annuler</string>
   <string name="nothing_inserted_store">Veuillez saisir un nom pour créer votre boutique</string>
   <string name="nothing_inserted_user">Veuillez saisir un nom d’utilisateur et une photo (facultative) pour créer votre profil</string>
   <string name="create_user_bad_photo">Veuillez choisir une image avec une résolution d’au moins 300 x 300</string>

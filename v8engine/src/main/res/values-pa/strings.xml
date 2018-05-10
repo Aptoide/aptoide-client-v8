@@ -5,20 +5,13 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">ਮੇਰਾ ਖਾਤਾ</string>
-  <string name="setting_schdwntitle">ਅਨੁਸੂਚਿਤ ਡਾਊਨਲੋਡ</string>
-  <string name="settings">ਸੈਟਿੰਗ</string>
-  <string name="facebook">ਫੇਸਬੁੱਕ</string>
-  <string name="twitter">ਟਵਿੱਟਰ</string>
-  <string name="backup_apps">ਬੈਕਅੱਪ ਐਪਸ</string>
   <string name="dark">ਗੂੜਾ</string>
   <string name="light">ਫਿੱਕਾ</string>
   <string name="updates_filter_summary">ਇਸਨੂੰ ਚੈੱਕ ਕਰਨ ਨਾਲ, ਤੁਹਾਨੂੰ ਬੇਟਾ ਵਰਜਨ ਦੀ ਸੂਚਨਾ ਨਹੀ ਦਿੱਤੀ ਜਾਵੇਗੀ|</string>
   <string name="updates_filter_setting_title">ਬਸ ਮੈਨੂੰ ਸਥਿਰ ਐਪਲੀਕੇਸ਼ ਵਰਜਨ ਅੱਪਡੇਟ ਦਿਖਾਓ</string>
   <string name="include_system_apps_title">ਸਿਸਟਮ ਐਪਸ ਸ਼ਾਮਲ ਕਰੋ</string>
   <string name="include_system_apps_summary">ਇਸ ਨੂੰ ਚੈੱਕ ਕਰਨ ਨਾਲ, ਤੁਹਾਨੂੰ ਸਿਸਟਮ ਐਪਸ (ਜਿਹੜੇ ਐਪਸ ਜੰਤਰ ਦੇ ਨਿਰਮਾਤਾ ਦੁਆਰਾ ਇੰਸਟਾਲ ਕੀਤੇ ਗਏ ਸੀ) ਦੇ ਅੱਪਡੇਟ ਬਾਰੇ ਸੂਚਿਤ ਕੀਤਾ ਜਾਵੇਗਾ</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_email">ਐਪਟਾਇਡ@ਐਪਟਾਇਡ.ਕੋਮ</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
   <!-- Permission pop-ups messages -->
   <string name="access_to_get_accounts_rationale">ਤੁਹਾਨੂੰ ਖਾਤੇ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਅਸੈਸ ਦੇਣ ਦੀ ਲੋੜ ਹੈ</string>
@@ -66,7 +59,7 @@
   <string name="appview_other_versions"><u> 1ਹੋਰ ਵਰਜਨ</u> 2</string>
   <string name="appview_latest_version_text">ਤਾਜ਼ਾ ਵਰਜਨ</string>
   <string name="appview_rate_this_app">ਇਸ ਐਪਲੀਕੇਸ਼ ਨੂੰ ਰੇਟ ਕਰੋ</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all">ਸਾਰਾ ਪੜੋ <![CDATA[>]]>;</string>
   <string name="zero">0</string>
   <string name="working_well">ਵਧੀਆ ਚੱਲ ਰਿਹਾ ਹੈ</string>
   <string name="needs_license">ਲਾਇਸੰਸ ਦੀ ਲੋੜ ਹੈ</string>
@@ -133,24 +126,28 @@ http://aptoi.de/tv</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b> ਛੱਡੋ</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">ਹੁਣ ਇੱਕ ਟਾਈਮਲਾਈਨ ਨਾਲ!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>ਇੱਕ ਜਗ੍ਹਾ ਵਿੱਚ ਹੀ ਵਧੀਆ ਐਪ</b>ਵੀਡਿਓ ਅਤੇ ਖਬਰਾਂ
-ਆਪਣੇ ਦੋਸਤਾਂ ਦੁਆਰਾ ਵਧੀਆ ਐਪਸ ਦੀ ਚੋਣ<b> ਕਰੋ|</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">ਆਪਣੇ ਖੁਦ ਦਾ ਸਟੋਰ ਪਾਓ</string>
-  <string name="wizard_sub_title_viewpager_two">ਦੋਸਤਾਂ ਅਤੇ ਐਪਟਾਇਡ<b> ਭਾਈਚਾਰੇ ਨਾਲ ਐਪਸ ਨੂੰ ਸ਼ੇਅਰ
- ਕਰਨ ਲਈ</b> ਆਪਣੇ ਸਟੋਰ<b> ਨੂੰ ਅਨੁਕੂਲਿਤ ਕਰੋ|</b></string>
+  <string name="wizard_title_viewpager_two"><b>ਐਪਸ ਟਾਈਮਲਾਈਨ</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">ਇੱਕ ਹਿੱਸਾ ਬਣੋ<b>ਭਾਈਚਾਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋ ਜਾਓ</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b> ਉਹ ਲੋਕ ਲੱਭੋ</b> ਜੋ ਤੁਹਾਡੇ ਐਪ ਹਿੱਤ ਸ਼ੇਅਰ ਕਰਦੇ ਹਨ|
-<b> ਰੇਟ ਅਤੇ ਸ਼ੇਅਰ ਕਰੋ|</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">ਸਾਡੇ ਨਾਲ ਸ਼ਾਮਲ ਹੋਵੋ!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">ਤੁਹਾਡੇ ਲਾਗਇਨ ਕਰਨ ਦੀ ਲੋੜ ਹੈ</string>
   <string name="follow">ਪਾਲਣਾ ਕਰੋ</string>
   <!--need translation-->
   <string name="followed">ਫੋਲੋ ਹੋ ਰਿਹਾ ਹੈ</string>
   <string name="unfollow_yes_no">ਕਿ ਤੁਸੀ ਪੱਕਾ ਫੋਲੋ ਨਹੀਂ ਕਰਨਾ ਚਾਹੁੰਦੇ?</string>
   <string name="unfollow">ਅਨਫੋਲੋ</string>
+  <string name="appview_follow_store_button_text">ਸਬਸਕ੍ਰਾਇਬ?</string>
   <string name="unfollowing_store_message">ਅਨਫੋਲੋ ਹੋ ਰਿਹਾ ਹੈ %s</string>
   <string name="store_followed">ਸਟੋਰ %s ਫੋਲੋ ਹੋ ਗਿਆ</string>
   <string name="subscribers">ਉਪਭੋਗੀ</string>
@@ -179,7 +176,6 @@ http://aptoi.de/tv</string>
   <string name="social_timeline">ਸੋਸ਼ਲ ਟਾਈਮਲਾਈਨ</string>
   <string name="downloads">ਡਾਊਨਲੋਡ</string>
   <string name="apps_timeline"><b>ਐਪਸ ਟਾਈਮਲਾਈਨ</b></string>
-  <string name="timeline"><b>ਟਾਈਮਲਾਈਨ</b></string>
   <string name="latest_reviews">ਤਾਜ਼ਾ ਸਮੀਖਿਆਵਾਂ</string>
   <string name="latest_comments">ਤਾਜ਼ਾ ਕੋਮੇਂਟ</string>
   <string name="action">ਐਕਸ਼ਨ</string>
@@ -252,8 +248,6 @@ http://aptoi.de/tv</string>
   <string name="essential_apps">ਜ਼ਰੂਰੀ ਐਪਸ</string>
   <string name="summer_apps">ਗਰਮੀ ਦੀਆਂ ਐਪਸ</string>
   <string name="play_it">ਇਹਨੂੰ-ਖੇਡੋ!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Featured Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s ਨਾਲ ਸਬੰਧਤ</string>
   <string name="appstimeline_update_app">ਐਪ</string>
@@ -276,10 +270,9 @@ http://aptoi.de/tv</string>
   <string name="create_store_displayable_message">ਆਪਣਾ ਸਟੋਰ ਹੁਣੇ ਬਣਾਓ ਅਤੇ ਐਪਸ ਸ਼ੇਅਰ ਕਰਨਾ ਸ਼ੁਰੂ ਕਰੋ!</string>
   <string name="create_store_displayable_button">ਸਟੋਰ ਬਣਾਓ</string>
   <string name="my_store_created_displayable_message">ਤੁਹਾਡਾ ਐਂਡ੍ਰਾਯ੍ਡ ਐਪ ਸਟੋਰ</string>
-  <string name="create_store_displayable_created_store_short_term_message">ਤੁਸੀ ਹੁਣੇ ਹੀ ਆਪਣਾ ਸਟੋਰ ਬਣਾਇਆ ਹੈ!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">ਆਓ ਅਤੇ ਸਾਰੀਆਂ ਸੰਭਾਵਨਾਵਾਂ ਦੀ ਪੜਚੋਲ ਕਰੋ</string>
   <string name="create_store_displayable_explore_button">ਪੜਚੋਲ ਕਰੋ</string>
-  <string name="follow_store">ਸਟੋਰ ਫੋਲੋ ਕਰੋ</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">ਤੁਹਾਡੇ ਸਟੋਰ ਵਿਚ ਅਜੇ ਵੀ ਐਪਸ ਨਹੀਂ ਹਨ|</string>
   <string name="install_app_outter_pt2">ਅਤੇ ਸੰਸਾਰ ਨਾਲ ਸ਼ੇਅਰ ਕਰਨ ਲਈ ਐਪਸ ਅੱਪਲੋਡ ਕਰੋ!</string>
@@ -292,8 +285,6 @@ http://aptoi.de/tv</string>
   <string name="word_this">ਇਸ</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">ਤੁਹਾਡੇ ਫੋਲੋਅਰ ਕੀ ਵੇਖਣਗੇ:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">ਕਾਰਡ ਦੀ ਝਲਕ ਸ਼ੇਅਰ ਕਰੋ</string>
   <string name="social_timeline_share_title_checkbox">ਐਪਸ ਟਾਈਮਲਾਈਨ ਤੇ ਉਪਭੋਗੀ ਦੀ ਪਰੋਫਾਇਲ ਨਿੱਜੀ ਕਰੋ ਅਤੇ ਸਿਰਫ ਆਪਣੇ ਸਟੋਰ ਦੀ ਜਾਣਕਾਰੀ ਸ਼ੇਅਰ ਕਰੋ|</string>
   <string name="social_timeline_share_title_checkbox_fb">ਉਪਭੋਗੀ ਪਰੋਫਾਇਲ ਨੂੰ ਐਪਸ ਟਾਈਮਲਾਈਨ ਤੇ ਜਾ ਕੇ ਜਨਤਕ ਕਰੋ</string>
@@ -323,95 +314,21 @@ http://aptoi.de/tv</string>
   <!-- Followers and following -->
   <string name="timeline_followers">ਫੋਲੋਅਰ- %d</string>
   <string name="timeline_followed">ਫੋਲੋ ਕਰ ਰਹੇ ਹਨ- %d</string>
-  <string name="timeline_stats_followers">ਫੋਲੋਅਰਜ਼</string>
+  <string name="timeline_stats_followers">ਉਪਭੋਗੀ</string>
   <string name="timeline_login_message">ਤੁਹਾਡੇ ਦੋਸਤ ਕੀ ਇੰਸਟਾਲ ਕਰ ਰਹੇ ਹਨ?</string>
   <string name="private_followers_message">%d ਚੇਲੇ ਨਿੱਜੀ ਹਨ</string>
   <string name="private_following_message">%d ਨਿੱਜੀ ਉਪਭੋਗੀ/ਸਟੋਰਜ਼ ਨੂੰ ਤੁਸੀ ਫੋਲੋ ਕਰ ਰਹੇ ਹੋ</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d ਜਵਾਬ</string>
   <string name="out_of_space_dialog_title">ਜਗ੍ਹਾ ਘੱਟ ਹੈ</string>
   <string name="out_of_space_dialog_message">ਅੱਗੇ ਵੱਧਣ ਲਈ ਜਗ੍ਹਾ ਖਾਲੀ ਕਰੋ ਜੀ|</string>
-  <string name="setting_category_autoupdate">%s ਅੱਪਡੇਟ</string>
-  <string name="setting_category_autoupdate_title">%s ਅੱਪਡੇਟ ਸੂਚਨਾਵਾਂ ਪ੍ਰਾਪਤ ਕਰੋ</string>
-  <string name="setting_category_autoupdate_message">ਲਗਾਤਾਰ %s ਨਵੇਂ ਵਰਜਨਾਂ ਲਈ ਚੈੱਕ ਕਰੋ ਜੀ</string>
-  <string name="store_added_long_time_suggestion_message">ਲੰਬੇ ਸਮੇਂ ਦਾ ਦਿਖਾਓ</string>
-  <string name="store_added_short_time_suggestion_message">ਹੁਣੇ ਬਣਾਇਆ ਦਿਖਾਓ</string>
-  <string name="create_store_displayable_created_store_long_term_message">ਲੰਮਾ ਸਮਾਂ</string>
-  <string name="create_store_displayable_explore_long_term_button">ਸਟੋਰ ਦੇਖੋ</string>
-  <string name="create_store_displayable_empty_description_message">ਆਪਣੇ ਸਟੋਰ ਦੇ ਲਈ ਇੱਕ ਵੇਰਵਾ ਸ਼ਾਮਿਲ ਕਰੋ. ਇੱਕ ਚੰਗਾ ਵੇਰਵਾ ਤੁਹਾਨੂੰ ਹੋਰ ਫੋਲੋਅਰ ਅਤੇ ਨਵੇਂ ਲੋਕਾਂ ਨਾਲ ਜੁੜਨ ਵਿੱਚ ਮਦਦ ਕਰਦਾ ਹੈ|</string>
-  <string name="fragment_spot_share_preview_start_button">ਸ਼ੁਰੂ ਕਰੋ</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">%s ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ</string>
-  <string name="login">ਲਾਗਇਨ</string>
-  <string name="login_company">ਲਾਗਇਨ %s</string>
-  <string name="connect_with_facebook">ਫੇਸਬੁੱਕ ਨਾਲ ਜੁੜੋ</string>
-  <string name="connect_with_google">ਗੂਗਲ ਨਾਲ ਜੁੜੋ</string>
-  <string name="accept_terms_signup">ਅੈਪਟਾਇਡ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋ ਕੇ ਤੁਸੀ ਅੈਪਟਾਇਡ ਦੇ ਨਿਯਮਾਂ ਅਤੇ ਹਾਲਾਤਾਂ ਅਤੇ ਡਿਵੈਲਪਰਾਂ ਦੀ ਸਮੱਗਰੀ ਨੀਤੀਆਂ ਨਾਲ ਸਹਿਮਤ ਹੋ|</string>
-  <string name="recover_password">ਆਪਣਾ ਪਾਸਵਰਡ ਬਚਾਓ</string>
-  <string name="email">ਈਮੇਲ</string>
-  <string name="password">ਪਾਸਵਰਡ</string>
-  <string name="create_password">ਪਾਸਵਰਡ ਬਣਾਓ</string>
-  <string name="store_suspended_message">ਸਟੋਰ ਮੁਅੱਤਲ ਕੀਤਾ ਗਿਆ</string>
-  <string name="facebook_login_cancelled">ਫੇਸਬੁੱਕ ਲਾਗਇਨ ਰੱਦ ਕੀਤਾ ਗਿਆ</string>
-  <string name="google_login_cancelled">ਗੂਗਲ ਲਾਗਇਨ ਰੱਦ ਕੀਤਾ ਗਿਆ</string>
-  <string name="login_separator_text">ਜਾਂ ਈ ਮੇਲ ਵਰਤ ਕੇ ਜੁੜੋ</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">ਤੁਸੀ ਵੱਖ-ਵੱਖ ਸਟੋਰਾਂ ਵਿੱਚ ਸਿਰਫ ਤੁਹਾਡੇ ਲਈ ਬਣਾਈ ਵਿਸ਼ੇਸ਼ ਸਮੱਗਰੀ ਲੱਭ ਸਕਦੇ ਹੋ</string>
-  <string name="add_store_dialog_top_stores">ਉੱਚ ਦੇ ਸਟੋਰ ਖੋਜੋ</string>
-  <string name="add_store_dialog_top_stores_small_text">ਅਤੇ ਵਿਸ਼ੇਸ਼ ਸਮੱਗਰੀ ਲੱਭੋ!</string>
-  <!-- Login -->
-  <string name="activity_login_title">ਲਾਗਇਨ</string>
-  <string name="activity_login_forgot_password_button">ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?</string>
-  <string name="activity_login_button">ਲਾਗਇਨ</string>
-  <string name="activity_login_sign_up_button">ਸਾਇਨ ਅਪ</string>
-  <string name="view_credentials_username_hint">ਈਮੇਲ</string>
-  <string name="view_credentials_password_hint">ਪਾਸਵਰਡ</string>
-  <string name="permission_access_deny">ਬਾਹਰੀ ਸਟੋਰੇਜ ਤੇ ਪੜ੍ਹਨ ਅਤੇ ਲਿਖਣ ਦੀ ਪਹੁੰਚ ਤੇ ਪਾਬੰਦੀ ਹੈ</string>
-  <string name="permission_account_deny">ਖਾਤੇ ਨੂੰ ਪ੍ਰਾਪਤ ਕਰਨ ਦੀ ਪਹੁੰਚ ਤੇ ਪਾਬੰਦੀ ਹੈ</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">ਆਪਣਾ ਨੈੱਟਵਰਕ ਵਧਾਓ|</string>
-  <string name="addressbook_connect_with_friends_message">ਦੋਸਤਾਂ ਨਾਲ ਜੁੜੋ|</string>
-  <string name="addressbook_sync">ਸਿੰਕ ਐਡਰੈੱਸ ਬੁੱਕ</string>
-  <string name="not_now">ਹਾਲੇ ਨਹੀਂ</string>
-  <string name="follow_friends">ਦੋਸਤਾਂ ਨੂੰ ਫੋਲੋ ਕਰੋ</string>
-  <string name="addressbook_data_about"><b>%1$s ਤੁਹਾਡਾ ਡਾਟਾ ਕਿਵੇਂ ਵਰਤਦਾ ਹੈ</b>\"
-
-
-%1$s ਤੁਹਾਡੀ ਐਡਰੈੱਸ ਬੁੱਕ ਵਿੱਚੋਂ ਓਹ ਦੋਸਤ ਅਤੇ ਪਰਿਵਾਰ ਲੱਭੇਗਾ ਜੋ ਕਿ ਸਾਡੇ ਐਪ ਸਟੋਰ ਨੂੰ ਵਰਤ ਰਹੇ ਹਨ|ਅਸੀ 
-ਸਿਰਫ ਇਸ ਜਾਣਕਾਰੀ ਨੂੰ ਵਰਤ ਕੇ ਤੁਹਾਨੂੰ ਹੋਰ ਲੋਕਾਂ ਨਾਲ ਜੋੜਾਂਗੇ ਜੋ ਕਿ ਤੁਹਾਡੇ ਨਾਲ ਐਪਸ ਸਬੰਧਤ ਸਮੱਗਰੀ ਨੂੰ  ਸ਼ੇਅਰ 
-ਕਰਣਗੇ ਅਤੇ ਤੁਹਾਡੇ %1$s ਅਨੁਭਵ ਨੂੰ ਹੋਰ ਵਧੀਆ ਕਰਾਂਗੇ|
-
-
-ਤੁਹਾਡੀ ਗੋਪਨੀਯਤਾ ਦੀ ਰੱਖਿਆ ਲਈ, ਨਿੱਜੀ ਡਾਟਾ ਬਾਹਰ 
-%1$s ਸਰਵਰਾਂ ਨੂੰ ਨਹੀਂ ਭੇਜਿਆ ਜਾਵੇਗਾ| ਇੱਕ ਅਗਿਆਤ ਦਸਤਖਤ (ਹੈਸ਼) ਤੁਹਾਡੇ ਡਾਟੇ ਨਾਲ ਬਣਾਇਆ ਜਾਵੇਗਾ
-ਅਤੇ ਇਹ ਹੈਸ਼ ਅਸਲੀ ਸੰਪਰਕ ਜਾਣਕਾਰੀ ਵਿੱਚ ਵਾਪਸ ਨਹੀ ਬਦਲਿਆ ਜਾ ਸਕਦਾ ਹੈ|
- \"</string>
-  <string name="addressbook_success">ਸਫਲਤਾ!</string>
-  <string name="addressbook_allow_friends_find">ਦੋਸਤਾਂ ਨੂੰ ਤੁਹਾਨੂੰ ਲੱਭਣ ਦੀ ਇਜ਼ਾਜਤ ਦਿਓ</string>
-  <string name="google">ਗੂਗਲ</string>
-  <string name="done">ਹੋ ਗਿਆ</string>
-  <string name="addressbook_share_phone">ਆਪਣਾ ਫੋਨ ਨੰਬਰ ਸ਼ੇਅਰ ਕਰੋ, ਤਾਂ ਕਿ ਤੁਹਾਡੇ ਦੋਸਤ ਤੁਹਾਨੂੰ ਆਸਾਨੀ ਨਾਲ %s ਤੇ ਲੱਭ ਸੱਕਣ</string>
-  <string name="addressbook_phone_number">ਫੋਨ ਨੰਬਰ</string>
-  <string name="addressbook_insuccess_connection">ਅਸੀਂ ਤੁਹਾਡੀ ਐਡਰੈੱਸ ਬੁੱਕ ਨਾਲ ਜੋੜ ਨਾ ਸੱਕੇ!</string>
-  <string name="addressbook_invite_friends">ਆਪਣੇ ਦੋਸਤਾਂ ਨੂੰ ਨਾਲ ਜੁੜਨ ਲਈ ਸੱਦਾ ਦਿਓ!</string>
-  <string name="addressbook_thanks_for_connecting">ਨਾਲ ਜੁੜਨ ਲਈ ਧੰਨਵਾਦ</string>
-  <string name="addressbook_success_connected_friends">ਅਸੀਂ ਸਫਲਤਾਪੂਰਕ ਤੁਹਾਨੂੰ %1$s ਦੋਸਤਾਂ ਨਾਲ ਜੋੜ ਦਿੱਤਾ ਹੈ ਜੋ %2$s ਵਰਤਦੇ ਹਨ</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">ਸਾਨੂੰ %1$s ਦੀ ਵਰਤੋਂ ਕਰਨ ਵਾਲਾ ਕੋਈ ਵੀ ਸੰਪਰਕ ਨਾ ਲੱਭਿਆ</string>
-  <string name="addressbook_2nd_msg">%1$s ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰਾਂ ਲਈ ਤੁਹਾਡੀ ਐਡਰੈੱਸ ਬੁੱਕ ਨੂੰ ਦੇਖੇਗਾ
- ਜੋ ਕਿ ਸਾਡੇ ਐਪ ਸਟੋਰ ਨੂੰ ਵਰਤ ਰਹੇ| ਤੁਹਾਡੀ ਗੋਪਨੀਯਤਾ ਦੀ ਰੱਖਿਆ ਕਰਨ ਲਈ, ਕੋਈ ਵੀ ਨਿੱਜੀ ਡਾਟਾ %1$s ਸਰਵਰਾਂ ਤੋਂ ਬਾਹਰ ਨਹੀਂ 
- ਭੇਜਿਆ ਜਾਵੇਗਾ</string>
-  <string name="addressbook_3rd_msg">ਹੋਰ ਸਿੱਖੋ</string>
-  <string name="address_book_twitter_error">ਟਵਿੱਟਰ ਅਧਿਕਾਰ ਗਲਤੀ</string>
-  <string name="follow_my_store">ਹੈਲੋ, ਮੇਰਾ %1$s ਸਟੋਰ ਇੱਥੇ ਫੋਲੋ ਕਰੋ</string>
-  <string name="store_meta_apps">ਐਪਸ
-%s</string>
-  <string name="store_meta_following">ਫੋਲੋਇੰਗ
-%s</string>
-  <string name="store_meta_followers">ਫੋਲੋਅਰਸ
-%s</string>
-  <string name="addressbook_about">ਐਡਰੈੱਸ ਬੁੱਕ ਬਾਰੇ</string>
-  <string name="addressbook_we_werent_able_to_connect_you">ਅਸੀਂ ਤੁਹਾਨੂੰ ਨਾਲ ਜੁੜਨ ਲਈ ਯੋਗ ਨਾ ਸੀ</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">ਆਪਣੇ ਦੋਸਤਾਂ ਦੇ ਨਾਲ ਐਪਸ ਸ਼ੇਅਰ ਕਰੋ</string>
-  <string name="spot_share_line_2">ਫੋਨ ਨਾਲ ਫੋਨ, ਇੰਟਰਨੈੱਟ ਬਿਨਾ</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

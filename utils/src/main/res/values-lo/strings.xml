@@ -10,7 +10,7 @@
   <string name="more_info">ຂໍ້ມູນເພີ່ມເຕີມ</string>
   <!-- DateUtils -->
   <string name="WidgetProvider_timestamp_today">ມື້ນີ້</string>
-  <string name="WidgetProvider_timestamp_yesterday">ມື້ວານ</string>
+  <string name="WidgetProvider_timestamp_yesterday">ມື້ວານນີ້</string>
   <string name="WidgetProvider_timestamp_hour_ago">%s ຊົ່ວໂມງກ່ອນ</string>
   <string name="WidgetProvider_timestamp_hours_ago">%s ຊົ່ວໂມງກ່ອນ</string>
   <string name="WidgetProvider_timestamp_minutes_ago">%s ນາທີກ່ອນ</string>

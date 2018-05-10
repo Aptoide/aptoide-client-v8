@@ -13,11 +13,12 @@
   <string name="forgot_passwd">Parolanızı unuttunuz mu?</string>
   <string name="fields_cannot_empty">Lütfen e-postanızı ve parolanızı kontrol ediniz.</string>
   <string name="unknown_error">Bilinmeyen Hata</string>
-  <string name="accept_terms">\"Kayıt olarak Geliştiriciler için Aptoide Hizmet Koşulları ve
-İçerik Politikası\'nı kabul etmiş olursunuz
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Lütfen kayıt olmak için e-posta ve şifre giriniz.
- \"</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">Lütfen kayıt olmak için şifre giriniz.</string>
   <string name="no_email_error_message">Lütfen kayıt olmak için bir e-posta giriniz.</string>
   <string name="password_validation_text">\"Parolanın asgari 8 karakter içermesi ve en az bir sayı
@@ -34,12 +35,12 @@ ihtiyacımız var
   <!--errors-->
   <string name="error_occured">Bir hata meydana geldi, tekrar deneyiniz</string>
   <string name="error_invalid_grant">Geçersiz kullanıcı adı ve parola eşleşmesi</string>
-  <string name="ws_error_MARG_200">\@string/hatası_oluştu</string>
-  <string name="ws_error_MARG_203">\@string/hatası_oluştu</string>
-  <string name="ws_error_MARG_204">\@string/hatası_oluştu</string>
-  <string name="ws_error_IARG_200">\@string/hatası_oluştu</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Geçersiz kimlik verileri!</string>
-  <string name="ws_error_AUTH_7">\@string/hatası_oluştu</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Google ile giriş yapılamadı. Google hesabınızı kontrol ediniz. (E-posta adresinizi teyit etmeniz gerekebilir.)</string>
   <string name="ws_error_AUTH_101">Google ile giriş yapılamadı. Lütfen tekrar deneyiniz.</string>
   <string name="ws_error_AUTH_102">Facebook ile giriş yapılamadı. Facebook hesabınızı kontrol ediniz. (E-posta adresinizi teyit etmeniz gerekebilir.)</string>
@@ -88,7 +89,7 @@ oturum açmanız için geçerli değildir</string>
   <string name="create_user_create_button">Profil Oluştur</string>
   <string name="create_user_dialog_camera">Fotoğraf Çek</string>
   <string name="create_user_dialog_gallery">Galeriden Seç</string>
-  <string name="create_user_dialog_cancel">İptal et</string>
+  <string name="create_user_dialog_cancel">İptal</string>
   <string name="nothing_inserted_store">Mağazanızı oluşturmak için bir mağaza adı giriniz</string>
   <string name="nothing_inserted_user">Profilinizi oluşturmak için bir kullanıcı ismi ve bir fotoğraf (isteğe bağlı) giriniz</string>
   <string name="create_user_bad_photo">Lütfen 300x300 çözünürlüğe sahip bir görüntü seçiniz</string>

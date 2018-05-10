@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Tài Khoản Của Tôi</string>
-  <string name="setting_schdwntitle">Tải về theo lịch trình</string>
-  <string name="settings">Thiết lập</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Ứng dụng sao lưu</string>
   <string name="dark">Tối</string>
   <string name="light">Đèn</string>
   <string name="updates_filter_summary">Đang kiểm tra điều này, bạn sẽ không được thông báo về phiên bản beta.</string>
@@ -31,7 +24,7 @@
   <string name="button_header_more">Xem thêm</string>
   <string name="search">Tìm kiếm</string>
   <string name="update">Cập Nhật</string>
-  <string name="uninstall">Gỡ bỏ</string>
+  <string name="uninstall">Gỡ cài đặt</string>
   <string name="downgrade">Hạ cấp</string>
   <string name="appview_followers_count_text">%1$s người theo dõi</string>
   <string name="other_versions_downloads_count_text">%1$s lượt tải về</string>
@@ -47,7 +40,7 @@ Chặn ứng dụng khỏi cập nhật. Tới tab Cập nhật và ấn giữ 
   <string name="restore_updates">Phục Hồi Cập Nhật</string>
   <string name="open_apps_manager">Mở Apps Manager</string>
   <!-- Rollback Fragment -->
-  <string name="rollback">Ứng dụng gần đây</string>
+  <string name="rollback">Rollback</string>
   <string name="no_rollbacks_msg">Hạ cấp nhanh chóng bất kỳ ứng dụng phiên bản cũ nào và giải quyết vấn đề tương thích. Giữ một bản ghi tất cả các ứng dụng đã cài đặt
 của bạn (thông qua %s) bao gồm cả phiên bản và ngày cài đặt.</string>
   <!-- Timeline Fragment -->
@@ -92,7 +85,7 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="top_comments">Các bình luận hàng đầu</string>
   <string name="rate">Đánh giá</string>
   <string name="rate_app">Đánh giá %s</string>
-  <string name="title">Tiêu đề</string>
+  <string name="title">TIÊU ĐỀ</string>
   <string name="tap_a_star">Nhấp vào ngôi sao để đánh giá</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
   <string name="other_versions_on_different_stores">Các phiên bản khác trên các cửa hàng khác nhau</string>
@@ -131,21 +124,28 @@ chứa bất kỳ mối đe dọa nào!</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>BỎ QUA</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Bây giờ là với một dòng thời gian!</string>
-  <string name="wizard_sub_title_viewpager_one">Bắt đầu một <b>hành trình</b> an toàn <b> và </b> vui vẻ.</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two"><b>Dòng thời gian ứng dụng</b></string>
-  <string name="wizard_sub_title_viewpager_two">Hãy tải các ứng dụng mới nhất <b/>, tìm kiếm các cửa hàng chủ đề <b/> và truy cập nội dung cá nhân <b>.</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Tham gia vào cộng đồng</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Tìm người</b> chia sẻ các sở thích ứng dụng của bạn. \n<b>Đánh giá và chia sẻ.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Tham gia cùng chúng tôi!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Bạn cần phải đăng nhập</string>
   <string name="follow">Theo dõi</string>
   <!--need translation-->
   <string name="followed">Theo dõi</string>
   <string name="unfollow_yes_no">Bạn có chắc rằng bạn muốn hủy theo dõi?</string>
   <string name="unfollow">Hủy theo dõi</string>
+  <string name="appview_follow_store_button_text">Theo dõi?</string>
   <string name="unfollowing_store_message">Hủy theo dõi %s</string>
   <string name="store_followed">Đã theo dõi cửa hàng %s</string>
   <string name="subscribers">Thuê bao</string>
@@ -172,26 +172,25 @@ Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin c
   <string name="stores">Cửa hàng</string>
   <string name="updates">Cập nhật</string>
   <string name="social_timeline">Dòng thời gian xã hội</string>
-  <string name="downloads">Lượt tải về</string>
+  <string name="downloads">Tải về</string>
   <string name="apps_timeline"><b>Dòng thời gian ứng dụng</b></string>
-  <string name="timeline"><b>Dòng thời gian</b></string>
   <string name="latest_reviews">Đánh giá mới nhất</string>
   <string name="latest_comments">Bình luận mới nhất</string>
   <string name="action">Hành động</string>
   <string name="adventure">Phiêu lưu</string>
   <string name="all">Tất cả</string>
   <string name="applications">Ứng dụng</string>
-  <string name="arcade">Giải trí</string>
+  <string name="arcade">Arcade</string>
   <string name="arcade_action">Giải trí &amp; Hành động</string>
-  <string name="board">Trò chơi cờ bàn</string>
+  <string name="board">Dạng bảng</string>
   <string name="books_reference">Sách &amp; Tham khảo</string>
   <string name="brain_puzzle">Trò chơi ghi nhớ</string>
   <string name="business">Kinh doanh</string>
   <string name="card">Bài</string>
   <string name="cards_casino">Thẻ và sòng bạc</string>
-  <string name="casino">Sòng bài casino</string>
-  <string name="casual">Bình thường</string>
-  <string name="comics">Truyện cười</string>
+  <string name="casino">Casino</string>
+  <string name="casual">Thông thường</string>
+  <string name="comics">Truyện tranh</string>
   <string name="communication">Truyền thông</string>
   <string name="demo">Bản thử nghiệm</string>
   <string name="education">Giáo dục</string>
@@ -214,32 +213,32 @@ Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin c
   <string name="news_weather">Tin tức &amp; Thời tiết</string>
   <string name="personalization">Cá nhân</string>
   <string name="photography">Chụp hình</string>
-  <string name="productivity">Sản lượng</string>
+  <string name="productivity">Năng suất</string>
   <string name="puzzle">Trò chơi đố vui</string>
   <string name="racing">Đua xe</string>
   <string name="reference">Tài liệu tham khảo</string>
-  <string name="role_playing">Chơi</string>
+  <string name="role_playing">Nhập vai</string>
   <string name="simulation">Đồng hóa</string>
   <string name="social">Xã hội</string>
   <string name="software_libraries">Thư viện phần mềm</string>
   <string name="sports">Thể thao</string>
   <string name="sports_games">Trò chơi thể thao</string>
-  <string name="strategy">Chiến lược</string>
+  <string name="strategy">Chiến thuật</string>
   <string name="themes">Chủ đề</string>
   <string name="tools">Công cụ</string>
-  <string name="top_apps">Ứng dụng hàng đầu</string>
+  <string name="top_apps">Những ứng dụng hàng đầu</string>
   <string name="top_games">Những trò chơi hàng đầu</string>
-  <string name="transport">Giao thông</string>
+  <string name="transport">Vận tải</string>
   <string name="transportation">Phương tiện giao thông</string>
   <string name="travel">Du lịch</string>
   <string name="travel_local">Điểm đến du lịch</string>
   <string name="trending">Theo xu hướng</string>
-  <string name="trivia">Thi đố vui</string>
+  <string name="trivia">Trắc nghiệm kiến thức</string>
   <string name="word">Từ</string>
   <string name="libraries_demo">Thư viện &amp; Bản thử nghiệm</string>
   <string name="shopping">Mua sắm</string>
   <string name="weather">Thời tiết</string>
-  <string name="latest_applications">Ứng dụng mới nhất</string>
+  <string name="latest_applications">Ứng dụng mới nhất</string>
   <string name="top_apps_in_store">Những ứng dụng hàng đầu trong cửa hàng này</string>
   <string name="apps_for_kids">Các ứng dụng cho trẻ con</string>
   <string name="aptoide_publishers">Các nhà xuất bản %s</string>
@@ -247,8 +246,6 @@ Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin c
   <string name="essential_apps">Các ứng dụng thiết yếu</string>
   <string name="summer_apps">Các ứng dụng mùa hè</string>
   <string name="play_it">Chơi đi!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Cửa hàng nổi bật</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Liên quan đến %1$s</string>
   <string name="appstimeline_update_app">ứng dụng</string>
@@ -271,10 +268,9 @@ Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin c
   <string name="create_store_displayable_message">Tạo cửa hàng của bạn ngay và bắt đầu chia sẻ các ứng dụng của bạn!</string>
   <string name="create_store_displayable_button">TẠO CỬA HÀNG</string>
   <string name="my_store_created_displayable_message">Cửa hàng ứng dụng Android của bạn</string>
-  <string name="create_store_displayable_created_store_short_term_message">Bạn đã vừa tạo cửa hàng của mình!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Nhập và khám phá tất cả các khả năng</string>
   <string name="create_store_displayable_explore_button">Khám phá</string>
-  <string name="follow_store">Theo dõi cửa hàng</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Cửa hàng của bạn chưa có ứng dụng.</string>
   <string name="install_app_outter_pt2">và tải lên các ứng dụng để chia sẻ chúng với thế giới!</string>
@@ -287,8 +283,6 @@ Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin c
   <string name="word_this">này</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Những thứ mà người theo dõi bạn sẽ nhìn thấy:</string>
-  <string name="social_timeline_you_will_share_comment">Người theo dõi bạn sẽ nhìn thấy bình luận của bạn:</string>
-  <string name="social_timeline_you_will_share_like">Người theo dõi bạn sẽ nhìn thấy lượt thích của bạn:</string>
   <string name="social_timeline_share_title">Chia sẻ thẻ xem trước</string>
   <string name="social_timeline_share_title_checkbox">Làm cho hồ sơ người dùng của tôi riêng tư trong dòng thời gian ứng dụng. Chỉ hiển thị/chia sẻ thông tin cửa hàng của tôi.</string>
   <string name="social_timeline_share_title_checkbox_fb">Cho phép hồ sơ người dùng của tôi được công khai trên dòng thời gian ứng dụng</string>
@@ -318,88 +312,21 @@ Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin c
   <!-- Followers and following -->
   <string name="timeline_followers">Người theo dõi %d</string>
   <string name="timeline_followed">Đang theo dõi %d</string>
-  <string name="timeline_stats_followers">Người theo dõi</string>
+  <string name="timeline_stats_followers">Thuê bao</string>
   <string name="timeline_login_message">Bạn bè của bạn đang cài đặt gì?</string>
   <string name="private_followers_message">Những người theo dõi %d được riêng tư</string>
   <string name="private_following_message">bạn đang theo dõi các người dùng/cửa hàng riêng tư %d</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">Trả lời %d</string>
   <string name="out_of_space_dialog_title">Hết dung lượng</string>
   <string name="out_of_space_dialog_message">Vui lòng, giải phóng bộ nhớ để tiếp tục.</string>
-  <string name="setting_category_autoupdate">Cập nhật %s</string>
-  <string name="setting_category_autoupdate_title">Nhận thông báo cập nhật %s</string>
-  <string name="setting_category_autoupdate_message">Kiểm tra định kỳ các phiên bản mới %s</string>
-  <string name="store_added_long_time_suggestion_message">hiển thị dài hạn</string>
-  <string name="store_added_short_time_suggestion_message">hiển thị vừa tạo</string>
-  <string name="create_store_displayable_created_store_long_term_message">dài hạn</string>
-  <string name="create_store_displayable_explore_long_term_button">Xem cửa hàng</string>
-  <string name="create_store_displayable_empty_description_message">Thêm mô tả cho cửa hàng của bạn. Một mô tả tốt sẽ giúp bạn có thêm nhiều người theo dõi và tương tác hơn.</string>
-  <string name="fragment_spot_share_preview_start_button">Bắt đầu</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Tham gia %s</string>
-  <string name="login">Đăng nhập</string>
-  <string name="login_company">Đăng nhập %s</string>
-  <string name="connect_with_facebook">Kết nối với Facebook</string>
-  <string name="connect_with_google">Kết nối với Google</string>
-  <string name="accept_terms_signup">Bằng cách tham gia Aptoide, bạn đồng ý với các điều khoản và điều kiện của Aptoide và chính sách nội dụng đối với lập trình viên.</string>
-  <string name="recover_password">Khôi phục mật khẩu của bạn</string>
-  <string name="email">Email</string>
-  <string name="password">Mật khẩu</string>
-  <string name="create_password">Tạo mật khẩu</string>
-  <string name="store_suspended_message">Cửa hàng bị tạm ngưng</string>
-  <string name="facebook_login_cancelled">Đăng nhập Facebook đã bị hủy bỏ</string>
-  <string name="google_login_cancelled">Đăng nhập Google đã thất bại</string>
-  <string name="login_separator_text">Hoặc kết nối sử dụng địa chỉ email của bạn</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Bạn có thể tìm thấy nội dung độc đáo được tạo riêng cho bạn trong các cửa hàng khác nhau</string>
-  <string name="add_store_dialog_top_stores">KHÁM PHÁ CÁC CỬA HÀNG HÀNG ĐẦU</string>
-  <string name="add_store_dialog_top_stores_small_text">và tìm thấy nội dung độc quyền!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Đăng nhập</string>
-  <string name="activity_login_forgot_password_button">Quên mật khẩu?</string>
-  <string name="activity_login_button">Đăng nhập</string>
-  <string name="activity_login_sign_up_button">Đăng Ký</string>
-  <string name="view_credentials_username_hint">Email</string>
-  <string name="view_credentials_password_hint">Mật khẩu</string>
-  <string name="permission_access_deny">truy cập để đọc và viết lên bộ nhớ ngoài đã bị từ chối</string>
-  <string name="permission_account_deny">truy cập để tải tài khoản đã bị từ chối</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Tăng cường mạng lưới của bạn.</string>
-  <string name="addressbook_connect_with_friends_message">Kết nối với bạn bè.</string>
-  <string name="addressbook_sync">Đồng bộ sổ địa chỉ</string>
-  <string name="not_now">Không phải bây giờ</string>
-  <string name="follow_friends">Theo dõi bạn bè</string>
-  <string name="addressbook_data_about"><b>Bằng cách nào%1$s sử dụng dữ liệu của bạn</b>
-    \n%1$s sẽ tìm kiếm sổ địa chỉ của bạn đối với bạn bè và gia đình đang sử dụng cửa hàng ứng dụng của chúng tôi. Chúng tôi sẽ
-    chỉ sử dụng thông tin này để cải thiện trải nghiệm %1$s của bạn bằng cách kết nối bạn đến với nhiều người
-    có thể sử chia sẻ các ứng dụng có nội dung liên quan tới bạn.\n\n\nĐể bảo vệ quyền riêng tư của bạn, không có dữ liệu cá nhân nào
-    được gửi đến máy chủ %1$s. Một chữ ký vô danh (hash) sẽ được tạo với dữ liệu của bạn
-    và hash không thể đảo ngược vào thông tin liên lạc ban đầu.
-  
-    </string>
-  <string name="addressbook_success">Thành công!</string>
-  <string name="addressbook_allow_friends_find">Cho phép bạn bè tìm thấy bạn</string>
-  <string name="google">Google</string>
-  <string name="done">Đã hoàn thành</string>
-  <string name="addressbook_share_phone">Chia sẻ số điện thoại của bạn để bạn bè của bạn có thể dễ dàng tìm thấy bạn trên %s</string>
-  <string name="addressbook_phone_number">Số điện thoại</string>
-  <string name="addressbook_insuccess_connection">Chúng tôi không thể kết nối với sổ địa chỉ của bạn!</string>
-  <string name="addressbook_invite_friends">Mời bạn bè tham gia cùng bạn!</string>
-  <string name="addressbook_thanks_for_connecting">Cảm ơn bạn đã kết nối</string>
-  <string name="addressbook_success_connected_friends">Chúng tôi đã kết nối thành công bạn với bạn bè %1$s sử dụng %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Chúng tôi đã không tìm thấy bất kỳ địa chỉ liên lạc nào đang sử dụng %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s sẽ duyệt sổ địa chỉ của bạn đối với bạn bè và gia đình
-    đang sử dụng cửa hàng ứng dụng của chúng tôi. Để bảo vệ sự riêng tư của bạn, không có dữ liệu cá nhân nào được gửi đến
-    các máy chủ %1$s</string>
-  <string name="addressbook_3rd_msg">TÌM HIỂU THÊM</string>
-  <string name="address_book_twitter_error">Lỗi ủy quyền trên Twitter</string>
-  <string name="follow_my_store">Xin chào, hãy theo dõi cửa hàng %1$s của tôi tại đây</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">Về sổ địa chỉ</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Chúng tôi không thể kết nối bạn</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Chia sẻ các ứng dụng với bạn bè của bạn</string>
-  <string name="spot_share_line_2">Điện thoại đến điện thoại, không có Internet</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

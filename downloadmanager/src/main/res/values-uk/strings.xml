@@ -4,7 +4,7 @@
   <string name="aptoide_downloading">%s завантажується</string>
   <string name="pause_download">Пауза</string>
   <string name="resume_download">Відновити</string>
-  <string name="general_downloads_dialog_only_mobile_message">"You chose to download only on Mobile 3G/4G. Do you want to change the settings?"</string>
-  <string name="general_downloads_dialog_only_wifi_message">"You chose to download only on WiFi. Do you want to change the settings?"</string>
-  <string name="general_downloads_dialog_no_download_rule_message">No download rule is set. Do you want to change the settings?</string>
+  <string name="general_downloads_dialog_only_mobile_message">"Ви вирішили завантажувати лише через мобільні мережі. Змінити настройки?"</string>
+  <string name="general_downloads_dialog_only_wifi_message">"Ви вирішили завантажувати лише через Wi-Fi. Змінити настройки?"</string>
+  <string name="general_downloads_dialog_no_download_rule_message">Немає правил для завантажень. Змінити настройки?</string>
 </resources>

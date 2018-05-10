@@ -10,16 +10,17 @@
   <string name="login">Autentificare</string>
   <string name="successful">Cu succes</string>
   <string name="login_successful">Autentificare reușită</string>
-  <string name="forgot_passwd"><u>Ai uitat parola?</u></string>
+  <string name="forgot_passwd">Ai uitat parola?</string>
   <string name="fields_cannot_empty">Vă rugăm verificați-vă adresa de e-mail și parola.</string>
   <string name="unknown_error">Eroare necunoscută</string>
-  <string name="accept_terms">\"Înregistrându-te declari că ești de acord cu Termenii Serviciului și
-Politica Conținutului pentru Dezvoltatori
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Te rugăm să introduci o adresă de e-mail și o parolă.
- \"</string>
-  <string name="no_pass_error_message">Introdu o parolă</string>
-  <string name="no_email_error_message">Introdu o adresă de e-mail</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Introdu o parolă pentru a te înregistra.</string>
+  <string name="no_email_error_message">Introdu o adresă de e-mail pentru a te înregistra.</string>
   <string name="password_validation_text">\"Parola trebuie să aibă cel puțin 8 caractere și cel puțin o literă
 și un număr sau caractere speciale (!@#$%*)
  \"</string>
@@ -34,12 +35,12 @@ cont
   <!--errors-->
   <string name="error_occured">A apărut o eroare. Vă rugăm să încercați din nou</string>
   <string name="error_invalid_grant">Combinație nume de utilizator și parolă nevalidă</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Acreditări nevalide!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Autentificare cu Google nereușită. Te rugăm să îți verifici contul Google (este posibil să fie nevoie să îți validezi adresa de e-mail)</string>
   <string name="ws_error_AUTH_101">Nu am putut să vă autentificăm cu Google. Vă rugăm să încercați din nou.</string>
   <string name="ws_error_AUTH_102">Autentificare cu Facebook nereușită. Te rugăm să îți verifici contul de Facebook (este posibil să fie nevoie să îți validezi adresa de e-mail)</string>
@@ -82,13 +83,13 @@ nume)</string>
   <string name="create_user_header"><b>Creează un profil de utilizator</b> pentru a putea să evaluezi, comentezi și distribui aplicații împreună cu prietenii tăi</string>
   <string name="create_user_take_picture">Fă-ți o poză pentru profilul tău</string>
   <string name="create_user_random_photo">Sau folosește o altă fotografie</string>
-  <string name="create_user_choose_username">Alege-ți numele de utilizator</string>
+  <string name="create_user_choose_username">Alege un nume de utilizator</string>
   <string name="create_user_username">Nume de utilizator</string>
   <string name="create_user_hint">Apare când evaluezi, comentezi sau distribui aplicații.</string>
   <string name="create_user_create_button">Creează profil</string>
   <string name="create_user_dialog_camera">Fă o poză</string>
   <string name="create_user_dialog_gallery">Alege din galerie</string>
-  <string name="create_user_dialog_cancel">Anulare</string>
+  <string name="create_user_dialog_cancel">Anulează</string>
   <string name="nothing_inserted_store">Te rugăm să introduci numele magazinului pentru a-ți crea magazinul</string>
   <string name="nothing_inserted_user">Te rugăm să introduci un nume de utilizator și o fotografie (opțional) pentru a-ți crea profilul</string>
   <string name="create_user_bad_photo">Te rugăm să alegi o imagine cu o rezoluție de cel puțin 300x300</string>

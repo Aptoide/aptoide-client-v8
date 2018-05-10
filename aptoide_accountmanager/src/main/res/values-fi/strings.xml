@@ -10,31 +10,32 @@
   <string name="login">Kirjaudu</string>
   <string name="successful">Onnistui</string>
   <string name="login_successful">Kirjautuminen onnistui</string>
-  <string name="forgot_passwd"><u>Unohditko salasanasi?</u></string>
+  <string name="forgot_passwd">Unohditko salasanasi?</string>
   <string name="fields_cannot_empty">Tarkista sähköpostiosoitteesi ja salasanasi.</string>
   <string name="unknown_error">Tuntematon virhe</string>
-  <string name="accept_terms">\"Rekisteröitymällä hyväksyt Aptoiden käyttöehdot
-sekä kehittäjien sisältökäytännön
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Syötä sähköposti ja salasana
- \"</string>
-  <string name="no_pass_error_message">Syötä salasana</string>
-  <string name="no_email_error_message">Syötä sähköposti</string>
-  <string name="password_validation_text">\"Salasanan pitää olla ainakin 8 merkkiä pitkä ja siinä pitää
+  <string name="accept_terms">Rekisteröitymällä hyväksyt Aptoiden käyttöehdot sekä
+     sekä kehittäjien sisältökäytännön
+    </string>
+  <string name="no_email_and_pass_error_message">Syötä sähköposti ja salasana
+     rekisteröityäksesi.
+    </string>
+  <string name="no_pass_error_message">Syötä salasana rekisteröityäksesi.</string>
+  <string name="no_email_error_message">Syötä sähköposti rekisteröityäksesi.</string>
+  <string name="password_validation_text">Salasanan pitää olla ainakin 8 merkkiä pitkä ja siinä pitää
 olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)
- \"</string>
+    </string>
   <string name="logged_as">Olet kirjautunut käyttäjänä:</string>
   <string name="sign_out">Kirjaudu ulos</string>
   <string name="default_account_type">cm.aptoide.pt</string>
   <string name="facebook_grant_permission_button">Anna lupa</string>
-  <string name="facebook_email_permission_regected_message">\"Tarvitsemme sähköpostiosoitteesi
+  <string name="facebook_email_permission_regected_message">Tarvitsemme sähköpostiosoitteesi
 luodakseen tilin
- \"</string>
+    </string>
   <string name="user_cancelled">Peruutettu käyttäjän toimesta</string>
   <!--errors-->
   <string name="error_occured">Tapahtui virhe. Yritä uudelleen</string>
   <string name="error_invalid_grant">Virheellinen käyttäjänimi ja salasana -yhdistelmä</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
   <string name="ws_error_MARG_203">@string/error_occured</string>
   <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_200">@string/error_occured</string>
@@ -101,7 +102,7 @@ numeroita ja ajatusviivoja.</string>
   <string name="next">Seuraava</string>
   <!--Create Store fragment-->
   <string name="create_store_title">Luo kauppasi</string>
-  <string name="create_store_header"><b>Luo oma kauppasi</b>" ja jaa sovellusvalikoimasi  %s -yhteisön kanssa."<b>Kokeile</b></string>
+  <string name="create_store_header"><b>Luo oma kauppasi</b>" ja jaa sovellusvalikoimasi %s -yhteisön kanssa."<b>Kokeile</b></string>
   <string name="edit_store_header">Muokkaa kauppaasi kauniilla kuvalla ja mukavalla kuvauksella</string>
   <string name="create_store_name">Valitse nimi %s -kaupallesi</string>
   <string name="create_store_name_inserted">Kauppasi nimi</string>
@@ -126,17 +127,11 @@ numeroita ja ajatusviivoja.</string>
   <string name="create_profile_pub_pri_sub_text_3">Voit myös tehdä kaupastasi yksityisen ja menettää jako-ominaisuudet.</string>
   <string name="create_profile_pub_pri_make_priv">Tee profiilistani yksityinen</string>
   <string name="create_profile_logged_in_activity_title">Kirjautunut</string>
-  <string name="image_requirements_popup_message">Kuvassa on seuraavat ongelmat:
-</string>
-  <string name="image_requirements_error_min_height">- Minimikorkeus on pienempi kuin 600 px
-</string>
-  <string name="image_requirements_error_max_height">- Maksimikorkeus on enemmän kuin 10240 px
-</string>
-  <string name="image_requirements_error_min_width">- Minimileveys on vähemmän kuin 600 px
-</string>
-  <string name="image_requirements_error_max_width">- Maksimileveys on enemmän kuin 10240 px
-</string>
-  <string name="image_requirements_error_max_file_size">- Maksimikoko on suurempi kuin 5 Mb
-</string>
+  <string name="image_requirements_popup_message">Kuvassa on seuraavat ongelmat:\n</string>
+  <string name="image_requirements_error_min_height">- Minimikorkeus on pienempi kuin 600 px\n</string>
+  <string name="image_requirements_error_max_height">- Maksimikorkeus on enemmän kuin 10240 px\n</string>
+  <string name="image_requirements_error_min_width">- Minimileveys on vähemmän kuin 600 px\n</string>
+  <string name="image_requirements_error_max_width">- Maksimileveys on enemmän kuin 10240 px\n</string>
+  <string name="image_requirements_error_max_file_size">- Maksimikoko on suurempi kuin 5 Mb\n</string>
   <string name="image_requirements_error_popup_title">Kuva</string>
 </resources>

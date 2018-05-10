@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Saját fiók</string>
-  <string name="setting_schdwntitle">Ütemezett letöltések</string>
-  <string name="settings">Beállítások</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Biztonsági másolat appokról</string>
   <string name="dark">Sötét</string>
   <string name="light">Világos</string>
   <string name="updates_filter_summary">Ezt bepipálva nem kap értesítést a béta verziókról.</string>
@@ -89,7 +82,7 @@
   <string name="top_comments">Top hozzászólások</string>
   <string name="rate">Értékelés</string>
   <string name="rate_app">%s értékelése</string>
-  <string name="title">Cím</string>
+  <string name="title">CÍM</string>
   <string name="tap_a_star">Értékeléshez bökjön egy csillagra</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
   <string name="other_versions_on_different_stores">Egyéb verziók más áruházakban</string>
@@ -123,26 +116,33 @@
   <string name="remote_install_nowifi_tip">Kérjük engedélyezze a wifit és kapcsolódjon egy hálózathoz</string>
   <string name="remote_install_empty_list">Keresés…</string>
   <string name="remote_install_tip">Kérjük, győződjön meg róla, hogy csatlakozik egy AndroidTV a hálózathoz</string>
-  <string name="remote_install_retry">Újra</string>
+  <string name="remote_install_retry">Ismét</string>
   <string name="remote_install_help">Súgó</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>PRESKOČI</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Mostantól idővonallal!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Legjobb app-videók és hírek</b> egy helyen. \n Fedezzen fel appokat a <b>barátain</b> keresztül</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Legyen saját áruháza</string>
-  <string name="wizard_sub_title_viewpager_two">Személyre szabhatja áruházát, hogy <b>megoszhasson appokat a barátaival</b> és az <b>Aptoide közösséggel.</b></string>
+  <string name="wizard_title_viewpager_two"><b>Appok idővonala</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Vegyen részt</string>
-  <string name="wizard_sub_title_viewpager_three"><b>Találjon olyanokat</b> akik hasonló alkalmazásokat kedvelnek. \n<b>Értékeljen és osszon meg.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Csatlakozzon!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Be kell jelentkeznie</string>
   <string name="follow">Követés</string>
   <!--need translation-->
   <string name="followed">Követések</string>
   <string name="unfollow_yes_no">Biztosan leiratkozik róla?</string>
   <string name="unfollow">Követés megszüntetése</string>
+  <string name="appview_follow_store_button_text">Feliratkozik?</string>
   <string name="unfollowing_store_message">%s követése ki</string>
   <string name="store_followed">%s áruházból követett alkalmazás</string>
   <string name="subscribers">Feliratkozók</string>
@@ -170,7 +170,6 @@
   <string name="social_timeline">Közösségi idővonal</string>
   <string name="downloads">Letöltések</string>
   <string name="apps_timeline"><b>Appok idővonala</b></string>
-  <string name="timeline"><b>Idővonal</b></string>
   <string name="latest_reviews">Legújabb értékelések</string>
   <string name="latest_comments">Legújabb hozzászólások</string>
   <string name="action">Akció</string>
@@ -243,8 +242,6 @@
   <string name="essential_apps">Létfontosságú appok</string>
   <string name="summer_apps">Nyári appok</string>
   <string name="play_it">Play-It!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Kiemelt történetek</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Kapcsolódik ehhez: %1$s</string>
   <string name="appstimeline_update_app">app</string>
@@ -267,10 +264,9 @@
   <string name="create_store_displayable_message">Hozza létre áruházát most és kezdjen megosztani appokat!</string>
   <string name="create_store_displayable_button">ÁRUHÁZ LÉTREHOZÁSA</string>
   <string name="my_store_created_displayable_message">A saját Android áruháza</string>
-  <string name="create_store_displayable_created_store_short_term_message">Sikeresen elkészítette az Áruházát!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Lépjen be és fedezze fel a lehetőségeket</string>
   <string name="create_store_displayable_explore_button">Felfedezés</string>
-  <string name="follow_store">Áruház követése</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Az áruháza még nem tartalmaz alkalmazásokat.</string>
   <string name="install_app_outter_pt2">és töltsön fel appokat, megosztva őket a világgal!</string>
@@ -283,8 +279,6 @@
   <string name="word_this">this</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">A követői ezt fogják látni:</string>
-  <string name="social_timeline_you_will_share_comment">A követői látni fogják a hozzászólását:</string>
-  <string name="social_timeline_you_will_share_like">A követői látni fogják a kedvelését:</string>
   <string name="social_timeline_share_title">Kártyás előnézet megosztása</string>
   <string name="social_timeline_share_title_checkbox">Saját felhasználóm priváttá tétele az App-idővonalon. Csak a saját áruházam adatait mutassa/ossza meg.</string>
   <string name="social_timeline_share_title_checkbox_fb">Legyen nyilvános az App-idővonalon a felhasználói profilom</string>
@@ -314,80 +308,21 @@
   <!-- Followers and following -->
   <string name="timeline_followers">%d követő</string>
   <string name="timeline_followed">%d követve</string>
-  <string name="timeline_stats_followers">Követők</string>
+  <string name="timeline_stats_followers">Feliratkozók</string>
   <string name="timeline_login_message">Miket telepítenek a barátai?</string>
   <string name="private_followers_message">%d követői privátok</string>
   <string name="private_following_message">%d db privát felhasználót/áruházat követ</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d válasz</string>
   <string name="out_of_space_dialog_title">Nincs elég hely</string>
   <string name="out_of_space_dialog_message">A folytatáshoz kérjük, szabadítson fel helyet.</string>
-  <string name="setting_category_autoupdate">%s frissítés</string>
-  <string name="setting_category_autoupdate_title">Új %s frissítések értesítéseinek megjelenítése</string>
-  <string name="setting_category_autoupdate_message">Időnként keressen új verziókat ehhez: %s</string>
-  <string name="store_added_long_time_suggestion_message">show long term</string>
-  <string name="store_added_short_time_suggestion_message">show just created</string>
-  <string name="create_store_displayable_created_store_long_term_message">long term</string>
-  <string name="create_store_displayable_explore_long_term_button">Áruház megtekintése</string>
-  <string name="create_store_displayable_empty_description_message">Adjon egy leírást az áruházához. Egy jó leírással több követőt és részvételt érhet el.</string>
-  <string name="fragment_spot_share_preview_start_button">Indítás</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Belépés ide: %s</string>
-  <string name="login">Bejelentkezés</string>
-  <string name="login_company">Belépés, mint: %s</string>
-  <string name="connect_with_facebook">Kapcsolódás a Facebookkal</string>
-  <string name="connect_with_google">Csatlakozás Google-vel</string>
-  <string name="accept_terms_signup">Azzal, hogy csatlakozik az Aptoide-hez, beleegyezik az Aptoide felhasználási feltételeibe, valamint a fejlesztőkre vonatkozó irányelvekbe.</string>
-  <string name="recover_password">Jelszó visszaállítása</string>
-  <string name="email">E-mail</string>
-  <string name="password">Jelszó</string>
-  <string name="create_password">Jelszó létrehozása</string>
-  <string name="store_suspended_message">Áruház felfüggesztve</string>
-  <string name="facebook_login_cancelled">Facebook bejelentkezési megszakítva</string>
-  <string name="google_login_cancelled">Google-bejelentkezés sikertelen</string>
-  <string name="login_separator_text">Vagy használja az e-mail címét</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Önhöz szabott exkluzív tartalmakat találhat különböző áruházakban</string>
-  <string name="add_store_dialog_top_stores">TOP ÁRUHÁZAK FELFEDEZÉSE</string>
-  <string name="add_store_dialog_top_stores_small_text">és találjon exkluzív tartalmakat!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Bejelentkezés</string>
-  <string name="activity_login_forgot_password_button">Elfelejtette a jelszavát?</string>
-  <string name="activity_login_button">Bejelentkezés</string>
-  <string name="activity_login_sign_up_button">Regisztráció</string>
-  <string name="view_credentials_username_hint">E-mail</string>
-  <string name="view_credentials_password_hint">Jelszó</string>
-  <string name="permission_access_deny">a külső tárhely írási és olvasási hozzáférése megtagadva</string>
-  <string name="permission_account_deny">fiókok beolvasása megtagadva</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Növelje ismeretségi körét.</string>
-  <string name="addressbook_connect_with_friends_message">Lépjen kapcsolatba barátaival.</string>
-  <string name="addressbook_sync">Névjegyzék szinkronizálása</string>
-  <string name="not_now">Nem most</string>
-  <string name="follow_friends">Barátok követése</string>
-  <string name="addressbook_data_about"><b>Hogyan használja a(z) %1$s az Ön adatait</b>
-\n\n A(z) %1$s megkeresi azokat a családtagokat és barátokat, akik a mi alkalmazásboltunkat használják. Csak arra használjuk ezeket az adatokat, hogy az Ön felhasználói élményét javítsuk a(z) %1$s-n azzal, hogy több ember tud Önnel megosztani appokkal kapcsolatos tartalmakat.\n\n\n A magánjellegű adatainak védelme érdekében egyértelműen Önt azonosító adatok nem kerülnek megosztásra a(z) %1$s szervereivel. Adataiból egy visszafejthetetlen névtelen hash készül.  </string>
-  <string name="addressbook_success">Siker!</string>
-  <string name="addressbook_allow_friends_find">Engedélyezze, hogy barátai megtalálják</string>
-  <string name="google">Google</string>
-  <string name="done">Kész</string>
-  <string name="addressbook_share_phone">Ossza meg a telefonszámát, hogy barátai könnyen megtalálják itt: %s</string>
-  <string name="addressbook_phone_number">Telefonszám</string>
-  <string name="addressbook_insuccess_connection">Nem sikerült kapcsolódni a névjegyzékéhez!</string>
-  <string name="addressbook_invite_friends">Hívja meg barátait, hogy csatlakozzanak!</string>
-  <string name="addressbook_thanks_for_connecting">Köszönjük a kapcsolódást</string>
-  <string name="addressbook_success_connected_friends">Sikeresen összekapcsoltuk %1$s baráttal, akik az alábbit használják: %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Nem találtunk az alábbit használó személyeket: %1$s</string>
-  <string name="addressbook_2nd_msg">A(z) %1$s átnézi névjegyzékét az alkalmazásboltunkat használó barátok és családtagok után, A személyi adatok védelmének érdekében magánjellegű adatokat nem osztunk meg a(z) %1$s szervereivel</string>
-  <string name="addressbook_3rd_msg">TUDJON MEG TÖBBET</string>
-  <string name="address_book_twitter_error">Twitter hitelesítési hiba</string>
-  <string name="follow_my_store">Üdvözlöm, kövesse a(z) %1$s áruházamat itt</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">A névjegyzékről</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Nem tudtuk összekapcsolni Önt</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Osszon meg appokat a barátaival</string>
-  <string name="spot_share_line_2">Telefonról telefonra, internet nélkül</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

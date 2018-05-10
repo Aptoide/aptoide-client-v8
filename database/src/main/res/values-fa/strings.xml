@@ -5,7 +5,7 @@
   ~ Modified by SithEngineer on 12/05/2016.
   -->
 <resources>
-  <string name="download_completed">دانلود به انجام رسید</string>
+  <string name="download_completed">دانلود کامل شد</string>
   <string name="download_paused">دانلود متوقف شد</string>
   <string name="download_progress">در حال دانلود</string>
   <string name="download_queue">در صف دانلود</string>

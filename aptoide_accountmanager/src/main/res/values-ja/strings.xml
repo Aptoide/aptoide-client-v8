@@ -6,20 +6,18 @@
   <string name="username">Eメール</string>
   <string name="password">パスワード</string>
   <string name="link_device_webinstall">アカウントをウェブインストールにリンクさせる</string>
-  <string name="register">登録</string>
+  <string name="register">サインアップ</string>
   <string name="login">ログイン</string>
   <string name="successful">成功しました</string>
   <string name="login_successful">ログインに成功しました</string>
-  <string name="forgot_passwd"><u>パスワードをお忘れですか?</u></string>
+  <string name="forgot_passwd">パスワードをお忘れですか？</string>
   <string name="fields_cannot_empty">Eメールとパスワードを確認してください。</string>
   <string name="unknown_error">不明なエラー</string>
-  <string name="accept_terms">\"サインアップすることにより、Aptoide サービス利用規約、
-開発者向けコンテンツポリシーに同意します。
- \"</string>
-  <string name="no_email_and_pass_error_message">\"メールアドレスとパスワードを入力してください
- \"</string>
-  <string name="no_pass_error_message">パスワードを入力してください</string>
-  <string name="no_email_error_message">メールアドレスを入力してください</string>
+  <string name="accept_terms">サインアップすることにより、Aptoide サービス利用規約、
+開発者向けコンテンツポリシーに同意します    </string>
+  <string name="no_email_and_pass_error_message">登録するメールアドレスとパスワードを入力してください。    </string>
+  <string name="no_pass_error_message">登録するパスワードを入力してください。</string>
+  <string name="no_email_error_message">登録するメールアドレスを入力してください。</string>
   <string name="password_validation_text">\"パスワードは 8 文字以上で、少なくとも 1 つの文字と 1 つの数字、
 または特殊文字 (!@#$%*) にする必要があります
  \"</string>
@@ -34,7 +32,7 @@
   <!--errors-->
   <string name="error_occured">エラーが発生しました。もう一度お試しください</string>
   <string name="error_invalid_grant">ユーザー名とパスワードの組み合わせが無効です</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
   <string name="ws_error_MARG_203">@string/error_occured</string>
   <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_200">@string/error_occured</string>
@@ -47,9 +45,9 @@
   <string name="ws_error_invalid_grant">ユーザー名とパスワードの組み合わせが無効です</string>
   <string name="ws_error_MARG_12">不明なhmacパラメーター</string>
   <string name="ws_error_MARG_109">不明なEメールパラメーター</string>
-  <string name="ws_error_MARG_110">不明なpasshashパラメータ</string>
-  <string name="ws_error_MARG_111">不明な名パラーメーター</string>
-  <string name="ws_error_MARG_112">不明なユーザーエージェントパラメータ</string>
+  <string name="ws_error_MARG_110">不明なパスハッシュパラメーター</string>
+  <string name="ws_error_MARG_111">不明な名前パラメーター</string>
+  <string name="ws_error_MARG_112">不明なユーザーエージェントパラメーター</string>
   <string name="ws_error_IARG_5">無効なhmacフォーマット</string>
   <string name="ws_error_IARG_106">このEメールアドレスは有効ではありません</string>
   <string name="ws_error_IARG_111">無効な passhash 形式</string>
@@ -82,7 +80,7 @@
   <string name="create_user_header">アプリを評価、コメント、友達と共有するため、<b>ユーザー プロファイルを作成</b> してください</string>
   <string name="create_user_take_picture">プロフィールの写真を撮る</string>
   <string name="create_user_random_photo">またはランダムな写真を使う</string>
-  <string name="create_user_choose_username">ユーザー名を選択</string>
+  <string name="create_user_choose_username">ユーザー名を選択してください</string>
   <string name="create_user_username">ユーザー名</string>
   <string name="create_user_hint">評価、コメント、アプリを共有するときに表示されます。</string>
   <string name="create_user_create_button">プロフィールを作成</string>

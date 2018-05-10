@@ -10,18 +10,13 @@
   <string name="login">Daxil ol</string>
   <string name="successful">uğurlu</string>
   <string name="login_successful">Uğurlu daxilolma</string>
-  <string name="forgot_passwd"><u>Parolu unutdunuz?</u></string>
+  <string name="forgot_passwd">Parolu unutdun?</string>
   <string name="fields_cannot_empty">Email və parolunuzu yoxlayın.</string>
-  <string name="unknown_error">Naməlum Xəta</string>
-  <string name="accept_terms">\"Qeydiyyatdan keçərək Aptoide-in İstifadəçi Razılaşması
-və Mobil proqram tərtibatçıları üçün Kontent Siyasəti
-ilə razı olduğunu bildirirsiniz
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Qeydiyyatdan keçmək üçün email və
-parolunuzu daxil edin.
- \"</string>
-  <string name="no_pass_error_message">parolunuzu daxil edin</string>
-  <string name="no_email_error_message">emailinizi daxil edin</string>
+  <string name="unknown_error">Naməlum xəta</string>
+  <string name="accept_terms">Azercell Apps-ə qoşularaq Azercell Apps-in Şərtləri və Qaydaları, Proqram Tərtibatçıları üçün Məzmun Siyasəti ilə razılaşırsınız.</string>
+  <string name="no_email_and_pass_error_message">Lütfən email və şifrəni daxil et</string>
+  <string name="no_pass_error_message">Qeydiyyatdan keçmək üçün parolunuzu daxil edin.</string>
+  <string name="no_email_error_message">Qeydiyyatdan keçmək üçün emailinizi daxil edin.</string>
   <string name="password_validation_text">\"Parol ən azı 8 simvoldan ibarət olmalıdır və ən azı bir hərf,
 bir rəqəm və ya xüsusi simvol (!@#$%*) daşımalıdır
  \"</string>
@@ -31,31 +26,31 @@ bir rəqəm və ya xüsusi simvol (!@#$%*) daşımalıdır
   <string name="facebook_grant_permission_button">İcazə ver</string>
   <string name="facebook_email_permission_regected_message">\"Hesabı yaratmaq üçün emailinız lazımdır
  \"</string>
-  <string name="user_cancelled">İstifadəçı tərəfindən ləğv edilib</string>
+  <string name="user_cancelled">İstifadəçi tərəfindən ləğv edilib</string>
   <!--errors-->
-  <string name="error_occured">Xəta baş verib. Yenidən cəhd edin</string>
+  <string name="error_occured">Xəta baş verdi. Yenidən cəhd et</string>
   <string name="error_invalid_grant">Səhv istifadəçı adı və parol cütlüyü</string>
-  <string name="ws_error_MARG_200">\@string/xəta</string>
-  <string name="ws_error_MARG_203">\@string/xəta</string>
-  <string name="ws_error_MARG_204">\@string/xəta</string>
-  <string name="ws_error_IARG_200">\@string/xəta</string>
-  <string name="ws_error_AUTH_2">İstifadəçi/parol məlumatı yanlışdır!</string>
-  <string name="ws_error_AUTH_7">\@string/xəta</string>
+  <string name="ws_error_MARG_200">Xəta baş verdi!</string>
+  <string name="ws_error_MARG_203">Xəta baş verdi!</string>
+  <string name="ws_error_MARG_204">Xəta baş verdi!</string>
+  <string name="ws_error_IARG_200">Xəta baş verdi!</string>
+  <string name="ws_error_AUTH_2">İstifadəçi adı/parol yanlışdır!</string>
+  <string name="ws_error_AUTH_7">Xəta baş verdi!</string>
   <string name="ws_error_AUTH_100">Google ilə daxil olmaq alınmadı. Google hesabınızı yoxlayın (emailinızı təstiq etməyiniz lazım ola bilər)</string>
   <string name="ws_error_AUTH_101">Google ilə giriş xətası. Bir daha cəhd edin.</string>
   <string name="ws_error_AUTH_102">Facebook ilə daxil olmaq alınmadı. Facebook hesabınızı yoxlayın (emailinızı təstiq etməyiniz lazım ola bilər)</string>
   <string name="ws_error_AUTH_103">Facebook ilə giriş xətası. Bir daha cəhd edin.</string>
-  <string name="ws_error_invalid_grant">Səhv istifadəçı adı və parol cütlüyü</string>
+  <string name="ws_error_invalid_grant">İstifadəçi adı və parol yanlışdır</string>
   <string name="ws_error_MARG_12">hmac paratmetri mövcud deyil</string>
   <string name="ws_error_MARG_109">email mövcud deyil</string>
   <string name="ws_error_MARG_110">passhash parametr mövcud deyil</string>
   <string name="ws_error_MARG_111">Ad parametri mövcud deyil</string>
   <string name="ws_error_MARG_112">user-agent parametri mövcud deyil</string>
   <string name="ws_error_IARG_5">hmac format yanlışdır</string>
-  <string name="ws_error_IARG_106">email ünvanı yanlışdır</string>
-  <string name="ws_error_IARG_111">Səhv passhash format</string>
+  <string name="ws_error_IARG_106">E-mail ünvanı yanlışdır</string>
+  <string name="ws_error_IARG_111">Passhash formatı yanlışdır</string>
   <string name="ws_error_REPO_4">Əlavələr mağazanın adı etibarsızdır. Yalnız hərflər, rəqəmlər və ya tire.</string>
-  <string name="ws_error_REPO_7">İstifadəçlnin qüvvədə olan mağazası var.</string>
+  <string name="ws_error_REPO_7">Bu istifadəçinin mağazası var.</string>
   <string name="ws_error_REPO_5">Bu ad ən azı 3 simvoldan ibarət olmalıdır.</string>
   <string name="ws_error_REPO_6">Bu ad artıq istifadə olunub. Başqasını seçin.</string>
   <string name="ws_eror_WOP_">Düzgün ad verilməyib. Ad yalnız alfanumerik simvollardan (A to Z and 0 to 9) və ya (-) ibarət ola bilər, tire ilə başlana və ya bitə bilməz.</string>
@@ -78,11 +73,11 @@ Limiti qaldırma istəyirsinizsə dəstək ilə əlaqə saxlayın və ya sabah b
   <!--Create user fragment-->
   <string name="create_user_title">İstifadəçi profili yarat</string>
   <string name="create_user_header">Əlavələrə rəy və şərh vermək, dostlar ilə paylaşmaq üçün <b>İstifadəçı profili yarat</b></string>
-  <string name="create_user_take_picture">Profilinin şəklini çək</string>
+  <string name="create_user_take_picture">Profilin üçün şəkil çək</string>
   <string name="create_user_random_photo">Və ya təsadüfi şəkildən istifadə et</string>
   <string name="create_user_choose_username">İstifadəçi adı seç</string>
   <string name="create_user_username">Istifadəçı adı</string>
-  <string name="create_user_hint">Əlavələri qiymətləndirən, şərh edən və paylaşan zamanı görünür.</string>
+  <string name="create_user_hint">Əlavələri qiymətləndirən, şərh edən və paylaşan zaman görünür.</string>
   <string name="create_user_create_button">Profili yarat</string>
   <string name="create_user_dialog_camera">Şəkil çək</string>
   <string name="create_user_dialog_gallery">Qalereyadan seç</string>
@@ -123,19 +118,15 @@ Limiti qaldırma istəyirsinizsə dəstək ilə əlaqə saxlayın və ya sabah b
   <string name="create_profile_pub_pri_sub_text_1">Dost və ailə üzvlərinizi izləməyə imkan verir</string>
   <string name="create_profile_pub_pri_sub_text_2">Apps Timeline sizə izləyiciləriniz ilə əlavələr üzrə tovsiyyərinizi və məqalələrinizi bölüşməyə imkan verir.</string>
   <string name="create_profile_pub_pri_sub_text_3">Profilinizi şəxsi edib paylaşım funksiyasını deaktiv edə bilərsiniz.</string>
-  <string name="create_profile_pub_pri_make_priv">Profilinizi şəxsi edin</string>
+  <string name="create_profile_pub_pri_make_priv">Profilini gizli et</string>
   <string name="create_profile_logged_in_activity_title">Giriş edilib</string>
-  <string name="image_requirements_popup_message">Şəkildə aşağıdakı problemlər var:
-</string>
-  <string name="image_requirements_error_min_height">- Minimal hündürlük 600px-dan aşağıdır
-</string>
+  <string name="image_requirements_popup_message">The image has the following problems:\n</string>
+  <string name="image_requirements_error_min_height">- Minimal hündürlük 600 pikseldən aşağıdır\n</string>
   <string name="image_requirements_error_max_height">- Maksimal hündürlük 10240px-dan yuxarıdır
 </string>
-  <string name="image_requirements_error_min_width">- Minimal en 600px-dan aşağıdır
-</string>
+  <string name="image_requirements_error_min_width">- Minimal en 600 pikseldən aşağıdır\n</string>
   <string name="image_requirements_error_max_width">- Maksimal en 10240px-dan yuxarıdır
 </string>
-  <string name="image_requirements_error_max_file_size">- Maksimal həcm 5 MB-dən yuxarıdır
-</string>
+  <string name="image_requirements_error_max_file_size">- Maksimal həcm 5 MB-dən yuxarıdır\n</string>
   <string name="image_requirements_error_popup_title">Şəkil</string>
 </resources>

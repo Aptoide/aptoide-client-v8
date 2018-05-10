@@ -10,16 +10,13 @@
   <string name="login">Inloggen</string>
   <string name="successful">Geslaagd</string>
   <string name="login_successful">Het inloggen is geslaagd</string>
-  <string name="forgot_passwd"><u>Wachtwoord vergeten?</u></string>
+  <string name="forgot_passwd">Wachtwoord vergeten?</string>
   <string name="fields_cannot_empty">Controleer je email en wachtwoord.</string>
   <string name="unknown_error">Onbekende fout</string>
-  <string name="accept_terms">\"Door u te registreren gaat u akkoord met de gebruikersvoorwaarden en
- het inhoudsbeleid voor ontwikkelaars van Aptoide
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Voer een e-mailadres en wachtwoord in
- \"</string>
-  <string name="no_pass_error_message">Voer een wachtwoord in</string>
-  <string name="no_email_error_message">Voer een e-mailadres in</string>
+  <string name="accept_terms">Door aanmelden ga je akkoord met de Aptoide Terms of Service and Content Policy voor Ontwikkelaars    </string>
+  <string name="no_email_and_pass_error_message">Vul een e-mailadres en wachtwoord in om te registreren.    </string>
+  <string name="no_pass_error_message">Voer een wachtwoord in om te registreren.</string>
+  <string name="no_email_error_message">Voer een e-mailadres in om te registreren.</string>
   <string name="password_validation_text">\"Wachtwoord moet minimaal 8 tekens lang zijn en minstens
 één letter en één cijfer of speciale tekens (!@#$%^*) bevatten.
  \"</string>
@@ -34,12 +31,12 @@
   <!--errors-->
   <string name="error_occured">Er is een fout opgetreden. Probeer het nogmaals</string>
   <string name="error_invalid_grant">Ongeldige combinatie van gebruikersnaam en wachtwoord</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Ongeldige gegevens!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Kon niet inloggen met Google. Controleer je Google-account (het kan zijn dat je je e-mailadres moet bevestigen)</string>
   <string name="ws_error_AUTH_101">Kon niet inloggen met Google. Probeer opnieuw.</string>
   <string name="ws_error_AUTH_102">Kon niet inloggen met Facebook. Controleer je Facebook-account (het kan zijn dat je je e-mailadres moet bevestigen)</string>
@@ -88,7 +85,7 @@
   <string name="create_user_create_button">Profiel aanmaken</string>
   <string name="create_user_dialog_camera">Foto maken</string>
   <string name="create_user_dialog_gallery">Kies uit galerij</string>
-  <string name="create_user_dialog_cancel">Annuleer</string>
+  <string name="create_user_dialog_cancel">Annuleren</string>
   <string name="nothing_inserted_store">Voer een naam in om je winkel aan te maken</string>
   <string name="nothing_inserted_user">Voer een gebruikersnaam en een foto (facultatief) in om je profiel aan te maken</string>
   <string name="create_user_bad_photo">Kies een afbeelding met een resolutie van minstens 300x300</string>

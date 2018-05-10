@@ -3,22 +3,22 @@
 <resources>
   <string name="one_account_allowed">Chỉ co phép một tài khoản</string>
   <string name="or">hoặc</string>
-  <string name="username">Email</string>
-  <string name="password">Mật khẩu</string>
+  <string name="username">Địa chỉ email</string>
+  <string name="password">Mật khẩu</string>
   <string name="link_device_webinstall">Liên kết tài khoản với Webinstall</string>
   <string name="register">Đăng Ký</string>
-  <string name="login">Đăng nhập</string>
+  <string name="login">Đăng nhập</string>
   <string name="successful">Thành công</string>
   <string name="login_successful">Đăng nhập thành công</string>
   <string name="forgot_passwd">Quên mật khẩu?</string>
   <string name="fields_cannot_empty">Xin kiểm tra email và mật khẩu của bạn.</string>
   <string name="unknown_error">Lỗi không rõ</string>
-  <string name="accept_terms">\"Bằng việc đăng ký, bạn đồng ý với các Điều khoản dịch vụ của Aptoide và 
-Chính sách nội dung đối với Lập trình viên
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Vui lòng nhập địa chỉ email và mật mã để 
-đăng ký.
- \"</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">Nhập mật mã để đăng ký.</string>
   <string name="no_email_error_message">Nhập địa chỉ mail để đăng ký.</string>
   <string name="password_validation_text">\"Mật khẩu cần phải có ít nhất 8 kí tự và nên có 
@@ -35,12 +35,12 @@ tài khoản
   <!--errors-->
   <string name="error_occured">Có lỗi xảy ra. Vui lòng thử lại</string>
   <string name="error_invalid_grant">Tên đăng nhập hoặc mật khẩu không hợp lệ</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Thông tin không hợp lệ!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Không thể đăng nhập bằng Google. Vui lòng kiểm tra tài khoản Google của bạn (bạn cần phải xác minh địa chỉ email của mình)</string>
   <string name="ws_error_AUTH_101">Không thể đăng nhập với Google. Xin thử lại.</string>
   <string name="ws_error_AUTH_102">Không thể đăng nhập bằng Facebook. Vui lòng kiểm tra tài khoản Facebook của bạn (bạn có thể cần phải xác minh địa chỉ email của mình)</string>

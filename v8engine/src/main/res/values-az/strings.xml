@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Hesabım</string>
-  <string name="setting_schdwntitle">Planlı Yükləmələr</string>
-  <string name="settings">Ayarlar</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Backup Əlavələr</string>
   <string name="dark">Tünd</string>
   <string name="light">Açıq</string>
   <string name="updates_filter_summary">Bunu seçərək siz beta versiyalar haqda məlumat almayacaqsınız.</string>
@@ -21,20 +14,20 @@
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <string name="aptoide_url">http://www.aptoide.com/</string>
   <!-- Permission pop-ups messages -->
-  <string name="access_to_get_accounts_rationale">Hesabları almaq üçün izin verməlisiniz</string>
+  <string name="access_to_get_accounts_rationale">Hesabları açmaq üçün icazə verməlisən</string>
   <string name="unsubscribe">Abunəliyi ləğv et</string>
-  <string name="developer_website">Veb Səhifə: %s</string>
+  <string name="developer_website">Veb-səhifə: %s</string>
   <string name="not_available">Mövcud deyil</string>
   <string name="developer_email">Email: %s</string>
-  <string name="developer_privacy_policy">Məxvilik Sözləşməsi: %s</string>
+  <string name="developer_privacy_policy">Məxfilik siyasəti: %s</string>
   <string name="open">Aç</string>
-  <string name="button_header_more">daha</string>
+  <string name="button_header_more">daha çox</string>
   <string name="search">Axtar</string>
   <string name="update">Yenilə</string>
   <string name="uninstall">Sil</string>
   <string name="downgrade">Aşağı versiya</string>
   <string name="appview_followers_count_text">%1$s İzləyicilər</string>
-  <string name="other_versions_downloads_count_text">%1$s yükləmələr</string>
+  <string name="other_versions_downloads_count_text">%1$s yükləmə</string>
   <!-- Common (menu) -->
   <string name="menu_select_all">Hamısını seç</string>
   <string name="menu_select_none">Heç birini seçmə</string>
@@ -61,11 +54,11 @@ bir müddət üzərinə basın.</string>
   <string name="displayable_social_timeline_article_get_app_button">%1$s əlavəni yüklə</string>
   <string name="displayable_social_timeline_app_update">Yeniləmə</string>
   <string name="displayable_social_timeline_app_update_version">Versiya %1$s</string>
-  <string name="displayable_social_timeline_app_update_button">Yeniləmə %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">%1$s yenilənmə</string>
   <string name="appview_other_versions"><u>Digər versiyalar</u></string>
   <string name="appview_latest_version_text">Axırıncı versiya</string>
   <string name="appview_rate_this_app">əlavəni dəyərləndir</string>
-  <string name="appview_read_all">read all <![CDATA[>]]></string>
+  <string name="appview_read_all"><![CDATA[>]]> hamısını oxu</string>
   <string name="zero">0</string>
   <string name="working_well">Normal işləyir</string>
   <string name="needs_license">Lisenziya tələb olunur</string>
@@ -74,7 +67,7 @@ bir müddət üzərinə basın.</string>
   <string name="additional_information">Əlavə məlumat</string>
   <string name="displayable_social_timeline_app_update_updated">Yenilənib</string>
   <string name="displayable_social_timeline_app_update_updating">Yenilənir</string>
-  <string name="displayable_social_timeline_app_update_error">Yeniləmə xətası</string>
+  <string name="displayable_social_timeline_app_update_error">Yenilənmə xətası</string>
   <!-- need translation -->
   <string name="appview_good_app_guaranteed">Etibarlı əlavəyə zəmanət!</string>
   <string name="appview_good_app_description">Bu əlavələr virus əleyhinə testdən keçib və heç bir təhlükə daşımır!</string>
@@ -89,13 +82,13 @@ bir müddət üzərinə basın.</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Populyar şərhlər</string>
-  <string name="rate">dəyərləndir</string>
-  <string name="rate_app">%s dəyərləndir</string>
+  <string name="rate">Qiymətləndir</string>
+  <string name="rate_app">%s qiymətləndir</string>
   <string name="title">Ad</string>
-  <string name="tap_a_star">dəyərləndirmək üçün ulduza bas</string>
+  <string name="tap_a_star">Qiymətləndirmək üçün ulduza bas</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
   <string name="other_versions_on_different_stores">digər mağazalarda olan versiyalar</string>
-  <string name="review_optional">Rəy (məcburi olmayan)</string>
+  <string name="review_optional">Rəy (məcburi deyil)</string>
   <string name="feedback_not_valid">Düzgün mövzu əlavə edin!</string>
   <string name="thank_you_for_your_opinion">Rəyiniz üçün təşəkkür edirik!</string>
   <string name="ignore_update">Yenilənmə</string>
@@ -105,52 +98,55 @@ bir müddət üzərinə basın.</string>
   <string name="two_numeric">2</string>
   <string name="one_numeric">1</string>
   <string name="just_reviews">Sadəcə rəylər</string>
-  <string name="downgrading_msg">Aşağı versiyaya keçid</string>
+  <string name="downgrading_msg">Əvvəlki versiya yüklənir</string>
   <string name="updating_msg">Yenilənir</string>
   <string name="installing_msg">Yüklənir</string>
   <string name="needs_permission_to_fs">xarici Fayl Sistemi istifadə üçün icazə tələb edir</string>
   <string name="added_to_scheduled">Menuya əlavə edilib &gt; Planlaşdırılmış Yükləmələr</string>
-  <string name="pause_all_downloads">Endirimə fasilə</string>
+  <string name="pause_all_downloads">Yükləmələri dayandır</string>
   <string name="all_stores">Bütün Mağazalar</string>
   <string name="followed_stores">İzlənilən Mağazalar</string>
   <string name="storage_access_permission_request_message">Bu ələvəni yükləmək üçün telefon yaddaşınıza müraciətə izin verin.</string>
   <string name="remote_install_menu_title">TV-yə yüklə</string>
   <string name="install_on_tv_mobile_error">Bu funksiyanı istifadə etmək üçün Wi-Fi-a qoşulmaq lazımdır.</string>
-  <string name="remote_install_title">Digər telefonu seçin</string>
+  <string name="remote_install_title">Lazımi cihazı seç</string>
   <string name="remote_install_success">Əlavə yüklənir</string>
   <string name="remote_install_fail">Uzaqdan yükləmə baş tutmadı</string>
-  <string name="remote_install_nodevices">Cihaz tapılmayıb</string>
-  <string name="remote_install_notinstallated">Android TV-de Aptoide TV varınızdırmı? 
- http://aptoi.de/tv</string>
+  <string name="remote_install_nodevices">Cihaz tapılmadı</string>
+  <string name="remote_install_notinstallated">Android TV-nizdə Aptoide TV var? \n http://aptoi.de/tv</string>
   <string name="remote_install_nowifi">Wi-Fi bağlantısı yoxdur</string>
   <string name="remote_install_nowifi_tip">Wi-Fi şəbəkəsinə qoşulmaq üçün işə salın</string>
   <string name="remote_install_empty_list">Axtarılır…</string>
   <string name="remote_install_tip">AndroidTV-nizin şəbəkəyə qoşulduğunu yoxlayın</string>
-  <string name="remote_install_retry">Yenidən cəhd edin</string>
+  <string name="remote_install_retry">Yenidən cəhd et</string>
   <string name="remote_install_help">Yardım</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>keç</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">indi isə Tarixçə ilə!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Ən yaxşı əlavə videolar və xəbərlər</b> bir yerdə.
-<b>Dostlarınız sayəsində əlavələri kəşf edin.</b></string>
+  <string name="wizard_welcome_message"><b>Xoş gəldin!</b></string>
+  <string name="wizard_sub_title_viewpager_one"><b>Təhlükəsiz</b> və <b>xoş</b> səyahətə başla.</string>
+  <string name="wizard_description_part_one_viewpager_one">\nTəhlükəsiz quraşdırılma üçün \nEtibarlılıq nişanı olan əlavələri <b>axtar</b>.</string>
+  <string name="wizard_description_part_two_viewpager_one">\nİstədiyin, lakin \ntapa bilmədiyin əlavələri <b>kəşf et</b>.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Öz mağazanı əldə et</string>
-  <string name="wizard_sub_title_viewpager_two"><b>Əlavələri dostlarınla</b> və <b>Azercellilərlə</b> paylaşmaq 
-üçün Mağazanı özünə görə yarat.</string>
+  <string name="wizard_title_viewpager_two"><b>Əlavələr Tarixçəsi</b></string>
+  <string name="wizard_sub_title_viewpager_two"><b>Ən yeni əlavələri</b> əldə et, <b>tematik mağazaları</b> tap və <b>sənə özəl məzmunlara</b> daxil ol.</string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Hissəsi ol</string>
-  <string name="wizard_sub_title_viewpager_three">Maraqlarını paylaşan <b>digərləri tap.</b>
-<b>Dəyərləndir və paylaş.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Bizə qoşul!</string>
+  <string name="wizard_title_viewpager_three"><b>İcmaya qoşul</b></string>
+  <string name="wizard_description_part_one_viewpager_three">Dostlarını <b>izlə</b></string>
+  <string name="wizard_description_part_two_viewpager_three">Əlavələri <b>nəzərdən keçir</b> və qiymətləndir</string>
+  <string name="wizard_description_part_three_viewpager_three">Öz Mağazanı <b>yarat</b></string>
+  <string name="wizard_register_now_button">Elə indi qeydiyyatdan keç</string>
+  <string name="wizard_be_a_part_of_aptoide">Azercell Apps-in bir parçası ol!</string>
+  <string name="wizard_or_login"><u>və ya Daxil ol</u></string>
   <string name="you_need_to_be_logged_in">Daxil olmalısınız</string>
   <string name="follow">İzlə</string>
   <!--need translation-->
   <string name="followed">İzlənilir</string>
   <string name="unfollow_yes_no">İzləmədən imtina etməyə əminsiniz?</string>
-  <string name="unfollow">İzləməkdən imtina</string>
-  <string name="unfollowing_store_message">%s izləməkdən imtina</string>
-  <string name="store_followed">%s mağazalar izlənilir</string>
+  <string name="unfollow">İzləmədən imtina</string>
+  <string name="appview_follow_store_button_text">Abunə?</string>
+  <string name="unfollowing_store_message">%s izlənilmir</string>
+  <string name="store_followed">%s mağazası izlənilir</string>
   <string name="subscribers">Abunəçilər</string>
   <string name="apps">Əlavələr</string>
   <!---->
@@ -159,24 +155,23 @@ bir müddət üzərinə basın.</string>
   <string name="dialog_install_warning_proceed_button">Davam et</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Axtar</string>
   <string name="dialog_install_warning_trusted_app_button">Etibarlı əlavə</string>
-  <string name="dialog_install_warning_careful_text">Bu əlavəni yüklədikdə ehtiyatlı ol. Daxilində viruslar aşkarlana bilər.</string>
+  <string name="dialog_install_warning_careful_text">Bu əlavəni yüklədikdə ehtiyatlı ol. Daxilində zərərli proqramlar və ya viruslar ola bilər.</string>
   <string name="dialog_install_warning_credibility_text">Davam etməzdən əvvəl mağazanın etimadlığını yoxla. Aptoide sizə yalnız %1$s etibarlı əlavələri yükləməyə tövsiyyə edir.</string>
   <string name="dialog_install_warning_trusted_version_button">Etibarlı versiya</string>
   <string name="dialog_install_warning_get_trusted_version_button">Al</string>
   <string name="flag_results">Nəticələri seç</string>
-  <string name="helpful">Yardımcıl</string>
-  <string name="not_helpful">Yardımcı olmayan</string>
+  <string name="helpful">Faydalı</string>
+  <string name="not_helpful">Faydalı deyil</string>
   <string name="description_not_available">Bu əlavə üçün təsvir yoxdur</string>
   <string name="top_stores_fragment_title">Populyar mağazalar</string>
   <!--server translations hammered-->
   <string name="home_title">Əsas Səhifə</string>
   <string name="community">İcma</string>
   <string name="stores">Mağazalar</string>
-  <string name="updates">Yeniliklər</string>
+  <string name="updates">Yenilənmələr</string>
   <string name="social_timeline">Sosial Tarixçə</string>
   <string name="downloads">Yükləmələr</string>
   <string name="apps_timeline"><b>Əlavələr Tarixçəsi</b></string>
-  <string name="timeline"><b>Tarixçə</b></string>
   <string name="latest_reviews">Son rəylər</string>
   <string name="latest_comments">Son şərhlər</string>
   <string name="action">Savaş</string>
@@ -184,13 +179,13 @@ bir müddət üzərinə basın.</string>
   <string name="all">Hamısı</string>
   <string name="applications">Əlavələr</string>
   <string name="arcade">Arkada</string>
-  <string name="arcade_action">Arkada və Savaş</string>
+  <string name="arcade_action">Arkada &amp; Savaş</string>
   <string name="board">Stolüstü</string>
   <string name="books_reference">Kitablar</string>
-  <string name="brain_puzzle">Idrak və Tapmaca</string>
+  <string name="brain_puzzle">İdrak &amp; Tapmaca</string>
   <string name="business">Biznes</string>
-  <string name="card">Kart oyunları</string>
-  <string name="cards_casino">Kart və Mərc</string>
+  <string name="card">Kart</string>
+  <string name="cards_casino">Kart &amp; Mərc</string>
   <string name="casino">Mərc</string>
   <string name="casual">Gündəlik</string>
   <string name="comics">Komiks</string>
@@ -202,64 +197,62 @@ bir müddət üzərinə basın.</string>
   <string name="family">Ailəvi</string>
   <string name="finance">Maliyyə</string>
   <string name="games">Oyunlar</string>
-  <string name="health">Səhiyyə</string>
-  <string name="health_fitness">Səhiyyə və Fitnes</string>
+  <string name="health">Sağlamlıq</string>
+  <string name="health_fitness">Sağlamlıq &amp; Fitnes</string>
   <string name="highlighted">Seçilmiş</string>
-  <string name="local_top_apps">Lokalpopulyar əlavələr</string>
+  <string name="local_top_apps">Populyar lokal əlavələr</string>
   <string name="lifestyle">Həyat tərzi</string>
-  <string name="media_video">Media və Video</string>
+  <string name="media_video">Media &amp; Video</string>
   <string name="medical">Tibbi</string>
   <string name="multimedia">Multimedia</string>
   <string name="music">Musiqi</string>
-  <string name="music_audio">Musiqi və Audio</string>
-  <string name="news_magazines">Xəbərlər və Jurnallar</string>
-  <string name="news_weather">Xəbərlər və Hava</string>
+  <string name="music_audio">Musiqi &amp; Audio</string>
+  <string name="news_magazines">Xəbərlər &amp; Jurnallar</string>
+  <string name="news_weather">Xəbərlər &amp; Hava</string>
   <string name="personalization">Personalizasiya</string>
-  <string name="photography">Fotoqraflıq</string>
-  <string name="productivity">Alətlər</string>
+  <string name="photography">Fotoqrafiya</string>
+  <string name="productivity">Səmərəlilik</string>
   <string name="puzzle">Tapmaca</string>
   <string name="racing">Yarış</string>
-  <string name="reference">İstinad ələvələr</string>
+  <string name="reference">Məlumat</string>
   <string name="role_playing">Rol oyunları</string>
   <string name="simulation">Simulyasiya</string>
   <string name="social">Sosial</string>
   <string name="software_libraries">Proqram topluları</string>
   <string name="sports">İdman</string>
-  <string name="sports_games">İdman Oyunları</string>
+  <string name="sports_games">İdman oyunları</string>
   <string name="strategy">Strategiya</string>
-  <string name="themes">Mövzular</string>
+  <string name="themes">Məzmunlar</string>
   <string name="tools">Alətlər</string>
   <string name="top_apps">Populyar əlavələr</string>
   <string name="top_games">Populyar oyunlar</string>
   <string name="transport">Nəqliyyat</string>
-  <string name="transportation">Nəqliyyatlar</string>
+  <string name="transportation">Nəqliyyat vasitələri</string>
   <string name="travel">Səyahət</string>
-  <string name="travel_local">Səyahət və Yerli</string>
-  <string name="trending">Dəbdə</string>
-  <string name="trivia">Sual-cavab oyunlar</string>
+  <string name="travel_local">Səyahət &amp; Yerli</string>
+  <string name="trending">Gündəmdə</string>
+  <string name="trivia">Sual-cavab</string>
   <string name="word">Söz oyunları</string>
-  <string name="libraries_demo">Toplular və Nümunələr</string>
+  <string name="libraries_demo">Toplular &amp; Nümunələr</string>
   <string name="shopping">Alış-veriş</string>
   <string name="weather">Hava</string>
   <string name="latest_applications">Son əlavələr</string>
-  <string name="top_apps_in_store">Bu mağazada son əlavələr</string>
+  <string name="top_apps_in_store">Bu mağazanın populyar əlavələri</string>
   <string name="apps_for_kids">Uşaqlar üçün</string>
   <string name="aptoide_publishers">%s naşirlər</string>
-  <string name="music_video">Musiqi və Video</string>
+  <string name="music_video">Musiqi &amp; Video</string>
   <string name="essential_apps">Əsas əlavələr</string>
   <string name="summer_apps">Yay əlavələri</string>
   <string name="play_it">Oyna!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Featured Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s əlaqəli</string>
   <string name="appstimeline_update_app">əlavə</string>
   <!--custom tabs-->
   <string name="customtabs_open_native_app">Əlavədə aç</string>
   <!--Download fragment-->
-  <string name="fragment_download_no_connection">Əlavələr yüklənilməyib</string>
+  <string name="fragment_download_no_connection">Yüklənmiş əlavə yoxdur</string>
   <string name="fragment_download_no_connection_subtitle">Yeni əlavələr yükləndikcə görünəcək!</string>
-  <string name="newer_version_available">Daha yeni versiya mövcuddur</string>
+  <string name="newer_version_available">Yeni versiya var</string>
   <string name="add_store">Mağaza əlavə et</string>
   <string name="downgrade_warning_dialog">Versiyanı aşağı salaraq əlavəyə əlaqəli məlumatları itirə və hesabından çıxa bilərsiniz.</string>
   <string name="displayable_social_timeline_similar_to">%1$s bənzərdir</string>
@@ -271,17 +264,16 @@ bir müddət üzərinə basın.</string>
   <!-- Stores tab -->
   <string name="recommended_stores">Tövsiyyə olunan mağazalar</string>
   <string name="create_store_displayable_message">Mağazanı yarat və əlavələr paylaşmağa başla!</string>
-  <string name="create_store_displayable_button">Mağazanı yarat</string>
+  <string name="create_store_displayable_button">Mağaza yarat</string>
   <string name="my_store_created_displayable_message">Android Əlavələr Mağazanız</string>
-  <string name="create_store_displayable_created_store_short_term_message">Mağazanızı yaratdınız!</string>
+  <string name="create_store_displayable_created_store_message">Öz Mağazanı yaratdın!</string>
   <string name="create_store_displayable_explore_message">Daxil ol və bütün imkanları kəşf et</string>
   <string name="create_store_displayable_explore_button">Kəşf et</string>
-  <string name="follow_store">Mağazanı izlə</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Mağazanızda əlavələr yoxdur.</string>
-  <string name="install_app_outter_pt2">və dünya ilə əlavələrinizi paylaşmaq üçün yükləyin!</string>
-  <string name="install_app_inner"> %1$s yüklə </string>
-  <string name="open_app_inner"> %1$s aç </string>
+  <string name="install_app_outter_pt2">və əlavələri yükləyib dünya ilə paylaş!</string>
+  <string name="install_app_inner">\u0020Yüklə %1$s\u0020</string>
+  <string name="open_app_inner">\u0020Aç %1$s\u0020</string>
   <string name="downloads_count">Yükləmələr: %1$s</string>
   <string name="version_number">Versiya: %1$s</string>
   <string name="app_size">Həcm: %1$s</string>
@@ -289,8 +281,6 @@ bir müddət üzərinə basın.</string>
   <string name="word_this">bu</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">İzəyiciləriniz bunu görəcək:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">kartın öncəbaxışını paylaş</string>
   <string name="social_timeline_share_title_checkbox">Əlavələr tarixçəsində profilimi gizlət. Yalnız mağazamın məlumatını göstər.</string>
   <string name="social_timeline_share_title_checkbox_fb">Əlavələr Tarixçəsində profilimi açıq et</string>
@@ -302,7 +292,7 @@ bir müddət üzərinə basın.</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">Yüklənilib və Tövsiyyə olunub</string>
   <string name="social_timeline_share_bar_login">Dostların nələr yükləyir?</string>
   <string name="social_timeline_share_bar_following">Daha çox mağaza izləyin və dostlarınıza qoşulun.</string>
-  <string name="social_timeline_share_bar_followers">Daha çox izləyici əldə etmək üçün mağazanızı təkmilləşdirin.</string>
+  <string name="social_timeline_share_bar_followers">Daha çox izləyici toplamaq üçün mağazanı təkmilləşdir.</string>
   <string name="social_timeline_followers_fragment_title">%d izləyici(lər)</string>
   <string name="social_timeline_following_fragment_title">%d nəfər izlənilir</string>
   <string name="social_timeline_share_soon">Paylaşım tezliklə dərc olunacaq</string>
@@ -315,96 +305,26 @@ bir müddət üzərinə basın.</string>
   <string name="edit_store">Düzəliş</string>
   <!-- Comments on store -->
   <string name="comment_store">Mağazaya şərh</string>
-  <string name="comment_store_title">Mağazaya şərhlər</string>
+  <string name="comment_store_title">Bu mağazanın şərhləri</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Bu mağaza haqda ilk rəy verən ol</string>
   <!-- Followers and following -->
   <string name="timeline_followers">%d izləyicilər</string>
   <string name="timeline_followed">%d izlənilir</string>
-  <string name="timeline_stats_followers">İzləyicilər</string>
+  <string name="timeline_stats_followers">Abunəçilər</string>
   <string name="timeline_login_message">Dostların nələr yükləyir?</string>
   <string name="private_followers_message">%d izləyicilər gizlidir</string>
-  <string name="private_following_message">%d gizli istifadəçını/mağazanı izləyirsən</string>
+  <string name="private_following_message">%d gizli istifadəçini/mağazanı izləyirsən</string>
   <!-- Payments -->
-  <string name="reviews_expand_button">%d cavab</string>
+  <string name="item_payment_button_use">istifadə et</string>
+  <string name="item_payment_button_register">qeydiyyatdan keç</string>
+  <string name="item_payment_approving_text">Təsdiqlənir...</string>
+  <string name="activity_payment_more_payments_button">Başqa ödəniş üsulundan istifadə et</string>
+  <string name="reviews_expand_button">%d cavablar</string>
   <string name="out_of_space_dialog_title">Yaddaş bitdi</string>
   <string name="out_of_space_dialog_message">Davam etmək üçün yaddaşda boş yer azad edin.</string>
-  <string name="setting_category_autoupdate">%s Yeniləmələr</string>
-  <string name="setting_category_autoupdate_title">%s Yeniləmə haqda bildiriş al</string>
-  <string name="setting_category_autoupdate_message">Vaxtaşırı %s yeni versiyaları yoxla</string>
-  <string name="store_added_long_time_suggestion_message">uzun müddətli göstər</string>
-  <string name="store_added_short_time_suggestion_message">yaradıldı</string>
-  <string name="create_store_displayable_created_store_long_term_message">uzun müddətli</string>
-  <string name="create_store_displayable_explore_long_term_button">Mağazanı göstər</string>
-  <string name="create_store_displayable_empty_description_message">Mağazaya təsvir əlavə et. Doğru təsvir daha çox izləyici yığmaq və qarşılıqlı əlaqələr qurmağa kömək edir.</string>
-  <string name="fragment_spot_share_preview_start_button">Başla</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">%s qoşul</string>
-  <string name="login">Daxil ol</string>
-  <string name="login_company">%s daxil ol</string>
-  <string name="connect_with_facebook">Facebook ilə bağlan</string>
-  <string name="connect_with_google">Google ilə bağlan</string>
-  <string name="accept_terms_signup">Aptoide-ə qoşularaq Aptoide-in proqram tərtibatçılar üçün Məzmun Siyasəti, Şərtlər və Qaydalar ilə razılığınızı bildirirsiniz.</string>
-  <string name="recover_password">Parolun bərpası</string>
-  <string name="email">Email</string>
-  <string name="password">Parol</string>
-  <string name="create_password">Parolu yarat</string>
-  <string name="store_suspended_message">Mağaza dayandırılıb</string>
-  <string name="facebook_login_cancelled">Facebook daxilolma ləğv olunub</string>
-  <string name="google_login_cancelled">Google daxilolma xətası</string>
-  <string name="login_separator_text">və ya emailiniz ilə qoşulun</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Müxtəlif mağazalarda məhz sizin üçün yaradılmış məzmunları tapa bilərsiniz</string>
-  <string name="add_store_dialog_top_stores">POPULYAR MAĞAZALARI KƏŞF EDİN</string>
-  <string name="add_store_dialog_top_stores_small_text">və xüsusi məzmun tapın!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Daxil ol</string>
-  <string name="activity_login_forgot_password_button">Parolu unutdun?</string>
-  <string name="activity_login_button">Daxil ol</string>
-  <string name="activity_login_sign_up_button">Qeydiyyat</string>
-  <string name="view_credentials_username_hint">Email</string>
-  <string name="view_credentials_password_hint">Parol</string>
-  <string name="permission_access_deny">Xarici yaddaşı oxumaq/yazmaq qadağandır</string>
-  <string name="permission_account_deny">Hesabları almaq qadağandir</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Şəbəkənizi genişləndirin.</string>
-  <string name="addressbook_connect_with_friends_message">Dostlarınızla bağlanın.</string>
-  <string name="addressbook_sync">Telefon kitabçanızı sinxronlaşdırın</string>
-  <string name="not_now">İndi yox</string>
-  <string name="follow_friends">Dostları izlə</string>
-  <string name="addressbook_data_about"><b>%1$s məlumatlarınızdan necə istifadə edir</b>
-
-
-%1$s telefon kitabçanızda Mağazadan istifadə edən dost və tanışlarınızı axtaracaq. 
-Biz bu məlumatı sadəcə sizin %1$s təcrübənizi təkmilləşdirmək məqsədilə əlavələr haqda 
-məlumat paylaşa biləcək adamlar ilə sizi əlaqələndirmək üçün istifadə edəcəyik.
-
-Məxfiliyinizi qorumaq üçün heç bir şəxsi məlumatınız %1$s serverlərimizə ötürülməyəcək.
- </string>
-  <string name="addressbook_success">Uğur!</string>
-  <string name="addressbook_allow_friends_find">Dostlarınıza sizi tapmağa icazə verin</string>
-  <string name="google">Google</string>
-  <string name="done">Hazır</string>
-  <string name="addressbook_share_phone">Dostlarınızın sizə rahatlıqla %s -da tapmaları üçün mobil nömrənizi qeyd edin</string>
-  <string name="addressbook_phone_number">Mobil nömrə</string>
-  <string name="addressbook_insuccess_connection">Telefon kitabçanıza qoşula bilmədik!</string>
-  <string name="addressbook_invite_friends">Dostları qoşulmağa dəvət et!</string>
-  <string name="addressbook_thanks_for_connecting">Qoşulduğunuz üçün təşəkkür</string>
-  <string name="addressbook_success_connected_friends">Sizi müvəffəqiyyətlə %2$s istifadə edən %1$s dostlarınıza qoşduq</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">%1$s istifadə edən kontakt tapmadıq</string>
-  <string name="addressbook_2nd_msg">%1$s Mağazamızdan istifadə edən dost və tanışlarınızı axtaracaq.
-Məxfilik üçün heş bir şəxsi məlumatınız bizim %1$s serverlərə ötürülməyəcək</string>
-  <string name="addressbook_3rd_msg">DAHA ÇOX ÖYRƏN</string>
-  <string name="address_book_twitter_error">Twitter avtorizasiya xətası</string>
-  <string name="follow_my_store">Salam, mənim %1$s mağazamı burada izlə</string>
-  <string name="store_meta_apps">Əlavələr
-%s</string>
-  <string name="store_meta_following">İzlənilir
-%s</string>
-  <string name="store_meta_followers">İzləyicilər
-%s</string>
-  <string name="addressbook_about">Telefon Kitabça haqqında</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Sizi qoşdura bilmədik</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Dostlarınızla əlavələri bölüşün</string>
-  <string name="spot_share_line_2">İnternetsiz telefonlar arası</string>
+  <!--new setting options-->
+  <string name="languages">Dillər</string>
+  <string name="language_dialog">Dili seç</string>
+  <string name="topAppsNotification">Tövsiyə olunan populyar əlavələr</string>
+  <string name="topAppsNotification_dialog">Populyar əlavələr barədə bildirişlərin tezliyini seç</string>
 </resources>

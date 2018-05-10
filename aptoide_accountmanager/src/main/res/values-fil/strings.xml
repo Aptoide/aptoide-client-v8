@@ -4,22 +4,23 @@
   <string name="one_account_allowed">Isang account lamang ang pinapayagan</string>
   <string name="or">o</string>
   <string name="username">Email</string>
-  <string name="password">Password</string>
+  <string name="password">Pasword</string>
   <string name="link_device_webinstall">Link account kasama ang Webinstall</string>
   <string name="register">Mag-sign up</string>
   <string name="login">Mag-login</string>
   <string name="successful">Matagumpay</string>
   <string name="login_successful">Login ay matagumpay</string>
-  <string name="forgot_passwd"><u>Nakalimutan ang password?</u></string>
+  <string name="forgot_passwd">Nakalimutan ang pasword?</string>
   <string name="fields_cannot_empty">Paki-tsek ang iyong email at pasword.</string>
   <string name="unknown_error">Hindi alam na kamalian</string>
-  <string name="accept_terms">\"Sa pagsa-sign up ikaw ay sumasang-ayon sa Aptoide Tuntunin ng Serbisyo at
- Polisiya ng Nilalaman para sa mga Tagalikha (Developers)
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Paki-lagay ang email at password
- \"</string>
-  <string name="no_pass_error_message">Paki-lagay ang pasword</string>
-  <string name="no_email_error_message">Paki-lagay ang email</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Paki-singit ang pasword para mag-rehistro.</string>
+  <string name="no_email_error_message">Paki-pasok ang email para mag-rehistro.</string>
   <string name="password_validation_text">\"Ang password ay dapat na hindi bababa sa 8 karakter at dapat mayroong
  isang letra at isang numero man lamang o kaya ay mga espesyal na karakter (!@#$%*)
  \"</string>
@@ -33,12 +34,12 @@
   <!--errors-->
   <string name="error_occured">May pagkakamaling naganap. Paki-subukan muli</string>
   <string name="error_invalid_grant">Imbalidong username at kombinasyon ng password</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Imbalidong mga kredensyal!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Hindi makapag-login gamit ang Google. Paki-tsek ang iyong Google account (maaaring kailanganin mong patunayan ang iyong email address)</string>
   <string name="ws_error_AUTH_101">Hindi makapag-login sa Google. Paki-subukan muli.</string>
   <string name="ws_error_AUTH_102">Hindi makapag-login gamit ang Facebook. Paki-tsek ang iyong Facebook account (maaaring kailanganin mong patunayan ang iyong email address)</string>
@@ -112,7 +113,7 @@
   <string name="create_store_description_title">Ang deskripsyon ng iyong Store</string>
   <string name="create_store_description_hint">Deskripsyon ng iyong store</string>
   <string name="edit_store_title">I-edit ang Iyong Store</string>
-  <string name="save_edit_store">Seyb</string>
+  <string name="save_edit_store">I-save</string>
   <string name="upload_dialog_title">I-upload ang Larawan</string>
   <string name="upload_dialog_photo">Kumuha ng bagong Larawan</string>
   <string name="upload_dialog_gallery">Mamili mula sa galeriya</string>

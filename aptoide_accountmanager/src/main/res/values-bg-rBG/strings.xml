@@ -10,13 +10,17 @@
   <string name="login">Вход</string>
   <string name="successful">Успешно</string>
   <string name="login_successful">Успешно влизане</string>
-  <string name="forgot_passwd"><u>Забравена парола?</u></string>
+  <string name="forgot_passwd">Забравена парола?</string>
   <string name="fields_cannot_empty">Проверете своя имейл адрес и парола.</string>
   <string name="unknown_error">Неизвестна грешка</string>
-  <string name="accept_terms">С регистрацията си, Вие приемате Общите условия и Правила за съдържанието на Aptoide за разработчици  </string>
-  <string name="no_email_and_pass_error_message">Моля, въведете имейл и парола  </string>
-  <string name="no_pass_error_message">Моля, въведете парола</string>
-  <string name="no_email_error_message">Моля, въведете е-мейл</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Моля, въведете парола за да се регистрирате.</string>
+  <string name="no_email_error_message">Моля въведете имейл, за да се регистрирате.</string>
   <string name="password_validation_text">Паролата трябва да бъде най-малко 8 знака и трябва да има поне една буква и едно число или специални знаци (! @# $% *)    </string>
   <string name="logged_as">Вие сте влезли като:</string>
   <string name="sign_out">Отпишете се</string>
@@ -25,7 +29,7 @@
   <string name="facebook_email_permission_regected_message">Нуждаем се от Вашия имейл, за да създадете профил    </string>
   <string name="user_cancelled">Прекратено от потребителя</string>
   <!--errors-->
-  <string name="error_occured">Възникна неизвестна грешка, моля опитайте отново</string>
+  <string name="error_occured">Възникна грешка, моля опитайте отново</string>
   <string name="error_invalid_grant">Невалидна комбинация от потребителско име и парола</string>
   <string name="ws_error_MARG_200">@string/error_occured</string>
   <string name="ws_error_MARG_203">@string/error_occured</string>
@@ -64,7 +68,7 @@
   <string name="store_upload_photo_failed">В момента не бе възможно да качите снимка, но Вашият магазин бе създаден.</string>
   <string name="user_created">Създаден потребител</string>
   <!-- WIZARD -->
-  <string name="wizard_skip"><b>ПРОПУСКАНЕ</b></string>
+  <string name="wizard_skip"><b>ПРОПУСК</b></string>
   <string name="please_wait_upload">Моля изчакайте, ако качвате може да отнеме известно време…</string>
   <!--Create user fragment-->
   <string name="create_user_title">Създайте потребителски профил</string>
@@ -102,7 +106,7 @@
   <string name="create_store_description_title">Описание на Вашия магазин</string>
   <string name="create_store_description_hint">Описание на Вашия магазин</string>
   <string name="edit_store_title">Редактирайте своя магазин</string>
-  <string name="save_edit_store">Запиши</string>
+  <string name="save_edit_store">Запази</string>
   <string name="upload_dialog_title">Качване на снимка</string>
   <string name="upload_dialog_photo">Вземете нова снимка</string>
   <string name="upload_dialog_gallery">Изберете от галерията</string>

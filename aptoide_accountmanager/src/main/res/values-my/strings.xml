@@ -3,20 +3,22 @@
 <resources>
   <string name="one_account_allowed">အကောင့်တစ်ခုသာ ခွင့်ပြုပါသည်</string>
   <string name="or">သို့မဟုတ်</string>
-  <string name="username">အီးမေးလ်</string>
+  <string name="username">အီးေမးလ္</string>
   <string name="password">လျှို့ဝှက်စကားလုံး</string>
   <string name="link_device_webinstall">အကောင့်အား Webinstall ဖြင့် ချိတ်ဆက်ပါ</string>
   <string name="register">အကောင့်အသစ်လျှောက်ပါ</string>
   <string name="login">အကောင့်၀င်ပါ</string>
   <string name="successful">ေအာင္ျမင္ပါသည္</string>
   <string name="login_successful">အကောင့်၀င်ခြင်း အောင်မြင်ပါသည်</string>
-  <string name="forgot_passwd">စကားဝွက္ေမ့ေနပါသလား?</string>
+  <string name="forgot_passwd">လျှို့ဝှက်စကားလုံး မေ့နေပါသလား?</string>
   <string name="fields_cannot_empty">သင်၏ အီးမေးလ်နှင့် လျှို့ဝှက်စကားလုံးကို ကျေးဇူးပြု၍ ပြန်စစ်ပါ.</string>
   <string name="unknown_error">အမည်မသိအမှား</string>
-  <string name="accept_terms">\"အေကာင့္ဖြင့္ျခင္းျဖင့္ သင္သည္ Aptoide ဝန္ေဆာင္မႈ အခ်က္အလက္မ်ားႏွင့္ ထုတ္လုပ္သူမ်ားအတြက္ ပါဝင္မႈ မူဝါဒကို သေဘာတူသည္
- \"</string>
-  <string name="no_email_and_pass_error_message">\"စာရင်းသွင်းရန်အတွက်ကျေးဇူးပြု၍ အီးမေးလ်နှင့် လျှို့ဝှက်စကားလုံးကို ထည့်သွင်းပါ.
- \"</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">စာရင္းသြင္းရန္ စကားဝွက္တစ္ခုထည့္ေပးပါ.</string>
   <string name="no_email_error_message">စာရင္းသြင္းရန္ အီးေမးလ္တစ္ခုထည့္ေပးပါ.</string>
   <string name="password_validation_text">\"လွ်ို႕ဝွက္စကားလံုးသည္ အနည္းဆံုး စာလံုး ၈ လံုး ပါဝင္ရမည္ျဖစ္ၿပီး အနည္းဆံုး အကၡရာတစ္လံုးႏွင့္ နံပါတ္တစ္လံုး သို႕မဟုတ္ အထူးစာလံုး (!@#$%*) တစ္လံုး ပါဝင္သင့္ပါသည္
@@ -31,24 +33,24 @@
   <!--errors-->
   <string name="error_occured">အမှားတစ်ခု ဖြစ်ပေါ်ခဲ့သည်. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ</string>
   <string name="error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ လွ်ိဳ႕ဝွက္စကားလံုး တြဲဖက္မႈ မွားယြင္းေနပါသည္</string>
-  <string name="ws_error_MARG_200">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
-  <string name="ws_error_MARG_203">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
-  <string name="ws_error_MARG_204">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
-  <string name="ws_error_IARG_200">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
-  <string name="ws_error_AUTH_2">အထောက်အထားများ မှားယွင်းနေပါသည်!</string>
-  <string name="ws_error_AUTH_7">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
+  <string name="ws_error_AUTH_2">အေထာက္အထားမ်ား မွားယြင္းေနပါသည္!</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Google ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Google အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္)</string>
   <string name="ws_error_AUTH_101">Google ဖြင့် အကောင့်၀င်၍ မရပါ. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ.</string>
   <string name="ws_error_AUTH_102">Facebook ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Facebook အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္)</string>
   <string name="ws_error_AUTH_103">Facebook ဖြင့်အကောင့်၀င်၍ မရပါ. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ.</string>
   <string name="ws_error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ စကား၀ွက္ တြဲဖက္မႈ မွားယြင္းေနပါသည္</string>
-  <string name="ws_error_MARG_12">ပျောက်ဆုံးနေသော hmac parameter</string>
-  <string name="ws_error_MARG_109">ပျောက်ဆုံးနေသော အီးမေးလ် parameter</string>
-  <string name="ws_error_MARG_110">ပျောက်ဆုံးနေသော passhash parameter</string>
-  <string name="ws_error_MARG_111">ပျောက်ဆုံးနေသော အမည် parameter</string>
-  <string name="ws_error_MARG_112">ပျောက်ဆုံးနေသော အသုံးပြုသူ-အေးဂျင့် parameter</string>
-  <string name="ws_error_IARG_5">hmace format မှားယွင်းနေသည်</string>
-  <string name="ws_error_IARG_106">အီးမေးလ်လိပ်စာ မှားယွင်းနေပါသည်</string>
+  <string name="ws_error_MARG_12">ေပ်ာက္ဆံုးေနေသာ hmac parameter</string>
+  <string name="ws_error_MARG_109">ေပ်ာက္ဆံုးေနေသာ အီးေမးလ္ parameter</string>
+  <string name="ws_error_MARG_110">ေပ်ာက္ဆံုးေနေသာ passhash parameter</string>
+  <string name="ws_error_MARG_111">ေပ်ာက္ဆံုးေနေသာ အမည္ parameter</string>
+  <string name="ws_error_MARG_112">ေပ်ာက္ဆံုးေနေသာ အသံုးျပဳသူ ေအးဂ်င့္ parameter</string>
+  <string name="ws_error_IARG_5">Hmac ပံုစံ မွားယြင္းေနပါသည္</string>
+  <string name="ws_error_IARG_106">အီးေမးလ္လိပ္စာ မွားယြင္းေနပါသည္</string>
   <string name="ws_error_IARG_111">passhash ပံုစံ မွားယြင္းေနပါသည္</string>
   <string name="ws_error_REPO_4">စတိုးအမည္ မွားယြင္းေနပါသည္၊ သင္သည္ စာလံုးမ်ား၊ ဂဏန္းမ်ားႏွင့္ ဒက္႐ွ္မ်ားကိုသာ အသံုးျပဳႏိုင္ပါသည္.</string>
   <string name="ws_error_REPO_7">ဤအသံုးျပဳသူတြင္ မွန္ကန္ေသာ စတုိးတစ္ခု ရွိႏွင့္ၿပီး ျဖစ္ပါသည္.</string>
@@ -92,7 +94,7 @@
   <string name="user_interests_header"><b>သင့္စိတ္ဝင္စားမႈမ်ားအား ျပဳ၍</b> သင့္အတြက္ အေကာင္းဆံုး Apps မ်ားအား ရွာေဖြရန္ ကူညီပါ</string>
   <string name="user_interests_adult_gambling">အရြယ္ေရာက္ၿပီးသူႏွင့္ ေလာင္းကစား</string>
   <string name="user_interests_photography_video">ဓာတ္ပံုပညာႏွင့္ ဗြီဒီယို</string>
-  <string name="next">ေရွ႕သို႕</string>
+  <string name="next">ေနာက္ထပ္</string>
   <!--Create Store fragment-->
   <string name="create_store_title">သင့္စတုိးအား ဖန္တီးပါ</string>
   <string name="create_store_header"><b>သင့္စတုိးအား ဖန္တီးၿပီး</b> သင့္စိတ္ႀကိဳက္ Apps မ်ားကို %s လူ႕အဖြဲ႕အစည္းအား မွ်ေဝပါ. <b>စမ္းၾကည့္လိုက္ပါ</b></string>
@@ -106,7 +108,7 @@
   <string name="create_store_description_title">သင့္စတိုး၏ ေဖာ္ျပခ်က္</string>
   <string name="create_store_description_hint">သင့္စတိုးေဖာ္ျပခ်က္</string>
   <string name="edit_store_title">သင့္စတိုးအား ျပင္ဆင္ပါ</string>
-  <string name="save_edit_store">သိမ်းဆည်းပါ</string>
+  <string name="save_edit_store">သိမ္းဆည္းမည္</string>
   <string name="upload_dialog_title">ဓာတ္ပံုတင္ပါ</string>
   <string name="upload_dialog_photo">ဓာတ္ပံုအသစ္႐ိုက္ပါ</string>
   <string name="upload_dialog_gallery">ဂယ္လာရီမွ ေရြးခ်ယ္ပါ</string>

@@ -4,20 +4,21 @@
   <string name="one_account_allowed">한개의 계정만 허용됩니다</string>
   <string name="or">아니면</string>
   <string name="username">이메일</string>
-  <string name="password">패스워드</string>
+  <string name="password">비밀번호</string>
   <string name="link_device_webinstall">웹 인스톨로 계정 링크하기</string>
   <string name="register">등록하기</string>
   <string name="login">로그인</string>
   <string name="successful">Successful</string>
   <string name="login_successful">로그인 성공</string>
-  <string name="forgot_passwd">비밀번호를 분실했나요?</string>
+  <string name="forgot_passwd">비밀번호를 잊으셨나요?</string>
   <string name="fields_cannot_empty">이메일과 비밀번호를 확인해주세요.</string>
   <string name="unknown_error">알수없는 에러</string>
-  <string name="accept_terms">\"회원가입을 함으로서  Aptoide 서비스약관과 
-개발자의 컨텐츠 정책에 동의 하시는 것 입니다.
- \"</string>
-  <string name="no_email_and_pass_error_message">\"등록하려면 이메일과 비밀번호를 입력해 주세요.
- \"</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">등록하려면 비밀번호를 입력하세요.</string>
   <string name="no_email_error_message">등록하려면 이메일을 입력하세요.</string>
   <string name="password_validation_text">\"비밀번호는 최소 8자 이상이어야하며 최소 한개의 글자와 하나의 숫자나 특수문자(!@#$%*)를 포함해야 합니다
@@ -32,12 +33,12 @@
   <!--errors-->
   <string name="error_occured">오류가 발생했습니다. 다시 시도해주세요</string>
   <string name="error_invalid_grant">사용자명과 비밀번호가 잘못되었습니다</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">유효하지 않은 자격!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">구글에 로그인할 수 없습니다. 구글 계정을 확인해주세요(이메일 주소를 확인해야 할수도 있습니다)</string>
   <string name="ws_error_AUTH_101">구글로 로그인 할 수 없습니다. 다시 시도해주세요.</string>
   <string name="ws_error_AUTH_102">페이스북으로 로그인할 수 없습니다. 페이스북 계정을 확인해주세요(이메일 주소를 확인해야할수도 있습니다)</string>
@@ -83,7 +84,7 @@ suport@aptoide.com 으로 연락을 주시거나 내일 사용자를 생성해�
   <string name="create_user_create_button">Create Profile</string>
   <string name="create_user_dialog_camera">Take Photo</string>
   <string name="create_user_dialog_gallery">Choose From Gallery</string>
-  <string name="create_user_dialog_cancel">취소하기</string>
+  <string name="create_user_dialog_cancel">취소</string>
   <string name="nothing_inserted_store">Please insert a store\'s name to create your store</string>
   <string name="nothing_inserted_user">Please insert a username and a photo (optional) to create your profile</string>
   <string name="create_user_bad_photo">Please choose a image with at least 300x300 resolution</string>
@@ -124,9 +125,9 @@ suport@aptoide.com 으로 연락을 주시거나 내일 사용자를 생성해�
   <string name="create_profile_logged_in_activity_title">Logged in</string>
   <string name="image_requirements_popup_message">The image has the following problems:\n</string>
   <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
-  <string name="image_requirements_error_max_height">- Maximum height is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_height">- Maximum height is higher than 102400px\n</string>
   <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
-  <string name="image_requirements_error_max_width">- Maximum width is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_width">- Maximum width is higher than 102400px\n</string>
   <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
   <string name="image_requirements_error_popup_title">이미지</string>
 </resources>

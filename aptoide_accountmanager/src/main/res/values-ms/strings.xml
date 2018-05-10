@@ -10,16 +10,13 @@
   <string name="login">Log Masuk</string>
   <string name="successful">Berjaya</string>
   <string name="login_successful">Berjaya log masuk</string>
-  <string name="forgot_passwd"><u>Terlupa kata laluan?</u></string>
+  <string name="forgot_passwd">Terlupa kata laluan?</string>
   <string name="fields_cannot_empty">Sila semak e-mel dan kata laluan anda.</string>
   <string name="unknown_error">Ralat tidak diketahui</string>
-  <string name="accept_terms">\"Dengan mendaftar, anda bersetuju dengan Syarat Perkhidmatan Aptoide dan
-  Dasar Kandungan untuk Pemaju
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Sila masukkan e-mel dan kata laluan.
- \"</string>
-  <string name="no_pass_error_message">Sila masukkan kata laluan</string>
-  <string name="no_email_error_message">Sila masukkan e-mel</string>
+  <string name="accept_terms">Dengan mendaftar, anda bersetuju dengan Terma Perkhidmatan dan                             Dasar Kandungan untuk Pemaju    </string>
+  <string name="no_email_and_pass_error_message">Sila masukkan e-mel dan kata laluan untuk        mendaftar.    </string>
+  <string name="no_pass_error_message">Sila masukkan kata laluan untuk mendaftar.</string>
+  <string name="no_email_error_message">Sila masukkan e-mel untuk mendaftar.</string>
   <string name="password_validation_text">\"Kata laluan mestilah sekurang-kurangnya 8 aksara dan harus mempunyai sekurang-kurangnya satu huruf dan satu nombor atau aksara khas (!@#$%*)
  \"</string>
   <string name="logged_as">Anda log masuk sebagai:</string>
@@ -33,18 +30,18 @@
   <!--errors-->
   <string name="error_occured">Ralat berlaku. Sila cuba lagi</string>
   <string name="error_invalid_grant">Nama pengguna dan gabungan kata laluan tidak sah</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Butiran tidak sah!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Tidak dapat log masuk dengan Google. Sila semak akaun Google anda (anda mungkin perlu untuk mengesahkan alamat e-mel anda)</string>
   <string name="ws_error_AUTH_101">Tidak dapat log masuk dengan Google. Sila cuba lagi.</string>
   <string name="ws_error_AUTH_102">Tidak dapat log masuk dengan Facebook. Sila semak akaun Facebook anda (anda mungkin perlu untuk mengesahkan alamat e-mel anda)</string>
   <string name="ws_error_AUTH_103">Tidak dapat log masuk dengan Facebook. Sila cuba lagi.</string>
   <string name="ws_error_invalid_grant">Nama pengguna dan gabungan kata laluan tidak sah</string>
-  <string name="ws_error_MARG_12">Parameter hmac hilang</string>
+  <string name="ws_error_MARG_12">Tiada parameter hmac</string>
   <string name="ws_error_MARG_109">Parameter e-mel hilang</string>
   <string name="ws_error_MARG_110">Parameter passhash hilang</string>
   <string name="ws_error_MARG_111">Parameter nama hilang</string>

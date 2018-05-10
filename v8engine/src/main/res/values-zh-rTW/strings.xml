@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">我的帐户</string>
-  <string name="setting_schdwntitle">已排程的下載</string>
-  <string name="settings">设置</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">備份應用程式</string>
   <string name="dark">深色</string>
   <string name="light">淺色</string>
   <string name="updates_filter_summary">檢查此內容時，您不會收到測試版的通知。</string>
@@ -25,11 +18,11 @@
   <string name="unsubscribe">取消訂閱</string>
   <string name="developer_website">網站：%s</string>
   <string name="not_available">不適用</string>
-  <string name="developer_email">電子郵件：%s</string>
-  <string name="developer_privacy_policy">隱私權原則：%s</string>
-  <string name="open">打开</string>
+  <string name="developer_email">電子信箱： %s</string>
+  <string name="developer_privacy_policy">隱私權原則： %s</string>
+  <string name="open">打開</string>
   <string name="button_header_more">更多</string>
-  <string name="search">检索</string>
+  <string name="search">搜尋</string>
   <string name="update">更新</string>
   <string name="uninstall">卸载</string>
   <string name="downgrade">降級</string>
@@ -127,45 +120,51 @@
   <string name="remote_install_nowifi_tip">請啟用並連接到無線網路</string>
   <string name="remote_install_empty_list">正在搜尋...</string>
   <string name="remote_install_tip">請確認您有已連接到網路的Android電視</string>
-  <string name="remote_install_retry">重试</string>
+  <string name="remote_install_retry">再試一次</string>
   <string name="remote_install_help">幫助</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>跳過</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">現在有時間軸功能！</string>
-  <string name="wizard_sub_title_viewpager_one">開啟一段<b>安全</b>又<b>愉快</b>的旅程。</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two"><b>應用時間表</b></string>
-  <string name="wizard_sub_title_viewpager_two">獲取<b>最新應用</b>，查找<b>主題商店</b>
-和存取<b>個人化內容。</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>加入社群</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>找到喜歡相同應用程式的人</b> 。\n <b>評分和分享。</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">加入我們吧！</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">您需要登入</string>
-  <string name="follow">關注</string>
+  <string name="follow">追蹤</string>
   <!--need translation-->
   <string name="followed">正在關注</string>
   <string name="unfollow_yes_no">確定要取消關注？</string>
   <string name="unfollow">取消關注</string>
+  <string name="appview_follow_store_button_text">訂閱嗎？</string>
   <string name="unfollowing_store_message">取消關注 %s</string>
   <string name="store_followed">已關注商店 %s</string>
   <string name="subscribers">訂閱者</string>
-  <string name="apps">應用</string>
+  <string name="apps">應用程式</string>
   <!---->
   <string name="be_the_first_to_rate_this_app">成爲第一個評價此應用的使用者</string>
   <string name="rate_this_app">評價此應用</string>
   <string name="dialog_install_warning_proceed_button">繼續</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">搜尋</string>
-  <string name="dialog_install_warning_trusted_app_button">受信任应用</string>
+  <string name="dialog_install_warning_trusted_app_button">可信的應用程式</string>
   <string name="dialog_install_warning_careful_text">如果選擇安裝此應用，請格外小心。此應用可能已損壞、攜帶病毒或惡意程式碼。</string>
   <string name="dialog_install_warning_credibility_text">在繼續之前，請檢查商店的信譽度
 和其他使用者的評論。Aptoide始終建議您僅安裝%1$s的可信應用。</string>
   <string name="dialog_install_warning_trusted_version_button">可信版本</string>
   <string name="dialog_install_warning_get_trusted_version_button">獲取</string>
   <string name="flag_results">標幟結果</string>
-  <string name="helpful">有帮助</string>
-  <string name="not_helpful">無用</string>
+  <string name="helpful">有幫助</string>
+  <string name="not_helpful">沒用</string>
   <string name="description_not_available">此應用沒有描述</string>
   <string name="top_stores_fragment_title">最佳商店</string>
   <!--server translations hammered-->
@@ -174,15 +173,14 @@
   <string name="stores">商店</string>
   <string name="updates">更新</string>
   <string name="social_timeline">社交時間表</string>
-  <string name="downloads">下载</string>
+  <string name="downloads">下載</string>
   <string name="apps_timeline"><b>應用時間表</b></string>
-  <string name="timeline"><b>時間軸</b></string>
-  <string name="latest_reviews">最新评价</string>
+  <string name="latest_reviews">最新評價</string>
   <string name="latest_comments">最新評價</string>
   <string name="action">操作</string>
   <string name="adventure">冒险</string>
   <string name="all">所有</string>
-  <string name="applications">应用程序</string>
+  <string name="applications">應用</string>
   <string name="arcade">街机</string>
   <string name="arcade_action">街机和动作</string>
   <string name="board">棋盘</string>
@@ -195,7 +193,7 @@
   <string name="casual">休闲</string>
   <string name="comics">漫画</string>
   <string name="communication">溝通</string>
-  <string name="demo">演示</string>
+  <string name="demo">示範</string>
   <string name="education">教育</string>
   <string name="educational">教育</string>
   <string name="entertainment">娱乐</string>
@@ -204,19 +202,19 @@
   <string name="games">游戏</string>
   <string name="health">健康</string>
   <string name="health_fitness">健康和健身</string>
-  <string name="highlighted">醒目提示</string>
+  <string name="highlighted">反白顯示</string>
   <string name="local_top_apps">本地最佳應用</string>
   <string name="lifestyle">生活</string>
-  <string name="media_video">媒体和视频</string>
+  <string name="media_video">媒體與影片</string>
   <string name="medical">医疗</string>
   <string name="multimedia">多媒体</string>
   <string name="music">音乐</string>
   <string name="music_audio">音乐和音频</string>
   <string name="news_magazines">新闻和杂志</string>
   <string name="news_weather">新聞與天氣</string>
-  <string name="personalization">個性化</string>
+  <string name="personalization">個人化設定</string>
   <string name="photography">摄影</string>
-  <string name="productivity">办公效率</string>
+  <string name="productivity">生產力</string>
   <string name="puzzle">解谜</string>
   <string name="racing">赛车</string>
   <string name="reference">參考</string>
@@ -229,19 +227,19 @@
   <string name="strategy">策略</string>
   <string name="themes">主题</string>
   <string name="tools">工具</string>
-  <string name="top_apps">最佳應用</string>
+  <string name="top_apps">最受歡迎的應用程式</string>
   <string name="top_games">最佳遊戲</string>
   <string name="transport">運輸</string>
   <string name="transportation">運輸</string>
   <string name="travel">旅游</string>
-  <string name="travel_local">旅游和本地出行</string>
+  <string name="travel_local">旅遊與地方資訊</string>
   <string name="trending">流行</string>
   <string name="trivia">问答</string>
   <string name="word">文字</string>
-  <string name="libraries_demo">素材库和演示</string>
+  <string name="libraries_demo">資料庫與示範</string>
   <string name="shopping">购物</string>
   <string name="weather">天气</string>
-  <string name="latest_applications">最新應用</string>
+  <string name="latest_applications">最新的應用程式</string>
   <string name="top_apps_in_store">本商店的最佳應用</string>
   <string name="apps_for_kids">兒童應用</string>
   <string name="aptoide_publishers">%s發行商</string>
@@ -249,8 +247,6 @@
   <string name="essential_apps">必備應用</string>
   <string name="summer_apps">夏季應用</string>
   <string name="play_it">暢玩應用！</string>
-  <!--home Fragment-->
-  <string name="featured_stores">特色商店</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">與%1$s有關</string>
   <string name="appstimeline_update_app">應用</string>
@@ -273,10 +269,9 @@
   <string name="create_store_displayable_message">現在建立您的商店，開始分享您的應用程式！</string>
   <string name="create_store_displayable_button">建立商店</string>
   <string name="my_store_created_displayable_message">您的Android應用程式商店</string>
-  <string name="create_store_displayable_created_store_short_term_message">您剛剛建立了您的商店！</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">進入並探索所有可能</string>
   <string name="create_store_displayable_explore_button">探索</string>
-  <string name="follow_store">追蹤商店</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">您的商店還沒有應用程式</string>
   <string name="install_app_outter_pt2">並且上傳應用程式，和全世界分享！</string>
@@ -289,8 +284,6 @@
   <string name="word_this">此</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">您的追蹤者將看到:</string>
-  <string name="social_timeline_you_will_share_comment">你的追蹤者將會看到您的留言：</string>
-  <string name="social_timeline_you_will_share_like">您的追蹤者將會看到您的按讚內容︰</string>
   <string name="social_timeline_share_title">分享卡預覽</string>
   <string name="social_timeline_share_title_checkbox">在應用程式時間軸上，將我的使用者檔案設為隱藏。只顯示/分享我的商店資訊。</string>
   <string name="social_timeline_share_title_checkbox_fb">在應用程式時間軸上，將我的使用者檔案設為公開</string>
@@ -320,79 +313,21 @@
   <!-- Followers and following -->
   <string name="timeline_followers">追蹤者 %d</string>
   <string name="timeline_followed">正在追蹤 %d</string>
-  <string name="timeline_stats_followers">追蹤者</string>
+  <string name="timeline_stats_followers">訂閱者</string>
   <string name="timeline_login_message">您的朋友正在安裝什麼？</string>
   <string name="private_followers_message">%d 追蹤者為隱藏</string>
   <string name="private_following_message">您正在追蹤 %d 隱藏的使用者/商店</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d 回覆</string>
-  <string name="out_of_space_dialog_title">空间不足</string>
+  <string name="out_of_space_dialog_title">空間不足</string>
   <string name="out_of_space_dialog_message">請釋放空間以繼續執行。</string>
-  <string name="setting_category_autoupdate">%s 更新</string>
-  <string name="setting_category_autoupdate_title">獲得 %s 更新通知</string>
-  <string name="setting_category_autoupdate_message">定期檢查 %s 是否有新版本</string>
-  <string name="store_added_long_time_suggestion_message">顯示長期</string>
-  <string name="store_added_short_time_suggestion_message">顯示剛建立</string>
-  <string name="create_store_displayable_created_store_long_term_message">長期</string>
-  <string name="create_store_displayable_explore_long_term_button">查看商店</string>
-  <string name="create_store_displayable_empty_description_message">為您的商店新增描述。好的描述可以幫助您吸引更多追蹤者和互動。</string>
-  <string name="fragment_spot_share_preview_start_button">開始</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">加入 %s</string>
-  <string name="login">登入</string>
-  <string name="login_company">登錄 %s</string>
-  <string name="connect_with_facebook">與 Facebook 連接</string>
-  <string name="connect_with_google">與Google連接</string>
-  <string name="accept_terms_signup">加入Aptoide，表示您同意Aptoide的服務條款與開發者內容政策。</string>
-  <string name="recover_password">尋回您的密碼</string>
-  <string name="email">電子郵件</string>
-  <string name="password">密碼</string>
-  <string name="create_password">設定密碼</string>
-  <string name="store_suspended_message">商店暫停使用</string>
-  <string name="facebook_login_cancelled">已取消Facebook登錄</string>
-  <string name="google_login_cancelled">Google登錄失敗</string>
-  <string name="login_separator_text">或使用您的電子信箱登錄</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">您可以在不同商店找到為您量身打造的內容</string>
-  <string name="add_store_dialog_top_stores">瀏覽熱門商店</string>
-  <string name="add_store_dialog_top_stores_small_text">並找到獨家內容！</string>
-  <!-- Login -->
-  <string name="activity_login_title">登入</string>
-  <string name="activity_login_forgot_password_button">忘记密码？</string>
-  <string name="activity_login_button">登入</string>
-  <string name="activity_login_sign_up_button">註冊</string>
-  <string name="view_credentials_username_hint">電子郵件</string>
-  <string name="view_credentials_password_hint">密碼</string>
-  <string name="permission_access_deny">無法讀取和寫入外部儲存空間</string>
-  <string name="permission_account_deny">無法獲得帳號</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">擴大您的人際網絡。</string>
-  <string name="addressbook_connect_with_friends_message">與朋友連接。</string>
-  <string name="addressbook_sync">同步通訊錄</string>
-  <string name="not_now">不是現在</string>
-  <string name="follow_friends">追蹤朋友</string>
-  <string name="addressbook_data_about"><b>%1$s 如何使用您的資料</b> \n\n%1$s 將在您的通訊錄中，搜尋您正在使用我們應用程式商店的朋友和家人。我們將 只使用這些資料來將您和更多可以與您分享應用程式相關內容的人連接，以改善您的 %1$s 經驗，\n\n\nTo 為了保護您的隱私，詳細的私人資料 將不會被發送到 %1$s 伺服器。我們將使用您的資料建立一個匿名簽章（hash）， 且該hash無法逆向轉換回原始的連絡人資訊。  </string>
-  <string name="addressbook_success">成功！</string>
-  <string name="addressbook_allow_friends_find">允許朋友找到您</string>
-  <string name="google">Google</string>
-  <string name="done">完成</string>
-  <string name="addressbook_share_phone">分享您的電話號碼，讓您的朋友可以輕易地在%s上找到您</string>
-  <string name="addressbook_phone_number">電話號碼</string>
-  <string name="addressbook_insuccess_connection">我們無法連接到您的通訊錄！</string>
-  <string name="addressbook_invite_friends">邀請朋友加入您！</string>
-  <string name="addressbook_thanks_for_connecting">謝謝您的連接</string>
-  <string name="addressbook_success_connected_friends">我們成功地將您與使用 %2$s 的 %1$s 朋友連接</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">我們沒有找到任何使用 %1$s 的聯絡人</string>
-  <string name="addressbook_2nd_msg">%1$s 將瀏覽您的通訊錄，以尋找您正在使用我們應用程式商店的朋友和家人。為了保護您的隱私，所有私人資料將不會被發送到 %1$s 伺服器</string>
-  <string name="addressbook_3rd_msg">瞭解更多</string>
-  <string name="address_book_twitter_error">Twitter 授權錯誤</string>
-  <string name="follow_my_store">哈囉，請追蹤我在這裡的 %1$s 商店</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">關於通訊錄</string>
-  <string name="addressbook_we_werent_able_to_connect_you">我們無法與您連接</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">與您的朋友分享應用程式</string>
-  <string name="spot_share_line_2">手機之間即可分享，不需要網路</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

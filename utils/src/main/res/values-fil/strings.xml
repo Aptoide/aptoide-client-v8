@@ -11,7 +11,7 @@
   <!-- DateUtils -->
   <string name="WidgetProvider_timestamp_today">Ngayong araw</string>
   <string name="WidgetProvider_timestamp_yesterday">Kahapon</string>
-  <string name="WidgetProvider_timestamp_hour_ago">%s oras na nakalipas</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s oras ang nakalipas</string>
   <string name="WidgetProvider_timestamp_hours_ago">%s oras na nakalipas</string>
   <string name="WidgetProvider_timestamp_minutes_ago">%s minutong nakalipas</string>
   <string name="WidgetProvider_timestamp_just_now">Ngayon lang</string>

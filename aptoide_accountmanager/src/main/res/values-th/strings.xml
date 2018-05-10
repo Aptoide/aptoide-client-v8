@@ -3,23 +3,24 @@
 <resources>
   <string name="one_account_allowed">ยอมให้บัญชีเดียวเท่านั้น</string>
   <string name="or">หรือ</string>
-  <string name="username">อีเมล</string>
+  <string name="username">อีเมลล์</string>
   <string name="password">รหัสผ่าน</string>
   <string name="link_device_webinstall">เชื่อมต่อบัญชีด้วย Webinstall</string>
   <string name="register">สมัคร</string>
   <string name="login">ลงชื่อเข้าใช้งาน</string>
   <string name="successful">สำเร็จ</string>
   <string name="login_successful">เข้าระบบได้สำเร็จ</string>
-  <string name="forgot_passwd"><u>ลืมรหัสผ่าน?</u></string>
+  <string name="forgot_passwd">ลืมรหัสผ่าน?</string>
   <string name="fields_cannot_empty">โปรดตรวจสอบอีเมลและรหัสผ่านของคุณ</string>
   <string name="unknown_error">ความผิดพลาดที่ไม่ทราบ</string>
-  <string name="accept_terms">\"โดยการลงชื่อเข้าใช้ที่คุณยินยอมกับเงื่อนไขการให้บริการของ Aptoide
-และนโยบายของนักพัฒนาคอนเท้นต์
- \"</string>
-  <string name="no_email_and_pass_error_message">\"โปรดใส่อีเมมล์และรหัสผ่านเพื่อ
- \"</string>
-  <string name="no_pass_error_message">โปรดใส่รหัสผ่าน</string>
-  <string name="no_email_error_message">โปรดใส่อีเมลล์</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">โปรดใส่รหัสผ่านเพื่อลงทะเบียน</string>
+  <string name="no_email_error_message">โปรดใส่อีเมลล์เพื่อลงทะเบียน</string>
   <string name="password_validation_text">\"รหัสผ่านต้องประกอบด้วยกันอย่างน้อย 8 ตัว และมี
  ตัวอักษรอย่างน้อยหนึ่งตัว และมีตัวเลขหรือสัญลักษณ์พิเศษอย่างน้อยหนึ่งตัว  (!@#$%*)
  \"</string>
@@ -34,7 +35,7 @@
   <!--errors-->
   <string name="error_occured">มีข้อผิดพลาดเกิดขึ้นโปรดลองใหม่อีกครั้ง</string>
   <string name="error_invalid_grant">ไม่มีชื่อผู้ใช้และรหัสผ่านที่เข้ากันได้</string>
-  <string name="ws_error_MARG_200">\@สตริง/มีข้อผิดพลาด_เกิดขึ้น</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
   <string name="ws_error_MARG_203">@string/error_occured</string>
   <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_200">@string/error_occured</string>
@@ -46,15 +47,15 @@
   <string name="ws_error_AUTH_103">ไม่สามารถลงชื่อเข้าใช้งาน Facebook โปรดลองอีกครั้ง</string>
   <string name="ws_error_invalid_grant">ไม่มีชื่อผู้ใช้และรหัสผ่านที่เข้ากันได้</string>
   <string name="ws_error_MARG_12">ไม่พบพารามิเตอร์ hmac</string>
-  <string name="ws_error_MARG_109">ข้อมูลอีเมลไม่ครบ</string>
-  <string name="ws_error_MARG_110">ข้อมูลแทนรหัสผ่านไม่ครบ</string>
-  <string name="ws_error_MARG_111">ข้อมูลชื่อไม่ครบ</string>
-  <string name="ws_error_MARG_112">ข้อมูลตัวแทนผู้ใช้ไม่ครบ</string>
-  <string name="ws_error_IARG_5">รูปแบบ hmac ไม่ถูกต้อง</string>
+  <string name="ws_error_MARG_109">ไม่พบพารามิเตอร์อีเมลล์</string>
+  <string name="ws_error_MARG_110">ไม่พบพารามิเตอร์แพชแฮช</string>
+  <string name="ws_error_MARG_111">ไม่พบพารามิเตอร์ชื่อ</string>
+  <string name="ws_error_MARG_112">ไม่พบพารามิเตอร์เอเยนต์ผู้ใช้</string>
+  <string name="ws_error_IARG_5">ไม่พบรูปแบบไฟล์</string>
   <string name="ws_error_IARG_106">อีเมลไม่ถูกต้อง</string>
   <string name="ws_error_IARG_111">ไม่มีรูปแบบพาสแฮช</string>
   <string name="ws_error_REPO_4">ไม่มีชื่อร้านค้านั้น คุณสามารถใช้อักษร ตัวเลขหรือแดช</string>
-  <string name="ws_error_REPO_7">ผู้ใช้บัญชีนี้สามารถทำธุรกรรมซื้อคืน</string>
+  <string name="ws_error_REPO_7">ผู้ใช้นี้มีอยู่ในร้านค้า</string>
   <string name="ws_error_REPO_5">ชื่อร้านค้าต้องมีความยาวอย่างน้อย 3 ตัวอักษร</string>
   <string name="ws_error_REPO_6">ชื่อร้านค้าถูกใช้ไปแล้ว คุณจำเป้นต้องเลือกชื่ออื่น</string>
   <string name="ws_eror_WOP_">ไม่มีชื่อร้านค้าสำหรับร้านค้าของคุณ ชื่อของร้านค้าประกอบด้วยตัวอักษรและตัวเลข(A ถึง Z และ 0 ถึง 9) หรือขีดกลาง(-) และไม่สามารถเริ่มต้นและจบด้วยขีดกลาง</string>

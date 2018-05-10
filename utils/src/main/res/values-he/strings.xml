@@ -11,7 +11,7 @@
   <!-- DateUtils -->
   <string name="WidgetProvider_timestamp_today">היום</string>
   <string name="WidgetProvider_timestamp_yesterday">אתמול</string>
-  <string name="WidgetProvider_timestamp_hour_ago">%s שעות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_hour_ago">לפני %s שעות</string>
   <string name="WidgetProvider_timestamp_hours_ago">%s שעות קודם לכן</string>
   <string name="WidgetProvider_timestamp_minutes_ago">%s דקות קודם לכן</string>
   <string name="WidgetProvider_timestamp_just_now">כרגע</string>

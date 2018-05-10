@@ -13,12 +13,12 @@
   <string name="forgot_passwd">Lupa kata sandi?</string>
   <string name="fields_cannot_empty">Harap periksa email dan kata sandi Anda.</string>
   <string name="unknown_error">Kesalahan Tak Dikenal</string>
-  <string name="accept_terms">\"Dengan mendaftar, Anda setuju dengan Ketentuan Layanan dan
-Kebijakan Konten Bagi Pengembang yang diberlakukan oleh Aptoide
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Harap masukkan email dan kata sandi untuk
-mendaftar.
- \"</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">Harap masukkan kata sandi untuk mendaftar.</string>
   <string name="no_email_error_message">Harap masukkan email untuk mendaftar.</string>
   <string name="password_validation_text">\"Kata sandi minimum harus 8 karakter dan harus mengandung
@@ -35,12 +35,12 @@ akun
   <!--errors-->
   <string name="error_occured">Terjadi kesalahan. Harap coba lagi</string>
   <string name="error_invalid_grant">Kombinasi nama pengguna dan kata sandi tidak valid</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Data tidak valid!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Tidak bisa masuk dengan Google. Harap periksa akun Google Anda (mungkin perlu Anda validasi alamat email Anda)</string>
   <string name="ws_error_AUTH_101">Tidak bisa masuk menggunakan Google. Harap coba lagi.</string>
   <string name="ws_error_AUTH_102">Tidak bisa masuk dengan Facebook. Harap periksa akun Facebook Anda (mungkin perlu Anda validasi alamat email Anda)</string>

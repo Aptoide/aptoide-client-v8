@@ -13,19 +13,19 @@
   <string name="forgot_passwd">Esqueceu-se da palavra-passe?</string>
   <string name="fields_cannot_empty">Por favor verifique o seu email e palavra-passe.</string>
   <string name="unknown_error">Erro desconhecido</string>
-  <string name="accept_terms">\"Ao registar-se está a aceitar com os Termos do Serviço Aptoide e
- com a Política de Conteúdo para programadores
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Por favor insira um email e palavra-passe
- para se registar.
- \"</string>
-  <string name="no_pass_error_message">Por favor introduza a palavra-passe</string>
-  <string name="no_email_error_message">Por favor, insira um e-mail.</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Por favor introduza a palavra-passe para se registar.</string>
+  <string name="no_email_error_message">Por favor, insira um e-mail para registar.</string>
   <string name="password_validation_text">\"A palavra-passe deve ter pelo menos 8 caracteres e conter
  pelo menos uma letra ou um número ou caracteres especiais (!@#$%*)
  \"</string>
   <string name="logged_as">Tem sessão iniciada como:</string>
-  <string name="sign_out">Terminar Sessão</string>
+  <string name="sign_out">Terminar sessão</string>
   <string name="default_account_type">cm.aptoide.pt</string>
   <string name="facebook_grant_permission_button">Dar permissão</string>
   <string name="facebook_email_permission_regected_message">\"A Aptoide precisa do seu e-mail para
@@ -35,28 +35,28 @@
   <!--errors-->
   <string name="error_occured">Ocorreu um erro. Por favor, tente novamente</string>
   <string name="error_invalid_grant">Combinação de nome de utilizador e palavra-passe inválida</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Credenciais inválidas!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Não foi possível iniciar sessão com a conta Google. Por favor, verifique a sua conta Google (poderá ter de validar o seu endereço de e-mail)</string>
   <string name="ws_error_AUTH_101">Não foi possível iniciar sessão com o Google. Por favor, tente novamente.</string>
   <string name="ws_error_AUTH_102">Não foi possível iniciar sessão com o Facebook. Por favor, verifique a sua conta Facebook (poderá ter de validar o seu endereço de e-mail)</string>
   <string name="ws_error_AUTH_103">Não foi possível iniciar sessão com o Facebook. Por favor, tente novamente.</string>
   <string name="ws_error_invalid_grant">Combinação de nome de utilizador e palavra-passe inválida</string>
   <string name="ws_error_MARG_12">Parâmetro hmac em falta</string>
-  <string name="ws_error_MARG_109">Parâmetro email em falta</string>
-  <string name="ws_error_MARG_110">Parâmetro passhash em falta</string>
-  <string name="ws_error_MARG_111">Parâmetro nome em falta</string>
-  <string name="ws_error_MARG_112">Parâmetro user-agent em falta</string>
-  <string name="ws_error_IARG_5">Formato de hmac inválido</string>
+  <string name="ws_error_MARG_109">Falta o parâmetro e-mail</string>
+  <string name="ws_error_MARG_110">Falta o parâmetro passhash</string>
+  <string name="ws_error_MARG_111">Falta o parâmetro nome</string>
+  <string name="ws_error_MARG_112">Falta o parâmetro user-agent</string>
+  <string name="ws_error_IARG_5">Formato hmac inválido</string>
   <string name="ws_error_IARG_106">O email não é válido</string>
   <string name="ws_error_IARG_111">Formato de passhash inválido</string>
   <string name="ws_error_REPO_4">O nome dessa loja é inválido, apenas pode usar letras, números ou
  hifens.</string>
-  <string name="ws_error_REPO_7">Este utilizador já tem um repositório válido.</string>
+  <string name="ws_error_REPO_7">Este utilizador já tem uma loja válida.</string>
   <string name="ws_error_REPO_5">O nome da loja tem de ter, pelo menos, 3 caracteres.</string>
   <string name="ws_error_REPO_6">Este nome para loja já existe, tem de escolher
  outro.</string>
@@ -83,7 +83,7 @@
   <string name="create_user_header"><b>Crie o seu Perfil de Utilizador</b> para poder avaliar, comentar e compartilhar apps com os seus amigos</string>
   <string name="create_user_take_picture">Tire uma foto para o seu perfil</string>
   <string name="create_user_random_photo">Ou use uma foto aleatória</string>
-  <string name="create_user_choose_username">Escolha um nome de utilizador</string>
+  <string name="create_user_choose_username">Escolhe o teu nome de utilizador</string>
   <string name="create_user_username">Nome de utilizador</string>
   <string name="create_user_hint">Aparece quando avaliar, comentar e partilhar aplicativos.</string>
   <string name="create_user_create_button">Criar Perfil</string>

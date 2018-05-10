@@ -15,7 +15,7 @@
   <string name="WidgetProvider_timestamp_hours_ago">Il y a %s heures</string>
   <string name="WidgetProvider_timestamp_minutes_ago">Il y a %s minutes</string>
   <string name="WidgetProvider_timestamp_just_now">À l\'instant</string>
-  <string name="WidgetProvider_timestamp_weeks_ago">il ya% s semaines</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">il y a %s semaines</string>
   <string name="WidgetProvider_timestamp_week_ago2">Il y a une semaine</string>
   <string name="WidgetProvider_timestamp_days_ago">Il y a %s jours</string>
   <string name="WidgetProvider_timestamp_month_ago">Il y a 1 mois</string>

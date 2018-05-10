@@ -4,7 +4,7 @@
   <string name="one_account_allowed">Samo je jedan račun dozvoljen</string>
   <string name="or">ili</string>
   <string name="username">E-pošta</string>
-  <string name="password">Zaporka</string>
+  <string name="password">Lozinka</string>
   <string name="link_device_webinstall">Poveži račun sa WebInstall</string>
   <string name="register">Prijavi se</string>
   <string name="login">Prijava</string>
@@ -13,12 +13,12 @@
   <string name="forgot_passwd">Zaboravljena lozinka?</string>
   <string name="fields_cannot_empty">Molimo vas provjerite e-poštu i zaporku</string>
   <string name="unknown_error">Nepoznata greška</string>
-  <string name="accept_terms">\"Prijavom se slažete s Uvijetima pružanja usluge Aptoide i
- Pravilima o sadržaju za razvojne programere.
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Molimo unesite e-mail adresu i lozinku za
-registraciju.
- \"</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">Molimo unesite lozinku za registraciju.</string>
   <string name="no_email_error_message">Molimo unesite e-mail adresu za registraciju.</string>
   <string name="password_validation_text">\"Lozinka mora imati minimalno 8 znakova i mora sadržavati

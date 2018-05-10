@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">החשבון שלי</string>
-  <string name="setting_schdwntitle">יישומונים מתוזמנים</string>
-  <string name="settings">הגדרות</string>
-  <string name="facebook">פייסבוק</string>
-  <string name="twitter">טוויטר</string>
-  <string name="backup_apps">Backup Apps</string>
   <string name="dark">כהה</string>
   <string name="light">בהיר</string>
   <string name="updates_filter_summary">סימון זה ימנע את ההודעה על גרסאות בטא.</string>
@@ -54,7 +47,7 @@
   <!-- Timeline Fragment -->
   <string name="menu_card_timeline_clear">פינוי</string>
   <string name="fragment_social_timeline_aptoide_team">צוות אפטויד</string>
-  <string name="fragment_social_timeline_no_connection">אין חיבור לרשת</string>
+  <string name="fragment_social_timeline_no_connection">אין קישור לרשת</string>
   <string name="fragment_social_timeline_general_error">יש כמה בעיות. יתאפשר לך לנסות שוב מאוחר יותר?</string>
   <string name="displayable_social_timeline_store_latest_apps_headline">בחנות זו יש יישומונים חדשים</string>
   <string name="displayable_social_timeline_app_update_name">ליישומון %1$s</string>
@@ -133,22 +126,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>דילוג</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Now with a Timeline!</string>
-  <string name="wizard_sub_title_viewpager_one">בואו נצא למסע <b>מאובטח</b> ו<b>מהנה</b>.</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two"><b>חדשות יישומונים</b></string>
-  <string name="wizard_sub_title_viewpager_two">ניתן להוריד את <b>היישומונים העדכניים ביותר</b>, למצוא <b>חנויות לפי נושאים</b>
-ולגשת ל<b>תוכן מותאם אישית.</b></string>
+  <string name="wizard_title_viewpager_two"><b>ציר זמן היישומונים</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>הצטרפות לקהילה</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Find people</b> who share your app interests. \n<b>Rate and share.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Join us!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">עליך להיכנס</string>
   <string name="follow">לעקוב</string>
   <!--need translation-->
   <string name="followed">במעקב</string>
   <string name="unfollow_yes_no">לבטל את המינוי?</string>
   <string name="unfollow">ביטול המינוי</string>
+  <string name="appview_follow_store_button_text">להירשם?</string>
   <string name="unfollowing_store_message">ביטול המינוי אל %s</string>
   <string name="store_followed">החנות %s במעקב</string>
   <string name="subscribers">מנויים</string>
@@ -177,11 +176,10 @@
   <string name="social_timeline">ציר זמן חברתי</string>
   <string name="downloads">הורדות</string>
   <string name="apps_timeline"><b>ציר זמן היישומונים</b></string>
-  <string name="timeline"><b>ציר זמן</b></string>
-  <string name="latest_reviews">ביקורות אחרונות</string>
+  <string name="latest_reviews">הסקירות האחרונות</string>
   <string name="latest_comments">התגובות האחרונות</string>
   <string name="action">פעולה</string>
-  <string name="adventure">הרפתקה</string>
+  <string name="adventure">הרפתקאות</string>
   <string name="all">הכול</string>
   <string name="applications">יישומים</string>
   <string name="arcade">ארקייד</string>
@@ -220,7 +218,7 @@
   <string name="productivity">יצרנות</string>
   <string name="puzzle">חידות</string>
   <string name="racing">מירוצים</string>
-  <string name="reference">המלצות קריאה</string>
+  <string name="reference">עיון</string>
   <string name="role_playing">משחק תפקידים</string>
   <string name="simulation">הדמיה</string>
   <string name="social">חברה</string>
@@ -250,11 +248,9 @@
   <string name="essential_apps">יישומים חיוניים</string>
   <string name="summer_apps">יישומוני קיץ</string>
   <string name="play_it">בואו נשחק!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Featured Stores</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">קשור אל %1$s</string>
-  <string name="appstimeline_update_app">יישומון</string>
+  <string name="appstimeline_update_app">אפליקציה</string>
   <!--custom tabs-->
   <string name="customtabs_open_native_app">פתיחה ביישומון</string>
   <!--Download fragment-->
@@ -274,10 +270,9 @@
   <string name="create_store_displayable_message">ניתן ליצור חנות משלך עכשיו ולהתחיל לשתף את היישומונים שלך!</string>
   <string name="create_store_displayable_button">יצירת חנות</string>
   <string name="my_store_created_displayable_message">חנות יישומוני האנדרויד שלך</string>
-  <string name="create_store_displayable_created_store_short_term_message">כרגע יצרת את החנות שלך!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">כדאי להיכנס ולחקור את כל ההזדמנויות</string>
   <string name="create_store_displayable_explore_button">סיור</string>
-  <string name="follow_store">Follow Store</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">בחנות שלך אין יישומונים עדיין.</string>
   <string name="install_app_outter_pt2">ולהעלות יישומונים ולשתף אותם עם העולם!</string>
@@ -290,8 +285,6 @@
   <string name="word_this">this</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">מה העוקבים שלך ייראו:</string>
-  <string name="social_timeline_you_will_share_comment">Your followers will see your Comment:</string>
-  <string name="social_timeline_you_will_share_like">Your followers will see your Like:</string>
   <string name="social_timeline_share_title">שיתוף תצוגה מקדימה של כרטיס</string>
   <string name="social_timeline_share_title_checkbox">Make my user profile private in Apps Timeline. Only show/share my store info.</string>
   <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
@@ -321,87 +314,21 @@
   <!-- Followers and following -->
   <string name="timeline_followers">%d עוקבים</string>
   <string name="timeline_followed">%d במעקב</string>
-  <string name="timeline_stats_followers">עוקבים</string>
+  <string name="timeline_stats_followers">מנויים</string>
   <string name="timeline_login_message">מה החברים שלך מתקינים?</string>
   <string name="private_followers_message">%d followers are private</string>
   <string name="private_following_message">you are following %d private users/stores</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">נגמר המקום</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
-  <string name="setting_category_autoupdate">%s Updates</string>
-  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
-  <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
-  <string name="store_added_long_time_suggestion_message">show long term</string>
-  <string name="store_added_short_time_suggestion_message">show just created</string>
-  <string name="create_store_displayable_created_store_long_term_message">טווח ארוך</string>
-  <string name="create_store_displayable_explore_long_term_button">הצגת החנות</string>
-  <string name="create_store_displayable_empty_description_message">כדאי להוסיף תיאור לחנות שלך. תיאור טוב מסייע לך לקבל יותר עוקבים ואינטראקציה.</string>
-  <string name="fragment_spot_share_preview_start_button">Start</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">הצטרפות אל %s</string>
-  <string name="login">התחבר</string>
-  <string name="login_company">כניסה אל %s</string>
-  <string name="connect_with_facebook">כניסה עם פייסבוק</string>
-  <string name="connect_with_google">כניסה עם גוגל</string>
-  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
-  <string name="recover_password">שחזור הססמה שלך</string>
-  <string name="email">דוא\"ל</string>
-  <string name="password">סיסמה</string>
-  <string name="create_password">יצירת ססמה</string>
-  <string name="store_suspended_message">Store suspended</string>
-  <string name="facebook_login_cancelled">Facebook login canceled</string>
-  <string name="google_login_cancelled">Google login failed</string>
-  <string name="login_separator_text">Or connect using your email</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
-  <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
-  <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
-  <!-- Login -->
-  <string name="activity_login_title">התחבר</string>
-  <string name="activity_login_forgot_password_button">שכחת סיסמה?</string>
-  <string name="activity_login_button">התחבר</string>
-  <string name="activity_login_sign_up_button">הירשם</string>
-  <string name="view_credentials_username_hint">דוא\"ל</string>
-  <string name="view_credentials_password_hint">סיסמה</string>
-  <string name="permission_access_deny">access to read and write to external storage was denied</string>
-  <string name="permission_account_deny">access to get accounts was denied</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">הגדלת רשת החברים שלך.</string>
-  <string name="addressbook_connect_with_friends_message">התחברות עם חברים.</string>
-  <string name="addressbook_sync">סנכרון ספר הכתובות</string>
-  <string name="not_now">לא עכשיו</string>
-  <string name="follow_friends">לעקוב אחר חברים</string>
-  <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
-    \n\n%1$s will search your address book for friends and family that are using our App Store. We\'ll
-    only use this information to improve your %1$s experience by connecting you to more people
-    that can share apps related content with you.\n\n\nTo protect your privacy, no clear private data
-    will be sent out to %1$s servers. An anonymous signature (hash) will be created with your data
-    and that hash cannot be reversed into the original contact info.
-  </string>
-  <string name="addressbook_success">הסתיים בהצלחה!</string>
-  <string name="addressbook_allow_friends_find">לאפשר לחברים למצוא אותך</string>
-  <string name="google">Google</string>
-  <string name="done">בוצע</string>
-  <string name="addressbook_share_phone">ניתן לשתף את מספר הטלפון שלך כדי לאפשר לחבריך למצוא אותך בקלות ב־%s</string>
-  <string name="addressbook_phone_number">מספר טלפון</string>
-  <string name="addressbook_insuccess_connection">לא הייתה לנו אפשרות להתחבר לספר הכתובות שלך!</string>
-  <string name="addressbook_invite_friends">להזמין חברים להצטרף!</string>
-  <string name="addressbook_thanks_for_connecting">תודה לך על הכניסה</string>
-  <string name="addressbook_success_connected_friends">חיברנו אותך בהצלחה ל־%1$s חברים שמשתמשים ב־%2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s will browse your address book for friends and family
-    that are using our App Store. To protect your privacy, no private data will be sent out to %1$s
-    servers</string>
-  <string name="addressbook_3rd_msg">LEARN MORE</string>
-  <string name="address_book_twitter_error">Twitter authorization error</string>
-  <string name="follow_my_store">Hello, follow my %1$s Store here</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">About Address Book</string>
-  <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Share apps with your friends</string>
-  <string name="spot_share_line_2">Phone to phone, without Internet</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

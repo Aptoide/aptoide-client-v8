@@ -6,21 +6,17 @@
   <string name="username">E-Mail</string>
   <string name="password">Passwort</string>
   <string name="link_device_webinstall">Konto mit Webinstallation verknüpfen</string>
-  <string name="register">Anmelden</string>
+  <string name="register">Registrieren</string>
   <string name="login">Anmelden</string>
   <string name="successful">Erfolgreich</string>
   <string name="login_successful">Login erfolgreich</string>
-  <string name="forgot_passwd"><u>Passwort vergessen?</u></string>
+  <string name="forgot_passwd">Passwort vergessen?</string>
   <string name="fields_cannot_empty">Bitte überprüfen Sie Ihre E-Mail und Passwort.</string>
   <string name="unknown_error">Unbekannter Fehler</string>
-  <string name="accept_terms">\"Mit der Anmeldung stimmen Sie den Aptoide Terms of Service und 
-Content-Richtlinien für Entwickler zu
- \"</string>
-  <string name="no_email_and_pass_error_message">\"Geben Sie bitte eine E-Mail-Adresse und 
-ein Passwort zur Anmeldung ein.
- \"</string>
-  <string name="no_pass_error_message">Bitte geben Sie ein Passwort ein</string>
-  <string name="no_email_error_message">Bitte geben Sie eine E-Mail-Adresse ein</string>
+  <string name="accept_terms">Durch die Anmeldung erklären Sie sich mit den Nutzungsbedingungen von Aptoide und den Inhaltsrichtlinien für Entwickler einverstanden    </string>
+  <string name="no_email_and_pass_error_message">Um sich registrieren, geben Sie bitte eine e-Mail-Adresse und ein Passwort ein.    </string>
+  <string name="no_pass_error_message">Bitte geben Sie ein Passwort ein, um sich anzumelden.</string>
+  <string name="no_email_error_message">Bitte geben Sie eine E-Mail-Adresse ein, um sich anzumelden.</string>
   <string name="password_validation_text">\"Das Passwort muss mindestens 8 Zeichen lang sein und aus 
 Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen
  \"</string>
@@ -35,12 +31,12 @@ Konto zu erstellen
   <!--errors-->
   <string name="error_occured">Ein Fehler trat auf. Bitte versuchen Sie es erneut</string>
   <string name="error_invalid_grant">Ungültige Kombination aus Nutzername und Passwort</string>
-  <string name="ws_error_MARG_200">\@string/ error_occured</string>
-  <string name="ws_error_MARG_203">\@string/ error_occured</string>
-  <string name="ws_error_MARG_204">\@string/ error_occured</string>
-  <string name="ws_error_IARG_200">\@string/ error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">Ungültige Anmeldeinformationen!</string>
-  <string name="ws_error_AUTH_7">\@string/ error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Login mit Google war nicht möglich. Bitte prüfen Sie Ihren Google-Account (es könnte nötig sein, Ihre E-Mail-Adresse zu bestätigen)</string>
   <string name="ws_error_AUTH_101">Konnte nicht mit Google verbinden. Bitte versuchen Sie es noch einmal.</string>
   <string name="ws_error_AUTH_102">Login mit Facebook nicht möglich. Bitte prüfen Sie Ihren Facebook-Account (es könnte nötig sein, Ihre E-Mail-Adresse zu bestätigen)</string>
@@ -83,7 +79,7 @@ gültig (nach Eingabe des Namens)</string>
   <string name="create_user_header"><b>Erstelle Dein Nutzer-Profil</b>, damit Du in der Lage bist zu bewerten, zu kommentieren und Apps mit deinen Freunden zu teilen</string>
   <string name="create_user_take_picture">Mache eine Bild für dein Profil</string>
   <string name="create_user_random_photo">Oder verwende ein Zufallsfoto</string>
-  <string name="create_user_choose_username">Wähle deinen Nutzer-Namen</string>
+  <string name="create_user_choose_username">Wählen Sie ihren Nutzer-Namen</string>
   <string name="create_user_username">Nutzer-Name</string>
   <string name="create_user_hint">Erscheint wen Du bewertest, kommentierst oder Apps teilst.</string>
   <string name="create_user_create_button">Profil erstellen</string>
@@ -100,7 +96,7 @@ gültig (nach Eingabe des Namens)</string>
   <string name="user_interests_header"><b>Bitte zeige uns deine Interessen</b> und hilf uns damit die besten Apps für dich zu finden</string>
   <string name="user_interests_adult_gambling">Erwachsen &amp; Glücksspiel</string>
   <string name="user_interests_photography_video">Fotografie &amp; Video</string>
-  <string name="next">Nächste(r)</string>
+  <string name="next">Nächste</string>
   <!--Create Store fragment-->
   <string name="create_store_title">Erstelle Store Fragment</string>
   <string name="create_store_header"><b>Erzeuge deinen Store</b> und teile die Auswahl an Apps mit %s Community. <b>Versuche es</b></string>

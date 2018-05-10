@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Oma tilini</string>
-  <string name="setting_schdwntitle">Ajastetut lataukset</string>
-  <string name="settings">Asetukset</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Backup Apps</string>
   <string name="dark">Tumma</string>
   <string name="light">Vaalea</string>
   <string name="updates_filter_summary">Beta-versioista ei ilmoiteta, kun valitset tämän.</string>
@@ -65,8 +58,8 @@ päivittää.</string>
   <string name="displayable_social_timeline_app_update_button">Päivitä %1$s</string>
   <string name="appview_other_versions"><u>Muut versiot</u></string>
   <string name="appview_latest_version_text">Viimeisin versio</string>
-  <string name="appview_rate_this_app">Luokittele tämä sovellus</string>
-  <string name="appview_read_all">lue kaikki <![CDATA[>]]>;</string>
+  <string name="appview_rate_this_app">arvioi tämä sovellus</string>
+  <string name="appview_read_all">lue kaikki <![CDATA[>]]></string>
   <string name="zero">0</string>
   <string name="working_well">Toimii hyvin</string>
   <string name="needs_license">Tarvitsee lisenssin</string>
@@ -122,8 +115,7 @@ päivittää.</string>
   <string name="remote_install_success">Sovellusta asennetaan</string>
   <string name="remote_install_fail">Etäasennus epäonnistui</string>
   <string name="remote_install_nodevices">Laitteita ei löytynyt</string>
-  <string name="remote_install_notinstallated">Onko Aptoide TV asennettu Android TV -laitteeseesi?
- http://aptoi.de/tv</string>
+  <string name="remote_install_notinstallated">Onko Aptoide TV asennettu Android TV -laitteeseesi?\n http://aptoi.de/tv</string>
   <string name="remote_install_nowifi">Ei WiFi-yhteyttä</string>
   <string name="remote_install_nowifi_tip">Ota WiFi käyttöön ja yhdistä langattomaan verkkoon</string>
   <string name="remote_install_empty_list">Etsitään…</string>
@@ -133,24 +125,28 @@ päivittää.</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>OHITA</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Nyt mukana myös aikajana!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Parhaat sovellusvideot ja uutiset</b> yhdessä paikassa. 
-Löydä sovelluksia <b>kavereittesi</b> kautta.</string>
+  <string name="wizard_welcome_message"><b>Tervetuloa!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Aloita <b>turvallinen</b> ja <b>nautinnollinen</b> matka.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Etsi</b> sovelluksia, joissa on\nLuotettu-merkki \nja asenna turvallisesti.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Tutustu</b> sovelluksiin, joita\nhaluat, mutta\net koskaan löytänyt.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Hanki omalle kaupallesi<b>Sovellusaikajana</b></string>
-  <string name="wizard_sub_title_viewpager_two">Muokkaa kauppaasi <b>jakaaksesi sovelluksia 
- kavereillesi</b> ja <b>Aptoide-yhteisölle.</b></string>
+  <string name="wizard_title_viewpager_two"><b>Sovellusaikajana</b></string>
+  <string name="wizard_sub_title_viewpager_two">Hanki <b>uusimmat sovellukset</b> ja löydä <b>aiheeseenliittyviä kauppoja</b> \nsekä <b>käyttäjäkohtaista sisältöä.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Ole osa<b>Liity yhteisöön</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Löydä ihmisiä</b>, joilla on samoja kiinnostuksen kohteita. 
-<b>Arvioi ja jaa.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Liity meihin!</string>
+  <string name="wizard_title_viewpager_three"><b>Liity yhteisöön</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Seuraa</b> kavereitasi</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Arvostele</b> ja arvioi sovelluksia</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Luo</b> oma kauppasi</string>
+  <string name="wizard_register_now_button">Rekisteröidy nyt</string>
+  <string name="wizard_be_a_part_of_aptoide">Ole osa Aptoidea!</string>
+  <string name="wizard_or_login"><u>tai kirjaudu sisään</u></string>
   <string name="you_need_to_be_logged_in">Sinun pitää kirjautua</string>
   <string name="follow">Seuraa</string>
   <!--need translation-->
   <string name="followed">Seurataan</string>
   <string name="unfollow_yes_no">Haluatko varmasti lopettaa seuraamisen?</string>
   <string name="unfollow">Lopeta seuraaminen</string>
+  <string name="appview_follow_store_button_text">Tilaa?</string>
   <string name="unfollowing_store_message">Kaupan %s seuranta lopetettu</string>
   <string name="store_followed">Seurataan kauppaa %s</string>
   <string name="subscribers">Tilaajat</string>
@@ -179,8 +175,7 @@ Löydä sovelluksia <b>kavereittesi</b> kautta.</string>
   <string name="social_timeline">Sosiaalinen aikajana</string>
   <string name="downloads">Lataukset</string>
   <string name="apps_timeline"><b>Sovellusaikajana</b></string>
-  <string name="timeline"><b>Aikajana</b></string>
-  <string name="latest_reviews">Viimeisimmät arviot</string>
+  <string name="latest_reviews">Viimeisimmät arvostelut</string>
   <string name="latest_comments">Viimeisimmät kommentit</string>
   <string name="action">Toiminta</string>
   <string name="adventure">Seikkailu</string>
@@ -233,7 +228,7 @@ Löydä sovelluksia <b>kavereittesi</b> kautta.</string>
   <string name="themes">Teemat</string>
   <string name="tools">Työkalut</string>
   <string name="top_apps">Huippusovellukset</string>
-  <string name="top_games">Huippupelit</string>
+  <string name="top_games">Toiminta</string>
   <string name="transport">Kuljetus</string>
   <string name="transportation">Kuljetukset</string>
   <string name="travel">Matkailu</string>
@@ -252,8 +247,6 @@ Löydä sovelluksia <b>kavereittesi</b> kautta.</string>
   <string name="essential_apps">Perussovellukset</string>
   <string name="summer_apps">Kesäsovellukset</string>
   <string name="play_it">Pelaa!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Esitellyt kaupat</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Liittyy kohteeseen %1$s</string>
   <string name="appstimeline_update_app">sovellus</string>
@@ -276,15 +269,14 @@ Löydä sovelluksia <b>kavereittesi</b> kautta.</string>
   <string name="create_store_displayable_message">Luo oma kauppasi ja aloita sovellustesi jakaminen!</string>
   <string name="create_store_displayable_button">LUO KAUPPA</string>
   <string name="my_store_created_displayable_message">Android-sovelluskauppasi</string>
-  <string name="create_store_displayable_created_store_short_term_message">Olet juuri luonut itsellesi kaupan!</string>
+  <string name="create_store_displayable_created_store_message">Olet juuri luonut itsellesi kaupan!</string>
   <string name="create_store_displayable_explore_message">Astu sisään ja tutustu kaikkiin mahdollisuuksiin</string>
   <string name="create_store_displayable_explore_button">Tutustu</string>
-  <string name="follow_store">Seuraa kauppaa</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Kaupassasi ei ole vielä sovelluksia.</string>
   <string name="install_app_outter_pt2">ja lataa sovelluksia jakaaksesi ne maailmalle!</string>
-  <string name="install_app_inner"> Asenna %1$s </string>
-  <string name="open_app_inner"> Avaa %1$s </string>
+  <string name="install_app_inner">\u0020Asenna %1$s\u0020</string>
+  <string name="open_app_inner">\u0020Avaa %1$s\u0020</string>
   <string name="downloads_count">Lataukset: %1$s</string>
   <string name="version_number">Versio: %1$s</string>
   <string name="app_size">Koko: %1$s</string>
@@ -292,8 +284,6 @@ Löydä sovelluksia <b>kavereittesi</b> kautta.</string>
   <string name="word_this">tämä</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Mitä seuraajasi näkevät:</string>
-  <string name="social_timeline_you_will_share_comment">Seuraajasi näkevät kommenttisi:</string>
-  <string name="social_timeline_you_will_share_like">Seuraajasi näkevät tykkäyksesi:</string>
   <string name="social_timeline_share_title">Jakokortin esikatselu</string>
   <string name="social_timeline_share_title_checkbox">Tee käyttäjäprofiilista yksityinen sovellusaikajanalla. Jaa ainoastaan kauppani tiedot.</string>
   <string name="social_timeline_share_title_checkbox_fb">Salli käyttäjäprofiilini olla julkinen sovellusaikajanalla</string>
@@ -323,87 +313,21 @@ Löydä sovelluksia <b>kavereittesi</b> kautta.</string>
   <!-- Followers and following -->
   <string name="timeline_followers">Seuraajat %d</string>
   <string name="timeline_followed">Seurataan %d</string>
-  <string name="timeline_stats_followers">Seuraajat</string>
+  <string name="timeline_stats_followers">Tilaajat</string>
   <string name="timeline_login_message">Mitä ystäväsi asentavat?</string>
   <string name="private_followers_message">%d seuraajaa ovat yksityisiä</string>
   <string name="private_following_message">seuraat %d yksityistä käyttäjää/kauppaa</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">käytä</string>
+  <string name="item_payment_button_register">rekisteröidy</string>
+  <string name="item_payment_approving_text">Hyväksytään...</string>
+  <string name="activity_payment_more_payments_button">Käytä toista maksutapaa</string>
   <string name="reviews_expand_button">%d vastausta</string>
   <string name="out_of_space_dialog_title">Tila lopussa</string>
   <string name="out_of_space_dialog_message">Vapauta tilaa jatkaaksesi.</string>
-  <string name="setting_category_autoupdate">%s -päivitykset</string>
-  <string name="setting_category_autoupdate_title">Saa päivityshuomautukset kohteelta %s</string>
-  <string name="setting_category_autoupdate_message">Tarkista säännöllisesti kohteen %s uudet versiot</string>
-  <string name="store_added_long_time_suggestion_message">näytä pitkältä ajalta</string>
-  <string name="store_added_short_time_suggestion_message">näytä juuri luodut</string>
-  <string name="create_store_displayable_created_store_long_term_message">pitkän ajan</string>
-  <string name="create_store_displayable_explore_long_term_button">Näytä kauppa</string>
-  <string name="create_store_displayable_empty_description_message">Lisää kaupallesi kuvaus. Hyvä kuvaus auttaa vuorovaikutuksessa ja seuraajien hankkimisessa.</string>
-  <string name="fragment_spot_share_preview_start_button">Aloita</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">%s -rekisteröinti</string>
-  <string name="login">Kirjaudu</string>
-  <string name="login_company">Kirjaudu kohteeseen %s</string>
-  <string name="connect_with_facebook">Yhdistä Facebookiin</string>
-  <string name="connect_with_google">Yhdistä Googleen</string>
-  <string name="accept_terms_signup">Liittymällä Aptoideen hyväksyt Aptoiden ehdot ja kehittäjien sisältökäytännöt.</string>
-  <string name="recover_password">Palauta salasanasi</string>
-  <string name="email">Sähköposti</string>
-  <string name="password">Salasana</string>
-  <string name="create_password">Luo salasana</string>
-  <string name="store_suspended_message">Kauppa suljettu väliaikaisesti</string>
-  <string name="facebook_login_cancelled">Facebook-kirjautuminen peruutettu</string>
-  <string name="google_login_cancelled">Google-kirjautuminen epäonnistui</string>
-  <string name="login_separator_text">Tai kirjaudu sähköpostillasi</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Voit löytää juuri sinua varten räätälöityä sisältöä eri kaupoista</string>
-  <string name="add_store_dialog_top_stores">LÖYDÄ HUIPPUKAUPAT</string>
-  <string name="add_store_dialog_top_stores_small_text">ja löydä hienoa sisältöä!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Kirjaudu</string>
-  <string name="activity_login_forgot_password_button">Unohditko salasanasi?</string>
-  <string name="activity_login_button">Kirjaudu</string>
-  <string name="activity_login_sign_up_button">Rekisteröidy</string>
-  <string name="view_credentials_username_hint">Sähköposti</string>
-  <string name="view_credentials_password_hint">Salasana</string>
-  <string name="permission_access_deny">pääsy ulkoisen tallennustilan lukuun ja kirjoitukseen estetty</string>
-  <string name="permission_account_deny">tileihin pääsy estetty</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Kasvata verkkoasi.</string>
-  <string name="addressbook_connect_with_friends_message">Ota yhteyttä kavereihisi.</string>
-  <string name="addressbook_sync">Synkronoi osoitekirja</string>
-  <string name="not_now">Ei nyt</string>
-  <string name="follow_friends">Seuraa kavereita</string>
-  <string name="addressbook_data_about"><b>Miten %1$s käyttää tietojasi</b>
-\n\n%1$s hakee kavereitasi ja perheenjäseniäsi osoitekirjastasi, jotka käyttävät sovelluskauppaamme. Käytämme tätä tietoa
-ainoastaan käyttökokemuksesi parantamiseksi liittämällä sinut ihmisiin, jotka voivat jakaa sovelluksiin liittyvää sisältöä kanssasi.
-\n\n\nTietoturvasi suojaamiseksi kaikki tieto salataan ennen lähettämistä %1$s -palvelimille. Tiedoillesi luodaan anonyymi allekirjoitus (hash) eikä sitä voi enää kääntää takaisin alkuperäiseksi tiedoksi.  </string>
-  <string name="addressbook_success">Onnistui!</string>
-  <string name="addressbook_allow_friends_find">Anna kavereittesi löytää sinut</string>
-  <string name="google">Google</string>
-  <string name="done">Valmis</string>
-  <string name="addressbook_share_phone">Jaa puhelinnumerosi, jotta kaverisi löytävät sinut helpommin kohteesta %s</string>
-  <string name="addressbook_phone_number">Puhelinnumero</string>
-  <string name="addressbook_insuccess_connection">Emme pystyneet ottamaan yhteyttä osoitekirjaasi!</string>
-  <string name="addressbook_invite_friends">Kutsu kavereita mukaan!</string>
-  <string name="addressbook_thanks_for_connecting">Kiitos yhdistämisestä</string>
-  <string name="addressbook_success_connected_friends">Olemme onnistuneesti yhdistäneet sinut %1$s kaveriisi, jotka käyttävät kohdetta %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Emme löytäneet yhteystietoja, jotka käyttävät kohdetta %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s käy osoitekirjasi läpi ja etsii kavereitasi sekä perheenjäseniäsi,
- jotka käyttävät sovelluskauppaamme. Suojellaksemme yksityisyyttäsi, mitään tietoa ei lähetetä ulos %1$s
- -palvelimilta</string>
-  <string name="addressbook_3rd_msg">LUE LISÄÄ</string>
-  <string name="address_book_twitter_error">Twitter-valtuutusvirhe</string>
-  <string name="follow_my_store">Hei, seuraa %1$s -kauppaani täällä</string>
-  <string name="store_meta_apps">Sovellukset
-%s</string>
-  <string name="store_meta_following">Seurataan
-%s</string>
-  <string name="store_meta_followers">Seuraajat
-%s</string>
-  <string name="addressbook_about">Tietoa osoitekirjasta</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Emme voineet yhdistää sinua</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Jaa sovelluksia kavereillesi</string>
-  <string name="spot_share_line_2">Puhelimesta puhelimeen, ilman internetiä</string>
+  <!--new setting options-->
+  <string name="languages">Kielet</string>
+  <string name="language_dialog">Valitse kieli</string>
+  <string name="topAppsNotification">Huippusovellusten suositukset</string>
+  <string name="topAppsNotification_dialog">Valitse huippusovellusten muistutustaajuus</string>
 </resources>

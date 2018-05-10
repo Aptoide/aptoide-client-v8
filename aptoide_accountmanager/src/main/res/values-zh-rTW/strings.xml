@@ -3,23 +3,24 @@
 <resources>
   <string name="one_account_allowed">只允许一个帐户</string>
   <string name="or">或</string>
-  <string name="username">電子郵件</string>
-  <string name="password">密碼</string>
+  <string name="username">电子邮件</string>
+  <string name="password">密码</string>
   <string name="link_device_webinstall">帐户关联Webinstall</string>
-  <string name="register">註冊</string>
+  <string name="register">注册</string>
   <string name="login">登入</string>
   <string name="successful">成功</string>
   <string name="login_successful">登录成功</string>
-  <string name="forgot_passwd"><u>忘记密码？</u></string>
+  <string name="forgot_passwd">忘记密码？</string>
   <string name="fields_cannot_empty">请检查您的电子邮件和密码。</string>
   <string name="unknown_error">未知错误</string>
-  <string name="accept_terms">\"注册则表示您同意Aptoide针对开发人员的服务条款
-及内容政策
- \"</string>
-  <string name="no_email_and_pass_error_message">\"请输入电子邮件和密码
- \"</string>
-  <string name="no_pass_error_message">请输入密码</string>
-  <string name="no_email_error_message">请输入电子邮件</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">Please insert a password to register.</string>
+  <string name="no_email_error_message">Please insert an email to register.</string>
   <string name="password_validation_text">\"密码必须至少包含8个字符，且至少包括一个字母和
 一个数字或特殊字符(!@#$%*)
  \"</string>
@@ -34,12 +35,12 @@
   <!--errors-->
   <string name="error_occured">出现异常。请重试</string>
   <string name="error_invalid_grant">用户名和密码组合无效</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">无效的凭据！</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">无法使用Google登录。请检查您的Google帐户（您可能需要验证电子邮件地址）</string>
   <string name="ws_error_AUTH_101">无法使用Google登录。请重试。</string>
   <string name="ws_error_AUTH_102">无法使用Facebook登录。请检查您的Facebook帐户（您可能需要验证电子邮件地址）</string>
@@ -82,7 +83,7 @@
   <string name="create_user_header"><b>创建您的用户资料</b>，这样您就可以评分、评论和与好友分享应用</string>
   <string name="create_user_take_picture">为您的资料拍照</string>
   <string name="create_user_random_photo">或使用任意照片</string>
-  <string name="create_user_choose_username">选择用户名</string>
+  <string name="create_user_choose_username">選擇您的使用者名稱</string>
   <string name="create_user_username">用户名</string>
   <string name="create_user_hint">当您给评分、评价和分享应用时出现。</string>
   <string name="create_user_create_button">创建资料</string>

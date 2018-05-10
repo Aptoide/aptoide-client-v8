@@ -10,16 +10,17 @@
   <string name="login">ការចុះឈ្មោះចូលប្រើ</string>
   <string name="successful">Successful</string>
   <string name="login_successful">Successful login</string>
-  <string name="forgot_passwd"><u>Forgot password?</u></string>
+  <string name="forgot_passwd">តើភ្លេចពាក្យសម្ងាត់ឬ?</string>
   <string name="fields_cannot_empty">សូមពិនិត្យមើលអ៊ីម៉ែលនិងពាក្យសម្ងាត់របស់អ្នក.</string>
   <string name="unknown_error">Unknown Error</string>
   <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-      Content Policy for Developers
-  </string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password
-  </string>
-  <string name="no_pass_error_message">Please insert a password</string>
-  <string name="no_email_error_message">Please insert an email</string>
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
+  <string name="no_pass_error_message">សូមបញ្ចូលពាក្យសម្ងាត់ដើម្បីចុះឈ្មោះ។</string>
+  <string name="no_email_error_message">សូមបញ្ចូលអ៊ីម៉ែលដើម្បីចុះឈ្មោះ។</string>
   <string name="password_validation_text">Password must be at least 8 characters and should have
         at least one letter and one number or special characters (!@#$%*)
     </string>
@@ -40,9 +41,9 @@
   <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">ការផ្តល់សិទ្ធិមិនត្រឹមត្រូវ!</string>
   <string name="ws_error_AUTH_7">@string/error_occured</string>
-  <string name="ws_error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address)</string>
+  <string name="ws_error_AUTH_100">មិនអាចចុះឈ្មោះចូលប្រើជាមួយ Google. សូមពិនិត្យមើលគណនេយ្យ Google របស់អ្នក (អ្នកអាចត្រូវផ្តល់សុពលភាពអាសយដ្ឋានអ៊ីម៉ែលរបស់អ្នក)</string>
   <string name="ws_error_AUTH_101">មិនអាចចុះឈ្មោះចូលប្រើជាមួយ Google. សូមព្យាយាមម្តងទៀត.</string>
-  <string name="ws_error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address)</string>
+  <string name="ws_error_AUTH_102">មិនអាចចុះឈ្មោះប្រើជាមួយ Facebook. សូមពិនិត្យមើលគណនេយ្យ Facebook របស់អ្នក (អ្នកអាចត្រូវផ្តល់សុពលភាពអាសយដ្ឋានអ៊ីម៉ែលរបស់អ្នក)</string>
   <string name="ws_error_AUTH_103">មិនអាចចុះឈ្មោះប្រើជាមួយ Facebook. សូមព្យាយាមម្តងទៀត.</string>
   <string name="ws_error_invalid_grant">Invalid username and password combination</string>
   <string name="ws_error_MARG_12">បាត់ hmac ប៉ារ៉ាម៉ែត្រ</string>
@@ -129,9 +130,9 @@
   <string name="create_profile_logged_in_activity_title">Logged in</string>
   <string name="image_requirements_popup_message">The image has the following problems:\n</string>
   <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
-  <string name="image_requirements_error_max_height">- Maximum height is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_height">- Maximum height is higher than 102400px\n</string>
   <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
-  <string name="image_requirements_error_max_width">- Maximum width is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_width">- Maximum width is higher than 102400px\n</string>
   <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
   <string name="image_requirements_error_popup_title">រូបភាព</string>
 </resources>

@@ -3,10 +3,10 @@
 <resources>
   <string name="one_account_allowed">Csak egy felhasználói fiók engedélyezett</string>
   <string name="or">vagy</string>
-  <string name="username">E-mail</string>
+  <string name="username">E-mail cím</string>
   <string name="password">Jelszó</string>
   <string name="link_device_webinstall">Csatolja a felhasználónevét a webes telepítéssel</string>
-  <string name="register">Regisztráció</string>
+  <string name="register">Feliratkozás</string>
   <string name="login">Bejelentkezés</string>
   <string name="successful">Sikeres</string>
   <string name="login_successful">Sikeres bejelentkezés</string>
@@ -14,9 +14,11 @@
   <string name="fields_cannot_empty">Kérjük ellenőrizze az e-mail címét és a jelszavát</string>
   <string name="unknown_error">Ismeretlen hiba</string>
   <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
-      Content Policy for Developers
-  </string>
-  <string name="no_email_and_pass_error_message">Kérjük, adjon meg egy e-mailt és jelszót a regisztrációhoz.</string>
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">Kérjük, a regisztrációhoz adjon meg egy jelszót.</string>
   <string name="no_email_error_message">Kérjük, a regisztrációhoz adjon meg egy e-mailt .</string>
   <string name="password_validation_text">A jelszónak legalább 8 karakterből kell állnia, és tartalmaznia kell legalább egy betűt és egy számot vagy speciális karaktert (!@#$%*) </string>
@@ -97,7 +99,7 @@
   <string name="create_store_title">Saját áruház létrehozása</string>
   <string name="create_store_header"><b>Hozzon létre egy áruházat</b> és ossza meg alkalmazásválogatását a %s közösséggel. <b>Próbálja ki</b></string>
   <string name="edit_store_header">Adjon az áruházának egy szép képet és egy vonzó leírást</string>
-  <string name="create_store_name">Adjon meg egy nevet a boltjának</string>
+  <string name="create_store_name">Adjon meg egy nevet a boltjának %s</string>
   <string name="create_store_name_inserted">A bolt neve</string>
   <string name="create_store_theme">Áruház témája</string>
   <string name="create_store_create">Áruház létrehozása</string>

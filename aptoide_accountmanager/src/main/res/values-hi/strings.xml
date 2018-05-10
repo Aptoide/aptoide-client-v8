@@ -3,28 +3,26 @@
 <resources>
   <string name="one_account_allowed">केवल एक अकाउंट की अनुमति है</string>
   <string name="or">या</string>
-  <string name="username">ईमेल करें</string>
+  <string name="username">ईमेल</string>
   <string name="password">पासवर्ड</string>
   <string name="link_device_webinstall">वेबइन्स्टाल के साथ अकाउंट लिंक करें</string>
   <string name="register">साइन अप करें</string>
-  <string name="login">लॉग इन करें</string>
+  <string name="login">लॉगिन करें</string>
   <string name="successful">सफल</string>
   <string name="login_successful">लॉग इन सफल</string>
-  <string name="forgot_passwd"><u>पासवर्ड भूले?</u></string>
+  <string name="forgot_passwd">क्या आपने पासवर्ड भूल गया?</string>
   <string name="fields_cannot_empty">कृपया अपने ईमेल और पासवर्ड की जांच करें।</string>
   <string name="unknown_error">अज्ञात त्रुटि</string>
-  <string name="accept_terms">\"साइन अप करने से आप Aptoide सेवा की शर्तों और डेवलपर्स के लिए 
-सामग्री नीति से सहमति व्यक्त कर रहे हैं
- \"</string>
-  <string name="no_email_and_pass_error_message">\"कृपया एक ईमेल और पासवर्ड डालें
- \"</string>
-  <string name="no_pass_error_message">कृपया एक पासवर्ड डालें</string>
-  <string name="no_email_error_message">कृपया एक ईमेल डालें</string>
+  <string name="accept_terms">साइन अप करके आप Aptoide सेवा की शर्तों से सहमत हो रहे हैं और डेवलपर्स के लिए सामग्री नीति
+    </string>
+  <string name="no_email_and_pass_error_message">रजिस्टर करने के लिए कृपया एक ईमेल और पासवर्ड सम्मिलित करें    </string>
+  <string name="no_pass_error_message">कृपया रजिस्टर करने के लिए एक पासवर्ड डालें</string>
+  <string name="no_email_error_message">रजिस्टर करने के लिए कृपया एक ईमेल डालें</string>
   <string name="password_validation_text">\"पासवर्ड न्यूनतम 8 वर्णों का होना चाहिए और उसमें न्यूनतम 
 एक अक्षर और एक संख्या या विशेष वर्ण (!@#$%*) होना चाहिए
  \"</string>
   <string name="logged_as">आप इससे लॉगिन हैं:</string>
-  <string name="sign_out">साइन आउट</string>
+  <string name="sign_out">साइन आऊट</string>
   <string name="default_account_type">cm.aptoide.pt</string>
   <string name="facebook_grant_permission_button">अनुमति दें</string>
   <string name="facebook_email_permission_regected_message">\"एक खाता बनाने के लिए हमें आपके ईमेल की 
@@ -32,14 +30,14 @@
  \"</string>
   <string name="user_cancelled">प्रयोक्ता द्वारा रद्द किया गया</string>
   <!--errors-->
-  <string name="error_occured">कोई एरर हुई। कृपया पुन: प्रयास करें</string>
+  <string name="error_occured">कोई त्रुटि हुई। कृपया पुन: प्रयास करें</string>
   <string name="error_invalid_grant">अमान्य प्रयोक्तानाम एवं पासवर्ड संयोजन</string>
-  <string name="ws_error_MARG_200">\@string/त्रुटि_उत्पन्न_हुई</string>
-  <string name="ws_error_MARG_203">\@string/त्रुटि_उत्पन्न_हुई</string>
-  <string name="ws_error_MARG_204">\@string/त्रुटि_उत्पन्न_हुई</string>
-  <string name="ws_error_IARG_200">\@string/त्रुटि_उत्पन्न_हुई</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">अवैध अधिकार!</string>
-  <string name="ws_error_AUTH_7">\@string/त्रुटि_उत्पन्न_हुई</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">गूगल के साथ लॉग इन नहीं कर सका। कृपया अपने गूगल खाते की जांच करें (आपको अपने ईमेल पते को मान्य करने की जरूरत हो सकती है)</string>
   <string name="ws_error_AUTH_101">गूगल के साथ लॉगिन नहीं कर सका। कृपया पुन: प्रयास करें।</string>
   <string name="ws_error_AUTH_102">फेसबुक के साथ लॉग इन नहीं कर सका। कृपया अपने फेसबुक खाते की जांच करें (आपको अपने ईमेल पते को मान्य करने की जरूरत हो सकती है)</string>

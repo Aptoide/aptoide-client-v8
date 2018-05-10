@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Moj račun</string>
-  <string name="setting_schdwntitle">Zakazana preuzimanja</string>
-  <string name="settings">Postavke</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Sigurnosno kopiranje aplikacija</string>
   <string name="dark">Tamna</string>
   <string name="light">Svijetla</string>
   <string name="updates_filter_summary">Odabirom ovoga nećete dobiti obavjesti o beta verzijama.</string>
@@ -130,22 +123,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>PRESKOČI</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Od sada s vremenskom crtom!</string>
-  <string name="wizard_sub_title_viewpager_one">Započni <b>sigurno</b> i <b>ugodno</b> putovanje.</string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two"><b>Vremenska crta aplikacija</b></string>
-  <string name="wizard_sub_title_viewpager_two">Preuzmite <b>najnovije aplikacije</b>, nađite <b>tematske trgovine</b>
-i pristupite <b>personaliziranom sadržaju.</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three"><b>Pridružite se zajednici</b></string>
-  <string name="wizard_sub_title_viewpager_three"><b>Pronađite ljude</b> koje zanimaju Vaše alikacije. \n<b>Ocijenite i dijelite.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Pridružite nam se!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Morate biti prijavljeni</string>
   <string name="follow">Pratite</string>
   <!--need translation-->
   <string name="followed">Pratite</string>
   <string name="unfollow_yes_no">Jeste li sigurni da želite prestati pratiti?</string>
   <string name="unfollow">Prestanite pratiti</string>
+  <string name="appview_follow_store_button_text">Pretplata?</string>
   <string name="unfollowing_store_message">Prestajete pratiti %s</string>
   <string name="store_followed">Pratite %s trgovinu</string>
   <string name="subscribers">Pretplatnici</string>
@@ -174,11 +173,10 @@ i pristupite <b>personaliziranom sadržaju.</b></string>
   <string name="social_timeline">Društvena vremenska crta</string>
   <string name="downloads">Preuzimanja</string>
   <string name="apps_timeline"><b>Vremenska crta aplikacija</b></string>
-  <string name="timeline"><b>Vremenska crta</b></string>
   <string name="latest_reviews">Posljednje recenzije</string>
   <string name="latest_comments">Posljednji komentari</string>
   <string name="action">Akcija</string>
-  <string name="adventure">Avantura</string>
+  <string name="adventure">Avanture</string>
   <string name="all">Sve</string>
   <string name="applications">Aplikacije</string>
   <string name="arcade">Arkada</string>
@@ -247,8 +245,6 @@ i pristupite <b>personaliziranom sadržaju.</b></string>
   <string name="essential_apps">Osnovne aplikacije</string>
   <string name="summer_apps">Ljetne aplikacije</string>
   <string name="play_it">Igraj!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Preporučene trgovine</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Povezano s %1$s</string>
   <string name="appstimeline_update_app">aplikacija</string>
@@ -271,10 +267,9 @@ i pristupite <b>personaliziranom sadržaju.</b></string>
   <string name="create_store_displayable_message">Stvorite svoju trgovinu odmah i krenite dijeliti svoje aplikacije!</string>
   <string name="create_store_displayable_button">STVORITE TRGOVINU</string>
   <string name="my_store_created_displayable_message">Vaša Android trgovina aplikacija</string>
-  <string name="create_store_displayable_created_store_short_term_message">Upravo ste stvoriti svoju trgovinu!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Krenite i istražite sve mogućnosti</string>
   <string name="create_store_displayable_explore_button">Istražiti</string>
-  <string name="follow_store">Prati trgovinu</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Vaša trgovina još nema aplikacija.</string>
   <string name="install_app_outter_pt2">i uploadati aplikacije za podijeliti ih sa svijetom!</string>
@@ -287,8 +282,6 @@ i pristupite <b>personaliziranom sadržaju.</b></string>
   <string name="word_this">ovo</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Ono što će Vaši pratitelji vidjeti:</string>
-  <string name="social_timeline_you_will_share_comment">Vaši pratitelji će vidjeti Vaš komentar:</string>
-  <string name="social_timeline_you_will_share_like">Vaši pratitelji će vidjeti Vaše \"Sviđa mi se\" oznake:</string>
   <string name="social_timeline_share_title">Podijelite izgled kartica</string>
   <string name="social_timeline_share_title_checkbox">Učini moj korisnički račun privatnim na vremenskoj traci aplikacija. Prikaži/dijeli samo podatke o mojoj trgovini.</string>
   <string name="social_timeline_share_title_checkbox_fb">Dopusti mom korisničkom računu da bude javan na vremenskoj traci aplikacija</string>
@@ -318,86 +311,21 @@ i pristupite <b>personaliziranom sadržaju.</b></string>
   <!-- Followers and following -->
   <string name="timeline_followers">Pratitelji %d</string>
   <string name="timeline_followed">Pratite %d</string>
-  <string name="timeline_stats_followers">Pratitelji</string>
+  <string name="timeline_stats_followers">Pretplatnici</string>
   <string name="timeline_login_message">Što Vaši prijatelji instaliraju?</string>
   <string name="private_followers_message">%d pratitelja je privatno</string>
   <string name="private_following_message">pratite %d privatnih korisnika/trgovina</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d odgovora</string>
   <string name="out_of_space_dialog_title">Nema više slobodnog prostora</string>
   <string name="out_of_space_dialog_message">Molimo oslobodite prostor kako biste nastavili.</string>
-  <string name="setting_category_autoupdate">%s ažuriranja</string>
-  <string name="setting_category_autoupdate_title">Odaberite %s obavijesti o ažuriranju</string>
-  <string name="setting_category_autoupdate_message">Povremeno provjeriti za %s nove verzije</string>
-  <string name="store_added_long_time_suggestion_message">prikazati dugoročno</string>
-  <string name="store_added_short_time_suggestion_message">prikazati samo što je nedavno stvoreno</string>
-  <string name="create_store_displayable_created_store_long_term_message">dugoročno</string>
-  <string name="create_store_displayable_explore_long_term_button">Pogledati trgovinu</string>
-  <string name="create_store_displayable_empty_description_message">Dodajte opis svoje trgovine. Dobar opis pomaže Vam dobiti više pratitelja i interakcija.</string>
-  <string name="fragment_spot_share_preview_start_button">Start</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Pridružite se %s</string>
-  <string name="login">Prijava</string>
-  <string name="login_company">Prijava %s</string>
-  <string name="connect_with_facebook">Prijava putem Facebook-a</string>
-  <string name="connect_with_google">Prijava putem Google-a</string>
-  <string name="accept_terms_signup">Pridruživanjem Aptoide-u pristajete na Aptoide Uvjete korištenja te na Pravila sadržaja za razvojne programere.</string>
-  <string name="recover_password">Obnovite lozinku</string>
-  <string name="email">E-pošta</string>
-  <string name="password">Zaporka</string>
-  <string name="create_password">Stvorite lozinku</string>
-  <string name="store_suspended_message">Trgovina suspendirana</string>
-  <string name="facebook_login_cancelled">Prijava putem Facebook-a je poništena</string>
-  <string name="google_login_cancelled">Google prijava nije uspjela</string>
-  <string name="login_separator_text">Ili se povežite koristeći svoju e-mail adresu</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Možete pronaći ekskluzivne, Vama prilagođene sadržaje u različitim trgovinama</string>
-  <string name="add_store_dialog_top_stores">OTKRIJTE TOP TRGOVINE</string>
-  <string name="add_store_dialog_top_stores_small_text">i pronađite ekskluzivan sadržaj!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Prijava</string>
-  <string name="activity_login_forgot_password_button">Zaboravljena lozinka?</string>
-  <string name="activity_login_button">Prijava</string>
-  <string name="activity_login_sign_up_button">Prijavi se</string>
-  <string name="view_credentials_username_hint">E-pošta</string>
-  <string name="view_credentials_password_hint">Zaporka</string>
-  <string name="permission_access_deny">pristup za čitanje i pisanje na vanjsku memoriju je odbijen</string>
-  <string name="permission_account_deny">pristupanje računima je odbijeno</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Proširite svoju mrežu.</string>
-  <string name="addressbook_connect_with_friends_message">Povežite se s prijateljima.</string>
-  <string name="addressbook_sync">Sinkronizacija imenika</string>
-  <string name="not_now">Ne sada</string>
-  <string name="follow_friends">Pratite prijatelje</string>
-  <string name="addressbook_data_about"><b>Kako %1$s koristi Vaše podatke</b>
-\n\n%1$s će pretraživati Vaš imenik tražeći prijatelje i obitelj koji koriste našu trgovinu aplikacija.
-Koristit ćemo te informacije isključivo kako bismo povećali Vaše %1$s iskustvo povezivanjem s više ljudi
-koji mogu dijeliti sadržaj vezan za aplikacije s Vama.\n\n\nZa zaštitu Vaše privatnosti, niti jedan jasni
-privatni podatak se neće slati na naše %1$s servere. Anonimni potpis (hash) će se stvoriti uz Vaše podatke
-i isti se ne može pretvoriti natrag u originalni zapis.  </string>
-  <string name="addressbook_success">Uspjeh!</string>
-  <string name="addressbook_allow_friends_find">Dopustite prijateljima da Vas pronađu</string>
-  <string name="google">Google</string>
-  <string name="done">Gotovo</string>
-  <string name="addressbook_share_phone">Podijelite svoj broj telefona tako da Vas prijatelji lako mogu pronaći na %s</string>
-  <string name="addressbook_phone_number">Broj telefona</string>
-  <string name="addressbook_insuccess_connection">Nismo se uspjeli povezati s Vašim imenikom!</string>
-  <string name="addressbook_invite_friends">Pozovite prijatelje da Vam se pridruže!</string>
-  <string name="addressbook_thanks_for_connecting">Hvala Vam za povezivanje</string>
-  <string name="addressbook_success_connected_friends">Uspješno smo Vas povezali s %1$s prijateljima koji koriste %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Nismo pronašli niti jedan kontakt koji koristi %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s će pretražiti Vaš imenik tražeći prijatelje i obitelj
-koji koriste našu trgovinu aplikacija. Za zaštitu privatnosti, niti jedan privatni podatak neće biti poslan na %1$s
-servere</string>
-  <string name="addressbook_3rd_msg">SAZNAJ VIŠE</string>
-  <string name="address_book_twitter_error">Twitter autorizacijska greška</string>
-  <string name="follow_my_store">Pozdrav, pratite moju trgovinu %1$s ovdje</string>
-  <string name="store_meta_apps">Apps\n%s</string>
-  <string name="store_meta_following">Following\n%s</string>
-  <string name="store_meta_followers">Followers\n%s</string>
-  <string name="addressbook_about">O imeniku</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Nismo Vas uspjeli povezati</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Podijelite aplikacije s prijateljima</string>
-  <string name="spot_share_line_2">S telefona na telefon, bez interneta</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

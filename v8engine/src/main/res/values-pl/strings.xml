@@ -5,13 +5,6 @@
   ~ Modified by SithEngineer on 17/08/2016.
   -->
 <resources>
-  <!-- NavDrawer List items -->
-  <string name="my_account">Moje Konto</string>
-  <string name="setting_schdwntitle">Zaplanowane Pobrania</string>
-  <string name="settings">Ustawienia</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Aplikacje Kopii Zapasowych</string>
   <string name="dark">Ciemny</string>
   <string name="light">Jasny</string>
   <string name="updates_filter_summary">Po zaznaczeniu, nie będziesz powiadamiany o wersjach beta.</string>
@@ -129,21 +122,28 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>POMIŃ</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Teraz z Osią Czasu!</string>
-  <string name="wizard_sub_title_viewpager_one"><b>Najlepsza aplikacja do wideo i wiadomości</b> w jednym miejscu. \nOdkryj aplikacje dzięki swoim <b>znajomym.</b></string>
+  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Posiadaj swój własny sklep</string>
-  <string name="wizard_sub_title_viewpager_two">Dostosuj swój sklep <b>do udostępniania aplikacji \n znajomym</b> i <b>Społeczności Aptoide.</b></string>
+  <string name="wizard_title_viewpager_two"><b>Oś Czasu Aplikacji</b></string>
+  <string name="wizard_sub_title_viewpager_two">Get the <b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
   <!-- WIZARD PAGE 3 -->
-  <string name="wizard_title_viewpager_three">Zostań częścią</string>
-  <string name="wizard_sub_title_viewpager_three"><b>Znajdź osoby,</b> które interesują się podobnymi aplikacjami. \n <b>Oceniaj i udostępniaj.</b></string>
-  <string name="wizard_sub_sub_title_viewpager_three">Dołącz do nas!</string>
+  <string name="wizard_title_viewpager_three"><b>Join the community</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Create</b> your Store</string>
+  <string name="wizard_register_now_button">Register now</string>
+  <string name="wizard_be_a_part_of_aptoide">Be a part of Aptoide!</string>
+  <string name="wizard_or_login"><u>or Login</u></string>
   <string name="you_need_to_be_logged_in">Musisz być zalogowany</string>
   <string name="follow">Obserwuj</string>
   <!--need translation-->
   <string name="followed">Obserwowanie</string>
   <string name="unfollow_yes_no">Czy jesteś pewien, że chcesz przestać obserwować?</string>
   <string name="unfollow">Przestań obserwować</string>
+  <string name="appview_follow_store_button_text">Subskrybować?</string>
   <string name="unfollowing_store_message">Przestajesz obserwować %s</string>
   <string name="store_followed">Obserwujesz sklep %s</string>
   <string name="subscribers">Subskrybentów</string>
@@ -172,7 +172,6 @@
   <string name="social_timeline">Socjalna linia czasu</string>
   <string name="downloads">Pobrania</string>
   <string name="apps_timeline"><b>Oś Czasu Aplikacji</b></string>
-  <string name="timeline"><b>Oś Czasu</b></string>
   <string name="latest_reviews">Najnowsze Recenzje</string>
   <string name="latest_comments">Ostatnie komentarze</string>
   <string name="action">Akcja</string>
@@ -245,8 +244,6 @@
   <string name="essential_apps">Niezbędne aplikacje</string>
   <string name="summer_apps">Aplikacje na lato</string>
   <string name="play_it">Zagraj!</string>
-  <!--home Fragment-->
-  <string name="featured_stores">Polecane Sklepy</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Powiązane z %1$s</string>
   <string name="appstimeline_update_app">aplikacja</string>
@@ -269,10 +266,9 @@
   <string name="create_store_displayable_message">Załóż swój Sklep teraz i zacznij udostępniać swoje aplikacje!</string>
   <string name="create_store_displayable_button">UTWÓRZ SKLEP</string>
   <string name="my_store_created_displayable_message">Twój sklep Aplikacji Android</string>
-  <string name="create_store_displayable_created_store_short_term_message">Właśnie stworzyłeś swój Sklep!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Wejdź i odkrywaj wszystkie możliwości</string>
   <string name="create_store_displayable_explore_button">Odkrywaj</string>
-  <string name="follow_store">Obserwuj Sklep</string>
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">W Twoim sklepie nie ma jeszcze aplikacji.</string>
   <string name="install_app_outter_pt2">i ładuj aplikacje, aby udostępniać je całemu światu!</string>
@@ -285,8 +281,6 @@
   <string name="word_this">ten</string>
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">Co zobaczą Twoi obserwujący:</string>
-  <string name="social_timeline_you_will_share_comment">Twoi obserwujący zobaczą Twój Komentarz:</string>
-  <string name="social_timeline_you_will_share_like">Twoi obserwujący zobaczą Twoje Polubienie:</string>
   <string name="social_timeline_share_title">Udostępnij podgląd karty</string>
   <string name="social_timeline_share_title_checkbox">Ustaw mój profil jako prywatny na Osi Czasu Aplikacji. Wyświetlaj/udostępniaj tylko informacje o sklepie.</string>
   <string name="social_timeline_share_title_checkbox_fb">Zezwalaj profilowi na bycie publicznym na Osi Czasu Aplikacji</string>
@@ -316,87 +310,21 @@
   <!-- Followers and following -->
   <string name="timeline_followers">Obserwujący %d</string>
   <string name="timeline_followed">Obserwujący %d</string>
-  <string name="timeline_stats_followers">Obserwujący</string>
+  <string name="timeline_stats_followers">Subskrybentów</string>
   <string name="timeline_login_message">Co instalują Twoi znajomi?</string>
   <string name="private_followers_message">%d obserwujących jest prywatnych</string>
   <string name="private_following_message">obserwujesz %d prywatnych użytkowników/sklepów</string>
   <!-- Payments -->
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving...</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
   <string name="reviews_expand_button">%d Odpowiedzi</string>
   <string name="out_of_space_dialog_title">Brak miejsca</string>
   <string name="out_of_space_dialog_message">Aby kontynuować zwolnij miejsce.</string>
-  <string name="setting_category_autoupdate">%s Aktualizacje</string>
-  <string name="setting_category_autoupdate_title">Otrzymuj powiadomienia o aktualizacjach %s</string>
-  <string name="setting_category_autoupdate_message">Co jakiś czas sprawdzaj nowe wersje %s </string>
-  <string name="store_added_long_time_suggestion_message">pokaż długoterminowe</string>
-  <string name="store_added_short_time_suggestion_message">pokaż nowo stworzone</string>
-  <string name="create_store_displayable_created_store_long_term_message">długoterminowe</string>
-  <string name="create_store_displayable_explore_long_term_button">Wyświetl Sklep</string>
-  <string name="create_store_displayable_empty_description_message">Dodaj opis dla swojego sklepu. Dobry opis pozwoli Ci pozyskać więcej obserwujących i interakcji.</string>
-  <string name="fragment_spot_share_preview_start_button">Rozpocznij</string>
-  <!-- 02/2017 strings for login / sign up -->
-  <string name="join_company">Dołącz do %s</string>
-  <string name="login">Zaloguj się</string>
-  <string name="login_company">Zaloguj się do %s</string>
-  <string name="connect_with_facebook">Połącz z Facebookiem</string>
-  <string name="connect_with_google">Połącz z Google</string>
-  <string name="accept_terms_signup">Dołączając do Aptoide akceptujesz Regulamin oraz Politykę Treści Aptoide dla Developerów.</string>
-  <string name="recover_password">Odzyskaj swoje hasło</string>
-  <string name="email">Email</string>
-  <string name="password">Hasło</string>
-  <string name="create_password">Stwórz Hasło</string>
-  <string name="store_suspended_message">Sklep zawieszony</string>
-  <string name="facebook_login_cancelled">Logowanie Facebook anulowane</string>
-  <string name="google_login_cancelled">Logowanie Google nie powiodło się</string>
-  <string name="login_separator_text">Lub połącz się przy użyciu swojego konta e-mail</string>
-  <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Możesz znaleźć wybrane tylko dla Ciebie treści w różnych sklepach</string>
-  <string name="add_store_dialog_top_stores">ODKRYJ NAJLEPSZE SKLEPY</string>
-  <string name="add_store_dialog_top_stores_small_text">i znajdź wyjątkowe treści!</string>
-  <!-- Login -->
-  <string name="activity_login_title">Zaloguj się</string>
-  <string name="activity_login_forgot_password_button">Zapomniałeś hasła?</string>
-  <string name="activity_login_button">Zaloguj się</string>
-  <string name="activity_login_sign_up_button">Zarejestruj się</string>
-  <string name="view_credentials_username_hint">Email</string>
-  <string name="view_credentials_password_hint">Hasło</string>
-  <string name="permission_access_deny">nastąpiła odmowa dostępu do odczytu i zapisu w pamięci zewnętrznej</string>
-  <string name="permission_account_deny">nastąpiła odmowa dostępu do kont</string>
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Rozszerz swoją sieć.</string>
-  <string name="addressbook_connect_with_friends_message">Połącz się ze znajomymi.</string>
-  <string name="addressbook_sync">Synchronizowanie Książki Adresowej</string>
-  <string name="not_now">Nie teraz</string>
-  <string name="follow_friends">Obserwuj Znajomych</string>
-  <string name="addressbook_data_about"><b>Jak %1$s Wykorzystuje Twoje Dane</b>
-    \n\n%1$s przeszuka Twoją książkę adresową w poszukiwaniu znajomych i rodziny, który korzystają z naszego App Store. Wykorzystamy
-    te informacje wyłącznie w celu poprawy Twojego doświadczenia z %1$s, dzięki połączeniu Cię z większą ilością osób,
-    które mogą udostępniać z Tobą aplikacje.\n\n\nAby chronić Twoją prywatność, żadne dane prywatne
-    nie będą wysyłane na nasze serwery %1$s. Anonimowy podpis (hash) zostanie stworzony dla Twoich danych
-    i ten hash cannot nie będzie mógł być zamieniony na dane kontaktowe.
-  </string>
-  <string name="addressbook_success">Powodzenie!</string>
-  <string name="addressbook_allow_friends_find">Pozwól swoim znajomym Cię odnaleźć</string>
-  <string name="google">Google</string>
-  <string name="done">Gotowe</string>
-  <string name="addressbook_share_phone">Udostępnij swój numer telefonu, aby Twoi znajomi mogli łatwo znaleźć Cię na %s</string>
-  <string name="addressbook_phone_number">Numer telefonu</string>
-  <string name="addressbook_insuccess_connection">Nie mogliśmy połączyć się z Twoją książką adresową!</string>
-  <string name="addressbook_invite_friends">Zaproś znajomych do przyłączenia się!</string>
-  <string name="addressbook_thanks_for_connecting">Dziękujemy za dołączenie</string>
-  <string name="addressbook_success_connected_friends">Pomyślnie połączyliśmy Cię z %1$s znajomymi korzystającymi z %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Nie znaleźliśmy żadnych kontaktów, które korzystają z %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s będzie przeglądać Twoją książkę adresową w poszukiwaniu znajomych i rodziny
-    korzystających z naszego Sklepu Aplikacji. Aby chronić Twoją prywatność, żadne prywatne dane nie będą wysyłane na
-    serwery %1$s</string>
-  <string name="addressbook_3rd_msg">DOWIEDZ SIĘ WIĘCEJ</string>
-  <string name="address_book_twitter_error">Błąd autoryzacji Twitter</string>
-  <string name="follow_my_store">Cześć, obserwuj mój Sklep %1$s tutaj</string>
-  <string name="store_meta_apps">Aplikacje\n%s</string>
-  <string name="store_meta_following">Obserwowanie\n%s</string>
-  <string name="store_meta_followers">Obserwujący\n%s</string>
-  <string name="addressbook_about">O Książce Adresowej</string>
-  <string name="addressbook_we_werent_able_to_connect_you">Nie mogliśmy Cię połączyć</string>
-  <!-- Spot and Share-->
-  <string name="spot_share_line_1">Udostępniaj aplikacje ze swoimi znajomymi</string>
-  <string name="spot_share_line_2">Telefon do telefonu, bez Internetu</string>
+  <!--new setting options-->
+  <string name="languages">Languages</string>
+  <string name="language_dialog">Select a language</string>
+  <string name="topAppsNotification">Top apps recommendations</string>
+  <string name="topAppsNotification_dialog">Choose top apps notifications frequency</string>
 </resources>

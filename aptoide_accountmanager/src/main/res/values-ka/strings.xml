@@ -10,16 +10,16 @@
   <string name="login">ავტორიზაცია</string>
   <string name="successful">მოთხოვნა წარმატებით შესრულდა</string>
   <string name="login_successful">ავტორიზაცია წარმატებულია</string>
-  <string name="forgot_passwd"><u>დაგავიწყდათ პაროლი?</u></string>
+  <string name="forgot_passwd">დაგავიწყდათ პაროლი?</string>
   <string name="fields_cannot_empty">გთხოვთ, შეამოწმოთმოთ ელ.ფოსტა და პაროლი.</string>
   <string name="unknown_error">ამოუცნობი ხარვეზი</string>
-  <string name="accept_terms">\"რეგისტრაციით, თქვენ ეთანხმებით Aptoide-ის გამოყენების პირობებს
-და მასალის პოლიტიკას შემმუშავებლებისთვის
- \"</string>
-  <string name="no_email_and_pass_error_message">\"შეიყვანეთ ელ.ფოსტის მისამართი და პაროლი
- \"</string>
-  <string name="no_pass_error_message">შეიყვანეთ პაროლი</string>
-  <string name="no_email_error_message">შეიყვანეთ ელ-ფოსტის მისამართი</string>
+  <string name="accept_terms">რეგისტრაციით, თქვენ ეთანხმებით Aptoide-ის გამოყენების პირობებს
+        და მასალის პოლიტიკას შემმუშავებლებისთვის
+    </string>
+  <string name="no_email_and_pass_error_message">შეიყვანეთ ელ-ფოსტის მისამართი და 
+        პაროლი.    </string>
+  <string name="no_pass_error_message">შეიყვანეთ პაროლი.</string>
+  <string name="no_email_error_message">შეიყვანეთ ელ-ფოსტის მისამართი.</string>
   <string name="password_validation_text">\"პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს
 (მინიმუმ 1 ასოს და 1 ციფრს ან სპეც. სიმბოლოს (!@#$%*))
  \"</string>
@@ -46,8 +46,8 @@
   <string name="ws_error_AUTH_103">Facebook-ით ავტორიზაცია ვერ მოხერხდა. კიდევ სცადეთ.</string>
   <string name="ws_error_invalid_grant">არასწორი პაროლი ან მომხმარებლის სახელი</string>
   <string name="ws_error_MARG_12">hmac ის პარამეტრები ვერ მოიძებნა</string>
-  <string name="ws_error_MARG_109">Email ის პარამეტრები ვერ მოიძებნა</string>
-  <string name="ws_error_MARG_110">passhash ის პარამეტრი ვერ მოიძებნა</string>
+  <string name="ws_error_MARG_109">Email-ის პარამეტრები ვერ მოიძებნა</string>
+  <string name="ws_error_MARG_110">passhash-ის პარამეტრი ვერ მოიძებნა</string>
   <string name="ws_error_MARG_111">სახელის პარამეტრი ვერ მოიძებნა</string>
   <string name="ws_error_MARG_112">მომხმარებლის აგენტის პარამეტრები ვერ მოიძებნა</string>
   <string name="ws_error_IARG_5">არასწორი hmac ფორმატი</string>

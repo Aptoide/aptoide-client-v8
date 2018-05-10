@@ -10,15 +10,15 @@
   <string name="login">התחבר</string>
   <string name="successful">Successful</string>
   <string name="login_successful">הכניסה הצליחה</string>
-  <string name="forgot_passwd">שכחת ססמה?</string>
+  <string name="forgot_passwd">שכחת סיסמה?</string>
   <string name="fields_cannot_empty">אנא בדוק את הדוא\"ל והשם שלך</string>
   <string name="unknown_error">שגיאה בלתי ידועה</string>
-  <string name="accept_terms">\"הרשמתך מהווה הסכמה לתנאי השימוש והתוכן
-של אפטויד למפתחים
- \"</string>
-  <string name="no_email_and_pass_error_message">\"נא להזין כתובת דוא״ל וססמה
-כדי להירשם.
- \"</string>
+  <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and
+        Content Policy for Developers
+    </string>
+  <string name="no_email_and_pass_error_message">Please insert an email and password to
+        register.
+    </string>
   <string name="no_pass_error_message">נא להזין ססמה כדי להירשם.</string>
   <string name="no_email_error_message">נא להזין כתובת דוא״ל כדי להירשם.</string>
   <string name="password_validation_text">\"על הססמה להיות מורכבת מ־8 תווים לפחות
@@ -35,12 +35,12 @@
   <!--errors-->
   <string name="error_occured">התרחשה שגיאה, אנא נסה שוב</string>
   <string name="error_invalid_grant">הצירוף בין שם המשתמש והססמה שגוי</string>
-  <string name="ws_error_MARG_200">\@string/error_occured</string>
-  <string name="ws_error_MARG_203">\@string/error_occured</string>
-  <string name="ws_error_MARG_204">\@string/error_occured</string>
-  <string name="ws_error_IARG_200">\@string/error_occured</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">אישורי משתמש לא חוקיים!</string>
-  <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">לא ניתן להיכנס עם Google. נא לבדוק את חשבון הגוגל שלך (יתכן שיהיה עליך לאמת את כתובת הדוא״ל שלך)</string>
   <string name="ws_error_AUTH_101">לא ניתן היה להתחבר לגוגל. אנא נסה שנית.</string>
   <string name="ws_error_AUTH_102">לא ניתן להיכנס עם Facebook. נא לבדוק את חשבון הגוגל שלך (יתכן שיהיה עליך לאמת את כתובת הדוא״ל שלך)</string>
@@ -130,9 +130,9 @@
   <string name="create_profile_logged_in_activity_title">Logged in</string>
   <string name="image_requirements_popup_message">The image has the following problems:\n</string>
   <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
-  <string name="image_requirements_error_max_height">- Maximum height is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_height">- Maximum height is higher than 102400px\n</string>
   <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
-  <string name="image_requirements_error_max_width">- Maximum width is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_width">- Maximum width is higher than 102400px\n</string>
   <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
   <string name="image_requirements_error_popup_title">Image</string>
 </resources>

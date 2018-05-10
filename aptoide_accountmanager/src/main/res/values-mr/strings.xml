@@ -10,17 +10,13 @@
   <string name="login">लॉगीन</string>
   <string name="successful">यशस्वी</string>
   <string name="login_successful">लॉगीन यशस्वी</string>
-  <string name="forgot_passwd"><u>पासवर्ड विसरलात?</u></string>
+  <string name="forgot_passwd">पासवर्ड विसरलात?</string>
   <string name="fields_cannot_empty">कृपया आपला ईमेल आणि पासवर्ड तपासून पहा.</string>
   <string name="unknown_error">अज्ञात त्रुटी</string>
-  <string name="accept_terms">\"साईन अप करून आपण Aptoide च्या सेवा शर्ती आणि डेवलपर्ससाठी सामग्रीविषयी
-धोरणाशी सहमत असल्याचे मान्य करता आहात
- \"</string>
-  <string name="no_email_and_pass_error_message">\"कृपया आपला इमेल आणि पासवर्ड 
-प्रविष्ठ करा
- \"</string>
-  <string name="no_pass_error_message">कृपया आपला पासवर्ड प्रविष्ठ करा</string>
-  <string name="no_email_error_message">कृपया एक ईमेल प्रविष्ठ करा</string>
+  <string name="accept_terms">आपण साईनअप करुन Aptoide च्या सेवा नियम तसेच अटी आणि विकसकांच्या सामग्री धोरणास मान्य करत आहात    </string>
+  <string name="no_email_and_pass_error_message">रजिस्टर करण्यासाठी कृपया ईमेल आणि पासवर्ड घाला.    </string>
+  <string name="no_pass_error_message">नोंदणी करण्यासाठी कृपया आपला पासवर्ड प्रविष्ठ करा.</string>
+  <string name="no_email_error_message">नोंदणी करण्यासाठी एक ईमेल प्रविष्ठ करा.</string>
   <string name="password_validation_text">\"पासवर्ड किमान ८ अक्षरी असावा आणि त्यात किमान 
 एक अक्षर आणि एक अंक किवा विशेष वर्ण (!@#$%*) असावा
  \"</string>
@@ -34,12 +30,12 @@
   <!--errors-->
   <string name="error_occured">एक त्रुटी निर्माण झाली आहे, कृपया पुन्हा प्रयत्न करा</string>
   <string name="error_invalid_grant">अवैध युजरनेम आणि पासवर्ड संयोग</string>
-  <string name="ws_error_MARG_200">\@string/त्रुटी_निर्माण_झाली</string>
-  <string name="ws_error_MARG_203">\@string/त्रुटी_निर्माण_झाली</string>
-  <string name="ws_error_MARG_204">\@string/त्रुटी_निर्माण_झाली</string>
-  <string name="ws_error_IARG_200">\@string/त्रुटी_निर्माण_झाली</string>
+  <string name="ws_error_MARG_200">@string/error_occured</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
+  <string name="ws_error_IARG_200">@string/error_occured</string>
   <string name="ws_error_AUTH_2">अवैध अधिकार!</string>
-  <string name="ws_error_AUTH_7">\@string/त्रुटी_निर्माण_झाली</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">गुगलद्वारे लॉगीन करता आले नाही. कृपया आपले गुगल खाते तपासून पहा (आपल्याला आपला ईमेल पत्ता सत्यापित करावा लागू शकतो)</string>
   <string name="ws_error_AUTH_101">गुगलद्वारे लॉगीन करता आले नाही. कृपया पुन्हा प्रयत्न करा.</string>
   <string name="ws_error_AUTH_102">फेसबुकद्वारे लॉगीन करता आले नाही. कृपया आपले फेसबुक खाते तपासून पहा (आपल्याला आपला ईमेल पत्ता सत्यापित करावा लागू शकतो)</string>
