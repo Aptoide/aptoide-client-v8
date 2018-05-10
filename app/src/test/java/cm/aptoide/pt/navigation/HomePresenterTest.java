@@ -152,8 +152,8 @@ public class HomePresenterTest {
     appClickEvent.onNext(
         new AppHomeEvent(aptoide, 3, localTopAppsBundle, 0, HomeEvent.Type.SOCIAL_CLICK));
     //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
-        aptoide.getTag());
+    verify(homeNavigator).navigateToRecommendsAppView(aptoide.getAppId(), aptoide.getPackageName(),
+        aptoide.getTag(), HomeEvent.Type.SOCIAL_CLICK);
   }
 
   @Test public void moreClicked_NavigateToActionView() {

@@ -32,6 +32,12 @@ public class HomeNavigator {
         true);
   }
 
+  public void navigateToRecommendsAppView(long appId, String packageName, String tag,
+      HomeEvent.Type type) {
+    fragmentNavigator.navigateTo(
+        AppViewFragment.newInstance(appId, packageName, parseAction(type), tag), true);
+  }
+
   public void navigateWithAction(HomeEvent click) {
     fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
         .getEvent(), click.getBundle()
@@ -59,5 +65,14 @@ public class HomeNavigator {
     fragmentNavigator.navigateTo(
         AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag,
             rewardAppCoins), true);
+  }
+
+  private AppViewFragment.OpenType parseAction(HomeEvent.Type type) {
+    if (type.equals(HomeEvent.Type.SOCIAL_CLICK)) {
+      return AppViewFragment.OpenType.OPEN_ONLY;
+    } else if (type.equals(HomeEvent.Type.SOCIAL_INSTALL)) {
+      return AppViewFragment.OpenType.OPEN_AND_INSTALL;
+    }
+    throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");
   }
 }
