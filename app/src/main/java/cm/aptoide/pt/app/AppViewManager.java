@@ -10,6 +10,7 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.DetailedApp;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -30,6 +31,7 @@ public class AppViewManager {
   private final FlagManager flagManager;
   private final StoreUtilsProxy storeUtilsProxy;
   private final AptoideAccountManager aptoideAccountManager;
+  private DetailedApp cachedApp;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
@@ -48,21 +50,23 @@ public class AppViewManager {
   }
 
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
+    if (cachedApp != null && cachedApp.getId() == appId && cachedApp.getPackageName()
+        .equals(packageName)) {
+      return isStoreFollowed(cachedApp.getStore()
+          .getId()).map(isStoreFollowed -> createDetailedAppViewModel(cachedApp, isStoreFollowed));
+    }
     return appCenter.getDetailedApp(appId, packageName)
         .flatMap(app -> isStoreFollowed(app.getStore()
-            .getId()).map(isStoreFollowed -> new DetailedAppViewModel(app, isStoreFollowed)));
+            .getId()).map(isStoreFollowed -> {
+          cachedApp = app;
+          return createDetailedAppViewModel(app, isStoreFollowed);
+        }));
   }
 
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
     return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort)
         .map(reviews -> new ReviewsViewModel(reviews));
-  }
-
-  public Single<Boolean> addReviewRatingRequestAction(long reviewId, boolean helpful) {
-    return reviewsManager.doReviewRatingRequest(reviewId, helpful)
-        .map(response -> (response.isOk() && response.getErrors()
-            .isEmpty()));
   }
 
   public Single<AdsViewModel> loadSimilarApps(String packageName, List<String> keyWords,
@@ -74,6 +78,12 @@ public class AppViewManager {
 
   public Single<MinimalAd> loadAd(String packageName, String storeName) {
     return adsManager.loadAd(packageName, storeName);
+  }
+
+  public Single<Boolean> addReviewRatingRequestAction(long reviewId, boolean helpful) {
+    return reviewsManager.doReviewRatingRequest(reviewId, helpful)
+        .map(response -> (response.isOk() && response.getErrors()
+            .isEmpty()));
   }
 
   public Single<Boolean> addApkFlagRequestAction(String storeName, String md5,
@@ -101,5 +111,13 @@ public class AppViewManager {
     return storeManager.isSubscribed(storeId)
         .first()
         .toSingle();
+  }
+
+  private DetailedAppViewModel createDetailedAppViewModel(DetailedApp app,
+      boolean isStoreFollowed) {
+    return new DetailedAppViewModel(app, app.getId(), app.getName(), app.getStore(), app.getFile(),
+        app.getPackageName(), app.getSize(), app.getStats(), app.getDeveloper(), app.getGraphic(),
+        app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(), app.getObb(),
+        app.getPay(), isStoreFollowed);
   }
 }
