@@ -33,6 +33,20 @@ public class InstallAppViewPresenter implements Presenter {
   @Override public void present() {
     getApp();
     installApp();
+    openApp();
+  }
+
+  private void openApp() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.installAppClick()
+            .filter(action -> action.equals(DownloadAppViewModel.Action.OPEN))
+            .doOnNext(__1 -> view.openApp(packageName))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
   }
 
   private void installApp() {

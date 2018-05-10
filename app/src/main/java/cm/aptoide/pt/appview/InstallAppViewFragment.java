@@ -18,6 +18,7 @@ import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -122,6 +123,10 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
       install.setVisibility(View.VISIBLE);
       setButtonText(model.getAction());
     }
+  }
+
+  @Override public void openApp(String packageName) {
+    AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
