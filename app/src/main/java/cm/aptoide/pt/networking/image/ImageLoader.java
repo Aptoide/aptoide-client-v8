@@ -162,6 +162,21 @@ public class ImageLoader {
     return null;
   }
 
+  public Target<GlideDrawable> loadWithShadowCircleTransformWithPlaceholder(String url,
+      ImageView imageView, int drawable) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .placeholder(drawable)
+          .transform(new ShadowCircleTransformation(context, imageView))
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
+    }
+    return null;
+  }
+
   public Target<GlideDrawable> loadWithShadowCircleTransform(String url, ImageView imageView,
       @ColorInt int color, float spaceBetween, float strokeSize) {
     Context context = weakContext.get();
