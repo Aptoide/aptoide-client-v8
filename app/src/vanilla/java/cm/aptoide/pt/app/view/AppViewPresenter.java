@@ -8,6 +8,8 @@ import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import rx.Completable;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
@@ -54,6 +56,8 @@ public class AppViewPresenter implements Presenter {
     handleClickOnFollowStore();
     handleClickOnOtherVersions();
     handleClickOnTrustedBadge();
+    handleClickOnRateApp();
+    handleClickReadComments();
   }
 
   private void handleFirstLoad() {
@@ -67,11 +71,14 @@ public class AppViewPresenter implements Presenter {
         .flatMapSingle(appViewModel -> Single.zip(appViewManager.getReviewsViewModel(
             appViewModel.getDetailedApp()
                 .getStore()
-                .getName(), view.getPackageName(), 5, view.getLanguageFilter()),
+                .getName(), view.getPackageName(), 5, view.getLanguageFilter())
+                .observeOn(scheduler),
             appViewManager.loadSimilarApps(view.getPackageName(), appViewModel.getDetailedApp()
                 .getMedia()
-                .getKeywords(), 2),
-            (reviews, similar) -> view.populateReviewsAndAds(reviews, similar)))
+                .getKeywords(), 2)
+                .observeOn(scheduler),
+            (reviews, similar) -> view.populateReviewsAndAds(reviews, similar,
+                appViewModel.getDetailedApp())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -197,19 +204,20 @@ public class AppViewPresenter implements Presenter {
         .flatMapSingle(
             __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
         .observeOn(scheduler)
-        .doOnNext(model -> {
+        .flatMapCompletable(model -> {
           if (model.isStoreFollowed()) {
             view.setFollowButton(true);
             appViewAnalytics.sendOpenStoreEvent();
             appViewNavigator.navigateToStore(model.getDetailedApp()
                 .getStore());
+            return Completable.complete();
           } else {
             view.setFollowButton(false);
             appViewAnalytics.sendFollowStoreEvent();
-            appViewManager.subscribeStore(model.getDetailedApp()
+            view.displayStoreFollowedSnack(model.getDetailedApp()
                 .getStore()
                 .getName());
-            view.displayStoreFollowedSnack(model.getDetailedApp()
+            return appViewManager.subscribeStore(model.getDetailedApp()
                 .getStore()
                 .getName());
           }
@@ -250,4 +258,38 @@ public class AppViewPresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
+
+  private void handleClickOnRateApp() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> Observable.merge(view.clickRateApp(), view.clickRateAppLarge(),
+            view.clickRateAppLayout()))
+        .flatMapSingle(
+            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .observeOn(scheduler)
+        .flatMap(model -> view.showRateDialog(model.getAppName(), model.getPackageName(),
+            model.getStore()
+                .getName()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickReadComments() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> Observable.merge(view.clickCommentsLayout(), view.clickReadAllComments()))
+        .flatMapSingle(
+            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .doOnNext(
+            model -> appViewNavigator.navigateToRateAndReview(model.getAppId(), model.getAppName(),
+                model.getStore()
+                    .getName(), model.getPackageName(), model.getStore()
+                    .getAppearance()
+                    .getTheme()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
 }

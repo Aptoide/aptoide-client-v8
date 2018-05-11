@@ -5,9 +5,9 @@ import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedApp;
 import rx.Observable;
-import rx.Single;
 
 /**
  * Created by franciscocalado on 08/05/18.
@@ -29,7 +29,7 @@ public interface AppViewView extends View {
 
   Observable<ReadMoreClickEvent> clickedReadMore();
 
-  Single<Void> populateReviewsAndAds(ReviewsViewModel reviews, AdsViewModel ads);
+  Void populateReviewsAndAds(ReviewsViewModel reviews, AdsViewModel ads, DetailedApp app);
 
   Observable<Void> clickWorkingFlag();
 
@@ -59,6 +59,16 @@ public interface AppViewView extends View {
 
   Observable<Void> clickTrustedBadge();
 
+  Observable<Void> clickRateApp();
+
+  Observable<Void> clickRateAppLarge();
+
+  Observable<Void> clickRateAppLayout();
+
+  Observable<Void> clickCommentsLayout();
+
+  Observable<Void> clickReadAllComments();
+
   void navigateToDeveloperWebsite(DetailedApp app);
 
   void navigateToDeveloperEmail(DetailedApp app);
@@ -72,4 +82,7 @@ public interface AppViewView extends View {
   void showTrustedDialog(DetailedApp app);
 
   String getLanguageFilter();
+
+  Observable<GenericDialogs.EResponse> showRateDialog(String appName, String packageName,
+      String storeName);
 }
