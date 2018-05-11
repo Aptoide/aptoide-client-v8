@@ -130,9 +130,9 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
       AppViewFragment.OpenType openType, String tag) {
     Bundle bundle = new Bundle();
     bundle.putString(ORIGIN_TAG, tag);
-    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
     NewAppViewFragment fragment = new NewAppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
@@ -148,8 +148,8 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
 
-    appId = args.getLong(AppViewFragment.BundleKeys.APP_ID.name(), -1);
-    packageName = args.getString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), null);
+    appId = args.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1);
+    packageName = args.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null);
   }
 
   @Override public void setupViews() {
@@ -686,4 +686,9 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
       }
     }
   }
+
+  public enum BundleKeys {
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
+  }
+
 }

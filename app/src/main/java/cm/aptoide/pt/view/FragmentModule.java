@@ -38,6 +38,7 @@ import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -267,6 +268,7 @@ import rx.schedulers.Schedulers;
       AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport);
+        crashReport, arguments.getLong(NewAppViewFragment.BundleKeys.APP_ID.name()),
+        arguments.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name()));
   }
 }

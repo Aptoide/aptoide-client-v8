@@ -28,11 +28,13 @@ public class AppViewPresenter implements Presenter {
   private AptoideAccountManager accountManager;
   private Scheduler scheduler;
   private CrashReport crashReport;
+  private long appId;
+  private String packageName;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler scheduler,
-      CrashReport crashReport) {
+      CrashReport crashReport, long appId, String packageName) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -41,6 +43,8 @@ public class AppViewPresenter implements Presenter {
     this.accountManager = accountManager;
     this.scheduler = scheduler;
     this.crashReport = crashReport;
+    this.appId = appId;
+    this.packageName = packageName;
   }
 
   @Override public void present() {
@@ -64,16 +68,15 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .observeOn(scheduler)
         .doOnNext(appViewModel -> view.populateAppDetails(appViewModel))
         .flatMapSingle(appViewModel -> Single.zip(appViewManager.getReviewsViewModel(
             appViewModel.getDetailedApp()
                 .getStore()
-                .getName(), view.getPackageName(), 5, view.getLanguageFilter())
+                .getName(), packageName, 5, view.getLanguageFilter())
                 .observeOn(scheduler),
-            appViewManager.loadSimilarApps(view.getPackageName(), appViewModel.getDetailedApp()
+            appViewManager.loadSimilarApps(packageName, appViewModel.getDetailedApp()
                 .getMedia()
                 .getKeywords(), 2)
                 .observeOn(scheduler),
@@ -131,8 +134,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperWebsite())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
             .getDeveloper()
             .getWebsite()))
@@ -146,8 +148,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperEmail())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
             .getDeveloper()
             .getEmail()))
@@ -161,8 +162,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPrivacy())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
             .getDeveloper()
             .getPrivacy()))
@@ -176,8 +176,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPermissions())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .doOnNext(app -> view.navigateToDeveloperPermissions(app.getDetailedApp()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -188,8 +187,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickStoreLayout())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .doOnNext(app -> appViewNavigator.navigateToStore(app.getDetailedApp()
             .getStore()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -201,8 +199,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickFollowStore())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .observeOn(scheduler)
         .flatMapCompletable(model -> {
           if (model.isStoreFollowed()) {
@@ -233,8 +230,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickOtherVersions())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .doOnNext(model -> {
           appViewAnalytics.sendOtherVersionsEvent();
           appViewNavigator.navigateToOtherVersions(model.getDetailedApp()
@@ -251,8 +247,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickTrustedBadge())
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .doOnNext(model -> view.showTrustedDialog(model.getDetailedApp()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -264,8 +259,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickRateApp(), view.clickRateAppLarge(),
             view.clickRateAppLayout()))
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .observeOn(scheduler)
         .flatMap(model -> view.showRateDialog(model.getAppName(), model.getPackageName(),
             model.getStore()
@@ -279,8 +273,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickCommentsLayout(), view.clickReadAllComments()))
-        .flatMapSingle(
-            __ -> appViewManager.getDetailedAppViewModel(view.getAppId(), view.getPackageName()))
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .doOnNext(
             model -> appViewNavigator.navigateToRateAndReview(model.getAppId(), model.getAppName(),
                 model.getStore()
