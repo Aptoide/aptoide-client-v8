@@ -26,9 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.app.AdsViewModel;
 import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
+import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -270,7 +270,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     downloadsTop.setText(String.format("%s", AptoideUtils.StringU.withSuffix(
         detailedApp.getDetailedApp()
             .getStats()
-        .getPdownloads())));
+            .getPdownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(detailedApp.getDetailedApp()
         .getSize(), false));
     latestVersion.setText(detailedApp.getDetailedApp()
@@ -339,7 +339,8 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     return readMoreClick;
   }
 
-  @Override public Void populateReviewsAndAds(ReviewsViewModel reviewsModel, AdsViewModel ads,
+  @Override
+  public Void populateReviewsAndAds(ReviewsViewModel reviewsModel, SimilarAppsViewModel ads,
       DetailedApp app) {
     List<Review> reviews = reviewsModel.getReviewsList();
     TopReviewsAdapter adapter;
@@ -469,8 +470,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   }
 
   @Override public void setFollowButton(boolean isFollowing) {
-    if (!isFollowing)
-      storeFollow.setText(R.string.followed);
+    if (!isFollowing) storeFollow.setText(R.string.followed);
   }
 
   @Override public void showTrustedDialog(DetailedApp app) {
@@ -493,7 +493,6 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
       String storeName) {
     return dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
   }
-
 
   private void setTrustedBadge(DetailedApp app) {
     @DrawableRes int badgeResId;

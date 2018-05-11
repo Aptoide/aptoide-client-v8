@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app.view;
 
-import cm.aptoide.pt.app.AdsViewModel;
 import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
+import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -29,7 +29,7 @@ public interface AppViewView extends View {
 
   Observable<ReadMoreClickEvent> clickedReadMore();
 
-  Void populateReviewsAndAds(ReviewsViewModel reviews, AdsViewModel ads, DetailedApp app);
+  Void populateReviewsAndAds(ReviewsViewModel reviews, SimilarAppsViewModel ads, DetailedApp app);
 
   Observable<Void> clickWorkingFlag();
 

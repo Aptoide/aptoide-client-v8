@@ -4,12 +4,12 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.List;
@@ -66,15 +66,17 @@ public class AppViewManager {
             reviewsRequestResult.isLoading(), reviewsRequestResult.getError()));
   }
 
-  public Single<AdsViewModel> loadSimilarApps(String packageName, List<String> keyWords,
+  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords,
       int limit) {
     return loadAdForSimilarApps(packageName, keyWords).flatMap(
         ad -> loadRecommended(limit, packageName).map(
-            recommendedApps -> new AdsViewModel(ad, recommendedApps)));
+            recommendedAppsRequestResult -> new SimilarAppsViewModel(ad,
+                recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
+                recommendedAppsRequestResult.getError())));
   }
 
-  public Single<MinimalAd> loadAd(String packageName, String storeName) {
-    return adsManager.loadAd(packageName, storeName);
+  public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
+    return adsManager.loadAdsFromAppView(packageName, storeName);
   }
 
   public Single<Boolean> addReviewRatingRequestAction(long reviewId, boolean helpful) {
@@ -95,7 +97,7 @@ public class AppViewManager {
         () -> storeUtilsProxy.subscribeStore(storeName, null, null, aptoideAccountManager));
   }
 
-  private Single<List<App>> loadRecommended(int limit, String packageName) {
+  private Single<AppsList> loadRecommended(int limit, String packageName) {
     return appCenter.loadRecommendedApps(limit, packageName);
   }
 

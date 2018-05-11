@@ -59,7 +59,7 @@ public class AppService {
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .flatMap(listApps -> mapListApps(listApps))
+        .flatMap(appsList -> mapListApps(appsList))
         .toSingle()
         .onErrorReturn(throwable -> createErrorAppsList(throwable));
   }
@@ -77,7 +77,7 @@ public class AppService {
       return Observable.just(new AppsList(list, false, listApps.getDataList()
           .getNext()));
     } else {
-      return Observable.error(new IllegalStateException("Could not obtain timeline from server."));
+      return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
   }
 
@@ -97,27 +97,34 @@ public class AppService {
   }
 
   private Observable<DetailedAppRequestResult> mapAppToDetailedAppRequestResult(GetApp getApp) {
-    GetAppMeta.App app = getApp.getNodes()
-        .getMeta()
-        .getData();
-    DetailedApp detailedApp =
-        new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-            app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getFile(),
-            app.getDeveloper(), app.getStore(), app.getMedia(), app.getStats(), app.getObb(),
-            app.getPay());
-    return Observable.just(new DetailedAppRequestResult(detailedApp));
+    if (getApp.isOk()) {
+      GetAppMeta.App app = getApp.getNodes()
+          .getMeta()
+          .getData();
+      DetailedApp detailedApp =
+          new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
+              app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getFile(),
+              app.getDeveloper(), app.getStore(), app.getMedia(), app.getStats(), app.getObb(),
+              app.getPay());
+      return Observable.just(new DetailedAppRequestResult(detailedApp));
+    } else {
+      return Observable.error(new IllegalStateException("Could not obtain request from server."));
+    }
   }
 
-  public Single<List<App>> loadRecommendedApps(int limit, String packageName) {
+  public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
+    if (loading) {
+      return Single.just(new AppsList(true));
+    }
     return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences).observe(
         true, false)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .map(listApps -> listApps.getDataList()
-            .getList())
-        .toSingle();
+        .flatMap(appsList -> mapListApps(appsList))
+        .toSingle()
+        .onErrorReturn(throwable -> createErrorAppsList(throwable));
   }
 
   public Single<AppsList> loadFreshApps(long storeId, int limit) {
