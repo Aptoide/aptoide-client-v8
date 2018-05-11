@@ -117,7 +117,15 @@ public class PackageRepository {
     });
   }
 
-  public Single<Boolean> isPackageInstalled(String packageName) {
+  public boolean isAppInstalled(String packageName) {
+    return getInstalledPackages().toSingle()
+        .flatMap(packageInfos -> isPackageInstalled(packageName))
+        .onErrorReturn(throwable -> false)
+        .toBlocking()
+        .value();
+  }
+
+  private Single<Boolean> isPackageInstalled(String packageName) {
     return Single.defer(() -> {
       try {
         final PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
