@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import static org.mockito.Mockito.when;
 
 public class AptoideBiAnalyticsTest {
 
+  SharedPreferences preferences = mock(SharedPreferences.class);
+
   @Test public void logTimeReached() throws Exception {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
@@ -37,7 +40,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 0, 200, crashReport);
+            new CompositeSubscription(), scheduler, 0, 200, crashReport, preferences);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -64,7 +67,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 0, 200, crashReport);
+            new CompositeSubscription(), scheduler, 0, 200, crashReport, preferences);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -93,7 +96,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 200000, 20000, crashReport);
+            new CompositeSubscription(), scheduler, 200000, 20000, crashReport, preferences);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
