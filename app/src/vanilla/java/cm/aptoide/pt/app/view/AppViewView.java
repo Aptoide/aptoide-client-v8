@@ -72,6 +72,8 @@ public interface AppViewView extends View {
 
   Observable<Void> clickLoginSnack();
 
+  Observable<SimilarAppClickEvent> clickSimilarApp();
+
   void navigateToDeveloperWebsite(DetailedApp app);
 
   void navigateToDeveloperEmail(DetailedApp app);

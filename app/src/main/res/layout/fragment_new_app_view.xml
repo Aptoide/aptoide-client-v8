@@ -12,18 +12,10 @@
       android:orientation="vertical"
       >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
-        >
-
       <include
-          layout="@layout/toolbar"
-          android:id="@+id/toolbar"
+          layout="@layout/action_bar_appview"
+          android:id="@+id/action_bar"
           />
-
-    </android.support.design.widget.AppBarLayout>
 
     <ProgressBar
         android:id="@+id/appview_progress"
@@ -256,6 +248,7 @@
             />
         <include
             layout="@layout/appview_similar_layout"
+            android:id="@+id/similar_download_apps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/recommend_card"

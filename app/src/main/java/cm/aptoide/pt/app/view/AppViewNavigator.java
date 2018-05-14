@@ -4,11 +4,13 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import java.util.ArrayList;
 
@@ -49,7 +51,13 @@ public class AppViewNavigator {
   public void navigateToAppView(long appId, String packageName, String tag) {
     Fragment fragment = AptoideApplication.getFragmentProvider()
         .newAppViewFragment(appId, packageName, tag);
-    fragmentNavigator.navigateTo(fragment, true);
+    fragmentNavigator.navigateTo(
+        NewAppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag),
+        true);
+  }
+
+  public void navigateToAd(MinimalAd ad) {
+    fragmentNavigator.navigateTo(AppViewFragment.newInstance(new SearchAdResult(ad)), true);
   }
 
   public void navigateToDescriptionReadMore(String name, String description, String theme) {

@@ -65,6 +65,7 @@ public class AppViewPresenter implements Presenter {
     handleClickReadComments();
     handleClickFlags();
     handleClickLoginSnack();
+    handleClickOnSimilarApps();
   }
 
   private void handleFirstLoad() {
@@ -330,6 +331,28 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.clickLoginSnack())
         .doOnNext(__ -> accountNavigator.navigateToAccountView(
             AccountAnalytics.AccountOrigins.APP_VIEW_FLAG))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickOnSimilarApps() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickSimilarApp())
+        .doOnNext(similarAppClickEvent -> {
+          if (similarAppClickEvent.getSimilar()
+              .isAd()) {
+            appViewNavigator.navigateToAd(similarAppClickEvent.getSimilar()
+                .getAd());
+          } else {
+            appViewNavigator.navigateToAppView(similarAppClickEvent.getSimilar()
+                .getApp()
+                .getAppId(), similarAppClickEvent.getSimilar()
+                .getApp()
+                .getPackageName(), "");
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));

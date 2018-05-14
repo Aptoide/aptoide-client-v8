@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,15 +10,21 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
@@ -43,15 +51,18 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
-import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import com.jakewharton.rxbinding.view.RxView;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -62,19 +73,25 @@ import rx.subjects.PublishSubject;
  * Created by franciscocalado on 07/05/18.
  */
 
-public class NewAppViewFragment extends BaseToolbarFragment implements AppViewView {
+public class NewAppViewFragment extends NavigationTrackFragment implements AppViewView {
   private static final String ORIGIN_TAG = "TAG";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   private Menu menu;
+  private Toolbar toolbar;
+  private ActionBar actionBar;
   private long appId;
   private String packageName;
   private NewScreenshotsAdapter screenshotsAdapter;
+  private TopReviewsAdapter reviewsAdapter;
+  private AppViewSimilarAppsAdapter similarAppsAdapter;
+  private AppViewSimilarAppsAdapter similarDownloadsAdapter;
   private PublishSubject<ScreenShotClickEvent> screenShotClick;
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
   private PublishSubject<Void> loginSnackClick;
+  private PublishSubject<SimilarAppClickEvent> similarAppClick;
 
   //Views
   private ImageView appIcon;
@@ -86,6 +103,8 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private TextView sizeInfo;
   private Button installButton;
   private TextView appcValue;
+  private View similarDownloadView;
+  private RecyclerView similarDownloadApps;
   private TextView latestVersion;
   private TextView otherVersions;
   private RecyclerView screenshots;
@@ -120,6 +139,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private TextView storeFollowers;
   private TextView storeDownloads;
   private Button storeFollow;
+  private View similarBottomView;
   private RecyclerView similarApps;
   private TextView infoWebsite;
   private TextView infoEmail;
@@ -147,27 +167,18 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     screenShotClick = PublishSubject.create();
     readMoreClick = PublishSubject.create();
     loginSnackClick = PublishSubject.create();
+    similarAppClick = PublishSubject.create();
+    setHasOptionsMenu(true);
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
-    appId = args.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1);
-    packageName = args.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null);
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-
-    screenshotsAdapter =
-        new NewScreenshotsAdapter(new ArrayList<>(), new ArrayList<>(), screenShotClick);
-    screenshots.setAdapter(screenshotsAdapter);
-
-    attachPresenter(presenter);
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
+    if (savedInstanceState != null) {
+      appId = savedInstanceState.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1);
+      packageName =
+          savedInstanceState.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null);
+    }
 
     appIcon = (ImageView) view.findViewById(R.id.app_icon);
     trustedBadge = (ImageView) view.findViewById(R.id.trusted_badge);
@@ -179,6 +190,8 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     installButton = (Button) view.findViewById(R.id.install_button);
     appcValue = (TextView) view.findViewById(R.id.appc_layout)
         .findViewById(R.id.appcoins_reward_message);
+    similarDownloadView = view.findViewById(R.id.similar_download_apps);
+    similarDownloadApps = (RecyclerView) similarDownloadView.findViewById(R.id.similar_list);
     latestVersion = (TextView) view.findViewById(R.id.versions_layout)
         .findViewById(R.id.latest_version);
     otherVersions = (TextView) view.findViewById(R.id.other_versions);
@@ -220,7 +233,8 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     storeFollowers = (TextView) view.findViewById(R.id.user_count);
     storeDownloads = (TextView) view.findViewById(R.id.download_count);
     storeFollow = (Button) view.findViewById(R.id.follow_button);
-    similarApps = (RecyclerView) view.findViewById(R.id.similar_list);
+    similarBottomView = view.findViewById(R.id.similar_layout);
+    similarApps = (RecyclerView) similarBottomView.findViewById(R.id.similar_list);
     infoWebsite = (TextView) view.findViewById(R.id.website_label);
     infoEmail = (TextView) view.findViewById(R.id.email_label);
     infoPrivacy = (TextView) view.findViewById(R.id.privacy_policy_label);
@@ -228,20 +242,72 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
     viewProgress = (ProgressBar) view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+    screenshotsAdapter =
+        new NewScreenshotsAdapter(new ArrayList<>(), new ArrayList<>(), screenShotClick);
+    screenshots.setAdapter(screenshotsAdapter);
+
+    LinearLayoutManagerWithSmoothScroller layoutManager =
+        new LinearLayoutManagerWithSmoothScroller(getContext(), LinearLayoutManager.HORIZONTAL,
+            false);
+    LinearLayoutManager similarLayout =
+        new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+    LinearLayoutManager similarDownloadsLayout =
+        new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+    commentsView.setLayoutManager(layoutManager);
+    // because otherwise the AppBar won't be collapsed
+    commentsView.setNestedScrollingEnabled(false);
+    similarApps.setNestedScrollingEnabled(false);
+
+    similarAppsAdapter =
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("#,#"),
+            similarAppClick);
+    similarDownloadsAdapter =
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("#,#"),
+            similarAppClick);
+
+    similarDownloadApps.setAdapter(similarDownloadsAdapter);
+    similarApps.setAdapter(similarAppsAdapter);
+    similarApps.setLayoutManager(similarLayout);
+
+    similarApps.addItemDecoration(new RecyclerView.ItemDecoration() {
+      @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+          RecyclerView.State state) {
+        int margin = AptoideUtils.ScreenU.getPixelsForDip(5, view.getResources());
+        outRect.set(margin, margin, 0, margin);
+        similarDownloadApps.setLayoutManager(similarDownloadsLayout);
+      }
+    });
+
+    similarDownloadApps.addItemDecoration(new RecyclerView.ItemDecoration() {
+      @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+          RecyclerView.State state) {
+        int margin = AptoideUtils.ScreenU.getPixelsForDip(5, view.getResources());
+        outRect.set(margin, margin, 0, margin);
+      }
+    });
+
+    setupToolbar();
+    attachPresenter(presenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta);
   }
 
+  @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
+  }
+
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.fragment_appview, menu);
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.fragment_new_app_view;
+    showHideOptionsMenu(true);
   }
 
   @Override public void showLoading() {
@@ -347,25 +413,19 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   public Void populateReviewsAndAds(ReviewsViewModel reviewsModel, SimilarAppsViewModel ads,
       DetailedApp app) {
     List<Review> reviews = reviewsModel.getReviewsList();
-    TopReviewsAdapter adapter;
-
-    LinearLayoutManagerWithSmoothScroller layoutManager =
-        new LinearLayoutManagerWithSmoothScroller(getContext(), LinearLayoutManager.HORIZONTAL,
-            false);
-    commentsView.setLayoutManager(layoutManager);
-    // because otherwise the AppBar won't be collapsed
-    commentsView.setNestedScrollingEnabled(false);
 
     if (reviews != null && !reviews.isEmpty()) {
       showReviews(true, app);
 
-      adapter = new TopReviewsAdapter(reviews.toArray(new Review[reviews.size()]));
+      reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new Review[reviews.size()]));
     } else {
       showReviews(false, app);
-      adapter = new TopReviewsAdapter();
+      reviewsAdapter = new TopReviewsAdapter();
     }
 
-    commentsView.setAdapter(adapter);
+    commentsView.setAdapter(reviewsAdapter);
+    similarAppsAdapter.update(mapToSimilar(ads));
+    similarDownloadsAdapter.update(mapToSimilar(ads));
 
     return null;
   }
@@ -458,6 +518,10 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
 
   @Override public Observable<Void> clickLoginSnack() {
     return loginSnackClick;
+  }
+
+  @Override public Observable<SimilarAppClickEvent> clickSimilarApp() {
+    return similarAppClick;
   }
 
   @Override public void navigateToDeveloperWebsite(DetailedApp app) {
@@ -760,6 +824,42 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
       if (usersToVote == 0) {
         emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
       }
+    }
+  }
+
+  private List<AppViewSimilarApp> mapToSimilar(SimilarAppsViewModel similarApps) {
+    List<AppViewSimilarApp> resultList = new ArrayList<>();
+
+    resultList.add(new AppViewSimilarApp(null, similarApps.getAd()));
+    for (Application app : similarApps.getRecommendedApps())
+      resultList.add(new AppViewSimilarApp(app, null));
+
+    return resultList;
+  }
+
+  private void showHideOptionsMenu(boolean visible) {
+    for (int i = 0; i < menu.size(); i++) {
+      MenuItem item = menu.getItem(i);
+      showHideOptionsMenu(item, visible);
+    }
+  }
+
+  protected void showHideOptionsMenu(@Nullable MenuItem item, boolean visible) {
+    if (item != null) {
+      item.setVisible(visible);
+    }
+  }
+
+  public void setupToolbar() {
+
+    toolbar.setTitle("");
+
+    final AppCompatActivity activity = (AppCompatActivity) getActivity();
+    activity.setSupportActionBar(toolbar);
+    actionBar = activity.getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setTitle(toolbar.getTitle());
     }
   }
 
