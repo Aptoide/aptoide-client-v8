@@ -149,8 +149,9 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   public static SearchResultFragment newInstance(String currentQuery, String storeName,
-      String defaultStoreName) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, defaultStoreName);
+      String storeTheme, String defaultStoreName) {
+    SearchViewModel viewModel =
+        new SearchViewModel(currentQuery, storeName, storeTheme, defaultStoreName);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -523,8 +524,9 @@ public class SearchResultFragment extends BackButtonFragment
       allStoresButton.setBackgroundResource(0);
     }
     viewModel.setAllStoresSelected(false);
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      followedStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+    String storeTheme = viewModel.getStoreTheme();
+    if (storeTheme != null && storeTheme.length() > 0) {
+      followedStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
           .getRoundGradientButtonDrawable());
     }
   }
@@ -539,8 +541,9 @@ public class SearchResultFragment extends BackButtonFragment
       allStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
     }
     viewModel.setAllStoresSelected(true);
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      allStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+    String storeTheme = viewModel.getStoreTheme();
+    if (storeTheme != null && storeTheme.length() > 0) {
+      allStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
           .getRoundGradientButtonDrawable());
     }
   }
@@ -645,20 +648,24 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupTheme() {
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
-      toolbar.setBackgroundResource(StoreTheme.get(defaultThemeName)
+    if (viewModel != null
+        && viewModel.getStoreTheme() != null
+        && viewModel.getStoreTheme()
+        .length() > 0) {
+      String storeTheme = viewModel.getStoreTheme();
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+      toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
           .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(defaultThemeName)
+            StoreTheme.get(storeTheme)
                 .getPrimaryColor()));
         progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
       } else {
         progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(defaultThemeName)
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(storeTheme)
                 .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
       }
     }

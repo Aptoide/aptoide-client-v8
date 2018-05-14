@@ -12,15 +12,18 @@ public class SearchNavigator {
 
   private final FragmentNavigator navigator;
   private final String storeName;
+  private final String storeTheme;
   private final String defaultStoreName;
 
   public SearchNavigator(FragmentNavigator navigator, String defaultStoreName) {
-    this(navigator, "", defaultStoreName);
+    this(navigator, "", "", defaultStoreName);
   }
 
-  public SearchNavigator(FragmentNavigator navigator, String storeName, String defaultStoreName) {
+  public SearchNavigator(FragmentNavigator navigator, String storeName, String storeTheme,
+      String defaultStoreName) {
     this.navigator = navigator;
     this.storeName = storeName;
+    this.storeTheme = storeTheme;
     this.defaultStoreName = defaultStoreName;
   }
 
@@ -39,7 +42,7 @@ public class SearchNavigator {
 
   public SearchResultFragment resolveFragment(String query) {
     if (storeName != null && storeName.length() > 0) {
-      return SearchResultFragment.newInstance(query, storeName, defaultStoreName);
+      return SearchResultFragment.newInstance(query, storeName, storeTheme, defaultStoreName);
     }
     return SearchResultFragment.newInstance(query, defaultStoreName);
   }
