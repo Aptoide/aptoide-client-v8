@@ -114,6 +114,7 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
   }
 
   @Override public void showDownloadAppModel(DownloadAppViewModel model) {
+    this.action = model.getAction();
     if (model.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
@@ -162,7 +163,6 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
   }
 
   private void setButtonText(DownloadAppViewModel.Action action) {
-    this.action = action;
     switch (action) {
       case UPDATE:
         install.setText(getResources().getString(R.string.appview_button_update));

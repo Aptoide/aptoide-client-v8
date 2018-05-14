@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.install.Install;
 
 /**
@@ -40,7 +41,7 @@ public class DownloadStateParser {
     return downloadState;
   }
 
-  public DownloadAppViewModel.Action parseDownloadAction(Install.InstallationType type) {
+  public DownloadAppViewModel.Action parseDownloadType(Install.InstallationType type) {
     DownloadAppViewModel.Action action;
     switch (type) {
       case INSTALLED:
@@ -59,5 +60,23 @@ public class DownloadStateParser {
         action = DownloadAppViewModel.Action.INSTALL;
     }
     return action;
+  }
+
+  public int parseDownloadAction(DownloadAppViewModel.Action action) {
+    int downloadAction;
+    switch (action) {
+      case INSTALL:
+        downloadAction = Download.ACTION_INSTALL;
+        break;
+      case UPDATE:
+        downloadAction = Download.ACTION_UPDATE;
+        break;
+      case DOWNGRADE:
+        downloadAction = Download.ACTION_DOWNGRADE;
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid action");
+    }
+    return downloadAction;
   }
 }

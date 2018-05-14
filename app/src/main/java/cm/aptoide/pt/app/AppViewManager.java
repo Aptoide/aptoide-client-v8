@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -7,10 +8,12 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.DetailedApp;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -28,11 +31,14 @@ public class AppViewManager {
   private final AdsManager adsManager;
   private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
+  private AppViewAnalytics appViewAnalytics;
+  private NotificationAnalytics notificationAnalytics;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser) {
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -41,6 +47,8 @@ public class AppViewManager {
     this.adsManager = adsManager;
     this.preferencesManager = preferencesManager;
     this.downloadStateParser = downloadStateParser;
+    this.appViewAnalytics = appViewAnalytics;
+    this.notificationAnalytics = notificationAnalytics;
   }
 
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
@@ -124,15 +132,27 @@ public class AppViewManager {
     return signature;
   }
 
-  public void downloadApp() {
+  public Completable downloadApp(DownloadAppViewModel.Action downloadAction, String packageName,
+      long appId) {
     increaseInstallClick();
+    return Observable.just(downloadFactory.create(buildAppMockedApp(),
+        downloadStateParser.parseDownloadAction(downloadAction)))
+        .flatMapCompletable(download -> installManager.install(download)
+            .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)))
+        .toCompletable();
+  }
+
+  private void setupDownloadEvents(Download download, String packageName, long appId) {
+    appViewAnalytics.setupDownloadEvents(download,
+        notificationAnalytics.getCampaignId(packageName, appId),
+        notificationAnalytics.getAbTestingGroup(packageName, appId), AnalyticsManager.Action.CLICK);
   }
 
   public Observable<DownloadAppViewModel> getDownloadAppViewModel(String md5, String packageName,
       int versionCode) {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new DownloadAppViewModel(
-            downloadStateParser.parseDownloadAction(install.getType()), install.getProgress(),
+            downloadStateParser.parseDownloadType(install.getType()), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState())));
   }
 }

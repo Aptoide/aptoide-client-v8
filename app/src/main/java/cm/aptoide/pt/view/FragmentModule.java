@@ -27,6 +27,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
@@ -39,6 +40,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -55,6 +57,7 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
@@ -249,11 +252,19 @@ import rx.schedulers.Schedulers;
     return new DownloadStateParser();
   }
 
+  @FragmentScope @Provides AppViewAnalytics providesAppViewAnalytics(
+      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
       ReviewsManager reviewsManager, AdsManager adsManager, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser) {
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager, preferencesManager, downloadStateParser);
+        reviewsManager, adsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+        notificationAnalytics);
   }
 }
