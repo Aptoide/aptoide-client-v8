@@ -49,10 +49,8 @@ public class InstallAppViewPresenter implements Presenter {
               Completable completable = null;
               switch (action) {
                 case INSTALL:
-                  completable = installApp(action);
-                  break;
                 case UPDATE:
-                  completable = updateApp();
+                  completable = downloadApp(action);
                   break;
                 case OPEN:
                   completable = openInstalledApp();
@@ -77,15 +75,11 @@ public class InstallAppViewPresenter implements Presenter {
     return Completable.complete();
   }
 
-  private Completable updateApp() {
-    return Completable.complete();
-  }
-
   private Completable openInstalledApp() {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private Completable installApp(DownloadAppViewModel.Action action) {
+  private Completable downloadApp(DownloadAppViewModel.Action action) {
     return Observable.defer(() -> {
       if (appViewManager.showRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
