@@ -207,6 +207,56 @@
           android:text="@string/newaccount_settings"
           style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
+
     </LinearLayout>
+
+
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/my_account_product_card_section_title"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="10dp"
+          style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
+          />
+
+      <include
+          layout="@layout/my_account_product_cardview"
+          android:id="@+id/product_aptoideTv_cardview"
+          android:layout_width="match_parent"
+          android:layout_height="63dp"
+          android:layout_marginTop="19dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          />
+      <include
+          layout="@layout/my_account_product_cardview"
+          android:id="@+id/product_uploader_cardview"
+          android:layout_width="match_parent"
+          android:layout_height="63dp"
+          android:layout_marginTop="9dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          />
+      <include
+          layout="@layout/my_account_product_cardview"
+          android:id="@+id/product_backup_cardview"
+          android:layout_width="match_parent"
+          android:layout_height="63dp"
+          android:layout_marginTop="9dp"
+          android:layout_marginBottom="9dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          />
   </LinearLayout>
 </ScrollView>

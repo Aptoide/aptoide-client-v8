@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -77,9 +80,15 @@ public class NewAccountFragment extends BackButtonFragment
   private Button editStoreButton;
   private Button editProfileButton;
 
+  private CardView aptoideTvCardView;
+  private CardView aptoideUploaderCardView;
+  private CardView aptoideBackupAppsCardView;
+
   //Navigation buttons
   private View notificationHistory;
   private View settings;
+
+  private final String WHAT_IS_APTOIDETV_URL = "https://blog.aptoide.com/what-is-aptoidetv/";
 
   public static Fragment newInstance() {
     return new NewAccountFragment();
@@ -108,11 +117,40 @@ public class NewAccountFragment extends BackButtonFragment
 
     setAccountViews(view);
     setupToolbar();
+    setupProductCardViews();
 
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new NewAccountPresenter(this, accountManager, CrashReport.getInstance(),
         application.getDefaultSharedPreferences(), AndroidSchedulers.mainThread(),
         newAccountNavigator, accountAnalytics));
+  }
+
+  private void setupProductCardViews() {
+    //Aptoide TV
+    ((TextView) aptoideTvCardView.findViewById(R.id.product_title_textview)).setText(
+        getString(R.string.product_card_aptoide_tv_title));
+    ((TextView) aptoideTvCardView.findViewById(R.id.product_subtitle_textview)).setText(
+        getString(R.string.product_card_aptoide_tv_subtitle));
+    ((ImageView) aptoideTvCardView.findViewById(R.id.product_icon_imageview)).setImageDrawable(
+        ContextCompat.getDrawable(getContext(), R.drawable.ic_product_tv));
+
+    //Aptoide Uploader
+    ((TextView) aptoideUploaderCardView.findViewById(R.id.product_title_textview)).setText(
+        getString(R.string.product_card_aptoide_uploader_title));
+    ((TextView) aptoideUploaderCardView.findViewById(R.id.product_subtitle_textview)).setText(
+        getString(R.string.product_card_aptoide_uploader_subtitle));
+    ((ImageView) aptoideUploaderCardView.findViewById(
+        R.id.product_icon_imageview)).setImageDrawable(
+        ContextCompat.getDrawable(getContext(), R.drawable.ic_product_uploader));
+
+    //Aptoide Backup
+    ((TextView) aptoideBackupAppsCardView.findViewById(R.id.product_title_textview)).setText(
+        getString(R.string.product_card_aptoide_backup_apps_title));
+    ((TextView) aptoideBackupAppsCardView.findViewById(R.id.product_subtitle_textview)).setText(
+        getString(R.string.product_card_aptoide_backup_apps_subtitle));
+    ((ImageView) aptoideBackupAppsCardView.findViewById(
+        R.id.product_icon_imageview)).setImageDrawable(
+        ContextCompat.getDrawable(getContext(), R.drawable.ic_product_backup_apps));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -135,7 +173,9 @@ public class NewAccountFragment extends BackButtonFragment
     createStoreButton = null;
     editStoreButton = null;
     editProfileButton = null;
-
+    aptoideBackupAppsCardView = null;
+    aptoideTvCardView = null;
+    aptoideUploaderCardView = null;
     super.onDestroyView();
   }
 
@@ -163,6 +203,23 @@ public class NewAccountFragment extends BackButtonFragment
           .getName(), account.getStore()
           .getAvatar());
     }
+  }
+
+  @Override public void startAptoideTvWebView() {
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab(WHAT_IS_APTOIDETV_URL, getContext());
+  }
+
+  @Override public Observable<Void> aptoideTvCardViewClick() {
+    return RxView.clicks(aptoideTvCardView);
+  }
+
+  @Override public Observable<Void> aptoideUploaderCardViewClick() {
+    return RxView.clicks(aptoideUploaderCardView);
+  }
+
+  @Override public Observable<Void> aptoideBackupCardViewClick() {
+    return RxView.clicks(aptoideBackupAppsCardView);
   }
 
   @Override public Observable<Void> loginClick() {
@@ -297,6 +354,10 @@ public class NewAccountFragment extends BackButtonFragment
     createStoreButton = (Button) view.findViewById(R.id.create_store_button);
     editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
     editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);
+
+    aptoideTvCardView = (CardView) view.findViewById(R.id.product_aptoideTv_cardview);
+    aptoideUploaderCardView = (CardView) view.findViewById(R.id.product_uploader_cardview);
+    aptoideBackupAppsCardView = (CardView) view.findViewById(R.id.product_backup_cardview);
   }
 
   private void setupToolbar() {
