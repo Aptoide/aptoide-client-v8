@@ -169,7 +169,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(url)
           .placeholder(drawable)
-          .transform(new ShadowCircleTransformation(context, imageView))
+          .transform(new ShadowCircleTransformation(context))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
