@@ -24,6 +24,7 @@ import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
@@ -69,7 +70,7 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
 
     attachPresenter(new InstallAppViewPresenter(this, appViewManager, new PermissionManager(),
-        ((PermissionService) getContext())));
+        ((PermissionService) getContext()), AndroidSchedulers.mainThread()));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -133,6 +134,7 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
     switch (downloadState) {
       case ACTIVE:
+        downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
         pauseDownload.setVisibility(View.VISIBLE);
         cancelDownload.setVisibility(View.GONE);
@@ -145,6 +147,7 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
         resumeDownload.setVisibility(View.GONE);
         break;
       case PAUSE:
+        downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
         pauseDownload.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.VISIBLE);

@@ -8,6 +8,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 
 /**
  * Created by filipegoncalves on 5/7/18.
@@ -18,6 +19,7 @@ public class InstallAppViewPresenter implements Presenter {
   private final InstallAppView view;
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private Scheduler viewScheduler;
   private AppViewManager appViewManager;
   private String md5 = "e900c63e3ca3da65f7c4aa4390b1304c";
   private String packageName = "de.autodoc.gmbh";
@@ -25,11 +27,13 @@ public class InstallAppViewPresenter implements Presenter {
   private long appId = 37032862;
 
   public InstallAppViewPresenter(InstallAppView view, AppViewManager appViewManager,
-      PermissionManager permissionManager, PermissionService permissionService) {
+      PermissionManager permissionManager, PermissionService permissionService,
+      Scheduler viewScheduler) {
     this.view = view;
     this.appViewManager = appViewManager;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.viewScheduler = viewScheduler;
   }
 
   @Override public void present() {
@@ -101,6 +105,7 @@ public class InstallAppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> appViewManager.getDownloadAppViewModel(md5, packageName, versionCode)
+            .observeOn(viewScheduler)
             .doOnNext(model -> view.showDownloadAppModel(model))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
