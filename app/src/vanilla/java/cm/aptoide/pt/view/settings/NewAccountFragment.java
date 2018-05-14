@@ -44,8 +44,6 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static android.support.v4.content.ContextCompat.getDrawable;
-
 /**
  * Created by franciscocalado on 12/03/18.
  */
@@ -134,7 +132,7 @@ public class NewAccountFragment extends BackButtonFragment
     ((TextView) aptoideTvCardView.findViewById(R.id.product_subtitle_textview)).setText(
         getString(R.string.product_card_aptoide_tv_subtitle));
     ((ImageView) aptoideTvCardView.findViewById(R.id.product_icon_imageview)).setImageDrawable(
-        getDrawable(getContext(), R.drawable.ic_product_tv));
+        ContextCompat.getDrawable(getContext(), R.drawable.ic_product_tv));
 
     //Aptoide Uploader
     ((TextView) aptoideUploaderCardView.findViewById(R.id.product_title_textview)).setText(
@@ -143,7 +141,7 @@ public class NewAccountFragment extends BackButtonFragment
         getString(R.string.product_card_aptoide_uploader_subtitle));
     ((ImageView) aptoideUploaderCardView.findViewById(
         R.id.product_icon_imageview)).setImageDrawable(
-        getDrawable(getContext(), R.drawable.ic_product_uploader));
+        ContextCompat.getDrawable(getContext(), R.drawable.ic_product_uploader));
 
     //Aptoide Backup
     ((TextView) aptoideBackupAppsCardView.findViewById(R.id.product_title_textview)).setText(
@@ -152,7 +150,7 @@ public class NewAccountFragment extends BackButtonFragment
         getString(R.string.product_card_aptoide_backup_apps_subtitle));
     ((ImageView) aptoideBackupAppsCardView.findViewById(
         R.id.product_icon_imageview)).setImageDrawable(
-        getDrawable(getContext(), R.drawable.ic_product_backup_apps));
+        ContextCompat.getDrawable(getContext(), R.drawable.ic_product_backup_apps));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

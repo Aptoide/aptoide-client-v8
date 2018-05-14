@@ -245,19 +245,17 @@ public class NewAccountPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleAptoideUploaderCardViewClick()
-  {
+  private void handleAptoideUploaderCardViewClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideUploaderCardViewClick())
         .doOnNext(__ -> newAccountNavigator.navigateToUploader())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-          }, throwable -> crashReport.log(throwable));
+        }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleAptoideBackupCardViewClick()
-  {
+  private void handleAptoideBackupCardViewClick() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideBackupCardViewClick())

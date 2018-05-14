@@ -60,23 +60,23 @@
   <color name="teal_700">#00796b</color>
 
 
-  <!-- Letters themes -->
-  <color name="defaul_color_letters">#FF6600</color>
-  <color name="amber_letters">#DBA400</color>
-  <color name="black_letters">#000000</color>
-  <color name="blue_grey_letters">#607D8B</color>
-  <color name="brown_letters">#795548</color>
-  <color name="deep_purple_letters">#673ab7</color>
-  <color name="green_letters">#4caf50</color>
-  <color name="grey_letters">#9E9E9E</color>
-  <color name="indigo_letters">#3f51b5</color>
-  <color name="light_blue_letters">#03a9f4</color>
-  <color name="light_green_letters">#8bc34a</color>
-  <color name="lime_letters">#CDDC39</color>
-  <color name="orange_letters">#ff9800</color>
-  <color name="pink_letters">#e91e63</color>
-  <color name="red_letters">#f44336</color>
-  <color name="teal_letters">#009688</color>
+  <!-- Text/Letters themes -->
+  <color name="default_text">@color/default_orange_gradient_end</color>
+  <color name="amber_text">@color/amber_gradient_end</color>
+  <color name="black_text">@color/black_gradient_start_new</color>
+  <color name="blue_grey_text">@color/blue_grey</color>
+  <color name="brown_text">@color/brown</color>
+  <color name="deep_purple_text">@color/deep_purple</color>
+  <color name="green_text">@color/green</color>
+  <color name="grey_text">@color/grey</color>
+  <color name="indigo_text">@color/indigo</color>
+  <color name="light_blue_text">@color/light_blue</color>
+  <color name="light_green_text">@color/light_green</color>
+  <color name="lime_text">@color/lime</color>
+  <color name="orange_text">@color/orange</color>
+  <color name="pink_text">@color/pink</color>
+  <color name="red_text">@color/red</color>
+  <color name="teal_text">@color/teal</color>
 
 </resources>
 
