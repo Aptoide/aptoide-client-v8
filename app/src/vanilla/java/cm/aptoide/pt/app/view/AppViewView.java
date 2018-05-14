@@ -4,6 +4,7 @@ import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedApp;
@@ -31,13 +32,13 @@ public interface AppViewView extends View {
 
   Void populateReviewsAndAds(ReviewsViewModel reviews, SimilarAppsViewModel ads, DetailedApp app);
 
-  Observable<Void> clickWorkingFlag();
+  Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickWorkingFlag();
 
-  Observable<Void> clickLicenseFlag();
+  Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickLicenseFlag();
 
-  Observable<Void> clickFakeFlag();
+  Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickFakeFlag();
 
-  Observable<Void> clickVirusFlag();
+  Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickVirusFlag();
 
   void displayNotLoggedInSnack();
 
@@ -69,6 +70,8 @@ public interface AppViewView extends View {
 
   Observable<Void> clickReadAllComments();
 
+  Observable<Void> clickLoginSnack();
+
   void navigateToDeveloperWebsite(DetailedApp app);
 
   void navigateToDeveloperEmail(DetailedApp app);
@@ -85,4 +88,12 @@ public interface AppViewView extends View {
 
   Observable<GenericDialogs.EResponse> showRateDialog(String appName, String packageName,
       String storeName);
+
+  void disableFlags();
+
+  void enableFlags();
+
+  void incrementFlags(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type);
+
+  void showFlagVoteSubmittedMessage();
 }

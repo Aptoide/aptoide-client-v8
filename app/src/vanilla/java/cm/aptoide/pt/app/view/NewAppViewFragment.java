@@ -42,12 +42,14 @@ import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import com.jakewharton.rxbinding.view.RxView;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   private NewScreenshotsAdapter screenshotsAdapter;
   private PublishSubject<ScreenShotClickEvent> screenShotClick;
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
+  private PublishSubject<Void> loginSnackClick;
 
   //Views
   private ImageView appIcon;
@@ -143,6 +146,7 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     getFragmentComponent(savedInstanceState).inject(this);
     screenShotClick = PublishSubject.create();
     readMoreClick = PublishSubject.create();
+    loginSnackClick = PublishSubject.create();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -366,24 +370,32 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     return null;
   }
 
-  @Override public Observable<Void> clickWorkingFlag() {
-    return RxView.clicks(workingWellLayout);
+  @Override public Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickWorkingFlag() {
+    return RxView.clicks(workingWellLayout)
+        .flatMap(__ -> Observable.just(GetAppMeta.GetAppMetaFile.Flags.Vote.Type.GOOD));
   }
 
-  @Override public Observable<Void> clickLicenseFlag() {
-    return RxView.clicks(needsLicenseLayout);
+  @Override public Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickLicenseFlag() {
+    return RxView.clicks(needsLicenseLayout)
+        .flatMap(__ -> Observable.just(GetAppMeta.GetAppMetaFile.Flags.Vote.Type.LICENSE));
   }
 
-  @Override public Observable<Void> clickFakeFlag() {
-    return RxView.clicks(fakeAppLayout);
+  @Override public Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickFakeFlag() {
+    return RxView.clicks(fakeAppLayout)
+        .flatMap(__ -> Observable.just(GetAppMeta.GetAppMetaFile.Flags.Vote.Type.FAKE));
   }
 
-  @Override public Observable<Void> clickVirusFlag() {
-    return RxView.clicks(virusLayout);
+  @Override public Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickVirusFlag() {
+    return RxView.clicks(virusLayout)
+        .flatMap(__ -> Observable.just(GetAppMeta.GetAppMetaFile.Flags.Vote.Type.VIRUS));
   }
 
   @Override public void displayNotLoggedInSnack() {
-
+    //Toast.makeText(getContext(), R.string.you_need_to_be_logged_in, Toast.LENGTH_SHORT)
+    //    .show();
+    ShowMessage.asSnack(getView(), R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
+      loginSnackClick.onNext(null);
+    });
   }
 
   @Override public void displayStoreFollowedSnack(String storeName) {
@@ -444,6 +456,10 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
     return RxView.clicks(showAllCommentsButton);
   }
 
+  @Override public Observable<Void> clickLoginSnack() {
+    return loginSnackClick;
+  }
+
   @Override public void navigateToDeveloperWebsite(DetailedApp app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getWebsite()));
@@ -492,6 +508,66 @@ public class NewAppViewFragment extends BaseToolbarFragment implements AppViewVi
   public Observable<GenericDialogs.EResponse> showRateDialog(String appName, String packageName,
       String storeName) {
     return dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
+  }
+
+  @Override public void disableFlags() {
+    workingWellLayout.setClickable(false);
+    needsLicenseLayout.setClickable(false);
+    fakeAppLayout.setClickable(false);
+    virusLayout.setClickable(false);
+  }
+
+  @Override public void enableFlags() {
+    workingWellLayout.setClickable(true);
+    needsLicenseLayout.setClickable(true);
+    fakeAppLayout.setClickable(true);
+    virusLayout.setClickable(true);
+  }
+
+  @Override public void incrementFlags(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
+    disableFlags();
+    switch (type) {
+      case GOOD:
+        workingWellText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(String.valueOf(new BigDecimal(workingWellText.getText()
+                .toString()))) + 1));
+        workingWellLayout.setSelected(true);
+        workingWellLayout.setPressed(false);
+        break;
+
+      case LICENSE:
+        needsLicenceText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(String.valueOf(new BigDecimal(needsLicenceText.getText()
+                .toString()))) + 1));
+        needsLicenceText.setSelected(true);
+        needsLicenceText.setPressed(false);
+
+        break;
+
+      case FAKE:
+        fakeAppText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(String.valueOf(new BigDecimal(fakeAppText.getText()
+                .toString()))) + 1));
+        fakeAppLayout.setSelected(true);
+        fakeAppLayout.setPressed(false);
+        break;
+
+      case VIRUS:
+        virusText.setText(NumberFormat.getIntegerInstance()
+            .format(Double.parseDouble(String.valueOf(new BigDecimal(virusText.getText()
+                .toString()))) + 1));
+        virusLayout.setSelected(true);
+        virusLayout.setPressed(false);
+        break;
+
+      default:
+        throw new IllegalArgumentException("Unable to find Type " + type.name());
+    }
+  }
+
+  @Override public void showFlagVoteSubmittedMessage() {
+    Toast.makeText(getContext(), R.string.vote_submitted, Toast.LENGTH_SHORT)
+        .show();
   }
 
   private void setTrustedBadge(DetailedApp app) {

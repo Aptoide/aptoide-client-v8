@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
@@ -62,6 +63,8 @@ public class AppViewPresenter implements Presenter {
     handleClickOnTrustedBadge();
     handleClickOnRateApp();
     handleClickReadComments();
+    handleClickFlags();
+    handleClickLoginSnack();
   }
 
   private void handleFirstLoad() {
@@ -285,4 +288,50 @@ public class AppViewPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
+  private void handleClickFlags() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> Observable.merge(view.clickVirusFlag(), view.clickLicenseFlag(),
+            view.clickWorkingFlag(), view.clickFakeFlag()))
+        .doOnNext(type -> view.disableFlags())
+        .flatMap(type -> accountManager.accountStatus()
+            .observeOn(scheduler)
+            .flatMap(account -> {
+              if (!account.isLoggedIn()) {
+                view.enableFlags();
+                view.displayNotLoggedInSnack();
+                return Observable.just(false);
+              } else {
+                return Observable.just(true);
+              }
+            })
+            .filter(isLoggedIn -> isLoggedIn)
+            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(model -> appViewManager.addApkFlagRequestAction(model.getStore()
+                .getName(), model.getFile()
+                .getMd5sum(), type))
+            .filter(result -> result)
+            .observeOn(scheduler)
+            .doOnNext(__ -> {
+              view.incrementFlags(type);
+              view.showFlagVoteSubmittedMessage();
+            }))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          view.enableFlags();
+          crashReport.log(err);
+        });
+  }
+
+  private void handleClickLoginSnack() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickLoginSnack())
+        .doOnNext(__ -> accountNavigator.navigateToAccountView(
+            AccountAnalytics.AccountOrigins.APP_VIEW_FLAG))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
 }
