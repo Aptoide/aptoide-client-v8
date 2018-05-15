@@ -53,12 +53,12 @@ import org.parceler.Parcel;
   public SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
       String defaultStoreName) {
     this(currentQuery, storeName, onlyTrustedApps, true, defaultStoreName, new LinkedList<>(),
-        new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), null);
+        new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), "");
   }
 
   public SearchViewModel(String currentQuery, boolean onlyTrustedApps, String defaultStoreName) {
     this(currentQuery, null, onlyTrustedApps, true, defaultStoreName, new LinkedList<>(),
-        new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), null);
+        new LinkedList<>(), new LinkedList<>(), new LinkedList<>(), "");
   }
 
   public SearchViewModel(String currentQuery, String storeName, String storeTheme,

@@ -671,10 +671,28 @@ public class SearchResultFragment extends BackButtonFragment
     }
   }
 
+  private void setupDefaultTheme() {
+    if (defaultThemeName != null && defaultThemeName.length() > 0) {
+      ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
+        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
+            StoreTheme.get(defaultThemeName)
+                .getPrimaryColor()));
+        progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
+      } else {
+        progressBar.getIndeterminateDrawable()
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(defaultThemeName)
+                .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
+      }
+    }
+  }
+
   @Override public void onDestroyView() {
     allStoresResultList.clearAnimation();
     followedStoresResultList.clearAnimation();
-    setupTheme();
+    setupDefaultTheme();
     super.onDestroyView();
   }
 
