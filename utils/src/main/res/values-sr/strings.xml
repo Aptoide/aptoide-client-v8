@@ -21,9 +21,7 @@
   <string name="WidgetProvider_timestamp_month_ago">1 месец пре</string>
   <string name="WidgetProvider_timestamp_months_ago">%s месеци раније</string>
   <string name="WidgetProvider_timestamp_year_ago">1 годину раније</string>
-  <string name="WidgetProvider_timestamp_years_ago">%s godinu ranije
-
-%s godina ranije</string>
+  <string name="WidgetProvider_timestamp_years_ago">%s godina ranije</string>
   <!-- Share options -->
   <string name="share_options_share_external">Podelite preko...</string>
   <string name="share_options_share_in_timeline">Podelite na Rasporedu Aplikacija</string>
