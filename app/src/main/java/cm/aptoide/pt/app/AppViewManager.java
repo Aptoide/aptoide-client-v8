@@ -159,4 +159,10 @@ public class AppViewManager {
   public Completable pauseDownload(String md5) {
     return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
+
+  public Completable resumeDownload(String md5, String packageName, long appId) {
+    return installManager.getDownload(md5)
+        .flatMapCompletable(download -> installManager.install(download)
+            .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)));
+  }
 }

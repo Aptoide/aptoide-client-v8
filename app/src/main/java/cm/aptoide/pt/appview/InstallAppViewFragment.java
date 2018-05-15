@@ -148,6 +148,10 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
     return RxView.clicks(pauseDownload);
   }
 
+  @Override public Observable<Void> resumeDownload() {
+    return RxView.clicks(resumeDownload);
+  }
+
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
     switch (downloadState) {
       case ACTIVE:

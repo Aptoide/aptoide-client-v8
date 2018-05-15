@@ -40,6 +40,22 @@ public class InstallAppViewPresenter implements Presenter {
     getApp();
     handleAppButtonClick();
     pauseDownload();
+    resumeDownload();
+  }
+
+  private void resumeDownload() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.resumeDownload()
+            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
+                .flatMap(success -> permissionManager.requestExternalStoragePermission(
+                    permissionService))
+                .flatMapCompletable(__1 -> appViewManager.resumeDownload(md5, packageName, appId))
+                .retry()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
   }
 
   private void pauseDownload() {
