@@ -17,6 +17,7 @@ public class DetailedAppViewModel {
   private final String appAdded;
   private final Obb obb;
   private final GetAppMeta.Pay pay;
+  private final String wUrls;
   private final boolean isStoreFollowed;
   private final DetailedApp detailedApp;
   private final long appId;
@@ -39,7 +40,8 @@ public class DetailedAppViewModel {
       GetAppMeta.GetAppMetaFile file, String packageName, long size, int downloads,
       GetAppMeta.Stats.Rating globalRating, int pDownloads, GetAppMeta.Stats.Rating rating,
       GetAppMeta.Developer developer, String graphic, String added, GetAppMeta.Media media,
-      String modified, String appAdded, Obb obb, GetAppMeta.Pay pay, Boolean isStoreFollowed) {
+      String modified, String appAdded, Obb obb, GetAppMeta.Pay pay, String wUrls,
+      boolean isStoreFollowed) {
     this.detailedApp = detailedApp;
     this.appId = appId;
     this.appName = appName;
@@ -59,6 +61,7 @@ public class DetailedAppViewModel {
     this.appAdded = appAdded;
     this.obb = obb;
     this.pay = pay;
+    this.wUrls = wUrls;
     this.isStoreFollowed = isStoreFollowed;
     this.loading = false;
     this.error = null;
@@ -86,6 +89,7 @@ public class DetailedAppViewModel {
     this.appAdded = null;
     this.obb = null;
     this.pay = null;
+    this.wUrls = null;
     this.isStoreFollowed = false;
     this.error = null;
   }
@@ -112,6 +116,7 @@ public class DetailedAppViewModel {
     this.appAdded = null;
     this.obb = null;
     this.pay = null;
+    this.wUrls = null;
     this.isStoreFollowed = false;
     this.loading = false;
   }
@@ -206,5 +211,9 @@ public class DetailedAppViewModel {
 
   public boolean hasError() {
     return (error != null);
+  }
+
+  public String getwUrls() {
+    return wUrls;
   }
 }

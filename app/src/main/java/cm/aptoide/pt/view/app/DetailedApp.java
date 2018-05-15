@@ -10,26 +10,27 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 
 public class DetailedApp {
 
-  private long id;
-  private String name;
-  private String packageName;
-  private long size;
-  private String icon;
-  private String graphic;
-  private String added;
-  private String modified;
-  private GetAppMeta.GetAppMetaFile file;
-  private GetAppMeta.Developer developer;
-  private Store store;
-  private GetAppMeta.Media media;
-  private GetAppMeta.Stats stats;
-  private Obb obb;
-  private GetAppMeta.Pay pay;
+  private final long id;
+  private final String name;
+  private final String packageName;
+  private final long size;
+  private final String icon;
+  private final String graphic;
+  private final String added;
+  private final String modified;
+  private final GetAppMeta.GetAppMetaFile file;
+  private final GetAppMeta.Developer developer;
+  private final Store store;
+  private final GetAppMeta.Media media;
+  private final GetAppMeta.Stats stats;
+  private final Obb obb;
+  private final GetAppMeta.Pay pay;
+  private final String wUrls;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, GetAppMeta.GetAppMetaFile file,
       GetAppMeta.Developer developer, Store store, GetAppMeta.Media media, GetAppMeta.Stats stats,
-      Obb obb, GetAppMeta.Pay pay) {
+      Obb obb, GetAppMeta.Pay pay, String wUrls) {
 
     this.id = id;
     this.name = name;
@@ -46,6 +47,7 @@ public class DetailedApp {
     this.stats = stats;
     this.obb = obb;
     this.pay = pay;
+    this.wUrls = wUrls;
   }
 
   public long getId() {
@@ -106,5 +108,9 @@ public class DetailedApp {
 
   public GetAppMeta.GetAppMetaFile getFile() {
     return file;
+  }
+
+  public String getwUrls() {
+    return wUrls;
   }
 }

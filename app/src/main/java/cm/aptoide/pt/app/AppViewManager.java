@@ -121,7 +121,7 @@ public class AppViewManager {
             app.getFile(), app.getPackageName(), app.getSize(), stats.getDownloads(),
             stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(), app.getDeveloper(),
             app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(),
-            app.getObb(), app.getPay(), isStoreFollowed));
+            app.getObb(), app.getPay(), app.getwUrls(), isStoreFollowed));
   }
 
   private Single<DetailedAppViewModel> mapResultToCorrectDetailedAppViewModel(
