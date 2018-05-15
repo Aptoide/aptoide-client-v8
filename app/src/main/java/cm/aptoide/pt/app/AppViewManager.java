@@ -165,4 +165,9 @@ public class AppViewManager {
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)));
   }
+
+  public Completable cancelDownload(String md5, String packageName, int versionCode) {
+    return Completable.fromAction(
+        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+  }
 }

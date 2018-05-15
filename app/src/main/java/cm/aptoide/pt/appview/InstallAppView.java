@@ -25,4 +25,6 @@ public interface InstallAppView extends View {
   Observable<Void> pauseDownload();
 
   Observable<Void> resumeDownload();
+
+  Observable<Void> cancelDownload();
 }
