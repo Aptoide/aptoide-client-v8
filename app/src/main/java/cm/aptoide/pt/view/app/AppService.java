@@ -105,7 +105,8 @@ public class AppService {
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
               app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getFile(),
               app.getDeveloper(), app.getStore(), app.getMedia(), app.getStats(), app.getObb(),
-              app.getPay());
+              app.getPay(), app.getUrls()
+              .getW());
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
