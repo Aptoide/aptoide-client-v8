@@ -17,4 +17,8 @@ public interface InstallAppView extends View {
   void showDownloadAppModel(DownloadAppViewModel model);
 
   void openApp(String packageName);
+
+  Observable<Boolean> showDowngradeMessage();
+
+  void showDowngradingMessage();
 }

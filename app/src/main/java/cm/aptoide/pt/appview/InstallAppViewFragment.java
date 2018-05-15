@@ -3,6 +3,7 @@ package cm.aptoide.pt.appview;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,6 +130,18 @@ public class InstallAppViewFragment extends NavigationTrackFragment implements I
 
   @Override public void openApp(String packageName) {
     AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+  }
+
+  @Override public Observable<Boolean> showDowngradeMessage() {
+    return GenericDialogs.createGenericContinueCancelMessage(getContext(), null,
+        getContext().getResources()
+            .getString(R.string.downgrade_warning_dialog))
+        .map(eResponse -> eResponse.equals(YES));
+  }
+
+  @Override public void showDowngradingMessage() {
+    Snackbar.make(getView(), R.string.downgrading_msg, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {

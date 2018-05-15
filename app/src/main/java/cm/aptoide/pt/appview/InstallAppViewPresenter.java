@@ -23,7 +23,7 @@ public class InstallAppViewPresenter implements Presenter {
   private AppViewManager appViewManager;
   private String md5 = "e900c63e3ca3da65f7c4aa4390b1304c";
   private String packageName = "de.autodoc.gmbh";
-  private int versionCode = 149;
+  private int versionCode = 145;
   private long appId = 37032862;
 
   public InstallAppViewPresenter(InstallAppView view, AppViewManager appViewManager,
@@ -56,7 +56,7 @@ public class InstallAppViewPresenter implements Presenter {
                   completable = openInstalledApp();
                   break;
                 case DOWNGRADE:
-                  completable = downgradeApp();
+                  completable = downgradeApp(action);
                   break;
                 default:
                   completable =
@@ -71,8 +71,12 @@ public class InstallAppViewPresenter implements Presenter {
         });
   }
 
-  private Completable downgradeApp() {
-    return Completable.complete();
+  private Completable downgradeApp(DownloadAppViewModel.Action action) {
+    return view.showDowngradeMessage()
+        .filter(downgrade -> downgrade)
+        .doOnNext(__ -> view.showDowngradingMessage())
+        .flatMapCompletable(__ -> downloadApp(action))
+        .toCompletable();
   }
 
   private Completable openInstalledApp() {
