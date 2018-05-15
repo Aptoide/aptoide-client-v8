@@ -21,4 +21,6 @@ public interface InstallAppView extends View {
   Observable<Boolean> showDowngradeMessage();
 
   void showDowngradingMessage();
+
+  Observable<Void> pauseDownload();
 }

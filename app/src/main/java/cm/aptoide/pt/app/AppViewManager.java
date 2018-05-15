@@ -155,4 +155,8 @@ public class AppViewManager {
             downloadStateParser.parseDownloadType(install.getType()), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState())));
   }
+
+  public Completable pauseDownload(String md5) {
+    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+  }
 }

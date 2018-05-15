@@ -23,7 +23,7 @@ public class InstallAppViewPresenter implements Presenter {
   private AppViewManager appViewManager;
   private String md5 = "e900c63e3ca3da65f7c4aa4390b1304c";
   private String packageName = "de.autodoc.gmbh";
-  private int versionCode = 145;
+  private int versionCode = 149;
   private long appId = 37032862;
 
   public InstallAppViewPresenter(InstallAppView view, AppViewManager appViewManager,
@@ -39,6 +39,19 @@ public class InstallAppViewPresenter implements Presenter {
   @Override public void present() {
     getApp();
     handleAppButtonClick();
+    pauseDownload();
+  }
+
+  private void pauseDownload() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.pauseDownload()
+            .flatMapCompletable(__ -> appViewManager.pauseDownload(md5))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
   }
 
   private void handleAppButtonClick() {
