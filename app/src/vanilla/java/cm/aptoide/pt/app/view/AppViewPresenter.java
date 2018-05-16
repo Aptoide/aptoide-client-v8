@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -9,6 +10,7 @@ import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.share.ShareDialogs;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
@@ -66,6 +68,9 @@ public class AppViewPresenter implements Presenter {
     handleClickFlags();
     handleClickLoginSnack();
     handleClickOnSimilarApps();
+    handleClickOnToolbar();
+    handleDefaultShare();
+    handleRecommendsShare();
   }
 
   private void handleFirstLoad() {
@@ -357,4 +362,63 @@ public class AppViewPresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
+
+  private void handleClickOnToolbar() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickToolbar())
+        .filter(menuItem -> menuItem != null)
+        .map(menuItem -> menuItem.getItemId())
+        .doOnNext(itemId -> {
+          switch (itemId) {
+            case R.id.menu_item_share:
+              view.showShareDialog();
+              break;
+
+            case R.id.menu_remote_install:
+              view.showShareOnTvDialog();
+              break;
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleDefaultShare() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.shareDialogResponse())
+        .filter(response -> response == ShareDialogs.ShareResponse.SHARE_EXTERNAL)
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+        .observeOn(scheduler)
+        .doOnNext(app -> view.defaultShare(app.getAppName(), app.getwUrls()))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleRecommendsShare() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.shareDialogResponse())
+        .filter(response -> response == ShareDialogs.ShareResponse.SHARE_TIMELINE)
+        .flatMap(__ -> accountManager.accountStatus())
+        .observeOn(scheduler)
+        .flatMap(account -> {
+          if (account.isLoggedIn()) {
+            view.displayNotLoggedInSnack();
+            return Observable.just(false);
+          } else {
+            return Observable.just(true);
+          }
+        })
+        .filter(shouldContinue -> shouldContinue)
+        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+        .observeOn(scheduler)
+        .doOnNext(appModel -> view.recommendsShare(appModel.getPackageName(), appModel.getStore()
+            .getId()))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
 }
+

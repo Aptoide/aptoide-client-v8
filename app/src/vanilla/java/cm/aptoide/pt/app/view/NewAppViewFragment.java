@@ -1,19 +1,25 @@
 package cm.aptoide.pt.app.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -31,6 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -44,10 +51,16 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.SnapToStartHelper;
+import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
+import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
+import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.timeline.SocialRepository;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -57,6 +70,7 @@ import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
+import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -92,6 +106,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
+  private PublishSubject<ShareDialogs.ShareResponse> shareDialogClick;
 
   //Views
   private ImageView appIcon;
@@ -168,6 +183,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     readMoreClick = PublishSubject.create();
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
+    shareDialogClick = PublishSubject.create();
+
     setHasOptionsMenu(true);
   }
 
@@ -289,8 +306,16 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       }
     });
 
+    SnapHelper commentsSnap = new SnapToStartHelper();
+    commentsSnap.attachToRecyclerView(commentsView);
+
     setupToolbar();
     attachPresenter(presenter);
+  }
+
+  @Override public void onResume() {
+
+    super.onResume();
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -451,11 +476,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void displayNotLoggedInSnack() {
-    //Toast.makeText(getContext(), R.string.you_need_to_be_logged_in, Toast.LENGTH_SHORT)
-    //    .show();
-    ShowMessage.asSnack(getView(), R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
-      loginSnackClick.onNext(null);
-    });
+    Snackbar.make(getView(), R.string.you_need_to_be_logged_in, Snackbar.LENGTH_SHORT)
+        .setAction(R.string.login, snackView -> loginSnackClick.onNext(null))
+        .show();
   }
 
   @Override public void displayStoreFollowedSnack(String storeName) {
@@ -523,6 +546,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public Observable<SimilarAppClickEvent> clickSimilarApp() {
     return similarAppClick;
   }
+
+  @Override public Observable<MenuItem> clickToolbar() {
+    return RxToolbar.itemClicks(toolbar);
+  }
+
+  @Override public Observable<ShareDialogs.ShareResponse> shareDialogResponse() {
+    return shareDialogClick;
+  }
+
 
   @Override public void navigateToDeveloperWebsite(DetailedApp app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
@@ -633,6 +665,81 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     Toast.makeText(getContext(), R.string.vote_submitted, Toast.LENGTH_SHORT)
         .show();
   }
+
+  @Override public void showShareDialog() {
+    String title = getActivity().getString(R.string.share);
+
+    ShareDialogs.createAppviewShareDialog(getActivity(), title)
+        .subscribe(response -> shareDialogClick.onNext(response));
+  }
+
+  @Override public void showShareOnTvDialog() {
+    if (AptoideUtils.SystemU.getConnectionType(
+        (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
+        .equals("mobile")) {
+      GenericDialogs.createGenericOkMessage(getContext(),
+          getContext().getString(R.string.remote_install_menu_title),
+          getContext().getString(R.string.install_on_tv_mobile_error))
+          .subscribe(__ -> {
+          }, err -> CrashReport.getInstance()
+              .log(err));
+    } else {
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(getAppId());
+      newFragment.show(getActivity().getSupportFragmentManager(),
+          RemoteInstallDialog.class.getSimpleName());
+    }
+  }
+
+  @Override public void defaultShare(String appName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+          getActivity().getString(R.string.install) + " \"" + appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      getActivity().startActivity(
+          Intent.createChooser(sharingIntent, getActivity().getString(R.string.share)));
+    }
+  }
+
+  @Override public void recommendsShare(String packageName, Long storeId) {
+
+    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
+    TimelineAnalytics analytics = application.getTimelineAnalytics();
+    if (application.isCreateStoreUserPrivacyEnabled()) {
+      SocialRepository socialRepository =
+          RepositoryFactory.getSocialRepository(getActivity(), analytics,
+              application.getDefaultSharedPreferences());
+      LayoutInflater inflater = LayoutInflater.from(getActivity());
+      AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+      View alertDialogView = inflater.inflate(R.layout.logged_in_share, null);
+      alertDialog.setView(alertDialogView);
+
+      alertDialogView.findViewById(R.id.continue_button)
+          .setOnClickListener(view -> {
+            socialRepository.share(packageName, storeId, "app");
+            ShowMessage.asSnack(getActivity(), R.string.social_timeline_share_dialog_title);
+            analytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
+            analytics.sendSocialCardPreviewActionEvent(
+                TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
+            alertDialog.dismiss();
+          });
+
+      alertDialogView.findViewById(R.id.skip_button)
+          .setOnClickListener(view -> {
+            analytics.sendRecommendedAppInteractEvent(packageName, "Skip");
+            analytics.sendSocialCardPreviewActionEvent(
+                TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
+            alertDialog.dismiss();
+          });
+
+      alertDialogView.findViewById(R.id.dont_show_button)
+          .setVisibility(View.GONE);
+
+      alertDialog.show();
+    }
+  }
+
 
   private void setTrustedBadge(DetailedApp app) {
     @DrawableRes int badgeResId;
@@ -866,5 +973,4 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   public enum BundleKeys {
     APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
   }
-
 }

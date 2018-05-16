@@ -1,11 +1,13 @@
 package cm.aptoide.pt.app.view;
 
+import android.view.MenuItem;
 import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedApp;
 import rx.Observable;
@@ -74,6 +76,10 @@ public interface AppViewView extends View {
 
   Observable<SimilarAppClickEvent> clickSimilarApp();
 
+  Observable<MenuItem> clickToolbar();
+
+  Observable<ShareDialogs.ShareResponse> shareDialogResponse();
+
   void navigateToDeveloperWebsite(DetailedApp app);
 
   void navigateToDeveloperEmail(DetailedApp app);
@@ -98,4 +104,12 @@ public interface AppViewView extends View {
   void incrementFlags(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type);
 
   void showFlagVoteSubmittedMessage();
+
+  void showShareDialog();
+
+  void showShareOnTvDialog();
+
+  void defaultShare(String appName, String wUrl);
+
+  void recommendsShare(String packageName, Long storeId);
 }
