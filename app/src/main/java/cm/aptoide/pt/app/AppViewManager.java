@@ -12,6 +12,7 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import cm.aptoide.pt.view.app.FlagsVote;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -86,7 +87,7 @@ public class AppViewManager {
   }
 
   public Single<Boolean> addApkFlagRequestAction(String storeName, String md5,
-      GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
+      FlagsVote.VoteType type) {
     return flagManager.loadAddApkFlagRequest(storeName, md5, type.name()
         .toLowerCase())
         .map(response -> (response.isOk() && !response.hasErrors()));
@@ -118,10 +119,13 @@ public class AppViewManager {
     return isStoreFollowed(cachedApp.getStore()
         .getId()).map(
         isStoreFollowed -> new DetailedAppViewModel(app, app.getId(), app.getName(), app.getStore(),
-            app.getFile(), app.getPackageName(), app.getSize(), stats.getDownloads(),
-            stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(), app.getDeveloper(),
-            app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(),
-            app.getObb(), app.getPay(), app.getwUrls(), isStoreFollowed));
+            app.isGoodApp(), app.getMalware(), app.getAppFlags(), app.getTags(),
+            app.getUsedFeatures(), app.getUsedPermissions(), app.getFileSize(), app.getMd5(),
+            app.getMd5Sum(), app.getPath(), app.getPathAlt(), app.getVerCode(), app.getVerName(),
+            app.getPackageName(), app.getSize(), stats.getDownloads(), stats.getGlobalRating(),
+            stats.getPdownloads(), stats.getRating(), app.getDeveloper(), app.getGraphic(),
+            app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(), app.getObb(),
+            app.getPay(), app.getwUrls(), isStoreFollowed));
   }
 
   private Single<DetailedAppViewModel> mapResultToCorrectDetailedAppViewModel(

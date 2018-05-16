@@ -47,7 +47,6 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -64,8 +63,10 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.DetailedApp;
+import cm.aptoide.pt.view.app.FlagsVote;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -354,8 +355,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void populateAppDetails(DetailedAppViewModel detailedApp) {
-    StoreTheme storeThemeEnum = StoreTheme.get(detailedApp.getDetailedApp()
-        .getStore());
+    StoreTheme storeThemeEnum = StoreTheme.get(detailedApp.getStore());
 
     appName.setText(detailedApp.getDetailedApp()
         .getName());
@@ -369,8 +369,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(detailedApp.getDetailedApp()
         .getSize(), false));
     latestVersion.setText(detailedApp.getDetailedApp()
-        .getFile()
-        .getVername());
+        .getVerName());
     storeName.setText(detailedApp.getDetailedApp()
         .getStore()
         .getName());
@@ -419,8 +418,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     setDescription(detailedApp.getDetailedApp()
         .getMedia()
         .getDescription());
-    setAppFlags(detailedApp.getDetailedApp()
-        .getFile());
+    setAppFlags(detailedApp.isGoodApp(), detailedApp.getAppFlags());
     setReadMoreClickListener(detailedApp.getDetailedApp());
     setDeveloperDetails(detailedApp.getDetailedApp());
     showAppview();
@@ -455,24 +453,24 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return null;
   }
 
-  @Override public Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickWorkingFlag() {
+  @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {
     return RxView.clicks(workingWellLayout)
-        .flatMap(__ -> Observable.just(GetAppMeta.GetAppMetaFile.Flags.Vote.Type.GOOD));
+        .flatMap(__ -> Observable.just(FlagsVote.VoteType.GOOD));
   }
 
-  @Override public Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickLicenseFlag() {
+  @Override public Observable<FlagsVote.VoteType> clickLicenseFlag() {
     return RxView.clicks(needsLicenseLayout)
-        .flatMap(__ -> Observable.just(GetAppMeta.GetAppMetaFile.Flags.Vote.Type.LICENSE));
+        .flatMap(__ -> Observable.just(FlagsVote.VoteType.LICENSE));
   }
 
-  @Override public Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickFakeFlag() {
+  @Override public Observable<FlagsVote.VoteType> clickFakeFlag() {
     return RxView.clicks(fakeAppLayout)
-        .flatMap(__ -> Observable.just(GetAppMeta.GetAppMetaFile.Flags.Vote.Type.FAKE));
+        .flatMap(__ -> Observable.just(FlagsVote.VoteType.FAKE));
   }
 
-  @Override public Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickVirusFlag() {
+  @Override public Observable<FlagsVote.VoteType> clickVirusFlag() {
     return RxView.clicks(virusLayout)
-        .flatMap(__ -> Observable.just(GetAppMeta.GetAppMetaFile.Flags.Vote.Type.VIRUS));
+        .flatMap(__ -> Observable.just(FlagsVote.VoteType.VIRUS));
   }
 
   @Override public void displayNotLoggedInSnack() {
@@ -555,7 +553,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return shareDialogClick;
   }
 
-
   @Override public void navigateToDeveloperWebsite(DetailedApp app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getWebsite()));
@@ -586,9 +583,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void showTrustedDialog(DetailedApp app) {
-    DialogBadgeV7.newInstance(app.getFile()
-        .getMalware(), app.getName(), app.getFile()
-        .getMalware()
+    DialogBadgeV7.newInstance(app.getMalware(), app.getName(), app.getMalware()
         .getRank())
         .show(getFragmentManager(), BADGE_DIALOG_TAG);
   }
@@ -620,7 +615,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     virusLayout.setClickable(true);
   }
 
-  @Override public void incrementFlags(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
+  @Override public void incrementFlags(FlagsVote.VoteType type) {
     disableFlags();
     switch (type) {
       case GOOD:
@@ -740,15 +735,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-
   private void setTrustedBadge(DetailedApp app) {
     @DrawableRes int badgeResId;
     @StringRes int badgeMessageId;
 
-    Malware.Rank rank = app.getFile()
-        .getMalware()
-        .getRank() == null ? Malware.Rank.UNKNOWN : app.getFile()
-        .getMalware()
+    Malware.Rank rank = app.getMalware()
+        .getRank() == null ? Malware.Rank.UNKNOWN : app.getMalware()
         .getRank();
     switch (rank) {
       case TRUSTED:
@@ -795,25 +787,23 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
             .getTheme())));
   }
 
-  private void setAppFlags(GetAppMeta.GetAppMetaFile file) {
-    if (file.isGoodApp()) {
+  private void setAppFlags(boolean isGoodFile, AppFlags appFlags) {
+    if (isGoodFile) {
       goodAppLayoutWrapper.setVisibility(View.VISIBLE);
       flagsLayoutWrapper.setVisibility(View.GONE);
     } else {
       goodAppLayoutWrapper.setVisibility(View.GONE);
       flagsLayoutWrapper.setVisibility(View.VISIBLE);
-      setFlagValues(file);
+      setFlagValues(appFlags);
     }
   }
 
-  private void setFlagValues(GetAppMeta.GetAppMetaFile file) {
+  private void setFlagValues(AppFlags appFlags) {
     try {
-      GetAppMeta.GetAppMetaFile.Flags flags = file.getFlags();
-
-      if (flags != null && flags.getVotes() != null && !flags.getVotes()
+      if (appFlags != null && appFlags.getVotes() != null && !appFlags.getVotes()
           .isEmpty()) {
-        for (final GetAppMeta.GetAppMetaFile.Flags.Vote vote : flags.getVotes()) {
-          applyCount(vote.getType(), vote.getCount());
+        for (final FlagsVote vote : appFlags.getVotes()) {
+          applyCount(vote.getVoteType(), vote.getCount());
         }
       }
     } catch (NullPointerException ex) {
@@ -822,7 +812,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private void applyCount(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type, int count) {
+  private void applyCount(FlagsVote.VoteType type, int count) {
     String countAsString = Integer.toString(count);
     switch (type) {
       case GOOD:

@@ -64,11 +64,11 @@ public class DialogPermissions extends DialogFragment {
     DialogPermissions dialog = new DialogPermissions();
     dialog.app = app;
     dialog.appName = app.getName();
-    dialog.versionName = app.getFile()
-        .getVername();
+    dialog.versionName = app.getVerName();
     dialog.icon = app.getIcon();
-    dialog.size = AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFile()
-        .getFilesize(), app.getObb()), false);
+    dialog.size =
+        AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),
+            false);
     return dialog;
   }
 
@@ -120,8 +120,7 @@ public class DialogPermissions extends DialogFragment {
           .getFile()
           .getUsedPermissions();
     } else {
-      usedPermissions = app.getFile()
-          .getUsedPermissions();
+      usedPermissions = app.getUsedPermissions();
     }
 
     List<ApkPermission> apkPermissions =

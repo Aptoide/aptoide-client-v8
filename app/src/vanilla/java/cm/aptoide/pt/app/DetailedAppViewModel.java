@@ -1,10 +1,13 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import java.util.List;
 
 /**
  * Created by D01 on 07/05/18.
@@ -23,7 +26,19 @@ public class DetailedAppViewModel {
   private final long appId;
   private final String appName;
   private final Store store;
-  private final GetAppMeta.GetAppMetaFile file;
+  private final boolean isGoodApp;
+  private final Malware malware;
+  private final AppFlags appFlags;
+  private final List<String> tags;
+  private final List<String> usedFeatures;
+  private final List<String> usedPermissions;
+  private final long fileSize;
+  private final String md5;
+  private final String md5Sum;
+  private final String path;
+  private final String pathAlt;
+  private final int verCode;
+  private final String verName;
   private final String packageName;
   private final long size;
   private final int downloads;
@@ -37,16 +52,30 @@ public class DetailedAppViewModel {
   private final DetailedAppRequestResult.Error error;
 
   public DetailedAppViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
-      GetAppMeta.GetAppMetaFile file, String packageName, long size, int downloads,
-      GetAppMeta.Stats.Rating globalRating, int pDownloads, GetAppMeta.Stats.Rating rating,
-      GetAppMeta.Developer developer, String graphic, String added, GetAppMeta.Media media,
-      String modified, String appAdded, Obb obb, GetAppMeta.Pay pay, String wUrls,
-      boolean isStoreFollowed) {
+      boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
+      List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
+      String md5Sum, String path, String pathAlt, int verCode, String verName, String packageName,
+      long size, int downloads, GetAppMeta.Stats.Rating globalRating, int pDownloads,
+      GetAppMeta.Stats.Rating rating, GetAppMeta.Developer developer, String graphic, String added,
+      GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
+      String wUrls, boolean isStoreFollowed) {
     this.detailedApp = detailedApp;
     this.appId = appId;
     this.appName = appName;
     this.store = store;
-    this.file = file;
+    this.isGoodApp = isGoodApp;
+    this.malware = malware;
+    this.appFlags = appFlags;
+    this.tags = tags;
+    this.usedFeatures = usedFeatures;
+    this.usedPermissions = usedPermissions;
+    this.fileSize = fileSize;
+    this.md5 = md5;
+    this.md5Sum = md5Sum;
+    this.path = path;
+    this.pathAlt = pathAlt;
+    this.verCode = verCode;
+    this.verName = verName;
     this.packageName = packageName;
     this.size = size;
     this.downloads = downloads;
@@ -74,7 +103,19 @@ public class DetailedAppViewModel {
     this.appId = -1;
     this.appName = "";
     this.store = null;
-    this.file = null;
+    this.isGoodApp = false;
+    this.malware = null;
+    this.appFlags = null;
+    this.tags = null;
+    this.usedFeatures = null;
+    this.usedPermissions = null;
+    this.fileSize = -1;
+    this.md5 = "";
+    this.md5Sum = "";
+    this.path = "";
+    this.pathAlt = "";
+    this.verCode = -1;
+    this.verName = "";
     this.packageName = "";
     this.size = -1;
     this.downloads = -1;
@@ -101,7 +142,19 @@ public class DetailedAppViewModel {
     this.appId = -1;
     this.appName = "";
     this.store = null;
-    this.file = null;
+    this.isGoodApp = false;
+    this.malware = null;
+    this.appFlags = null;
+    this.tags = null;
+    this.usedFeatures = null;
+    this.usedPermissions = null;
+    this.fileSize = -1;
+    this.md5 = "";
+    this.md5Sum = "";
+    this.path = "";
+    this.pathAlt = "";
+    this.verCode = -1;
+    this.verName = "";
     this.packageName = "";
     this.size = -1;
     this.downloads = -1;
@@ -139,10 +192,6 @@ public class DetailedAppViewModel {
 
   public String getPackageName() {
     return packageName;
-  }
-
-  public GetAppMeta.GetAppMetaFile getFile() {
-    return file;
   }
 
   public long getSize() {
@@ -215,5 +264,57 @@ public class DetailedAppViewModel {
 
   public String getwUrls() {
     return wUrls;
+  }
+
+  public AppFlags getAppFlags() {
+    return appFlags;
+  }
+
+  public List<String> getTags() {
+    return tags;
+  }
+
+  public List<String> getUsedFeatures() {
+    return usedFeatures;
+  }
+
+  public List<String> getUsedPermissions() {
+    return usedPermissions;
+  }
+
+  public long getFileSize() {
+    return fileSize;
+  }
+
+  public String getMd5() {
+    return md5;
+  }
+
+  public String getMd5Sum() {
+    return md5Sum;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public String getPathAlt() {
+    return pathAlt;
+  }
+
+  public int getVerCode() {
+    return verCode;
+  }
+
+  public String getVerName() {
+    return verName;
+  }
+
+  public boolean isGoodApp() {
+    return isGoodApp;
+  }
+
+  public Malware getMalware() {
+    return malware;
   }
 }

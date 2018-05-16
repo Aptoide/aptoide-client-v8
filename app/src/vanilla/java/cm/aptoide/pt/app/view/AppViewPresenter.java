@@ -84,8 +84,8 @@ public class AppViewPresenter implements Presenter {
             appViewModel.getDetailedApp()
                 .getStore()
                 .getName(), packageName, 5, view.getLanguageFilter())
-                .observeOn(scheduler),
-            appViewManager.loadSimilarApps(packageName, appViewModel.getDetailedApp()
+                .observeOn(scheduler), appViewManager.loadSimilarApps(packageName,
+            appViewModel.getDetailedApp()
                 .getMedia()
                 .getKeywords(), 2)
                 .observeOn(scheduler),
@@ -314,8 +314,7 @@ public class AppViewPresenter implements Presenter {
             .filter(isLoggedIn -> isLoggedIn)
             .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
             .flatMapSingle(model -> appViewManager.addApkFlagRequestAction(model.getStore()
-                .getName(), model.getFile()
-                .getMd5sum(), type))
+                .getName(), model.getMd5Sum(), type))
             .filter(result -> result)
             .observeOn(scheduler)
             .doOnNext(__ -> {

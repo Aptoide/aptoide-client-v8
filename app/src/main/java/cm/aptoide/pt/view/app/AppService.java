@@ -101,9 +101,16 @@ public class AppService {
       GetAppMeta.App app = getApp.getNodes()
           .getMeta()
           .getData();
+      GetAppMeta.GetAppMetaFile file = app.getFile();
+      GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
+          .getFlags();
+      AppFlags appFlags = new AppFlags(flags.getReview(), flags.getVotes());
       DetailedApp detailedApp =
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-              app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getFile(),
+              app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
+              file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
+              file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getMd5sum(),
+              file.getPath(), file.getPathAlt(), file.getVercode(), file.getVername(),
               app.getDeveloper(), app.getStore(), app.getMedia(), app.getStats(), app.getObb(),
               app.getPay(), app.getUrls()
               .getW());
