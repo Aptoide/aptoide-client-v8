@@ -4,9 +4,13 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.reviews.RateAndReviewsFragment;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import java.util.ArrayList;
 
@@ -47,6 +51,18 @@ public class AppViewNavigator {
   public void navigateToAppView(long appId, String packageName, String tag) {
     Fragment fragment = AptoideApplication.getFragmentProvider()
         .newAppViewFragment(appId, packageName, tag);
+    fragmentNavigator.navigateTo(
+        NewAppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag),
+        true);
+  }
+
+  public void navigateToAd(MinimalAd ad) {
+    fragmentNavigator.navigateTo(AppViewFragment.newInstance(new SearchAdResult(ad)), true);
+  }
+
+  public void navigateToDescriptionReadMore(String name, String description, String theme) {
+    Fragment fragment = AptoideApplication.getFragmentProvider()
+        .newDescriptionFragment(name, description, theme);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
@@ -61,5 +77,18 @@ public class AppViewNavigator {
     if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
       ((AppViewFragment) fragment).buyApp(app);
     }
+  }
+
+  public void navigateToStore(Store store) {
+    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
+        .newStoreFragment(store.getName(), store.getAppearance()
+            .getTheme()), true);
+  }
+
+  public void navigateToRateAndReview(long appId, String appName, String storeName,
+      String packageName, String storeTheme) {
+    fragmentNavigator.navigateTo(
+        RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName, storeTheme),
+        true);
   }
 }

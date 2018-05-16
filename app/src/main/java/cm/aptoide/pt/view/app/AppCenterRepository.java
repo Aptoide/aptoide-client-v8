@@ -2,6 +2,7 @@ package cm.aptoide.pt.view.app;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import rx.Single;
@@ -91,7 +92,30 @@ public class AppCenterRepository {
     }
   }
 
-  public Single<DetailedApp> getDetailedApp(long appId, String packageName) {
+  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String packageName) {
     return appService.loadDetailedApp(appId, packageName);
+  }
+
+  public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
+    return appService.loadRecommendedApps(limit, packageName)
+        .map(appsListRequestResult -> removeCurrentAppFromSuggested(appsListRequestResult,
+            packageName));
+  }
+
+  private AppsList removeCurrentAppFromSuggested(AppsList appsList, String packageName) {
+    if (appsList.getList() != null && !appsList.getList()
+        .isEmpty()) {
+      List<Application> list = appsList.getList();
+      Iterator<Application> iterator = list.iterator();
+      while (iterator.hasNext()) {
+        Application next = iterator.next();
+        if (next.getPackageName()
+            .equals(packageName)) {
+          iterator.remove();
+        }
+      }
+      return new AppsList(list, appsList.isLoading(), appsList.getOffset());
+    }
+    return appsList;
   }
 }

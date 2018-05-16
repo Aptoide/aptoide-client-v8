@@ -3,7 +3,6 @@ package cm.aptoide.pt.view.app;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by D01 on 04/05/18.
@@ -13,12 +12,13 @@ public class DetailedApp {
 
   private long id;
   private String name;
-  @JsonProperty("package") private String packageName;
+  private String packageName;
   private long size;
   private String icon;
   private String graphic;
   private String added;
   private String modified;
+  private GetAppMeta.GetAppMetaFile file;
   private GetAppMeta.Developer developer;
   private Store store;
   private GetAppMeta.Media media;
@@ -27,8 +27,9 @@ public class DetailedApp {
   private GetAppMeta.Pay pay;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
-      String graphic, String added, String modified, GetAppMeta.Developer developer, Store store,
-      GetAppMeta.Media media, GetAppMeta.Stats stats, Obb obb, GetAppMeta.Pay pay) {
+      String graphic, String added, String modified, GetAppMeta.GetAppMetaFile file,
+      GetAppMeta.Developer developer, Store store, GetAppMeta.Media media, GetAppMeta.Stats stats,
+      Obb obb, GetAppMeta.Pay pay) {
 
     this.id = id;
     this.name = name;
@@ -38,6 +39,7 @@ public class DetailedApp {
     this.graphic = graphic;
     this.added = added;
     this.modified = modified;
+    this.file = file;
     this.developer = developer;
     this.store = store;
     this.media = media;
@@ -100,5 +102,9 @@ public class DetailedApp {
 
   public GetAppMeta.Pay getPay() {
     return pay;
+  }
+
+  public GetAppMeta.GetAppMetaFile getFile() {
+    return file;
   }
 }

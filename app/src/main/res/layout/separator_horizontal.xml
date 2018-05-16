@@ -8,5 +8,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="?attr/separatorColor"
+    android:background="@color/grey_fog_light"
     />

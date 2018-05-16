@@ -25,7 +25,11 @@ public class AppCenter {
     return appCenterRepository.getApplications(storeId, limit);
   }
 
-  public Single<DetailedApp> getDetailedApp(long appId, String packageName) {
+  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String packageName) {
     return appCenterRepository.getDetailedApp(appId, packageName);
+  }
+
+  public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
+    return appCenterRepository.loadRecommendedApps(limit, packageName);
   }
 }

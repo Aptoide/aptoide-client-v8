@@ -18,6 +18,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
+import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.store.StoreTheme;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Converter;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
@@ -45,13 +47,15 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
   private final TokenInvalidator tokenInvalidator;
   private final RequestBodyFactory requestBodyFactory;
   private final ObjectMapper objectMapper;
+  private final StoreRepository storeRepository;
 
   public StoreManager(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
       BodyInterceptor<BaseBody> bodyInterceptorV3,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7,
       SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      RequestBodyFactory requestBodyFactory, ObjectMapper objectMapper) {
+      RequestBodyFactory requestBodyFactory, ObjectMapper objectMapper,
+      StoreRepository storeRepository) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.multipartBodyInterceptor = multipartBodyInterceptor;
@@ -61,6 +65,7 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
     this.tokenInvalidator = tokenInvalidator;
     this.requestBodyFactory = requestBodyFactory;
     this.objectMapper = objectMapper;
+    this.storeRepository = storeRepository;
   }
 
   public Completable createOrUpdate(String storeName, String storeDescription,
@@ -75,6 +80,10 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
           socialLinkToStoreLink(storeLinksList), storeDeleteLinksList);
     })
         .onErrorResumeNext(err -> getOnErrorCompletable(err));
+  }
+
+  public Observable<Boolean> isSubscribed(long storeId) {
+    return storeRepository.isSubscribed(storeId);
   }
 
   @NonNull private Completable getOnErrorCompletable(Throwable err) {

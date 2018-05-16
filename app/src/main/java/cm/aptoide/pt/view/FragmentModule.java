@@ -19,6 +19,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.store.ManageStorePresenter;
 import cm.aptoide.pt.account.view.store.ManageStoreView;
+import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.CreateUserErrorMapper;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
@@ -30,11 +31,17 @@ import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.DownloadStateParser;
+import cm.aptoide.pt.app.FlagManager;
+import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
+import cm.aptoide.pt.app.view.AppViewNavigator;
+import cm.aptoide.pt.app.view.AppViewPresenter;
+import cm.aptoide.pt.app.view.AppViewView;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -69,6 +76,7 @@ import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
+import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
@@ -238,6 +246,17 @@ import rx.schedulers.Schedulers;
     return new AdsManager(adsRepository);
   }
 
+  @FragmentScope @Provides FlagManager providesFlagManager(FlagService flagService) {
+    return new FlagManager(flagService);
+  }
+
+  @FragmentScope @Provides FlagService providesFlagService(@Named("defaultInterceptorV3")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
+  }
+
   @FragmentScope @Provides UserPreferencesPersister providesUserPreferencesPersister(
       @Named("default") SharedPreferences sharedPreferences) {
     return new UserPreferencesPersister(sharedPreferences);
@@ -260,11 +279,24 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
-      ReviewsManager reviewsManager, AdsManager adsManager, PreferencesManager preferencesManager,
+      ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
+      FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
+      AptoideAccountManager aptoideAccountManager, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+        reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy,
+        aptoideAccountManager, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics);
+  }
+
+  @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
+      AccountNavigator accountNavigator, AppViewAnalytics analytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, CrashReport crashReport) {
+    return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
+        appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
+        crashReport, arguments.getLong(NewAppViewFragment.BundleKeys.APP_ID.name()),
+        arguments.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name()));
   }
 }

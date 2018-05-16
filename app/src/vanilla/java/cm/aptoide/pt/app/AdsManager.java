@@ -18,7 +18,7 @@ public class AdsManager {
     this.adsRepository = adsRepository;
   }
 
-  public Single<MinimalAd> loadAd(String packageName, String storeName) {
+  public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
     return adsRepository.getAdsFromAppView(packageName, storeName)
         .toSingle();
   }

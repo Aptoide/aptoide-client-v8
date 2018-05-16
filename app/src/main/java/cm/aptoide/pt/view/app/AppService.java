@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
-import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by trinkes on 18/10/2017.
@@ -46,8 +46,7 @@ public class AppService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit,
-      boolean bypassServerCache) {
+  private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
     if (loading) {
       return Single.just(new AppsList(true));
     }
@@ -56,11 +55,11 @@ public class AppService {
     body.setOffset(offset);
     body.setStoreId(storeId);
     return new ListAppsRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences).observe(bypassCache, bypassServerCache)
+        tokenInvalidator, sharedPreferences).observe(bypassCache, false)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .flatMap(listApps -> mapListApps(listApps))
+        .flatMap(appsList -> mapListApps(appsList))
         .toSingle()
         .onErrorReturn(throwable -> createErrorAppsList(throwable));
   }
@@ -78,16 +77,62 @@ public class AppService {
       return Observable.just(new AppsList(list, false, listApps.getDataList()
           .getNext()));
     } else {
-      return Observable.error(new IllegalStateException("Could not obtain timeline from server."));
+      return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
   }
 
+  public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String packageName) {
+    if (loading) {
+      return Single.just(new DetailedAppRequestResult(true));
+    }
+    return GetAppRequest.of(packageName, bodyInterceptor, appId, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe(true, false)
+        .doOnSubscribe(() -> loading = true)
+        .doOnUnsubscribe(() -> loading = false)
+        .doOnTerminate(() -> loading = false)
+        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp))
+        .toSingle()
+        .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
+  }
+
+  private Observable<DetailedAppRequestResult> mapAppToDetailedAppRequestResult(GetApp getApp) {
+    if (getApp.isOk()) {
+      GetAppMeta.App app = getApp.getNodes()
+          .getMeta()
+          .getData();
+      DetailedApp detailedApp =
+          new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
+              app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getFile(),
+              app.getDeveloper(), app.getStore(), app.getMedia(), app.getStats(), app.getObb(),
+              app.getPay());
+      return Observable.just(new DetailedAppRequestResult(detailedApp));
+    } else {
+      return Observable.error(new IllegalStateException("Could not obtain request from server."));
+    }
+  }
+
+  public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
+    if (loading) {
+      return Single.just(new AppsList(true));
+    }
+    return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences).observe(
+        true, false)
+        .doOnSubscribe(() -> loading = true)
+        .doOnUnsubscribe(() -> loading = false)
+        .doOnTerminate(() -> loading = false)
+        .flatMap(appsList -> mapListApps(appsList))
+        .toSingle()
+        .onErrorReturn(throwable -> createErrorAppsList(throwable));
+  }
+
   public Single<AppsList> loadFreshApps(long storeId, int limit) {
-    return loadApps(storeId, true, 0, limit, false);
+    return loadApps(storeId, true, 0, limit);
   }
 
   public Single<AppsList> loadApps(long storeId, int offset, int limit) {
-    return loadApps(storeId, false, offset, limit, false);
+    return loadApps(storeId, false, offset, limit);
   }
 
   @NonNull private AppsList createErrorAppsList(Throwable throwable) {
@@ -98,28 +143,12 @@ public class AppService {
     }
   }
 
-  public Single<DetailedApp> loadDetailedApp(long appId, String packageName) {
-    return GetAppRequest.of(packageName, bodyInterceptor, appId, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
-        .observe(true, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedApp(getApp))
-        .toSingle()
-        .onErrorReturn(throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private Observable<DetailedApp> mapAppToDetailedApp(GetApp getApp) {
-    GetAppMeta.App app = getApp.getNodes()
-        .getMeta()
-        .getData();
-    DetailedApp detailedApp =
-        new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-            app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), app.getDeveloper(),
-            app.getStore(), app.getMedia(), app.getStats(), app.getObb(), app.getPay());
-    return Observable.just(detailedApp);
+  @NonNull
+  private DetailedAppRequestResult createDetailedAppRequestResultError(Throwable throwable) {
+    if (throwable instanceof NoNetworkConnectionException) {
+      return new DetailedAppRequestResult(DetailedAppRequestResult.Error.NETWORK);
+    } else {
+      return new DetailedAppRequestResult(DetailedAppRequestResult.Error.GENERIC);
+    }
   }
 }

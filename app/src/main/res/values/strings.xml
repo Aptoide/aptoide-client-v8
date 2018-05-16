@@ -62,6 +62,9 @@
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
   <string name="appcardview_title_no_stars" translatable="false">- -</string>
+  <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
+  <string name="appview_uploaded_by">Apps uploaded by</string>
+  <string name="appview_similar_apps">Similar apps</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -167,7 +170,7 @@
         credibility and other user comments. Aptoide always recommends that you only install %1$s trusted apps.</string>
   <string name="dialog_install_warning_trusted_version_button">Trusted version</string>
   <string name="dialog_install_warning_get_trusted_version_button">Get</string>
-  <string name="flag_results">Flag results</string>
+  <string name="flag_results">Flag this app</string>
   <string name="helpful">Helpful</string>
   <string name="not_helpful">Not Helpful</string>
   <string name="description_not_available">No available description for this app</string>

@@ -12,10 +12,9 @@
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
       android:background="@drawable/main_orange_gradient"
+      android:elevation="4dp"
       android:theme="?attr/toolbarTheme"
-      app:layout_collapseMode="pin"
       app:layout_scrollFlags="scroll|enterAlways"
       app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-      app:titleMarginStart="30dp"
       />
 </merge>
