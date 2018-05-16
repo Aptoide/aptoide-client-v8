@@ -241,7 +241,7 @@
   <string name="personalization">Personalization</string>
   <string name="photography">Photography</string>
   <string name="productivity">Productivity</string>
-  <string name="puzzle">Puzzle</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Racing</string>
   <string name="reference">Reference</string>
   <string name="role_playing">Role Playing</string>
@@ -273,6 +273,10 @@
   <string name="essential_apps">Essential Apps</string>
   <string name="summer_apps">Summer Apps</string>
   <string name="play_it">Play-It!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
 
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>

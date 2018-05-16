@@ -271,6 +271,18 @@ public class Translator {
       case "Comments in this store":
         translated = Application.getContext().getString(R.string.comment_store_title);
         break;
+      case "Dating":
+        translated = Application.getContext().getString(R.string.dating);
+        break;
+      case "Maps & Navigation":
+        translated = Application.getContext().getString(R.string.maps_navigation);
+        break;
+      case "Food & Drink":
+        translated = Application.getContext().getString(R.string.food_drink);
+        break;
+      case "Other":
+        translated = Application.getContext().getString(R.string.other);
+        break;
       default:
         translated = string;
         break;
