@@ -80,6 +80,8 @@ public interface AppViewView extends View {
 
   Observable<ShareDialogs.ShareResponse> shareDialogResponse();
 
+  Observable<Integer> scrollReviewsResponse();
+
   void navigateToDeveloperWebsite(DetailedApp app);
 
   void navigateToDeveloperEmail(DetailedApp app);
@@ -112,4 +114,6 @@ public interface AppViewView extends View {
   void defaultShare(String appName, String wUrl);
 
   void recommendsShare(String packageName, Long storeId);
+
+  void scrollReviews(Integer position);
 }

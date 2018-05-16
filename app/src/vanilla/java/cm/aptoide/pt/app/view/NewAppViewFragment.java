@@ -107,6 +107,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
   private PublishSubject<ShareDialogs.ShareResponse> shareDialogClick;
+  private PublishSubject<Integer> reviewsAutoScroll;
 
   //Views
   private ImageView appIcon;
@@ -184,6 +185,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
     shareDialogClick = PublishSubject.create();
+    reviewsAutoScroll = PublishSubject.create();
 
     setHasOptionsMenu(true);
   }
@@ -451,6 +453,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     commentsView.setAdapter(reviewsAdapter);
     similarAppsAdapter.update(mapToSimilar(ads));
     similarDownloadsAdapter.update(mapToSimilar(ads));
+    reviewsAutoScroll.onNext(reviewsAdapter.getItemCount());
 
     return null;
   }
@@ -553,6 +556,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public Observable<ShareDialogs.ShareResponse> shareDialogResponse() {
     return shareDialogClick;
+  }
+
+  @Override public Observable<Integer> scrollReviewsResponse() {
+    return reviewsAutoScroll;
   }
 
 
@@ -740,6 +747,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
+  @Override public void scrollReviews(Integer position) {
+    commentsView.smoothScrollToPosition(position);
+  }
 
   private void setTrustedBadge(DetailedApp app) {
     @DrawableRes int badgeResId;
