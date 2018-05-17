@@ -40,13 +40,16 @@ public class DetailedApp {
   private final Obb obb;
   private final GetAppMeta.Pay pay;
   private final String wUrls;
+  private final boolean isPaid;
+  private final String uName;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
       AppFlags appFlags, List<String> tags, List<String> usedFeatures, List<String> usedPermissions,
       long fileSize, String md5, String md5Sum, String path, String pathAlt, int verCode,
       String verName, GetAppMeta.Developer developer, Store store, GetAppMeta.Media media,
-      GetAppMeta.Stats stats, Obb obb, GetAppMeta.Pay pay, String wUrls) {
+      GetAppMeta.Stats stats, Obb obb, GetAppMeta.Pay pay, String wUrls, boolean isPaid,
+      String uName) {
 
     this.id = id;
     this.name = name;
@@ -76,6 +79,8 @@ public class DetailedApp {
     this.obb = obb;
     this.pay = pay;
     this.wUrls = wUrls;
+    this.isPaid = isPaid;
+    this.uName = uName;
   }
 
   public long getId() {
@@ -188,5 +193,13 @@ public class DetailedApp {
 
   public Malware getMalware() {
     return malware;
+  }
+
+  public boolean isPaid() {
+    return isPaid;
+  }
+
+  public String getUname() {
+    return uName;
   }
 }

@@ -60,6 +60,48 @@ public class AppViewManager {
         .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
   }
 
+  public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String storeName,
+      String packageName) {
+    if (cachedApp != null && cachedApp.getId() == appId && cachedApp.getPackageName()
+        .equals(packageName) && cachedApp.getStore()
+        .getName()
+        .equals(storeName)) {
+      return createDetailedAppViewModel(cachedApp);
+    }
+    return appCenter.getDetailedApp(appId, storeName, packageName)
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+  }
+
+  public Single<DetailedAppViewModel> getDetailedAppViewModel(String packageName,
+      String storeName) {
+    if (cachedApp != null && cachedApp.getPackageName()
+        .equals(packageName) && cachedApp.getStore()
+        .getName()
+        .equals(storeName)) {
+      return createDetailedAppViewModel(cachedApp);
+    }
+    return appCenter.getDetailedApp(packageName, storeName)
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+  }
+
+  public Single<DetailedAppViewModel> getDetailedAppViewModelFromMd5(String md5) {
+    if (cachedApp != null && cachedApp.getMd5()
+        .equals(md5)) {
+      return createDetailedAppViewModel(cachedApp);
+    }
+    return appCenter.getDetailedAppFromMd5(md5)
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+  }
+
+  public Single<DetailedAppViewModel> getDetailedAppViewModelFromUname(String uName) {
+    if (cachedApp != null && cachedApp.getUname()
+        .equals(uName)) {
+      return createDetailedAppViewModel(cachedApp);
+    }
+    return appCenter.getDetailedAppAppFromUname(uName)
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+  }
+
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
     return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort)
@@ -125,7 +167,7 @@ public class AppViewManager {
             app.getPackageName(), app.getSize(), stats.getDownloads(), stats.getGlobalRating(),
             stats.getPdownloads(), stats.getRating(), app.getDeveloper(), app.getGraphic(),
             app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(), app.getObb(),
-            app.getPay(), app.getwUrls(), isStoreFollowed));
+            app.getPay(), app.getwUrls(), app.isPaid(), app.getUname(), isStoreFollowed));
   }
 
   private Single<DetailedAppViewModel> mapResultToCorrectDetailedAppViewModel(

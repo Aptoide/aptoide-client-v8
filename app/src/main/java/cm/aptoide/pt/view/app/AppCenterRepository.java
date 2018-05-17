@@ -96,6 +96,23 @@ public class AppCenterRepository {
     return appService.loadDetailedApp(appId, packageName);
   }
 
+  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String storeName,
+      String packageName) {
+    return appService.loadDetailedApp(appId, storeName, packageName);
+  }
+
+  public Single<DetailedAppRequestResult> getDetailedApp(String packageName, String storeName) {
+    return appService.loadDetailedApp(packageName, storeName);
+  }
+
+  public Single<DetailedAppRequestResult> getDetailedAppFromMd5(String md5) {
+    return appService.loadDetailedAppFromMd5(md5);
+  }
+
+  public Single<DetailedAppRequestResult> getDetailedAppAppFromUname(String uName) {
+    return appService.loadDetailedAppFromUname(uName);
+  }
+
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
     return appService.loadRecommendedApps(limit, packageName)
         .map(appsListRequestResult -> removeCurrentAppFromSuggested(appsListRequestResult,
