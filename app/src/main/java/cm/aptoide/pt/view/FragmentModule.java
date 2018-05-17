@@ -268,7 +268,7 @@ import rx.schedulers.Schedulers;
       AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport, arguments.getLong(NewAppViewFragment.BundleKeys.APP_ID.name()),
-        arguments.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name()));
+        crashReport, arguments.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1),
+        arguments.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null));
   }
 }

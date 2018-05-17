@@ -9,6 +9,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedApp;
+import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import rx.Observable;
 
@@ -27,6 +28,8 @@ public interface AppViewView extends View {
   String getPackageName();
 
   void populateAppDetails(DetailedAppViewModel detailedApp);
+
+  void handleError(DetailedAppRequestResult.Error error);
 
   Observable<ScreenShotClickEvent> getScreenshotClickEvent();
 
@@ -78,7 +81,13 @@ public interface AppViewView extends View {
 
   Observable<MenuItem> clickToolbar();
 
+  Observable<Void> clickNoNetworkRetry();
+
+  Observable<Void> clickGenericRetry();
+
   Observable<ShareDialogs.ShareResponse> shareDialogResponse();
+
+  Observable<Integer> scrollReviewsResponse();
 
   void navigateToDeveloperWebsite(DetailedApp app);
 
@@ -112,4 +121,6 @@ public interface AppViewView extends View {
   void defaultShare(String appName, String wUrl);
 
   void recommendsShare(String packageName, Long storeId);
+
+  void scrollReviews(Integer position);
 }
