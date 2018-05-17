@@ -942,11 +942,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return RxView.clicks(cancelDownload);
   }
 
-  @Override public Observable<Void> isAppViewReady() {
+  @Override public Observable<Void> isAppViewReadyToDownload() {
     return ready;
   }
 
-  @Override public void appViewIsREady() {
+  @Override public void readyToDownload() {
     ready.onNext(null);
   }
 

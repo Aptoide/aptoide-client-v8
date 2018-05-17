@@ -95,7 +95,7 @@ public class AppViewPresenter implements Presenter {
                 .first()
                 .observeOn(viewScheduler)
                 .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
-                .doOnNext(downloadAppViewModel -> view.appViewIsREady())
+                .doOnNext(downloadAppViewModel -> view.readyToDownload())
                 .toSingle()
                 .map(downloadAppViewModel -> detailedAppViewModel)))
         .observeOn(viewScheduler)
@@ -490,7 +490,7 @@ public class AppViewPresenter implements Presenter {
   private void loadDownloadApp() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.isAppViewReady())
+        .flatMap(created -> view.isAppViewReadyToDownload())
         .flatMap(create -> appViewManager.getDetailedAppViewModel(appId, packageName)
             .toObservable())
         .filter(app -> !app.isLoading())
