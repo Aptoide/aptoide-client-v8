@@ -8,6 +8,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
@@ -17,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
-import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -448,7 +448,7 @@ public class AppViewPresenter implements Presenter {
             .doOnNext(pos2 -> view.scrollReviews(pos2)));
   }
 
-  private Observable<Void> loadApp() {
+  private Observable<DetailedAppViewModel> loadApp() {
     return appViewManager.getDetailedAppViewModel(appId, packageName)
         .toObservable()
         .observeOn(scheduler)
@@ -460,17 +460,30 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(model -> !model.hasError())
-        .flatMapSingle(appViewModel -> Single.zip(appViewManager.getReviewsViewModel(
-            appViewModel.getDetailedApp()
-                .getStore()
-                .getName(), packageName, 5, view.getLanguageFilter())
-                .observeOn(scheduler), appViewManager.loadSimilarApps(packageName,
-            appViewModel.getDetailedApp()
-                .getMedia()
-                .getKeywords(), 2)
-                .observeOn(scheduler),
-            (reviews, similar) -> view.populateReviewsAndAds(reviews, similar,
-                appViewModel.getDetailedApp())));
+        .flatMapCompletable(appViewModel -> Completable.merge(updateReviews(appViewModel),
+            updateSuggestedApps(appViewModel)));
+  }
+
+  private Completable updateSuggestedApps(DetailedAppViewModel appViewModel) {
+    return appViewManager.loadSimilarApps(view.getPackageName(), appViewModel.getDetailedApp()
+        .getMedia()
+        .getKeywords(), 2)
+        .observeOn(scheduler)
+        .doOnSuccess(adsViewModel -> {
+          view.populateAds(adsViewModel);
+        })
+        .toCompletable();
+  }
+
+  private Completable updateReviews(DetailedAppViewModel appViewModel) {
+    return appViewManager.getReviewsViewModel(appViewModel.getDetailedApp()
+        .getStore()
+        .getName(), view.getPackageName(), 5, view.getLanguageFilter())
+        .observeOn(scheduler)
+        .doOnSuccess(reviewsViewModel -> {
+          view.populateReviews(reviewsViewModel, appViewModel);
+        })
+        .toCompletable();
   }
 }
 

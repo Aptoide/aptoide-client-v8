@@ -35,7 +35,9 @@ public interface AppViewView extends View {
 
   Observable<ReadMoreClickEvent> clickedReadMore();
 
-  Void populateReviewsAndAds(ReviewsViewModel reviews, SimilarAppsViewModel ads, DetailedApp app);
+  void populateReviews(ReviewsViewModel reviews, DetailedAppViewModel app);
+
+  void populateAds(SimilarAppsViewModel ads);
 
   Observable<FlagsVote.VoteType> clickWorkingFlag();
 
