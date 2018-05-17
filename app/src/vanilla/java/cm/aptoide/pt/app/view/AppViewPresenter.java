@@ -88,7 +88,6 @@ public class AppViewPresenter implements Presenter {
     handleRecommendsShare();
     handleClickOnRetry();
 
-
     handleInstallButtonClick();
     pauseDownload();
     resumeDownload();
