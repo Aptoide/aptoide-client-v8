@@ -1,13 +1,17 @@
 package cm.aptoide.pt.app.view;
 
+import android.view.MenuItem;
 import cm.aptoide.pt.app.DetailedAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.appview.InstallAppView;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedApp;
+import cm.aptoide.pt.view.app.FlagsVote;
 import rx.Observable;
 
 /**
@@ -32,13 +36,13 @@ public interface AppViewView extends InstallAppView {
 
   Void populateReviewsAndAds(ReviewsViewModel reviews, SimilarAppsViewModel ads, DetailedApp app);
 
-  Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickWorkingFlag();
+  Observable<FlagsVote.VoteType> clickWorkingFlag();
 
-  Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickLicenseFlag();
+  Observable<FlagsVote.VoteType> clickLicenseFlag();
 
-  Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickFakeFlag();
+  Observable<FlagsVote.VoteType> clickFakeFlag();
 
-  Observable<GetAppMeta.GetAppMetaFile.Flags.Vote.Type> clickVirusFlag();
+  Observable<FlagsVote.VoteType> clickVirusFlag();
 
   void displayNotLoggedInSnack();
 
@@ -74,6 +78,10 @@ public interface AppViewView extends InstallAppView {
 
   Observable<SimilarAppClickEvent> clickSimilarApp();
 
+  Observable<MenuItem> clickToolbar();
+
+  Observable<ShareDialogs.ShareResponse> shareDialogResponse();
+
   void navigateToDeveloperWebsite(DetailedApp app);
 
   void navigateToDeveloperEmail(DetailedApp app);
@@ -95,7 +103,15 @@ public interface AppViewView extends InstallAppView {
 
   void enableFlags();
 
-  void incrementFlags(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type);
+  void incrementFlags(FlagsVote.VoteType type);
 
   void showFlagVoteSubmittedMessage();
+
+  void showShareDialog();
+
+  void showShareOnTvDialog();
+
+  void defaultShare(String appName, String wUrl);
+
+  void recommendsShare(String packageName, Long storeId);
 }

@@ -29,6 +29,23 @@ public class AppCenter {
     return appCenterRepository.getDetailedApp(appId, packageName);
   }
 
+  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String storeName,
+      String packageName) {
+    return appCenterRepository.getDetailedApp(appId, storeName, packageName);
+  }
+
+  public Single<DetailedAppRequestResult> getDetailedApp(String packageName, String storeName) {
+    return appCenterRepository.getDetailedApp(packageName, storeName);
+  }
+
+  public Single<DetailedAppRequestResult> getDetailedAppFromMd5(String md5) {
+    return appCenterRepository.getDetailedAppFromMd5(md5);
+  }
+
+  public Single<DetailedAppRequestResult> getDetailedAppAppFromUname(String uName) {
+    return appCenterRepository.getDetailedAppAppFromUname(uName);
+  }
+
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
     return appCenterRepository.loadRecommendedApps(limit, packageName);
   }

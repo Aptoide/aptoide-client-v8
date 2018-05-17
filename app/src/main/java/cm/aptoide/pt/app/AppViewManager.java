@@ -16,6 +16,7 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import cm.aptoide.pt.view.app.FlagsVote;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -74,6 +75,48 @@ public class AppViewManager {
         .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
   }
 
+  public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String storeName,
+      String packageName) {
+    if (cachedApp != null && cachedApp.getId() == appId && cachedApp.getPackageName()
+        .equals(packageName) && cachedApp.getStore()
+        .getName()
+        .equals(storeName)) {
+      return createDetailedAppViewModel(cachedApp);
+    }
+    return appCenter.getDetailedApp(appId, storeName, packageName)
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+  }
+
+  public Single<DetailedAppViewModel> getDetailedAppViewModel(String packageName,
+      String storeName) {
+    if (cachedApp != null && cachedApp.getPackageName()
+        .equals(packageName) && cachedApp.getStore()
+        .getName()
+        .equals(storeName)) {
+      return createDetailedAppViewModel(cachedApp);
+    }
+    return appCenter.getDetailedApp(packageName, storeName)
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+  }
+
+  public Single<DetailedAppViewModel> getDetailedAppViewModelFromMd5(String md5) {
+    if (cachedApp != null && cachedApp.getMd5()
+        .equals(md5)) {
+      return createDetailedAppViewModel(cachedApp);
+    }
+    return appCenter.getDetailedAppFromMd5(md5)
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+  }
+
+  public Single<DetailedAppViewModel> getDetailedAppViewModelFromUname(String uName) {
+    if (cachedApp != null && cachedApp.getUname()
+        .equals(uName)) {
+      return createDetailedAppViewModel(cachedApp);
+    }
+    return appCenter.getDetailedAppAppFromUname(uName)
+        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+  }
+
   public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
     return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort)
@@ -101,7 +144,7 @@ public class AppViewManager {
   }
 
   public Single<Boolean> addApkFlagRequestAction(String storeName, String md5,
-      GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
+      FlagsVote.VoteType type) {
     return flagManager.loadAddApkFlagRequest(storeName, md5, type.name()
         .toLowerCase())
         .map(response -> (response.isOk() && !response.hasErrors()));
@@ -133,10 +176,13 @@ public class AppViewManager {
     return isStoreFollowed(cachedApp.getStore()
         .getId()).map(
         isStoreFollowed -> new DetailedAppViewModel(app, app.getId(), app.getName(), app.getStore(),
-            app.getFile(), app.getPackageName(), app.getSize(), stats.getDownloads(),
-            stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(), app.getDeveloper(),
-            app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(),
-            app.getObb(), app.getPay(), isStoreFollowed));
+            app.isGoodApp(), app.getMalware(), app.getAppFlags(), app.getTags(),
+            app.getUsedFeatures(), app.getUsedPermissions(), app.getFileSize(), app.getMd5(),
+            app.getMd5Sum(), app.getPath(), app.getPathAlt(), app.getVerCode(), app.getVerName(),
+            app.getPackageName(), app.getSize(), stats.getDownloads(), stats.getGlobalRating(),
+            stats.getPdownloads(), stats.getRating(), app.getDeveloper(), app.getGraphic(),
+            app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(), app.getObb(),
+            app.getPay(), app.getwUrls(), app.isPaid(), app.getUname(), isStoreFollowed));
   }
 
   private Single<DetailedAppViewModel> mapResultToCorrectDetailedAppViewModel(
