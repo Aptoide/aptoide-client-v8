@@ -318,8 +318,7 @@ public class AppViewPresenter implements Presenter {
             .filter(isLoggedIn -> isLoggedIn)
             .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
             .flatMapSingle(model -> appViewManager.addApkFlagRequestAction(model.getStore()
-                .getName(), model.getFile()
-                .getMd5sum(), type))
+                .getName(), model.getMd5Sum(), type))
             .filter(result -> result)
             .observeOn(scheduler)
             .doOnNext(__ -> {
