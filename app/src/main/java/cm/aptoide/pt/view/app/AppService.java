@@ -172,7 +172,7 @@ public class AppService {
       GetAppMeta.GetAppMetaFile file = app.getFile();
       GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
           .getFlags();
-      AppFlags appFlags = new AppFlags(flags.getReview(), flags.getVotes());
+      AppFlags appFlags = new AppFlags(flags.getReview(), mapToFlagsVote(flags.getVotes()));
       DetailedApp detailedApp =
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
               app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
@@ -226,5 +226,39 @@ public class AppService {
     } else {
       return new DetailedAppRequestResult(DetailedAppRequestResult.Error.GENERIC);
     }
+  }
+
+  private List<FlagsVote> mapToFlagsVote(List<GetAppMeta.GetAppMetaFile.Flags.Vote> votes) {
+    List<FlagsVote> flagsVotes = new ArrayList<>();
+    if (votes != null) {
+      for (GetAppMeta.GetAppMetaFile.Flags.Vote vote : votes) {
+        flagsVotes.add(new FlagsVote(vote.getCount(), mapToFlagsVoteType(vote.getType())));
+      }
+    }
+    return flagsVotes;
+  }
+
+  private FlagsVote.VoteType mapToFlagsVoteType(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
+    FlagsVote.VoteType flagsVoteVoteType = null;
+    switch (type) {
+      case FAKE:
+        flagsVoteVoteType = FlagsVote.VoteType.FAKE;
+        break;
+      case GOOD:
+        flagsVoteVoteType = FlagsVote.VoteType.GOOD;
+        break;
+      case VIRUS:
+        flagsVoteVoteType = FlagsVote.VoteType.VIRUS;
+        break;
+      case FREEZE:
+        flagsVoteVoteType = FlagsVote.VoteType.FREEZE;
+        break;
+      case LICENSE:
+        flagsVoteVoteType = FlagsVote.VoteType.LICENSE;
+        break;
+      default:
+        break;
+    }
+    return flagsVoteVoteType;
   }
 }
