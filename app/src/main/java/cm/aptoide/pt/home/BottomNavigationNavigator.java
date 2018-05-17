@@ -1,7 +1,6 @@
 package cm.aptoide.pt.home;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.appview.InstallAppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.apps.AppsFragment;
@@ -70,7 +69,7 @@ public class BottomNavigationNavigator {
   }
 
   public void navigateToSearch(SearchResultFragment searchResultFragment) {
-    navigateToSelectedFragment(searchPosition, InstallAppViewFragment.newInstance());
+    navigateToSelectedFragment(searchPosition, searchResultFragment);
   }
 
   public void navigateToStore() {
