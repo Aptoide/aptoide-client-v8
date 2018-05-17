@@ -24,6 +24,8 @@ import cm.aptoide.pt.account.view.user.CreateUserErrorMapper;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
@@ -36,18 +38,17 @@ import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
-import cm.aptoide.pt.appview.PreferencesManager;
-import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.appview.PreferencesManager;
+import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -271,12 +272,6 @@ import rx.schedulers.Schedulers;
     return new DownloadStateParser();
   }
 
-  @FragmentScope @Provides AppViewAnalytics providesAppViewAnalytics(
-      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
-  }
-
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
       ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
@@ -297,6 +292,7 @@ import rx.schedulers.Schedulers;
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
         crashReport, arguments.getLong(NewAppViewFragment.BundleKeys.APP_ID.name()),
-        arguments.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name()));
+        arguments.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name()),
+        new PermissionManager(), ((PermissionService) fragment.getContext()));
   }
 }

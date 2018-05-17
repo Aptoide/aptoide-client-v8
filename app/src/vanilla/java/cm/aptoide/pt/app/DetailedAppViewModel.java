@@ -65,7 +65,6 @@ public class DetailedAppViewModel {
   }
 
   public DetailedAppViewModel(boolean loading) {
-
     this.loading = loading;
     this.detailedApp = null;
     this.appId = -1;
@@ -91,7 +90,6 @@ public class DetailedAppViewModel {
   }
 
   public DetailedAppViewModel(DetailedAppRequestResult.Error error) {
-
     this.error = error;
     this.detailedApp = null;
     this.appId = -1;

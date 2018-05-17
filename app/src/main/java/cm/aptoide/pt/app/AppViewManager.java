@@ -1,11 +1,10 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.account.view.store.StoreManager;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -20,7 +19,6 @@ import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
-import rx.Completable;
 import rx.Single;
 
 /**
@@ -35,22 +33,22 @@ public class AppViewManager {
   private final AppCenter appCenter;
   private final ReviewsManager reviewsManager;
   private final AdsManager adsManager;
-  private PreferencesManager preferencesManager;
-  private DownloadStateParser downloadStateParser;
-  private AppViewAnalytics appViewAnalytics;
-  private NotificationAnalytics notificationAnalytics;
   private final StoreManager storeManager;
   private final FlagManager flagManager;
   private final StoreUtilsProxy storeUtilsProxy;
   private final AptoideAccountManager aptoideAccountManager;
+  private PreferencesManager preferencesManager;
+  private DownloadStateParser downloadStateParser;
+  private AppViewAnalytics appViewAnalytics;
+  private NotificationAnalytics notificationAnalytics;
   private DetailedApp cachedApp;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
-      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics) {
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
+      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -166,11 +164,6 @@ public class AppViewManager {
     installManager.rootInstallAllowed(answer);
   }
 
-  public Download createDownload() {
-    GetAppMeta.App app = buildAppMockedApp();
-    return downloadFactory.create(app, Download.ACTION_INSTALL);
-  }
-
   private GetAppMeta.App buildAppMockedApp() {
     GetAppMeta.App app = new GetAppMeta.App();
     app.setId(37032862);
@@ -211,8 +204,8 @@ public class AppViewManager {
   public Completable downloadApp(DownloadAppViewModel.Action downloadAction, String packageName,
       long appId) {
     increaseInstallClick();
-    return Observable.just(downloadFactory.create(buildAppMockedApp(),
-        downloadStateParser.parseDownloadAction(downloadAction)))
+    return Observable.just(
+        downloadFactory.create(cachedApp, downloadStateParser.parseDownloadAction(downloadAction)))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)))
         .toCompletable();

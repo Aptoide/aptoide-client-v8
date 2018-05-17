@@ -97,6 +97,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
+  private PublishSubject<Void> ready;
 
   //Views
   private ImageView appIcon;
@@ -179,6 +180,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     readMoreClick = PublishSubject.create();
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
+    ready = PublishSubject.create();
     setHasOptionsMenu(true);
   }
 
@@ -314,10 +316,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta);
   }
 
-  @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
+  @Override public void onDestroy() {
+    super.onDestroy();
+    ready = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -325,6 +326,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     this.menu = menu;
     inflater.inflate(R.menu.fragment_appview, menu);
     showHideOptionsMenu(true);
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
   }
 
   @Override public void showLoading() {
@@ -416,6 +423,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     setReadMoreClickListener(detailedApp.getDetailedApp());
     setDeveloperDetails(detailedApp.getDetailedApp());
     showAppview();
+
+    downloadInfoLayout.setVisibility(View.GONE);
+    install.setVisibility(View.VISIBLE);
   }
 
   @Override public Observable<ScreenShotClickEvent> getScreenshotClickEvent() {
@@ -930,6 +940,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public Observable<Void> cancelDownload() {
     return RxView.clicks(cancelDownload);
+  }
+
+  @Override public Observable<Void> isAppViewReady() {
+    return ready;
+  }
+
+  @Override public void appViewIsREady() {
+    ready.onNext(null);
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {

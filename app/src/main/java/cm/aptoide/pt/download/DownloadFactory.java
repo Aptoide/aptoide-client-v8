@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.updates.view.UpdateDisplayable;
+import cm.aptoide.pt.view.app.DetailedApp;
 import io.realm.RealmList;
 
 /**
@@ -243,6 +244,41 @@ public class DownloadFactory {
     download.setFilesToDownload(
         createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path, autoUpdateInfo.md5, null,
             null, autoUpdateInfo.vercode, null));
+    return download;
+  }
+
+  public Download create(DetailedApp cachedApp, int downloadAction) {
+    final GetAppMeta.GetAppMetaFile file = cachedApp.getFile();
+
+    validateApp(cachedApp.getFile()
+            .getMd5sum(), cachedApp.getObb(), cachedApp.getPackageName(), cachedApp.getName(),
+        file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
+
+    String path = cachedApp.getFile()
+        .getPath();
+    String altPath = cachedApp.getFile()
+        .getPathAlt();
+
+    ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
+
+    Download download = new Download();
+    download.setMd5(cachedApp.getFile()
+        .getMd5sum());
+    download.setIcon(cachedApp.getIcon());
+    download.setAppName(cachedApp.getName());
+    download.setAction(downloadAction);
+    download.setPackageName(cachedApp.getPackageName());
+    download.setVersionCode(cachedApp.getFile()
+        .getVercode());
+    download.setVersionName(cachedApp.getFile()
+        .getVername());
+
+    download.setFilesToDownload(createFileList(cachedApp.getFile()
+        .getMd5sum(), cachedApp.getPackageName(), downloadPaths.path, cachedApp.getFile()
+        .getMd5sum(), cachedApp.getObb(), downloadPaths.altPath, cachedApp.getFile()
+        .getVercode(), cachedApp.getFile()
+        .getVername()));
+
     return download;
   }
 
