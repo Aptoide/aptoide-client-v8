@@ -247,37 +247,27 @@ public class DownloadFactory {
     return download;
   }
 
-  public Download create(DetailedApp cachedApp, int downloadAction) {
-    final GetAppMeta.GetAppMetaFile file = cachedApp.getFile();
+  public Download create(DetailedApp app, int downloadAction) {
+    validateApp(app.getMd5(), app.getObb(), app.getPackageName(), app.getName(), app.getPath(),
+        app.getPathAlt());
 
-    validateApp(cachedApp.getFile()
-            .getMd5sum(), cachedApp.getObb(), cachedApp.getPackageName(), cachedApp.getName(),
-        file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
-
-    String path = cachedApp.getFile()
-        .getPath();
-    String altPath = cachedApp.getFile()
-        .getPathAlt();
+    String path = app.getPath();
+    String altPath = app.getPathAlt();
 
     ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
 
     Download download = new Download();
-    download.setMd5(cachedApp.getFile()
-        .getMd5sum());
-    download.setIcon(cachedApp.getIcon());
-    download.setAppName(cachedApp.getName());
+    download.setMd5(app.getMd5());
+    download.setIcon(app.getIcon());
+    download.setAppName(app.getName());
     download.setAction(downloadAction);
-    download.setPackageName(cachedApp.getPackageName());
-    download.setVersionCode(cachedApp.getFile()
-        .getVercode());
-    download.setVersionName(cachedApp.getFile()
-        .getVername());
+    download.setPackageName(app.getPackageName());
+    download.setVersionCode(app.getVerCode());
+    download.setVersionName(app.getVerName());
 
-    download.setFilesToDownload(createFileList(cachedApp.getFile()
-        .getMd5sum(), cachedApp.getPackageName(), downloadPaths.path, cachedApp.getFile()
-        .getMd5sum(), cachedApp.getObb(), downloadPaths.altPath, cachedApp.getFile()
-        .getVercode(), cachedApp.getFile()
-        .getVername()));
+    download.setFilesToDownload(
+        createFileList(app.getMd5(), app.getPackageName(), downloadPaths.path, app.getMd5(),
+            app.getObb(), downloadPaths.altPath, app.getVerCode(), app.getVerName()));
 
     return download;
   }
