@@ -4,6 +4,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
@@ -47,7 +48,7 @@ public class DetailedAppViewModel {
   private final GetAppMeta.Stats.Rating globalRating;
   private final int pDownloads;
   private final GetAppMeta.Stats.Rating rating;
-  private final GetAppMeta.Developer developer;
+  private final AppDeveloper appDeveloper;
   private final String graphic;
   private final String added;
   private final boolean loading;
@@ -58,7 +59,7 @@ public class DetailedAppViewModel {
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
       String md5Sum, String path, String pathAlt, int verCode, String verName, String packageName,
       long size, int downloads, GetAppMeta.Stats.Rating globalRating, int pDownloads,
-      GetAppMeta.Stats.Rating rating, GetAppMeta.Developer developer, String graphic, String added,
+      GetAppMeta.Stats.Rating rating, AppDeveloper appDeveloper, String graphic, String added,
       GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
       String wUrls, boolean isPaid, String uName, boolean isStoreFollowed) {
     this.detailedApp = detailedApp;
@@ -84,7 +85,7 @@ public class DetailedAppViewModel {
     this.globalRating = globalRating;
     this.pDownloads = pDownloads;
     this.rating = rating;
-    this.developer = developer;
+    this.appDeveloper = appDeveloper;
     this.graphic = graphic;
     this.added = added;
     this.media = media;
@@ -126,7 +127,7 @@ public class DetailedAppViewModel {
     this.globalRating = null;
     this.pDownloads = -1;
     this.rating = null;
-    this.developer = null;
+    this.appDeveloper = null;
     this.graphic = null;
     this.added = null;
     this.media = null;
@@ -167,7 +168,7 @@ public class DetailedAppViewModel {
     this.globalRating = null;
     this.pDownloads = -1;
     this.rating = null;
-    this.developer = null;
+    this.appDeveloper = null;
     this.graphic = null;
     this.added = null;
     this.media = null;
@@ -206,8 +207,8 @@ public class DetailedAppViewModel {
     return size;
   }
 
-  public GetAppMeta.Developer getDeveloper() {
-    return developer;
+  public AppDeveloper getDeveloper() {
+    return appDeveloper;
   }
 
   public String getGraphic() {

@@ -173,15 +173,19 @@ public class AppService {
       GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
           .getFlags();
       AppFlags appFlags = new AppFlags(flags.getReview(), mapToFlagsVote(flags.getVotes()));
+      GetAppMeta.Developer developer = app.getDeveloper();
+      AppDeveloper appDeveloper =
+          new AppDeveloper(developer.getName(), developer.getEmail(), developer.getPrivacy(),
+              developer.getWebsite());
       DetailedApp detailedApp =
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
               app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
               file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
               file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getMd5sum(),
-              file.getPath(), file.getPathAlt(), file.getVercode(), file.getVername(),
-              app.getDeveloper(), app.getStore(), app.getMedia(), app.getStats(), app.getObb(),
-              app.getPay(), app.getUrls()
-              .getW(), app.isPaid(), uName);
+              file.getPath(), file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper,
+              app.getStore(), app.getMedia(), app.getStats(), app.getObb(), app.getPay(),
+              app.getUrls()
+                  .getW(), app.isPaid(), uName);
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
