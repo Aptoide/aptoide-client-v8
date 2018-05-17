@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -8,13 +9,16 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.share.ShareDialogs;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
 /**
@@ -22,6 +26,8 @@ import rx.exceptions.OnErrorNotImplementedException;
  */
 
 public class AppViewPresenter implements Presenter {
+  private static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
+  private static final String TAG = AppViewPresenter.class.getSimpleName();
 
   private AppViewView view;
   private AccountNavigator accountNavigator;
@@ -52,6 +58,7 @@ public class AppViewPresenter implements Presenter {
 
   @Override public void present() {
     handleFirstLoad();
+    handleReviewAutoScroll();
     handleClickOnScreenshot();
     handleClickOnVideo();
     handleClickOnDescriptionReadMore();
@@ -71,27 +78,24 @@ public class AppViewPresenter implements Presenter {
     handleClickOnToolbar();
     handleDefaultShare();
     handleRecommendsShare();
+    handleClickOnRetry();
   }
 
   private void handleFirstLoad() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .observeOn(scheduler)
-        .doOnNext(appViewModel -> view.populateAppDetails(appViewModel))
-        .flatMapSingle(appViewModel -> Single.zip(appViewManager.getReviewsViewModel(
-            appViewModel.getDetailedApp()
-                .getStore()
-                .getName(), packageName, 5, view.getLanguageFilter())
-                .observeOn(scheduler), appViewManager.loadSimilarApps(packageName,
-            appViewModel.getDetailedApp()
-                .getMedia()
-                .getKeywords(), 2)
-                .observeOn(scheduler),
-            (reviews, similar) -> view.populateReviewsAndAds(reviews, similar,
-                appViewModel.getDetailedApp())))
+        .flatMap(__ -> loadApp())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleReviewAutoScroll() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.scrollReviewsResponse())
+        .flatMap(reviews -> scheduleAnimations(reviews))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
@@ -418,6 +422,55 @@ public class AppViewPresenter implements Presenter {
             .getId()))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
+  }
+
+  private void handleClickOnRetry() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> Observable.merge(view.clickNoNetworkRetry(), view.clickGenericRetry()))
+        .doOnNext(__ -> view.showLoading())
+        .flatMap(__ -> loadApp())
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private Observable<Integer> scheduleAnimations(int topReviewsCount) {
+    if (topReviewsCount <= 1) {
+      // not enough elements for animation
+      Logger.w(TAG, "Not enough top reviews to do paging animation.");
+      return Observable.empty();
+    }
+
+    return Observable.range(0, topReviewsCount)
+        .concatMap(pos -> Observable.just(pos)
+            .delay(TIME_BETWEEN_SCROLL, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(pos2 -> view.scrollReviews(pos2)));
+  }
+
+  private Observable<Void> loadApp() {
+    return appViewManager.getDetailedAppViewModel(appId, packageName)
+        .toObservable()
+        .observeOn(scheduler)
+        .doOnNext(appViewModel -> {
+          if (appViewModel.hasError()) {
+            view.handleError(appViewModel.getError());
+          } else {
+            view.populateAppDetails(appViewModel);
+          }
+        })
+        .filter(model -> !model.hasError())
+        .flatMapSingle(appViewModel -> Single.zip(appViewManager.getReviewsViewModel(
+            appViewModel.getDetailedApp()
+                .getStore()
+                .getName(), packageName, 5, view.getLanguageFilter())
+                .observeOn(scheduler), appViewManager.loadSimilarApps(packageName,
+            appViewModel.getDetailedApp()
+                .getMedia()
+                .getKeywords(), 2)
+                .observeOn(scheduler),
+            (reviews, similar) -> view.populateReviewsAndAds(reviews, similar,
+                appViewModel.getDetailedApp())));
   }
 }
 
