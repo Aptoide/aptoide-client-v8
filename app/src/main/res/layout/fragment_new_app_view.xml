@@ -26,12 +26,22 @@
         android:visibility="gone"
         />
 
+    <include
+        layout="@layout/partial_view_incl_no_network"
+        tools:visibility="gone"
+        />
+
+    <include
+        layout="@layout/partial_view_error"
+        tools:visibility="gone"
+        />
+
     <LinearLayout
         android:id="@+id/appview_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:visibility="visible"
+        tools:visibility="gone"
         >
 
       <RelativeLayout

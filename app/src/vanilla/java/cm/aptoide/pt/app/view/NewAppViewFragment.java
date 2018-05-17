@@ -68,6 +68,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.DetailedApp;
+import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
@@ -102,6 +103,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Toolbar toolbar;
   private ActionBar actionBar;
   private long appId;
+  private double appcReward;
   private String packageName;
   private NewScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
@@ -112,9 +114,17 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
   private PublishSubject<ShareDialogs.ShareResponse> shareDialogClick;
+  private PublishSubject<Integer> reviewsAutoScroll;
+  private PublishSubject<Void> noNetworkRetryClick;
+  private PublishSubject<Void> genericRetryClick;
   private PublishSubject<Void> ready;
 
   //Views
+  private View noNetworkErrorView;
+  private View genericErrorView;
+  private View genericRetryButton;
+  private View noNetworkRetryButton;
+
   private ImageView appIcon;
   private TextView appName;
   private View trustedLayout;
@@ -123,6 +133,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private TextView downloadsTop;
   private TextView sizeInfo;
   private TextView appcValue;
+  private View appcRewardView;
+  private TextView appcRewardValue;
   private View similarDownloadView;
   private RecyclerView similarDownloadApps;
   private TextView latestVersion;
@@ -188,6 +200,19 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return fragment;
   }
 
+  public static NewAppViewFragment newInstance(long appId, String packageName,
+      AppViewFragment.OpenType openType, String tag, double appcReward) {
+    Bundle bundle = new Bundle();
+    bundle.putString(ORIGIN_TAG, tag);
+    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putDouble(BundleKeys.APPC.name(), appcReward);
+    NewAppViewFragment fragment = new NewAppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
@@ -197,6 +222,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarAppClick = PublishSubject.create();
     shareDialogClick = PublishSubject.create();
     ready = PublishSubject.create();
+    reviewsAutoScroll = PublishSubject.create();
+    noNetworkRetryClick = PublishSubject.create();
+    genericRetryClick = PublishSubject.create();
 
     setHasOptionsMenu(true);
   }
@@ -208,8 +236,17 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       appId = savedInstanceState.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1);
       packageName =
           savedInstanceState.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null);
+      appcReward = savedInstanceState.getDouble(BundleKeys.APPC.name(), -1);
+    } else {
+      appcReward = -1;
     }
 
+    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
+    genericErrorView = view.findViewById(R.id.generic_error);
+    genericRetryButton = genericErrorView.findViewById(R.id.retry);
+    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
+    noNetworkRetryButton.setOnClickListener(click -> noNetworkRetryClick.onNext(null));
+    genericRetryButton.setOnClickListener(click -> genericRetryClick.onNext(null));
     appIcon = (ImageView) view.findViewById(R.id.app_icon);
     trustedBadge = (ImageView) view.findViewById(R.id.trusted_badge);
     appName = (TextView) view.findViewById(R.id.app_name);
@@ -219,6 +256,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     sizeInfo = (TextView) view.findViewById(R.id.header_size);
     appcValue = (TextView) view.findViewById(R.id.appc_layout)
         .findViewById(R.id.appcoins_reward_message);
+    appcRewardView = view.findViewById(R.id.appc_layout);
+    appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
     similarDownloadApps = (RecyclerView) similarDownloadView.findViewById(R.id.similar_list);
     latestVersion = (TextView) view.findViewById(R.id.versions_layout)
@@ -360,13 +399,17 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void showLoading() {
-    appview.setVisibility(View.GONE);
     viewProgress.setVisibility(View.VISIBLE);
+    appview.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
+    noNetworkErrorView.setVisibility(View.GONE);
   }
 
   @Override public void showAppview() {
     appview.setVisibility(View.VISIBLE);
     viewProgress.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
+    noNetworkErrorView.setVisibility(View.GONE);
   }
 
   @Override public long getAppId() {
@@ -391,6 +434,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
             .getPdownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(detailedApp.getDetailedApp()
         .getSize(), false));
+    if (appcReward != -1) {
+      appcRewardView.setVisibility(View.VISIBLE);
+      appcRewardValue.setText(formatAppCoinsRewardMessage());
+    }
+
     latestVersion.setText(detailedApp.getDetailedApp()
         .getVerName());
     storeName.setText(detailedApp.getDetailedApp()
@@ -450,6 +498,18 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     install.setVisibility(View.VISIBLE);
   }
 
+  @Override public void handleError(DetailedAppRequestResult.Error error) {
+    viewProgress.setVisibility(View.GONE);
+    switch (error) {
+      case NETWORK:
+        noNetworkErrorView.setVisibility(View.VISIBLE);
+        break;
+      case GENERIC:
+        genericErrorView.setVisibility(View.VISIBLE);
+        break;
+    }
+  }
+
   @Override public Observable<ScreenShotClickEvent> getScreenshotClickEvent() {
     return screenShotClick;
   }
@@ -475,6 +535,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     commentsView.setAdapter(reviewsAdapter);
     similarAppsAdapter.update(mapToSimilar(ads));
     similarDownloadsAdapter.update(mapToSimilar(ads));
+    reviewsAutoScroll.onNext(reviewsAdapter.getItemCount());
 
     return null;
   }
@@ -575,8 +636,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return RxToolbar.itemClicks(toolbar);
   }
 
+  @Override public Observable<Void> clickNoNetworkRetry() {
+    return noNetworkRetryClick;
+  }
+
+  @Override public Observable<Void> clickGenericRetry() {
+    return genericRetryClick;
+  }
+
   @Override public Observable<ShareDialogs.ShareResponse> shareDialogResponse() {
     return shareDialogClick;
+  }
+
+  @Override public Observable<Integer> scrollReviewsResponse() {
+    return reviewsAutoScroll;
   }
 
   @Override public void navigateToDeveloperWebsite(DetailedApp app) {
@@ -759,6 +832,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
       alertDialog.show();
     }
+  }
+
+  @Override public void scrollReviews(Integer position) {
+    commentsView.smoothScrollToPosition(position);
   }
 
   private void setTrustedBadge(DetailedApp app) {
@@ -986,6 +1063,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
+  private SpannableString formatAppCoinsRewardMessage() {
+    DecimalFormat twoDecimalFormat = new DecimalFormat("#.##");
+
+    String reward = String.valueOf(twoDecimalFormat.format(appcReward)) + " APPC";
+    String tryAppMessage =
+        getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
+
+    SpannableString spannable = new SpannableString(tryAppMessage);
+    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.orange_700)),
+        tryAppMessage.indexOf(reward), tryAppMessage.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    return spannable;
+  }
+
   @Override public Observable<DownloadAppViewModel.Action> installAppClick() {
     return RxView.clicks(install)
         .map(__ -> action);
@@ -1098,6 +1189,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   public enum BundleKeys {
-    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME,
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, APPC,
   }
 }
