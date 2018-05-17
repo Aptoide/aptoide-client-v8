@@ -9,8 +9,8 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedApp;
-import cm.aptoide.pt.view.app.FlagsVote;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import cm.aptoide.pt.view.app.FlagsVote;
 import rx.Observable;
 
 /**
