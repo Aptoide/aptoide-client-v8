@@ -40,6 +40,7 @@ public class AppViewManager {
   private final StoreUtilsProxy storeUtilsProxy;
   private final AptoideAccountManager aptoideAccountManager;
   private final AppViewConfiguration appViewConfiguration;
+  private final int limit;
   private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
@@ -52,7 +53,7 @@ public class AppViewManager {
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
       AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics) {
+      NotificationAnalytics notificationAnalytics, int limit) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -68,6 +69,7 @@ public class AppViewManager {
     this.downloadStateParser = downloadStateParser;
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
+    this.limit = limit;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -129,8 +131,7 @@ public class AppViewManager {
             result.getError()));
   }
 
-  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords,
-      int limit) {
+  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
     return loadAdForSimilarApps(packageName, keyWords).flatMap(
         ad -> loadRecommended(limit, packageName).map(
             recommendedAppsRequestResult -> new SimilarAppsViewModel(ad,

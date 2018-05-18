@@ -1,8 +1,10 @@
 package cm.aptoide.pt.view;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -43,6 +45,7 @@ import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AdMapper;
@@ -240,11 +243,13 @@ import rx.schedulers.Schedulers;
       FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
       AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics) {
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      Resources resources, WindowManager windowManager) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy,
         aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser,
-        appViewAnalytics, notificationAnalytics);
+        appViewAnalytics, notificationAnalytics,
+        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6));
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

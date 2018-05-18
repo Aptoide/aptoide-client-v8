@@ -484,9 +484,10 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable updateSuggestedApps(AppViewViewModel appViewModel) {
-    return appViewManager.loadSimilarApps(view.getPackageName(), appViewModel.getDetailedApp()
-        .getMedia()
-        .getKeywords(), 2)
+    return appViewManager.loadSimilarApps(appViewModel.getPackageName(),
+        appViewModel.getDetailedApp()
+            .getMedia()
+            .getKeywords())
         .observeOn(viewScheduler)
         .doOnSuccess(adsViewModel -> {
           view.populateAds(adsViewModel);

@@ -732,10 +732,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides QManager provideQManager(
-      @Named("default") SharedPreferences sharedPreferences, Resources resources) {
+      @Named("default") SharedPreferences sharedPreferences, Resources resources,
+      WindowManager windowManager) {
     return new QManager(sharedPreferences, resources,
-        ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)),
-        ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE)));
+        ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)), windowManager);
+  }
+
+  @Singleton @Provides WindowManager provideWindowManager() {
+    return ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE));
   }
 
   @Singleton @Provides LocalPersistenceAdultContent provideLocalAdultContent(
@@ -1117,23 +1121,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager,
-      PackageRepository packageRepository) {
+      PackageRepository packageRepository, Database database, IdsRepository idsRepository,
+      QManager qManager, Resources resources, WindowManager windowManager,
+      ConnectivityManager connectivityManager,
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
     return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
-        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class)).fromUrl(""),
-        ((AptoideApplication) getApplicationContext()).getIdsRepository()
-            .getUniqueIdentifier(),
+        new StoreCredentialsProviderImpl(
+            AccessorFactory.getAccessorFor(database, Store.class)).fromUrl(""),
+        idsRepository.getUniqueIdentifier(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
         ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
-        ((AptoideApplication) getApplicationContext()).getQManager()
-            .getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-        getApplicationContext().getResources(),
-        (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE),
-        (ConnectivityManager) getApplicationContext().getSystemService(
-            Context.CONNECTIVITY_SERVICE),
-        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider(), packageRepository,
+        qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
+        windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
         10, 10);
   }
 
