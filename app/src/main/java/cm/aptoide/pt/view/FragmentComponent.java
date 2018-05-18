@@ -13,7 +13,7 @@ import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.download.view.DownloadsFragment;
-import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
@@ -24,7 +24,6 @@ import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
-import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
@@ -44,8 +43,6 @@ public interface FragmentComponent {
   void inject(ManageStoreFragment manageStoreFragment);
 
   void inject(AppViewFragment appViewFragment);
-
-  void inject(HomeFragment homeFragment);
 
   void inject(SearchResultFragment searchResultFragment);
 
@@ -85,7 +82,7 @@ public interface FragmentComponent {
 
   void inject(ListStoreAppsFragment listStoreAppsFragment);
 
-  void inject(BottomHomeFragment bottomHomeFragment);
+  void inject(HomeFragment homeFragment);
 
   void inject(AppsFragment appsFragment);
 

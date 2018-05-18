@@ -58,12 +58,12 @@ import rx.Single;
 
   public Single<List<SearchAppResult>> searchInNonFollowedStores(String query,
       boolean onlyTrustedApps, int offset) {
-    return accountManager.accountStatus()
+    return accountManager.enabled()
         .first()
-        .flatMap(account -> ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
+        .flatMap(enabled -> ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
             StoreUtils.getSubscribedStoresIds(
                 AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, account.isAdultContentEnabled())
+            converterFactory, tokenInvalidator, sharedPreferences, enabled)
             .observe(true))
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
@@ -77,12 +77,12 @@ import rx.Single;
 
   public Single<List<SearchAppResult>> searchInFollowedStores(String query, boolean onlyTrustedApps,
       int offset) {
-    return accountManager.accountStatus()
+    return accountManager.enabled()
         .first()
-        .flatMap(account -> ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps,
+        .flatMap(enabled -> ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps,
             StoreUtils.getSubscribedStoresIds(
                 AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, account.isAdultContentEnabled())
+            converterFactory, tokenInvalidator, sharedPreferences, enabled)
             .observe(true))
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()

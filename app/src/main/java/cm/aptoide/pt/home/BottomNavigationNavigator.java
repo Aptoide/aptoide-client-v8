@@ -64,8 +64,8 @@ public class BottomNavigationNavigator {
   }
 
   public void navigateToHome() {
-    BottomHomeFragment bottomHomeFragment = new BottomHomeFragment();
-    navigateToSelectedFragment(homePosition, bottomHomeFragment);
+    HomeFragment homeFragment = new HomeFragment();
+    navigateToSelectedFragment(homePosition, homeFragment);
   }
 
   public void navigateToSearch(SearchResultFragment searchResultFragment) {
@@ -114,7 +114,7 @@ public class BottomNavigationNavigator {
     Fragment fragment = null;
     switch (bottomNavigationPosition) {
       case homePosition:
-        fragment = new BottomHomeFragment();
+        fragment = new HomeFragment();
         break;
       case searchPosition:
         fragment = SearchResultFragment.newInstance(defaultStoreName, true);

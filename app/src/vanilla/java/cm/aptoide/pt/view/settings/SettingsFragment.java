@@ -273,8 +273,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     subscriptions.add(RxPreference.clicks(termsAndConditions)
         .subscribe(clicked -> fragmentNavigator.navigateTo(
             GenericWebviewFragment.newInstance(getString(R.string.terms_conditions_navigation_url),
-                getString(R.string.settings_terms_conditions)),
-            true)));
+                getString(R.string.settings_terms_conditions)), true)));
 
     subscriptions.add(RxPreference.clicks(privacyPolicy)
         .subscribe(clicked -> fragmentNavigator.navigateTo(
