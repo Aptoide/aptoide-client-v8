@@ -23,8 +23,9 @@ public class AdsManager {
         .toSingle();
   }
 
-  public Single<List<MinimalAd>> loadSuggestedApps(String packageName, List<String> keyWords) {
+  public Single<MinimalAd> loadAdForSimilarApps(String packageName, List<String> keyWords) {
     return adsRepository.loadAdsFromAppviewSuggested(packageName, keyWords)
+        .map(minimalAds -> minimalAds.get(0))
         .toSingle();
   }
 }

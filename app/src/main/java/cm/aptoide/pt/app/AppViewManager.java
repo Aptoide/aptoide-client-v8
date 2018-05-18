@@ -152,8 +152,7 @@ public class AppViewManager {
   }
 
   private Single<MinimalAd> loadAdForSimilarApps(String packageName, List<String> keyWords) {
-    return adsManager.loadSuggestedApps(packageName, keyWords)
-        .map(adsForSimilarApps -> adsForSimilarApps.get(0));
+    return adsManager.loadAdForSimilarApps(packageName, keyWords);
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {
