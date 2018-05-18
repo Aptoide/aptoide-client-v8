@@ -92,24 +92,20 @@ public class AppCenterRepository {
     }
   }
 
-  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String packageName) {
-    return appService.loadDetailedApp(appId, packageName);
-  }
-
-  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String storeName,
+  public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String storeName,
       String packageName) {
     return appService.loadDetailedApp(appId, storeName, packageName);
   }
 
-  public Single<DetailedAppRequestResult> getDetailedApp(String packageName, String storeName) {
+  public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
     return appService.loadDetailedApp(packageName, storeName);
   }
 
-  public Single<DetailedAppRequestResult> getDetailedAppFromMd5(String md5) {
+  public Single<DetailedAppRequestResult> loadDetailedAppFromMd5(String md5) {
     return appService.loadDetailedAppFromMd5(md5);
   }
 
-  public Single<DetailedAppRequestResult> getDetailedAppAppFromUname(String uName) {
+  public Single<DetailedAppRequestResult> loadDetailedAppAppFromUname(String uName) {
     return appService.loadDetailedAppFromUname(uName);
   }
 

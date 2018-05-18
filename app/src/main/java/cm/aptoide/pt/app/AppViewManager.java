@@ -55,67 +55,66 @@ public class AppViewManager {
     this.appViewConfiguration = appViewConfiguration;
   }
 
-  public Single<DetailedAppViewModel> getDetailedAppViewModel() {
+  public Single<AppViewViewModel> loadAppViewViewModel() {
     if (appViewConfiguration.hasIdStoreNamePackageName()) {
-      return getDetailedAppViewModel(appViewConfiguration.getAppId(),
+      return loadAppViewViewModel(appViewConfiguration.getAppId(),
           appViewConfiguration.getStoreName(), appViewConfiguration.getPackageName());
     } else if (appViewConfiguration.hasMd5()) {
-      return getDetailedAppViewModelFromMd5(appViewConfiguration.getMd5());
+      return loadAppViewViewModelFromMd5(appViewConfiguration.getMd5());
     } else if (appViewConfiguration.hasUname()) {
-      return getDetailedAppViewModelFromUname(appViewConfiguration.getuName());
+      return loadAppViewViewModelFromUname(appViewConfiguration.getuName());
     } else {
-      return getDetailedAppViewModel(appViewConfiguration.getPackageName(),
+      return loadAppViewViewModel(appViewConfiguration.getPackageName(),
           appViewConfiguration.getStoreName());
     }
   }
 
-  private Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String storeName,
+  private Single<AppViewViewModel> loadAppViewViewModel(long appId, String storeName,
       String packageName) {
     if (cachedApp != null && cachedApp.getId() == appId && cachedApp.getPackageName()
         .equals(packageName) && cachedApp.getStore()
         .getName()
         .equals(storeName)) {
-      return createDetailedAppViewModel(cachedApp);
+      return createAppViewViewModel(cachedApp);
     }
-    return appCenter.getDetailedApp(appId, storeName, packageName)
-        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+    return appCenter.loadDetailedApp(appId, storeName, packageName)
+        .flatMap(result -> map(result));
   }
 
-  private Single<DetailedAppViewModel> getDetailedAppViewModel(String packageName,
-      String storeName) {
+  private Single<AppViewViewModel> loadAppViewViewModel(String packageName, String storeName) {
     if (cachedApp != null && cachedApp.getPackageName()
         .equals(packageName) && cachedApp.getStore()
         .getName()
         .equals(storeName)) {
-      return createDetailedAppViewModel(cachedApp);
+      return createAppViewViewModel(cachedApp);
     }
-    return appCenter.getDetailedApp(packageName, storeName)
-        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+    return appCenter.loadDetailedApp(packageName, storeName)
+        .flatMap(result -> map(result));
   }
 
-  private Single<DetailedAppViewModel> getDetailedAppViewModelFromMd5(String md5) {
+  private Single<AppViewViewModel> loadAppViewViewModelFromMd5(String md5) {
     if (cachedApp != null && cachedApp.getMd5()
         .equals(md5)) {
-      return createDetailedAppViewModel(cachedApp);
+      return createAppViewViewModel(cachedApp);
     }
-    return appCenter.getDetailedAppFromMd5(md5)
-        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+    return appCenter.loadDetailedAppFromMd5(md5)
+        .flatMap(result -> map(result));
   }
 
-  private Single<DetailedAppViewModel> getDetailedAppViewModelFromUname(String uName) {
+  private Single<AppViewViewModel> loadAppViewViewModelFromUname(String uName) {
     if (cachedApp != null && cachedApp.getUname()
         .equals(uName)) {
-      return createDetailedAppViewModel(cachedApp);
+      return createAppViewViewModel(cachedApp);
     }
-    return appCenter.getDetailedAppAppFromUname(uName)
-        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
+    return appCenter.loadDetailedAppAppFromUname(uName)
+        .flatMap(result -> map(result));
   }
 
-  public Single<ReviewsViewModel> getReviewsViewModel(String storeName, String packageName,
+  public Single<ReviewsViewModel> loadReviewsViewModel(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
     return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort)
-        .map(reviewsRequestResult -> new ReviewsViewModel(reviewsRequestResult.getReviewList(),
-            reviewsRequestResult.isLoading(), reviewsRequestResult.getError()));
+        .map(result -> new ReviewsViewModel(result.getReviewList(), result.isLoading(),
+            result.getError()));
   }
 
   public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords,
@@ -131,15 +130,14 @@ public class AppViewManager {
     return adsManager.loadAdsFromAppView(packageName, storeName);
   }
 
-  public Single<Boolean> addReviewRatingRequestAction(long reviewId, boolean helpful) {
-    return reviewsManager.doReviewRatingRequest(reviewId, helpful)
+  public Single<Boolean> rateApp(long reviewId, boolean helpful) {
+    return reviewsManager.rateApp(reviewId, helpful)
         .map(response -> (response.isOk() && response.getErrors()
             .isEmpty()));
   }
 
-  public Single<Boolean> addApkFlagRequestAction(String storeName, String md5,
-      FlagsVote.VoteType type) {
-    return flagManager.loadAddApkFlagRequest(storeName, md5, type.name()
+  public Single<Boolean> flagApp(String storeName, String md5, FlagsVote.VoteType type) {
+    return flagManager.flagApp(storeName, md5, type.name()
         .toLowerCase())
         .map(response -> (response.isOk() && !response.hasErrors()));
   }
@@ -164,12 +162,12 @@ public class AppViewManager {
         .toSingle();
   }
 
-  private Single<DetailedAppViewModel> createDetailedAppViewModel(DetailedApp app) {
+  private Single<AppViewViewModel> createAppViewViewModel(DetailedApp app) {
     GetAppMeta.Stats stats = app.getStats();
     cachedApp = app;
     return isStoreFollowed(cachedApp.getStore()
         .getId()).map(
-        isStoreFollowed -> new DetailedAppViewModel(app, app.getId(), app.getName(), app.getStore(),
+        isStoreFollowed -> new AppViewViewModel(app, app.getId(), app.getName(), app.getStore(),
             appViewConfiguration.getStoreTheme(), app.isGoodApp(), app.getMalware(),
             app.getAppFlags(), app.getTags(), app.getUsedFeatures(), app.getUsedPermissions(),
             app.getFileSize(), app.getMd5(), app.getMd5Sum(), app.getPath(), app.getPathAlt(),
@@ -181,16 +179,15 @@ public class AppViewManager {
             appViewConfiguration.getMinimalAd(), isStoreFollowed));
   }
 
-  private Single<DetailedAppViewModel> mapResultToCorrectDetailedAppViewModel(
-      DetailedAppRequestResult requestResult) {
-    if (requestResult.getDetailedApp() != null) {
-      return createDetailedAppViewModel(requestResult.getDetailedApp());
-    } else if (requestResult.isLoading()) {
-      return Single.just(new DetailedAppViewModel(requestResult.isLoading()));
-    } else if (requestResult.hasError()) {
-      return Single.just(new DetailedAppViewModel(requestResult.getError()));
+  private Single<AppViewViewModel> map(DetailedAppRequestResult result) {
+    if (result.getDetailedApp() != null) {
+      return createAppViewViewModel(result.getDetailedApp());
+    } else if (result.isLoading()) {
+      return Single.just(new AppViewViewModel(result.isLoading()));
+    } else if (result.hasError()) {
+      return Single.just(new AppViewViewModel(result.getError()));
     } else {
-      return Single.just(new DetailedAppViewModel(DetailedAppRequestResult.Error.GENERIC));
+      return Single.just(new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC));
     }
   }
 }

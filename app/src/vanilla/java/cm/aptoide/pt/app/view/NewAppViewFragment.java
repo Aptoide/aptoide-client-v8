@@ -41,7 +41,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppViewSimilarApp;
-import cm.aptoide.pt.app.DetailedAppViewModel;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
@@ -394,7 +394,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return packageName;
   }
 
-  @Override public void populateAppDetails(DetailedAppViewModel detailedApp) {
+  @Override public void populateAppDetails(AppViewViewModel detailedApp) {
     StoreTheme storeThemeEnum = StoreTheme.get(detailedApp.getStore());
 
     appName.setText(detailedApp.getDetailedApp()

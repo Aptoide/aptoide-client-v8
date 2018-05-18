@@ -16,7 +16,7 @@ import java.util.List;
  * Created by D01 on 07/05/18.
  */
 
-public class DetailedAppViewModel {
+public class AppViewViewModel {
 
   private final GetAppMeta.Media media;
   private final String modified;
@@ -60,7 +60,7 @@ public class DetailedAppViewModel {
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
 
-  public DetailedAppViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
+  public AppViewViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
       String storeTheme, boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
       String md5Sum, String path, String pathAlt, int verCode, String verName, String packageName,
@@ -112,7 +112,7 @@ public class DetailedAppViewModel {
     this.error = null;
   }
 
-  public DetailedAppViewModel(boolean loading) {
+  public AppViewViewModel(boolean loading) {
 
     this.loading = loading;
     this.detailedApp = null;
@@ -157,7 +157,7 @@ public class DetailedAppViewModel {
     this.error = null;
   }
 
-  public DetailedAppViewModel(DetailedAppRequestResult.Error error) {
+  public AppViewViewModel(DetailedAppRequestResult.Error error) {
 
     this.error = error;
     this.detailedApp = null;

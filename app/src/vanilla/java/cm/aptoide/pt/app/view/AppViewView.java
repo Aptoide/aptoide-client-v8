@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.view.MenuItem;
-import cm.aptoide.pt.app.DetailedAppViewModel;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
@@ -27,7 +27,7 @@ public interface AppViewView extends View {
 
   String getPackageName();
 
-  void populateAppDetails(DetailedAppViewModel detailedApp);
+  void populateAppDetails(AppViewViewModel detailedApp);
 
   void handleError(DetailedAppRequestResult.Error error);
 

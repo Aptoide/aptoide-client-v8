@@ -143,7 +143,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperWebsite())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
             .getDeveloper()
             .getWebsite()))
@@ -157,7 +157,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperEmail())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
             .getDeveloper()
             .getEmail()))
@@ -171,7 +171,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPrivacy())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
             .getDeveloper()
             .getPrivacy()))
@@ -185,7 +185,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPermissions())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(app -> view.navigateToDeveloperPermissions(app.getDetailedApp()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -196,7 +196,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickStoreLayout())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(app -> appViewNavigator.navigateToStore(app.getDetailedApp()
             .getStore()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -208,7 +208,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickFollowStore())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(scheduler)
         .flatMapCompletable(model -> {
           if (model.isStoreFollowed()) {
@@ -239,7 +239,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickOtherVersions())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(model -> {
           appViewAnalytics.sendOtherVersionsEvent();
           appViewNavigator.navigateToOtherVersions(model.getDetailedApp()
@@ -256,7 +256,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickTrustedBadge())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(model -> view.showTrustedDialog(model.getDetailedApp()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -268,7 +268,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickRateApp(), view.clickRateAppLarge(),
             view.clickRateAppLayout()))
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(scheduler)
         .flatMap(model -> view.showRateDialog(model.getAppName(), model.getPackageName(),
             model.getStore()
@@ -282,7 +282,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickCommentsLayout(), view.clickReadAllComments()))
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(
             model -> appViewNavigator.navigateToRateAndReview(model.getAppId(), model.getAppName(),
                 model.getStore()
@@ -312,8 +312,8 @@ public class AppViewPresenter implements Presenter {
               }
             })
             .filter(isLoggedIn -> isLoggedIn)
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
-            .flatMapSingle(model -> appViewManager.addApkFlagRequestAction(model.getStore()
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .flatMapSingle(model -> appViewManager.flagApp(model.getStore()
                 .getName(), model.getMd5Sum(), type))
             .filter(result -> result)
             .observeOn(scheduler)
@@ -389,7 +389,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.shareDialogResponse())
         .filter(response -> response == ShareDialogs.ShareResponse.SHARE_EXTERNAL)
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(scheduler)
         .doOnNext(app -> view.defaultShare(app.getAppName(), app.getwUrls()))
         .subscribe(__ -> {
@@ -412,7 +412,7 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(shouldContinue -> shouldContinue)
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(scheduler)
         .doOnNext(appModel -> view.recommendsShare(appModel.getPackageName(), appModel.getStore()
             .getId()))
@@ -445,7 +445,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Observable<Void> loadApp() {
-    return appViewManager.getDetailedAppViewModel()
+    return appViewManager.loadAppViewViewModel()
         .toObservable()
         .observeOn(scheduler)
         .doOnNext(appViewModel -> {
@@ -456,7 +456,7 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(model -> !model.hasError())
-        .flatMapSingle(appViewModel -> Single.zip(appViewManager.getReviewsViewModel(
+        .flatMapSingle(appViewModel -> Single.zip(appViewManager.loadReviewsViewModel(
             appViewModel.getDetailedApp()
                 .getStore()
                 .getName(), appViewModel.getPackageName(), 5, view.getLanguageFilter())

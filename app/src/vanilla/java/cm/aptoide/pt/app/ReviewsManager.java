@@ -22,7 +22,7 @@ public class ReviewsManager {
         languagesFilterSort);
   }
 
-  public Single<BaseV7Response> doReviewRatingRequest(long reviewId, boolean helpful) {
-    return reviewsRepository.doReviewRatingRequest(reviewId, helpful);
+  public Single<BaseV7Response> rateApp(long reviewId, boolean helpful) {
+    return reviewsRepository.rateApp(reviewId, helpful);
   }
 }

@@ -21,7 +21,7 @@ public class ReviewsRepository {
     return reviewsService.loadListReviews(storeName, packageName, maxReviews, languagesFilterSort);
   }
 
-  public Single<BaseV7Response> doReviewRatingRequest(long reviewId, boolean helpful) {
+  public Single<BaseV7Response> rateApp(long reviewId, boolean helpful) {
     return reviewsService.doReviewRatingRequest(reviewId, helpful);
   }
 }
