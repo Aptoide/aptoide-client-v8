@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.DetailedAppViewModel;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.permissions.ApkPermission;
@@ -39,7 +39,7 @@ import java.util.List;
 public class DialogPermissions extends DialogFragment {
 
   private GetApp getApp;
-  private DetailedAppViewModel app;
+  private AppViewViewModel app;
   private String appName;
   private String versionName;
   private String icon;
@@ -60,12 +60,12 @@ public class DialogPermissions extends DialogFragment {
     return dialog;
   }
 
-  public static DialogPermissions newInstance(DetailedAppViewModel app) {
+  public static DialogPermissions newInstance(AppViewViewModel app) {
     DialogPermissions dialog = new DialogPermissions();
     dialog.app = app;
     dialog.appName = app.getAppName();
     dialog.versionName = app.getVerName();
-    dialog.icon = app.getAdded();
+    dialog.icon = app.getIcon();
     dialog.size =
         AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),
             false);

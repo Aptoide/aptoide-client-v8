@@ -46,10 +46,10 @@ public class AppViewPresenter implements Presenter {
   private CrashReport crashReport;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
-      AppViewAnalytics appViewAnalytics, StoreAnalytics storeAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
-      CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService) {
+      AppViewAnalytics appViewAnalytics, StoreAnalytics storeAnalytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
+      PermissionManager permissionManager, PermissionService permissionService) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;

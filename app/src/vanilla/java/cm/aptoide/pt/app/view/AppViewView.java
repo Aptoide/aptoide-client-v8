@@ -90,17 +90,17 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Integer> scrollReviewsResponse();
 
-  void navigateToDeveloperWebsite(DetailedAppViewModel app);
+  void navigateToDeveloperWebsite(AppViewViewModel app);
 
-  void navigateToDeveloperEmail(DetailedAppViewModel app);
+  void navigateToDeveloperEmail(AppViewViewModel app);
 
-  void navigateToDeveloperPrivacy(DetailedAppViewModel app);
+  void navigateToDeveloperPrivacy(AppViewViewModel app);
 
-  void navigateToDeveloperPermissions(DetailedAppViewModel app);
+  void navigateToDeveloperPermissions(AppViewViewModel app);
 
   void setFollowButton(boolean isFollowing);
 
-  void showTrustedDialog(DetailedAppViewModel app);
+  void showTrustedDialog(AppViewViewModel app);
 
   String getLanguageFilter();
 
