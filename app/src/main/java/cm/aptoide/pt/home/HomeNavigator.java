@@ -29,8 +29,8 @@ public class HomeNavigator {
 
   public void navigateToAppView(long appId, String packageName, String tag) {
     fragmentNavigator.navigateTo(
-        NewAppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag),
-        true);
+        NewAppViewFragment.newInstance(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY,
+            tag), true);
   }
 
   public void navigateWithAction(HomeEvent click) {

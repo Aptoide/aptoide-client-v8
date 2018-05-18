@@ -177,7 +177,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View appview;
 
   public static NewAppViewFragment newInstance(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag) {
+      NewAppViewFragment.OpenType openType, String tag) {
     Bundle bundle = new Bundle();
     bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
@@ -189,7 +189,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   public static NewAppViewFragment newInstance(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag, double appcReward) {
+      NewAppViewFragment.OpenType openType, String tag, double appcReward) {
     Bundle bundle = new Bundle();
     bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
@@ -1050,5 +1050,18 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   public enum BundleKeys {
     APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, APPC,
+  }
+
+  public enum OpenType {
+    /**
+     * Only open the appview
+     */
+    OPEN_ONLY, /**
+     * opens the appView and starts the installation
+     */
+    OPEN_AND_INSTALL, /**
+     * open the appView and ask user if want to install the app
+     */
+    OPEN_WITH_INSTALL_POPUP
   }
 }

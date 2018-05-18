@@ -1,9 +1,11 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.app.view.NewAppViewFragment.OpenType;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.DetailedApp;
@@ -24,11 +26,15 @@ public class DetailedAppViewModel {
   private final String wUrls;
   private final boolean isPaid;
   private final String uName;
+  private final OpenType shouldInstall;
+  private final double appc;
+  private final SearchAdResult minimalAd;
   private final boolean isStoreFollowed;
   private final DetailedApp detailedApp;
   private final long appId;
   private final String appName;
   private final Store store;
+  private final String storeTheme;
   private final boolean isGoodApp;
   private final Malware malware;
   private final AppFlags appFlags;
@@ -55,17 +61,19 @@ public class DetailedAppViewModel {
   private final DetailedAppRequestResult.Error error;
 
   public DetailedAppViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
-      boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
+      String storeTheme, boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
       String md5Sum, String path, String pathAlt, int verCode, String verName, String packageName,
       long size, int downloads, GetAppMeta.Stats.Rating globalRating, int pDownloads,
       GetAppMeta.Stats.Rating rating, AppDeveloper appDeveloper, String graphic, String added,
       GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
-      String wUrls, boolean isPaid, String uName, boolean isStoreFollowed) {
+      String wUrls, boolean isPaid, String uName, OpenType shouldInstall, double appc,
+      SearchAdResult minimalAd, boolean isStoreFollowed) {
     this.detailedApp = detailedApp;
     this.appId = appId;
     this.appName = appName;
     this.store = store;
+    this.storeTheme = storeTheme;
     this.isGoodApp = isGoodApp;
     this.malware = malware;
     this.appFlags = appFlags;
@@ -96,6 +104,9 @@ public class DetailedAppViewModel {
     this.wUrls = wUrls;
     this.isPaid = isPaid;
     this.uName = uName;
+    this.shouldInstall = shouldInstall;
+    this.appc = appc;
+    this.minimalAd = minimalAd;
     this.isStoreFollowed = isStoreFollowed;
     this.loading = false;
     this.error = null;
@@ -108,6 +119,7 @@ public class DetailedAppViewModel {
     this.appId = -1;
     this.appName = "";
     this.store = null;
+    this.storeTheme = "";
     this.isGoodApp = false;
     this.malware = null;
     this.appFlags = null;
@@ -138,6 +150,9 @@ public class DetailedAppViewModel {
     this.wUrls = null;
     this.isPaid = false;
     this.uName = "";
+    this.shouldInstall = null;
+    this.appc = -1;
+    this.minimalAd = null;
     this.isStoreFollowed = false;
     this.error = null;
   }
@@ -149,6 +164,7 @@ public class DetailedAppViewModel {
     this.appId = -1;
     this.appName = "";
     this.store = null;
+    this.storeTheme = "";
     this.isGoodApp = false;
     this.malware = null;
     this.appFlags = null;
@@ -179,6 +195,9 @@ public class DetailedAppViewModel {
     this.wUrls = null;
     this.isPaid = false;
     this.uName = "";
+    this.shouldInstall = null;
+    this.appc = -1;
+    this.minimalAd = null;
     this.isStoreFollowed = false;
     this.loading = false;
   }
@@ -333,5 +352,21 @@ public class DetailedAppViewModel {
 
   public String getuName() {
     return uName;
+  }
+
+  public OpenType getShouldInstall() {
+    return shouldInstall;
+  }
+
+  public double getAppc() {
+    return appc;
+  }
+
+  public SearchAdResult getMinimalAd() {
+    return minimalAd;
+  }
+
+  public String getStoreTheme() {
+    return storeTheme;
   }
 }

@@ -39,6 +39,7 @@ import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -81,6 +82,7 @@ import dagger.Provides;
 import java.util.Arrays;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
+import org.parceler.Parcels;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -256,10 +258,10 @@ import rx.schedulers.Schedulers;
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
       ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
       FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
-      AptoideAccountManager aptoideAccountManager) {
+      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy,
-        aptoideAccountManager);
+        aptoideAccountManager, appViewConfiguration);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -268,7 +270,18 @@ import rx.schedulers.Schedulers;
       AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport, arguments.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1),
-        arguments.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null));
+        crashReport);
+  }
+
+  @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
+    return new AppViewConfiguration(arguments.getLong(BundleKeys.APP_ID.name(), -1),
+        arguments.getString(BundleKeys.PACKAGE_NAME.name(), ""),
+        arguments.getString(BundleKeys.STORE_NAME.name(), null),
+        arguments.getString(BundleKeys.STORE_THEME.name(), ""),
+        Parcels.unwrap(arguments.getParcelable(BundleKeys.MINIMAL_AD.name())),
+        ((NewAppViewFragment.OpenType) arguments.getSerializable(BundleKeys.SHOULD_INSTALL.name())),
+        arguments.getString(BundleKeys.MD5.name(), ""),
+        arguments.getString(BundleKeys.UNAME.name(), ""),
+        arguments.getDouble(BundleKeys.APPC.name(), -1));
   }
 }

@@ -8,6 +8,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.DetailedApp;
@@ -33,12 +34,14 @@ public class AppViewManager {
   private final FlagManager flagManager;
   private final StoreUtilsProxy storeUtilsProxy;
   private final AptoideAccountManager aptoideAccountManager;
+  private final AppViewConfiguration appViewConfiguration;
   private DetailedApp cachedApp;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
-      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager) {
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
+      AppViewConfiguration appViewConfiguration) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -49,18 +52,24 @@ public class AppViewManager {
     this.flagManager = flagManager;
     this.storeUtilsProxy = storeUtilsProxy;
     this.aptoideAccountManager = aptoideAccountManager;
+    this.appViewConfiguration = appViewConfiguration;
   }
 
-  public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
-    if (cachedApp != null && cachedApp.getId() == appId && cachedApp.getPackageName()
-        .equals(packageName)) {
-      return createDetailedAppViewModel(cachedApp);
+  public Single<DetailedAppViewModel> getDetailedAppViewModel() {
+    if (appViewConfiguration.hasIdStoreNamePackageName()) {
+      return getDetailedAppViewModel(appViewConfiguration.getAppId(),
+          appViewConfiguration.getStoreName(), appViewConfiguration.getPackageName());
+    } else if (appViewConfiguration.hasMd5()) {
+      return getDetailedAppViewModelFromMd5(appViewConfiguration.getMd5());
+    } else if (appViewConfiguration.hasUname()) {
+      return getDetailedAppViewModelFromUname(appViewConfiguration.getuName());
+    } else {
+      return getDetailedAppViewModel(appViewConfiguration.getPackageName(),
+          appViewConfiguration.getStoreName());
     }
-    return appCenter.getDetailedApp(appId, packageName)
-        .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
   }
 
-  public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String storeName,
+  private Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String storeName,
       String packageName) {
     if (cachedApp != null && cachedApp.getId() == appId && cachedApp.getPackageName()
         .equals(packageName) && cachedApp.getStore()
@@ -72,7 +81,7 @@ public class AppViewManager {
         .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
   }
 
-  public Single<DetailedAppViewModel> getDetailedAppViewModel(String packageName,
+  private Single<DetailedAppViewModel> getDetailedAppViewModel(String packageName,
       String storeName) {
     if (cachedApp != null && cachedApp.getPackageName()
         .equals(packageName) && cachedApp.getStore()
@@ -84,7 +93,7 @@ public class AppViewManager {
         .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
   }
 
-  public Single<DetailedAppViewModel> getDetailedAppViewModelFromMd5(String md5) {
+  private Single<DetailedAppViewModel> getDetailedAppViewModelFromMd5(String md5) {
     if (cachedApp != null && cachedApp.getMd5()
         .equals(md5)) {
       return createDetailedAppViewModel(cachedApp);
@@ -93,7 +102,7 @@ public class AppViewManager {
         .flatMap(requestResult -> mapResultToCorrectDetailedAppViewModel(requestResult));
   }
 
-  public Single<DetailedAppViewModel> getDetailedAppViewModelFromUname(String uName) {
+  private Single<DetailedAppViewModel> getDetailedAppViewModelFromUname(String uName) {
     if (cachedApp != null && cachedApp.getUname()
         .equals(uName)) {
       return createDetailedAppViewModel(cachedApp);
@@ -161,13 +170,15 @@ public class AppViewManager {
     return isStoreFollowed(cachedApp.getStore()
         .getId()).map(
         isStoreFollowed -> new DetailedAppViewModel(app, app.getId(), app.getName(), app.getStore(),
-            app.isGoodApp(), app.getMalware(), app.getAppFlags(), app.getTags(),
-            app.getUsedFeatures(), app.getUsedPermissions(), app.getFileSize(), app.getMd5(),
-            app.getMd5Sum(), app.getPath(), app.getPathAlt(), app.getVerCode(), app.getVerName(),
-            app.getPackageName(), app.getSize(), stats.getDownloads(), stats.getGlobalRating(),
-            stats.getPdownloads(), stats.getRating(), app.getDeveloper(), app.getGraphic(),
-            app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(), app.getObb(),
-            app.getPay(), app.getwUrls(), app.isPaid(), app.getUname(), isStoreFollowed));
+            appViewConfiguration.getStoreTheme(), app.isGoodApp(), app.getMalware(),
+            app.getAppFlags(), app.getTags(), app.getUsedFeatures(), app.getUsedPermissions(),
+            app.getFileSize(), app.getMd5(), app.getMd5Sum(), app.getPath(), app.getPathAlt(),
+            app.getVerCode(), app.getVerName(), app.getPackageName(), app.getSize(),
+            stats.getDownloads(), stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(),
+            app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
+            app.getAdded(), app.getObb(), app.getPay(), app.getwUrls(), app.isPaid(),
+            app.getUname(), appViewConfiguration.shouldInstall(), appViewConfiguration.getAppc(),
+            appViewConfiguration.getMinimalAd(), isStoreFollowed));
   }
 
   private Single<DetailedAppViewModel> mapResultToCorrectDetailedAppViewModel(
