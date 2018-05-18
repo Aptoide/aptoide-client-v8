@@ -35,7 +35,7 @@ public interface AppViewView extends InstallAppView {
 
   Observable<ReadMoreClickEvent> clickedReadMore();
 
-  void populateReviews(ReviewsViewModel reviews, DetailedAppViewModel app);
+  void populateReviews(ReviewsViewModel reviews, AppViewViewModel app);
 
   void populateAds(SimilarAppsViewModel ads);
 

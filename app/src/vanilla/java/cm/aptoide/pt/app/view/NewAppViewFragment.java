@@ -69,6 +69,7 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.DetailedApp;
@@ -271,7 +272,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           }
         });
       }
-
     } else {
       appcReward = -1;
     }
@@ -408,22 +408,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onResume() {
     super.onResume();
-
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta);
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    ready = null;
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putIntArray("ARTICLE_SCROLL_POSITION",
-        new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
   }
 
   @Override public void onDestroy() {
@@ -440,7 +428,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     trustedText = null;
     downloadsTop = null;
     sizeInfo = null;
-    installButton = null;
     appcRewardView = null;
     appcRewardValue = null;
     similarDownloadView = null;
@@ -498,6 +485,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     appId = -1;
     appcReward = -1;
     packageName = null;
+    ready = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -511,6 +499,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_new_app_view, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putIntArray("ARTICLE_SCROLL_POSITION",
+        new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
   }
 
   @Override public void showLoading() {
@@ -543,32 +537,26 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .load(model.getDetailedApp()
             .getIcon(), appIcon);
     downloadsTop.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model.getDetailedApp()
-            .getStats()
-            .getPdownloads())));
-    sizeInfo.setText(AptoideUtils.StringU.formatBytes(model
-        .getSize(), false));
+        .getStats()
+        .getPdownloads())));
+    sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
     if (appcReward != -1) {
       appcRewardView.setVisibility(View.VISIBLE);
       appcRewardValue.setText(formatAppCoinsRewardMessage());
     }
 
-    latestVersion.setText(model
-        .getVerName());
-    storeName.setText(model
-        .getStore()
+    latestVersion.setText(model.getVerName());
+    storeName.setText(model.getStore()
         .getName());
     ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(model
-            .getStore()
+        .loadWithShadowCircleTransform(model.getStore()
             .getAvatar(), storeIcon);
-    storeDownloads.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model
-            .getStore()
-            .getStats()
-            .getDownloads())));
-    storeFollowers.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model
-            .getStore()
-            .getStats()
-            .getSubscribers())));
+    storeDownloads.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model.getStore()
+        .getStats()
+        .getDownloads())));
+    storeFollowers.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model.getStore()
+        .getStats()
+        .getSubscribers())));
     storeFollow.setBackgroundDrawable(
         storeThemeEnum.getButtonLayoutDrawable(getResources(), getContext().getTheme()));
     if (model.isStoreFollowed()) {
@@ -576,29 +564,22 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     } else {
       storeFollow.setText(R.string.follow);
     }
-    if ((model
-        .getMedia()
-        .getScreenshots() != null && !model
-        .getMedia()
+    if ((model.getMedia()
+        .getScreenshots() != null && !model.getMedia()
         .getScreenshots()
-        .isEmpty()) || (model
-        .getMedia()
-        .getVideos() != null && !model
-        .getMedia()
+        .isEmpty()) || (model.getMedia()
+        .getVideos() != null && !model.getMedia()
         .getVideos()
         .isEmpty())) {
-      screenshotsAdapter.updateScreenshots(model
-          .getMedia()
+      screenshotsAdapter.updateScreenshots(model.getMedia()
           .getScreenshots());
-      screenshotsAdapter.updateVideos(model
-          .getMedia()
+      screenshotsAdapter.updateVideos(model.getMedia()
           .getVideos());
     } else {
       screenshots.setVisibility(View.GONE);
     }
     setTrustedBadge(model.getMalware());
-    setDescription(model
-        .getMedia()
+    setDescription(model.getMedia()
         .getDescription());
     setAppFlags(model.isGoodApp(), model.getAppFlags());
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
@@ -629,7 +610,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return readMoreClick;
   }
 
-  @Override public void populateReviews(ReviewsViewModel reviewsModel, DetailedAppViewModel app) {
+  @Override public void populateReviews(ReviewsViewModel reviewsModel, AppViewViewModel app) {
     List<Review> reviews = reviewsModel.getReviewsList();
 
     if (reviews != null && !reviews.isEmpty()) {
@@ -956,8 +937,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     @DrawableRes int badgeResId;
     @StringRes int badgeMessageId;
 
-    Malware.Rank rank = malware.getRank() == null ? Malware.Rank.UNKNOWN : malware
-        .getRank();
+    Malware.Rank rank = malware.getRank() == null ? Malware.Rank.UNKNOWN : malware.getRank();
     switch (rank) {
       case TRUSTED:
         badgeResId = R.drawable.ic_badge_trusted;
@@ -997,8 +977,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   private void setReadMoreClickListener(String appName, GetAppMeta.Media media, Store store) {
     descriptionReadMore.setOnClickListener(view -> readMoreClick.onNext(
-        new ReadMoreClickEvent(appName, media.getDescription(), store
-            .getAppearance()
+        new ReadMoreClickEvent(appName, media.getDescription(), store.getAppearance()
             .getTheme())));
   }
 
@@ -1058,11 +1037,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private void setDeveloperDetails(GetAppMeta.Developer developer) {
-    if (!TextUtils.isEmpty(developer
-        .getWebsite())) {
-      String website = developer
-          .getWebsite();
+  private void setDeveloperDetails(AppDeveloper developer) {
+    if (!TextUtils.isEmpty(developer.getWebsite())) {
+      String website = developer.getWebsite();
       String websiteCompositeString = String.format(getString(R.string.developer_website), website);
       SpannableString compositeSpan = new SpannableString(websiteCompositeString);
       compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
@@ -1075,10 +1052,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           String.format(getString(R.string.developer_website), getString(R.string.not_available)));
     }
 
-    if (!TextUtils.isEmpty(developer
-        .getEmail())) {
-      String email = developer
-          .getEmail();
+    if (!TextUtils.isEmpty(developer.getEmail())) {
+      String email = developer.getEmail();
       String emailCompositeString = String.format(getString(R.string.developer_email), email);
       SpannableString compositeSpan = new SpannableString(emailCompositeString);
       compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
@@ -1090,10 +1065,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           String.format(getString(R.string.developer_email), getString(R.string.not_available)));
     }
 
-    if (!TextUtils.isEmpty(developer
-        .getPrivacy())) {
-      String privacy = developer
-          .getPrivacy();
+    if (!TextUtils.isEmpty(developer.getPrivacy())) {
+      String privacy = developer.getPrivacy();
       String privacyCompositeString =
           String.format(getString(R.string.developer_privacy_policy), privacy);
       SpannableString compositeSpan = new SpannableString(privacyCompositeString);
