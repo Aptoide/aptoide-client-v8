@@ -56,7 +56,7 @@ public class AppViewViewModel {
   private final GetAppMeta.Stats.Rating rating;
   private final AppDeveloper appDeveloper;
   private final String graphic;
-  private final String added;
+  private final String icon;
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
 
@@ -65,7 +65,7 @@ public class AppViewViewModel {
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
       String md5Sum, String path, String pathAlt, int verCode, String verName, String packageName,
       long size, int downloads, GetAppMeta.Stats.Rating globalRating, int pDownloads,
-      GetAppMeta.Stats.Rating rating, AppDeveloper appDeveloper, String graphic, String added,
+      GetAppMeta.Stats.Rating rating, AppDeveloper appDeveloper, String graphic, String icon,
       GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
       String wUrls, boolean isPaid, String uName, OpenType shouldInstall, double appc,
       SearchAdResult minimalAd, boolean isStoreFollowed) {
@@ -95,7 +95,7 @@ public class AppViewViewModel {
     this.rating = rating;
     this.appDeveloper = appDeveloper;
     this.graphic = graphic;
-    this.added = added;
+    this.icon = icon;
     this.media = media;
     this.modified = modified;
     this.appAdded = appAdded;
@@ -141,7 +141,7 @@ public class AppViewViewModel {
     this.rating = null;
     this.appDeveloper = null;
     this.graphic = null;
-    this.added = null;
+    this.icon = null;
     this.media = null;
     this.modified = null;
     this.appAdded = null;
@@ -186,7 +186,7 @@ public class AppViewViewModel {
     this.rating = null;
     this.appDeveloper = null;
     this.graphic = null;
-    this.added = null;
+    this.icon = null;
     this.media = null;
     this.modified = null;
     this.appAdded = null;
@@ -234,8 +234,8 @@ public class AppViewViewModel {
     return graphic;
   }
 
-  public String getAdded() {
-    return added;
+  public String getIcon() {
+    return icon;
   }
 
   public GetAppMeta.Media getMedia() {
