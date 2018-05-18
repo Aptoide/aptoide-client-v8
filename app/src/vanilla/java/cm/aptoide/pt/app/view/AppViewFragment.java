@@ -839,7 +839,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     List<String> fragmentNames = createFragmentNameList(getFragmentManager().getFragments());
 
     installDisplayable =
-        AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
+        AppViewInstallDisplayable. newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
             this, downloadAnalytics, navigationTracker, getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),

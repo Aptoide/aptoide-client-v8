@@ -113,7 +113,6 @@ public class AppViewViewModel {
   }
 
   public AppViewViewModel(boolean loading) {
-
     this.loading = loading;
     this.detailedApp = null;
     this.appId = -1;
@@ -158,7 +157,6 @@ public class AppViewViewModel {
   }
 
   public AppViewViewModel(DetailedAppRequestResult.Error error) {
-
     this.error = error;
     this.detailedApp = null;
     this.appId = -1;
