@@ -93,7 +93,7 @@ public class AppService {
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, ""))
+        .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
@@ -111,7 +111,7 @@ public class AppService {
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, ""))
+        .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
@@ -127,7 +127,7 @@ public class AppService {
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, ""))
+        .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
@@ -143,7 +143,7 @@ public class AppService {
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, ""))
+        .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
@@ -158,13 +158,12 @@ public class AppService {
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, uName))
+        .flatMap(getApp -> mapApp(getApp, uName))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  private Observable<DetailedAppRequestResult> mapAppToDetailedAppRequestResult(GetApp getApp,
-      String uName) {
+  private Observable<DetailedAppRequestResult> mapApp(GetApp getApp, String uName) {
     if (getApp.isOk()) {
       GetAppMeta.App app = getApp.getNodes()
           .getMeta()
