@@ -10,6 +10,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
@@ -20,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
-import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -458,7 +458,7 @@ public class AppViewPresenter implements Presenter {
             .doOnNext(pos2 -> view.scrollReviews(pos2)));
   }
 
-  private Observable<Void> loadApp() {
+  private Observable<AppViewViewModel> loadApp() {
     return appViewManager.loadAppViewViewModel()
         .flatMap(
             appViewViewModel -> appViewManager.getDownloadAppViewModel(appViewViewModel.getMd5(),
@@ -479,17 +479,30 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(model -> !model.hasError())
-        .flatMapSingle(appViewModel -> Single.zip(appViewManager.loadReviewsViewModel(
-            appViewModel.getDetailedApp()
-                .getStore()
-                .getName(), appViewModel.getPackageName(), 5, view.getLanguageFilter())
-                .observeOn(viewScheduler), appViewManager.loadSimilarApps(appViewModel.getPackageName(),
-            appViewModel.getDetailedApp()
-                .getMedia()
-                .getKeywords(), 2)
-                .observeOn(viewScheduler),
-            (reviews, similar) -> view.populateReviewsAndAds(reviews, similar,
-                appViewModel.getDetailedApp())));
+        .flatMapCompletable(appViewModel -> Completable.merge(updateReviews(appViewModel),
+            updateSuggestedApps(appViewModel)));
+  }
+
+  private Completable updateSuggestedApps(AppViewViewModel appViewModel) {
+    return appViewManager.loadSimilarApps(view.getPackageName(), appViewModel.getDetailedApp()
+        .getMedia()
+        .getKeywords(), 2)
+        .observeOn(viewScheduler)
+        .doOnSuccess(adsViewModel -> {
+          view.populateAds(adsViewModel);
+        })
+        .toCompletable();
+  }
+
+  private Completable updateReviews(AppViewViewModel appViewModel) {
+    return appViewManager.loadReviewsViewModel(appViewModel.getDetailedApp()
+        .getStore()
+        .getName(), view.getPackageName(), 5, view.getLanguageFilter())
+        .observeOn(viewScheduler)
+        .doOnSuccess(reviewsViewModel -> {
+          view.populateReviews(reviewsViewModel, appViewModel);
+        })
+        .toCompletable();
   }
 
   private void cancelDownload() {
