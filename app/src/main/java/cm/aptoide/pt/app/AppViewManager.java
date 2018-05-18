@@ -71,10 +71,7 @@ public class AppViewManager {
 
   private Single<AppViewViewModel> loadAppViewViewModel(long appId, String storeName,
       String packageName) {
-    if (cachedApp != null && cachedApp.getId() == appId && cachedApp.getPackageName()
-        .equals(packageName) && cachedApp.getStore()
-        .getName()
-        .equals(storeName)) {
+    if (cachedApp != null) {
       return createAppViewViewModel(cachedApp);
     }
     return appCenter.loadDetailedApp(appId, storeName, packageName)
@@ -128,12 +125,6 @@ public class AppViewManager {
 
   public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
     return adsManager.loadAdsFromAppView(packageName, storeName);
-  }
-
-  public Single<Boolean> rateApp(long reviewId, boolean helpful) {
-    return reviewsManager.rateApp(reviewId, helpful)
-        .map(response -> (response.isOk() && response.getErrors()
-            .isEmpty()));
   }
 
   public Single<Boolean> flagApp(String storeName, String md5, FlagsVote.VoteType type) {

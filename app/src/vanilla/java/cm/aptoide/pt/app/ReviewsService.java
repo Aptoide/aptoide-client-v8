@@ -2,13 +2,11 @@ package cm.aptoide.pt.app;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.ListReviews;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -71,12 +69,5 @@ public class ReviewsService {
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
-  }
-
-  public Single<BaseV7Response> doReviewRatingRequest(long reviewId, boolean helpful) {
-    return SetReviewRatingRequest.of(reviewId, helpful, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
-        .observe()
-        .toSingle();
   }
 }
