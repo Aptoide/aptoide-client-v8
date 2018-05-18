@@ -59,7 +59,13 @@ import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
 import cm.aptoide.pt.analytics.analytics.SessionLogger;
+import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.ReviewsRepository;
+import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.appview.PreferencesManager;
+import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -1163,5 +1169,36 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new UserPreferencesPersister(sharedPreferences);
+  }
+
+  @Singleton @Provides PreferencesManager providesPreferencesManager(
+      UserPreferencesPersister userPreferencesPersister) {
+    return new PreferencesManager(userPreferencesPersister);
+  }
+
+  @Singleton @Provides ReviewsManager providesReviewsManager(ReviewsRepository reviewsRepository) {
+    return new ReviewsManager(reviewsRepository);
+  }
+
+  @Singleton @Provides ReviewsRepository providesReviewsRepository(ReviewsService reviewsService) {
+    return new ReviewsRepository(reviewsService);
+  }
+
+  @Singleton @Provides ReviewsService providesReviewsService(
+      StoreCredentialsProvider storeCredentialsProvider, @Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new ReviewsService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
+        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
+  }
+
+  @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository) {
+    return new AdsManager(adsRepository);
   }
 }

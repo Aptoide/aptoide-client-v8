@@ -26,7 +26,6 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AdsManager;
@@ -36,20 +35,15 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
-import cm.aptoide.pt.app.ReviewsRepository;
-import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
-import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -77,7 +71,6 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
-import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
@@ -226,29 +219,6 @@ import rx.schedulers.Schedulers;
     return new GetRewardAppCoinsAppsNavigator(fragmentNavigator);
   }
 
-  @FragmentScope @Provides ReviewsManager providesReviewsManager(
-      ReviewsRepository reviewsRepository) {
-    return new ReviewsManager(reviewsRepository);
-  }
-
-  @FragmentScope @Provides ReviewsRepository providesReviewsRepository(
-      ReviewsService reviewsService) {
-    return new ReviewsRepository(reviewsService);
-  }
-
-  @FragmentScope @Provides ReviewsService providesReviewsService(
-      StoreCredentialsProvider storeCredentialsProvider,
-      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences) {
-    return new ReviewsService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
-        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
-  }
-
-  @FragmentScope @Provides AdsManager providesAdsManager(AdsRepository adsRepository) {
-    return new AdsManager(adsRepository);
-  }
-
   @FragmentScope @Provides FlagManager providesFlagManager(FlagService flagService) {
     return new FlagManager(flagService);
   }
@@ -258,16 +228,6 @@ import rx.schedulers.Schedulers;
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
-  }
-
-  @FragmentScope @Provides UserPreferencesPersister providesUserPreferencesPersister(
-      @Named("default") SharedPreferences sharedPreferences) {
-    return new UserPreferencesPersister(sharedPreferences);
-  }
-
-  @FragmentScope @Provides PreferencesManager providesPreferencesManager(
-      UserPreferencesPersister userPreferencesPersister) {
-    return new PreferencesManager(userPreferencesPersister);
   }
 
   @FragmentScope @Provides DownloadStateParser providesDownloadStateParser() {
