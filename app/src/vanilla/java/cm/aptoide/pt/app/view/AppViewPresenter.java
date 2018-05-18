@@ -460,15 +460,15 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<Void> loadApp() {
     return appViewManager.loadAppViewViewModel()
-        .flatMap(detailedAppViewModel -> appViewManager.getDownloadAppViewModel(
-            detailedAppViewModel.getMd5(), detailedAppViewModel.getPackageName(),
-            detailedAppViewModel.getVerCode())
-            .first()
-            .observeOn(viewScheduler)
-            .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
-            .doOnNext(downloadAppViewModel -> view.readyToDownload())
-            .toSingle()
-            .map(downloadAppViewModel -> detailedAppViewModel))
+        .flatMap(
+            appViewViewModel -> appViewManager.getDownloadAppViewModel(appViewViewModel.getMd5(),
+                appViewViewModel.getPackageName(), appViewViewModel.getVerCode())
+                .first()
+                .observeOn(viewScheduler)
+                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
+                .doOnNext(downloadAppViewModel -> view.readyToDownload())
+                .toSingle()
+                .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
         .observeOn(viewScheduler)
         .doOnNext(appViewModel -> {
@@ -483,7 +483,7 @@ public class AppViewPresenter implements Presenter {
             appViewModel.getDetailedApp()
                 .getStore()
                 .getName(), appViewModel.getPackageName(), 5, view.getLanguageFilter())
-                .observeOn(viewScheduler), appViewManager.loadSimilarApps(packageName,
+                .observeOn(viewScheduler), appViewManager.loadSimilarApps(appViewModel.getPackageName(),
             appViewModel.getDetailedApp()
                 .getMedia()
                 .getKeywords(), 2)
@@ -496,9 +496,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelDownload()
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .flatMapCompletable(
-                app -> appViewManager.cancelDownload(app.getMd5(), packageName, app.getVerCode()))
+                app -> appViewManager.cancelDownload(app.getMd5(), app.getPackageName(),
+                    app.getVerCode()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -513,9 +514,10 @@ public class AppViewPresenter implements Presenter {
             .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
-                .flatMapSingle(__1 -> appViewManager.getDetailedAppViewModel(appId, packageName))
+                .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
                 .flatMapCompletable(
-                    app -> appViewManager.resumeDownload(app.getMd5(), packageName, appId))
+                    app -> appViewManager.resumeDownload(app.getMd5(), app.getPackageName(),
+                        app.getAppId()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -527,7 +529,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.pauseDownload()
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .flatMapCompletable(app -> appViewManager.pauseDownload(app.getMd5()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -575,7 +577,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable openInstalledApp() {
-    return Completable.fromAction(() -> view.openApp(packageName));
+    return Completable.fromAction(() -> view.openApp(""));
   }
 
   private Completable downloadApp(DownloadAppViewModel.Action action) {
@@ -590,7 +592,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
-            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, packageName, appId)))
+            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, "", -1)))
         .toCompletable();
   }
 
@@ -598,10 +600,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.isAppViewReadyToDownload())
-        .flatMap(create -> appViewManager.getDetailedAppViewModel(appId, packageName)
+        .flatMap(create -> appViewManager.loadAppViewViewModel()
             .toObservable())
         .filter(app -> !app.isLoading())
-        .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), packageName,
+        .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), app.getPackageName(),
             app.getVerCode()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))

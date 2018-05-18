@@ -278,13 +278,13 @@ import rx.schedulers.Schedulers;
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
       ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
       FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
-      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics) {
+      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
+      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy,
-        aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-        notificationAnalytics);
+        aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser,
+        appViewAnalytics, notificationAnalytics);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -293,8 +293,7 @@ import rx.schedulers.Schedulers;
       AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport,
-        new PermissionManager(), ((PermissionService) fragment.getContext()));
+        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()));
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {

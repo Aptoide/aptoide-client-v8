@@ -49,9 +49,10 @@ public class AppViewManager {
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
-      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics) {
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
+      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
