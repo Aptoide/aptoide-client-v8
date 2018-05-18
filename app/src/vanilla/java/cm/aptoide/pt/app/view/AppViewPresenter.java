@@ -14,6 +14,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.share.ShareDialogs;
+import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
@@ -32,6 +33,7 @@ public class AppViewPresenter implements Presenter {
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
+  private StoreAnalytics storeAnalytics;
   private AppViewNavigator appViewNavigator;
   private AppViewManager appViewManager;
   private AptoideAccountManager accountManager;
@@ -41,12 +43,14 @@ public class AppViewPresenter implements Presenter {
   private String packageName;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
-      AppViewAnalytics appViewAnalytics, AppViewNavigator appViewNavigator,
+      AppViewAnalytics appViewAnalytics, StoreAnalytics storeAnalytics,
+      AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler scheduler,
       CrashReport crashReport, long appId, String packageName) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
+    this.storeAnalytics = storeAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -86,6 +90,11 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> loadApp())
+        .doOnNext(model -> appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(),
+            model.getDeveloper()
+                .getName(), model.getMalware()
+                .getRank()
+                .name()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -148,10 +157,10 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperWebsite())
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
+        .filter(app -> !TextUtils.isEmpty(app
             .getDeveloper()
             .getWebsite()))
-        .doOnNext(app -> view.navigateToDeveloperWebsite(app.getDetailedApp()))
+        .doOnNext(app -> view.navigateToDeveloperWebsite(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -162,10 +171,10 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperEmail())
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
+        .filter(app -> !TextUtils.isEmpty(app
             .getDeveloper()
             .getEmail()))
-        .doOnNext(app -> view.navigateToDeveloperEmail(app.getDetailedApp()))
+        .doOnNext(app -> view.navigateToDeveloperEmail(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -176,10 +185,10 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPrivacy())
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
+        .filter(app -> !TextUtils.isEmpty(app
             .getDeveloper()
             .getPrivacy()))
-        .doOnNext(app -> view.navigateToDeveloperPrivacy(app.getDetailedApp()))
+        .doOnNext(app -> view.navigateToDeveloperPrivacy(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -190,7 +199,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPermissions())
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .doOnNext(app -> view.navigateToDeveloperPermissions(app.getDetailedApp()))
+        .doOnNext(app -> view.navigateToDeveloperPermissions(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -201,8 +210,12 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickStoreLayout())
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .doOnNext(app -> appViewNavigator.navigateToStore(app.getDetailedApp()
-            .getStore()))
+        .doOnNext(app -> {
+          storeAnalytics.sendStoreOpenEvent("App View", app.getStore()
+              .getName(), true);
+          appViewAnalytics.sendOpenStoreEvent();
+          appViewNavigator.navigateToStore(app.getStore());
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -218,16 +231,16 @@ public class AppViewPresenter implements Presenter {
           if (model.isStoreFollowed()) {
             view.setFollowButton(true);
             appViewAnalytics.sendOpenStoreEvent();
-            appViewNavigator.navigateToStore(model.getDetailedApp()
+            appViewNavigator.navigateToStore(model
                 .getStore());
             return Completable.complete();
           } else {
             view.setFollowButton(false);
             appViewAnalytics.sendFollowStoreEvent();
-            view.displayStoreFollowedSnack(model.getDetailedApp()
+            view.displayStoreFollowedSnack(model
                 .getStore()
                 .getName());
-            return appViewManager.subscribeStore(model.getDetailedApp()
+            return appViewManager.subscribeStore(model
                 .getStore()
                 .getName());
           }
@@ -246,9 +259,7 @@ public class AppViewPresenter implements Presenter {
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .doOnNext(model -> {
           appViewAnalytics.sendOtherVersionsEvent();
-          appViewNavigator.navigateToOtherVersions(model.getDetailedApp()
-              .getName(), model.getDetailedApp()
-              .getIcon(), model.getDetailedApp()
+          appViewNavigator.navigateToOtherVersions(model.getAppName(), model.getAdded(), model
               .getPackageName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -261,7 +272,10 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickTrustedBadge())
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .doOnNext(model -> view.showTrustedDialog(model.getDetailedApp()))
+        .doOnNext(model -> {
+          appViewAnalytics.sendBadgeClickEvent();
+          view.showTrustedDialog(model);
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -274,6 +288,7 @@ public class AppViewPresenter implements Presenter {
             view.clickRateAppLayout()))
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .observeOn(scheduler)
+        .doOnNext(model -> appViewAnalytics.sendRateThisAppEvent())
         .flatMap(model -> view.showRateDialog(model.getAppName(), model.getPackageName(),
             model.getStore()
                 .getName()))
@@ -287,12 +302,14 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickCommentsLayout(), view.clickReadAllComments()))
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .doOnNext(
-            model -> appViewNavigator.navigateToRateAndReview(model.getAppId(), model.getAppName(),
+        .doOnNext(model -> {
+          appViewAnalytics.sendReadAllEvent();
+          appViewNavigator.navigateToRateAndReview(model.getAppId(), model.getAppName(),
                 model.getStore()
                     .getName(), model.getPackageName(), model.getStore()
                     .getAppearance()
-                    .getTheme()))
+                  .getTheme());
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -317,6 +334,7 @@ public class AppViewPresenter implements Presenter {
             })
             .filter(isLoggedIn -> isLoggedIn)
             .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .doOnNext(model -> appViewAnalytics.sendFlagAppEvent(type.name()))
             .flatMapSingle(model -> appViewManager.addApkFlagRequestAction(model.getStore()
                 .getName(), model.getMd5Sum(), type))
             .filter(result -> result)
@@ -351,9 +369,11 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(similarAppClickEvent -> {
           if (similarAppClickEvent.getSimilar()
               .isAd()) {
+            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
             appViewNavigator.navigateToAd(similarAppClickEvent.getSimilar()
                 .getAd());
           } else {
+            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
             appViewNavigator.navigateToAppView(similarAppClickEvent.getSimilar()
                 .getApp()
                 .getAppId(), similarAppClickEvent.getSimilar()
@@ -379,6 +399,7 @@ public class AppViewPresenter implements Presenter {
               break;
 
             case R.id.menu_remote_install:
+              appViewAnalytics.sendRemoteInstallEvent();
               view.showShareOnTvDialog();
               break;
           }
@@ -395,7 +416,10 @@ public class AppViewPresenter implements Presenter {
         .filter(response -> response == ShareDialogs.ShareResponse.SHARE_EXTERNAL)
         .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
         .observeOn(scheduler)
-        .doOnNext(app -> view.defaultShare(app.getAppName(), app.getwUrls()))
+        .doOnNext(app -> {
+          view.defaultShare(app.getAppName(), app.getwUrls());
+          appViewAnalytics.sendAppShareEvent();
+        })
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -465,7 +489,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable updateSuggestedApps(DetailedAppViewModel appViewModel) {
-    return appViewManager.loadSimilarApps(view.getPackageName(), appViewModel.getDetailedApp()
+    return appViewManager.loadSimilarApps(view.getPackageName(), appViewModel
         .getMedia()
         .getKeywords(), 2)
         .observeOn(scheduler)
@@ -476,7 +500,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable updateReviews(DetailedAppViewModel appViewModel) {
-    return appViewManager.getReviewsViewModel(appViewModel.getDetailedApp()
+    return appViewManager.getReviewsViewModel(appViewModel
         .getStore()
         .getName(), view.getPackageName(), 5, view.getLanguageFilter())
         .observeOn(scheduler)

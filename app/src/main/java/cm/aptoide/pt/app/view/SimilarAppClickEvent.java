@@ -9,18 +9,18 @@ import cm.aptoide.pt.app.AppViewSimilarApp;
 public class SimilarAppClickEvent {
 
   private AppViewSimilarApp similar;
-  private int position;
+  private String type;
 
-  public SimilarAppClickEvent(AppViewSimilarApp similar, int position) {
+  public SimilarAppClickEvent(AppViewSimilarApp similar, String type) {
     this.similar = similar;
-    this.position = position;
+    this.type = type;
   }
 
   public AppViewSimilarApp getSimilar() {
     return similar;
   }
 
-  public int getPosition() {
-    return position;
+  public String getType() {
+    return type;
   }
 }

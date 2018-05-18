@@ -15,15 +15,18 @@ import rx.subjects.PublishSubject;
 
 public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimilarAppViewHolder> {
 
-  List<AppViewSimilarApp> similarApps;
-  DecimalFormat oneDecimalFormater;
-  PublishSubject<SimilarAppClickEvent> appClicked;
+  private List<AppViewSimilarApp> similarApps;
+  private DecimalFormat oneDecimalFormater;
+  private PublishSubject<SimilarAppClickEvent> appClicked;
+  private String type;
 
   public AppViewSimilarAppsAdapter(List<AppViewSimilarApp> similarApps,
-      DecimalFormat oneDecimalFormater, PublishSubject<SimilarAppClickEvent> appClicked) {
+      DecimalFormat oneDecimalFormater, PublishSubject<SimilarAppClickEvent> appClicked,
+      String type) {
     this.similarApps = similarApps;
     this.oneDecimalFormater = oneDecimalFormater;
     this.appClicked = appClicked;
+    this.type = type;
   }
 
   @Override public AppViewSimilarAppViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -33,7 +36,7 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
 
   @Override public void onBindViewHolder(AppViewSimilarAppViewHolder appViewSimilarAppViewHolder,
       int position) {
-    appViewSimilarAppViewHolder.setSimilarApp(similarApps.get(position), position);
+    appViewSimilarAppViewHolder.setSimilarApp(similarApps.get(position), type);
   }
 
   @Override public int getItemCount() {

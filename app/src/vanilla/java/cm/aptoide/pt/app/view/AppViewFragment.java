@@ -1265,8 +1265,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
         appViewAnalytics.sendEditorsChoiceClickEvent(navigationTracker.getPreviousScreen(),
             getPackageName(), getEditorsBrickPosition());
       }
-      appViewAnalytics.sendAppViewOpenedFromEvent(navigationTracker.getPreviousScreen(),
-          navigationTracker.getCurrentScreen(), getPackageName(), app.getDeveloper()
+      appViewAnalytics.sendAppViewOpenedFromEvent(getPackageName(), app.getDeveloper()
               .getName(), app.getFile()
               .getMalware()
               .getRank()

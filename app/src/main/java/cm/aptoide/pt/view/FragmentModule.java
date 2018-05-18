@@ -70,6 +70,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -263,10 +264,10 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
-      AccountNavigator accountNavigator, AppViewAnalytics analytics,
+      AccountNavigator accountNavigator, AppViewAnalytics analytics, StoreAnalytics storeAnalytics,
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, CrashReport crashReport) {
-    return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
+    return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics, storeAnalytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
         crashReport, arguments.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1),
         arguments.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null));

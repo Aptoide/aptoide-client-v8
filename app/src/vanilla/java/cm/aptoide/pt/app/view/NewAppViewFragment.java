@@ -69,7 +69,6 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.Application;
-import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
@@ -352,10 +351,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     similarAppsAdapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("#,#"),
-            similarAppClick);
+            similarAppClick, "similar_apps");
     similarDownloadsAdapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("#,#"),
-            similarAppClick);
+            similarAppClick, "similar_downloads");
 
     similarDownloadApps.setAdapter(similarDownloadsAdapter);
     similarApps.setAdapter(similarAppsAdapter);
@@ -514,11 +513,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     appName.setText(model.getAppName());
     ImageLoader.with(getContext())
-        .load(model.getDetailedApp()
-            .getIcon(), appIcon);
-    downloadsTop.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model.getDetailedApp()
-            .getStats()
-            .getPdownloads())));
+        .load(model.getAdded(), appIcon);
+    downloadsTop.setText(
+        String.format("%s", AptoideUtils.StringU.withSuffix(model.getpDownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(model
         .getSize(), false));
     if (appcReward != -1) {
@@ -737,13 +734,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return reviewsAutoScroll;
   }
 
-  @Override public void navigateToDeveloperWebsite(DetailedApp app) {
+  @Override public void navigateToDeveloperWebsite(DetailedAppViewModel app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getWebsite()));
     getContext().startActivity(browserIntent);
   }
 
-  @Override public void navigateToDeveloperEmail(DetailedApp app) {
+  @Override public void navigateToDeveloperEmail(DetailedAppViewModel app) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     Uri data = Uri.parse("mailto:" + app.getDeveloper()
         .getEmail() + "?subject=" + "Feedback" + "&body=" + "");
@@ -751,13 +748,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     getContext().startActivity(intent);
   }
 
-  @Override public void navigateToDeveloperPrivacy(DetailedApp app) {
+  @Override public void navigateToDeveloperPrivacy(DetailedAppViewModel app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getPrivacy()));
     getContext().startActivity(browserIntent);
   }
 
-  @Override public void navigateToDeveloperPermissions(DetailedApp app) {
+  @Override public void navigateToDeveloperPermissions(DetailedAppViewModel app) {
     DialogPermissions dialogPermissions = DialogPermissions.newInstance(app);
     dialogPermissions.show(getActivity().getSupportFragmentManager(), "");
   }
@@ -766,8 +763,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (!isFollowing) storeFollow.setText(R.string.followed);
   }
 
-  @Override public void showTrustedDialog(DetailedApp app) {
-    DialogBadgeV7.newInstance(app.getMalware(), app.getName(), app.getMalware()
+  @Override public void showTrustedDialog(DetailedAppViewModel app) {
+    DialogBadgeV7.newInstance(app.getMalware(), app.getAppName(), app.getMalware()
         .getRank())
         .show(getFragmentManager(), BADGE_DIALOG_TAG);
   }

@@ -8,7 +8,6 @@ import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import rx.Observable;
@@ -91,17 +90,17 @@ public interface AppViewView extends View {
 
   Observable<Integer> scrollReviewsResponse();
 
-  void navigateToDeveloperWebsite(DetailedApp app);
+  void navigateToDeveloperWebsite(DetailedAppViewModel app);
 
-  void navigateToDeveloperEmail(DetailedApp app);
+  void navigateToDeveloperEmail(DetailedAppViewModel app);
 
-  void navigateToDeveloperPrivacy(DetailedApp app);
+  void navigateToDeveloperPrivacy(DetailedAppViewModel app);
 
-  void navigateToDeveloperPermissions(DetailedApp app);
+  void navigateToDeveloperPermissions(DetailedAppViewModel app);
 
   void setFollowButton(boolean isFollowing);
 
-  void showTrustedDialog(DetailedApp app);
+  void showTrustedDialog(DetailedAppViewModel app);
 
   String getLanguageFilter();
 
