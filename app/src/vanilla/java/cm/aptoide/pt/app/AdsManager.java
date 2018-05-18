@@ -19,12 +19,13 @@ public class AdsManager {
   }
 
   public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
-    return adsRepository.getAdsFromAppView(packageName, storeName)
+    return adsRepository.loadAdsFromAppView(packageName, storeName)
         .toSingle();
   }
 
-  public Single<List<MinimalAd>> loadSuggestedApps(String packageName, List<String> keyWords) {
-    return adsRepository.getAdsFromAppviewSuggested(packageName, keyWords)
+  public Single<MinimalAd> loadAdForSimilarApps(String packageName, List<String> keyWords) {
+    return adsRepository.loadAdsFromAppviewSuggested(packageName, keyWords)
+        .map(minimalAds -> minimalAds.get(0))
         .toSingle();
   }
 }

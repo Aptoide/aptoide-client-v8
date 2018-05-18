@@ -29,8 +29,7 @@ public class FlagService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Single<GenericResponseV2> loadAddApkFlagRequest(String storeName, String md5,
-      String flag) {
+  public Single<GenericResponseV2> doAppFlagRequest(String storeName, String md5, String flag) {
     return AddApkFlagRequest.of(storeName, md5, flag, bodyInterceptorV3, okHttpClient,
         tokenInvalidator, sharedPreferences)
         .observe(true)

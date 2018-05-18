@@ -16,8 +16,7 @@ public class FlagManager {
     this.flagService = flagService;
   }
 
-  public Single<GenericResponseV2> loadAddApkFlagRequest(String storeName, String md5,
-      String flag) {
-    return flagService.loadAddApkFlagRequest(storeName, md5, flag);
+  public Single<GenericResponseV2> flagApp(String storeName, String md5, String flag) {
+    return flagService.doAppFlagRequest(storeName, md5, flag);
   }
 }

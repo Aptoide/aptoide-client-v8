@@ -52,8 +52,8 @@ public class AppViewNavigator {
     Fragment fragment = AptoideApplication.getFragmentProvider()
         .newAppViewFragment(appId, packageName, tag);
     fragmentNavigator.navigateTo(
-        NewAppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag),
-        true);
+        NewAppViewFragment.newInstance(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY,
+            tag), true);
   }
 
   public void navigateToAd(MinimalAd ad) {

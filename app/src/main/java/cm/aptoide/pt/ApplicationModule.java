@@ -59,7 +59,13 @@ import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
 import cm.aptoide.pt.analytics.analytics.SessionLogger;
+import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.ReviewsRepository;
+import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.appview.PreferencesManager;
+import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -726,10 +732,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides QManager provideQManager(
-      @Named("default") SharedPreferences sharedPreferences, Resources resources) {
+      @Named("default") SharedPreferences sharedPreferences, Resources resources,
+      WindowManager windowManager) {
     return new QManager(sharedPreferences, resources,
-        ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)),
-        ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE)));
+        ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)), windowManager);
+  }
+
+  @Singleton @Provides WindowManager provideWindowManager() {
+    return ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE));
   }
 
   @Singleton @Provides LocalPersistenceAdultContent provideLocalAdultContent(
@@ -1131,23 +1141,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager,
-      PackageRepository packageRepository) {
+      PackageRepository packageRepository, Database database, IdsRepository idsRepository,
+      QManager qManager, Resources resources, WindowManager windowManager,
+      ConnectivityManager connectivityManager,
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
     return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
-        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-            Store.class)).fromUrl(""),
-        ((AptoideApplication) getApplicationContext()).getIdsRepository()
-            .getUniqueIdentifier(),
+        new StoreCredentialsProviderImpl(
+            AccessorFactory.getAccessorFor(database, Store.class)).fromUrl(""),
+        idsRepository.getUniqueIdentifier(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
         ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
-        ((AptoideApplication) getApplicationContext()).getQManager()
-            .getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-        getApplicationContext().getResources(),
-        (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE),
-        (ConnectivityManager) getApplicationContext().getSystemService(
-            Context.CONNECTIVITY_SERVICE),
-        ((AptoideApplication) getApplicationContext()).getVersionCodeProvider(), packageRepository,
+        qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
+        windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
         10, 10);
   }
 
@@ -1184,5 +1190,36 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new UserPreferencesPersister(sharedPreferences);
+  }
+
+  @Singleton @Provides PreferencesManager providesPreferencesManager(
+      UserPreferencesPersister userPreferencesPersister) {
+    return new PreferencesManager(userPreferencesPersister);
+  }
+
+  @Singleton @Provides ReviewsManager providesReviewsManager(ReviewsRepository reviewsRepository) {
+    return new ReviewsManager(reviewsRepository);
+  }
+
+  @Singleton @Provides ReviewsRepository providesReviewsRepository(ReviewsService reviewsService) {
+    return new ReviewsRepository(reviewsService);
+  }
+
+  @Singleton @Provides ReviewsService providesReviewsService(
+      StoreCredentialsProvider storeCredentialsProvider, @Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new ReviewsService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
+        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
+  }
+
+  @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository) {
+    return new AdsManager(adsRepository);
   }
 }

@@ -1,9 +1,12 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.app.view.NewAppViewFragment.OpenType;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
@@ -13,7 +16,7 @@ import java.util.List;
  * Created by D01 on 07/05/18.
  */
 
-public class DetailedAppViewModel {
+public class AppViewViewModel {
 
   private final GetAppMeta.Media media;
   private final String modified;
@@ -23,11 +26,17 @@ public class DetailedAppViewModel {
   private final String wUrls;
   private final boolean isPaid;
   private final String uName;
+  private final OpenType shouldInstall;
+  private final double appc;
+  private final SearchAdResult minimalAd;
+  private final String editorsChoice;
+  private final String originTag;
   private final boolean isStoreFollowed;
   private final DetailedApp detailedApp;
   private final long appId;
   private final String appName;
   private final Store store;
+  private final String storeTheme;
   private final boolean isGoodApp;
   private final Malware malware;
   private final AppFlags appFlags;
@@ -47,24 +56,26 @@ public class DetailedAppViewModel {
   private final GetAppMeta.Stats.Rating globalRating;
   private final int pDownloads;
   private final GetAppMeta.Stats.Rating rating;
-  private final GetAppMeta.Developer developer;
+  private final AppDeveloper appDeveloper;
   private final String graphic;
-  private final String added;
+  private final String icon;
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
 
-  public DetailedAppViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
-      boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
+  public AppViewViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
+      String storeTheme, boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
       String md5Sum, String path, String pathAlt, int verCode, String verName, String packageName,
       long size, int downloads, GetAppMeta.Stats.Rating globalRating, int pDownloads,
-      GetAppMeta.Stats.Rating rating, GetAppMeta.Developer developer, String graphic, String added,
+      GetAppMeta.Stats.Rating rating, AppDeveloper appDeveloper, String graphic, String icon,
       GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
-      String wUrls, boolean isPaid, String uName, boolean isStoreFollowed) {
+      String wUrls, boolean isPaid, String uName, OpenType shouldInstall, double appc,
+      SearchAdResult minimalAd, String editorsChoice, String originTag, boolean isStoreFollowed) {
     this.detailedApp = detailedApp;
     this.appId = appId;
     this.appName = appName;
     this.store = store;
+    this.storeTheme = storeTheme;
     this.isGoodApp = isGoodApp;
     this.malware = malware;
     this.appFlags = appFlags;
@@ -84,9 +95,9 @@ public class DetailedAppViewModel {
     this.globalRating = globalRating;
     this.pDownloads = pDownloads;
     this.rating = rating;
-    this.developer = developer;
+    this.appDeveloper = appDeveloper;
     this.graphic = graphic;
-    this.added = added;
+    this.icon = icon;
     this.media = media;
     this.modified = modified;
     this.appAdded = appAdded;
@@ -95,18 +106,23 @@ public class DetailedAppViewModel {
     this.wUrls = wUrls;
     this.isPaid = isPaid;
     this.uName = uName;
+    this.shouldInstall = shouldInstall;
+    this.appc = appc;
+    this.minimalAd = minimalAd;
+    this.editorsChoice = editorsChoice;
+    this.originTag = originTag;
     this.isStoreFollowed = isStoreFollowed;
     this.loading = false;
     this.error = null;
   }
 
-  public DetailedAppViewModel(boolean loading) {
-
+  public AppViewViewModel(boolean loading) {
     this.loading = loading;
     this.detailedApp = null;
     this.appId = -1;
     this.appName = "";
     this.store = null;
+    this.storeTheme = "";
     this.isGoodApp = false;
     this.malware = null;
     this.appFlags = null;
@@ -126,9 +142,9 @@ public class DetailedAppViewModel {
     this.globalRating = null;
     this.pDownloads = -1;
     this.rating = null;
-    this.developer = null;
+    this.appDeveloper = null;
     this.graphic = null;
-    this.added = null;
+    this.icon = null;
     this.media = null;
     this.modified = null;
     this.appAdded = null;
@@ -137,17 +153,22 @@ public class DetailedAppViewModel {
     this.wUrls = null;
     this.isPaid = false;
     this.uName = "";
+    this.shouldInstall = null;
+    this.appc = -1;
+    this.minimalAd = null;
+    this.editorsChoice = "";
+    this.originTag = "";
     this.isStoreFollowed = false;
     this.error = null;
   }
 
-  public DetailedAppViewModel(DetailedAppRequestResult.Error error) {
-
+  public AppViewViewModel(DetailedAppRequestResult.Error error) {
     this.error = error;
     this.detailedApp = null;
     this.appId = -1;
     this.appName = "";
     this.store = null;
+    this.storeTheme = "";
     this.isGoodApp = false;
     this.malware = null;
     this.appFlags = null;
@@ -167,9 +188,9 @@ public class DetailedAppViewModel {
     this.globalRating = null;
     this.pDownloads = -1;
     this.rating = null;
-    this.developer = null;
+    this.appDeveloper = null;
     this.graphic = null;
-    this.added = null;
+    this.icon = null;
     this.media = null;
     this.modified = null;
     this.appAdded = null;
@@ -178,6 +199,11 @@ public class DetailedAppViewModel {
     this.wUrls = null;
     this.isPaid = false;
     this.uName = "";
+    this.shouldInstall = null;
+    this.appc = -1;
+    this.minimalAd = null;
+    this.editorsChoice = "";
+    this.originTag = "";
     this.isStoreFollowed = false;
     this.loading = false;
   }
@@ -206,16 +232,16 @@ public class DetailedAppViewModel {
     return size;
   }
 
-  public GetAppMeta.Developer getDeveloper() {
-    return developer;
+  public AppDeveloper getDeveloper() {
+    return appDeveloper;
   }
 
   public String getGraphic() {
     return graphic;
   }
 
-  public String getAdded() {
-    return added;
+  public String getIcon() {
+    return icon;
   }
 
   public GetAppMeta.Media getMedia() {
@@ -332,5 +358,29 @@ public class DetailedAppViewModel {
 
   public String getuName() {
     return uName;
+  }
+
+  public OpenType getShouldInstall() {
+    return shouldInstall;
+  }
+
+  public double getAppc() {
+    return appc;
+  }
+
+  public SearchAdResult getMinimalAd() {
+    return minimalAd;
+  }
+
+  public String getStoreTheme() {
+    return storeTheme;
+  }
+
+  public String getEditorsChoice() {
+    return editorsChoice;
+  }
+
+  public String getOriginTag() {
+    return originTag;
   }
 }

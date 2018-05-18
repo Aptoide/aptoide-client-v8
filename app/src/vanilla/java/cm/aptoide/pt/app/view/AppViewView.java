@@ -1,11 +1,11 @@
 package cm.aptoide.pt.app.view;
 
 import android.view.MenuItem;
-import cm.aptoide.pt.app.DetailedAppViewModel;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
-import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.appview.InstallAppView;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
@@ -16,7 +16,7 @@ import rx.Observable;
  * Created by franciscocalado on 08/05/18.
  */
 
-public interface AppViewView extends View {
+public interface AppViewView extends InstallAppView {
 
   void showLoading();
 
@@ -26,7 +26,7 @@ public interface AppViewView extends View {
 
   String getPackageName();
 
-  void populateAppDetails(DetailedAppViewModel detailedApp);
+  void populateAppDetails(AppViewViewModel detailedApp);
 
   void handleError(DetailedAppRequestResult.Error error);
 
@@ -34,7 +34,7 @@ public interface AppViewView extends View {
 
   Observable<ReadMoreClickEvent> clickedReadMore();
 
-  void populateReviews(ReviewsViewModel reviews, DetailedAppViewModel app);
+  void populateReviews(ReviewsViewModel reviews, AppViewViewModel app);
 
   void populateAds(SimilarAppsViewModel ads);
 
