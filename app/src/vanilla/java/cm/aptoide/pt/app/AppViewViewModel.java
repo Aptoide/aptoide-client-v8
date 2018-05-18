@@ -29,6 +29,8 @@ public class AppViewViewModel {
   private final OpenType shouldInstall;
   private final double appc;
   private final SearchAdResult minimalAd;
+  private final String editorsChoice;
+  private final String originTag;
   private final boolean isStoreFollowed;
   private final DetailedApp detailedApp;
   private final long appId;
@@ -68,7 +70,7 @@ public class AppViewViewModel {
       GetAppMeta.Stats.Rating rating, AppDeveloper appDeveloper, String graphic, String icon,
       GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
       String wUrls, boolean isPaid, String uName, OpenType shouldInstall, double appc,
-      SearchAdResult minimalAd, boolean isStoreFollowed) {
+      SearchAdResult minimalAd, String editorsChoice, String originTag, boolean isStoreFollowed) {
     this.detailedApp = detailedApp;
     this.appId = appId;
     this.appName = appName;
@@ -107,6 +109,8 @@ public class AppViewViewModel {
     this.shouldInstall = shouldInstall;
     this.appc = appc;
     this.minimalAd = minimalAd;
+    this.editorsChoice = editorsChoice;
+    this.originTag = originTag;
     this.isStoreFollowed = isStoreFollowed;
     this.loading = false;
     this.error = null;
@@ -152,6 +156,8 @@ public class AppViewViewModel {
     this.shouldInstall = null;
     this.appc = -1;
     this.minimalAd = null;
+    this.editorsChoice = "";
+    this.originTag = "";
     this.isStoreFollowed = false;
     this.error = null;
   }
@@ -196,6 +202,8 @@ public class AppViewViewModel {
     this.shouldInstall = null;
     this.appc = -1;
     this.minimalAd = null;
+    this.editorsChoice = "";
+    this.originTag = "";
     this.isStoreFollowed = false;
     this.loading = false;
   }
@@ -366,5 +374,13 @@ public class AppViewViewModel {
 
   public String getStoreTheme() {
     return storeTheme;
+  }
+
+  public String getEditorsChoice() {
+    return editorsChoice;
+  }
+
+  public String getOriginTag() {
+    return originTag;
   }
 }

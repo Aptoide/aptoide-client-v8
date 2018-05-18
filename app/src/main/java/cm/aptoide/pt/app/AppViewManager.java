@@ -182,7 +182,8 @@ public class AppViewManager {
             app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
             app.getAdded(), app.getObb(), app.getPay(), app.getwUrls(), app.isPaid(),
             app.getUname(), appViewConfiguration.shouldInstall(), appViewConfiguration.getAppc(),
-            appViewConfiguration.getMinimalAd(), isStoreFollowed));
+            appViewConfiguration.getMinimalAd(), appViewConfiguration.getEditorsChoice(),
+            appViewConfiguration.getOriginTag(), isStoreFollowed));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {

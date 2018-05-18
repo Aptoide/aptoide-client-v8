@@ -270,6 +270,8 @@ import rx.schedulers.Schedulers;
         ((NewAppViewFragment.OpenType) arguments.getSerializable(BundleKeys.SHOULD_INSTALL.name())),
         arguments.getString(BundleKeys.MD5.name(), ""),
         arguments.getString(BundleKeys.UNAME.name(), ""),
-        arguments.getDouble(BundleKeys.APPC.name(), -1));
+        arguments.getDouble(BundleKeys.APPC.name(), -1),
+        arguments.getString(BundleKeys.EDITORS_CHOICE_POSITION.name(), ""),
+        arguments.getString(BundleKeys.ORIGIN_TAG.name(), ""));
   }
 }
