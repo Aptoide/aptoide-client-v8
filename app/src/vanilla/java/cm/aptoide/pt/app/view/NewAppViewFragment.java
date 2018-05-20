@@ -118,6 +118,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> noNetworkRetryClick;
   private PublishSubject<Void> genericRetryClick;
   private PublishSubject<Void> ready;
+  private PublishSubject<Void> continueRecommendsDialogClick;
+  private PublishSubject<Void> skipRecommendsDialogClick;
+  private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
 
   //Views
   private View noNetworkErrorView;
@@ -225,6 +228,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     reviewsAutoScroll = PublishSubject.create();
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
+
+    continueRecommendsDialogClick = PublishSubject.create();
+    skipRecommendsDialogClick = PublishSubject.create();
+    dontShowAgainRecommendsDialogClick = PublishSubject.create();
 
     setHasOptionsMenu(true);
   }
@@ -1135,6 +1142,36 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void readyToDownload() {
     ready.onNext(null);
+  }
+
+  @Override public void showRecommendsDialog() {
+    LayoutInflater inflater = LayoutInflater.from(getActivity());
+    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    View dialogView = inflater.inflate(R.layout.logged_in_share, null);
+    alertDialog.setView(dialogView);
+
+    dialogView.findViewById(R.id.continue_button)
+        .setOnClickListener(__ -> continueRecommendsDialogClick.onNext(null));
+
+    dialogView.findViewById(R.id.skip_button)
+        .setOnClickListener(__ -> skipRecommendsDialogClick.onNext(null));
+
+    dialogView.findViewById(R.id.dont_show_button)
+        .setOnClickListener(__ -> dontShowAgainRecommendsDialogClick.onNext(null));
+    alertDialog.show();
+  }
+
+  @Override public void showNotLoggedInDialog() {
+
+  }
+
+  @Override public Observable<Void> continueRecommendsDialogClick() {
+    return continueRecommendsDialogClick;
+  }
+
+  @Override public void showRecommendsThanksMessage() {
+    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {

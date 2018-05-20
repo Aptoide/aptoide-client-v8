@@ -12,6 +12,7 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.DetailedApp;
@@ -43,13 +44,15 @@ public class AppViewManager {
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
   private DetailedApp cachedApp;
+  private SocialRepository socialRepository;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics) {
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      SocialRepository socialRepository) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -64,6 +67,7 @@ public class AppViewManager {
     this.downloadStateParser = downloadStateParser;
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
+    this.socialRepository = socialRepository;
   }
 
   public Single<DetailedAppViewModel> getDetailedAppViewModel(long appId, String packageName) {
@@ -284,5 +288,17 @@ public class AppViewManager {
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
     return Completable.fromAction(
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+  }
+
+  public boolean shouldShowRecommendsPreviewDialog() {
+    return preferencesManager.shouldShowPreviewDialog();
+  }
+
+  public boolean canShowNotLoggedInDialog() {
+    return preferencesManager.canShowNotLoggedInDialog();
+  }
+
+  public Completable shareOnTimeline(String packageName, long storeId, String shareType) {
+    return Completable.fromAction(() -> socialRepository.share(packageName, storeId, shareType));
   }
 }

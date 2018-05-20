@@ -93,6 +93,7 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
+    continueRecommendsDialogClick();
   }
 
   private void handleFirstLoad() {
@@ -543,13 +544,17 @@ public class AppViewPresenter implements Presenter {
   private void handleInstallButtonClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.installAppClick()
+        .flatMap(create -> accountManager.accountStatus())
+        .observeOn(viewScheduler)
+        .flatMap(account -> view.installAppClick()
+            .doOnError(__ -> System.out.println("wtfff"))
             .flatMapCompletable(action -> {
               Completable completable = null;
               switch (action) {
                 case INSTALL:
                 case UPDATE:
-                  completable = downloadApp(action);
+                  completable = downloadApp(action).observeOn(viewScheduler)
+                      .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn()));
                   break;
                 case OPEN:
                   completable = openInstalledApp();
@@ -567,7 +572,17 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
+          throw new IllegalStateException(error);
         });
+  }
+
+  private void showRecommendsDialog(boolean isLoggedIn) {
+
+    if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
+      view.showRecommendsDialog();
+    } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
+      view.showNotLoggedInDialog();
+    }
   }
 
   private Completable downgradeApp(DownloadAppViewModel.Action action) {
@@ -614,6 +629,25 @@ public class AppViewPresenter implements Presenter {
         }, error -> {
           throw new IllegalStateException(error);
         });
+  }
+
+  private void continueRecommendsDialogClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.continueRecommendsDialogClick()
+            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapCompletable(app -> appViewManager.shareOnTimeline(app.getPackageName(),
+                app.getStore()
+                    .getId(), "install"))
+            .doOnNext(__ -> appViewAnalytics.sendTimelineRecommendContinueEvents(packageName))
+            .doOnNext(__ -> view.showRecommendsThanksMessage())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new IllegalStateException(error);
+        });
+    ;
   }
 }
 

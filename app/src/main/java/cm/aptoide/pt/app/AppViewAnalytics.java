@@ -6,6 +6,7 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,12 +30,14 @@ public class AppViewAnalytics {
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
+  private TimelineAnalytics timelineAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   public void sendEditorsChoiceClickEvent(ScreenTagHistory previousScreen, String packageName,
@@ -226,5 +229,11 @@ public class AppViewAnalytics {
       AnalyticsManager.Action action) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.APPVIEW, action);
+  }
+
+  public void sendTimelineRecommendContinueEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
+    timelineAnalytics.sendSocialCardPreviewActionEvent(
+        TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
   }
 }

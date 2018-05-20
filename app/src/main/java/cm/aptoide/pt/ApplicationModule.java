@@ -1161,7 +1161,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics) {
+    return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
+        timelineAnalytics);
   }
 }

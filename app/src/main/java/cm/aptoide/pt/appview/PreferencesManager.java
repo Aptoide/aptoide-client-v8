@@ -18,4 +18,13 @@ public class PreferencesManager {
     int oldValue = persister.get(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, 0);
     persister.save(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, oldValue + 1);
   }
+
+  public boolean shouldShowPreviewDialog() {
+    return persister.get(ManagedKeys.DONT_SHOW_ME_AGAIN, true);
+  }
+
+  public boolean canShowNotLoggedInDialog() {
+    return persister.get(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, 0) == 2
+        || persister.get(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, 0) == 4;
+  }
 }

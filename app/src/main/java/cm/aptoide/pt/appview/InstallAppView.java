@@ -31,4 +31,12 @@ public interface InstallAppView extends View {
   Observable<Void> isAppViewReadyToDownload();
 
   void readyToDownload();
+
+  void showRecommendsDialog();
+
+  void showNotLoggedInDialog();
+
+  Observable<Void> continueRecommendsDialogClick();
+
+  void showRecommendsThanksMessage();
 }

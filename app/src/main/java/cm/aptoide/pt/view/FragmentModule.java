@@ -81,6 +81,8 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
+import cm.aptoide.pt.timeline.SocialRepository;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import dagger.Module;
 import dagger.Provides;
@@ -272,17 +274,27 @@ import rx.schedulers.Schedulers;
     return new DownloadStateParser();
   }
 
+  @FragmentScope @Provides SocialRepository providesSocialRepository(
+      AptoideAccountManager accountManager,
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TimelineAnalytics timelineAnalytics,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new SocialRepository(accountManager, bodyInterceptorPoolV7,
+        WebService.getDefaultConverter(), okHttpClient, timelineAnalytics, tokenInvalidator,
+        sharedPreferences);
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
       InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
       ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
       FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
       AptoideAccountManager aptoideAccountManager, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics) {
+      NotificationAnalytics notificationAnalytics, SocialRepository socialRepository) {
     return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy,
         aptoideAccountManager, preferencesManager, downloadStateParser, appViewAnalytics,
-        notificationAnalytics);
+        notificationAnalytics, socialRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
