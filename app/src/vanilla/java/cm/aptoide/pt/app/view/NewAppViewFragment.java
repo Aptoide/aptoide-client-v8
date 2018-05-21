@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -368,6 +369,16 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     commentsSnap.attachToRecyclerView(commentsView);
 
     setupToolbar();
+
+    ((AppBarLayout) view.findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(
+        (appBarLayout, verticalOffset) -> {
+          float percentage =
+              ((float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange());
+          //view.findViewById(R.id.toolbar_layout_logo).setAlpha(1 - (percentage * 1.20f));
+          ((ToolbarArcBackground) view.findViewById(R.id.toolbar_background_arc)).setScale(
+              percentage);
+        });
+
     attachPresenter(presenter);
   }
 
