@@ -13,6 +13,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -86,7 +87,7 @@ public class SearchResultFragment extends BackButtonFragment
   private ImageView noResultsSearchButton;
   private View searchResultsLayout;
   private ProgressBar progressBar;
-  private LinearLayout allAndFollowedStoresButtonsLayout;
+  private CardView allAndFollowedStoresButtonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
   private RecyclerView followedStoresResultList;
@@ -159,7 +160,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void findChildViews(View view) {
-    allAndFollowedStoresButtonsLayout = (LinearLayout) view.findViewById(
+    allAndFollowedStoresButtonsLayout = (CardView) view.findViewById(
         R.id.fragment_search_result_all_followed_stores_buttons_layout);
     allStoresResultList =
         (RecyclerView) view.findViewById(R.id.fragment_search_result_all_stores_app_list);
@@ -520,7 +521,7 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-      allStoresButton.setBackgroundResource(0);
+      allStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
     }
     viewModel.setAllStoresSelected(false);
     if (defaultThemeName != null && defaultThemeName.length() > 0) {
@@ -532,7 +533,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void setAllStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-      followedStoresButton.setBackgroundResource(0);
+      followedStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.white));
@@ -589,7 +590,7 @@ public class SearchResultFragment extends BackButtonFragment
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultFollowedStores,
             searchResultAdsFollowedStores, crashReport);
 
-    listItemPadding = getResources().getDimension(R.dimen.padding_very_very_small);
+    listItemPadding = getResources().getDimension(R.dimen.padding_tiny);
 
     final List<SearchAppResult> searchResultAllStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsAllStores = new ArrayList<>();
