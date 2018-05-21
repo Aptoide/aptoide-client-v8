@@ -2,24 +2,24 @@
 <android.support.design.widget.AppBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_bar_layout"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="131dp"
     android:fitsSystemWindows="true"
     >
 
   <android.support.design.widget.CollapsingToolbarLayout
-      android:id="@+id/toolbar_layout"
+      android:id="@+id/collapsing_toolbar_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@drawable/main_orange_gradient"
       android:fitsSystemWindows="false"
       android:theme="?attr/toolbarTheme"
-      app:collapsedTitleTextAppearance="@style/ToolbarTextAppearance.Title"
-      app:expandedTitleGravity="bottom|center_horizontal"
-      app:expandedTitleTextAppearance="@style/ToolbarTextAppearance.Title.Expanded"
+      app:expandedTitleGravity="top"
       app:layout_scrollFlags="scroll|exitUntilCollapsed"
       app:toolbarId="@+id/toolbar"
+      tools:title="couves"
       >
 
     <android.support.v7.widget.Toolbar

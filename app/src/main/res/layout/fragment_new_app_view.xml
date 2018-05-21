@@ -11,7 +11,14 @@
   <include
       layout="@layout/action_bar_appview"
       />
-
+  <ImageView
+      android:id="@+id/app_icon"
+      android:layout_width="104dp"
+      android:layout_height="104dp"
+      app:layout_anchor="@id/app_bar_layout"
+      app:layout_anchorGravity="bottom|center"
+      tools:src="@mipmap/ic_launcher"
+      />
   <android.support.v4.widget.NestedScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -49,28 +56,22 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="vertical"
-          tools:visibility="gone"
+          tools:visibility="visible"
           >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="104dp"
-            android:layout_marginTop="14dp"
+            android:layout_height="wrap_content"
             >
 
-          <ImageView
-              android:id="@+id/app_icon"
-              android:layout_width="104dp"
-              android:layout_height="104dp"
-              android:layout_centerHorizontal="true"
-              android:src="@mipmap/ic_launcher"
-              />
           <RelativeLayout
               android:id="@+id/trusted_layout"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_toEndOf="@id/app_icon"
-              android:layout_toRightOf="@id/app_icon"
+              android:layout_height="48dp"
+              android:layout_alignParentEnd="true"
+              android:layout_alignParentRight="true"
+              android:layout_marginEnd="45dp"
+              android:layout_marginRight="45dp"
               >
             <TextView
                 android:id="@+id/trusted_text"
@@ -104,7 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="12dp"
             android:textColor="@color/black"
             android:textSize="20sp"
             tools:text="Clash Royale"
