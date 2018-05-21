@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
+import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.AppRating;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class AppViewViewModel {
 
-  private final GetAppMeta.Media media;
+  private final AppMedia media;
   private final String modified;
   private final String appAdded;
   private final Obb obb;
@@ -65,8 +66,8 @@ public class AppViewViewModel {
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
       String path, String pathAlt, int versionCode, String versionName, String packageName,
       long size, int downloads, AppRating globalRating, int packageDownloads, AppRating rating,
-      AppDeveloper appDeveloper, String graphic, String icon, GetAppMeta.Media media,
-      String modified, String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid,
+      AppDeveloper appDeveloper, String graphic, String icon, AppMedia media, String modified,
+      String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid,
       String uniqueName, OpenType shouldInstall, double appc, SearchAdResult minimalAd,
       String editorsChoice, String originTag, boolean isStoreFollowed) {
     this.appId = appId;
@@ -236,7 +237,7 @@ public class AppViewViewModel {
     return icon;
   }
 
-  public GetAppMeta.Media getMedia() {
+  public AppMedia getMedia() {
     return media;
   }
 

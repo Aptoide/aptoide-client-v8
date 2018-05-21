@@ -146,42 +146,6 @@ public class AppService {
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  private Observable<DetailedAppRequestResult> mapApp(GetApp getApp, String uniqueName) {
-    if (getApp.isOk()) {
-      GetAppMeta.App app = getApp.getNodes()
-          .getMeta()
-          .getData();
-      GetAppMeta.GetAppMetaFile file = app.getFile();
-      GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
-          .getFlags();
-      AppFlags appFlags = new AppFlags(flags.getReview(), mapToFlagsVote(flags.getVotes()));
-      GetAppMeta.Developer developer = app.getDeveloper();
-      AppDeveloper appDeveloper =
-          new AppDeveloper(developer.getName(), developer.getEmail(), developer.getPrivacy(),
-              developer.getWebsite());
-      GetAppMeta.Stats stats = app.getStats();
-      GetAppMeta.Stats.Rating rating = stats.getRating();
-      GetAppMeta.Stats.Rating globalRating = stats.getGlobalRating();
-      AppRating appRating =
-          new AppRating(rating.getAvg(), rating.getTotal(), mapToRatingsVote(rating.getVotes()));
-      AppRating globalAppRating = new AppRating(globalRating.getAvg(), globalRating.getTotal(),
-          mapToRatingsVote(globalRating.getVotes()));
-      AppStats appStats =
-          new AppStats(appRating, globalAppRating, stats.getDownloads(), stats.getPdownloads());
-      DetailedApp detailedApp =
-          new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-              app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
-              file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
-              file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
-              file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
-              app.getMedia(), appStats, app.getObb(), app.getPay(), app.getUrls()
-              .getW(), app.isPaid(), uniqueName);
-      return Observable.just(new DetailedAppRequestResult(detailedApp));
-    } else {
-      return Observable.error(new IllegalStateException("Could not obtain request from server."));
-    }
-  }
-
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
     if (loadingSimilarApps) {
       return Single.just(new AppsList(true));
@@ -203,6 +167,47 @@ public class AppService {
 
   public Single<AppsList> loadApps(long storeId, int offset, int limit) {
     return loadApps(storeId, false, offset, limit);
+  }
+
+  private Observable<DetailedAppRequestResult> mapApp(GetApp getApp, String uniqueName) {
+    if (getApp.isOk()) {
+      GetAppMeta.App app = getApp.getNodes()
+          .getMeta()
+          .getData();
+      GetAppMeta.GetAppMetaFile file = app.getFile();
+      GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
+          .getFlags();
+      GetAppMeta.Developer developer = app.getDeveloper();
+      GetAppMeta.Stats stats = app.getStats();
+      GetAppMeta.Stats.Rating rating = stats.getRating();
+      GetAppMeta.Stats.Rating globalRating = stats.getGlobalRating();
+      GetAppMeta.Media media = app.getMedia();
+
+      AppFlags appFlags = new AppFlags(flags.getReview(), mapToFlagsVote(flags.getVotes()));
+      AppDeveloper appDeveloper =
+          new AppDeveloper(developer.getName(), developer.getEmail(), developer.getPrivacy(),
+              developer.getWebsite());
+      AppRating appRating =
+          new AppRating(rating.getAvg(), rating.getTotal(), mapToRatingsVote(rating.getVotes()));
+      AppRating globalAppRating = new AppRating(globalRating.getAvg(), globalRating.getTotal(),
+          mapToRatingsVote(globalRating.getVotes()));
+      AppStats appStats =
+          new AppStats(appRating, globalAppRating, stats.getDownloads(), stats.getPdownloads());
+      AppMedia appMedia = new AppMedia(media.getDescription(), media.getKeywords(), media.getNews(),
+          mapToScreenShots(media.getScreenshots()), mapToVideo(media.getVideos()));
+
+      DetailedApp detailedApp =
+          new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
+              app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
+              file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
+              file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
+              file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
+              appMedia, appStats, app.getObb(), app.getPay(), app.getUrls()
+              .getW(), app.isPaid(), uniqueName);
+      return Observable.just(new DetailedAppRequestResult(detailedApp));
+    } else {
+      return Observable.error(new IllegalStateException("Could not obtain request from server."));
+    }
   }
 
   @NonNull private AppsList createErrorAppsList(Throwable throwable) {
@@ -240,6 +245,27 @@ public class AppService {
       }
     }
     return ratingVotes;
+  }
+
+  private List<AppVideo> mapToVideo(List<GetAppMeta.Media.Video> videos) {
+    List<AppVideo> appVideos = new ArrayList<>();
+    if (videos != null) {
+      for (GetAppMeta.Media.Video video : videos) {
+        appVideos.add(new AppVideo(video.getThumbnail(), video.getType(), video.getUrl()));
+      }
+    }
+    return appVideos;
+  }
+
+  private List<AppScreenshot> mapToScreenShots(List<GetAppMeta.Media.Screenshot> screenshots) {
+    List<AppScreenshot> appScreenShots = new ArrayList<>();
+    if (screenshots != null) {
+      for (GetAppMeta.Media.Screenshot screenshot : screenshots) {
+        appScreenShots.add(new AppScreenshot(screenshot.getHeight(), screenshot.getWidth(),
+            screenshot.getOrientation(), screenshot.getUrl()));
+      }
+    }
+    return appScreenShots;
   }
 
   private FlagsVote.VoteType map(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {

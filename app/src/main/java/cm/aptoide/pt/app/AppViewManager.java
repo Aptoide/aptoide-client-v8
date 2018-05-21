@@ -87,6 +87,36 @@ public class AppViewManager {
     }
   }
 
+  public Single<ReviewsViewModel> loadReviewsViewModel(String storeName, String packageName,
+      String languagesFilterSort) {
+    return reviewsManager.loadReviews(storeName, packageName, 3, languagesFilterSort)
+        .map(result -> new ReviewsViewModel(result.getReviewList(), result.isLoading(),
+            result.getError()));
+  }
+
+  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
+    return loadAdForSimilarApps(packageName, keyWords).flatMap(
+        ad -> loadRecommended(limit, packageName).map(
+            recommendedAppsRequestResult -> new SimilarAppsViewModel(ad,
+                recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
+                recommendedAppsRequestResult.getError())));
+  }
+
+  public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
+    return adsManager.loadAds(packageName, storeName);
+  }
+
+  public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
+    return flagManager.flagApk(storeName, md5, type.name()
+        .toLowerCase())
+        .map(response -> (response.isOk() && !response.hasErrors()));
+  }
+
+  public Completable subscribeStore(String storeName) {
+    return Completable.fromAction(
+        () -> storeUtilsProxy.subscribeStore(storeName, null, null, aptoideAccountManager));
+  }
+
   private Single<AppViewViewModel> loadAppViewViewModel(long appId, String storeName,
       String packageName) {
     if (cachedApp != null) {
@@ -123,36 +153,6 @@ public class AppViewManager {
     }
     return appCenter.loadDetailedAppAppFromUniqueName(uniqueName)
         .flatMap(result -> map(result));
-  }
-
-  public Single<ReviewsViewModel> loadReviewsViewModel(String storeName, String packageName,
-      String languagesFilterSort) {
-    return reviewsManager.loadReviews(storeName, packageName, 3, languagesFilterSort)
-        .map(result -> new ReviewsViewModel(result.getReviewList(), result.isLoading(),
-            result.getError()));
-  }
-
-  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
-    return loadAdForSimilarApps(packageName, keyWords).flatMap(
-        ad -> loadRecommended(limit, packageName).map(
-            recommendedAppsRequestResult -> new SimilarAppsViewModel(ad,
-                recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError())));
-  }
-
-  public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
-    return adsManager.loadAds(packageName, storeName);
-  }
-
-  public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
-    return flagManager.flagApk(storeName, md5, type.name()
-        .toLowerCase())
-        .map(response -> (response.isOk() && !response.hasErrors()));
-  }
-
-  public Completable subscribeStore(String storeName) {
-    return Completable.fromAction(
-        () -> storeUtilsProxy.subscribeStore(storeName, null, null, aptoideAccountManager));
   }
 
   private Single<AppsList> loadRecommended(int limit, String packageName) {
