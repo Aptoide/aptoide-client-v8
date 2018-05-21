@@ -34,6 +34,14 @@ public interface NewAccountView extends View {
 
   Observable<GetStore> getStore();
 
+  Observable<Void> aptoideTvCardViewClick();
+
+  Observable<Void> aptoideUploaderCardViewClick();
+
+  Observable<Void> aptoideBackupCardViewClick();
+
+  void startAptoideTvWebView();
+
   void refreshUI(Store store);
 
   void showLoginAccountDisplayable();

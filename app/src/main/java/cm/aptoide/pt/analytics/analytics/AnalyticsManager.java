@@ -4,24 +4,26 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.ApplicationModule;
 import cm.aptoide.pt.FlavourApplicationModule;
 import cm.aptoide.pt.logger.Logger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
-  private final SessionLogger sessionLogger;
+  private List<SessionLogger> sessionLoggers;
   private final AnalyticsNormalizer analyticsNormalizer;
 
   private Map<EventLogger, Collection<String>> eventLoggers;
 
   private AnalyticsManager(HttpKnockEventLogger knockLogger,
-      Map<EventLogger, Collection<String>> eventLoggers, SessionLogger sessionLogger,
+      Map<EventLogger, Collection<String>> eventLoggers, List<SessionLogger> sessionLoggers,
       AnalyticsNormalizer analyticsNormalizer) {
     this.knockEventLogger = knockLogger;
     this.eventLoggers = eventLoggers;
-    this.sessionLogger = sessionLogger;
+    this.sessionLoggers = sessionLoggers;
     this.analyticsNormalizer = analyticsNormalizer;
   }
 
@@ -86,14 +88,18 @@ public class AnalyticsManager {
    * <p> Starts the Flurry session allowing to log events.</p>
    */
   public void startSession() {
-    sessionLogger.startSession();
+    for (SessionLogger sessionLogger : sessionLoggers) {
+      sessionLogger.startSession();
+    }
   }
 
   /**
    * <p> Ends Flurry session. </p>
    */
   public void endSession() {
-    sessionLogger.endSession();
+    for (SessionLogger sessionLogger : sessionLoggers) {
+      sessionLogger.endSession();
+    }
   }
 
   /**
@@ -111,12 +117,14 @@ public class AnalyticsManager {
     private final Map<EventLogger, Collection<String>> eventLoggers;
     private HttpKnockEventLogger httpKnockEventLogger;
     private SessionLogger sessionLogger;
+    private List<SessionLogger> sessionLoggers;
     private AnalyticsNormalizer analyticsNormalizer;
 
     /**
      * <p>Start the builder.</p>
      */
     public Builder() {
+      sessionLoggers = new ArrayList<>();
       eventLoggers = new HashMap<>();
     }
 
@@ -156,7 +164,7 @@ public class AnalyticsManager {
      * @see NullPointerException
      */
     public Builder addSessionLogger(SessionLogger sessionLogger) {
-      this.sessionLogger = sessionLogger;
+      this.sessionLoggers.add(sessionLogger);
       return this;
     }
 
@@ -218,7 +226,7 @@ public class AnalyticsManager {
       if (eventLoggers.size() < 1) {
         throw new IllegalArgumentException("Analytics manager need at least one logger");
       }
-      return new AnalyticsManager(httpKnockEventLogger, eventLoggers, sessionLogger,
+      return new AnalyticsManager(httpKnockEventLogger, eventLoggers, sessionLoggers,
           analyticsNormalizer);
     }
   }
