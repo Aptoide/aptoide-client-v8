@@ -131,22 +131,22 @@ public class AppService {
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  public Single<DetailedAppRequestResult> loadDetailedAppFromUname(String uName) {
+  public Single<DetailedAppRequestResult> loadDetailedAppFromUniqueName(String uniqueName) {
     if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
-    return GetAppRequest.ofUname(uName, bodyInterceptorV7, httpClient, converterFactory,
+    return GetAppRequest.ofUname(uniqueName, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
         .doOnTerminate(() -> loadingApps = false)
-        .flatMap(getApp -> mapApp(getApp, uName))
+        .flatMap(getApp -> mapApp(getApp, uniqueName))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  private Observable<DetailedAppRequestResult> mapApp(GetApp getApp, String uName) {
+  private Observable<DetailedAppRequestResult> mapApp(GetApp getApp, String uniqueName) {
     if (getApp.isOk()) {
       GetAppMeta.App app = getApp.getNodes()
           .getMeta()
@@ -175,7 +175,7 @@ public class AppService {
               file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
               file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
               app.getMedia(), appStats, app.getObb(), app.getPay(), app.getUrls()
-              .getW(), app.isPaid(), uName);
+              .getW(), app.isPaid(), uniqueName);
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

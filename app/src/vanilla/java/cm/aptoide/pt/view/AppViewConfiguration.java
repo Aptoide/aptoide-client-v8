@@ -16,13 +16,13 @@ public class AppViewConfiguration {
   private final SearchAdResult minimalAd;
   private final OpenType shouldInstall;
   private final String md5;
-  private final String uName;
+  private final String uniqueName;
   private final double appc;
   private final String editorsChoice;
   private final String originTag;
 
   public AppViewConfiguration(long appId, String packageName, String storeName, String storeTheme,
-      SearchAdResult minimalAd, OpenType shouldInstall, String md5, String uName, double appc,
+      SearchAdResult minimalAd, OpenType shouldInstall, String md5, String uniqueName, double appc,
       String editorsChoice, String originTag) {
     this.appId = appId;
     this.packageName = packageName;
@@ -31,7 +31,7 @@ public class AppViewConfiguration {
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
     this.md5 = md5;
-    this.uName = uName;
+    this.uniqueName = uniqueName;
     this.appc = appc;
     this.editorsChoice = editorsChoice;
     this.originTag = originTag;
@@ -65,8 +65,8 @@ public class AppViewConfiguration {
     return md5;
   }
 
-  public String getuName() {
-    return uName;
+  public String getUniqueName() {
+    return uniqueName;
   }
 
   public double getAppc() {
@@ -77,8 +77,8 @@ public class AppViewConfiguration {
     return (md5 != null && !md5.isEmpty());
   }
 
-  public boolean hasUname() {
-    return (uName != null && !uName.isEmpty());
+  public boolean hasUniqueName() {
+    return (uniqueName != null && !uniqueName.isEmpty());
   }
 
   public String getEditorsChoice() {

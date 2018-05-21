@@ -79,8 +79,8 @@ public class AppViewManager {
           appViewConfiguration.getStoreName(), appViewConfiguration.getPackageName());
     } else if (appViewConfiguration.hasMd5()) {
       return loadAppViewViewModelFromMd5(appViewConfiguration.getMd5());
-    } else if (appViewConfiguration.hasUname()) {
-      return loadAppViewViewModelFromUname(appViewConfiguration.getuName());
+    } else if (appViewConfiguration.hasUniqueName()) {
+      return loadAppViewViewModelFromUniqueName(appViewConfiguration.getUniqueName());
     } else {
       return loadAppViewViewModel(appViewConfiguration.getPackageName(),
           appViewConfiguration.getStoreName());
@@ -116,12 +116,12 @@ public class AppViewManager {
         .flatMap(result -> map(result));
   }
 
-  private Single<AppViewViewModel> loadAppViewViewModelFromUname(String uName) {
+  private Single<AppViewViewModel> loadAppViewViewModelFromUniqueName(String uniqueName) {
     if (cachedApp != null && cachedApp.getUniqueName()
-        .equals(uName)) {
+        .equals(uniqueName)) {
       return createAppViewViewModel(cachedApp);
     }
-    return appCenter.loadDetailedAppAppFromUname(uName)
+    return appCenter.loadDetailedAppAppFromUniqueName(uniqueName)
         .flatMap(result -> map(result));
   }
 

@@ -105,8 +105,8 @@ public class AppCenterRepository {
     return appService.loadDetailedAppFromMd5(md5);
   }
 
-  public Single<DetailedAppRequestResult> loadDetailedAppAppFromUname(String uName) {
-    return appService.loadDetailedAppFromUname(uName);
+  public Single<DetailedAppRequestResult> loadDetailedAppAppFromUniqueName(String uniqueName) {
+    return appService.loadDetailedAppFromUniqueName(uniqueName);
   }
 
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
