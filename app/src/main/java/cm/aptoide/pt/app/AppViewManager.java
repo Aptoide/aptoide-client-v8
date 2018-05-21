@@ -306,4 +306,8 @@ public class AppViewManager {
     return Completable.fromAction(
         () -> preferencesManager.setShouldShowInstallRecommendsPreviewDialog(false));
   }
+
+  public Completable shareOnTimelineAsync(String packageName, long storeId) {
+    return Completable.fromAction(() -> socialRepository.asyncShare(packageName, storeId, "app"));
+  }
 }

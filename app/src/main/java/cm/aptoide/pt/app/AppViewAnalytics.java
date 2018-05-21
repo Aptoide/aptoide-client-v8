@@ -7,6 +7,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,13 +32,16 @@ public class AppViewAnalytics {
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
   private TimelineAnalytics timelineAnalytics;
+  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics) {
+      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
+      NotLoggedInShareAnalytics notLoggedInShareAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
     this.timelineAnalytics = timelineAnalytics;
+    this.notLoggedInShareAnalytics = notLoggedInShareAnalytics;
   }
 
   public void sendEditorsChoiceClickEvent(ScreenTagHistory previousScreen, String packageName,
@@ -250,5 +254,13 @@ public class AppViewAnalytics {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
     timelineAnalytics.sendSocialCardPreviewActionEvent(
         TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
+  }
+
+  public void sendSuccessShareEvent() {
+    notLoggedInShareAnalytics.sendShareSuccess();
+  }
+
+  public void sendFailedShareEvent() {
+    notLoggedInShareAnalytics.sendShareFail();
   }
 }

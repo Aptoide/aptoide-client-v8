@@ -96,6 +96,7 @@ public class AppViewPresenter implements Presenter {
     continueRecommendsDialogClick();
     skipRecommendsDialogClick();
     dontShowAgainRecommendsDialogClick();
+    handleNotLoggedinShareResults();
   }
 
   private void handleFirstLoad() {
@@ -583,6 +584,7 @@ public class AppViewPresenter implements Presenter {
       view.showRecommendsDialog();
     } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
       view.showNotLoggedInDialog();
+      appViewNavigator.navigateToNotLoggedInShareFragmentForResult();
     }
   }
 
@@ -673,6 +675,28 @@ public class AppViewPresenter implements Presenter {
             .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
             .doOnNext(app -> appViewAnalytics.sendTimelineInstallRecommendDontShowMeAgainEvents(
                 app.getPackageName())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new IllegalStateException(error);
+        });
+  }
+
+  private void handleNotLoggedinShareResults() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> appViewNavigator.notLoggedInViewResults()
+            .filter(success -> success)
+            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapCompletable(app -> appViewManager.shareOnTimelineAsync(app.getPackageName(),
+                app.getStore()
+                    .getId())
+                .doOnCompleted(() -> appViewAnalytics.sendSuccessShareEvent()))
+            .doOnError(error -> {
+              appViewAnalytics.sendFailedShareEvent();
+              crashReport.log(error);
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

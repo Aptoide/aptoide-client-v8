@@ -29,7 +29,6 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -517,8 +516,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   } else if (!accountManager.isLoggedIn()
                       && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
                       || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
-                    accountNavigator.navigateToNotLoggedInViewForResult(
-                        AppViewFragment.LOGIN_REQUEST_CODE, app);
+                    /**
+                     accountNavigator.navigateToNotLoggedInViewForResult(
+                     AppViewFragment.LOGIN_REQUEST_CODE, app);
+                     **/
                   }
                   ShowMessage.asSnack(v, installOrUpgradeMsg);
                 });

@@ -17,12 +17,12 @@ import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Arrays;
@@ -36,6 +36,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private static final String APP_ICON = "app_title";
   private static final String APP_RATING = "app_rating";
   @Inject AccountAnalytics accountAnalytics;
+  @Inject NotLoggedInShareAnalytics analytics;
   private ProgressDialog progressDialog;
   private Button facebookLoginButton;
   private Button googleLoginButton;
@@ -48,14 +49,9 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private View outerLayout;
   private ClickHandler backClickHandler;
 
-  public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
+  public static NotLoggedInShareFragment newInstance() {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
     Bundle bundle = new Bundle();
-    bundle.putString(APP_NAME, app.getName());
-    bundle.putString(APP_ICON, app.getIcon());
-    bundle.putFloat(APP_RATING, app.getStats()
-        .getRating()
-        .getAvg());
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -101,7 +97,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     attachPresenter(new NotLoggedInSharePresenter(this, CrashReport.getInstance(), accountManager,
         ((ActivityResultNavigator) getContext()).getAccountNavigator(),
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
-        ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()));
+        analytics));
   }
 
   @Override public void onDestroyView() {
