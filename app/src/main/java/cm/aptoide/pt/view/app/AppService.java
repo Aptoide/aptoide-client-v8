@@ -34,7 +34,8 @@ public class AppService {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private boolean loading;
+  private boolean loadingApps;
+  private boolean loadingSimilarApps;
 
   public AppService(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
@@ -49,7 +50,7 @@ public class AppService {
   }
 
   private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new AppsList(true));
     }
     ListAppsRequest.Body body =
@@ -58,9 +59,9 @@ public class AppService {
     body.setStoreId(storeId);
     return new ListAppsRequest(body, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences).observe(bypassCache, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
         .flatMap(appsList -> mapListApps(appsList))
         .toSingle()
         .onErrorReturn(throwable -> createErrorAppsList(throwable));
@@ -83,125 +84,78 @@ public class AppService {
     }
   }
 
-  public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String packageName) {
-    if (loading) {
-      return Single.just(new DetailedAppRequestResult(true));
-    }
-    return GetAppRequest.of(packageName, bodyInterceptorV7, appId, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
-        .observe(false, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, ""))
-        .toSingle()
-        .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
-  }
-
-  //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String storeName,
       String packageName) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.of(appId, null,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
         bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(false, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, ""))
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
+        .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.of(packageName, storeName, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, ""))
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
+        .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedAppFromMd5(String md5) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.ofMd5(md5, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences))
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, ""))
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
+        .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  public Single<DetailedAppRequestResult> loadDetailedAppFromUname(String uName) {
-    if (loading) {
+  public Single<DetailedAppRequestResult> loadDetailedAppFromUniqueName(String uniqueName) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
-    return GetAppRequest.ofUname(uName, bodyInterceptorV7, httpClient, converterFactory,
+    return GetAppRequest.ofUname(uniqueName, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
-        .flatMap(getApp -> mapAppToDetailedAppRequestResult(getApp, uName))
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
+        .flatMap(getApp -> mapApp(getApp, uniqueName))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
-  }
-
-  private Observable<DetailedAppRequestResult> mapAppToDetailedAppRequestResult(GetApp getApp,
-      String uName) {
-    if (getApp.isOk()) {
-      GetAppMeta.App app = getApp.getNodes()
-          .getMeta()
-          .getData();
-      GetAppMeta.GetAppMetaFile file = app.getFile();
-      GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
-          .getFlags();
-      AppFlags appFlags = new AppFlags(flags.getReview(), mapToFlagsVote(flags.getVotes()));
-      GetAppMeta.Developer developer = app.getDeveloper();
-      AppDeveloper appDeveloper =
-          new AppDeveloper(developer.getName(), developer.getEmail(), developer.getPrivacy(),
-              developer.getWebsite());
-      DetailedApp detailedApp =
-          new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-              app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
-              file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
-              file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getMd5sum(),
-              file.getPath(), file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper,
-              app.getStore(), app.getMedia(), app.getStats(), app.getObb(), app.getPay(),
-              app.getUrls()
-                  .getW(), app.isPaid(), uName);
-      return Observable.just(new DetailedAppRequestResult(detailedApp));
-    } else {
-      return Observable.error(new IllegalStateException("Could not obtain request from server."));
-    }
   }
 
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
-    if (loading) {
+    if (loadingSimilarApps) {
       return Single.just(new AppsList(true));
     }
     return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
         bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences).observe(true, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingSimilarApps = true)
+        .doOnUnsubscribe(() -> loadingSimilarApps = false)
+        .doOnTerminate(() -> loadingSimilarApps = false)
         .flatMap(appsList -> mapListApps(appsList))
         .toSingle()
         .onErrorReturn(throwable -> createErrorAppsList(throwable));
@@ -213,6 +167,47 @@ public class AppService {
 
   public Single<AppsList> loadApps(long storeId, int offset, int limit) {
     return loadApps(storeId, false, offset, limit);
+  }
+
+  private Observable<DetailedAppRequestResult> mapApp(GetApp getApp, String uniqueName) {
+    if (getApp.isOk()) {
+      GetAppMeta.App app = getApp.getNodes()
+          .getMeta()
+          .getData();
+      GetAppMeta.GetAppMetaFile file = app.getFile();
+      GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
+          .getFlags();
+      GetAppMeta.Developer developer = app.getDeveloper();
+      GetAppMeta.Stats stats = app.getStats();
+      GetAppMeta.Stats.Rating rating = stats.getRating();
+      GetAppMeta.Stats.Rating globalRating = stats.getGlobalRating();
+      GetAppMeta.Media media = app.getMedia();
+
+      AppFlags appFlags = new AppFlags(flags.getReview(), mapToFlagsVote(flags.getVotes()));
+      AppDeveloper appDeveloper =
+          new AppDeveloper(developer.getName(), developer.getEmail(), developer.getPrivacy(),
+              developer.getWebsite());
+      AppRating appRating =
+          new AppRating(rating.getAvg(), rating.getTotal(), mapToRatingsVote(rating.getVotes()));
+      AppRating globalAppRating = new AppRating(globalRating.getAvg(), globalRating.getTotal(),
+          mapToRatingsVote(globalRating.getVotes()));
+      AppStats appStats =
+          new AppStats(appRating, globalAppRating, stats.getDownloads(), stats.getPdownloads());
+      AppMedia appMedia = new AppMedia(media.getDescription(), media.getKeywords(), media.getNews(),
+          mapToScreenShots(media.getScreenshots()), mapToVideo(media.getVideos()));
+
+      DetailedApp detailedApp =
+          new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
+              app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
+              file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
+              file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
+              file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
+              appMedia, appStats, app.getObb(), app.getPay(), app.getUrls()
+              .getW(), app.isPaid(), uniqueName);
+      return Observable.just(new DetailedAppRequestResult(detailedApp));
+    } else {
+      return Observable.error(new IllegalStateException("Could not obtain request from server."));
+    }
   }
 
   @NonNull private AppsList createErrorAppsList(Throwable throwable) {
@@ -236,13 +231,44 @@ public class AppService {
     List<FlagsVote> flagsVotes = new ArrayList<>();
     if (votes != null) {
       for (GetAppMeta.GetAppMetaFile.Flags.Vote vote : votes) {
-        flagsVotes.add(new FlagsVote(vote.getCount(), mapToFlagsVoteType(vote.getType())));
+        flagsVotes.add(new FlagsVote(vote.getCount(), map(vote.getType())));
       }
     }
     return flagsVotes;
   }
 
-  private FlagsVote.VoteType mapToFlagsVoteType(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
+  private List<RatingVote> mapToRatingsVote(List<GetAppMeta.Stats.Rating.Vote> votes) {
+    List<RatingVote> ratingVotes = new ArrayList<>();
+    if (ratingVotes != null) {
+      for (GetAppMeta.Stats.Rating.Vote vote : votes) {
+        ratingVotes.add(new RatingVote(vote.getCount(), vote.getValue()));
+      }
+    }
+    return ratingVotes;
+  }
+
+  private List<AppVideo> mapToVideo(List<GetAppMeta.Media.Video> videos) {
+    List<AppVideo> appVideos = new ArrayList<>();
+    if (videos != null) {
+      for (GetAppMeta.Media.Video video : videos) {
+        appVideos.add(new AppVideo(video.getThumbnail(), video.getType(), video.getUrl()));
+      }
+    }
+    return appVideos;
+  }
+
+  private List<AppScreenshot> mapToScreenShots(List<GetAppMeta.Media.Screenshot> screenshots) {
+    List<AppScreenshot> appScreenShots = new ArrayList<>();
+    if (screenshots != null) {
+      for (GetAppMeta.Media.Screenshot screenshot : screenshots) {
+        appScreenShots.add(new AppScreenshot(screenshot.getHeight(), screenshot.getWidth(),
+            screenshot.getOrientation(), screenshot.getUrl()));
+      }
+    }
+    return appScreenShots;
+  }
+
+  private FlagsVote.VoteType map(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
     FlagsVote.VoteType flagsVoteVoteType = null;
     switch (type) {
       case FAKE:

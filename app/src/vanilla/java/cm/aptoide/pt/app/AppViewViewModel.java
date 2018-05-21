@@ -1,12 +1,15 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.app.view.NewAppViewFragment.OpenType;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
-import cm.aptoide.pt.view.app.DetailedApp;
+import cm.aptoide.pt.view.app.AppMedia;
+import cm.aptoide.pt.view.app.AppRating;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.List;
 
@@ -14,21 +17,26 @@ import java.util.List;
  * Created by D01 on 07/05/18.
  */
 
-public class DetailedAppViewModel {
+public class AppViewViewModel {
 
-  private final GetAppMeta.Media media;
+  private final AppMedia media;
   private final String modified;
   private final String appAdded;
   private final Obb obb;
   private final GetAppMeta.Pay pay;
-  private final String wUrls;
+  private final String webUrls;
   private final boolean isPaid;
-  private final String uName;
+  private final String uniqueName;
+  private final OpenType shouldInstall;
+  private final double appc;
+  private final SearchAdResult minimalAd;
+  private final String editorsChoice;
+  private final String originTag;
   private final boolean isStoreFollowed;
-  private final DetailedApp detailedApp;
   private final long appId;
   private final String appName;
   private final Store store;
+  private final String storeTheme;
   private final boolean isGoodApp;
   private final Malware malware;
   private final AppFlags appFlags;
@@ -37,35 +45,35 @@ public class DetailedAppViewModel {
   private final List<String> usedPermissions;
   private final long fileSize;
   private final String md5;
-  private final String md5Sum;
   private final String path;
   private final String pathAlt;
-  private final int verCode;
-  private final String verName;
+  private final int versionCode;
+  private final String versionName;
   private final String packageName;
   private final long size;
   private final int downloads;
-  private final GetAppMeta.Stats.Rating globalRating;
-  private final int pDownloads;
-  private final GetAppMeta.Stats.Rating rating;
+  private final AppRating globalRating;
+  private final int packageDownloads;
+  private final AppRating rating;
   private final AppDeveloper appDeveloper;
   private final String graphic;
-  private final String added;
+  private final String icon;
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
 
-  public DetailedAppViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
+  public AppViewViewModel(long appId, String appName, Store store, String storeTheme,
       boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
-      String md5Sum, String path, String pathAlt, int verCode, String verName, String packageName,
-      long size, int downloads, GetAppMeta.Stats.Rating globalRating, int pDownloads,
-      GetAppMeta.Stats.Rating rating, AppDeveloper appDeveloper, String graphic, String added,
-      GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
-      String wUrls, boolean isPaid, String uName, boolean isStoreFollowed) {
-    this.detailedApp = detailedApp;
+      String path, String pathAlt, int versionCode, String versionName, String packageName,
+      long size, int downloads, AppRating globalRating, int packageDownloads, AppRating rating,
+      AppDeveloper appDeveloper, String graphic, String icon, AppMedia media, String modified,
+      String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid,
+      String uniqueName, OpenType shouldInstall, double appc, SearchAdResult minimalAd,
+      String editorsChoice, String originTag, boolean isStoreFollowed) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
+    this.storeTheme = storeTheme;
     this.isGoodApp = isGoodApp;
     this.malware = malware;
     this.appFlags = appFlags;
@@ -74,39 +82,43 @@ public class DetailedAppViewModel {
     this.usedPermissions = usedPermissions;
     this.fileSize = fileSize;
     this.md5 = md5;
-    this.md5Sum = md5Sum;
     this.path = path;
     this.pathAlt = pathAlt;
-    this.verCode = verCode;
-    this.verName = verName;
+    this.versionCode = versionCode;
+    this.versionName = versionName;
     this.packageName = packageName;
     this.size = size;
     this.downloads = downloads;
     this.globalRating = globalRating;
-    this.pDownloads = pDownloads;
+    this.packageDownloads = packageDownloads;
     this.rating = rating;
     this.appDeveloper = appDeveloper;
     this.graphic = graphic;
-    this.added = added;
+    this.icon = icon;
     this.media = media;
     this.modified = modified;
     this.appAdded = appAdded;
     this.obb = obb;
     this.pay = pay;
-    this.wUrls = wUrls;
+    this.webUrls = webUrls;
     this.isPaid = isPaid;
-    this.uName = uName;
+    this.uniqueName = uniqueName;
+    this.shouldInstall = shouldInstall;
+    this.appc = appc;
+    this.minimalAd = minimalAd;
+    this.editorsChoice = editorsChoice;
+    this.originTag = originTag;
     this.isStoreFollowed = isStoreFollowed;
     this.loading = false;
     this.error = null;
   }
 
-  public DetailedAppViewModel(boolean loading) {
+  public AppViewViewModel(boolean loading) {
     this.loading = loading;
-    this.detailedApp = null;
     this.appId = -1;
     this.appName = "";
     this.store = null;
+    this.storeTheme = "";
     this.isGoodApp = false;
     this.malware = null;
     this.appFlags = null;
@@ -115,38 +127,42 @@ public class DetailedAppViewModel {
     this.usedPermissions = null;
     this.fileSize = -1;
     this.md5 = "";
-    this.md5Sum = "";
     this.path = "";
     this.pathAlt = "";
-    this.verCode = -1;
-    this.verName = "";
+    this.versionCode = -1;
+    this.versionName = "";
     this.packageName = "";
     this.size = -1;
     this.downloads = -1;
     this.globalRating = null;
-    this.pDownloads = -1;
+    this.packageDownloads = -1;
     this.rating = null;
     this.appDeveloper = null;
     this.graphic = null;
-    this.added = null;
+    this.icon = null;
     this.media = null;
     this.modified = null;
     this.appAdded = null;
     this.obb = null;
     this.pay = null;
-    this.wUrls = null;
+    this.webUrls = null;
     this.isPaid = false;
-    this.uName = "";
+    this.uniqueName = "";
+    this.shouldInstall = null;
+    this.appc = -1;
+    this.minimalAd = null;
+    this.editorsChoice = "";
+    this.originTag = "";
     this.isStoreFollowed = false;
     this.error = null;
   }
 
-  public DetailedAppViewModel(DetailedAppRequestResult.Error error) {
+  public AppViewViewModel(DetailedAppRequestResult.Error error) {
     this.error = error;
-    this.detailedApp = null;
     this.appId = -1;
     this.appName = "";
     this.store = null;
+    this.storeTheme = "";
     this.isGoodApp = false;
     this.malware = null;
     this.appFlags = null;
@@ -155,28 +171,32 @@ public class DetailedAppViewModel {
     this.usedPermissions = null;
     this.fileSize = -1;
     this.md5 = "";
-    this.md5Sum = "";
     this.path = "";
     this.pathAlt = "";
-    this.verCode = -1;
-    this.verName = "";
+    this.versionCode = -1;
+    this.versionName = "";
     this.packageName = "";
     this.size = -1;
     this.downloads = -1;
     this.globalRating = null;
-    this.pDownloads = -1;
+    this.packageDownloads = -1;
     this.rating = null;
     this.appDeveloper = null;
     this.graphic = null;
-    this.added = null;
+    this.icon = null;
     this.media = null;
     this.modified = null;
     this.appAdded = null;
     this.obb = null;
     this.pay = null;
-    this.wUrls = null;
+    this.webUrls = null;
     this.isPaid = false;
-    this.uName = "";
+    this.uniqueName = "";
+    this.shouldInstall = null;
+    this.appc = -1;
+    this.minimalAd = null;
+    this.editorsChoice = "";
+    this.originTag = "";
     this.isStoreFollowed = false;
     this.loading = false;
   }
@@ -213,11 +233,11 @@ public class DetailedAppViewModel {
     return graphic;
   }
 
-  public String getAdded() {
-    return added;
+  public String getIcon() {
+    return icon;
   }
 
-  public GetAppMeta.Media getMedia() {
+  public AppMedia getMedia() {
     return media;
   }
 
@@ -237,23 +257,19 @@ public class DetailedAppViewModel {
     return pay;
   }
 
-  public DetailedApp getDetailedApp() {
-    return detailedApp;
-  }
-
   public int getDownloads() {
     return downloads;
   }
 
-  public GetAppMeta.Stats.Rating getGlobalRating() {
+  public AppRating getGlobalRating() {
     return globalRating;
   }
 
-  public int getpDownloads() {
-    return pDownloads;
+  public int getPackageDownloads() {
+    return packageDownloads;
   }
 
-  public GetAppMeta.Stats.Rating getRating() {
+  public AppRating getRating() {
     return rating;
   }
 
@@ -269,8 +285,8 @@ public class DetailedAppViewModel {
     return (error != null);
   }
 
-  public String getwUrls() {
-    return wUrls;
+  public String getWebUrls() {
+    return webUrls;
   }
 
   public AppFlags getAppFlags() {
@@ -297,10 +313,6 @@ public class DetailedAppViewModel {
     return md5;
   }
 
-  public String getMd5Sum() {
-    return md5Sum;
-  }
-
   public String getPath() {
     return path;
   }
@@ -309,12 +321,12 @@ public class DetailedAppViewModel {
     return pathAlt;
   }
 
-  public int getVerCode() {
-    return verCode;
+  public int getVersionCode() {
+    return versionCode;
   }
 
-  public String getVerName() {
-    return verName;
+  public String getVersionName() {
+    return versionName;
   }
 
   public boolean isGoodApp() {
@@ -329,7 +341,31 @@ public class DetailedAppViewModel {
     return isPaid;
   }
 
-  public String getuName() {
-    return uName;
+  public String getUniqueName() {
+    return uniqueName;
+  }
+
+  public OpenType getShouldInstall() {
+    return shouldInstall;
+  }
+
+  public double getAppc() {
+    return appc;
+  }
+
+  public SearchAdResult getMinimalAd() {
+    return minimalAd;
+  }
+
+  public String getStoreTheme() {
+    return storeTheme;
+  }
+
+  public String getEditorsChoice() {
+    return editorsChoice;
+  }
+
+  public String getOriginTag() {
+    return originTag;
   }
 }

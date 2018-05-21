@@ -36,7 +36,7 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
     adLabel = (TextView) itemView.findViewById(R.id.ad_label);
   }
 
-  public void setSimilarApp(AppViewSimilarApp app, int position) {
+  public void setSimilarApp(AppViewSimilarApp app, String type) {
     if (app.isAd()) {
       adLabel.setVisibility(View.VISIBLE);
       nameTextView.setText(app.getAd()
@@ -51,8 +51,7 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
       } else {
         this.rating.setText(oneDecimalFormatter.format(rating));
       }
-      itemView.setOnClickListener(
-          view -> appClicked.onNext(new SimilarAppClickEvent(app, position)));
+      itemView.setOnClickListener(view -> appClicked.onNext(new SimilarAppClickEvent(app, type)));
     } else {
       adLabel.setVisibility(View.GONE);
       nameTextView.setText(app.getApp()
@@ -67,8 +66,7 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
       } else {
         this.rating.setText(oneDecimalFormatter.format(rating));
       }
-      itemView.setOnClickListener(
-          view -> appClicked.onNext(new SimilarAppClickEvent(app, position)));
+      itemView.setOnClickListener(view -> appClicked.onNext(new SimilarAppClickEvent(app, type)));
     }
   }
 }

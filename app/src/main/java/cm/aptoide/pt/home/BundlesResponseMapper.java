@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
 import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
@@ -27,10 +28,13 @@ public class BundlesResponseMapper {
 
   private final String marketName;
   private final InstallManager installManager;
+  private final PackageRepository packageRepository;
 
-  public BundlesResponseMapper(String marketName, InstallManager installManager) {
+  public BundlesResponseMapper(String marketName, InstallManager installManager,
+      PackageRepository packageRepository) {
     this.marketName = marketName;
     this.installManager = installManager;
+    this.packageRepository = packageRepository;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
@@ -66,21 +70,22 @@ public class BundlesResponseMapper {
         } else if (type.equals(HomeBundle.BundleType.SOCIAL)) {
           List<Card> list = ((SocialResponse) viewObject).getDataList()
               .getList();
-          if (!list.isEmpty()) {
-            List<App> apps = new ArrayList<>();
-            Card card = list.get(0);
+          List<App> apps = new ArrayList<>();
+          for (Card card : list) {
             App app = card.getApp();
-            apps.add(app);
-            if (card.hasUser()) {
-              appBundles.add(
-                  new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
-                      widgetTag, card.getUser()
-                      .getAvatar(), card.getUser()
-                      .getName()));
-            } else {
-              appBundles.add(
-                  new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
-                      widgetTag, R.mipmap.ic_launcher, marketName));
+            if (!packageRepository.isAppInstalled(app.getPackageName())) {
+              apps.add(app);
+              if (card.hasUser()) {
+                appBundles.add(
+                    new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
+                        widgetTag, card.getUser()
+                        .getAvatar(), card.getUser()
+                        .getName()));
+              } else {
+                appBundles.add(
+                    new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
+                        widgetTag, R.mipmap.ic_launcher, marketName));
+              }
             }
           }
         }

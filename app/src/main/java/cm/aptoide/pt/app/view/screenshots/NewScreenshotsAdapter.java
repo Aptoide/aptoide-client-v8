@@ -4,7 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.view.app.AppScreenshot;
+import cm.aptoide.pt.view.app.AppVideo;
 import java.util.ArrayList;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -15,13 +16,13 @@ import rx.subjects.PublishSubject;
 
 public class NewScreenshotsAdapter extends RecyclerView.Adapter<NewScreenshotViewHolder> {
 
-  private List<GetAppMeta.Media.Video> videos;
-  private List<GetAppMeta.Media.Screenshot> screenshots;
+  private List<AppVideo> videos;
+  private List<AppScreenshot> screenshots;
   private ArrayList<String> imageUris;
   private PublishSubject<ScreenShotClickEvent> screenShotClick;
 
-  public NewScreenshotsAdapter(List<GetAppMeta.Media.Screenshot> screenshots,
-      List<GetAppMeta.Media.Video> videos, PublishSubject<ScreenShotClickEvent> screenShotClick) {
+  public NewScreenshotsAdapter(List<AppScreenshot> screenshots, List<AppVideo> videos,
+      PublishSubject<ScreenShotClickEvent> screenShotClick) {
     this.screenshots = screenshots;
     this.videos = videos;
     this.screenShotClick = screenShotClick;
@@ -49,16 +50,16 @@ public class NewScreenshotsAdapter extends RecyclerView.Adapter<NewScreenshotVie
     return (videos != null ? videos.size() : 0) + (screenshots != null ? screenshots.size() : 0);
   }
 
-  public void updateScreenshots(List<GetAppMeta.Media.Screenshot> screenshots) {
+  public void updateScreenshots(List<AppScreenshot> screenshots) {
     this.screenshots = screenshots;
     imageUris = new ArrayList<>(screenshots.size());
-    for (GetAppMeta.Media.Screenshot screenshot : screenshots) {
+    for (AppScreenshot screenshot : screenshots) {
       imageUris.add(screenshot.getUrl());
     }
     notifyDataSetChanged();
   }
 
-  public void updateVideos(List<GetAppMeta.Media.Video> videos) {
+  public void updateVideos(List<AppVideo> videos) {
     this.videos = videos;
     notifyDataSetChanged();
   }

@@ -16,7 +16,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-import cm.aptoide.pt.home.BottomHomeFragment;
+import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -39,6 +39,7 @@ import rx.schedulers.Schedulers;
 
 public class AccountNavigator {
 
+  private final BottomNavigationNavigator bottomNavigationNavigator;
   private final FragmentNavigator fragmentNavigator;
   private final AptoideAccountManager accountManager;
   private final ActivityNavigator activityNavigator;
@@ -49,11 +50,13 @@ public class AccountNavigator {
   private final String recoverPasswordUrl;
   private final AccountAnalytics accountAnalytics;
 
-  public AccountNavigator(FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
+  public AccountNavigator(BottomNavigationNavigator bottomNavigationNavigator,
+      FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       ActivityNavigator activityNavigator, LoginManager facebookLoginManager,
       CallbackManager callbackManager, GoogleApiClient client,
       PublishRelay<FacebookLoginResult> facebookLoginSubject, String recoverPasswordUrl,
       AccountAnalytics accountAnalytics) {
+    this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
     this.activityNavigator = activityNavigator;
@@ -139,7 +142,7 @@ public class AccountNavigator {
   }
 
   public void navigateToHomeView() {
-    fragmentNavigator.navigateToCleaningBackStack(new BottomHomeFragment(), true);
+    bottomNavigationNavigator.navigateToHome();
   }
 
   public void popView() {

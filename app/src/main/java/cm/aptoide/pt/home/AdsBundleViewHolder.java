@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.Translator;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,10 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");
     }
-    bundleTitle.setText(homeBundle.getTitle());
+    bundleTitle.setText(Translator.translate(homeBundle.getTitle(), itemView.getContext(),
+        ((AptoideApplication) itemView.getContext()
+            .getApplicationContext()).getMarketName()));
+
     appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
     appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {

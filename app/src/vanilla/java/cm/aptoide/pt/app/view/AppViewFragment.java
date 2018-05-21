@@ -668,7 +668,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
         .getName();
 
     if (getSearchAdResult() == null) {
-      return adsRepository.getAdsFromAppView(packageName, storeName)
+      return adsRepository.loadAdsFromAppView(packageName, storeName)
           .map(SearchAdResult::new)
           .doOnNext(ad -> {
             setSearchAdResult(ad);
@@ -839,7 +839,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     List<String> fragmentNames = createFragmentNameList(getFragmentManager().getFragments());
 
     installDisplayable =
-        AppViewInstallDisplayable. newInstance(getApp, installManager, getSearchAdResult(),
+        AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
             shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
             this, downloadAnalytics, navigationTracker, getEditorsBrickPosition(), installAnalytics,
             notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
@@ -973,7 +973,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     appViewSimilarAppAnalytics.similarAppsIsShown();
     setSuggestedShowing(true);
 
-    adsRepository.getAdsFromAppviewSuggested(getPackageName(), appViewModel.getKeywords())
+    adsRepository.loadAdsFromAppviewSuggested(getPackageName(), appViewModel.getKeywords())
         .onErrorReturn(throwable -> Collections.emptyList())
         .zipWith(requestFactoryCdnWeb.newGetRecommendedRequest(6, getPackageName())
             .observe(), (minimalAds, listApps) -> new AppViewSuggestedAppsDisplayable(minimalAds,
@@ -1265,12 +1265,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
         appViewAnalytics.sendEditorsChoiceClickEvent(navigationTracker.getPreviousScreen(),
             getPackageName(), getEditorsBrickPosition());
       }
-      appViewAnalytics.sendAppViewOpenedFromEvent(navigationTracker.getPreviousScreen(),
-          navigationTracker.getCurrentScreen(), getPackageName(), app.getDeveloper()
-              .getName(), app.getFile()
-              .getMalware()
-              .getRank()
-              .name());
+      appViewAnalytics.sendAppViewOpenedFromEvent(getPackageName(), app.getDeveloper()
+          .getName(), app.getFile()
+          .getMalware()
+          .getRank()
+          .name());
       final Malware malware = app.getFile()
           .getMalware();
       badge.setOnClickListener(v -> {

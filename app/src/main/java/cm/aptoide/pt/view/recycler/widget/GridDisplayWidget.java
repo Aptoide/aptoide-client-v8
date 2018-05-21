@@ -18,8 +18,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.store.view.home.HomeFragment;
-import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.functions.Action1;
 
@@ -27,8 +25,6 @@ import rx.functions.Action1;
  * Created on 02/05/16.
  */
 public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
-
-  private static final String TAG = GridDisplayWidget.class.getName();
 
   private ImageView imageView;
 
@@ -57,18 +53,6 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
       } else {
         switch (name) {
           case facebook:
-            compositeSubscription.add(displayable.getInstalledRepository()
-                .getInstalled(HomeFragment.FACEBOOK_PACKAGE_NAME)
-                .first()
-                .subscribe(installedFacebook -> {
-                  sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
-                      installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-                      event.getAction()));
-                }, err -> {
-                  CrashReport.getInstance()
-                      .log(err);
-                }));
-            break;
           case twitch:
           case youtube:
           default:

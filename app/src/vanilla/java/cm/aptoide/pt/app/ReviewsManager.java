@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import rx.Single;
 
 /**
@@ -18,11 +17,6 @@ public class ReviewsManager {
 
   public Single<ReviewRequestResult> loadReviews(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
-    return reviewsRepository.loadListReviews(storeName, packageName, maxReviews,
-        languagesFilterSort);
-  }
-
-  public Single<BaseV7Response> doReviewRatingRequest(long reviewId, boolean helpful) {
-    return reviewsRepository.doReviewRatingRequest(reviewId, helpful);
+    return reviewsRepository.loadReviews(storeName, packageName, maxReviews, languagesFilterSort);
   }
 }

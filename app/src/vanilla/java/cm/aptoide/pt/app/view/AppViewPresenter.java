@@ -10,17 +10,18 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.share.ShareDialogs;
+import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
-import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -37,29 +38,27 @@ public class AppViewPresenter implements Presenter {
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
+  private StoreAnalytics storeAnalytics;
   private AppViewNavigator appViewNavigator;
   private AppViewManager appViewManager;
   private AptoideAccountManager accountManager;
   private Scheduler viewScheduler;
   private CrashReport crashReport;
-  private long appId;
-  private String packageName;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
-      AppViewAnalytics appViewAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
-      CrashReport crashReport, long appId, String packageName, PermissionManager permissionManager,
-      PermissionService permissionService) {
+      AppViewAnalytics appViewAnalytics, StoreAnalytics storeAnalytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
+      PermissionManager permissionManager, PermissionService permissionService) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
+    this.storeAnalytics = storeAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
     this.viewScheduler = viewScheduler;
     this.crashReport = crashReport;
-    this.appId = appId;
-    this.packageName = packageName;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
   }
@@ -100,6 +99,11 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> loadApp())
+        .doOnNext(model -> appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(),
+            model.getDeveloper()
+                .getName(), model.getMalware()
+                .getRank()
+                .name()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -161,11 +165,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperWebsite())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
-            .getDeveloper()
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .filter(app -> !TextUtils.isEmpty(app.getDeveloper()
             .getWebsite()))
-        .doOnNext(app -> view.navigateToDeveloperWebsite(app.getDetailedApp()))
+        .doOnNext(app -> view.navigateToDeveloperWebsite(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -175,11 +178,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperEmail())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
-            .getDeveloper()
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .filter(app -> !TextUtils.isEmpty(app.getDeveloper()
             .getEmail()))
-        .doOnNext(app -> view.navigateToDeveloperEmail(app.getDetailedApp()))
+        .doOnNext(app -> view.navigateToDeveloperEmail(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -189,11 +191,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPrivacy())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
-            .getDeveloper()
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .filter(app -> !TextUtils.isEmpty(app.getDeveloper()
             .getPrivacy()))
-        .doOnNext(app -> view.navigateToDeveloperPrivacy(app.getDetailedApp()))
+        .doOnNext(app -> view.navigateToDeveloperPrivacy(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -203,8 +204,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPermissions())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .doOnNext(app -> view.navigateToDeveloperPermissions(app.getDetailedApp()))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(app -> view.navigateToDeveloperPermissions(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -214,9 +215,13 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickStoreLayout())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .doOnNext(app -> appViewNavigator.navigateToStore(app.getDetailedApp()
-            .getStore()))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(app -> {
+          storeAnalytics.sendStoreOpenEvent("App View", app.getStore()
+              .getName(), true);
+          appViewAnalytics.sendOpenStoreEvent();
+          appViewNavigator.navigateToStore(app.getStore());
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -226,23 +231,20 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickFollowStore())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(viewScheduler)
         .flatMapCompletable(model -> {
           if (model.isStoreFollowed()) {
             view.setFollowButton(true);
             appViewAnalytics.sendOpenStoreEvent();
-            appViewNavigator.navigateToStore(model.getDetailedApp()
-                .getStore());
+            appViewNavigator.navigateToStore(model.getStore());
             return Completable.complete();
           } else {
             view.setFollowButton(false);
             appViewAnalytics.sendFollowStoreEvent();
-            view.displayStoreFollowedSnack(model.getDetailedApp()
-                .getStore()
+            view.displayStoreFollowedSnack(model.getStore()
                 .getName());
-            return appViewManager.subscribeStore(model.getDetailedApp()
-                .getStore()
+            return appViewManager.subscribeStore(model.getStore()
                 .getName());
           }
         })
@@ -257,13 +259,11 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickOtherVersions())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(model -> {
           appViewAnalytics.sendOtherVersionsEvent();
-          appViewNavigator.navigateToOtherVersions(model.getDetailedApp()
-              .getName(), model.getDetailedApp()
-              .getIcon(), model.getDetailedApp()
-              .getPackageName());
+          appViewNavigator.navigateToOtherVersions(model.getAppName(), model.getIcon(),
+              model.getPackageName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -274,8 +274,11 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickTrustedBadge())
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .doOnNext(model -> view.showTrustedDialog(model.getDetailedApp()))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(model -> {
+          appViewAnalytics.sendBadgeClickEvent();
+          view.showTrustedDialog(model);
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -286,8 +289,9 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickRateApp(), view.clickRateAppLarge(),
             view.clickRateAppLayout()))
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(viewScheduler)
+        .doOnNext(model -> appViewAnalytics.sendRateThisAppEvent())
         .flatMap(model -> view.showRateDialog(model.getAppName(), model.getPackageName(),
             model.getStore()
                 .getName()))
@@ -300,13 +304,15 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickCommentsLayout(), view.clickReadAllComments()))
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-        .doOnNext(
-            model -> appViewNavigator.navigateToRateAndReview(model.getAppId(), model.getAppName(),
-                model.getStore()
-                    .getName(), model.getPackageName(), model.getStore()
-                    .getAppearance()
-                    .getTheme()))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(model -> {
+          appViewAnalytics.sendReadAllEvent();
+          appViewNavigator.navigateToRateAndReview(model.getAppId(), model.getAppName(),
+              model.getStore()
+                  .getName(), model.getPackageName(), model.getStore()
+                  .getAppearance()
+                  .getTheme());
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -330,9 +336,9 @@ public class AppViewPresenter implements Presenter {
               }
             })
             .filter(isLoggedIn -> isLoggedIn)
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-            .flatMapSingle(model -> appViewManager.addApkFlagRequestAction(model.getStore()
-                .getName(), model.getMd5Sum(), type))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .flatMapSingle(model -> appViewManager.flagApk(model.getStore()
+                .getName(), model.getMd5(), type))
             .filter(result -> result)
             .observeOn(viewScheduler)
             .doOnNext(__ -> {
@@ -365,9 +371,11 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(similarAppClickEvent -> {
           if (similarAppClickEvent.getSimilar()
               .isAd()) {
+            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
             appViewNavigator.navigateToAd(similarAppClickEvent.getSimilar()
                 .getAd());
           } else {
+            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
             appViewNavigator.navigateToAppView(similarAppClickEvent.getSimilar()
                 .getApp()
                 .getAppId(), similarAppClickEvent.getSimilar()
@@ -393,6 +401,7 @@ public class AppViewPresenter implements Presenter {
               break;
 
             case R.id.menu_remote_install:
+              appViewAnalytics.sendRemoteInstallEvent();
               view.showShareOnTvDialog();
               break;
           }
@@ -407,9 +416,9 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.shareDialogResponse())
         .filter(response -> response == ShareDialogs.ShareResponse.SHARE_EXTERNAL)
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(viewScheduler)
-        .doOnNext(app -> view.defaultShare(app.getAppName(), app.getwUrls()))
+        .doOnNext(app -> view.defaultShare(app.getAppName(), app.getWebUrls()))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -430,7 +439,7 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(shouldContinue -> shouldContinue)
-        .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(viewScheduler)
         .doOnNext(appModel -> view.recommendsShare(appModel.getPackageName(), appModel.getStore()
             .getId()))
@@ -462,17 +471,17 @@ public class AppViewPresenter implements Presenter {
             .doOnNext(pos2 -> view.scrollReviews(pos2)));
   }
 
-  private Observable<Void> loadApp() {
-    return appViewManager.getDetailedAppViewModel(appId, packageName)
-        .flatMap(detailedAppViewModel -> appViewManager.getDownloadAppViewModel(
-            detailedAppViewModel.getMd5(), detailedAppViewModel.getPackageName(),
-            detailedAppViewModel.getVerCode())
-            .first()
-            .observeOn(viewScheduler)
-            .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
-            .doOnNext(downloadAppViewModel -> view.readyToDownload())
-            .toSingle()
-            .map(downloadAppViewModel -> detailedAppViewModel))
+  private Observable<AppViewViewModel> loadApp() {
+    return appViewManager.loadAppViewViewModel()
+        .flatMap(
+            appViewViewModel -> appViewManager.getDownloadAppViewModel(appViewViewModel.getMd5(),
+                appViewViewModel.getPackageName(), appViewViewModel.getVersionCode())
+                .first()
+                .observeOn(viewScheduler)
+                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
+                .doOnNext(downloadAppViewModel -> view.readyToDownload())
+                .toSingle()
+                .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
         .observeOn(viewScheduler)
         .doOnNext(appViewModel -> {
@@ -483,26 +492,38 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(model -> !model.hasError())
-        .flatMapSingle(appViewModel -> Single.zip(appViewManager.getReviewsViewModel(
-            appViewModel.getDetailedApp()
-                .getStore()
-                .getName(), packageName, 5, view.getLanguageFilter())
-                .observeOn(viewScheduler), appViewManager.loadSimilarApps(packageName,
-            appViewModel.getDetailedApp()
-                .getMedia()
-                .getKeywords(), 2)
-                .observeOn(viewScheduler),
-            (reviews, similar) -> view.populateReviewsAndAds(reviews, similar,
-                appViewModel.getDetailedApp())));
+        .flatMapCompletable(appViewModel -> Completable.merge(updateReviews(appViewModel),
+            updateSuggestedApps(appViewModel)));
+  }
+
+  private Completable updateSuggestedApps(AppViewViewModel appViewModel) {
+    return appViewManager.loadSimilarApps(appViewModel.getPackageName(), appViewModel.getMedia()
+        .getKeywords())
+        .observeOn(viewScheduler)
+        .doOnSuccess(adsViewModel -> {
+          view.populateAds(adsViewModel);
+        })
+        .toCompletable();
+  }
+
+  private Completable updateReviews(AppViewViewModel appViewModel) {
+    return appViewManager.loadReviewsViewModel(appViewModel.getStore()
+        .getName(), view.getPackageName(), view.getLanguageFilter())
+        .observeOn(viewScheduler)
+        .doOnSuccess(reviewsViewModel -> {
+          view.populateReviews(reviewsViewModel, appViewModel);
+        })
+        .toCompletable();
   }
 
   private void cancelDownload() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelDownload()
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .flatMapCompletable(
-                app -> appViewManager.cancelDownload(app.getMd5(), packageName, app.getVerCode()))
+                app -> appViewManager.cancelDownload(app.getMd5(), app.getPackageName(),
+                    app.getVersionCode()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -517,9 +538,10 @@ public class AppViewPresenter implements Presenter {
             .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
-                .flatMapSingle(__1 -> appViewManager.getDetailedAppViewModel(appId, packageName))
+                .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
                 .flatMapCompletable(
-                    app -> appViewManager.resumeDownload(app.getMd5(), packageName, appId))
+                    app -> appViewManager.resumeDownload(app.getMd5(), app.getPackageName(),
+                        app.getAppId()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -531,7 +553,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.pauseDownload()
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .flatMapCompletable(app -> appViewManager.pauseDownload(app.getMd5()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -579,7 +601,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable openInstalledApp() {
-    return Completable.fromAction(() -> view.openApp(packageName));
+    return Completable.fromAction(() -> view.openApp(""));
   }
 
   private Completable downloadApp(DownloadAppViewModel.Action action) {
@@ -594,7 +616,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
-            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, packageName, appId)))
+            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, "", -1)))
         .toCompletable();
   }
 
@@ -602,11 +624,11 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.isAppViewReadyToDownload())
-        .flatMap(create -> appViewManager.getDetailedAppViewModel(appId, packageName)
+        .flatMap(create -> appViewManager.loadAppViewViewModel()
             .toObservable())
         .filter(app -> !app.isLoading())
-        .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), packageName,
-            app.getVerCode()))
+        .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), app.getPackageName(),
+            app.getVersionCode()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

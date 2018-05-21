@@ -7,7 +7,6 @@ import cm.aptoide.pt.PartnerApplication;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.store.view.home.AdultRowDisplayable;
-import cm.aptoide.pt.store.view.home.HomeFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
 import rx.Observable;

@@ -243,6 +243,8 @@ android {
         project.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS
     variant.buildConfigField "int", "ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS",
         project.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS
+    variant.buildConfigField "long", "ANALYTICS_SESSION_INTERVAL_IN_MILLIS",
+        project.ANALYTICS_SESSION_INTERVAL_IN_MILLIS
 
     if (flavors[1].name.contains('internal')) {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",

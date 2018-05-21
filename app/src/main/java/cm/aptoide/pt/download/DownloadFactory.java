@@ -262,12 +262,12 @@ public class DownloadFactory {
     download.setAppName(app.getName());
     download.setAction(downloadAction);
     download.setPackageName(app.getPackageName());
-    download.setVersionCode(app.getVerCode());
-    download.setVersionName(app.getVerName());
+    download.setVersionCode(app.getVersionCode());
+    download.setVersionName(app.getVersionName());
 
     download.setFilesToDownload(
         createFileList(app.getMd5(), app.getPackageName(), downloadPaths.path, app.getMd5(),
-            app.getObb(), downloadPaths.altPath, app.getVerCode(), app.getVerName()));
+            app.getObb(), downloadPaths.altPath, app.getVersionCode(), app.getVersionName()));
 
     return download;
   }
