@@ -73,7 +73,7 @@ public class AppViewManager {
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
-    if (appViewConfiguration.hasIdStoreNamePackageName()) {
+    if (appViewConfiguration.getAppId() >= 0) {
       return loadAppViewViewModel(appViewConfiguration.getAppId(),
           appViewConfiguration.getStoreName(), appViewConfiguration.getPackageName());
     } else if (appViewConfiguration.hasMd5()) {
