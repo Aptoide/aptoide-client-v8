@@ -37,13 +37,15 @@ public class AppViewAnalytics {
     this.navigationTracker = navigationTracker;
   }
 
-  public void sendEditorsChoiceClickEvent(ScreenTagHistory previousScreen, String packageName,
+  public void sendEditorsChoiceClickEvent(String packageName,
       String editorsBrickPosition) {
     analyticsManager.logEvent(
-        createEditorsChoiceClickEventMap(previousScreen, packageName, editorsBrickPosition),
+        createEditorsChoiceClickEventMap(navigationTracker.getPreviousScreen(), packageName,
+            editorsBrickPosition),
         EDITORS_CHOICE_CLICKS, AnalyticsManager.Action.CLICK, getViewName(false));
     analyticsManager.logEvent(
-        createEditorsClickEventMap(previousScreen, packageName, editorsBrickPosition),
+        createEditorsClickEventMap(navigationTracker.getPreviousScreen(), packageName,
+            editorsBrickPosition),
         HOME_PAGE_EDITORS_CHOICE_FLURRY, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
@@ -69,17 +71,18 @@ public class AppViewAnalytics {
     return map;
   }
 
-  public void sendAppViewOpenedFromEvent(String packageName, String appPublisher, String badge) {
+  public void sendAppViewOpenedFromEvent(String packageName, String appPublisher, String badge,
+      double appc) {
     analyticsManager.logEvent(createAppViewedFromMap(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), packageName, appPublisher, badge),
+        navigationTracker.getCurrentScreen(), packageName, appPublisher, badge, appc),
         APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
     analyticsManager.logEvent(createAppViewDataMap(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), packageName),
+        navigationTracker.getCurrentScreen(), packageName, appc),
         OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private Map<String, Object> createAppViewDataMap(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName) {
+      ScreenTagHistory currentScreen, String packageName, double appc) {
     Map<String, String> packageMap = new HashMap<>();
     packageMap.put("package", packageName);
     Map<String, Object> data = new HashMap<>();
@@ -94,11 +97,14 @@ public class AppViewAnalytics {
     } else {
       data.put("previous_tag", APP_SHORTCUT);
     }
+    if (appc > 0) data.put("appcoins_type", "appcoins ads");
+
     return data;
   }
 
   private HashMap<String, Object> createAppViewedFromMap(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge)
+      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge,
+      double appc)
       throws NullPointerException {
     HashMap<String, Object> map = new HashMap<>();
     if (previousScreen != null) {
@@ -114,6 +120,8 @@ public class AppViewAnalytics {
         map.put("tag", currentScreen.getTag());
       }
     }
+    if (appc > 0) map.put("appcoins_type", "appcoins ads");
+
     map.put("package_name", packageName);
     map.put("application_publisher", appPublisher);
     map.put("trusted_badge", badge);

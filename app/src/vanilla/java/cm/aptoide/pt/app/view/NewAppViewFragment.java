@@ -123,12 +123,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> genericRetryClick;
   private PublishSubject<Void> ready;
 
+  private Integer positionY;
+
   //Views
   private NestedScrollView scrollView;
   private View noNetworkErrorView;
   private View genericErrorView;
   private View genericRetryButton;
   private View noNetworkRetryButton;
+  private View reviewsLayout;
 
   private ImageView appIcon;
   private TextView appName;
@@ -149,15 +152,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ContentLoadingProgressBar topReviewsProgress;
   private View ratingLayout;
   private View emptyReviewsLayout;
-  private View commentsLayout;
+  private View topReviewsLayout;
   private Button rateAppButtonLarge;
   private TextView emptyReviewTextView;
   private TextView reviewUsers;
   private TextView avgReviewScore;
   private RatingBar avgReviewScoreBar;
-  private RecyclerView commentsView;
+  private RecyclerView reviewsView;
   private Button rateAppButton;
-  private Button showAllCommentsButton;
+  private Button showAllReviewsButton;
 
   private View goodAppLayoutWrapper;
   private View flagsLayoutWrapper;
@@ -192,48 +195,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ImageView resumeDownload;
   private DownloadAppViewModel.Action action;
 
-  public static NewAppViewFragment newInstanceUname(String uname) {
-    Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.UNAME.name(), uname);
-
-    NewAppViewFragment fragment = new NewAppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
-  public static NewAppViewFragment newInstance(String md5) {
-    Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.MD5.name(), md5);
-
-    NewAppViewFragment fragment = new NewAppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
-  public static NewAppViewFragment newInstance(long appId, String packageName,
-      NewAppViewFragment.OpenType openType, String tag) {
-    Bundle bundle = new Bundle();
-    bundle.putString(ORIGIN_TAG, tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    NewAppViewFragment fragment = new NewAppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
-  public static NewAppViewFragment newInstance(long appId, String packageName,
-      NewAppViewFragment.OpenType openType, String tag, double appcReward) {
-    Bundle bundle = new Bundle();
-    bundle.putString(ORIGIN_TAG, tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    bundle.putDouble(BundleKeys.APPC.name(), appcReward);
-    NewAppViewFragment fragment = new NewAppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -256,8 +217,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     scrollView = (NestedScrollView) view.findViewById(R.id.scroll_view_app);
 
     ViewTreeObserver vto = scrollView.getViewTreeObserver();
-
-    if (savedInstanceState != null) {
+    if (positionY != null) {
+      vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        public void onGlobalLayout() {
+          if (scrollView != null) scrollView.scrollTo(0, positionY);
+        }
+      });
+    } else if (savedInstanceState != null) {
       int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
       if (position != null) {
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -272,6 +238,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     genericErrorView = view.findViewById(R.id.generic_error);
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
+    reviewsLayout = view.findViewById(R.id.reviews_layout);
     noNetworkRetryButton.setOnClickListener(click -> noNetworkRetryClick.onNext(null));
     genericRetryButton.setOnClickListener(click -> genericRetryClick.onNext(null));
     appIcon = (ImageView) view.findViewById(R.id.app_icon);
@@ -299,15 +266,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     topReviewsProgress = (ContentLoadingProgressBar) view.findViewById(R.id.top_comments_progress);
     ratingLayout = view.findViewById(R.id.rating_layout);
     emptyReviewsLayout = view.findViewById(R.id.empty_reviews_layout);
-    commentsLayout = view.findViewById(R.id.comments_layout);
+    topReviewsLayout = view.findViewById(R.id.comments_layout);
     rateAppButtonLarge = (Button) view.findViewById(R.id.rate_this_button2);
     emptyReviewTextView = (TextView) view.findViewById(R.id.empty_review_text);
     reviewUsers = (TextView) view.findViewById(R.id.users_voted);
     avgReviewScore = (TextView) view.findViewById(R.id.rating_value);
     avgReviewScoreBar = (RatingBar) view.findViewById(R.id.rating_bar);
-    commentsView = (RecyclerView) view.findViewById(R.id.top_comments_list);
+    reviewsView = (RecyclerView) view.findViewById(R.id.top_comments_list);
     rateAppButton = (Button) view.findViewById(R.id.rate_this_button);
-    showAllCommentsButton = (Button) view.findViewById(R.id.read_all_button);
+    showAllReviewsButton = (Button) view.findViewById(R.id.read_all_button);
 
     goodAppLayoutWrapper = view.findViewById(R.id.good_app_layout);
     flagsLayoutWrapper = view.findViewById(R.id.rating_flags_layout);
@@ -356,9 +323,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     LinearLayoutManager similarDownloadsLayout =
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-    commentsView.setLayoutManager(layoutManager);
+    reviewsView.setLayoutManager(layoutManager);
     // because otherwise the AppBar won't be collapsed
-    commentsView.setNestedScrollingEnabled(false);
+    reviewsView.setNestedScrollingEnabled(false);
     similarApps.setNestedScrollingEnabled(false);
 
     similarAppsAdapter =
@@ -390,7 +357,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     });
 
     SnapHelper commentsSnap = new SnapToStartHelper();
-    commentsSnap.attachToRecyclerView(commentsView);
+    commentsSnap.attachToRecyclerView(reviewsView);
 
     setupToolbar();
     attachPresenter(presenter);
@@ -407,6 +374,29 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void onDestroy() {
     super.onDestroy();
 
+    screenShotClick = null;
+    readMoreClick = null;
+    loginSnackClick = null;
+    similarAppClick = null;
+    shareDialogClick = null;
+    ready = null;
+    reviewsAutoScroll = null;
+    noNetworkRetryClick = null;
+    genericRetryClick = null;
+    positionY = null;
+  }
+
+  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    this.menu = menu;
+    inflater.inflate(R.menu.fragment_appview, menu);
+    showHideOptionsMenu(true);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    positionY = scrollView.getScrollY();
     noNetworkErrorView = null;
     genericErrorView = null;
     genericRetryButton = null;
@@ -431,15 +421,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     topReviewsProgress = null;
     ratingLayout = null;
     emptyReviewsLayout = null;
-    commentsLayout = null;
+    topReviewsLayout = null;
     rateAppButtonLarge = null;
     emptyReviewTextView = null;
     reviewUsers = null;
     avgReviewScore = null;
     avgReviewScoreBar = null;
-    commentsView = null;
+    reviewsView = null;
     rateAppButton = null;
-    showAllCommentsButton = null;
+    showAllReviewsButton = null;
     goodAppLayoutWrapper = null;
     flagsLayoutWrapper = null;
     workingWellLayout = null;
@@ -467,7 +457,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     screenshotsAdapter = null;
     similarAppsAdapter = null;
     similarDownloadsAdapter = null;
-    presenter = null;
     dialogUtils = null;
     menu = null;
     toolbar = null;
@@ -475,14 +464,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     appId = -1;
     appcReward = -1;
     packageName = null;
-    ready = null;
-  }
-
-  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    this.menu = menu;
-    inflater.inflate(R.menu.fragment_appview, menu);
-    showHideOptionsMenu(true);
+    scrollView = null;
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -614,7 +596,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       reviewsAdapter = new TopReviewsAdapter();
     }
 
-    commentsView.setAdapter(reviewsAdapter);
+    reviewsView.setAdapter(reviewsAdapter);
     reviewsAutoScroll.onNext(reviewsAdapter.getItemCount());
   }
 
@@ -699,12 +681,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return RxView.clicks(ratingLayout);
   }
 
-  @Override public Observable<Void> clickCommentsLayout() {
-    return RxView.clicks(commentsLayout);
+  @Override public Observable<Void> clickReviewsLayout() {
+    return RxView.clicks(topReviewsLayout);
   }
 
-  @Override public Observable<Void> clickReadAllComments() {
-    return RxView.clicks(showAllCommentsButton);
+  @Override public Observable<Void> clickReadAllReviews() {
+    return RxView.clicks(showAllReviewsButton);
   }
 
   @Override public Observable<Void> clickLoginSnack() {
@@ -918,7 +900,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void scrollReviews(Integer position) {
-    commentsView.smoothScrollToPosition(position);
+    reviewsView.smoothScrollToPosition(position);
+  }
+
+  @Override public void hideReviews() {
+    reviewsLayout.setVisibility(View.GONE);
+  }
+
+  @Override public void hideSimilarApps() {
+    similarBottomView.setVisibility(View.GONE);
   }
 
   private void setTrustedBadge(Malware malware) {
@@ -1079,13 +1069,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (hasReviews) {
       ratingLayout.setVisibility(View.VISIBLE);
       emptyReviewsLayout.setVisibility(View.GONE);
-      commentsLayout.setVisibility(View.VISIBLE);
+      topReviewsLayout.setVisibility(View.VISIBLE);
       rateAppButtonLarge.setVisibility(View.GONE);
       rateAppButton.setVisibility(View.VISIBLE);
     } else {
       ratingLayout.setVisibility(View.VISIBLE);
       emptyReviewsLayout.setVisibility(View.VISIBLE);
-      commentsLayout.setVisibility(View.GONE);
+      topReviewsLayout.setVisibility(View.GONE);
       rateAppButtonLarge.setVisibility(View.VISIBLE);
       rateAppButton.setVisibility(View.INVISIBLE);
 
