@@ -212,7 +212,7 @@
   <string name="personalization">Персоналізація</string>
   <string name="photography">Фотографія</string>
   <string name="productivity">Продуктивність</string>
-  <string name="puzzle">Головоломки</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Гонки</string>
   <string name="reference">Посилання</string>
   <string name="role_playing">Рольові ігри</string>
@@ -244,6 +244,10 @@
   <string name="essential_apps">Основні програми</string>
   <string name="summer_apps">Літні програми</string>
   <string name="play_it">Ігри</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Пов\'язані з %1$s</string>
   <string name="appstimeline_update_app">додатки</string>

@@ -214,7 +214,7 @@
   <string name="personalization">ตั้งค่าส่วนบุคคล</string>
   <string name="photography">การถ่ายภาพ</string>
   <string name="productivity">ผลงาน</string>
-  <string name="puzzle">ปริศนา</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">แข่งรถ</string>
   <string name="reference">อ้างอิง</string>
   <string name="role_playing">บทบาทสมมคิ</string>
@@ -246,6 +246,10 @@
   <string name="essential_apps">แอปจำเป็น</string>
   <string name="summer_apps">แอปซัมเมอร์</string>
   <string name="play_it">เล่นมัน!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">เกี่ยวข้องกับ %1$s</string>
   <string name="appstimeline_update_app">แอป</string>

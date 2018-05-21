@@ -210,7 +210,7 @@
   <string name="personalization">የግል ጉዳይ</string>
   <string name="photography">ፎቶግራፍ</string>
   <string name="productivity">ምርታማነት</string>
-  <string name="puzzle">እንቆቅልሽ</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">ውድድር</string>
   <string name="reference">ማጣቀሻ</string>
   <string name="role_playing">እየተጫወተ ያለው ሚና</string>
@@ -242,6 +242,10 @@
   <string name="essential_apps">አስፈላጊ ኤፒፒ</string>
   <string name="summer_apps">የበጋ ኤፒፒ</string>
   <string name="play_it">አጫውተው!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">የተዛመደ %1$s</string>
   <string name="appstimeline_update_app">ኤፒፒ</string>

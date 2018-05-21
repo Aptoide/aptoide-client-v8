@@ -215,7 +215,7 @@
   <string name="personalization">პერსონალიზაცია</string>
   <string name="photography">ფოტოგრაფია</string>
   <string name="productivity">პროდუქტიულობა</string>
-  <string name="puzzle">თავსატეხი</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">რბოლები</string>
   <string name="reference">ცნობარები</string>
   <string name="role_playing">როლური</string>
@@ -247,6 +247,10 @@
   <string name="essential_apps">აუცილებელი აპლიკაციები</string>
   <string name="summer_apps">ზაფხულისთვის</string>
   <string name="play_it">ითამაშე!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s -ის მსგავსი</string>
   <string name="appstimeline_update_app">აპლიკაცია</string>

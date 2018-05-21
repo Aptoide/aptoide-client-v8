@@ -210,7 +210,7 @@
   <string name="personalization">Personalzacija</string>
   <string name="photography">Fotografija</string>
   <string name="productivity">Produktivnost</string>
-  <string name="puzzle">Slagalica</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Trke</string>
   <string name="reference">Reference</string>
   <string name="role_playing">Igranje uloge</string>
@@ -242,6 +242,10 @@
   <string name="essential_apps">Ključne aplikacije</string>
   <string name="summer_apps">Letnje aplikacije</string>
   <string name="play_it">Play-It!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Vezano za %1$s</string>
   <string name="appstimeline_update_app">aplikacija</string>

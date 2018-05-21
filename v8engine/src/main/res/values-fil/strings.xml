@@ -214,7 +214,7 @@ Magpanatili ng isang log ng lahat ng iyong nainstalang app (sa pamamagitan ng %s
   <string name="personalization">Personalisasyon</string>
   <string name="photography">Potograpya</string>
   <string name="productivity">Pagka-produktibo</string>
-  <string name="puzzle">Palaisipan</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Karera</string>
   <string name="reference">Reperensiya</string>
   <string name="role_playing">Dula-dulaan</string>
@@ -246,6 +246,10 @@ Magpanatili ng isang log ng lahat ng iyong nainstalang app (sa pamamagitan ng %s
   <string name="essential_apps">Mga Kinakailangang App</string>
   <string name="summer_apps">Mga App ng Tag-init</string>
   <string name="play_it">Laruin-Siya!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Kaugnay sa %1$s</string>
   <string name="appstimeline_update_app">ang app</string>

@@ -215,7 +215,7 @@ päivittää.</string>
   <string name="personalization">Personointi</string>
   <string name="photography">Valokuvaus</string>
   <string name="productivity">Tuottavuus</string>
-  <string name="puzzle">Älypelit</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Kilpa-ajo</string>
   <string name="reference">Viiteteokset</string>
   <string name="role_playing">Roolipelit</string>
@@ -247,6 +247,10 @@ päivittää.</string>
   <string name="essential_apps">Perussovellukset</string>
   <string name="summer_apps">Kesäsovellukset</string>
   <string name="play_it">Pelaa!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Liittyy kohteeseen %1$s</string>
   <string name="appstimeline_update_app">sovellus</string>

@@ -210,7 +210,7 @@
   <string name="personalization">Testreszabás</string>
   <string name="photography">Fényképészet</string>
   <string name="productivity">Produktivitás</string>
-  <string name="puzzle">Puzzle</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Versenyzős</string>
   <string name="reference">Információs</string>
   <string name="role_playing">Szerepjáték</string>
@@ -242,6 +242,10 @@
   <string name="essential_apps">Létfontosságú appok</string>
   <string name="summer_apps">Nyári appok</string>
   <string name="play_it">Play-It!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Kapcsolódik ehhez: %1$s</string>
   <string name="appstimeline_update_app">app</string>

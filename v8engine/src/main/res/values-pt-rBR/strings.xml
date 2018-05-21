@@ -216,7 +216,7 @@ Mantenha um registro de todos os seus aplicativos instalados (via %s), incluindo
   <string name="personalization">Personalização</string>
   <string name="photography">Fotografia</string>
   <string name="productivity">Produtividade</string>
-  <string name="puzzle">Quebra-Cabeças</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Corrida</string>
   <string name="reference">Referência</string>
   <string name="role_playing">Interpretação</string>
@@ -248,6 +248,10 @@ Mantenha um registro de todos os seus aplicativos instalados (via %s), incluindo
   <string name="essential_apps">Aplicativos Essenciais</string>
   <string name="summer_apps">Aplicativos de Verão</string>
   <string name="play_it">Jogar!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Relacionado com %1$s</string>
   <string name="appstimeline_update_app">app</string>

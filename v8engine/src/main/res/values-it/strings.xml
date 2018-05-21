@@ -213,7 +213,7 @@ dello Store e i commenti degli altri utenti. Aptoide consiglia sempre di install
   <string name="personalization">Personalizzazione</string>
   <string name="photography">Fotografia</string>
   <string name="productivity">Produttività</string>
-  <string name="puzzle">Puzzle</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Corse</string>
   <string name="reference">Riferimento</string>
   <string name="role_playing">Giochi di Ruolo</string>
@@ -245,6 +245,10 @@ dello Store e i commenti degli altri utenti. Aptoide consiglia sempre di install
   <string name="essential_apps">App Essenziali</string>
   <string name="summer_apps">App Estive</string>
   <string name="play_it">Gioca!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Relativo a %1$s</string>
   <string name="appstimeline_update_app">app</string>

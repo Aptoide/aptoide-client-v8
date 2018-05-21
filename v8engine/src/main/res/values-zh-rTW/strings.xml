@@ -215,7 +215,7 @@
   <string name="personalization">個人化設定</string>
   <string name="photography">摄影</string>
   <string name="productivity">生產力</string>
-  <string name="puzzle">解谜</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">赛车</string>
   <string name="reference">參考</string>
   <string name="role_playing">角色扮演</string>
@@ -247,6 +247,10 @@
   <string name="essential_apps">必備應用</string>
   <string name="summer_apps">夏季應用</string>
   <string name="play_it">暢玩應用！</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">與%1$s有關</string>
   <string name="appstimeline_update_app">應用</string>

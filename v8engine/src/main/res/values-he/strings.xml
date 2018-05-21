@@ -216,7 +216,7 @@
   <string name="personalization">התאמה אישית</string>
   <string name="photography">צילום</string>
   <string name="productivity">יצרנות</string>
-  <string name="puzzle">חידות</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">מירוצים</string>
   <string name="reference">עיון</string>
   <string name="role_playing">משחק תפקידים</string>
@@ -248,6 +248,10 @@
   <string name="essential_apps">יישומים חיוניים</string>
   <string name="summer_apps">יישומוני קיץ</string>
   <string name="play_it">בואו נשחק!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">קשור אל %1$s</string>
   <string name="appstimeline_update_app">אפליקציה</string>

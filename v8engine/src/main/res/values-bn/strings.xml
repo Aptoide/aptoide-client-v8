@@ -216,7 +216,7 @@
   <string name="personalization">ব্যক্তিগতকরণ</string>
   <string name="photography">ফটোগ্রাফি</string>
   <string name="productivity">উৎপাদনশীলতা</string>
-  <string name="puzzle">পাজল</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">রেসিং</string>
   <string name="reference">রেফারেন্স</string>
   <string name="role_playing">রোল প্লে</string>
@@ -248,6 +248,10 @@
   <string name="essential_apps">প্রয়োজনীয় অ্যাপসমূহ</string>
   <string name="summer_apps">গ্রীষ্মকালীণ অ্যাপসমূহ</string>
   <string name="play_it">প্লে-ইট!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s সম্পর্কিত</string>
   <string name="appstimeline_update_app">অ্যাপ</string>

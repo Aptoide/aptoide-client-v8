@@ -212,7 +212,7 @@
   <string name="personalization">Personalizacja</string>
   <string name="photography">Fotografia</string>
   <string name="productivity">Produktywność</string>
-  <string name="puzzle">Puzzle</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Wyścigi</string>
   <string name="reference">Odwołanie</string>
   <string name="role_playing">RPG</string>
@@ -244,6 +244,10 @@
   <string name="essential_apps">Niezbędne aplikacje</string>
   <string name="summer_apps">Aplikacje na lato</string>
   <string name="play_it">Zagraj!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Powiązane z %1$s</string>
   <string name="appstimeline_update_app">aplikacja</string>

@@ -41,7 +41,7 @@ bir müddət üzərinə basın.</string>
   <string name="restore_updates">Yeniləmələri bərpa edin</string>
   <string name="open_apps_manager">App Manager açın</string>
   <!-- Rollback Fragment -->
-  <string name="rollback">Geriyə bərpa</string>
+  <string name="rollback">Geriyə</string>
   <string name="no_rollbacks_msg">Uyğunluq problemləri həll etmək üçün istənilən əlavəni əvvəlki versiyaya keçirin. Yüklənilən əlavələrinizin tarixçəsini (%s vasitsilə) o cümlədən versiya və yükləmə tarixi əlinizin altında saxlayın.</string>
   <!-- Timeline Fragment -->
   <string name="menu_card_timeline_clear">Sil</string>
@@ -244,6 +244,10 @@ bir müddət üzərinə basın.</string>
   <string name="essential_apps">Əsas əlavələr</string>
   <string name="summer_apps">Yay əlavələri</string>
   <string name="play_it">Oyna!</string>
+  <string name="dating">Tanışlıq</string>
+  <string name="maps_navigation">Xəritələr &amp; Naviqasiya</string>
+  <string name="food_drink">Qida &amp; İçki</string>
+  <string name="other">Digər</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s əlaqəli</string>
   <string name="appstimeline_update_app">əlavə</string>

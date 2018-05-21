@@ -213,7 +213,7 @@ Aptoide नेहमी शिफारस करते की आपण के�
   <string name="personalization">वैयक्तीकीकरण</string>
   <string name="photography">फोटोग्राफी</string>
   <string name="productivity">उत्पादकता</string>
-  <string name="puzzle">कोडी</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">रेसिंग</string>
   <string name="reference">संदर्भ</string>
   <string name="role_playing">रोल प्ले</string>
@@ -245,6 +245,10 @@ Aptoide नेहमी शिफारस करते की आपण के�
   <string name="essential_apps">अत्यावश्यक अॅप्स</string>
   <string name="summer_apps">उन्हाळ्यातील अॅप्स</string>
   <string name="play_it">खेळा!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s शी संबंधित</string>
   <string name="appstimeline_update_app">अॅप</string>

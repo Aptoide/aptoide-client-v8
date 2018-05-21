@@ -215,7 +215,7 @@
   <string name="personalization">Anpassning</string>
   <string name="photography">Fotografering</string>
   <string name="productivity">Produktivitet</string>
-  <string name="puzzle">Pussel</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Racing</string>
   <string name="reference">Referens</string>
   <string name="role_playing">Rollspel</string>
@@ -247,6 +247,10 @@
   <string name="essential_apps">Essentiella appar</string>
   <string name="summer_apps">Sommar-appar</string>
   <string name="play_it">Spela det!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Relaterad till %1$s</string>
   <string name="appstimeline_update_app">app</string>

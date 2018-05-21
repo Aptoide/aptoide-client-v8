@@ -215,7 +215,7 @@ patikimumą ir kitų vartotojų komentarus. Aptoide visada rekomenduoja įdiegti
   <string name="personalization">Pritaikymas asmeniniams poreikiams</string>
   <string name="photography">Fotografija</string>
   <string name="productivity">Produktyvumas</string>
-  <string name="puzzle">Dėlionės</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Lenktynės</string>
   <string name="reference">Nuoroda</string>
   <string name="role_playing">Vaidmenys</string>
@@ -247,6 +247,10 @@ patikimumą ir kitų vartotojų komentarus. Aptoide visada rekomenduoja įdiegti
   <string name="essential_apps">Būtinos programėlės</string>
   <string name="summer_apps">Vasaros programėlės</string>
   <string name="play_it">Paleiskite!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Panašus į %1$s</string>
   <string name="appstimeline_update_app">programėlė</string>

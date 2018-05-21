@@ -211,7 +211,7 @@ http://aptoi.de/tv</string>
   <string name="personalization">စိတ္ႀကိဳက္ျပဳျပင္ျခင္း</string>
   <string name="photography">ဓာတ္ပံုဆိုင္ရာ</string>
   <string name="productivity">ထုတ္လုပ္ႏိုင္စြမ္း</string>
-  <string name="puzzle">ပဟေဠိ</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">ပြိုင်ပွဲ</string>
   <string name="reference">ရည်ညွှန်းချက်</string>
   <string name="role_playing">တကိုယ္ေတာ္</string>
@@ -243,6 +243,10 @@ http://aptoi.de/tv</string>
   <string name="essential_apps">မရွိမျဖစ္ Appsမ်ား</string>
   <string name="summer_apps">ေႏြရာသီ Apps</string>
   <string name="play_it">၄င္းကို ဖြင့္ပါ။</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s ႏွင့္ သက္ဆိုင္ေသာ</string>
   <string name="appstimeline_update_app">အပ္စ္</string>

@@ -215,7 +215,7 @@ bir tehdit içermez!</string>
   <string name="personalization">Kişiselleştirme</string>
   <string name="photography">Fotoğrafçılık</string>
   <string name="productivity">Verimlilik</string>
-  <string name="puzzle">Bulmaca</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Yarış</string>
   <string name="reference">Referans</string>
   <string name="role_playing">Rol Yapma</string>
@@ -247,6 +247,10 @@ bir tehdit içermez!</string>
   <string name="essential_apps">Önemli Uygulamalar</string>
   <string name="summer_apps">Yaz Uygulamaları</string>
   <string name="play_it">Oyna bunu!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s ile ilgili</string>
   <string name="appstimeline_update_app">uygulama</string>

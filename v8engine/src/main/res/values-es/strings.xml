@@ -215,7 +215,7 @@ y a los comentarios de otros usuarios. En Aptoide siempre recomendamos que sólo
   <string name="personalization">Personalización</string>
   <string name="photography">Fotografía</string>
   <string name="productivity">Productividad</string>
-  <string name="puzzle">Rompecabezas</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Carreras</string>
   <string name="reference">Referencias</string>
   <string name="role_playing">Juegos de rol</string>
@@ -247,6 +247,10 @@ y a los comentarios de otros usuarios. En Aptoide siempre recomendamos que sólo
   <string name="essential_apps">Aplicaciones básicas</string>
   <string name="summer_apps">Aplicaciones de verano</string>
   <string name="play_it">¡Juégalo!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Relacionadas con %1$s</string>
   <string name="appstimeline_update_app">aplicación</string>

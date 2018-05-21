@@ -215,7 +215,7 @@ toko dan komentar pengguna lainnya. Aptoide selalu merekomendasikan agar Anda ha
   <string name="personalization">Personalisasi</string>
   <string name="photography">Fotografi</string>
   <string name="productivity">Produktivitas</string>
-  <string name="puzzle">Teka-teki</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Balapan</string>
   <string name="reference">Referensi</string>
   <string name="role_playing">Bermain Peran</string>
@@ -247,6 +247,10 @@ toko dan komentar pengguna lainnya. Aptoide selalu merekomendasikan agar Anda ha
   <string name="essential_apps">Aplikasi Penting</string>
   <string name="summer_apps">Aplikasi Musim Panas</string>
   <string name="play_it">Play-It!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Berhubungan dengan %1$s</string>
   <string name="appstimeline_update_app">aplikasi</string>

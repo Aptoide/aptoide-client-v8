@@ -215,7 +215,7 @@
   <string name="personalization">ປັບແຕ່ງສ່ວນຕົວ</string>
   <string name="photography">ການຖ່າຍຮູບ</string>
   <string name="productivity">ການເຮັດວຽກ</string>
-  <string name="puzzle">ປິດສະໜາ</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">ແຂ່ງລົດ</string>
   <string name="reference">ແຫຼ່ງອ້າງອີງ</string>
   <string name="role_playing">ສວມບົດບາດ</string>
@@ -247,6 +247,10 @@
   <string name="essential_apps">ແອັບສຳຄັນ</string>
   <string name="summer_apps">ແອັບພັກຄາຍຮ້ອນ</string>
   <string name="play_it">ຫຼິ້ນມັນເລີຍ!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">ກ່ຽວຂ້ອງກັບ %1$s</string>
   <string name="appstimeline_update_app">ແອັບ</string>

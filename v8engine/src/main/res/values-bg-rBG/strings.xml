@@ -210,7 +210,7 @@
   <string name="personalization">Персонализация</string>
   <string name="photography">Фотография</string>
   <string name="productivity">Продуктивност</string>
-  <string name="puzzle">Ребуси</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Състезания</string>
   <string name="reference">Справки</string>
   <string name="role_playing">Актьорско майсторство</string>
@@ -242,6 +242,10 @@
   <string name="essential_apps">Основни приложения</string>
   <string name="summer_apps">Лятни приложения</string>
   <string name="play_it">Само за пускане!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Свързано с %1$s</string>
   <string name="appstimeline_update_app">приложение</string>

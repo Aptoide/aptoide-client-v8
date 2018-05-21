@@ -214,7 +214,7 @@ Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin c
   <string name="personalization">Cá nhân</string>
   <string name="photography">Chụp hình</string>
   <string name="productivity">Năng suất</string>
-  <string name="puzzle">Trò chơi đố vui</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Đua xe</string>
   <string name="reference">Tài liệu tham khảo</string>
   <string name="role_playing">Nhập vai</string>
@@ -246,6 +246,10 @@ Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin c
   <string name="essential_apps">Các ứng dụng thiết yếu</string>
   <string name="summer_apps">Các ứng dụng mùa hè</string>
   <string name="play_it">Chơi đi!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Liên quan đến %1$s</string>
   <string name="appstimeline_update_app">ứng dụng</string>

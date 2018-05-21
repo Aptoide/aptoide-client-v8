@@ -216,7 +216,7 @@
   <string name="personalization">パーソナライズ</string>
   <string name="photography">写真</string>
   <string name="productivity">生産性</string>
-  <string name="puzzle">パズル</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">レース</string>
   <string name="reference">資料</string>
   <string name="role_playing">ロールプレイング</string>
@@ -248,6 +248,10 @@
   <string name="essential_apps">必須アプリ</string>
   <string name="summer_apps">夏アプリ</string>
   <string name="play_it">プレイしよう!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s に関連</string>
   <string name="appstimeline_update_app">アプリ</string>

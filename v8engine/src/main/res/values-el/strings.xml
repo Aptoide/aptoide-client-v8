@@ -213,7 +213,7 @@
   <string name="personalization">Εξατομίκευση</string>
   <string name="photography">Φωτογραφία</string>
   <string name="productivity">Παραγωγικότητα</string>
-  <string name="puzzle">Παζλ</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Αγωνιστικά</string>
   <string name="reference">Αναφορά</string>
   <string name="role_playing">Role Playing</string>
@@ -245,6 +245,10 @@
   <string name="essential_apps">Απαραίτητα Apps</string>
   <string name="summer_apps">Καλοκαιρινά Apps</string>
   <string name="play_it">Play-It!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Σχετίζονται με %1$s</string>
   <string name="appstimeline_update_app">app</string>

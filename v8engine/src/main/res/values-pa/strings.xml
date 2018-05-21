@@ -216,7 +216,7 @@ http://aptoi.de/tv</string>
   <string name="personalization">ਵਿਅਕਤੀਗਤ</string>
   <string name="photography">ਫੋਟੋਗ੍ਰਾਫੀ</string>
   <string name="productivity">ਉਤਪਾਦਕਤਾ</string>
-  <string name="puzzle">ਬੁਝਾਰਤ</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">ਰੇਸਿੰਗ</string>
   <string name="reference">ਹਵਾਲਾ</string>
   <string name="role_playing">ਭੂਮਿਕਾ ਨਿਭਾਉਣੀ</string>
@@ -248,6 +248,10 @@ http://aptoi.de/tv</string>
   <string name="essential_apps">ਜ਼ਰੂਰੀ ਐਪਸ</string>
   <string name="summer_apps">ਗਰਮੀ ਦੀਆਂ ਐਪਸ</string>
   <string name="play_it">ਇਹਨੂੰ-ਖੇਡੋ!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">%1$s ਨਾਲ ਸਬੰਧਤ</string>
   <string name="appstimeline_update_app">ਐਪ</string>

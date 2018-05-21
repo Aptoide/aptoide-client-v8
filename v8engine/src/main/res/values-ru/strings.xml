@@ -21,7 +21,7 @@
   <string name="developer_email">Имейл: %s</string>
   <string name="developer_privacy_policy">Политика приватности: %s</string>
   <string name="open">Открыть</string>
-  <string name="button_header_more">больше</string>
+  <string name="button_header_more">ещё</string>
   <string name="search">Поиск</string>
   <string name="update">Обновить</string>
   <string name="uninstall">Удалить</string>
@@ -124,7 +124,7 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>Пропустить</b></string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_welcome_message"><b>Welcome!</b></string>
+  <string name="wizard_welcome_message"><b>Добро пожаловать!</b></string>
   <string name="wizard_sub_title_viewpager_one">Begin a <b>secure</b> and <b>enjoyable</b> journey.</string>
   <string name="wizard_description_part_one_viewpager_one"><b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
   <string name="wizard_description_part_two_viewpager_one"><b>Discover</b> apps that\nyou wanted, but\nnever found.</string>
@@ -214,7 +214,7 @@
   <string name="personalization">Персонализация</string>
   <string name="photography">Фотография</string>
   <string name="productivity">Производительность</string>
-  <string name="puzzle">Головоломки</string>
+  <string name="puzzle">Головоломка </string>
   <string name="racing">Гонки</string>
   <string name="reference">Справочники</string>
   <string name="role_playing">Ролевые игры</string>
@@ -246,6 +246,10 @@
   <string name="essential_apps">Основные приложения</string>
   <string name="summer_apps">Летние приложения</string>
   <string name="play_it">Игры Play-It!</string>
+  <string name="dating">Знакомства</string>
+  <string name="maps_navigation">Карты &amp; Навигация</string>
+  <string name="food_drink">Еда &amp; Напитки</string>
+  <string name="other">Другие</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Связанные с %1$s</string>
   <string name="appstimeline_update_app">приложение</string>
@@ -268,7 +272,7 @@
   <string name="create_store_displayable_message">Создайте свой магазин сейчас и начните делиться вашими приложениями!</string>
   <string name="create_store_displayable_button">СОЗДАТЬ МАГАЗИН</string>
   <string name="my_store_created_displayable_message">Ваш магазин приложений для Android</string>
-  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">Вы только что создали свой Магазин!</string>
   <string name="create_store_displayable_explore_message">Войдите и изучите все возможности</string>
   <string name="create_store_displayable_explore_button">Исследуй</string>
   <!-- stores tab > my store with no apps -->

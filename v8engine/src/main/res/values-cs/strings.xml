@@ -213,7 +213,7 @@
   <string name="personalization">Osobní nastavení</string>
   <string name="photography">Fotografování</string>
   <string name="productivity">Produktivita</string>
-  <string name="puzzle">Hlavolamy</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Závodní</string>
   <string name="reference">Příručky</string>
   <string name="role_playing">Hra na hrdiny</string>
@@ -245,6 +245,10 @@
   <string name="essential_apps">Essential Apps</string>
   <string name="summer_apps">Summer Apps</string>
   <string name="play_it">Play-It!</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Related to %1$s</string>
   <string name="appstimeline_update_app">aplikaci</string>

@@ -215,7 +215,7 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="personalization">Personnalisation</string>
   <string name="photography">Photographie</string>
   <string name="productivity">Productivité</string>
-  <string name="puzzle">Puzzle</string>
+  <string name="puzzle">Puzzle </string>
   <string name="racing">Courses</string>
   <string name="reference">Référence</string>
   <string name="role_playing">Jeux de rôle</string>
@@ -247,6 +247,10 @@ Aptoide vous recommande de n\'installer que des applications %1$s approuvées.</
   <string name="essential_apps">Applications essentielles</string>
   <string name="summer_apps">Applications pour l’été</string>
   <string name="play_it">Jouez-y !</string>
+  <string name="dating">Dating</string>
+  <string name="maps_navigation">Maps &amp; Navigation</string>
+  <string name="food_drink">Food &amp; Drink</string>
+  <string name="other">Other</string>
   <!--AppsTimeline new string-->
   <string name="displayable_social_timeline_article_related_to">Associés à %1$s</string>
   <string name="appstimeline_update_app">app</string>
