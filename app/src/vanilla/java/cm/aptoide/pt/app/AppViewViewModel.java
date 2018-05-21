@@ -8,7 +8,6 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
-import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.List;
 
@@ -32,7 +31,6 @@ public class AppViewViewModel {
   private final String editorsChoice;
   private final String originTag;
   private final boolean isStoreFollowed;
-  private final DetailedApp detailedApp;
   private final long appId;
   private final String appName;
   private final Store store;
@@ -61,8 +59,8 @@ public class AppViewViewModel {
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
 
-  public AppViewViewModel(DetailedApp detailedApp, long appId, String appName, Store store,
-      String storeTheme, boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
+  public AppViewViewModel(long appId, String appName, Store store, String storeTheme,
+      boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
       String path, String pathAlt, int versionCode, String versionName, String packageName,
       long size, int downloads, GetAppMeta.Stats.Rating globalRating, int packageDownloads,
@@ -70,7 +68,6 @@ public class AppViewViewModel {
       GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
       String webUrls, boolean isPaid, String uniqueName, OpenType shouldInstall, double appc,
       SearchAdResult minimalAd, String editorsChoice, String originTag, boolean isStoreFollowed) {
-    this.detailedApp = detailedApp;
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -116,7 +113,6 @@ public class AppViewViewModel {
 
   public AppViewViewModel(boolean loading) {
     this.loading = loading;
-    this.detailedApp = null;
     this.appId = -1;
     this.appName = "";
     this.store = null;
@@ -161,7 +157,6 @@ public class AppViewViewModel {
 
   public AppViewViewModel(DetailedAppRequestResult.Error error) {
     this.error = error;
-    this.detailedApp = null;
     this.appId = -1;
     this.appName = "";
     this.store = null;
@@ -258,10 +253,6 @@ public class AppViewViewModel {
 
   public GetAppMeta.Pay getPay() {
     return pay;
-  }
-
-  public DetailedApp getDetailedApp() {
-    return detailedApp;
   }
 
   public int getDownloads() {

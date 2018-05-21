@@ -166,8 +166,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperWebsite())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
-            .getDeveloper()
+        .filter(app -> !TextUtils.isEmpty(app.getDeveloper()
             .getWebsite()))
         .doOnNext(app -> view.navigateToDeveloperWebsite(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -180,8 +179,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperEmail())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
-            .getDeveloper()
+        .filter(app -> !TextUtils.isEmpty(app.getDeveloper()
             .getEmail()))
         .doOnNext(app -> view.navigateToDeveloperEmail(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -194,8 +192,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPrivacy())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .filter(app -> !TextUtils.isEmpty(app.getDetailedApp()
-            .getDeveloper()
+        .filter(app -> !TextUtils.isEmpty(app.getDeveloper()
             .getPrivacy()))
         .doOnNext(app -> view.navigateToDeveloperPrivacy(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -500,10 +497,8 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable updateSuggestedApps(AppViewViewModel appViewModel) {
-    return appViewManager.loadSimilarApps(appViewModel.getPackageName(),
-        appViewModel.getDetailedApp()
-            .getMedia()
-            .getKeywords())
+    return appViewManager.loadSimilarApps(appViewModel.getPackageName(), appViewModel.getMedia()
+        .getKeywords())
         .observeOn(viewScheduler)
         .doOnSuccess(adsViewModel -> {
           view.populateAds(adsViewModel);
@@ -512,8 +507,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable updateReviews(AppViewViewModel appViewModel) {
-    return appViewManager.loadReviewsViewModel(appViewModel.getDetailedApp()
-        .getStore()
+    return appViewManager.loadReviewsViewModel(appViewModel.getStore()
         .getName(), view.getPackageName(), 5, view.getLanguageFilter())
         .observeOn(viewScheduler)
         .doOnSuccess(reviewsViewModel -> {

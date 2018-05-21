@@ -173,7 +173,7 @@ public class AppViewManager {
     cachedApp = app;
     return isStoreFollowed(cachedApp.getStore()
         .getId()).map(
-        isStoreFollowed -> new AppViewViewModel(app, app.getId(), app.getName(), app.getStore(),
+        isStoreFollowed -> new AppViewViewModel(app.getId(), app.getName(), app.getStore(),
             appViewConfiguration.getStoreTheme(), app.isGoodApp(), app.getMalware(),
             app.getAppFlags(), app.getTags(), app.getUsedFeatures(), app.getUsedPermissions(),
             app.getFileSize(), app.getMd5(), app.getPath(), app.getPathAlt(), app.getVersionCode(),
