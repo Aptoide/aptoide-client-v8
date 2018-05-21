@@ -137,7 +137,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private TextView trustedText;
   private TextView downloadsTop;
   private TextView sizeInfo;
-  private TextView appcValue;
   private View appcRewardView;
   private TextView appcRewardValue;
   private View similarDownloadView;
@@ -259,10 +258,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     ViewTreeObserver vto = scrollView.getViewTreeObserver();
 
     if (savedInstanceState != null) {
-      appId = savedInstanceState.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1);
-      packageName =
-          savedInstanceState.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null);
-      appcReward = savedInstanceState.getDouble(BundleKeys.APPC.name(), -1);
       int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
       if (position != null) {
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -271,8 +266,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           }
         });
       }
-    } else {
-      appcReward = -1;
     }
 
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
@@ -288,8 +281,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     trustedText = (TextView) view.findViewById(R.id.trusted_text);
     downloadsTop = (TextView) view.findViewById(R.id.header_downloads);
     sizeInfo = (TextView) view.findViewById(R.id.header_size);
-    appcValue = (TextView) view.findViewById(R.id.appc_layout)
-        .findViewById(R.id.appcoins_reward_message);
     appcRewardView = view.findViewById(R.id.appc_layout);
     appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
@@ -537,9 +528,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     downloadsTop.setText(
         String.format("%s", AptoideUtils.StringU.withSuffix(model.getPackageDownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
-    if (appcReward != -1) {
+    if (model.getAppc() > 0) {
       appcRewardView.setVisibility(View.VISIBLE);
-      appcRewardValue.setText(formatAppCoinsRewardMessage());
+      appcRewardValue.setText(formatAppCoinsRewardMessage(model.getAppc()));
     }
 
     latestVersion.setText(model.getVersionName());
@@ -1140,7 +1131,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private SpannableString formatAppCoinsRewardMessage() {
+  private SpannableString formatAppCoinsRewardMessage(double appcReward) {
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.##");
 
     String reward = String.valueOf(twoDecimalFormat.format(appcReward)) + " APPC";

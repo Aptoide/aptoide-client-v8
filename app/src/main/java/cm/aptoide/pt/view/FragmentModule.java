@@ -31,6 +31,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.DownloadStateParser;
@@ -186,9 +187,9 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper);
+        bottomNavigationMapper, appNavigator);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository) {
@@ -213,14 +214,14 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides AppsNavigator providesAppsNavigator(FragmentNavigator fragmentNavigator,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
     return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper);
+        bottomNavigationMapper, appNavigator);
   }
 
   @FragmentScope @Provides GetRewardAppCoinsAppsNavigator providesGetRewardAppCoinsAppsNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new GetRewardAppCoinsAppsNavigator(fragmentNavigator);
+      FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
+    return new GetRewardAppCoinsAppsNavigator(fragmentNavigator, appNavigator);
   }
 
   @FragmentScope @Provides FlagManager providesFlagManager(FlagService flagService) {

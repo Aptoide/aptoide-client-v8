@@ -2,7 +2,6 @@ package cm.aptoide.pt.app;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -38,12 +37,12 @@ public class AppNavigator {
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateWithPackageName(String packageName, AppViewFragment.OpenType openType) {
+  public void navigateWithPackageName(String packageName, NewAppViewFragment.OpenType openType) {
     navigateWithPackageAndStoreNames(packageName, null, openType);
   }
 
   public void navigateWithPackageAndStoreNames(String packageName, String storeName,
-      AppViewFragment.OpenType openType) {
+      NewAppViewFragment.OpenType openType) {
     Bundle bundle = new Bundle();
     if (!TextUtils.isEmpty(packageName)) {
       bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
@@ -55,7 +54,8 @@ public class AppNavigator {
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateWithAppId(long appId, String packageName, AppViewFragment.OpenType openType,
+  public void navigateWithAppId(long appId, String packageName,
+      NewAppViewFragment.OpenType openType,
       String tag) {
     Bundle bundle = new Bundle();
     bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
@@ -68,7 +68,7 @@ public class AppNavigator {
   }
 
   public void navigateWithAppcReward(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag, double appRewardAppc) {
+      NewAppViewFragment.OpenType openType, String tag, double appRewardAppc) {
     Bundle bundle = new Bundle();
     bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
     bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);

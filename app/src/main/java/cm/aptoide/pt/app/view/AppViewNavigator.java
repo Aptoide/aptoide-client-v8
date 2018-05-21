@@ -3,6 +3,7 @@ package cm.aptoide.pt.app.view;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -20,13 +21,15 @@ public class AppViewNavigator {
   private final ActivityNavigator activityNavigator;
   private final boolean hasMultiStoreSearch;
   private final String defaultStoreName;
+  private final AppNavigator appNavigator;
 
   public AppViewNavigator(FragmentNavigator fragmentNavigator, ActivityNavigator activityNavigator,
-      boolean hasMultiStoreSearch, String defaultStoreName) {
+      boolean hasMultiStoreSearch, String defaultStoreName, AppNavigator appNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.activityNavigator = activityNavigator;
     this.hasMultiStoreSearch = hasMultiStoreSearch;
     this.defaultStoreName = defaultStoreName;
+    this.appNavigator = appNavigator;
   }
 
   public void navigateToScreenshots(ArrayList<String> imagesUris, int currentPosition) {
@@ -49,15 +52,11 @@ public class AppViewNavigator {
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
-    Fragment fragment = AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(appId, packageName, tag);
-    fragmentNavigator.navigateTo(
-        NewAppViewFragment.newInstance(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY,
-            tag), true);
+    appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
   public void navigateToAd(MinimalAd ad) {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstance(new SearchAdResult(ad)), true);
+    appNavigator.navigateWithAd(new SearchAdResult(ad));
   }
 
   public void navigateToDescriptionReadMore(String name, String description, String theme) {

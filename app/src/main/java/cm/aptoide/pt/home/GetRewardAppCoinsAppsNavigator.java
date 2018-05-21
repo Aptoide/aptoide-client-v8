@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 
 /**
@@ -9,15 +10,17 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 
 public class GetRewardAppCoinsAppsNavigator {
   private final FragmentNavigator fragmentNavigator;
+  private final AppNavigator appNavigator;
 
-  public GetRewardAppCoinsAppsNavigator(FragmentNavigator fragmentNavigator) {
+  public GetRewardAppCoinsAppsNavigator(FragmentNavigator fragmentNavigator,
+      AppNavigator appNavigator) {
     this.fragmentNavigator = fragmentNavigator;
+    this.appNavigator = appNavigator;
   }
 
   public void navigateToRewardAppView(long appId, String packageName, String tag,
       double rewardAppCoins) {
-    fragmentNavigator.navigateTo(
-        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag,
-            rewardAppCoins), true);
+    appNavigator.navigateWithAppcReward(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY,
+        tag, rewardAppCoins);
   }
 }
