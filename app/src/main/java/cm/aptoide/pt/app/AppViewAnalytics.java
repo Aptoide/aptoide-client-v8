@@ -243,6 +243,12 @@ public class AppViewAnalytics {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
     timelineAnalytics.sendSocialCardPreviewActionEvent(
         TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
-    ;
+  }
+
+  public void sendTimelineInstallRecommendDontShowMeAgainEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
+    timelineAnalytics.sendSocialCardPreviewActionEvent(
+        TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
   }
 }

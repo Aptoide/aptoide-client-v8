@@ -291,7 +291,7 @@ public class AppViewManager {
   }
 
   public boolean shouldShowRecommendsPreviewDialog() {
-    return preferencesManager.shouldShowPreviewDialog();
+    return preferencesManager.shouldShowInstallRecommendsPreviewDialog();
   }
 
   public boolean canShowNotLoggedInDialog() {
@@ -300,5 +300,10 @@ public class AppViewManager {
 
   public Completable shareOnTimeline(String packageName, long storeId, String shareType) {
     return Completable.fromAction(() -> socialRepository.share(packageName, storeId, shareType));
+  }
+
+  public Completable dontShowInstallRecommendsPreviewDialog() {
+    return Completable.fromAction(
+        () -> preferencesManager.setShouldShowInstallRecommendsPreviewDialog(false));
   }
 }
