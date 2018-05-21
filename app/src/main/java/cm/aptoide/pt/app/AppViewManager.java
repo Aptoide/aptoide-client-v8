@@ -126,8 +126,8 @@ public class AppViewManager {
   }
 
   public Single<ReviewsViewModel> loadReviewsViewModel(String storeName, String packageName,
-      int maxReviews, String languagesFilterSort) {
-    return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort)
+      String languagesFilterSort) {
+    return reviewsManager.loadReviews(storeName, packageName, 3, languagesFilterSort)
         .map(result -> new ReviewsViewModel(result.getReviewList(), result.isLoading(),
             result.getError()));
   }

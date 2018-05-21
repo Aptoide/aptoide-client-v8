@@ -508,7 +508,7 @@ public class AppViewPresenter implements Presenter {
 
   private Completable updateReviews(AppViewViewModel appViewModel) {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
-        .getName(), view.getPackageName(), 5, view.getLanguageFilter())
+        .getName(), view.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
         .doOnSuccess(reviewsViewModel -> {
           view.populateReviews(reviewsViewModel, appViewModel);
