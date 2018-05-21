@@ -15,8 +15,8 @@ public class ReviewsRepository {
     this.reviewsService = reviewsService;
   }
 
-  public Single<ReviewRequestResult> loadListReviews(String storeName, String packageName,
+  public Single<ReviewRequestResult> loadReviews(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
-    return reviewsService.loadListReviews(storeName, packageName, maxReviews, languagesFilterSort);
+    return reviewsService.loadReviews(storeName, packageName, maxReviews, languagesFilterSort);
   }
 }

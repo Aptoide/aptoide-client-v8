@@ -17,7 +17,6 @@ public class ReviewsManager {
 
   public Single<ReviewRequestResult> loadReviews(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
-    return reviewsRepository.loadListReviews(storeName, packageName, maxReviews,
-        languagesFilterSort);
+    return reviewsRepository.loadReviews(storeName, packageName, maxReviews, languagesFilterSort);
   }
 }

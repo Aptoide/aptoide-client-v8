@@ -73,10 +73,6 @@ public class AppViewConfiguration {
     return appc;
   }
 
-  public boolean hasIdStoreNamePackageName() {
-    return (appId != -1 && storeName != null && packageName != null && packageName.isEmpty());
-  }
-
   public boolean hasMd5() {
     return (md5 != null && !md5.isEmpty());
   }

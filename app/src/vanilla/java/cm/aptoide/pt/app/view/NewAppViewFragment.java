@@ -543,7 +543,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       appcRewardValue.setText(formatAppCoinsRewardMessage());
     }
 
-    latestVersion.setText(model.getVerName());
+    latestVersion.setText(model.getVersionName());
     storeName.setText(model.getStore()
         .getName());
     ImageLoader.with(getContext())

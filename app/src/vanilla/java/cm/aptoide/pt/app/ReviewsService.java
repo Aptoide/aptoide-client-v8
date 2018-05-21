@@ -41,7 +41,7 @@ public class ReviewsService {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Single<ReviewRequestResult> loadListReviews(String storeName, String packageName,
+  public Single<ReviewRequestResult> loadReviews(String storeName, String packageName,
       int maxReviews, String languagesFilterSort) {
     if (loading) {
       return Single.just(new ReviewRequestResult(true));
