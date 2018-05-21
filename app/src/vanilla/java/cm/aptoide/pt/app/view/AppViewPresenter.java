@@ -327,8 +327,8 @@ public class AppViewPresenter implements Presenter {
             })
             .filter(isLoggedIn -> isLoggedIn)
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-            .flatMapSingle(model -> appViewManager.flagApp(model.getStore()
-                .getName(), model.getMd5Sum(), type))
+            .flatMapSingle(model -> appViewManager.flagApk(model.getStore()
+                .getName(), model.getMd5(), type))
             .filter(result -> result)
             .observeOn(viewScheduler)
             .doOnNext(__ -> {
@@ -405,7 +405,7 @@ public class AppViewPresenter implements Presenter {
         .filter(response -> response == ShareDialogs.ShareResponse.SHARE_EXTERNAL)
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .observeOn(viewScheduler)
-        .doOnNext(app -> view.defaultShare(app.getAppName(), app.getwUrls()))
+        .doOnNext(app -> view.defaultShare(app.getAppName(), app.getWebUrls()))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -462,7 +462,7 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadAppViewViewModel()
         .flatMap(
             appViewViewModel -> appViewManager.getDownloadAppViewModel(appViewViewModel.getMd5(),
-                appViewViewModel.getPackageName(), appViewViewModel.getVerCode())
+                appViewViewModel.getPackageName(), appViewViewModel.getVersionCode())
                 .first()
                 .observeOn(viewScheduler)
                 .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
@@ -513,7 +513,7 @@ public class AppViewPresenter implements Presenter {
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .flatMapCompletable(
                 app -> appViewManager.cancelDownload(app.getMd5(), app.getPackageName(),
-                    app.getVerCode()))
+                    app.getVersionCode()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -618,7 +618,7 @@ public class AppViewPresenter implements Presenter {
             .toObservable())
         .filter(app -> !app.isLoading())
         .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVerCode()))
+            app.getVersionCode()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

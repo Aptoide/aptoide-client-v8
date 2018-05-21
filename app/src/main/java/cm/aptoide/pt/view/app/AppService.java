@@ -181,11 +181,10 @@ public class AppService {
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
               app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
               file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
-              file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getMd5sum(),
-              file.getPath(), file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper,
-              app.getStore(), app.getMedia(), app.getStats(), app.getObb(), app.getPay(),
-              app.getUrls()
-                  .getW(), app.isPaid(), uName);
+              file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
+              file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
+              app.getMedia(), app.getStats(), app.getObb(), app.getPay(), app.getUrls()
+              .getW(), app.isPaid(), uName);
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

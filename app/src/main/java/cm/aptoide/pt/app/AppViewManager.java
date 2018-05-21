@@ -116,7 +116,7 @@ public class AppViewManager {
   }
 
   private Single<AppViewViewModel> loadAppViewViewModelFromUname(String uName) {
-    if (cachedApp != null && cachedApp.getUname()
+    if (cachedApp != null && cachedApp.getUniqueName()
         .equals(uName)) {
       return createAppViewViewModel(cachedApp);
     }
@@ -140,11 +140,11 @@ public class AppViewManager {
   }
 
   public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
-    return adsManager.loadAdsFromAppView(packageName, storeName);
+    return adsManager.loadAds(packageName, storeName);
   }
 
-  public Single<Boolean> flagApp(String storeName, String md5, FlagsVote.VoteType type) {
-    return flagManager.flagApp(storeName, md5, type.name()
+  public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
+    return flagManager.flagApk(storeName, md5, type.name()
         .toLowerCase())
         .map(response -> (response.isOk() && !response.hasErrors()));
   }
@@ -159,7 +159,7 @@ public class AppViewManager {
   }
 
   private Single<MinimalAd> loadAdForSimilarApps(String packageName, List<String> keyWords) {
-    return adsManager.loadAdForSimilarApps(packageName, keyWords);
+    return adsManager.loadAd(packageName, keyWords);
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {
@@ -176,12 +176,12 @@ public class AppViewManager {
         isStoreFollowed -> new AppViewViewModel(app, app.getId(), app.getName(), app.getStore(),
             appViewConfiguration.getStoreTheme(), app.isGoodApp(), app.getMalware(),
             app.getAppFlags(), app.getTags(), app.getUsedFeatures(), app.getUsedPermissions(),
-            app.getFileSize(), app.getMd5(), app.getMd5Sum(), app.getPath(), app.getPathAlt(),
-            app.getVerCode(), app.getVerName(), app.getPackageName(), app.getSize(),
-            stats.getDownloads(), stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(),
-            app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
-            app.getAdded(), app.getObb(), app.getPay(), app.getwUrls(), app.isPaid(),
-            app.getUname(), appViewConfiguration.shouldInstall(), appViewConfiguration.getAppc(),
+            app.getFileSize(), app.getMd5(), app.getPath(), app.getPathAlt(), app.getVersionCode(),
+            app.getVersionName(), app.getPackageName(), app.getSize(), stats.getDownloads(),
+            stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(), app.getDeveloper(),
+            app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(),
+            app.getObb(), app.getPay(), app.getWebUrls(), app.isPaid(), app.getUniqueName(),
+            appViewConfiguration.shouldInstall(), appViewConfiguration.getAppc(),
             appViewConfiguration.getMinimalAd(), appViewConfiguration.getEditorsChoice(),
             appViewConfiguration.getOriginTag(), isStoreFollowed));
   }
