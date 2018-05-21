@@ -34,7 +34,8 @@ public class AppService {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private boolean loading;
+  private boolean loadingApps;
+  private boolean loadingSimilarApps;
 
   public AppService(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
@@ -49,7 +50,7 @@ public class AppService {
   }
 
   private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new AppsList(true));
     }
     ListAppsRequest.Body body =
@@ -58,9 +59,9 @@ public class AppService {
     body.setStoreId(storeId);
     return new ListAppsRequest(body, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences).observe(bypassCache, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
         .flatMap(appsList -> mapListApps(appsList))
         .toSingle()
         .onErrorReturn(throwable -> createErrorAppsList(throwable));
@@ -84,15 +85,15 @@ public class AppService {
   }
 
   public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String packageName) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.of(packageName, bodyInterceptorV7, appId, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
         .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
@@ -101,16 +102,16 @@ public class AppService {
   //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String storeName,
       String packageName) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.of(appId, null,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
         bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(false, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
         .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
@@ -118,15 +119,15 @@ public class AppService {
 
   //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.of(packageName, storeName, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
         .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
@@ -134,30 +135,30 @@ public class AppService {
 
   //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedAppFromMd5(String md5) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.ofMd5(md5, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences))
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
         .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
   public Single<DetailedAppRequestResult> loadDetailedAppFromUname(String uName) {
-    if (loading) {
+    if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.ofUname(uName, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
         .flatMap(getApp -> mapApp(getApp, uName))
         .toSingle()
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
@@ -192,15 +193,15 @@ public class AppService {
   }
 
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
-    if (loading) {
+    if (loadingSimilarApps) {
       return Single.just(new AppsList(true));
     }
     return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
         bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences).observe(true, false)
-        .doOnSubscribe(() -> loading = true)
-        .doOnUnsubscribe(() -> loading = false)
-        .doOnTerminate(() -> loading = false)
+        .doOnSubscribe(() -> loadingSimilarApps = true)
+        .doOnUnsubscribe(() -> loadingSimilarApps = false)
+        .doOnTerminate(() -> loadingSimilarApps = false)
         .flatMap(appsList -> mapListApps(appsList))
         .toSingle()
         .onErrorReturn(throwable -> createErrorAppsList(throwable));
