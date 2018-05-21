@@ -237,4 +237,12 @@ public class AppViewAnalytics {
     timelineAnalytics.sendSocialCardPreviewActionEvent(
         TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
   }
+
+  public void sendTimelineRecommendSkipEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
+    timelineAnalytics.sendSocialCardPreviewActionEvent(
+        TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
+    ;
+  }
 }

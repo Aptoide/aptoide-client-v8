@@ -1151,13 +1151,22 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     alertDialog.setView(dialogView);
 
     dialogView.findViewById(R.id.continue_button)
-        .setOnClickListener(__ -> continueRecommendsDialogClick.onNext(null));
+        .setOnClickListener(__ -> {
+          continueRecommendsDialogClick.onNext(null);
+          alertDialog.dismiss();
+        });
 
     dialogView.findViewById(R.id.skip_button)
-        .setOnClickListener(__ -> skipRecommendsDialogClick.onNext(null));
+        .setOnClickListener(__ -> {
+          skipRecommendsDialogClick.onNext(null);
+          alertDialog.dismiss();
+        });
 
     dialogView.findViewById(R.id.dont_show_button)
-        .setOnClickListener(__ -> dontShowAgainRecommendsDialogClick.onNext(null));
+        .setOnClickListener(__ -> {
+          dontShowAgainRecommendsDialogClick.onNext(null);
+          alertDialog.dismiss();
+        });
     alertDialog.show();
   }
 
@@ -1172,6 +1181,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void showRecommendsThanksMessage() {
     Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<Void> skipRecommendsDialogClick() {
+    return skipRecommendsDialogClick;
+  }
+
+  @Override public Observable<Void> dontShowAgainRecommendsDialogClick() {
+    return dontShowAgainRecommendsDialogClick;
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {

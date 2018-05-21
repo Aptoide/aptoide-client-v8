@@ -94,6 +94,7 @@ public class AppViewPresenter implements Presenter {
     cancelDownload();
     loadDownloadApp();
     continueRecommendsDialogClick();
+    skipRecommendsDialogClick();
   }
 
   private void handleFirstLoad() {
@@ -641,6 +642,20 @@ public class AppViewPresenter implements Presenter {
             .doOnNext(__ -> appViewAnalytics.sendTimelineRecommendContinueEvents(packageName))
             .doOnNext(__ -> view.showRecommendsThanksMessage())
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new IllegalStateException(error);
+        });
+  }
+
+  private void skipRecommendsDialogClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.skipRecommendsDialogClick()
+            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .doOnNext(
+                app -> appViewAnalytics.sendTimelineRecommendSkipEvents(app.getPackageName())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
