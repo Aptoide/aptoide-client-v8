@@ -38,8 +38,8 @@ public class AppCenter {
     return appCenterRepository.loadDetailedAppFromMd5(md5);
   }
 
-  public Single<DetailedAppRequestResult> loadDetailedAppAppFromUname(String uName) {
-    return appCenterRepository.loadDetailedAppAppFromUname(uName);
+  public Single<DetailedAppRequestResult> loadDetailedAppAppFromUniqueName(String uniqueName) {
+    return appCenterRepository.loadDetailedAppAppFromUniqueName(uniqueName);
   }
 
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {

@@ -14,6 +14,7 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
@@ -78,12 +79,42 @@ public class AppViewManager {
           appViewConfiguration.getStoreName(), appViewConfiguration.getPackageName());
     } else if (appViewConfiguration.hasMd5()) {
       return loadAppViewViewModelFromMd5(appViewConfiguration.getMd5());
-    } else if (appViewConfiguration.hasUname()) {
-      return loadAppViewViewModelFromUname(appViewConfiguration.getuName());
+    } else if (appViewConfiguration.hasUniqueName()) {
+      return loadAppViewViewModelFromUniqueName(appViewConfiguration.getUniqueName());
     } else {
       return loadAppViewViewModel(appViewConfiguration.getPackageName(),
           appViewConfiguration.getStoreName());
     }
+  }
+
+  public Single<ReviewsViewModel> loadReviewsViewModel(String storeName, String packageName,
+      String languagesFilterSort) {
+    return reviewsManager.loadReviews(storeName, packageName, 3, languagesFilterSort)
+        .map(result -> new ReviewsViewModel(result.getReviewList(), result.isLoading(),
+            result.getError()));
+  }
+
+  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
+    return loadAdForSimilarApps(packageName, keyWords).flatMap(
+        ad -> loadRecommended(limit, packageName).map(
+            recommendedAppsRequestResult -> new SimilarAppsViewModel(ad,
+                recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
+                recommendedAppsRequestResult.getError())));
+  }
+
+  public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
+    return adsManager.loadAds(packageName, storeName);
+  }
+
+  public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
+    return flagManager.flagApk(storeName, md5, type.name()
+        .toLowerCase())
+        .map(response -> (response.isOk() && !response.hasErrors()));
+  }
+
+  public Completable subscribeStore(String storeName) {
+    return Completable.fromAction(
+        () -> storeUtilsProxy.subscribeStore(storeName, null, null, aptoideAccountManager));
   }
 
   private Single<AppViewViewModel> loadAppViewViewModel(long appId, String storeName,
@@ -115,43 +146,13 @@ public class AppViewManager {
         .flatMap(result -> map(result));
   }
 
-  private Single<AppViewViewModel> loadAppViewViewModelFromUname(String uName) {
+  private Single<AppViewViewModel> loadAppViewViewModelFromUniqueName(String uniqueName) {
     if (cachedApp != null && cachedApp.getUniqueName()
-        .equals(uName)) {
+        .equals(uniqueName)) {
       return createAppViewViewModel(cachedApp);
     }
-    return appCenter.loadDetailedAppAppFromUname(uName)
+    return appCenter.loadDetailedAppAppFromUniqueName(uniqueName)
         .flatMap(result -> map(result));
-  }
-
-  public Single<ReviewsViewModel> loadReviewsViewModel(String storeName, String packageName,
-      int maxReviews, String languagesFilterSort) {
-    return reviewsManager.loadReviews(storeName, packageName, maxReviews, languagesFilterSort)
-        .map(result -> new ReviewsViewModel(result.getReviewList(), result.isLoading(),
-            result.getError()));
-  }
-
-  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
-    return loadAdForSimilarApps(packageName, keyWords).flatMap(
-        ad -> loadRecommended(limit, packageName).map(
-            recommendedAppsRequestResult -> new SimilarAppsViewModel(ad,
-                recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError())));
-  }
-
-  public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
-    return adsManager.loadAds(packageName, storeName);
-  }
-
-  public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
-    return flagManager.flagApk(storeName, md5, type.name()
-        .toLowerCase())
-        .map(response -> (response.isOk() && !response.hasErrors()));
-  }
-
-  public Completable subscribeStore(String storeName) {
-    return Completable.fromAction(
-        () -> storeUtilsProxy.subscribeStore(storeName, null, null, aptoideAccountManager));
   }
 
   private Single<AppsList> loadRecommended(int limit, String packageName) {
@@ -169,7 +170,7 @@ public class AppViewManager {
   }
 
   private Single<AppViewViewModel> createAppViewViewModel(DetailedApp app) {
-    GetAppMeta.Stats stats = app.getStats();
+    AppStats stats = app.getStats();
     cachedApp = app;
     return isStoreFollowed(cachedApp.getStore()
         .getId()).map(
@@ -178,12 +179,13 @@ public class AppViewManager {
             app.getAppFlags(), app.getTags(), app.getUsedFeatures(), app.getUsedPermissions(),
             app.getFileSize(), app.getMd5(), app.getPath(), app.getPathAlt(), app.getVersionCode(),
             app.getVersionName(), app.getPackageName(), app.getSize(), stats.getDownloads(),
-            stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(), app.getDeveloper(),
-            app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(),
-            app.getObb(), app.getPay(), app.getWebUrls(), app.isPaid(), app.getUniqueName(),
-            appViewConfiguration.shouldInstall(), appViewConfiguration.getAppc(),
-            appViewConfiguration.getMinimalAd(), appViewConfiguration.getEditorsChoice(),
-            appViewConfiguration.getOriginTag(), isStoreFollowed));
+            stats.getGlobalRating(), stats.getPackageDownloads(), stats.getRating(),
+            app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
+            app.getAdded(), app.getObb(), app.getPay(), app.getWebUrls(), app.isPaid(),
+            app.getUniqueName(), appViewConfiguration.shouldInstall(),
+            appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
+            appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
+            isStoreFollowed));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {

@@ -51,7 +51,6 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -71,6 +70,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
+import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
@@ -604,13 +604,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (reviews != null && !reviews.isEmpty()) {
       showReviews(true, app.getGlobalRating()
           .getTotal(), app.getRating()
-          .getAvg());
+          .getAverage());
 
       reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new Review[reviews.size()]));
     } else {
       showReviews(false, app.getGlobalRating()
           .getTotal(), app.getRating()
-          .getAvg());
+          .getAverage());
       reviewsAdapter = new TopReviewsAdapter();
     }
 
@@ -963,7 +963,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private void setReadMoreClickListener(String appName, GetAppMeta.Media media, Store store) {
+  private void setReadMoreClickListener(String appName, AppMedia media, Store store) {
     descriptionReadMore.setOnClickListener(view -> readMoreClick.onNext(
         new ReadMoreClickEvent(appName, media.getDescription(), store.getAppearance()
             .getTheme())));
