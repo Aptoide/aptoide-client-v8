@@ -535,9 +535,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     ImageLoader.with(getContext())
         .load(model.getIcon(), appIcon);
     downloadsTop.setText(
-        String.format("%s", AptoideUtils.StringU.withSuffix(model.getpDownloads())));
-    sizeInfo.setText(AptoideUtils.StringU.formatBytes(model
-        .getSize(), false));
+        String.format("%s", AptoideUtils.StringU.withSuffix(model.getPackageDownloads())));
+    sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
     if (appcReward != -1) {
       appcRewardView.setVisibility(View.VISIBLE);
       appcRewardValue.setText(formatAppCoinsRewardMessage());

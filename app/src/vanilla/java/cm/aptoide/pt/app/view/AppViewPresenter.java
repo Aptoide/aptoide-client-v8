@@ -240,17 +240,14 @@ public class AppViewPresenter implements Presenter {
           if (model.isStoreFollowed()) {
             view.setFollowButton(true);
             appViewAnalytics.sendOpenStoreEvent();
-            appViewNavigator.navigateToStore(model
-                .getStore());
+            appViewNavigator.navigateToStore(model.getStore());
             return Completable.complete();
           } else {
             view.setFollowButton(false);
             appViewAnalytics.sendFollowStoreEvent();
-            view.displayStoreFollowedSnack(model
-                .getStore()
+            view.displayStoreFollowedSnack(model.getStore()
                 .getName());
-            return appViewManager.subscribeStore(model
-                .getStore()
+            return appViewManager.subscribeStore(model.getStore()
                 .getName());
           }
         })
@@ -268,8 +265,8 @@ public class AppViewPresenter implements Presenter {
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(model -> {
           appViewAnalytics.sendOtherVersionsEvent();
-          appViewNavigator.navigateToOtherVersions(model.getAppName(), model.getIcon(), model
-              .getPackageName());
+          appViewNavigator.navigateToOtherVersions(model.getAppName(), model.getIcon(),
+              model.getPackageName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
