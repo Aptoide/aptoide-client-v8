@@ -547,7 +547,6 @@ public class AppViewPresenter implements Presenter {
         .flatMap(create -> accountManager.accountStatus())
         .observeOn(viewScheduler)
         .flatMap(account -> view.installAppClick()
-            .doOnError(__ -> System.out.println("wtfff"))
             .flatMapCompletable(action -> {
               Completable completable = null;
               switch (action) {
@@ -647,7 +646,6 @@ public class AppViewPresenter implements Presenter {
         }, error -> {
           throw new IllegalStateException(error);
         });
-    ;
   }
 }
 

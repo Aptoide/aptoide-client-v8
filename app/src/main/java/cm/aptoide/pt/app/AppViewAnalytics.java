@@ -232,6 +232,7 @@ public class AppViewAnalytics {
   }
 
   public void sendTimelineRecommendContinueEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
     timelineAnalytics.sendSocialCardPreviewActionEvent(
         TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
