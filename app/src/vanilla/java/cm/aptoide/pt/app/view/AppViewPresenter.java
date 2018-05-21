@@ -640,7 +640,8 @@ public class AppViewPresenter implements Presenter {
             .flatMapCompletable(app -> appViewManager.shareOnTimeline(app.getPackageName(),
                 app.getStore()
                     .getId(), "install"))
-            .doOnNext(__ -> appViewAnalytics.sendTimelineRecommendContinueEvents(packageName))
+            .doOnNext(
+                __ -> appViewAnalytics.sendTimelineInstallRecommendContinueEvents(packageName))
             .doOnNext(__ -> view.showRecommendsThanksMessage())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -655,8 +656,8 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.skipRecommendsDialogClick()
             .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
-            .doOnNext(
-                app -> appViewAnalytics.sendTimelineRecommendSkipEvents(app.getPackageName())))
+            .doOnNext(app -> appViewAnalytics.sendTimelineInstallRecommendSkipEvents(
+                app.getPackageName())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

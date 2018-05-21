@@ -231,14 +231,14 @@ public class AppViewAnalytics {
         DownloadAnalytics.AppContext.APPVIEW, action);
   }
 
-  public void sendTimelineRecommendContinueEvents(String packageName) {
+  public void sendTimelineInstallRecommendContinueEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
     timelineAnalytics.sendSocialCardPreviewActionEvent(
         TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
   }
 
-  public void sendTimelineRecommendSkipEvents(String packageName) {
+  public void sendTimelineInstallRecommendSkipEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
     timelineAnalytics.sendSocialCardPreviewActionEvent(
