@@ -14,6 +14,7 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
@@ -169,7 +170,7 @@ public class AppViewManager {
   }
 
   private Single<AppViewViewModel> createAppViewViewModel(DetailedApp app) {
-    GetAppMeta.Stats stats = app.getStats();
+    AppStats stats = app.getStats();
     cachedApp = app;
     return isStoreFollowed(cachedApp.getStore()
         .getId()).map(
@@ -178,12 +179,13 @@ public class AppViewManager {
             app.getAppFlags(), app.getTags(), app.getUsedFeatures(), app.getUsedPermissions(),
             app.getFileSize(), app.getMd5(), app.getPath(), app.getPathAlt(), app.getVersionCode(),
             app.getVersionName(), app.getPackageName(), app.getSize(), stats.getDownloads(),
-            stats.getGlobalRating(), stats.getPdownloads(), stats.getRating(), app.getDeveloper(),
-            app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(), app.getAdded(),
-            app.getObb(), app.getPay(), app.getWebUrls(), app.isPaid(), app.getUniqueName(),
-            appViewConfiguration.shouldInstall(), appViewConfiguration.getAppc(),
-            appViewConfiguration.getMinimalAd(), appViewConfiguration.getEditorsChoice(),
-            appViewConfiguration.getOriginTag(), isStoreFollowed));
+            stats.getGlobalRating(), stats.getPackageDownloads(), stats.getRating(),
+            app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
+            app.getAdded(), app.getObb(), app.getPay(), app.getWebUrls(), app.isPaid(),
+            app.getUniqueName(), appViewConfiguration.shouldInstall(),
+            appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
+            appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
+            isStoreFollowed));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {

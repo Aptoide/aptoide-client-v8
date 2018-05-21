@@ -613,13 +613,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (reviews != null && !reviews.isEmpty()) {
       showReviews(true, app.getGlobalRating()
           .getTotal(), app.getRating()
-          .getAvg());
+          .getAverage());
 
       reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new Review[reviews.size()]));
     } else {
       showReviews(false, app.getGlobalRating()
           .getTotal(), app.getRating()
-          .getAvg());
+          .getAverage());
       reviewsAdapter = new TopReviewsAdapter();
     }
 

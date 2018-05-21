@@ -84,22 +84,6 @@ public class AppService {
     }
   }
 
-  public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String packageName) {
-    if (loadingApps) {
-      return Single.just(new DetailedAppRequestResult(true));
-    }
-    return GetAppRequest.of(packageName, bodyInterceptorV7, appId, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
-        .observe(false, false)
-        .doOnSubscribe(() -> loadingApps = true)
-        .doOnUnsubscribe(() -> loadingApps = false)
-        .doOnTerminate(() -> loadingApps = false)
-        .flatMap(getApp -> mapApp(getApp, ""))
-        .toSingle()
-        .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
-  }
-
-  //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String storeName,
       String packageName) {
     if (loadingApps) {
@@ -117,7 +101,6 @@ public class AppService {
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
     if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
@@ -133,7 +116,6 @@ public class AppService {
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
-  //Might need PaidApp logic
   public Single<DetailedAppRequestResult> loadDetailedAppFromMd5(String md5) {
     if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));
@@ -177,13 +159,22 @@ public class AppService {
       AppDeveloper appDeveloper =
           new AppDeveloper(developer.getName(), developer.getEmail(), developer.getPrivacy(),
               developer.getWebsite());
+      GetAppMeta.Stats stats = app.getStats();
+      GetAppMeta.Stats.Rating rating = stats.getRating();
+      GetAppMeta.Stats.Rating globalRating = stats.getGlobalRating();
+      AppRating appRating =
+          new AppRating(rating.getAvg(), rating.getTotal(), mapToRatingsVote(rating.getVotes()));
+      AppRating globalAppRating = new AppRating(globalRating.getAvg(), globalRating.getTotal(),
+          mapToRatingsVote(globalRating.getVotes()));
+      AppStats appStats =
+          new AppStats(appRating, globalAppRating, stats.getDownloads(), stats.getPdownloads());
       DetailedApp detailedApp =
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
               app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
               file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
               file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
               file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
-              app.getMedia(), app.getStats(), app.getObb(), app.getPay(), app.getUrls()
+              app.getMedia(), appStats, app.getObb(), app.getPay(), app.getUrls()
               .getW(), app.isPaid(), uName);
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
@@ -235,13 +226,23 @@ public class AppService {
     List<FlagsVote> flagsVotes = new ArrayList<>();
     if (votes != null) {
       for (GetAppMeta.GetAppMetaFile.Flags.Vote vote : votes) {
-        flagsVotes.add(new FlagsVote(vote.getCount(), mapToFlagsVoteType(vote.getType())));
+        flagsVotes.add(new FlagsVote(vote.getCount(), map(vote.getType())));
       }
     }
     return flagsVotes;
   }
 
-  private FlagsVote.VoteType mapToFlagsVoteType(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
+  private List<RatingVote> mapToRatingsVote(List<GetAppMeta.Stats.Rating.Vote> votes) {
+    List<RatingVote> ratingVotes = new ArrayList<>();
+    if (ratingVotes != null) {
+      for (GetAppMeta.Stats.Rating.Vote vote : votes) {
+        ratingVotes.add(new RatingVote(vote.getCount(), vote.getValue()));
+      }
+    }
+    return ratingVotes;
+  }
+
+  private FlagsVote.VoteType map(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type) {
     FlagsVote.VoteType flagsVoteVoteType = null;
     switch (type) {
       case FAKE:

@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
+import cm.aptoide.pt.view.app.AppRating;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.List;
 
@@ -50,9 +51,9 @@ public class AppViewViewModel {
   private final String packageName;
   private final long size;
   private final int downloads;
-  private final GetAppMeta.Stats.Rating globalRating;
+  private final AppRating globalRating;
   private final int packageDownloads;
-  private final GetAppMeta.Stats.Rating rating;
+  private final AppRating rating;
   private final AppDeveloper appDeveloper;
   private final String graphic;
   private final String icon;
@@ -63,11 +64,11 @@ public class AppViewViewModel {
       boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
       List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
       String path, String pathAlt, int versionCode, String versionName, String packageName,
-      long size, int downloads, GetAppMeta.Stats.Rating globalRating, int packageDownloads,
-      GetAppMeta.Stats.Rating rating, AppDeveloper appDeveloper, String graphic, String icon,
-      GetAppMeta.Media media, String modified, String appAdded, Obb obb, GetAppMeta.Pay pay,
-      String webUrls, boolean isPaid, String uniqueName, OpenType shouldInstall, double appc,
-      SearchAdResult minimalAd, String editorsChoice, String originTag, boolean isStoreFollowed) {
+      long size, int downloads, AppRating globalRating, int packageDownloads, AppRating rating,
+      AppDeveloper appDeveloper, String graphic, String icon, GetAppMeta.Media media,
+      String modified, String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid,
+      String uniqueName, OpenType shouldInstall, double appc, SearchAdResult minimalAd,
+      String editorsChoice, String originTag, boolean isStoreFollowed) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -259,7 +260,7 @@ public class AppViewViewModel {
     return downloads;
   }
 
-  public GetAppMeta.Stats.Rating getGlobalRating() {
+  public AppRating getGlobalRating() {
     return globalRating;
   }
 
@@ -267,7 +268,7 @@ public class AppViewViewModel {
     return packageDownloads;
   }
 
-  public GetAppMeta.Stats.Rating getRating() {
+  public AppRating getRating() {
     return rating;
   }
 

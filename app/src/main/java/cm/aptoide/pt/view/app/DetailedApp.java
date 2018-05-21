@@ -35,7 +35,7 @@ public class DetailedApp {
   private final AppDeveloper appDeveloper;
   private final Store store;
   private final GetAppMeta.Media media;
-  private final GetAppMeta.Stats stats;
+  private final AppStats stats;
   private final Obb obb;
   private final GetAppMeta.Pay pay;
   private final String webUrls;
@@ -46,8 +46,8 @@ public class DetailedApp {
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
       AppFlags appFlags, List<String> tags, List<String> usedFeatures, List<String> usedPermissions,
       long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
-      AppDeveloper appDeveloper, Store store, GetAppMeta.Media media, GetAppMeta.Stats stats,
-      Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid, String uniqueName) {
+      AppDeveloper appDeveloper, Store store, GetAppMeta.Media media, AppStats stats, Obb obb,
+      GetAppMeta.Pay pay, String webUrls, boolean isPaid, String uniqueName) {
 
     this.id = id;
     this.name = name;
@@ -124,7 +124,7 @@ public class DetailedApp {
     return media;
   }
 
-  public GetAppMeta.Stats getStats() {
+  public AppStats getStats() {
     return stats;
   }
 
