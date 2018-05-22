@@ -107,11 +107,10 @@ public class AppViewPresenter implements Presenter {
             appViewAnalytics.sendEditorsChoiceClickEvent(model.getPackageName(),
                 model.getEditorsChoice());
           }
-          appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(),
-            model.getDeveloper()
-                .getName(), model.getMalware()
-                .getRank()
-                  .name(), model.getAppc());
+          appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
+              .getName(), model.getMalware()
+              .getRank()
+              .name(), model.getAppc());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
