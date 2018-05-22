@@ -1266,10 +1266,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
             getPackageName(), getEditorsBrickPosition());
       }
       appViewAnalytics.sendAppViewOpenedFromEvent(getPackageName(), app.getDeveloper()
-              .getName(), app.getFile()
-              .getMalware()
-              .getRank()
-              .name());
+          .getName(), app.getFile()
+          .getMalware()
+          .getRank()
+          .name());
       final Malware malware = app.getFile()
           .getMalware();
       badge.setOnClickListener(v -> {

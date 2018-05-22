@@ -6,6 +6,7 @@ import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.appview.InstallAppView;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
@@ -124,4 +125,6 @@ public interface AppViewView extends InstallAppView {
   void recommendsShare(String packageName, Long storeId);
 
   void scrollReviews(Integer position);
+
+  void extractReferrer(SearchAdResult searchAdResult);
 }

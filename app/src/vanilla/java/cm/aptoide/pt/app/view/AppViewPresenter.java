@@ -16,6 +16,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.concurrent.TimeUnit;
@@ -98,7 +99,9 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> loadApp())
+        .flatMap(__ -> loadApp().flatMap(
+            appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).toObservable()
+                .map(__1 -> appViewViewModel)))
         .doOnNext(model -> appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(),
             model.getDeveloper()
                 .getName(), model.getMalware()
@@ -107,6 +110,25 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private Completable manageOrganicAds(SearchAdResult searchAdResult) {
+    if (searchAdResult == null) {
+      return appViewManager.loadAdsFromAppView()
+          .doOnSuccess(ad -> {
+            appViewManager.setSearchAdResult(ad);
+            handleAdsLogic(appViewManager.getSearchAdResult());
+          })
+          .doOnError(throwable -> crashReport.log(throwable))
+          .toCompletable();
+    }
+    return Completable.complete()
+        .doOnCompleted(() -> handleAdsLogic(searchAdResult));
+  }
+
+  private void handleAdsLogic(SearchAdResult searchAdResult) {
+    appViewManager.handleAdsLogic(searchAdResult);
+    view.extractReferrer(searchAdResult);
   }
 
   private void handleReviewAutoScroll() {

@@ -11,6 +11,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
@@ -47,6 +48,7 @@ public class AppViewManager {
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
   private DetailedApp cachedApp;
+  private SearchAdResult searchAdResult;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
@@ -102,8 +104,10 @@ public class AppViewManager {
                 recommendedAppsRequestResult.getError())));
   }
 
-  public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
-    return adsManager.loadAds(packageName, storeName);
+  public Single<SearchAdResult> loadAdsFromAppView() {
+    return adsManager.loadAds(cachedApp.getPackageName(), cachedApp.getStore()
+        .getName())
+        .map(SearchAdResult::new);
   }
 
   public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
@@ -286,5 +290,17 @@ public class AppViewManager {
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
     return Completable.fromAction(
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+  }
+
+  public SearchAdResult getSearchAdResult() {
+    return searchAdResult;
+  }
+
+  public void setSearchAdResult(SearchAdResult searchAdResult) {
+    this.searchAdResult = searchAdResult;
+  }
+
+  public void handleAdsLogic(SearchAdResult searchAdResult) {
+    adsManager.handleAdsLogic(searchAdResult);
   }
 }
