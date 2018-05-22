@@ -660,12 +660,12 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.continueRecommendsDialogClick()
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .flatMapCompletable(app -> appViewManager.shareOnTimeline(app.getPackageName(),
                 app.getStore()
                     .getId(), "install"))
-            .doOnNext(
-                __ -> appViewAnalytics.sendTimelineInstallRecommendContinueEvents(packageName))
+            .doOnNext(app -> appViewAnalytics.sendTimelineInstallRecommendContinueEvents(
+                app.getPackageName()))
             .doOnNext(__ -> view.showRecommendsThanksMessage())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -679,7 +679,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.skipRecommendsDialogClick()
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .doOnNext(app -> appViewAnalytics.sendTimelineInstallRecommendSkipEvents(
                 app.getPackageName())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -694,7 +694,7 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.dontShowAgainRecommendsDialogClick()
             .flatMapCompletable(__ -> appViewManager.dontShowInstallRecommendsPreviewDialog())
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .doOnNext(app -> appViewAnalytics.sendTimelineInstallRecommendDontShowMeAgainEvents(
                 app.getPackageName())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -709,7 +709,7 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> appViewNavigator.notLoggedInViewResults()
             .filter(success -> success)
-            .flatMapSingle(__ -> appViewManager.getDetailedAppViewModel(appId, packageName))
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .flatMapCompletable(app -> appViewManager.shareOnTimelineAsync(app.getPackageName(),
                 app.getStore()
                     .getId())
