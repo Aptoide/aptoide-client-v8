@@ -3,7 +3,6 @@ package cm.aptoide.pt.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -139,9 +138,7 @@ import rx.schedulers.Schedulers;
       TrendingManager trendingManager, SearchSuggestionManager searchSuggestionManager,
       BottomNavigationMapper bottomNavigationMapper) {
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
-        CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager,
-        ((AptoideApplication) fragment.getContext()
-            .getApplicationContext()).getDefaultThemeName(), trendingManager,
+        CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
   }

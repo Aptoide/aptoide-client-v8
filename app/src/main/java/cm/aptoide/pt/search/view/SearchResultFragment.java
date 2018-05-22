@@ -150,8 +150,9 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   public static SearchResultFragment newInstance(String currentQuery, String storeName,
-      String defaultStoreName) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, defaultStoreName);
+      String storeTheme, String defaultStoreName) {
+    SearchViewModel viewModel =
+        new SearchViewModel(currentQuery, storeName, storeTheme, defaultStoreName);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -524,8 +525,9 @@ public class SearchResultFragment extends BackButtonFragment
       allStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
     }
     viewModel.setAllStoresSelected(false);
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      followedStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+    String storeTheme = viewModel.getStoreTheme();
+    if (storeThemeExists(storeTheme)) {
+      followedStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
           .getRoundGradientButtonDrawable());
     }
   }
@@ -540,10 +542,15 @@ public class SearchResultFragment extends BackButtonFragment
       allStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
     }
     viewModel.setAllStoresSelected(true);
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      allStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+    String storeTheme = viewModel.getStoreTheme();
+    if (storeThemeExists(storeTheme)) {
+      allStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
           .getRoundGradientButtonDrawable());
     }
+  }
+
+  private boolean storeThemeExists(String storeTheme) {
+    return (storeTheme != null && storeTheme.length() > 0);
   }
 
   private boolean hasSearchResults() {
@@ -646,11 +653,30 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupTheme() {
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
+    if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
+      String storeTheme = viewModel.getStoreTheme();
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+      toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
+          .getGradientDrawable());
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
+        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
+            StoreTheme.get(storeTheme)
+                .getPrimaryColor()));
+        progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
+      } else {
+        progressBar.getIndeterminateDrawable()
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(storeTheme)
+                .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
+      }
+    }
+  }
+
+  private void setupDefaultTheme() {
+    if (storeThemeExists(defaultThemeName)) {
       ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
-      toolbar.setBackgroundResource(StoreTheme.get(defaultThemeName)
-          .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
@@ -668,7 +694,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void onDestroyView() {
     allStoresResultList.clearAnimation();
     followedStoresResultList.clearAnimation();
-    setupTheme();
+    setupDefaultTheme();
     super.onDestroyView();
   }
 
