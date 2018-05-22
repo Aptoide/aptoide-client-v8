@@ -577,8 +577,21 @@ public class AppViewPresenter implements Presenter {
               switch (action) {
                 case INSTALL:
                 case UPDATE:
-                  completable = downloadApp(action).observeOn(viewScheduler)
-                      .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn()));
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(
+                          appViewViewModel -> downloadApp(action).observeOn(viewScheduler)
+                              .doOnCompleted(() -> {
+                                if (account.isLoggedIn()
+                                    && appViewManager.shouldShowRecommendsPreviewDialog()) {
+                                  view.showRecommendsDialog();
+                                  appViewAnalytics.sendRecommendAppDialogShowEvent(
+                                      appViewViewModel.getPackageName());
+                                } else if (!account.isLoggedIn()
+                                    && appViewManager.canShowNotLoggedInDialog()) {
+                                  appViewNavigator.navigateToNotLoggedInShareFragmentForResult();
+                                }
+                              }));
                   break;
                 case OPEN:
                   completable = openInstalledApp();
@@ -592,6 +605,7 @@ public class AppViewPresenter implements Presenter {
               }
               return completable;
             })
+            .doOnError(throwable -> throwable.printStackTrace())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -600,15 +614,7 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void showRecommendsDialog(boolean isLoggedIn) {
 
-    if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
-      view.showRecommendsDialog();
-    } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
-      view.showNotLoggedInDialog();
-      appViewNavigator.navigateToNotLoggedInShareFragmentForResult();
-    }
-  }
 
   private Completable downgradeApp(DownloadAppViewModel.Action action) {
     return view.showDowngradeMessage()

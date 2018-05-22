@@ -78,11 +78,11 @@ public class AppViewAnalytics {
 
   public void sendAppViewOpenedFromEvent(String packageName, String appPublisher, String badge) {
     analyticsManager.logEvent(createAppViewedFromMap(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), packageName, appPublisher, badge),
-        APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
+        navigationTracker.getCurrentScreen(), packageName, appPublisher, badge), APP_VIEW_OPEN_FROM,
+        AnalyticsManager.Action.CLICK, getViewName(false));
     analyticsManager.logEvent(createAppViewDataMap(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), packageName),
-        OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
+        navigationTracker.getCurrentScreen(), packageName), OPEN_APP_VIEW,
+        AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private Map<String, Object> createAppViewDataMap(ScreenTagHistory previousScreen,
@@ -248,21 +248,18 @@ public class AppViewAnalytics {
   }
 
   public void sendTimelineInstallRecommendContinueEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
     timelineAnalytics.sendSocialCardPreviewActionEvent(
         TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
   }
 
   public void sendTimelineInstallRecommendSkipEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
     timelineAnalytics.sendSocialCardPreviewActionEvent(
         TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
   }
 
   public void sendTimelineInstallRecommendDontShowMeAgainEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
     timelineAnalytics.sendSocialCardPreviewActionEvent(
         TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
@@ -274,5 +271,9 @@ public class AppViewAnalytics {
 
   public void sendFailedShareEvent() {
     notLoggedInShareAnalytics.sendShareFail();
+  }
+
+  public void sendRecommendAppDialogShowEvent(String packageName) {
+    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
   }
 }
