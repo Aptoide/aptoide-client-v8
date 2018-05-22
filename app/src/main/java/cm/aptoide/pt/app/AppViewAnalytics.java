@@ -249,20 +249,14 @@ public class AppViewAnalytics {
 
   public void sendTimelineInstallRecommendContinueEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
-    timelineAnalytics.sendSocialCardPreviewActionEvent(
-        TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
   }
 
   public void sendTimelineInstallRecommendSkipEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
-    timelineAnalytics.sendSocialCardPreviewActionEvent(
-        TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
   }
 
   public void sendTimelineInstallRecommendDontShowMeAgainEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
-    timelineAnalytics.sendSocialCardPreviewActionEvent(
-        TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
   }
 
   public void sendSuccessShareEvent() {
