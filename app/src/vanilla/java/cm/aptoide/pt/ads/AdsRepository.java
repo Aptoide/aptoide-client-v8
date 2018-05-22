@@ -82,7 +82,7 @@ public class AdsRepository {
     return getAdsResponse != null && validAds(getAdsResponse.getAds());
   }
 
-  public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
+  public Observable<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
@@ -138,7 +138,7 @@ public class AdsRepository {
         });
   }
 
-  public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,
+  public Observable<List<MinimalAd>> loadAdsFromAppviewSuggested(String packageName,
       List<String> keywords) {
     return accountManager.accountStatus()
         .first()

@@ -76,12 +76,12 @@ public class AppViewAnalytics {
     return map;
   }
 
-  public void sendAppViewOpenedFromEvent(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
-    analyticsManager.logEvent(
-        createAppViewedFromMap(previousScreen, currentScreen, packageName, appPublisher, badge),
+  public void sendAppViewOpenedFromEvent(String packageName, String appPublisher, String badge) {
+    analyticsManager.logEvent(createAppViewedFromMap(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), packageName, appPublisher, badge),
         APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
-    analyticsManager.logEvent(createAppViewDataMap(previousScreen, currentScreen, packageName),
+    analyticsManager.logEvent(createAppViewDataMap(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), packageName),
         OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
@@ -172,10 +172,22 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
+  public void sendSimilarAppsInteractEvent(String type) {
+    analyticsManager.logEvent(createSimilarAppsEventData(type), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
   private Map<String, Object> createFlagAppEventData(String action, String flagDetail) {
     Map<String, Object> map = new HashMap<>();
     map.put(ACTION, action);
     map.put("flag_details", flagDetail);
+    return map;
+  }
+
+  private Map<String, Object> createSimilarAppsEventData(String type) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(ACTION, "Open App on Recommended for you");
+    map.put("bundle_tag", type);
     return map;
   }
 

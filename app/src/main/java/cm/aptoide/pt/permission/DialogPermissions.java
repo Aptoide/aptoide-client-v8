@@ -19,13 +19,13 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.permissions.ApkPermission;
 import cm.aptoide.pt.permissions.ApkPermissionGroup;
 import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.app.DetailedApp;
 import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.List;
 public class DialogPermissions extends DialogFragment {
 
   private GetApp getApp;
-  private DetailedApp app;
+  private AppViewViewModel app;
   private String appName;
   private String versionName;
   private String icon;
@@ -60,11 +60,11 @@ public class DialogPermissions extends DialogFragment {
     return dialog;
   }
 
-  public static DialogPermissions newInstance(DetailedApp app) {
+  public static DialogPermissions newInstance(AppViewViewModel app) {
     DialogPermissions dialog = new DialogPermissions();
     dialog.app = app;
-    dialog.appName = app.getName();
-    dialog.versionName = app.getVerName();
+    dialog.appName = app.getAppName();
+    dialog.versionName = app.getVersionName();
     dialog.icon = app.getIcon();
     dialog.size =
         AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),

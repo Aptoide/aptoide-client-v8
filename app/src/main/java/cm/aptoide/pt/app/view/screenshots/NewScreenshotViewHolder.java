@@ -10,8 +10,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.view.app.AppScreenshot;
+import cm.aptoide.pt.view.app.AppVideo;
 import java.util.ArrayList;
 import rx.subjects.PublishSubject;
 
@@ -39,7 +40,7 @@ public class NewScreenshotViewHolder extends RecyclerView.ViewHolder {
     media_layout = (FrameLayout) itemView.findViewById(R.id.media_layout);
   }
 
-  public void bindView(GetAppMeta.Media.Video item) {
+  public void bindView(AppVideo item) {
 
     final Context context = screenshot.getContext();
     if (context == null) {
@@ -67,8 +68,7 @@ public class NewScreenshotViewHolder extends RecyclerView.ViewHolder {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
   }
 
-  public void bindView(GetAppMeta.Media.Screenshot item, final int position,
-      final ArrayList<String> imagesUris) {
+  public void bindView(AppScreenshot item, final int position, final ArrayList<String> imagesUris) {
 
     final Context context = screenshot.getContext();
     if (context == null) {

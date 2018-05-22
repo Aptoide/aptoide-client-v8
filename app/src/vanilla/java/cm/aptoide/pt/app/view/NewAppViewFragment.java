@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,7 +44,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppViewSimilarApp;
-import cm.aptoide.pt.app.DetailedAppViewModel;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
@@ -51,6 +53,7 @@ import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Review;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
@@ -65,9 +68,10 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
+import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.Application;
-import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
@@ -123,6 +127,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
 
   //Views
+  private NestedScrollView scrollView;
   private View noNetworkErrorView;
   private View genericErrorView;
   private View genericRetryButton;
@@ -135,7 +140,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private TextView trustedText;
   private TextView downloadsTop;
   private TextView sizeInfo;
-  private TextView appcValue;
   private View appcRewardView;
   private TextView appcRewardValue;
   private View similarDownloadView;
@@ -191,8 +195,26 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ImageView resumeDownload;
   private DownloadAppViewModel.Action action;
 
+  public static NewAppViewFragment newInstanceUname(String uname) {
+    Bundle bundle = new Bundle();
+    bundle.putString(NewAppViewFragment.BundleKeys.UNAME.name(), uname);
+
+    NewAppViewFragment fragment = new NewAppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
+  public static NewAppViewFragment newInstance(String md5) {
+    Bundle bundle = new Bundle();
+    bundle.putString(NewAppViewFragment.BundleKeys.MD5.name(), md5);
+
+    NewAppViewFragment fragment = new NewAppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
   public static NewAppViewFragment newInstance(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag) {
+      NewAppViewFragment.OpenType openType, String tag) {
     Bundle bundle = new Bundle();
     bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
@@ -204,7 +226,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   public static NewAppViewFragment newInstance(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag, double appcReward) {
+      NewAppViewFragment.OpenType openType, String tag, double appcReward) {
     Bundle bundle = new Bundle();
     bundle.putString(ORIGIN_TAG, tag);
     bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
@@ -238,14 +260,19 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    scrollView = (NestedScrollView) view.findViewById(R.id.scroll_view_app);
+
+    ViewTreeObserver vto = scrollView.getViewTreeObserver();
 
     if (savedInstanceState != null) {
-      appId = savedInstanceState.getLong(NewAppViewFragment.BundleKeys.APP_ID.name(), -1);
-      packageName =
-          savedInstanceState.getString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), null);
-      appcReward = savedInstanceState.getDouble(BundleKeys.APPC.name(), -1);
-    } else {
-      appcReward = -1;
+      int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
+      if (position != null) {
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+          public void onGlobalLayout() {
+            scrollView.scrollTo(position[0], position[1]);
+          }
+        });
+      }
     }
 
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
@@ -261,8 +288,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     trustedText = (TextView) view.findViewById(R.id.trusted_text);
     downloadsTop = (TextView) view.findViewById(R.id.header_downloads);
     sizeInfo = (TextView) view.findViewById(R.id.header_size);
-    appcValue = (TextView) view.findViewById(R.id.appc_layout)
-        .findViewById(R.id.appcoins_reward_message);
     appcRewardView = view.findViewById(R.id.appc_layout);
     appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
@@ -345,10 +370,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     similarAppsAdapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("#,#"),
-            similarAppClick);
+            similarAppClick, "similar_apps");
     similarDownloadsAdapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("#,#"),
-            similarAppClick);
+            similarAppClick, "similar_downloads");
 
     similarDownloadApps.setAdapter(similarDownloadsAdapter);
     similarApps.setAdapter(similarAppsAdapter);
@@ -379,7 +404,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void onResume() {
-
     super.onResume();
   }
 
@@ -389,6 +413,75 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onDestroy() {
     super.onDestroy();
+
+    noNetworkErrorView = null;
+    genericErrorView = null;
+    genericRetryButton = null;
+    noNetworkRetryButton = null;
+    appIcon = null;
+    trustedBadge = null;
+    appName = null;
+    trustedLayout = null;
+    trustedText = null;
+    downloadsTop = null;
+    sizeInfo = null;
+    appcRewardView = null;
+    appcRewardValue = null;
+    similarDownloadView = null;
+    similarDownloadApps = null;
+    latestVersion = null;
+    otherVersions = null;
+    screenshots = null;
+    descriptionText = null;
+    reviewsAdapter = null;
+    descriptionReadMore = null;
+    topReviewsProgress = null;
+    ratingLayout = null;
+    emptyReviewsLayout = null;
+    commentsLayout = null;
+    rateAppButtonLarge = null;
+    emptyReviewTextView = null;
+    reviewUsers = null;
+    avgReviewScore = null;
+    avgReviewScoreBar = null;
+    commentsView = null;
+    rateAppButton = null;
+    showAllCommentsButton = null;
+    goodAppLayoutWrapper = null;
+    flagsLayoutWrapper = null;
+    workingWellLayout = null;
+    needsLicenseLayout = null;
+    fakeAppLayout = null;
+    virusLayout = null;
+    workingWellText = null;
+    needsLicenceText = null;
+    fakeAppText = null;
+    virusText = null;
+    storeLayout = null;
+    storeIcon = null;
+    storeName = null;
+    storeFollowers = null;
+    storeDownloads = null;
+    storeFollow = null;
+    similarBottomView = null;
+    similarApps = null;
+    infoWebsite = null;
+    infoEmail = null;
+    infoPrivacy = null;
+    infoPermissions = null;
+    viewProgress = null;
+    appview = null;
+    screenshotsAdapter = null;
+    similarAppsAdapter = null;
+    similarDownloadsAdapter = null;
+    presenter = null;
+    dialogUtils = null;
+    menu = null;
+    toolbar = null;
+    actionBar = null;
+    appId = -1;
+    appcReward = -1;
+    packageName = null;
     ready = null;
   }
 
@@ -403,6 +496,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_new_app_view, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putIntArray("ARTICLE_SCROLL_POSITION",
+        new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
   }
 
   @Override public void showLoading() {
@@ -427,78 +526,59 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return packageName;
   }
 
-  @Override public void populateAppDetails(DetailedAppViewModel detailedApp) {
-    StoreTheme storeThemeEnum = StoreTheme.get(detailedApp.getStore());
+  @Override public void populateAppDetails(AppViewViewModel model) {
+    StoreTheme storeThemeEnum = StoreTheme.get(model.getStore());
 
-    appName.setText(detailedApp.getDetailedApp()
-        .getName());
+    appName.setText(model.getAppName());
     ImageLoader.with(getContext())
-        .load(detailedApp.getDetailedApp()
-            .getIcon(), appIcon);
-    downloadsTop.setText(String.format("%s", AptoideUtils.StringU.withSuffix(
-        detailedApp.getDetailedApp()
-            .getStats()
-            .getPdownloads())));
-    sizeInfo.setText(AptoideUtils.StringU.formatBytes(detailedApp.getDetailedApp()
-        .getSize(), false));
-    if (appcReward != -1) {
+        .load(model.getIcon(), appIcon);
+    downloadsTop.setText(
+        String.format("%s", AptoideUtils.StringU.withSuffix(model.getPackageDownloads())));
+    sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
+    if (model.getAppc() > 0) {
       appcRewardView.setVisibility(View.VISIBLE);
-      appcRewardValue.setText(formatAppCoinsRewardMessage());
+      appcRewardValue.setText(formatAppCoinsRewardMessage(model.getAppc()));
     }
 
-    latestVersion.setText(detailedApp.getDetailedApp()
-        .getVerName());
-    storeName.setText(detailedApp.getDetailedApp()
-        .getStore()
+    latestVersion.setText(model.getVersionName());
+    storeName.setText(model.getStore()
         .getName());
     ImageLoader.with(getContext())
-        .loadWithShadowCircleTransform(detailedApp.getDetailedApp()
-            .getStore()
+        .loadWithShadowCircleTransform(model.getStore()
             .getAvatar(), storeIcon);
-    storeDownloads.setText(String.format("%s", AptoideUtils.StringU.withSuffix(
-        detailedApp.getDetailedApp()
-            .getStore()
-            .getStats()
-            .getDownloads())));
-    storeFollowers.setText(String.format("%s", AptoideUtils.StringU.withSuffix(
-        detailedApp.getDetailedApp()
-            .getStore()
-            .getStats()
-            .getSubscribers())));
+    storeDownloads.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model.getStore()
+        .getStats()
+        .getDownloads())));
+    storeFollowers.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model.getStore()
+        .getStats()
+        .getSubscribers())));
     storeFollow.setBackgroundDrawable(
         storeThemeEnum.getButtonLayoutDrawable(getResources(), getContext().getTheme()));
-    if (detailedApp.isStoreFollowed()) {
+    if (model.isStoreFollowed()) {
       storeFollow.setText(R.string.followed);
     } else {
       storeFollow.setText(R.string.follow);
     }
-    if ((detailedApp.getDetailedApp()
-        .getMedia()
-        .getScreenshots() != null && !detailedApp.getDetailedApp()
-        .getMedia()
+    if ((model.getMedia()
+        .getScreenshots() != null && !model.getMedia()
         .getScreenshots()
-        .isEmpty()) || (detailedApp.getDetailedApp()
-        .getMedia()
-        .getVideos() != null && !detailedApp.getDetailedApp()
-        .getMedia()
+        .isEmpty()) || (model.getMedia()
+        .getVideos() != null && !model.getMedia()
         .getVideos()
         .isEmpty())) {
-      screenshotsAdapter.updateScreenshots(detailedApp.getDetailedApp()
-          .getMedia()
+      screenshotsAdapter.updateScreenshots(model.getMedia()
           .getScreenshots());
-      screenshotsAdapter.updateVideos(detailedApp.getDetailedApp()
-          .getMedia()
+      screenshotsAdapter.updateVideos(model.getMedia()
           .getVideos());
     } else {
       screenshots.setVisibility(View.GONE);
     }
-    setTrustedBadge(detailedApp.getDetailedApp());
-    setDescription(detailedApp.getDetailedApp()
-        .getMedia()
+    setTrustedBadge(model.getMalware());
+    setDescription(model.getMedia()
         .getDescription());
-    setAppFlags(detailedApp.isGoodApp(), detailedApp.getAppFlags());
-    setReadMoreClickListener(detailedApp.getDetailedApp());
-    setDeveloperDetails(detailedApp.getDetailedApp());
+    setAppFlags(model.isGoodApp(), model.getAppFlags());
+    setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
+    setDeveloperDetails(model.getDeveloper());
     showAppview();
 
     downloadInfoLayout.setVisibility(View.GONE);
@@ -525,26 +605,29 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return readMoreClick;
   }
 
-  @Override
-  public Void populateReviewsAndAds(ReviewsViewModel reviewsModel, SimilarAppsViewModel ads,
-      DetailedApp app) {
+  @Override public void populateReviews(ReviewsViewModel reviewsModel, AppViewViewModel app) {
     List<Review> reviews = reviewsModel.getReviewsList();
 
     if (reviews != null && !reviews.isEmpty()) {
-      showReviews(true, app);
+      showReviews(true, app.getGlobalRating()
+          .getTotal(), app.getRating()
+          .getAverage());
 
       reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new Review[reviews.size()]));
     } else {
-      showReviews(false, app);
+      showReviews(false, app.getGlobalRating()
+          .getTotal(), app.getRating()
+          .getAverage());
       reviewsAdapter = new TopReviewsAdapter();
     }
 
     commentsView.setAdapter(reviewsAdapter);
+    reviewsAutoScroll.onNext(reviewsAdapter.getItemCount());
+  }
+
+  @Override public void populateAds(SimilarAppsViewModel ads) {
     similarAppsAdapter.update(mapToSimilar(ads));
     similarDownloadsAdapter.update(mapToSimilar(ads));
-    reviewsAutoScroll.onNext(reviewsAdapter.getItemCount());
-
-    return null;
   }
 
   @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {
@@ -659,13 +742,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return reviewsAutoScroll;
   }
 
-  @Override public void navigateToDeveloperWebsite(DetailedApp app) {
+  @Override public void navigateToDeveloperWebsite(AppViewViewModel app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getWebsite()));
     getContext().startActivity(browserIntent);
   }
 
-  @Override public void navigateToDeveloperEmail(DetailedApp app) {
+  @Override public void navigateToDeveloperEmail(AppViewViewModel app) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     Uri data = Uri.parse("mailto:" + app.getDeveloper()
         .getEmail() + "?subject=" + "Feedback" + "&body=" + "");
@@ -673,13 +756,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     getContext().startActivity(intent);
   }
 
-  @Override public void navigateToDeveloperPrivacy(DetailedApp app) {
+  @Override public void navigateToDeveloperPrivacy(AppViewViewModel app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getPrivacy()));
     getContext().startActivity(browserIntent);
   }
 
-  @Override public void navigateToDeveloperPermissions(DetailedApp app) {
+  @Override public void navigateToDeveloperPermissions(AppViewViewModel app) {
     DialogPermissions dialogPermissions = DialogPermissions.newInstance(app);
     dialogPermissions.show(getActivity().getSupportFragmentManager(), "");
   }
@@ -688,8 +771,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (!isFollowing) storeFollow.setText(R.string.followed);
   }
 
-  @Override public void showTrustedDialog(DetailedApp app) {
-    DialogBadgeV7.newInstance(app.getMalware(), app.getName(), app.getMalware()
+  @Override public void showTrustedDialog(AppViewViewModel app) {
+    DialogBadgeV7.newInstance(app.getMalware(), app.getAppName(), app.getMalware()
         .getRank())
         .show(getFragmentManager(), BADGE_DIALOG_TAG);
   }
@@ -845,13 +928,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     commentsView.smoothScrollToPosition(position);
   }
 
-  private void setTrustedBadge(DetailedApp app) {
+  private void setTrustedBadge(Malware malware) {
     @DrawableRes int badgeResId;
     @StringRes int badgeMessageId;
 
-    Malware.Rank rank = app.getMalware()
-        .getRank() == null ? Malware.Rank.UNKNOWN : app.getMalware()
-        .getRank();
+    Malware.Rank rank = malware.getRank() == null ? Malware.Rank.UNKNOWN : malware.getRank();
     switch (rank) {
       case TRUSTED:
         badgeResId = R.drawable.ic_badge_trusted;
@@ -889,11 +970,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private void setReadMoreClickListener(DetailedApp detailedApp) {
+  private void setReadMoreClickListener(String appName, AppMedia media, Store store) {
     descriptionReadMore.setOnClickListener(view -> readMoreClick.onNext(
-        new ReadMoreClickEvent(detailedApp.getName(), detailedApp.getMedia()
-            .getDescription(), detailedApp.getStore()
-            .getAppearance()
+        new ReadMoreClickEvent(appName, media.getDescription(), store.getAppearance()
             .getTheme())));
   }
 
@@ -953,11 +1032,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private void setDeveloperDetails(DetailedApp app) {
-    if (!TextUtils.isEmpty(app.getDeveloper()
-        .getWebsite())) {
-      String website = app.getDeveloper()
-          .getWebsite();
+  private void setDeveloperDetails(AppDeveloper developer) {
+    if (!TextUtils.isEmpty(developer.getWebsite())) {
+      String website = developer.getWebsite();
       String websiteCompositeString = String.format(getString(R.string.developer_website), website);
       SpannableString compositeSpan = new SpannableString(websiteCompositeString);
       compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
@@ -970,10 +1047,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           String.format(getString(R.string.developer_website), getString(R.string.not_available)));
     }
 
-    if (!TextUtils.isEmpty(app.getDeveloper()
-        .getEmail())) {
-      String email = app.getDeveloper()
-          .getEmail();
+    if (!TextUtils.isEmpty(developer.getEmail())) {
+      String email = developer.getEmail();
       String emailCompositeString = String.format(getString(R.string.developer_email), email);
       SpannableString compositeSpan = new SpannableString(emailCompositeString);
       compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
@@ -985,10 +1060,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           String.format(getString(R.string.developer_email), getString(R.string.not_available)));
     }
 
-    if (!TextUtils.isEmpty(app.getDeveloper()
-        .getPrivacy())) {
-      String privacy = app.getDeveloper()
-          .getPrivacy();
+    if (!TextUtils.isEmpty(developer.getPrivacy())) {
+      String privacy = developer.getPrivacy();
       String privacyCompositeString =
           String.format(getString(R.string.developer_privacy_policy), privacy);
       SpannableString compositeSpan = new SpannableString(privacyCompositeString);
@@ -1003,17 +1076,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private void showReviews(boolean hasReviews, DetailedApp app) {
+  private void showReviews(boolean hasReviews, int gRating, float avgRating) {
     topReviewsProgress.setVisibility(View.GONE);
-    int usersToVote = app.getStats()
-        .getGlobalRating()
-        .getTotal();
-    float ratingAvg = app.getStats()
-        .getRating()
-        .getAvg();
-    reviewUsers.setText(AptoideUtils.StringU.withSuffix(usersToVote));
-    avgReviewScore.setText(String.format(Locale.getDefault(), "%.1f", ratingAvg));
-    avgReviewScoreBar.setRating(ratingAvg);
+
+    reviewUsers.setText(AptoideUtils.StringU.withSuffix(gRating));
+    avgReviewScore.setText(String.format(Locale.getDefault(), "%.1f", avgRating));
+    avgReviewScoreBar.setRating(avgRating);
 
     if (hasReviews) {
       ratingLayout.setVisibility(View.VISIBLE);
@@ -1028,7 +1096,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       rateAppButtonLarge.setVisibility(View.VISIBLE);
       rateAppButton.setVisibility(View.INVISIBLE);
 
-      if (usersToVote == 0) {
+      if (gRating == 0) {
         emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
       }
     }
@@ -1070,7 +1138,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private SpannableString formatAppCoinsRewardMessage() {
+  private SpannableString formatAppCoinsRewardMessage(double appcReward) {
     DecimalFormat twoDecimalFormat = new DecimalFormat("#.##");
 
     String reward = String.valueOf(twoDecimalFormat.format(appcReward)) + " APPC";
@@ -1243,6 +1311,19 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   public enum BundleKeys {
-    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, APPC,
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG,
+  }
+
+  public enum OpenType {
+    /**
+     * Only open the appview
+     */
+    OPEN_ONLY, /**
+     * opens the appView and starts the installation
+     */
+    OPEN_AND_INSTALL, /**
+     * open the appView and ask user if want to install the app
+     */
+    OPEN_WITH_INSTALL_POPUP
   }
 }

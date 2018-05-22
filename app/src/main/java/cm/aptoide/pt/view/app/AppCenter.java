@@ -25,25 +25,21 @@ public class AppCenter {
     return appCenterRepository.getApplications(storeId, limit);
   }
 
-  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String packageName) {
-    return appCenterRepository.getDetailedApp(appId, packageName);
-  }
-
-  public Single<DetailedAppRequestResult> getDetailedApp(long appId, String storeName,
+  public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String storeName,
       String packageName) {
-    return appCenterRepository.getDetailedApp(appId, storeName, packageName);
+    return appCenterRepository.loadDetailedApp(appId, storeName, packageName);
   }
 
-  public Single<DetailedAppRequestResult> getDetailedApp(String packageName, String storeName) {
-    return appCenterRepository.getDetailedApp(packageName, storeName);
+  public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
+    return appCenterRepository.loadDetailedApp(packageName, storeName);
   }
 
-  public Single<DetailedAppRequestResult> getDetailedAppFromMd5(String md5) {
-    return appCenterRepository.getDetailedAppFromMd5(md5);
+  public Single<DetailedAppRequestResult> loadDetailedAppFromMd5(String md5) {
+    return appCenterRepository.loadDetailedAppFromMd5(md5);
   }
 
-  public Single<DetailedAppRequestResult> getDetailedAppAppFromUname(String uName) {
-    return appCenterRepository.getDetailedAppAppFromUname(uName);
+  public Single<DetailedAppRequestResult> loadDetailedAppAppFromUniqueName(String uniqueName) {
+    return appCenterRepository.loadDetailedAppAppFromUniqueName(uniqueName);
   }
 
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {

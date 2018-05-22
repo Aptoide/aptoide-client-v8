@@ -28,28 +28,26 @@ public class DetailedApp {
   private final List<String> usedPermissions;
   private final long fileSize;
   private final String md5;
-  private final String md5Sum;
   private final String path;
   private final String pathAlt;
-  private final int verCode;
-  private final String verName;
+  private final int versionCode;
+  private final String versionName;
   private final AppDeveloper appDeveloper;
   private final Store store;
-  private final GetAppMeta.Media media;
-  private final GetAppMeta.Stats stats;
+  private final AppMedia media;
+  private final AppStats stats;
   private final Obb obb;
   private final GetAppMeta.Pay pay;
-  private final String wUrls;
+  private final String webUrls;
   private final boolean isPaid;
-  private final String uName;
+  private final String uniqueName;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
       AppFlags appFlags, List<String> tags, List<String> usedFeatures, List<String> usedPermissions,
-      long fileSize, String md5, String md5Sum, String path, String pathAlt, int verCode,
-      String verName, AppDeveloper appDeveloper, Store store, GetAppMeta.Media media,
-      GetAppMeta.Stats stats, Obb obb, GetAppMeta.Pay pay, String wUrls, boolean isPaid,
-      String uName) {
+      long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
+      AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
+      GetAppMeta.Pay pay, String webUrls, boolean isPaid, String uniqueName) {
 
     this.id = id;
     this.name = name;
@@ -67,20 +65,19 @@ public class DetailedApp {
     this.usedPermissions = usedPermissions;
     this.fileSize = fileSize;
     this.md5 = md5;
-    this.md5Sum = md5Sum;
     this.path = path;
     this.pathAlt = pathAlt;
-    this.verCode = verCode;
-    this.verName = verName;
+    this.versionCode = versionCode;
+    this.versionName = versionName;
     this.appDeveloper = appDeveloper;
     this.store = store;
     this.media = media;
     this.stats = stats;
     this.obb = obb;
     this.pay = pay;
-    this.wUrls = wUrls;
+    this.webUrls = webUrls;
     this.isPaid = isPaid;
-    this.uName = uName;
+    this.uniqueName = uniqueName;
   }
 
   public long getId() {
@@ -123,11 +120,11 @@ public class DetailedApp {
     return appDeveloper;
   }
 
-  public GetAppMeta.Media getMedia() {
+  public AppMedia getMedia() {
     return media;
   }
 
-  public GetAppMeta.Stats getStats() {
+  public AppStats getStats() {
     return stats;
   }
 
@@ -139,8 +136,8 @@ public class DetailedApp {
     return pay;
   }
 
-  public String getwUrls() {
-    return wUrls;
+  public String getWebUrls() {
+    return webUrls;
   }
 
   public AppFlags getAppFlags() {
@@ -167,10 +164,6 @@ public class DetailedApp {
     return md5;
   }
 
-  public String getMd5Sum() {
-    return md5Sum;
-  }
-
   public String getPath() {
     return path;
   }
@@ -179,12 +172,12 @@ public class DetailedApp {
     return pathAlt;
   }
 
-  public int getVerCode() {
-    return verCode;
+  public int getVersionCode() {
+    return versionCode;
   }
 
-  public String getVerName() {
-    return verName;
+  public String getVersionName() {
+    return versionName;
   }
 
   public boolean isGoodApp() {
@@ -199,7 +192,7 @@ public class DetailedApp {
     return isPaid;
   }
 
-  public String getUname() {
-    return uName;
+  public String getUniqueName() {
+    return uniqueName;
   }
 }

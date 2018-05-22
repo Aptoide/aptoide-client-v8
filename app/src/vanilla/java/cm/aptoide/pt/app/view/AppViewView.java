@@ -1,14 +1,13 @@
 package cm.aptoide.pt.app.view;
 
 import android.view.MenuItem;
-import cm.aptoide.pt.app.DetailedAppViewModel;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.appview.InstallAppView;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import rx.Observable;
@@ -27,7 +26,7 @@ public interface AppViewView extends InstallAppView {
 
   String getPackageName();
 
-  void populateAppDetails(DetailedAppViewModel detailedApp);
+  void populateAppDetails(AppViewViewModel detailedApp);
 
   void handleError(DetailedAppRequestResult.Error error);
 
@@ -35,7 +34,9 @@ public interface AppViewView extends InstallAppView {
 
   Observable<ReadMoreClickEvent> clickedReadMore();
 
-  Void populateReviewsAndAds(ReviewsViewModel reviews, SimilarAppsViewModel ads, DetailedApp app);
+  void populateReviews(ReviewsViewModel reviews, AppViewViewModel app);
+
+  void populateAds(SimilarAppsViewModel ads);
 
   Observable<FlagsVote.VoteType> clickWorkingFlag();
 
@@ -89,17 +90,17 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Integer> scrollReviewsResponse();
 
-  void navigateToDeveloperWebsite(DetailedApp app);
+  void navigateToDeveloperWebsite(AppViewViewModel app);
 
-  void navigateToDeveloperEmail(DetailedApp app);
+  void navigateToDeveloperEmail(AppViewViewModel app);
 
-  void navigateToDeveloperPrivacy(DetailedApp app);
+  void navigateToDeveloperPrivacy(AppViewViewModel app);
 
-  void navigateToDeveloperPermissions(DetailedApp app);
+  void navigateToDeveloperPermissions(AppViewViewModel app);
 
   void setFollowButton(boolean isFollowing);
 
-  void showTrustedDialog(DetailedApp app);
+  void showTrustedDialog(AppViewViewModel app);
 
   String getLanguageFilter();
 

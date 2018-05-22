@@ -6,13 +6,13 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AppHomeEvent;
-import cm.aptoide.pt.home.BottomHomeFragment;
 import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeBundlesModel;
 import cm.aptoide.pt.home.HomeEvent;
+import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 
 public class HomePresenterTest {
 
-  @Mock private BottomHomeFragment view;
+  @Mock private HomeFragment view;
   @Mock private CrashReport crashReporter;
   @Mock private HomeNavigator homeNavigator;
   @Mock private Home home;
@@ -152,8 +152,8 @@ public class HomePresenterTest {
     appClickEvent.onNext(
         new AppHomeEvent(aptoide, 3, localTopAppsBundle, 0, HomeEvent.Type.SOCIAL_CLICK));
     //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
-        aptoide.getTag());
+    verify(homeNavigator).navigateToRecommendsAppView(aptoide.getAppId(), aptoide.getPackageName(),
+        aptoide.getTag(), HomeEvent.Type.SOCIAL_CLICK);
   }
 
   @Test public void moreClicked_NavigateToActionView() {

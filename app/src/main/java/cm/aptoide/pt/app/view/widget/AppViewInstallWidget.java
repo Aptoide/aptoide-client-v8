@@ -28,6 +28,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
+import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
@@ -765,7 +766,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
 
   private AppViewNavigator getAppViewNavigator() {
     return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(), isMultiStoreSearch,
-        defaultStoreName);
+        defaultStoreName, new AppNavigator(getFragmentNavigator()));
   }
 
   private void findTrustedVersion(GetAppMeta.App app, ListAppVersions appVersions) {

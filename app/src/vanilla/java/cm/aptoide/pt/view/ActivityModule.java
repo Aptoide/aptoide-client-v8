@@ -24,6 +24,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -135,8 +136,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides SearchNavigator providesSearchNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new SearchNavigator(fragmentNavigator, defaultStoreName);
+      FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
+    return new SearchNavigator(fragmentNavigator, defaultStoreName, appNavigator);
   }
 
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
@@ -147,12 +148,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository) {
+      AdsRepository adsRepository, AppNavigator appNavigator) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
         sharedPreferences, storeAccessor, defaultTheme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
-        adsRepository);
+        adsRepository, appNavigator);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
@@ -175,10 +176,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
       FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       CallbackManager callbackManager, GoogleApiClient googleApiClient,
-      AccountAnalytics accountAnalytics) {
-    return new AccountNavigator(fragmentNavigator, accountManager, ((ActivityNavigator) activity),
-        LoginManager.getInstance(), callbackManager, googleApiClient, PublishRelay.create(),
-        "http://m.aptoide.com/account/password-recovery", accountAnalytics);
+      AccountAnalytics accountAnalytics, BottomNavigationNavigator bottomNavigationNavigator) {
+    return new AccountNavigator(bottomNavigationNavigator, fragmentNavigator, accountManager,
+        ((ActivityNavigator) activity), LoginManager.getInstance(), callbackManager,
+        googleApiClient, PublishRelay.create(), "http://m.aptoide.com/account/password-recovery",
+        accountAnalytics);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {
@@ -204,13 +206,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides ManageStoreNavigator provideManageStoreNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new ManageStoreNavigator(fragmentNavigator);
+      FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator) {
+    return new ManageStoreNavigator(fragmentNavigator, bottomNavigationNavigator);
   }
 
   @ActivityScope @Provides ManageUserNavigator provideManageUserNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new ManageUserNavigator(fragmentNavigator);
+      FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator) {
+    return new ManageUserNavigator(fragmentNavigator, bottomNavigationNavigator);
   }
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
@@ -223,14 +225,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides ListStoreAppsNavigator provideListStoreAppsNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new ListStoreAppsNavigator(fragmentNavigator);
+      FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
+    return new ListStoreAppsNavigator(fragmentNavigator, appNavigator);
   }
 
   @ActivityScope @Provides NewAccountNavigator provideNewAccountNavigator(
       FragmentNavigator fragmentNavigator, MyAccountNavigator myAccountNavigator,
-      AccountNavigator accountNavigator) {
-    return new NewAccountNavigator(fragmentNavigator, myAccountNavigator, accountNavigator);
+      AccountNavigator accountNavigator, AppNavigator appNavigator) {
+    return new NewAccountNavigator(fragmentNavigator, myAccountNavigator, accountNavigator,
+        appNavigator);
   }
 
   @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
@@ -250,11 +253,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides AppViewNavigator providesAppViewNavigator(
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
 
     return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity,
-        application.hasMultiStoreSearch(), application.getDefaultStoreName());
+        application.hasMultiStoreSearch(), application.getDefaultStoreName(), appNavigator);
   }
 
   @ActivityScope @Provides DialogUtils providesDialogUtils(AptoideAccountManager accountManager,
@@ -265,5 +268,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       @Named("default") SharedPreferences sharedPreferences, Resources resources) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources);
+  }
+
+  @ActivityScope @Provides AppNavigator providesAppNavigator(FragmentNavigator fragmentNavigator) {
+    return new AppNavigator(fragmentNavigator);
   }
 }

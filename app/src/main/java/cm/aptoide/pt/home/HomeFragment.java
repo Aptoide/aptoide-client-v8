@@ -33,7 +33,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/03/2018.
  */
 
-public class BottomHomeFragment extends NavigationTrackFragment implements HomeView {
+public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
 
@@ -42,7 +42,6 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
    */
   private static final int VISIBLE_THRESHOLD = 2;
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
-  @Inject Home home;
   @Inject HomePresenter presenter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
@@ -113,7 +112,8 @@ public class BottomHomeFragment extends NavigationTrackFragment implements HomeV
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build("HomeFragment", "", StoreContext.home);
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName(), "", StoreContext.home);
   }
 
   @Nullable @Override
