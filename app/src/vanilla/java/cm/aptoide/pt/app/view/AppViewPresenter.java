@@ -510,9 +510,12 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadSimilarApps(appViewModel.getPackageName(), appViewModel.getMedia()
         .getKeywords())
         .observeOn(viewScheduler)
-        .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
-          view.populateAds(adsViewModel);
+          if (adsViewModel.hasError()) {
+            view.hideSimilarApps();
+          } else {
+            view.populateAds(adsViewModel);
+          }
         })
         .toObservable();
   }
@@ -521,9 +524,12 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
         .getName(), view.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
-        .doOnError(__ -> view.hideReviews())
         .doOnSuccess(reviewsViewModel -> {
-          view.populateReviews(reviewsViewModel, appViewModel);
+          if (reviewsViewModel.hasError()) {
+            view.hideReviews();
+          } else {
+            view.populateReviews(reviewsViewModel, appViewModel);
+          }
         })
         .toObservable();
   }
