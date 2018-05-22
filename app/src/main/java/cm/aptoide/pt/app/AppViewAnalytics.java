@@ -37,16 +37,15 @@ public class AppViewAnalytics {
     this.navigationTracker = navigationTracker;
   }
 
-  public void sendEditorsChoiceClickEvent(String packageName,
-      String editorsBrickPosition) {
+  public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
     analyticsManager.logEvent(
         createEditorsChoiceClickEventMap(navigationTracker.getPreviousScreen(), packageName,
-            editorsBrickPosition),
-        EDITORS_CHOICE_CLICKS, AnalyticsManager.Action.CLICK, getViewName(false));
+            editorsBrickPosition), EDITORS_CHOICE_CLICKS, AnalyticsManager.Action.CLICK,
+        getViewName(false));
     analyticsManager.logEvent(
         createEditorsClickEventMap(navigationTracker.getPreviousScreen(), packageName,
-            editorsBrickPosition),
-        HOME_PAGE_EDITORS_CHOICE_FLURRY, AnalyticsManager.Action.CLICK, getViewName(false));
+            editorsBrickPosition), HOME_PAGE_EDITORS_CHOICE_FLURRY, AnalyticsManager.Action.CLICK,
+        getViewName(false));
   }
 
   private Map<String, Object> createEditorsClickEventMap(ScreenTagHistory previousScreen,
@@ -77,8 +76,8 @@ public class AppViewAnalytics {
         navigationTracker.getCurrentScreen(), packageName, appPublisher, badge, appc),
         APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
     analyticsManager.logEvent(createAppViewDataMap(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), packageName, appc),
-        OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
+        navigationTracker.getCurrentScreen(), packageName, appc), OPEN_APP_VIEW,
+        AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private Map<String, Object> createAppViewDataMap(ScreenTagHistory previousScreen,
@@ -104,8 +103,7 @@ public class AppViewAnalytics {
 
   private HashMap<String, Object> createAppViewedFromMap(ScreenTagHistory previousScreen,
       ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge,
-      double appc)
-      throws NullPointerException {
+      double appc) throws NullPointerException {
     HashMap<String, Object> map = new HashMap<>();
     if (previousScreen != null) {
       if (previousScreen.getFragment() != null) {
