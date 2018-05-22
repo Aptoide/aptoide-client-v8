@@ -1,6 +1,8 @@
 package cm.aptoide.pt.app;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListReviews;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -12,7 +14,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
-import rx.exceptions.OnErrorNotImplementedException;
 
 /**
  * Created by D01 on 04/05/18.
@@ -57,9 +58,15 @@ public class ReviewsService {
         .doOnTerminate(() -> loading = false)
         .flatMap(listReviews -> mapListReviews(listReviews))
         .toSingle()
-        .onErrorReturn(throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        .onErrorReturn(throwable -> createReviewRequestResultError(throwable));
+  }
+
+  @NonNull private ReviewRequestResult createReviewRequestResultError(Throwable throwable) {
+    if (throwable instanceof NoNetworkConnectionException) {
+      return new ReviewRequestResult(ReviewRequestResult.Error.NETWORK);
+    } else {
+      return new ReviewRequestResult(ReviewRequestResult.Error.GENERIC);
+    }
   }
 
   private Observable<ReviewRequestResult> mapListReviews(ListReviews listReviews) {
