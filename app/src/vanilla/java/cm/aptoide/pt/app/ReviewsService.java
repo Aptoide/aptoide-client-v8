@@ -5,11 +5,14 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListReviews;
+import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
+import java.util.ArrayList;
+import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -71,10 +74,31 @@ public class ReviewsService {
 
   private Observable<ReviewRequestResult> mapListReviews(ListReviews listReviews) {
     if (listReviews.isOk()) {
-      return Observable.just(new ReviewRequestResult(listReviews.getDataList()
-          .getList()));
+      return Observable.just(new ReviewRequestResult(map(listReviews.getDataList()
+          .getList())));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
+  }
+
+  private List<AppReview> map(List<Review> reviews) {
+    List<AppReview> appReviews = new ArrayList<>();
+    if (reviews != null) {
+      for (Review review : reviews) {
+        Review.Stats stats = review.getStats();
+        Review.User user = review.getUser();
+        ReviewStats reviewStats =
+            new ReviewStats(stats.getComments(), stats.getLikes(), stats.getPoints(),
+                stats.getRating());
+        ReviewComment reviewComment = new ReviewComment(review.getComments()
+            .getView(), review.getComments()
+            .getTotal());
+        ReviewUser reviewUser = new ReviewUser(user.getId(), user.getAvatar(), user.getName());
+        appReviews.add(
+            new AppReview(review.getId(), review.getTitle(), review.getBody(), review.getAdded(),
+                review.getModified(), reviewStats, reviewComment, reviewUser));
+      }
+    }
+    return appReviews;
   }
 }

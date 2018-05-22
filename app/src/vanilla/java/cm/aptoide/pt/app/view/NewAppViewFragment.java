@@ -43,6 +43,7 @@ import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
@@ -52,7 +53,6 @@ import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
-import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.SnapToStartHelper;
@@ -194,7 +194,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ImageView pauseDownload;
   private ImageView resumeDownload;
   private DownloadAppViewModel.Action action;
-
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -581,14 +580,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void populateReviews(ReviewsViewModel reviewsModel, AppViewViewModel app) {
-    List<Review> reviews = reviewsModel.getReviewsList();
+    List<AppReview> reviews = reviewsModel.getReviewsList();
 
     if (reviews != null && !reviews.isEmpty()) {
       showReviews(true, app.getGlobalRating()
           .getTotal(), app.getRating()
           .getAverage());
 
-      reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new Review[reviews.size()]));
+      reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new AppReview[reviews.size()]));
     } else {
       showReviews(false, app.getGlobalRating()
           .getTotal(), app.getRating()
