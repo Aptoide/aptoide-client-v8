@@ -7,7 +7,10 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -174,6 +177,8 @@ public class AppService {
       GetAppMeta.App app = getApp.getNodes()
           .getMeta()
           .getData();
+      ListAppVersions listAppVersions = getApp.getNodes()
+          .getVersions();
       GetAppMeta.GetAppMetaFile file = app.getFile();
       GetAppMeta.GetAppMetaFile.Flags flags = app.getFile()
           .getFlags();
@@ -203,11 +208,33 @@ public class AppService {
               file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
               file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
               appMedia, appStats, app.getObb(), app.getPay(), app.getUrls()
-              .getW(), app.isPaid(), uniqueName);
+              .getW(), app.isPaid(), isLatestTrustedVersion(listAppVersions, file), uniqueName);
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
+  }
+
+  private boolean isLatestTrustedVersion(ListAppVersions listAppVersions, File file) {
+    if (canCompare(listAppVersions)) {
+      boolean isLatestVersion = file.getMd5sum()
+          .equals(listAppVersions.getList()
+              .get(0)
+              .getFile()
+              .getMd5sum());
+      if (isLatestVersion) {
+        return file.getMalware()
+            .getRank() == Malware.Rank.TRUSTED;
+      }
+    }
+    return false;
+  }
+
+  private boolean canCompare(ListAppVersions listAppVersions) {
+    return (listAppVersions != null
+        && listAppVersions.getList() != null
+        && !listAppVersions.getList()
+        .isEmpty());
   }
 
   @NonNull private AppsList createErrorAppsList(Throwable throwable) {

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.dataprovider.model.v7.Review;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,7 +8,7 @@ import java.util.List;
  */
 
 public class ReviewRequestResult {
-  private final List<Review> reviewList;
+  private final List<AppReview> reviewList;
   private final boolean loading;
   private final Error error;
 
@@ -25,7 +24,7 @@ public class ReviewRequestResult {
     this.error = error;
   }
 
-  public ReviewRequestResult(List<Review> reviewList) {
+  public ReviewRequestResult(List<AppReview> reviewList) {
     this.reviewList = reviewList;
     this.loading = false;
     this.error = null;
@@ -39,7 +38,7 @@ public class ReviewRequestResult {
     return error;
   }
 
-  public List<Review> getReviewList() {
+  public List<AppReview> getReviewList() {
     return reviewList;
   }
 
