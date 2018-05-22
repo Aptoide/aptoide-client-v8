@@ -32,9 +32,6 @@ import rx.Observable;
 public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     implements NotLoggedInShareView {
 
-  private static final String APP_NAME = "app_name";
-  private static final String APP_ICON = "app_title";
-  private static final String APP_RATING = "app_rating";
   @Inject AccountAnalytics accountAnalytics;
   @Inject NotLoggedInShareAnalytics analytics;
   private ProgressDialog progressDialog;

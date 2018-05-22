@@ -121,6 +121,6 @@ import javax.inject.Singleton;
         AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
         BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
         TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
-        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT);
+        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT, NotLoggedInShareAnalytics.MESSAGE_IMPRESSION);
   }
 }

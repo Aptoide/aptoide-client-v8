@@ -585,11 +585,13 @@ public class AppViewPresenter implements Presenter {
                                 if (account.isLoggedIn()
                                     && appViewManager.shouldShowRecommendsPreviewDialog()) {
                                   view.showRecommendsDialog();
-                                  appViewAnalytics.sendRecommendAppDialogShowEvent(
+                                  appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(
                                       appViewViewModel.getPackageName());
                                 } else if (!account.isLoggedIn()
                                     && appViewManager.canShowNotLoggedInDialog()) {
                                   appViewNavigator.navigateToNotLoggedInShareFragmentForResult();
+                                  appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(
+                                      appViewViewModel.getPackageName());
                                 }
                               }));
                   break;
@@ -613,8 +615,6 @@ public class AppViewPresenter implements Presenter {
           throw new IllegalStateException(error);
         });
   }
-
-
 
   private Completable downgradeApp(DownloadAppViewModel.Action action) {
     return view.showDowngradeMessage()

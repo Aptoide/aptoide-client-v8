@@ -267,7 +267,11 @@ public class AppViewAnalytics {
     notLoggedInShareAnalytics.sendShareFail();
   }
 
-  public void sendRecommendAppDialogShowEvent(String packageName) {
+  public void sendLoggedInRecommendAppDialogShowEvent(String packageName) {
     timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
+  }
+
+  public void sendNotLoggedInRecommendAppDialogShowEvent(String packageName) {
+    notLoggedInShareAnalytics.sendNotLoggedInRecommendAppImpressionEvent(packageName);
   }
 }
