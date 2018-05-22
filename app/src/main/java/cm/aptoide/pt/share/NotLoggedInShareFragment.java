@@ -32,6 +32,7 @@ import rx.Observable;
 public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     implements NotLoggedInShareView {
 
+  private static final String PACKAGE_NAME = "PACKAGE_NAME";
   @Inject AccountAnalytics accountAnalytics;
   @Inject NotLoggedInShareAnalytics analytics;
   private ProgressDialog progressDialog;
@@ -45,10 +46,12 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private PublishRelay<Void> backButtonPress;
   private View outerLayout;
   private ClickHandler backClickHandler;
+  private String packageName;
 
-  public static NotLoggedInShareFragment newInstance() {
+  public static NotLoggedInShareFragment newInstance(String packageName) {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
     Bundle bundle = new Bundle();
+    bundle.putString(PACKAGE_NAME, packageName);
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -56,6 +59,9 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    if (getArguments() != null) {
+      this.packageName = getArguments().getString(PACKAGE_NAME, "");
+    }
     errorMapper = new AccountErrorMapper(getContext(), new ErrorsMapper());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
@@ -94,7 +100,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     attachPresenter(new NotLoggedInSharePresenter(this, CrashReport.getInstance(), accountManager,
         ((ActivityResultNavigator) getContext()).getAccountNavigator(),
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
-        analytics));
+        analytics, packageName));
   }
 
   @Override public void onDestroyView() {

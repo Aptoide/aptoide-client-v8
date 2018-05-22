@@ -95,8 +95,8 @@ public class AppViewNavigator {
         true);
   }
 
-  public void navigateToNotLoggedInShareFragmentForResult() {
-    fragmentNavigator.navigateForResult(NotLoggedInShareFragment.newInstance(),
+  public void navigateToNotLoggedInShareFragmentForResult(String packageName) {
+    fragmentNavigator.navigateForResult(NotLoggedInShareFragment.newInstance(packageName),
         NOT_LOGGED_IN_SHARE_REQUEST_CODE, false);
   }
 

@@ -589,7 +589,8 @@ public class AppViewPresenter implements Presenter {
                                       appViewViewModel.getPackageName());
                                 } else if (!account.isLoggedIn()
                                     && appViewManager.canShowNotLoggedInDialog()) {
-                                  appViewNavigator.navigateToNotLoggedInShareFragmentForResult();
+                                  appViewNavigator.navigateToNotLoggedInShareFragmentForResult(
+                                      appViewViewModel.getPackageName());
                                   appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(
                                       appViewViewModel.getPackageName());
                                 }
