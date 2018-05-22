@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.dataprovider.model.v7.Review;
 import java.util.List;
 
 /**
@@ -9,11 +8,11 @@ import java.util.List;
 
 public class ReviewsViewModel {
 
-  private final List<Review> reviewsList;
+  private final List<AppReview> reviewsList;
   private final boolean loading;
   private final ReviewRequestResult.Error error;
 
-  public ReviewsViewModel(List<Review> reviewsList, boolean loading,
+  public ReviewsViewModel(List<AppReview> reviewsList, boolean loading,
       ReviewRequestResult.Error error) {
 
     this.reviewsList = reviewsList;
@@ -21,7 +20,7 @@ public class ReviewsViewModel {
     this.error = error;
   }
 
-  public List<Review> getReviewsList() {
+  public List<AppReview> getReviewsList() {
     return reviewsList;
   }
 
@@ -31,5 +30,9 @@ public class ReviewsViewModel {
 
   public ReviewRequestResult.Error getError() {
     return error;
+  }
+
+  public boolean hasError() {
+    return (error != null);
   }
 }

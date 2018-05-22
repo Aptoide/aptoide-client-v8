@@ -3,7 +3,7 @@ package cm.aptoide.pt.app.view;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import cm.aptoide.pt.dataprovider.model.v7.Review;
+import cm.aptoide.pt.app.AppReview;
 
 /**
  * Created by franciscocalado on 10/05/18.
@@ -11,13 +11,13 @@ import cm.aptoide.pt.dataprovider.model.v7.Review;
 
 public class TopReviewsAdapter extends RecyclerView.Adapter<MiniTopReviewViewHolder> {
 
-  private final Review[] reviews;
+  private final AppReview[] reviews;
 
   public TopReviewsAdapter() {
     this(null);
   }
 
-  public TopReviewsAdapter(Review[] reviews) {
+  public TopReviewsAdapter(AppReview[] reviews) {
     this.reviews = reviews;
   }
 

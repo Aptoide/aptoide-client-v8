@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v7.Review;
+import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -43,17 +43,17 @@ public class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
     commentText = (TextView) view.findViewById(R.id.comment);
   }
 
-  public void setup(Review review) {
-    String imageUrl = review.getUser()
+  public void setup(AppReview review) {
+    String imageUrl = review.getReviewUser()
         .getAvatar();
     Context context = itemView.getContext();
     //Context context = itemView.getContext().getApplicationContext();
     imageLoadingTarget = ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(imageUrl, userIconImageView,
             R.drawable.layer_1);
-    userName.setText(review.getUser()
+    userName.setText(review.getReviewUser()
         .getName());
-    ratingBar.setRating(review.getStats()
+    ratingBar.setRating(review.getReviewStats()
         .getRating());
     commentTitle.setText(review.getTitle());
     commentText.setText(review.getBody());

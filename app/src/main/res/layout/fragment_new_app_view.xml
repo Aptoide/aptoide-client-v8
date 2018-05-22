@@ -129,6 +129,7 @@
               android:layout_height="8dp"
               android:layout_gravity="center_vertical"
               android:src="@drawable/ic_appview_download_icon"
+              android:tint="@color/grey"
               />
           <TextView
               android:id="@+id/header_downloads"
@@ -136,7 +137,7 @@
               android:layout_height="wrap_content"
               android:layout_marginLeft="3dp"
               android:layout_marginStart="3dp"
-              android:textColor="@color/black"
+              android:textColor="@color/grey"
               android:textSize="8sp"
               tools:text="5 M"
               />
@@ -147,6 +148,7 @@
               android:layout_marginLeft="15dp"
               android:layout_marginStart="15dp"
               android:src="@drawable/ic_dimension"
+              android:tint="@color/grey"
               />
 
           <TextView
@@ -155,9 +157,30 @@
               android:layout_height="wrap_content"
               android:layout_marginLeft="3dp"
               android:layout_marginStart="3dp"
-              android:textColor="@color/black"
+              android:textColor="@color/grey"
               android:textSize="8sp"
               tools:text="90.7 MB"
+              />
+
+          <ImageView
+              android:layout_width="10dp"
+              android:layout_height="9.5dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginLeft="15dp"
+              android:layout_marginStart="15dp"
+              android:src="@drawable/ic_star_black"
+              android:tint="@color/grey"
+              />
+
+          <TextView
+              android:id="@+id/header_rating"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="3dp"
+              android:layout_marginStart="3dp"
+              android:textColor="@color/grey"
+              android:textSize="8sp"
+              tools:text="4.2"
               />
         </LinearLayout>
 
@@ -319,7 +342,7 @@
         <include
             layout="@layout/appview_app_versions_layout"
             android:id="@+id/versions_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="7dp"
