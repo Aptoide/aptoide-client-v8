@@ -386,6 +386,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     noNetworkRetryClick = null;
     genericRetryClick = null;
     positionY = null;
+    dialogUtils = null;
+    presenter = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -460,7 +462,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     screenshotsAdapter = null;
     similarAppsAdapter = null;
     similarDownloadsAdapter = null;
-    dialogUtils = null;
     menu = null;
     toolbar = null;
     actionBar = null;

@@ -19,7 +19,7 @@
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
       android:gravity="center"
-      android:textColor="?colorPrimary"
+      android:textColor="@color/grey_900"
       android:textSize="@dimen/text_size_large"
       tools:text="Rate Boom Beach"
       />
@@ -47,7 +47,7 @@
       android:layout_height="wrap_content"
       android:gravity="center"
       android:text="@string/tap_a_star"
-      android:textColor="@color/medium_custom_gray"
+      android:textColor="@color/grey_fog_dark"
       android:textSize="@dimen/text_size_medium_small"
       />
 
@@ -115,6 +115,7 @@
         android:id="@+id/highlighted_reviews_explanation_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8sp"
         android:layout_marginStart="8sp"
         android:layout_marginTop="4dp"
         />
@@ -122,12 +123,14 @@
         android:id="@+id/highlighted_reviews_explanation_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         />
     <TextView
         android:id="@+id/highlighted_reviews_explanation_4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         />
 
@@ -148,7 +151,7 @@
         android:padding="6dp"
         android:text="@string/rate"
         android:textAllCaps="true"
-        android:textColor="?colorPrimary"
+        android:textColor="@color/default_orange_gradient_end"
         android:textSize="@dimen/text_size_medium"
         />
 
