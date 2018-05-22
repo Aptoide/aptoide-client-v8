@@ -87,6 +87,10 @@ import org.parceler.Parcel;
     return defaultStoreName;
   }
 
+  @Override public String getStoreTheme() {
+    return storeTheme;
+  }
+
   @Override public boolean isOnlyTrustedApps() {
     return onlyTrustedApps;
   }
@@ -173,9 +177,5 @@ import org.parceler.Parcel;
 
   public void addAllStoresSearchAppResults(List<SearchAppResult> allStoresSearchAppResults) {
     this.allStoresSearchAppResults.addAll(allStoresSearchAppResults);
-  }
-
-  public String getStoreTheme() {
-    return storeTheme;
   }
 }
