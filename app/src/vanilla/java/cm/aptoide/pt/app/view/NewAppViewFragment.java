@@ -140,6 +140,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private TextView trustedText;
   private TextView downloadsTop;
   private TextView sizeInfo;
+  private TextView ratingInfo;
   private View appcRewardView;
   private TextView appcRewardValue;
   private View similarDownloadView;
@@ -228,7 +229,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       if (position != null) {
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
           public void onGlobalLayout() {
-            scrollView.scrollTo(position[0], position[1]);
+            if (scrollView != null) scrollView.scrollTo(position[0], position[1]);
           }
         });
       }
@@ -248,6 +249,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     trustedText = (TextView) view.findViewById(R.id.trusted_text);
     downloadsTop = (TextView) view.findViewById(R.id.header_downloads);
     sizeInfo = (TextView) view.findViewById(R.id.header_size);
+    ratingInfo = (TextView) view.findViewById(R.id.header_rating);
     appcRewardView = view.findViewById(R.id.appc_layout);
     appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
@@ -408,6 +410,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     trustedText = null;
     downloadsTop = null;
     sizeInfo = null;
+    ratingInfo = null;
     appcRewardView = null;
     appcRewardValue = null;
     similarDownloadView = null;
@@ -510,6 +513,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     downloadsTop.setText(
         String.format("%s", AptoideUtils.StringU.withSuffix(model.getPackageDownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
+    ratingInfo.setText(new DecimalFormat("#.#").format(model.getGlobalRating()
+        .getAverage()));
     if (model.getAppc() > 0) {
       appcRewardView.setVisibility(View.VISIBLE);
       appcRewardValue.setText(formatAppCoinsRewardMessage(model.getAppc()));

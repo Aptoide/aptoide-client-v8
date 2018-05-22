@@ -169,7 +169,7 @@
   <string name="reviewappview_short_comments_by_language_current_language_first">Current language first</string>
   <string name="reviewappview_short_comments_by_language_english">English</string>
 
-
+  <string name="appview_read_more">Read More</string>
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
   <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
