@@ -300,7 +300,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void setUserImage(String userAvatarUrl) {
     ImageLoader.with(getContext())
-        .loadWithCircleTransformAndPlaceHolder(userAvatarUrl, userAvatar,
+        .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar,
             R.drawable.ic_account_circle);
   }
 
