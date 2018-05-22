@@ -45,6 +45,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
@@ -55,7 +56,6 @@ import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
-import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.SnapToStartHelper;
@@ -72,7 +72,6 @@ import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
@@ -115,7 +114,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Toolbar toolbar;
   private ActionBar actionBar;
   private long appId;
-  private double appcReward;
   private String packageName;
   private NewScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
@@ -131,12 +129,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> genericRetryClick;
   private PublishSubject<Void> ready;
 
+  private Integer positionY;
+
   //Views
   private NestedScrollView scrollView;
   private View noNetworkErrorView;
   private View genericErrorView;
   private View genericRetryButton;
   private View noNetworkRetryButton;
+  private View reviewsLayout;
 
   private ImageView appIcon;
   private TextView appName;
@@ -145,6 +146,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private TextView trustedText;
   private TextView downloadsTop;
   private TextView sizeInfo;
+  private TextView ratingInfo;
   private View appcRewardView;
   private TextView appcRewardValue;
   private View similarDownloadView;
@@ -157,15 +159,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ContentLoadingProgressBar topReviewsProgress;
   private View ratingLayout;
   private View emptyReviewsLayout;
-  private View commentsLayout;
+  private View topReviewsLayout;
   private Button rateAppButtonLarge;
   private TextView emptyReviewTextView;
   private TextView reviewUsers;
   private TextView avgReviewScore;
   private RatingBar avgReviewScoreBar;
-  private RecyclerView commentsView;
+  private RecyclerView reviewsView;
   private Button rateAppButton;
-  private Button showAllCommentsButton;
+  private Button showAllReviewsButton;
 
   private View goodAppLayoutWrapper;
   private View flagsLayoutWrapper;
@@ -185,10 +187,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Button storeFollow;
   private View similarBottomView;
   private RecyclerView similarApps;
-  private TextView infoWebsite;
-  private TextView infoEmail;
-  private TextView infoPrivacy;
-  private TextView infoPermissions;
+  private View infoWebsite;
+  private View infoEmail;
+  private View infoPrivacy;
+  private View infoPermissions;
 
   private ProgressBar viewProgress;
   private View appview;
@@ -203,49 +205,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
-
-  public static NewAppViewFragment newInstanceUname(String uname) {
-    Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.UNAME.name(), uname);
-
-    NewAppViewFragment fragment = new NewAppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
-  public static NewAppViewFragment newInstance(String md5) {
-    Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.MD5.name(), md5);
-
-    NewAppViewFragment fragment = new NewAppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
-  public static NewAppViewFragment newInstance(long appId, String packageName,
-      NewAppViewFragment.OpenType openType, String tag) {
-    Bundle bundle = new Bundle();
-    bundle.putString(ORIGIN_TAG, tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    NewAppViewFragment fragment = new NewAppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
-  public static NewAppViewFragment newInstance(long appId, String packageName,
-      NewAppViewFragment.OpenType openType, String tag, double appcReward) {
-    Bundle bundle = new Bundle();
-    bundle.putString(ORIGIN_TAG, tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    bundle.putDouble(BundleKeys.APPC.name(), appcReward);
-    NewAppViewFragment fragment = new NewAppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -274,14 +233,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     scrollView = (NestedScrollView) view.findViewById(R.id.scroll_view_app);
 
     ViewTreeObserver vto = scrollView.getViewTreeObserver();
-
-    if (savedInstanceState != null) {
+    if (positionY != null) {
+      vto.addOnGlobalLayoutListener(() -> {
+        if (scrollView != null) scrollView.scrollTo(0, positionY);
+      });
+    } else if (savedInstanceState != null) {
       int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
       if (position != null) {
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          public void onGlobalLayout() {
-            scrollView.scrollTo(position[0], position[1]);
-          }
+        vto.addOnGlobalLayoutListener(() -> {
+          if (scrollView != null) scrollView.scrollTo(position[0], position[1]);
         });
       }
     }
@@ -290,6 +250,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     genericErrorView = view.findViewById(R.id.generic_error);
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
+    reviewsLayout = view.findViewById(R.id.reviews_layout);
     noNetworkRetryButton.setOnClickListener(click -> noNetworkRetryClick.onNext(null));
     genericRetryButton.setOnClickListener(click -> genericRetryClick.onNext(null));
     appIcon = (ImageView) view.findViewById(R.id.app_icon);
@@ -299,6 +260,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     trustedText = (TextView) view.findViewById(R.id.trusted_text);
     downloadsTop = (TextView) view.findViewById(R.id.header_downloads);
     sizeInfo = (TextView) view.findViewById(R.id.header_size);
+    ratingInfo = (TextView) view.findViewById(R.id.header_rating);
     appcRewardView = view.findViewById(R.id.appc_layout);
     appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
@@ -317,15 +279,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     topReviewsProgress = (ContentLoadingProgressBar) view.findViewById(R.id.top_comments_progress);
     ratingLayout = view.findViewById(R.id.rating_layout);
     emptyReviewsLayout = view.findViewById(R.id.empty_reviews_layout);
-    commentsLayout = view.findViewById(R.id.comments_layout);
+    topReviewsLayout = view.findViewById(R.id.comments_layout);
     rateAppButtonLarge = (Button) view.findViewById(R.id.rate_this_button2);
     emptyReviewTextView = (TextView) view.findViewById(R.id.empty_review_text);
     reviewUsers = (TextView) view.findViewById(R.id.users_voted);
     avgReviewScore = (TextView) view.findViewById(R.id.rating_value);
     avgReviewScoreBar = (RatingBar) view.findViewById(R.id.rating_bar);
-    commentsView = (RecyclerView) view.findViewById(R.id.top_comments_list);
+    reviewsView = (RecyclerView) view.findViewById(R.id.top_comments_list);
     rateAppButton = (Button) view.findViewById(R.id.rate_this_button);
-    showAllCommentsButton = (Button) view.findViewById(R.id.read_all_button);
+    showAllReviewsButton = (Button) view.findViewById(R.id.read_all_button);
 
     goodAppLayoutWrapper = view.findViewById(R.id.good_app_layout);
     flagsLayoutWrapper = view.findViewById(R.id.rating_flags_layout);
@@ -346,10 +308,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     storeFollow = (Button) view.findViewById(R.id.follow_button);
     similarBottomView = view.findViewById(R.id.similar_layout);
     similarApps = (RecyclerView) similarBottomView.findViewById(R.id.similar_list);
-    infoWebsite = (TextView) view.findViewById(R.id.website_label);
-    infoEmail = (TextView) view.findViewById(R.id.email_label);
-    infoPrivacy = (TextView) view.findViewById(R.id.privacy_policy_label);
-    infoPermissions = (TextView) view.findViewById(R.id.permissions_label);
+    infoWebsite = view.findViewById(R.id.website_label);
+    infoEmail = view.findViewById(R.id.email_label);
+    infoPrivacy = view.findViewById(R.id.privacy_policy_label);
+    infoPermissions = view.findViewById(R.id.permissions_label);
 
     viewProgress = (ProgressBar) view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
@@ -374,9 +336,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     LinearLayoutManager similarDownloadsLayout =
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-    commentsView.setLayoutManager(layoutManager);
+    reviewsView.setLayoutManager(layoutManager);
     // because otherwise the AppBar won't be collapsed
-    commentsView.setNestedScrollingEnabled(false);
+    reviewsView.setNestedScrollingEnabled(false);
     similarApps.setNestedScrollingEnabled(false);
 
     similarAppsAdapter =
@@ -408,7 +370,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     });
 
     SnapHelper commentsSnap = new SnapToStartHelper();
-    commentsSnap.attachToRecyclerView(commentsView);
+    SnapHelper screenshotsSnap = new SnapToStartHelper();
+    SnapHelper similarSnap = new SnapToStartHelper();
+    commentsSnap.attachToRecyclerView(reviewsView);
+    screenshotsSnap.attachToRecyclerView(screenshots);
+    similarSnap.attachToRecyclerView(similarApps);
 
     setupToolbar();
     attachPresenter(presenter);
@@ -425,6 +391,31 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void onDestroy() {
     super.onDestroy();
 
+    screenShotClick = null;
+    readMoreClick = null;
+    loginSnackClick = null;
+    similarAppClick = null;
+    shareDialogClick = null;
+    ready = null;
+    reviewsAutoScroll = null;
+    noNetworkRetryClick = null;
+    genericRetryClick = null;
+    positionY = null;
+    dialogUtils = null;
+    presenter = null;
+  }
+
+  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    this.menu = menu;
+    inflater.inflate(R.menu.fragment_appview, menu);
+    showHideOptionsMenu(true);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    positionY = scrollView.getScrollY();
     noNetworkErrorView = null;
     genericErrorView = null;
     genericRetryButton = null;
@@ -436,6 +427,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     trustedText = null;
     downloadsTop = null;
     sizeInfo = null;
+    ratingInfo = null;
     appcRewardView = null;
     appcRewardValue = null;
     similarDownloadView = null;
@@ -449,15 +441,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     topReviewsProgress = null;
     ratingLayout = null;
     emptyReviewsLayout = null;
-    commentsLayout = null;
+    topReviewsLayout = null;
     rateAppButtonLarge = null;
     emptyReviewTextView = null;
     reviewUsers = null;
     avgReviewScore = null;
     avgReviewScoreBar = null;
-    commentsView = null;
+    reviewsView = null;
     rateAppButton = null;
-    showAllCommentsButton = null;
+    showAllReviewsButton = null;
     goodAppLayoutWrapper = null;
     flagsLayoutWrapper = null;
     workingWellLayout = null;
@@ -485,22 +477,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     screenshotsAdapter = null;
     similarAppsAdapter = null;
     similarDownloadsAdapter = null;
-    presenter = null;
-    dialogUtils = null;
     menu = null;
     toolbar = null;
     actionBar = null;
     appId = -1;
-    appcReward = -1;
     packageName = null;
-    ready = null;
-  }
-
-  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    this.menu = menu;
-    inflater.inflate(R.menu.fragment_appview, menu);
-    showHideOptionsMenu(true);
+    scrollView = null;
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -546,6 +528,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     downloadsTop.setText(
         String.format("%s", AptoideUtils.StringU.withSuffix(model.getPackageDownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
+    ratingInfo.setText(new DecimalFormat("#.#").format(model.getGlobalRating()
+        .getAverage()));
     if (model.getAppc() > 0) {
       appcRewardView.setVisibility(View.VISIBLE);
       appcRewardValue.setText(formatAppCoinsRewardMessage(model.getAppc()));
@@ -617,14 +601,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void populateReviews(ReviewsViewModel reviewsModel, AppViewViewModel app) {
-    List<Review> reviews = reviewsModel.getReviewsList();
+    List<AppReview> reviews = reviewsModel.getReviewsList();
 
     if (reviews != null && !reviews.isEmpty()) {
       showReviews(true, app.getGlobalRating()
           .getTotal(), app.getRating()
           .getAverage());
 
-      reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new Review[reviews.size()]));
+      reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new AppReview[reviews.size()]));
     } else {
       showReviews(false, app.getGlobalRating()
           .getTotal(), app.getRating()
@@ -632,7 +616,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       reviewsAdapter = new TopReviewsAdapter();
     }
 
-    commentsView.setAdapter(reviewsAdapter);
+    reviewsView.setAdapter(reviewsAdapter);
     reviewsAutoScroll.onNext(reviewsAdapter.getItemCount());
   }
 
@@ -717,12 +701,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return RxView.clicks(ratingLayout);
   }
 
-  @Override public Observable<Void> clickCommentsLayout() {
-    return RxView.clicks(commentsLayout);
+  @Override public Observable<Void> clickReviewsLayout() {
+    return RxView.clicks(topReviewsLayout);
   }
 
-  @Override public Observable<Void> clickReadAllComments() {
-    return RxView.clicks(showAllCommentsButton);
+  @Override public Observable<Void> clickReadAllReviews() {
+    return RxView.clicks(showAllReviewsButton);
   }
 
   @Override public Observable<Void> clickLoginSnack() {
@@ -913,7 +897,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       alertDialogView.findViewById(R.id.continue_button)
           .setOnClickListener(view -> {
             socialRepository.share(packageName, storeId, "app");
-            ShowMessage.asSnack(getActivity(), R.string.social_timeline_share_dialog_title);
+            Snackbar.make(getView(), R.string.social_timeline_share_dialog_title,
+                Snackbar.LENGTH_SHORT)
+                .show();
             analytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
             analytics.sendSocialCardPreviewActionEvent(
                 TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
@@ -936,7 +922,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void scrollReviews(Integer position) {
-    commentsView.smoothScrollToPosition(position);
+    reviewsView.smoothScrollToPosition(position);
+  }
+
+  @Override public void hideReviews() {
+    reviewsLayout.setVisibility(View.GONE);
+  }
+
+  @Override public void hideSimilarApps() {
+    similarBottomView.setVisibility(View.GONE);
   }
 
   @Override public void extractReferrer(SearchAdResult searchAdResult) {
@@ -1054,45 +1048,27 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   private void setDeveloperDetails(AppDeveloper developer) {
     if (!TextUtils.isEmpty(developer.getWebsite())) {
-      String website = developer.getWebsite();
-      String websiteCompositeString = String.format(getString(R.string.developer_website), website);
-      SpannableString compositeSpan = new SpannableString(websiteCompositeString);
-      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
-          websiteCompositeString.indexOf(website),
-          websiteCompositeString.indexOf(website) + website.length(),
-          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-      infoWebsite.setText(compositeSpan);
+      infoWebsite.setVisibility(View.VISIBLE);
+      ((TextView) infoWebsite.findViewById(R.id.website_text)).setText(
+          getString(R.string.appview_short_developer_website));
     } else {
-      infoWebsite.setText(
-          String.format(getString(R.string.developer_website), getString(R.string.not_available)));
+      infoWebsite.setVisibility(View.GONE);
     }
 
     if (!TextUtils.isEmpty(developer.getEmail())) {
-      String email = developer.getEmail();
-      String emailCompositeString = String.format(getString(R.string.developer_email), email);
-      SpannableString compositeSpan = new SpannableString(emailCompositeString);
-      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
-          emailCompositeString.indexOf(email), emailCompositeString.indexOf(email) + email.length(),
-          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-      infoEmail.setText(compositeSpan);
+      infoEmail.setVisibility(View.VISIBLE);
+      ((TextView) infoEmail.findViewById(R.id.email_text)).setText(
+          getString(R.string.appview_short_developer_email));
     } else {
-      infoEmail.setText(
-          String.format(getString(R.string.developer_email), getString(R.string.not_available)));
+      infoEmail.setVisibility(View.GONE);
     }
 
     if (!TextUtils.isEmpty(developer.getPrivacy())) {
-      String privacy = developer.getPrivacy();
-      String privacyCompositeString =
-          String.format(getString(R.string.developer_privacy_policy), privacy);
-      SpannableString compositeSpan = new SpannableString(privacyCompositeString);
-      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
-          privacyCompositeString.indexOf(privacy),
-          privacyCompositeString.indexOf(privacy) + privacy.length(),
-          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-      infoPrivacy.setText(compositeSpan);
+      infoPrivacy.setVisibility(View.VISIBLE);
+      ((TextView) infoPrivacy.findViewById(R.id.privacy_text)).setText(
+          getString(R.string.appview_short_developer_privacy_policy));
     } else {
-      infoPrivacy.setText(String.format(getString(R.string.developer_privacy_policy),
-          getString(R.string.not_available)));
+      infoPrivacy.setVisibility(View.GONE);
     }
   }
 
@@ -1106,15 +1082,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (hasReviews) {
       ratingLayout.setVisibility(View.VISIBLE);
       emptyReviewsLayout.setVisibility(View.GONE);
-      commentsLayout.setVisibility(View.VISIBLE);
+      topReviewsLayout.setVisibility(View.VISIBLE);
       rateAppButtonLarge.setVisibility(View.GONE);
       rateAppButton.setVisibility(View.VISIBLE);
     } else {
       ratingLayout.setVisibility(View.VISIBLE);
       emptyReviewsLayout.setVisibility(View.VISIBLE);
-      commentsLayout.setVisibility(View.GONE);
+      topReviewsLayout.setVisibility(View.GONE);
       rateAppButtonLarge.setVisibility(View.VISIBLE);
-      rateAppButton.setVisibility(View.INVISIBLE);
+      rateAppButton.setVisibility(View.GONE);
 
       if (gRating == 0) {
         emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);

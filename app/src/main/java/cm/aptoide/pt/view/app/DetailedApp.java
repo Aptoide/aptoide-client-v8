@@ -40,6 +40,7 @@ public class DetailedApp {
   private final GetAppMeta.Pay pay;
   private final String webUrls;
   private final boolean isPaid;
+  private final boolean isLatestTrustedVersion;
   private final String uniqueName;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
@@ -47,7 +48,8 @@ public class DetailedApp {
       AppFlags appFlags, List<String> tags, List<String> usedFeatures, List<String> usedPermissions,
       long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
-      GetAppMeta.Pay pay, String webUrls, boolean isPaid, String uniqueName) {
+      GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean isLatestTrustedVersion,
+      String uniqueName) {
 
     this.id = id;
     this.name = name;
@@ -77,6 +79,7 @@ public class DetailedApp {
     this.pay = pay;
     this.webUrls = webUrls;
     this.isPaid = isPaid;
+    this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
   }
 
@@ -194,5 +197,9 @@ public class DetailedApp {
 
   public String getUniqueName() {
     return uniqueName;
+  }
+
+  public boolean isLatestTrustedVersion() {
+    return isLatestTrustedVersion;
   }
 }

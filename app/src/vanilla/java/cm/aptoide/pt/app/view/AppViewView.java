@@ -73,9 +73,9 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickRateAppLayout();
 
-  Observable<Void> clickCommentsLayout();
+  Observable<Void> clickReviewsLayout();
 
-  Observable<Void> clickReadAllComments();
+  Observable<Void> clickReadAllReviews();
 
   Observable<Void> clickLoginSnack();
 
@@ -125,6 +125,10 @@ public interface AppViewView extends InstallAppView {
   void recommendsShare(String packageName, Long storeId);
 
   void scrollReviews(Integer position);
+
+  void hideReviews();
+
+  void hideSimilarApps();
 
   void extractReferrer(SearchAdResult searchAdResult);
 }

@@ -12,6 +12,8 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.ReviewsViewModel;
+import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
@@ -79,7 +81,7 @@ public class AppViewPresenter implements Presenter {
     handleClickOnOtherVersions();
     handleClickOnTrustedBadge();
     handleClickOnRateApp();
-    handleClickReadComments();
+    handleClickReadReviews();
     handleClickFlags();
     handleClickLoginSnack();
     handleClickOnSimilarApps();
@@ -102,11 +104,17 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> loadApp().flatMap(
             appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).toObservable()
                 .map(__1 -> appViewViewModel)))
-        .doOnNext(model -> appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(),
-            model.getDeveloper()
-                .getName(), model.getMalware()
-                .getRank()
-                .name()))
+        .doOnNext(model -> {
+          if (!model.getEditorsChoice()
+              .isEmpty()) {
+            appViewAnalytics.sendEditorsChoiceClickEvent(model.getPackageName(),
+                model.getEditorsChoice());
+          }
+          appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
+              .getName(), model.getMalware()
+              .getRank()
+              .name(), model.getAppc());
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -322,10 +330,10 @@ public class AppViewPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private void handleClickReadComments() {
+  private void handleClickReadReviews() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> Observable.merge(view.clickCommentsLayout(), view.clickReadAllComments()))
+        .flatMap(__ -> Observable.merge(view.clickReviewsLayout(), view.clickReadAllReviews()))
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(model -> {
           appViewAnalytics.sendReadAllEvent();
@@ -514,28 +522,37 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(model -> !model.hasError())
-        .flatMapCompletable(appViewModel -> Completable.merge(updateReviews(appViewModel),
-            updateSuggestedApps(appViewModel)));
+        .flatMap(appViewModel -> Observable.merge(updateSuggestedApps(appViewModel),
+            updateReviews(appViewModel))
+            .map(__ -> appViewModel));
   }
 
-  private Completable updateSuggestedApps(AppViewViewModel appViewModel) {
+  private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {
     return appViewManager.loadSimilarApps(appViewModel.getPackageName(), appViewModel.getMedia()
         .getKeywords())
         .observeOn(viewScheduler)
         .doOnSuccess(adsViewModel -> {
-          view.populateAds(adsViewModel);
+          if (adsViewModel.hasError()) {
+            view.hideSimilarApps();
+          } else {
+            view.populateAds(adsViewModel);
+          }
         })
-        .toCompletable();
+        .toObservable();
   }
 
-  private Completable updateReviews(AppViewViewModel appViewModel) {
+  private Observable<ReviewsViewModel> updateReviews(AppViewViewModel appViewModel) {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
         .getName(), view.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
         .doOnSuccess(reviewsViewModel -> {
-          view.populateReviews(reviewsViewModel, appViewModel);
+          if (reviewsViewModel.hasError()) {
+            view.hideReviews();
+          } else {
+            view.populateReviews(reviewsViewModel, appViewModel);
+          }
         })
-        .toCompletable();
+        .toObservable();
   }
 
   private void cancelDownload() {

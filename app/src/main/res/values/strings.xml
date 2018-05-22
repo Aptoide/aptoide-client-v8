@@ -44,6 +44,9 @@
   <string name="bottomnavigation_button_apps">Apps</string>
 
   <!-- AppView -->
+  <string name="appview_short_developer_website">Website</string>
+  <string name="appview_short_developer_email">Email</string>
+  <string name="appview_short_developer_privacy_policy">Privacy Policy</string>
   <string name="appview_button_install">Install</string>
   <string name="appview_button_downgrade">Downgrade</string>
   <string name="appview_button_open">Open</string>
@@ -169,7 +172,7 @@
   <string name="reviewappview_short_comments_by_language_current_language_first">Current language first</string>
   <string name="reviewappview_short_comments_by_language_english">English</string>
 
-
+  <string name="appview_read_more">Read More</string>
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
   <string name="dialog_install_warning_trusted_app_button">Trusted App</string>

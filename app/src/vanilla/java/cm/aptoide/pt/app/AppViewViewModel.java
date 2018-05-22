@@ -26,6 +26,7 @@ public class AppViewViewModel {
   private final GetAppMeta.Pay pay;
   private final String webUrls;
   private final boolean isPaid;
+  private final boolean isLatestTrustedVersion;
   private final String uniqueName;
   private final OpenType shouldInstall;
   private final double appc;
@@ -68,8 +69,8 @@ public class AppViewViewModel {
       long size, int downloads, AppRating globalRating, int packageDownloads, AppRating rating,
       AppDeveloper appDeveloper, String graphic, String icon, AppMedia media, String modified,
       String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid,
-      String uniqueName, OpenType shouldInstall, double appc, SearchAdResult minimalAd,
-      String editorsChoice, String originTag, boolean isStoreFollowed) {
+      boolean isLatestTrustedVersion, String uniqueName, OpenType shouldInstall, double appc,
+      SearchAdResult minimalAd, String editorsChoice, String originTag, boolean isStoreFollowed) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -102,6 +103,7 @@ public class AppViewViewModel {
     this.pay = pay;
     this.webUrls = webUrls;
     this.isPaid = isPaid;
+    this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
     this.shouldInstall = shouldInstall;
     this.appc = appc;
@@ -147,6 +149,7 @@ public class AppViewViewModel {
     this.pay = null;
     this.webUrls = null;
     this.isPaid = false;
+    this.isLatestTrustedVersion = false;
     this.uniqueName = "";
     this.shouldInstall = null;
     this.appc = -1;
@@ -191,6 +194,7 @@ public class AppViewViewModel {
     this.pay = null;
     this.webUrls = null;
     this.isPaid = false;
+    this.isLatestTrustedVersion = false;
     this.uniqueName = "";
     this.shouldInstall = null;
     this.appc = -1;
@@ -367,5 +371,9 @@ public class AppViewViewModel {
 
   public String getOriginTag() {
     return originTag;
+  }
+
+  public boolean isLatestTrustedVersion() {
+    return isLatestTrustedVersion;
   }
 }
