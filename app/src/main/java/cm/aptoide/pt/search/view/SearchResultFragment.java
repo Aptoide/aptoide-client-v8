@@ -525,7 +525,7 @@ public class SearchResultFragment extends BackButtonFragment
     }
     viewModel.setAllStoresSelected(false);
     String storeTheme = viewModel.getStoreTheme();
-    if (storeTheme != null && storeTheme.length() > 0) {
+    if (storeThemeExists(storeTheme)) {
       followedStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
           .getRoundGradientButtonDrawable());
     }
@@ -542,10 +542,14 @@ public class SearchResultFragment extends BackButtonFragment
     }
     viewModel.setAllStoresSelected(true);
     String storeTheme = viewModel.getStoreTheme();
-    if (storeTheme != null && storeTheme.length() > 0) {
+    if (storeThemeExists(storeTheme)) {
       allStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
           .getRoundGradientButtonDrawable());
     }
+  }
+
+  private boolean storeThemeExists(String storeTheme) {
+    return (storeTheme != null && storeTheme.length() > 0);
   }
 
   private boolean hasSearchResults() {
@@ -648,10 +652,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupTheme() {
-    if (viewModel != null
-        && viewModel.getStoreTheme() != null
-        && viewModel.getStoreTheme()
-        .length() > 0) {
+    if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
       String storeTheme = viewModel.getStoreTheme();
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
@@ -672,7 +673,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupDefaultTheme() {
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
+    if (storeThemeExists(defaultThemeName)) {
       ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
