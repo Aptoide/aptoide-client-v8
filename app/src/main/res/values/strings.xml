@@ -44,6 +44,9 @@
   <string name="bottomnavigation_button_apps">Apps</string>
 
   <!-- AppView -->
+  <string name="appview_short_developer_website">Website</string>
+  <string name="appview_short_developer_email">Email</string>
+  <string name="appview_short_developer_privacy_policy">Privacy Policy</string>
   <string name="appview_button_install">Install</string>
   <string name="appview_button_downgrade">Downgrade</string>
   <string name="appview_button_open">Open</string>

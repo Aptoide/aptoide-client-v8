@@ -67,7 +67,6 @@ import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
@@ -107,7 +106,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Toolbar toolbar;
   private ActionBar actionBar;
   private long appId;
-  private double appcReward;
   private String packageName;
   private NewScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
@@ -181,10 +179,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Button storeFollow;
   private View similarBottomView;
   private RecyclerView similarApps;
-  private TextView infoWebsite;
-  private TextView infoEmail;
-  private TextView infoPrivacy;
-  private TextView infoPermissions;
+  private View infoWebsite;
+  private View infoEmail;
+  private View infoPrivacy;
+  private View infoPermissions;
 
   private ProgressBar viewProgress;
   private View appview;
@@ -218,18 +216,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     ViewTreeObserver vto = scrollView.getViewTreeObserver();
     if (positionY != null) {
-      vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-        public void onGlobalLayout() {
-          if (scrollView != null) scrollView.scrollTo(0, positionY);
-        }
+      vto.addOnGlobalLayoutListener(() -> {
+        if (scrollView != null) scrollView.scrollTo(0, positionY);
       });
     } else if (savedInstanceState != null) {
       int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
       if (position != null) {
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          public void onGlobalLayout() {
-            if (scrollView != null) scrollView.scrollTo(position[0], position[1]);
-          }
+        vto.addOnGlobalLayoutListener(() -> {
+          if (scrollView != null) scrollView.scrollTo(position[0], position[1]);
         });
       }
     }
@@ -296,10 +290,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     storeFollow = (Button) view.findViewById(R.id.follow_button);
     similarBottomView = view.findViewById(R.id.similar_layout);
     similarApps = (RecyclerView) similarBottomView.findViewById(R.id.similar_list);
-    infoWebsite = (TextView) view.findViewById(R.id.website_label);
-    infoEmail = (TextView) view.findViewById(R.id.email_label);
-    infoPrivacy = (TextView) view.findViewById(R.id.privacy_policy_label);
-    infoPermissions = (TextView) view.findViewById(R.id.permissions_label);
+    infoWebsite = view.findViewById(R.id.website_label);
+    infoEmail = view.findViewById(R.id.email_label);
+    infoPrivacy = view.findViewById(R.id.privacy_policy_label);
+    infoPermissions = view.findViewById(R.id.permissions_label);
 
     viewProgress = (ProgressBar) view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
@@ -358,7 +352,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     });
 
     SnapHelper commentsSnap = new SnapToStartHelper();
+    SnapHelper screenshotsSnap = new SnapToStartHelper();
+    SnapHelper similarSnap = new SnapToStartHelper();
     commentsSnap.attachToRecyclerView(reviewsView);
+    screenshotsSnap.attachToRecyclerView(screenshots);
+    similarSnap.attachToRecyclerView(similarApps);
 
     setupToolbar();
     attachPresenter(presenter);
@@ -465,7 +463,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     toolbar = null;
     actionBar = null;
     appId = -1;
-    appcReward = -1;
     packageName = null;
     scrollView = null;
   }
@@ -882,7 +879,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       alertDialogView.findViewById(R.id.continue_button)
           .setOnClickListener(view -> {
             socialRepository.share(packageName, storeId, "app");
-            ShowMessage.asSnack(getActivity(), R.string.social_timeline_share_dialog_title);
+            Snackbar.make(getView(), R.string.social_timeline_share_dialog_title,
+                Snackbar.LENGTH_SHORT)
+                .show();
             analytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
             analytics.sendSocialCardPreviewActionEvent(
                 TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
@@ -1022,45 +1021,27 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   private void setDeveloperDetails(AppDeveloper developer) {
     if (!TextUtils.isEmpty(developer.getWebsite())) {
-      String website = developer.getWebsite();
-      String websiteCompositeString = String.format(getString(R.string.developer_website), website);
-      SpannableString compositeSpan = new SpannableString(websiteCompositeString);
-      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
-          websiteCompositeString.indexOf(website),
-          websiteCompositeString.indexOf(website) + website.length(),
-          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-      infoWebsite.setText(compositeSpan);
+      infoWebsite.setVisibility(View.VISIBLE);
+      ((TextView) infoWebsite.findViewById(R.id.website_text)).setText(
+          getString(R.string.appview_short_developer_website));
     } else {
-      infoWebsite.setText(
-          String.format(getString(R.string.developer_website), getString(R.string.not_available)));
+      infoWebsite.setVisibility(View.GONE);
     }
 
     if (!TextUtils.isEmpty(developer.getEmail())) {
-      String email = developer.getEmail();
-      String emailCompositeString = String.format(getString(R.string.developer_email), email);
-      SpannableString compositeSpan = new SpannableString(emailCompositeString);
-      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
-          emailCompositeString.indexOf(email), emailCompositeString.indexOf(email) + email.length(),
-          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-      infoEmail.setText(compositeSpan);
+      infoEmail.setVisibility(View.VISIBLE);
+      ((TextView) infoEmail.findViewById(R.id.email_text)).setText(
+          getString(R.string.appview_short_developer_email));
     } else {
-      infoEmail.setText(
-          String.format(getString(R.string.developer_email), getString(R.string.not_available)));
+      infoEmail.setVisibility(View.GONE);
     }
 
     if (!TextUtils.isEmpty(developer.getPrivacy())) {
-      String privacy = developer.getPrivacy();
-      String privacyCompositeString =
-          String.format(getString(R.string.developer_privacy_policy), privacy);
-      SpannableString compositeSpan = new SpannableString(privacyCompositeString);
-      compositeSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.black)),
-          privacyCompositeString.indexOf(privacy),
-          privacyCompositeString.indexOf(privacy) + privacy.length(),
-          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-      infoPrivacy.setText(compositeSpan);
+      infoPrivacy.setVisibility(View.VISIBLE);
+      ((TextView) infoPrivacy.findViewById(R.id.privacy_text)).setText(
+          getString(R.string.appview_short_developer_privacy_policy));
     } else {
-      infoPrivacy.setText(String.format(getString(R.string.developer_privacy_policy),
-          getString(R.string.not_available)));
+      infoPrivacy.setVisibility(View.GONE);
     }
   }
 
@@ -1082,7 +1063,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       emptyReviewsLayout.setVisibility(View.VISIBLE);
       topReviewsLayout.setVisibility(View.GONE);
       rateAppButtonLarge.setVisibility(View.VISIBLE);
-      rateAppButton.setVisibility(View.INVISIBLE);
+      rateAppButton.setVisibility(View.GONE);
 
       if (gRating == 0) {
         emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
