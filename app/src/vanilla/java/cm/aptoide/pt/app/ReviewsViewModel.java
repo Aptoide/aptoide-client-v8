@@ -32,4 +32,8 @@ public class ReviewsViewModel {
   public ReviewRequestResult.Error getError() {
     return error;
   }
+
+  public boolean hasError() {
+    return (error != null);
+  }
 }
