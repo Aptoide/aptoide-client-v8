@@ -143,6 +143,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private TextView appcRewardValue;
   private View similarDownloadView;
   private RecyclerView similarDownloadApps;
+  private TextView latestVersionTitle;
   private TextView latestVersion;
   private TextView otherVersions;
   private RecyclerView screenshots;
@@ -247,6 +248,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
     similarDownloadApps = (RecyclerView) similarDownloadView.findViewById(R.id.similar_list);
+    latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
     latestVersion = (TextView) view.findViewById(R.id.versions_layout)
         .findViewById(R.id.latest_version);
     otherVersions = (TextView) view.findViewById(R.id.other_versions);
@@ -475,8 +477,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putIntArray("ARTICLE_SCROLL_POSITION",
-        new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
+    if (scrollView != null) {
+      outState.putIntArray("ARTICLE_SCROLL_POSITION",
+          new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
+    }
   }
 
   @Override public void showLoading() {
@@ -519,6 +523,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     latestVersion.setText(model.getVersionName());
     if (!model.isLatestTrustedVersion()) {
+      latestVersionTitle.setText(getString(R.string.appview_version_text));
       otherVersions.setText(getString(R.string.newer_version_available));
     }
     storeName.setText(model.getStore()
