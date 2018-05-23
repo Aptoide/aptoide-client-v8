@@ -30,7 +30,6 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -431,9 +430,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                             // TODO: 12/07/2017 this code doesnt run
                             Logger.d(TAG, "Installing");
                           }, throwable -> crashReport.log(throwable)));
-                  appViewAnalytics.downgradeDialogContinue();
-                } else {
-                  appViewAnalytics.downgradeDialogCancel();
                 }
               }
             });
@@ -515,11 +511,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
                       sharedPreferences) && isCreateStoreUserPrivacyEnabled) {
                     showRecommendsDialog(displayable, context);
-                  } else if (!accountManager.isLoggedIn()
-                      && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
-                      || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
-                    accountNavigator.navigateToNotLoggedInViewForResult(
-                        AppViewFragment.LOGIN_REQUEST_CODE, app);
                   }
                   ShowMessage.asSnack(v, installOrUpgradeMsg);
                 });

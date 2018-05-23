@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
@@ -13,10 +14,13 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchResultFragment;
+import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import java.util.ArrayList;
+import rx.Observable;
 
 public class AppViewNavigator {
 
+  private final int NOT_LOGGED_IN_SHARE_REQUEST_CODE = 13;
   private final FragmentNavigator fragmentNavigator;
   private final ActivityNavigator activityNavigator;
   private final boolean hasMultiStoreSearch;
@@ -89,5 +93,15 @@ public class AppViewNavigator {
     fragmentNavigator.navigateTo(
         RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName, storeTheme),
         true);
+  }
+
+  public void navigateToNotLoggedInShareFragmentForResult(String packageName) {
+    fragmentNavigator.navigateForResult(NotLoggedInShareFragment.newInstance(packageName),
+        NOT_LOGGED_IN_SHARE_REQUEST_CODE, false);
+  }
+
+  public Observable<Boolean> notLoggedInViewResults() {
+    return fragmentNavigator.results(NOT_LOGGED_IN_SHARE_REQUEST_CODE)
+        .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 }

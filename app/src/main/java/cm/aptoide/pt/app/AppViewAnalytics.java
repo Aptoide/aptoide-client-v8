@@ -6,6 +6,8 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,21 +22,26 @@ public class AppViewAnalytics {
   public static final String APP_VIEW_OPEN_FROM = "App_Viewed_Open_From";
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
-  public static final String DOWNGRADE_DIALOG = "Downgrade_Dialog";
   public static final String CLICK_INSTALL = "Clicked on install button";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
+  private static final String TYPE = "type";
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
+  private TimelineAnalytics timelineAnalytics;
+  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
+      NotLoggedInShareAnalytics notLoggedInShareAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
+    this.timelineAnalytics = timelineAnalytics;
+    this.notLoggedInShareAnalytics = notLoggedInShareAnalytics;
   }
 
   public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
@@ -205,16 +212,6 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.INSTALL, getViewName(true));
   }
 
-  public void downgradeDialogContinue() {
-    analyticsManager.logEvent(createMapData(ACTION, "Continue"), DOWNGRADE_DIALOG,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void downgradeDialogCancel() {
-    analyticsManager.logEvent(createMapData(ACTION, "Cancel"), DOWNGRADE_DIALOG,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
   public void clickOnInstallButton(GetAppMeta.App app) {
     try {
       HashMap<String, Object> map = new HashMap<>();
@@ -228,6 +225,14 @@ public class AppViewAnalytics {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void clickOnInstallButton(String packageName, String developerName, String type) {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put(TYPE, type);
+    map.put(APPLICATION_NAME, packageName);
+    map.put(APPLICATION_PUBLISHER, developerName);
+    analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createMapData(String key, String value) {
@@ -244,5 +249,41 @@ public class AppViewAnalytics {
       AnalyticsManager.Action action) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.APPVIEW, action);
+  }
+
+  public void sendTimelineLoggedInInstallRecommendContinueEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
+  }
+
+  public void sendTimelineLoggedInInstallRecommendSkipEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
+  }
+
+  public void sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
+  }
+
+  public void sendSuccessShareEvent() {
+    notLoggedInShareAnalytics.sendShareSuccess();
+  }
+
+  public void sendFailedShareEvent() {
+    notLoggedInShareAnalytics.sendShareFail();
+  }
+
+  public void sendLoggedInRecommendAppDialogShowEvent(String packageName) {
+    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
+  }
+
+  public void sendNotLoggedInRecommendAppDialogShowEvent(String packageName) {
+    notLoggedInShareAnalytics.sendNotLoggedInRecommendAppImpressionEvent(packageName);
+  }
+
+  public void sendDownloadPauseEvent(String packageName) {
+    downloadAnalytics.downloadInteractEvent(packageName, "pause");
+  }
+
+  public void sendDownloadCancelEvent(String packageName) {
+    downloadAnalytics.downloadInteractEvent(packageName, "cancel");
   }
 }

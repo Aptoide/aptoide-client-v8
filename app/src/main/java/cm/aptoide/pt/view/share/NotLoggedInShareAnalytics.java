@@ -26,6 +26,8 @@ public class NotLoggedInShareAnalytics {
   public static final String LOGIN_GOOGLE_PARAMETER = "Login Google";
   public static final String LOGIN_FACEBOOK_PARAMETER = "Login Facebook";
   public static final String ALTERNATIVE_FLOW = "alternative_flow";
+  public static final String MESSAGE_IMPRESSION = "Message_Impression";
+  public static final String MESSAGE_INTERACT = "Message_Interact";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final AccountAnalytics accountAnalytics;
@@ -38,14 +40,28 @@ public class NotLoggedInShareAnalytics {
     this.accountAnalytics = accountAnalytics;
   }
 
-  public void sendGoogleLoginButtonPressed() {
+  public void sendGoogleLoginResultEvent(String packageName, String success) {
     accountAnalytics.sendGoogleLoginButtonPressed();
     loginEventMap = createMap(LOGIN_GOOGLE_PARAMETER, NONE_PARAMETER);
+    sendInteractEvent(packageName, "Google", success);
   }
 
-  public void sendFacebookLoginButtonPressed() {
+  private void sendInteractEvent(String packageName, String action, String success) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("type", "not login recommend app");
+    data.put("fragment", getViewName(true));
+    data.put("package_name", packageName);
+    data.put("status", success);
+    data.put("action", action);
+
+    analyticsManager.logEvent(data, MESSAGE_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendFacebookLoginButtonPressed(String packageName, String success) {
     accountAnalytics.sendFacebookLoginButtonPressed();
     loginEventMap = createMap(LOGIN_FACEBOOK_PARAMETER, NONE_PARAMETER);
+    sendInteractEvent(packageName, "Facebook", success);
   }
 
   public void sendGoogleSignUpFailEvent() {
@@ -140,5 +156,15 @@ public class NotLoggedInShareAnalytics {
 
   private String getViewName(boolean isCurrent) {
     return navigationTracker.getViewName(isCurrent);
+  }
+
+  public void sendNotLoggedInRecommendAppImpressionEvent(String packageName) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("type", "not login recommend app");
+    data.put("fragment", getViewName(true));
+    data.put("package_name", packageName);
+
+    analyticsManager.logEvent(data, MESSAGE_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
   }
 }

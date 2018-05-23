@@ -26,11 +26,13 @@ public class NotLoggedInSharePresenter implements Presenter {
   private final int requestCode;
   private final ThrowableToStringMapper errorMapper;
   private final NotLoggedInShareAnalytics analytics;
+  private final String packageName;
 
   public NotLoggedInSharePresenter(NotLoggedInShareView view, CrashReport crashReport,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       Collection<String> permissions, Collection<String> requiredPermissions, int requestCode,
-      ThrowableToStringMapper errorMapper, NotLoggedInShareAnalytics analytics) {
+      ThrowableToStringMapper errorMapper, NotLoggedInShareAnalytics analytics,
+      String packageName) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
@@ -40,6 +42,7 @@ public class NotLoggedInSharePresenter implements Presenter {
     this.requestCode = requestCode;
     this.errorMapper = errorMapper;
     this.analytics = analytics;
+    this.packageName = packageName;
   }
 
   @Override public void present() {
@@ -95,7 +98,6 @@ public class NotLoggedInSharePresenter implements Presenter {
         .flatMap(__ -> view.googleSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
-          analytics.sendGoogleLoginButtonPressed();
         })
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
             RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE))
@@ -122,12 +124,14 @@ public class NotLoggedInSharePresenter implements Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   analytics.loginSuccess();
+                  analytics.sendGoogleLoginResultEvent(packageName, "success");
                   accountNavigator.popViewWithResult(requestCode, true);
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
                   view.showError(errorMapper.map(throwable));
                   crashReport.log(throwable);
+                  analytics.sendGoogleLoginResultEvent(packageName, "fail");
                   analytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.GOOGLE, throwable);
                 }))
             .retry())
@@ -142,7 +146,6 @@ public class NotLoggedInSharePresenter implements Presenter {
         .flatMap(__ -> view.facebookSignUpEvent())
         .doOnNext(event -> {
           view.showLoading();
-          analytics.sendFacebookLoginButtonPressed();
           accountNavigator.navigateToFacebookSignUpForResult(permissions);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -162,10 +165,12 @@ public class NotLoggedInSharePresenter implements Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   analytics.loginSuccess();
+                  analytics.sendFacebookLoginButtonPressed(packageName, "success");
                   accountNavigator.popViewWithResult(requestCode, true);
                 })
                 .doOnTerminate(() -> view.hideLoading())
                 .doOnError(throwable -> {
+                  analytics.sendFacebookLoginButtonPressed(packageName, "fail");
                   if (throwable instanceof FacebookSignUpException
                       && ((FacebookSignUpException) throwable).getCode()
                       == FacebookSignUpException.MISSING_REQUIRED_PERMISSIONS) {

@@ -13,6 +13,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppStats;
@@ -49,6 +50,7 @@ public class AppViewManager {
   private NotificationAnalytics notificationAnalytics;
   private DetailedApp cachedApp;
   private SearchAdResult searchAdResult;
+  private SocialRepository socialRepository;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
@@ -56,7 +58,7 @@ public class AppViewManager {
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
       AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, int limit) {
+      NotificationAnalytics notificationAnalytics, int limit, SocialRepository socialRepository) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -72,6 +74,7 @@ public class AppViewManager {
     this.downloadStateParser = downloadStateParser;
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
+    this.socialRepository = socialRepository;
     this.limit = limit;
   }
 
@@ -303,5 +306,26 @@ public class AppViewManager {
 
   public void handleAdsLogic(SearchAdResult searchAdResult) {
     adsManager.handleAdsLogic(searchAdResult);
+  }
+
+  public boolean shouldShowRecommendsPreviewDialog() {
+    return preferencesManager.shouldShowInstallRecommendsPreviewDialog();
+  }
+
+  public boolean canShowNotLoggedInDialog() {
+    return preferencesManager.canShowNotLoggedInDialog();
+  }
+
+  public Completable shareOnTimeline(String packageName, long storeId, String shareType) {
+    return Completable.fromAction(() -> socialRepository.share(packageName, storeId, shareType));
+  }
+
+  public Completable dontShowLoggedInInstallRecommendsPreviewDialog() {
+    return Completable.fromAction(
+        () -> preferencesManager.setShouldShowInstallRecommendsPreviewDialog(false));
+  }
+
+  public Completable shareOnTimelineAsync(String packageName, long storeId) {
+    return Completable.fromAction(() -> socialRepository.asyncShare(packageName, storeId, "app"));
   }
 }

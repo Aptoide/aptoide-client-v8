@@ -95,6 +95,10 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
+    continueLoggedInRecommendsDialogClick();
+    skipLoggedInRecommendsDialogClick();
+    dontShowAgainLoggedInRecommendsDialogClick();
+    handleNotLoggedinShareResults();
   }
 
   private void handleFirstLoad() {
@@ -560,6 +564,7 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelDownload()
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .doOnNext(app -> appViewAnalytics.sendDownloadCancelEvent(app.getPackageName()))
             .flatMapCompletable(
                 app -> appViewManager.cancelDownload(app.getMd5(), app.getPackageName(),
                     app.getVersionCode()))
@@ -593,6 +598,7 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.pauseDownload()
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .doOnNext(app -> appViewAnalytics.sendDownloadPauseEvent(app.getPackageName()))
             .flatMapCompletable(app -> appViewManager.pauseDownload(app.getMd5()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -604,13 +610,25 @@ public class AppViewPresenter implements Presenter {
   private void handleInstallButtonClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.installAppClick()
+        .flatMap(create -> accountManager.accountStatus())
+        .observeOn(viewScheduler)
+        .flatMap(account -> view.installAppClick()
             .flatMapCompletable(action -> {
               Completable completable = null;
               switch (action) {
                 case INSTALL:
                 case UPDATE:
-                  completable = downloadApp(action);
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(
+                          appViewViewModel -> downloadApp(action).observeOn(viewScheduler)
+                              .doOnCompleted(() -> {
+                                appViewAnalytics.clickOnInstallButton(
+                                    appViewViewModel.getPackageName(),
+                                    appViewViewModel.getDeveloper()
+                                        .getName(), action.toString());
+                                showRecommendsDialog(account.isLoggedIn(), appViewViewModel);
+                              }));
                   break;
                 case OPEN:
                   completable = openInstalledApp();
@@ -624,11 +642,25 @@ public class AppViewPresenter implements Presenter {
               }
               return completable;
             })
+            .doOnError(throwable -> throwable.printStackTrace())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
+          throw new IllegalStateException(error);
         });
+  }
+
+  private void showRecommendsDialog(boolean isLoggedIn, AppViewViewModel appViewViewModel) {
+    if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
+      view.showRecommendsDialog();
+      appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(appViewViewModel.getPackageName());
+    } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
+      appViewNavigator.navigateToNotLoggedInShareFragmentForResult(
+          appViewViewModel.getPackageName());
+      appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(
+          appViewViewModel.getPackageName());
+    }
   }
 
   private Completable downgradeApp(DownloadAppViewModel.Action action) {
@@ -673,7 +705,81 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          throw new IllegalStateException(error);
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void continueLoggedInRecommendsDialogClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.continueLoggedInRecommendsDialogClick()
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .flatMapCompletable(app -> appViewManager.shareOnTimeline(app.getPackageName(),
+                app.getStore()
+                    .getId(), "install"))
+            .doOnNext(app -> appViewAnalytics.sendTimelineLoggedInInstallRecommendContinueEvents(
+                app.getPackageName()))
+            .doOnNext(__ -> view.showRecommendsThanksMessage())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void skipLoggedInRecommendsDialogClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.skipLoggedInRecommendsDialogClick()
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .doOnNext(app -> appViewAnalytics.sendTimelineLoggedInInstallRecommendSkipEvents(
+                app.getPackageName()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void dontShowAgainLoggedInRecommendsDialogClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.dontShowAgainLoggedInRecommendsDialogClick()
+            .flatMapCompletable(
+                __ -> appViewManager.dontShowLoggedInInstallRecommendsPreviewDialog())
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .doOnNext(
+                app -> appViewAnalytics.sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(
+                    app.getPackageName()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleNotLoggedinShareResults() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> appViewNavigator.notLoggedInViewResults()
+            .filter(success -> success)
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .flatMapCompletable(app -> appViewManager.shareOnTimelineAsync(app.getPackageName(),
+                app.getStore()
+                    .getId())
+                .doOnCompleted(() -> appViewAnalytics.sendSuccessShareEvent()))
+            .doOnError(error -> {
+              appViewAnalytics.sendFailedShareEvent();
+              crashReport.log(error);
+            })
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
         });
   }
 }
