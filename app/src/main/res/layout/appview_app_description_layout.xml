@@ -30,8 +30,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="16dp"
-      android:text="@string/read_more"
-      style="@style/Aptoide.Button.Ghost.GreyFogLight"
+      android:text="@string/appview_read_more"
+      android:textSize="@dimen/text_size_small"
+      style="@style/Aptoide.Button.Ghost.Grey"
       />
 
 </LinearLayout>

@@ -1263,14 +1263,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
       badgeText.setText(badgeMessageId);
 
       if (getEditorsBrickPosition() != null) {
-        appViewAnalytics.sendEditorsChoiceClickEvent(navigationTracker.getPreviousScreen(),
-            getPackageName(), getEditorsBrickPosition());
+        appViewAnalytics.sendEditorsChoiceClickEvent(getPackageName(), getEditorsBrickPosition());
       }
       appViewAnalytics.sendAppViewOpenedFromEvent(getPackageName(), app.getDeveloper()
-              .getName(), app.getFile()
-              .getMalware()
-              .getRank()
-              .name());
+          .getName(), app.getFile()
+          .getMalware()
+          .getRank()
+          .name(), appRewardAppcoins);
       final Malware malware = app.getFile()
           .getMalware();
       badge.setOnClickListener(v -> {

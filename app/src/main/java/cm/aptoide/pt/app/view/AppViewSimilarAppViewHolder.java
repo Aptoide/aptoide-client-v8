@@ -24,7 +24,6 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
   private DecimalFormat oneDecimalFormatter;
   private PublishSubject<SimilarAppClickEvent> appClicked;
 
-
   public AppViewSimilarAppViewHolder(View itemView, DecimalFormat oneDecimalFormatter,
       PublishSubject<SimilarAppClickEvent> appClicked) {
     super(itemView);
