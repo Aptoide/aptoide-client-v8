@@ -43,8 +43,7 @@ public enum StoreTheme {
 
   TEAL(R.style.AptoideThemeDefaultTeal, R.color.teal, R.color.teal_gradient_end,
       R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal,
-      R.drawable.teal_gradient, R.color.teal_text, R.drawable.default_search_button_background,
-      8),
+      R.drawable.teal_gradient, R.color.teal_text, R.drawable.default_search_button_background, 8),
 
   RED(R.style.AptoideThemeDefaultRed, R.color.red, R.color.red_gradient_end,
       R.drawable.button_border_red, R.drawable.create_store_theme_shape_red,
@@ -52,18 +51,17 @@ public enum StoreTheme {
 
   INDIGO(R.style.AptoideThemeDefaultIndigo, R.color.indigo, R.color.indigo_gradient_end,
       R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo,
-      R.drawable.indigo_gradient, R.color.indigo_text,
-      R.drawable.default_search_button_background, 8),
+      R.drawable.indigo_gradient, R.color.indigo_text, R.drawable.default_search_button_background,
+      8),
 
   PINK(R.style.AptoideThemeDefaultPink, R.color.pink, R.color.pink_gradient_end,
       R.drawable.button_border_pink, R.drawable.create_store_theme_shape_pink,
-      R.drawable.pink_gradient, R.color.pink_text, R.drawable.default_search_button_background,
-      8),
+      R.drawable.pink_gradient, R.color.pink_text, R.drawable.default_search_button_background, 8),
 
   ORANGE(R.style.AptoideThemeDefaultOrange, R.color.orange, R.color.orange_gradient_end,
       R.drawable.button_border_orange, R.drawable.create_store_theme_shape_orange,
-      R.drawable.orange_gradient, R.color.orange_text,
-      R.drawable.default_search_button_background, 8),
+      R.drawable.orange_gradient, R.color.orange_text, R.drawable.default_search_button_background,
+      8),
 
   BROWN(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_gradient_end,
       R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown,
@@ -77,8 +75,7 @@ public enum StoreTheme {
 
   GREY(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_gradient_end,
       R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey,
-      R.drawable.grey_gradient, R.color.grey_text, R.drawable.default_search_button_background,
-      8),
+      R.drawable.grey_gradient, R.color.grey_text, R.drawable.default_search_button_background, 8),
 
   BLACK(R.style.AptoideThemeDefaultBlack, R.color.black, R.color.grey,
       R.drawable.button_border_black, R.drawable.create_store_theme_shape_black,
@@ -102,8 +99,7 @@ public enum StoreTheme {
 
   LIME(R.style.AptoideThemeDefaultLime, R.color.lime, R.color.lime_gradient_end,
       R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime,
-      R.drawable.lime_gradient, R.color.lime_text, R.drawable.default_search_button_background,
-      8),
+      R.drawable.lime_gradient, R.color.lime_text, R.drawable.default_search_button_background, 8),
 
   LIGHT_BLUE(R.style.AptoideThemeDefaultLightblue, R.color.light_blue,
       R.color.light_blue_gradient_end, R.drawable.button_border_lightblue,
@@ -120,8 +116,7 @@ public enum StoreTheme {
   //SLATEGRAY TO TEAL
   SLATE_GRAY(R.style.AptoideThemeDefaultTeal, R.color.teal, R.color.teal_gradient_end,
       R.drawable.button_border_teal, R.drawable.create_store_theme_shape_teal,
-      R.drawable.teal_gradient, R.color.teal_text, R.drawable.default_search_button_background,
-      7),
+      R.drawable.teal_gradient, R.color.teal_text, R.drawable.default_search_button_background, 7),
 
   //BLUE TO INDIGO
   BLUE(R.style.AptoideThemeDefaultIndigo, R.color.indigo, R.color.indigo_gradient_end,
@@ -149,13 +144,11 @@ public enum StoreTheme {
   //SILVER AND DIMGREY TO GREY
   SILVER(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_gradient_end,
       R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey,
-      R.drawable.grey_gradient, R.color.grey_text, R.drawable.default_search_button_background,
-      7),
+      R.drawable.grey_gradient, R.color.grey_text, R.drawable.default_search_button_background, 7),
 
   DIM_GRAY(R.style.AptoideThemeDefaultGrey, R.color.grey, R.color.grey_gradient_end,
       R.drawable.button_border_grey, R.drawable.create_store_theme_shape_grey,
-      R.drawable.grey_gradient, R.color.grey_text, R.drawable.default_search_button_background,
-      7),
+      R.drawable.grey_gradient, R.color.grey_text, R.drawable.default_search_button_background, 7),
 
   //MAGENTA TO DEEPPURPLE
   MAGENTA(R.style.AptoideThemeDefaultDeepPurple, R.color.deep_purple,
@@ -183,8 +176,7 @@ public enum StoreTheme {
   //GREENAPPLE TO LIME
   GREEN_APPLE(R.style.AptoideThemeDefaultLime, R.color.lime, R.color.lime_gradient_end,
       R.drawable.button_border_lime, R.drawable.create_store_theme_shape_lime,
-      R.drawable.lime_gradient, R.color.lime_text, R.drawable.default_search_button_background,
-      7),
+      R.drawable.lime_gradient, R.color.lime_text, R.drawable.default_search_button_background, 7),
 
   //LIGHTSKY AND LIGHTSKY TO LIGHTBLUE
   LIGHT_SKY(R.style.AptoideThemeDefaultLightblue, R.color.light_blue,

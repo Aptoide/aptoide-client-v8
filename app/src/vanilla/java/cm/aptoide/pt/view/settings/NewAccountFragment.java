@@ -53,16 +53,14 @@ public class NewAccountFragment extends BackButtonFragment
     NotBottomNavigationView {
 
   private static final float STROKE_SIZE = 0.04f;
-
+  private final String WHAT_IS_APTOIDETV_URL = "https://blog.aptoide.com/what-is-aptoidetv/";
   protected Toolbar toolbar;
   @Inject NewAccountNavigator newAccountNavigator;
   @Inject AccountAnalytics accountAnalytics;
   private AptoideAccountManager accountManager;
-
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
   private BodyInterceptor<BaseBody> bodyInterceptor;
-
   //Account views
   private View myProfileView;
   private View myStoreView;
@@ -79,16 +77,12 @@ public class NewAccountFragment extends BackButtonFragment
   private Button createStoreButton;
   private Button editStoreButton;
   private Button editProfileButton;
-
   private CardView aptoideTvCardView;
   private CardView aptoideUploaderCardView;
   private CardView aptoideBackupAppsCardView;
-
   //Navigation buttons
   private View notificationHistory;
   private View settings;
-
-  private final String WHAT_IS_APTOIDETV_URL = "https://blog.aptoide.com/what-is-aptoidetv/";
 
   public static Fragment newInstance() {
     return new NewAccountFragment();
@@ -125,6 +119,11 @@ public class NewAccountFragment extends BackButtonFragment
         newAccountNavigator, accountAnalytics));
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   private void setupProductCardViews() {
     //Aptoide TV
     ((TextView) aptoideTvCardView.findViewById(R.id.product_title_textview)).setText(
@@ -151,11 +150,6 @@ public class NewAccountFragment extends BackButtonFragment
     ((ImageView) aptoideBackupAppsCardView.findViewById(
         R.id.product_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.ic_product_backup_apps));
-  }
-
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
   }
 
   @Override public void onDestroyView() {
@@ -203,23 +197,6 @@ public class NewAccountFragment extends BackButtonFragment
           .getName(), account.getStore()
           .getAvatar());
     }
-  }
-
-  @Override public void startAptoideTvWebView() {
-    CustomTabsHelper.getInstance()
-        .openInChromeCustomTab(WHAT_IS_APTOIDETV_URL, getContext());
-  }
-
-  @Override public Observable<Void> aptoideTvCardViewClick() {
-    return RxView.clicks(aptoideTvCardView);
-  }
-
-  @Override public Observable<Void> aptoideUploaderCardViewClick() {
-    return RxView.clicks(aptoideUploaderCardView);
-  }
-
-  @Override public Observable<Void> aptoideBackupCardViewClick() {
-    return RxView.clicks(aptoideBackupAppsCardView);
   }
 
   @Override public Observable<Void> loginClick() {
@@ -270,6 +247,23 @@ public class NewAccountFragment extends BackButtonFragment
             getContext().getResources(),
             (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
             .observe());
+  }
+
+  @Override public Observable<Void> aptoideTvCardViewClick() {
+    return RxView.clicks(aptoideTvCardView);
+  }
+
+  @Override public Observable<Void> aptoideUploaderCardViewClick() {
+    return RxView.clicks(aptoideUploaderCardView);
+  }
+
+  @Override public Observable<Void> aptoideBackupCardViewClick() {
+    return RxView.clicks(aptoideBackupAppsCardView);
+  }
+
+  @Override public void startAptoideTvWebView() {
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab(WHAT_IS_APTOIDETV_URL, getContext());
   }
 
   @Override public void refreshUI(Store store) {
