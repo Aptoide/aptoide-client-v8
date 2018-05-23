@@ -511,13 +511,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                   if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
                       sharedPreferences) && isCreateStoreUserPrivacyEnabled) {
                     showRecommendsDialog(displayable, context);
-                  } else if (!accountManager.isLoggedIn()
-                      && (ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 2
-                      || ManagerPreferences.getNotLoggedInInstallClicks(sharedPreferences) == 4)) {
-                    /**
-                     accountNavigator.navigateToNotLoggedInViewForResult(
-                     AppViewFragment.LOGIN_REQUEST_CODE, app);
-                     **/
                   }
                   ShowMessage.asSnack(v, installOrUpgradeMsg);
                 });
