@@ -5,10 +5,8 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -32,7 +30,6 @@ import rx.Single;
 
 public class AppViewManager {
 
-  private final UpdatesManager updatesManager;
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
   private final AppCenter appCenter;
@@ -52,14 +49,13 @@ public class AppViewManager {
   private SearchAdResult searchAdResult;
   private SocialRepository socialRepository;
 
-  public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
-      DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
-      AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
-      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
-      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, int limit, SocialRepository socialRepository) {
-    this.updatesManager = updatesManager;
+  public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
+      AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
+      StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
+      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
+      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics, int limit,
+      SocialRepository socialRepository) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;

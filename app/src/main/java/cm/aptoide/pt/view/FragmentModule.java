@@ -62,7 +62,6 @@ import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
 import cm.aptoide.pt.home.apps.AppsNavigator;
-import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -253,19 +252,19 @@ import rx.schedulers.Schedulers;
         sharedPreferences);
   }
 
-  @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
-      InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
-      ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
-      FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
-      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      Resources resources, WindowManager windowManager, SocialRepository socialRepository) {
-    return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy,
-        aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser,
-        appViewAnalytics, notificationAnalytics,
-        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository);
+  @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
+      DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
+      AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
+      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics, Resources resources, WindowManager windowManager,
+      SocialRepository socialRepository) {
+    return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
+        adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
+        appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
+        notificationAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
+        socialRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
