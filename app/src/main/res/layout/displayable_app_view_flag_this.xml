@@ -21,7 +21,7 @@
       android:layout_marginTop="10dp"
       android:text="@string/flag_results"
       android:textAppearance="?android:textAppearanceMedium"
-      android:textColor="@color/aptoide_orange"
+      android:textColor="@color/black"
       android:textSize="18sp"
       />
 

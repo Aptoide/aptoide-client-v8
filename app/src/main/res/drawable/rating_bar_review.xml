@@ -7,11 +7,11 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
   <item
       android:id="@android:id/background"
-      android:drawable="@drawable/ic_review_white_star"/>
+      android:drawable="@drawable/ic_star_review_empty"/>
   <item
       android:id="@android:id/secondaryProgress"
-      android:drawable="@drawable/ic_review_white_star"/>
+      android:drawable="@drawable/ic_star_review_empty"/>
   <item
       android:id="@android:id/progress"
-      android:drawable="@drawable/ic_review_yellow_star"/>
+      android:drawable="@drawable/ic_star_review_full"/>
 </layer-list>

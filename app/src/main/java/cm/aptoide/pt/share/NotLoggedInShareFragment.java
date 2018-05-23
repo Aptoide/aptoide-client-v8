@@ -17,12 +17,12 @@ import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Arrays;
@@ -32,10 +32,9 @@ import rx.Observable;
 public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     implements NotLoggedInShareView {
 
-  private static final String APP_NAME = "app_name";
-  private static final String APP_ICON = "app_title";
-  private static final String APP_RATING = "app_rating";
+  private static final String PACKAGE_NAME = "PACKAGE_NAME";
   @Inject AccountAnalytics accountAnalytics;
+  @Inject NotLoggedInShareAnalytics analytics;
   private ProgressDialog progressDialog;
   private Button facebookLoginButton;
   private Button googleLoginButton;
@@ -47,15 +46,12 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   private PublishRelay<Void> backButtonPress;
   private View outerLayout;
   private ClickHandler backClickHandler;
+  private String packageName;
 
-  public static NotLoggedInShareFragment newInstance(GetAppMeta.App app) {
+  public static NotLoggedInShareFragment newInstance(String packageName) {
     NotLoggedInShareFragment fragment = new NotLoggedInShareFragment();
     Bundle bundle = new Bundle();
-    bundle.putString(APP_NAME, app.getName());
-    bundle.putString(APP_ICON, app.getIcon());
-    bundle.putFloat(APP_RATING, app.getStats()
-        .getRating()
-        .getAvg());
+    bundle.putString(PACKAGE_NAME, packageName);
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -63,6 +59,9 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    if (getArguments() != null) {
+      this.packageName = getArguments().getString(PACKAGE_NAME, "");
+    }
     errorMapper = new AccountErrorMapper(getContext(), new ErrorsMapper());
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
@@ -101,7 +100,7 @@ public class NotLoggedInShareFragment extends GooglePlayServicesFragment
     attachPresenter(new NotLoggedInSharePresenter(this, CrashReport.getInstance(), accountManager,
         ((ActivityResultNavigator) getContext()).getAccountNavigator(),
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), requestCode, errorMapper,
-        ((AptoideApplication) getContext().getApplicationContext()).getNotLoggedInShareAnalytics()));
+        analytics, packageName));
   }
 
   @Override public void onDestroyView() {

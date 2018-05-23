@@ -1,7 +1,7 @@
 package cm.aptoide.pt.search;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.OtherVersionsFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -14,17 +14,21 @@ public class SearchNavigator {
   private final String storeName;
   private final String storeTheme;
   private final String defaultStoreName;
+  private final AppNavigator appNavigator;
 
-  public SearchNavigator(FragmentNavigator navigator, String defaultStoreName) {
-    this(navigator, "", "", defaultStoreName);
+  public SearchNavigator(FragmentNavigator navigator, String defaultStoreName,
+      AppNavigator appNavigator) {
+    this(navigator, "", "", defaultStoreName, appNavigator);
   }
 
   public SearchNavigator(FragmentNavigator navigator, String storeName, String storeTheme,
-      String defaultStoreName) {
+      String defaultStoreName,
+      AppNavigator appNavigator) {
     this.navigator = navigator;
     this.storeName = storeName;
     this.storeTheme = storeTheme;
     this.defaultStoreName = defaultStoreName;
+    this.appNavigator = appNavigator;
   }
 
   public void goToOtherVersions(String name, String icon, String packageName) {
@@ -48,14 +52,11 @@ public class SearchNavigator {
   }
 
   public void goToAppView(long appId, String packageName, String storeTheme, String storeName) {
-    final Fragment fragment =
-        AppViewFragment.newInstance(appId, packageName, storeTheme, storeName);
-    navigator.navigateTo(fragment, true);
+    appNavigator.navigateWithStore(appId, packageName, storeTheme, storeName);
   }
 
   public void goToAppView(SearchAdResult searchAdResult) {
-    final Fragment fragment = AppViewFragment.newInstance(searchAdResult);
-    navigator.navigateTo(fragment, true);
+    appNavigator.navigateWithAd(searchAdResult);
   }
 
   public void goToStoreFragment(String storeName, String theme) {

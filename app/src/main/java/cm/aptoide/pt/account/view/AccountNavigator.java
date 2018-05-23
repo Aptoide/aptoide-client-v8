@@ -20,7 +20,6 @@ import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
-import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import cm.aptoide.pt.view.settings.NewAccountFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -129,11 +128,6 @@ public class AccountNavigator {
   public void popViewWithResult(int requestCode, boolean success) {
     fragmentNavigator.popWithResult(
         new Result(requestCode, (success ? Activity.RESULT_OK : Activity.RESULT_CANCELED), null));
-  }
-
-  public void navigateToNotLoggedInViewForResult(int requestCode, GetAppMeta.App app) {
-    fragmentNavigator.navigateForResult(NotLoggedInShareFragment.newInstance(app), requestCode,
-        false);
   }
 
   public Observable<Boolean> notLoggedInViewResults(int requestCode) {

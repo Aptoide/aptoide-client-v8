@@ -299,8 +299,8 @@
         <data
             android:host="*.aptoide.com"
             android:path="/"
-            tools:ignore="AppLinkUrlError"
-            android:scheme="https"/>
+            android:scheme="https"
+            tools:ignore="AppLinkUrlError"/>
       </intent-filter>
 
     </activity>

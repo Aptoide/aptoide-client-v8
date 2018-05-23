@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.permissions.ApkPermission;
@@ -38,6 +39,7 @@ import java.util.List;
 public class DialogPermissions extends DialogFragment {
 
   private GetApp getApp;
+  private AppViewViewModel app;
   private String appName;
   private String versionName;
   private String icon;
@@ -55,6 +57,18 @@ public class DialogPermissions extends DialogFragment {
     dialog.icon = app.getIcon();
     dialog.size = AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFile()
         .getFilesize(), app.getObb()), false);
+    return dialog;
+  }
+
+  public static DialogPermissions newInstance(AppViewViewModel app) {
+    DialogPermissions dialog = new DialogPermissions();
+    dialog.app = app;
+    dialog.appName = app.getAppName();
+    dialog.versionName = app.getVersionName();
+    dialog.icon = app.getIcon();
+    dialog.size =
+        AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),
+            false);
     return dialog;
   }
 
@@ -97,11 +111,17 @@ public class DialogPermissions extends DialogFragment {
 
     final TableLayout tableLayout = (TableLayout) v.findViewById(R.id.dialog_table_permissions);
 
-    final List<String> usedPermissions = getApp.getNodes()
-        .getMeta()
-        .getData()
-        .getFile()
-        .getUsedPermissions();
+    final List<String> usedPermissions;
+
+    if (getApp != null) {
+      usedPermissions = getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getFile()
+          .getUsedPermissions();
+    } else {
+      usedPermissions = app.getUsedPermissions();
+    }
 
     List<ApkPermission> apkPermissions =
         AptoideUtils.SystemU.parsePermissions(getContext(), usedPermissions);

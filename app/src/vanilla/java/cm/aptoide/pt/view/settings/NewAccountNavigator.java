@@ -6,7 +6,7 @@ import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.addressbook.view.AddressBookFragment;
-import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.view.InboxFragment;
@@ -21,27 +21,29 @@ public class NewAccountNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final MyAccountNavigator accountNavigator;
   private final AccountNavigator navigator;
+  private final AppNavigator appNavigator;
 
   private final String UPLOADER_UNAME = "aptoide-uploader";
   private final String BACKUP_APPS_UNAME = "aptoide-backup-apps";
 
   public NewAccountNavigator(FragmentNavigator fragmentNavigator,
-      MyAccountNavigator accountNavigator, AccountNavigator navigator) {
+      MyAccountNavigator accountNavigator, AccountNavigator navigator, AppNavigator appNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.accountNavigator = accountNavigator;
     this.navigator = navigator;
+    this.appNavigator = appNavigator;
   }
 
   public void navigateToAppView(String uname) {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(uname), true);
+    appNavigator.navigateWithUname(uname);
   }
 
   public void navigateToUploader() {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(UPLOADER_UNAME), true);
+    appNavigator.navigateWithUname(UPLOADER_UNAME);
   }
 
   public void navigateToBackupApps() {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(BACKUP_APPS_UNAME), true);
+    appNavigator.navigateWithUname(BACKUP_APPS_UNAME);
   }
 
   public void navigateToEditStoreView(Store store, int requestCode) {

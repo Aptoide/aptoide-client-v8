@@ -81,8 +81,8 @@ import javax.inject.Singleton;
         FirstLaunchAnalytics.FIRST_LAUNCH, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN,
         AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.CREATE_YOUR_STORE,
         AccountAnalytics.PROFILE_SETTINGS, AdultContentAnalytics.ADULT_CONTENT,
-        AppViewAnalytics.DOWNGRADE_DIALOG, DeepLinkAnalytics.APP_LAUNCH,
-        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL));
+        DeepLinkAnalytics.APP_LAUNCH, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
+        AppViewAnalytics.CLICK_INSTALL));
     return flurryEvents;
   }
 
@@ -122,6 +122,8 @@ import javax.inject.Singleton;
         BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
         TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
         AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
-        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT);
+        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
+        NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
+        DownloadAnalytics.DOWNLOAD_INTERACT);
   }
 }

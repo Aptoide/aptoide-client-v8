@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
-import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.home.BottomNavigationMapper;
@@ -17,19 +18,19 @@ public class AppsNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final BottomNavigationMapper bottomNavigationMapper;
+  private final AppNavigator appNavigator;
 
   public AppsNavigator(FragmentNavigator fragmentNavigator,
-      AptoideBottomNavigator aptoideBottomNavigator,
-      BottomNavigationMapper bottomNavigationMapper) {
+      AptoideBottomNavigator aptoideBottomNavigator, BottomNavigationMapper bottomNavigationMapper,
+      AppNavigator appNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.bottomNavigationMapper = bottomNavigationMapper;
+    this.appNavigator = appNavigator;
   }
 
   public void navigateToAppView(long appId, String packageName) {
-    fragmentNavigator.navigateTo(
-        AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, ""),
-        true);
+    appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, "");
   }
 
   public void navigateToMyAccount() {

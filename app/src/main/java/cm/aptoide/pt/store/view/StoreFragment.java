@@ -29,6 +29,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -85,6 +86,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject AppNavigator appNavigator;
   private AptoideAccountManager accountManager;
   private String storeName;
   private String title;
@@ -227,7 +229,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
     if (hasSearchFromStoreFragment()) {
       searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
       searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName, storeTheme,
-          application.getDefaultStoreName());
+          application.getDefaultStoreName(),
+              appNavigator);
       trendingManager = application.getTrendingManager();
       crashReport = CrashReport.getInstance();
     }
