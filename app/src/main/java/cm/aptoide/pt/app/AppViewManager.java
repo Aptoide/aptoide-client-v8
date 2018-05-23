@@ -98,10 +98,10 @@ public class AppViewManager {
 
   public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
     return loadAdForSimilarApps(packageName, keyWords).flatMap(
-        ad -> loadRecommended(limit, packageName).map(
-            recommendedAppsRequestResult -> new SimilarAppsViewModel(ad,
+        adResult -> loadRecommended(limit, packageName).map(
+            recommendedAppsRequestResult -> new SimilarAppsViewModel(adResult.getMinimalAd(),
                 recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError())));
+                recommendedAppsRequestResult.getError(), adResult.getError())));
   }
 
   public Single<SearchAdResult> loadAdsFromAppView() {
@@ -163,7 +163,8 @@ public class AppViewManager {
     return appCenter.loadRecommendedApps(limit, packageName);
   }
 
-  private Single<MinimalAd> loadAdForSimilarApps(String packageName, List<String> keyWords) {
+  private Single<MinimalAdRequestResult> loadAdForSimilarApps(String packageName,
+      List<String> keyWords) {
     return adsManager.loadAd(packageName, keyWords);
   }
 

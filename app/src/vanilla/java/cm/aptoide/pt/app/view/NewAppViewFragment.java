@@ -550,7 +550,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     downloadsTop.setText(
         String.format("%s", AptoideUtils.StringU.withSuffix(model.getPackageDownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
-    ratingInfo.setText(new DecimalFormat("#.#").format(model.getGlobalRating()
+    ratingInfo.setText(new DecimalFormat("#.#").format(model.getRating()
         .getAverage()));
     if (model.getAppc() > 0) {
       appcRewardView.setVisibility(View.VISIBLE);
@@ -558,6 +558,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
 
     latestVersion.setText(model.getVersionName());
+    if (!model.isLatestTrustedVersion()) {
+      otherVersions.setText(getString(R.string.newer_version_available));
+    }
     storeName.setText(model.getStore()
         .getName());
     ImageLoader.with(getContext())
@@ -626,13 +629,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     List<AppReview> reviews = reviewsModel.getReviewsList();
 
     if (reviews != null && !reviews.isEmpty()) {
-      showReviews(true, app.getGlobalRating()
+      showReviews(true, app.getRating()
           .getTotal(), app.getRating()
           .getAverage());
 
       reviewsAdapter = new TopReviewsAdapter(reviews.toArray(new AppReview[reviews.size()]));
     } else {
-      showReviews(false, app.getGlobalRating()
+      showReviews(false, app.getRating()
           .getTotal(), app.getRating()
           .getAverage());
       reviewsAdapter = new TopReviewsAdapter();

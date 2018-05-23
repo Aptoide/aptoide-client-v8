@@ -14,14 +14,16 @@ public class SimilarAppsViewModel {
   private final MinimalAd ad;
   private final List<Application> recommendedApps;
   private final boolean loading;
-  private final AppsList.Error error;
+  private final AppsList.Error recommendedAppsError;
+  private final AppsList.Error adResultError;
 
   public SimilarAppsViewModel(MinimalAd ad, List<Application> recommendedApps, boolean loading,
-      AppsList.Error error) {
+      AppsList.Error recommendedAppsError, AppsList.Error adResultError) {
     this.ad = ad;
     this.recommendedApps = recommendedApps;
     this.loading = loading;
-    this.error = error;
+    this.recommendedAppsError = recommendedAppsError;
+    this.adResultError = adResultError;
   }
 
   public MinimalAd getAd() {
@@ -36,11 +38,23 @@ public class SimilarAppsViewModel {
     return loading;
   }
 
-  public AppsList.Error getError() {
-    return error;
+  public AppsList.Error getRecommendedAppsError() {
+    return recommendedAppsError;
   }
 
   public boolean hasError() {
-    return (error != null);
+    return (recommendedAppsError != null || adResultError != null);
+  }
+
+  public AppsList.Error getAdResultError() {
+    return adResultError;
+  }
+
+  public AppsList.Error getError() {
+    if (getRecommendedAppsError() != null) {
+      return getRecommendedAppsError();
+    } else {
+      return getAdResultError();
+    }
   }
 }
