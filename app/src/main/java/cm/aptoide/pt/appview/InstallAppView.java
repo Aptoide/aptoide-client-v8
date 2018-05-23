@@ -36,11 +36,11 @@ public interface InstallAppView extends View {
 
   void showNotLoggedInDialog();
 
-  Observable<Void> continueRecommendsDialogClick();
+  Observable<Void> continueLoggedInRecommendsDialogClick();
 
   void showRecommendsThanksMessage();
 
-  Observable<Void> skipRecommendsDialogClick();
+  Observable<Void> skipLoggedInRecommendsDialogClick();
 
-  Observable<Void> dontShowAgainRecommendsDialogClick();
+  Observable<Void> dontShowAgainLoggedInRecommendsDialogClick();
 }

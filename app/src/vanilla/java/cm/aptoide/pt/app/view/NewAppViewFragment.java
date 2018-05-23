@@ -1270,7 +1270,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   }
 
-  @Override public Observable<Void> continueRecommendsDialogClick() {
+  @Override public Observable<Void> continueLoggedInRecommendsDialogClick() {
     return continueRecommendsDialogClick;
   }
 
@@ -1279,11 +1279,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .show();
   }
 
-  @Override public Observable<Void> skipRecommendsDialogClick() {
+  @Override public Observable<Void> skipLoggedInRecommendsDialogClick() {
     return skipRecommendsDialogClick;
   }
 
-  @Override public Observable<Void> dontShowAgainRecommendsDialogClick() {
+  @Override public Observable<Void> dontShowAgainLoggedInRecommendsDialogClick() {
     return dontShowAgainRecommendsDialogClick;
   }
 

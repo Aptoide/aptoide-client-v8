@@ -251,15 +251,15 @@ public class AppViewAnalytics {
         DownloadAnalytics.AppContext.APPVIEW, action);
   }
 
-  public void sendTimelineInstallRecommendContinueEvents(String packageName) {
+  public void sendTimelineLoggedInInstallRecommendContinueEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
   }
 
-  public void sendTimelineInstallRecommendSkipEvents(String packageName) {
+  public void sendTimelineLoggedInInstallRecommendSkipEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
   }
 
-  public void sendTimelineInstallRecommendDontShowMeAgainEvents(String packageName) {
+  public void sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
   }
 

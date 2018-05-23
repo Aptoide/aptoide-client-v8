@@ -320,7 +320,7 @@ public class AppViewManager {
     return Completable.fromAction(() -> socialRepository.share(packageName, storeId, shareType));
   }
 
-  public Completable dontShowInstallRecommendsPreviewDialog() {
+  public Completable dontShowLoggedInInstallRecommendsPreviewDialog() {
     return Completable.fromAction(
         () -> preferencesManager.setShouldShowInstallRecommendsPreviewDialog(false));
   }
