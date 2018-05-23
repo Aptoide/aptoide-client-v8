@@ -430,9 +430,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                             // TODO: 12/07/2017 this code doesnt run
                             Logger.d(TAG, "Installing");
                           }, throwable -> crashReport.log(throwable)));
-                  //appViewAnalytics.downgradeDialogContinue();
-                } else {
-                  //appViewAnalytics.downgradeDialogCancel();
                 }
               }
             });
