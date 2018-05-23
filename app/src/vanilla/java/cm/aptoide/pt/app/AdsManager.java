@@ -1,8 +1,12 @@
 package cm.aptoide.pt.app;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
+import cm.aptoide.pt.view.app.AppsList;
 import java.util.List;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -23,9 +27,18 @@ public class AdsManager {
         .toSingle();
   }
 
-  public Single<MinimalAd> loadAd(String packageName, List<String> keyWords) {
+  public Single<MinimalAdRequestResult> loadAd(String packageName, List<String> keyWords) {
     return adsRepository.loadAdsFromAppviewSuggested(packageName, keyWords)
-        .map(minimalAds -> minimalAds.get(0))
-        .toSingle();
+        .flatMap(minimalAds -> Observable.just(new MinimalAdRequestResult(minimalAds.get(0))))
+        .toSingle()
+        .onErrorReturn(throwable -> createMinimalAdRequestResultError(throwable));
+  }
+
+  @NonNull private MinimalAdRequestResult createMinimalAdRequestResultError(Throwable throwable) {
+    if (throwable instanceof NoNetworkConnectionException) {
+      return new MinimalAdRequestResult(AppsList.Error.NETWORK);
+    } else {
+      return new MinimalAdRequestResult(AppsList.Error.GENERIC);
+    }
   }
 }
