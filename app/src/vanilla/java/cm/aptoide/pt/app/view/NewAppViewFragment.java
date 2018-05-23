@@ -1281,9 +1281,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         install.setText(getResources().getString(R.string.appview_button_downgrade));
         break;
       case PAY:
-        install.setText(getContext().getString(R.string.appview_button_buy) + " (" + model.getPay()
-            .getSymbol() + " " + model.getPay()
-            .getPrice() + ")");
+        install.setText(
+            String.format("%s (%s %s)", getContext().getString(R.string.appview_button_buy),
+                model.getPay()
+                    .getSymbol(), model.getPay()
+                    .getPrice()));
+        break;
     }
   }
 
