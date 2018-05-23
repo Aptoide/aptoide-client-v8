@@ -22,6 +22,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   public static final String DOWNLOAD_COMPLETE_EVENT = "Download Complete";
   public static final String EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME =
       "Editors Choice_Download_Complete";
+  public static final String DOWNLOAD_INTERACT = "Download_Interact";
   private final Map<String, DownloadEvent> cache;
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
@@ -250,6 +251,15 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
           new DownloadEvent(EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME, map, context, action);
       cache.put(id + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME, downloadEvent);
     }
+  }
+
+  public void downloadInteractEvent(String packageName, String action) {
+    final HashMap<String, Object> data = new HashMap<>();
+    data.put("package_name", packageName);
+    data.put("action", action);
+
+    analyticsManager.logEvent(data, DOWNLOAD_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 
   public enum AppContext {

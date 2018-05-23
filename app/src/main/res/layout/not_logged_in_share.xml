@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/outer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,6 +29,81 @@
         android:layout_marginTop="15dp"
         android:text="@string/appview_not_logged_in_share_title_fragment"
         style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+        />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        >
+
+      <TextView
+          android:id="@+id/not_logged_in_install_text"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:gravity="start|left"
+          android:text="@string/install"
+          android:textAllCaps="true"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toLeftOf="@+id/not_logged_in_login_text"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          tools:layout_editor_absoluteX="134dp"
+          tools:layout_editor_absoluteY="129dp"
+          style="@style/Aptoide.TextView.Regular.XS"
+          />
+      <TextView
+          android:id="@+id/not_logged_in_login_text"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:text="@string/login"
+          android:textAllCaps="true"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toRightOf="@+id/not_logged_in_install_text"
+          app:layout_constraintRight_toLeftOf="@+id/not_logged_int_share_text"
+          app:layout_constraintTop_toTopOf="parent"
+          tools:layout_editor_absoluteX="166dp"
+          tools:layout_editor_absoluteY="129dp"
+          style="@style/Aptoide.TextView.Regular.XS"
+          />
+
+      <TextView
+          android:id="@+id/not_logged_int_share_text"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:gravity="right|end"
+          android:text="@string/share"
+          android:textAllCaps="true"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toRightOf="@+id/not_logged_in_login_text"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          tools:layout_editor_absoluteX="195dp"
+          tools:layout_editor_absoluteY="129dp"
+          style="@style/Aptoide.TextView.Regular.XS"
+          />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <ImageView
+        android:id="@+id/login_progress_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="3dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_no_login_share_progress_bar"
         />
 
 
@@ -62,9 +139,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="18dp"
         android:text="@string/appview_not_logged_in_share_title_connect_with"
-        style="@style/Aptoide.TextView.Regular.XXS.BlackAlpha"
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
 
     <LinearLayout
@@ -104,6 +181,17 @@
           />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/no_posts_on_user_behalf_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="@string/appview_not_logged_in_share_message_no_posts_on_user_behalf_warning"
+        style="@style/Aptoide.TextView.Regular.XXS.GreyMedium"
+        />
 
     <Button
         android:id="@+id/close_button"
