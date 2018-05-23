@@ -525,6 +525,7 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelDownload()
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .doOnNext(app -> appViewAnalytics.sendDownloadCancelEvent(app.getPackageName()))
             .flatMapCompletable(
                 app -> appViewManager.cancelDownload(app.getMd5(), app.getPackageName(),
                     app.getVersionCode()))
@@ -558,6 +559,7 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.pauseDownload()
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .doOnNext(app -> appViewAnalytics.sendDownloadPauseEvent(app.getPackageName()))
             .flatMapCompletable(app -> appViewManager.pauseDownload(app.getMd5()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

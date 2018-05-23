@@ -274,4 +274,12 @@ public class AppViewAnalytics {
   public void sendNotLoggedInRecommendAppDialogShowEvent(String packageName) {
     notLoggedInShareAnalytics.sendNotLoggedInRecommendAppImpressionEvent(packageName);
   }
+
+  public void sendDownloadPauseEvent(String packageName) {
+    downloadAnalytics.downloadInteractEvent(packageName, "pause");
+  }
+
+  public void sendDownloadCancelEvent(String packageName) {
+    downloadAnalytics.downloadInteractEvent(packageName, "cancel");
+  }
 }

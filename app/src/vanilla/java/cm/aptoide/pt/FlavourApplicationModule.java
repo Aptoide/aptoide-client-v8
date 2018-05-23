@@ -122,6 +122,7 @@ import javax.inject.Singleton;
         BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
         TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
-        NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT);
+        NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
+        DownloadAnalytics.DOWNLOAD_INTERACT);
   }
 }
