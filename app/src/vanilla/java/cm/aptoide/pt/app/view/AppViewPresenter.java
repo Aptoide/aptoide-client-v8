@@ -631,7 +631,10 @@ public class AppViewPresenter implements Presenter {
                               }));
                   break;
                 case OPEN:
-                  completable = openInstalledApp();
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(
+                          appViewViewModel -> openInstalledApp(appViewViewModel.getPackageName()));
                   break;
                 case DOWNGRADE:
                   completable = downgradeApp(action);
@@ -671,8 +674,8 @@ public class AppViewPresenter implements Presenter {
         .toCompletable();
   }
 
-  private Completable openInstalledApp() {
-    return Completable.fromAction(() -> view.openApp(""));
+  private Completable openInstalledApp(String packageName) {
+    return Completable.fromAction(() -> view.openApp(packageName));
   }
 
   private Completable downloadApp(DownloadAppViewModel.Action action) {
