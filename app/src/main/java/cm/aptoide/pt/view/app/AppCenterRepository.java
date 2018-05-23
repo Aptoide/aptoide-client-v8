@@ -4,6 +4,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -89,5 +90,33 @@ public class AppCenterRepository {
       return loadNextApps(storeId, appsLeft).map(
           appsList -> new AppsList(new ArrayList<>(cache.getValue()), false, cache.getKey()));
     }
+  }
+
+  public Single<DetailedAppRequestResult> loadDetailedApp(long appId, String storeName,
+      String packageName) {
+    return appService.loadDetailedApp(appId, storeName, packageName);
+  }
+
+  public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
+    return appService.loadDetailedApp(packageName, storeName);
+  }
+
+  public Single<DetailedAppRequestResult> loadDetailedAppFromMd5(String md5) {
+    return appService.loadDetailedAppFromMd5(md5);
+  }
+
+  public Single<DetailedAppRequestResult> loadDetailedAppAppFromUniqueName(String uniqueName) {
+    return appService.loadDetailedAppFromUniqueName(uniqueName);
+  }
+
+  public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
+    return appService.loadRecommendedApps(limit, packageName)
+        .flatMapObservable(appsList -> Observable.just(appsList)
+            .flatMapIterable(AppsList::getList)
+            .filter(application -> !application.getPackageName()
+                .equals(packageName))
+            .toList()
+            .map(apps -> new AppsList(apps, appsList.isLoading(), appsList.getOffset())))
+        .toSingle();
   }
 }

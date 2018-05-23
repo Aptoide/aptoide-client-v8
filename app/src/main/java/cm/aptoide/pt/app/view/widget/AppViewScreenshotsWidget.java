@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
@@ -79,6 +80,6 @@ public class AppViewScreenshotsWidget extends Widget<AppViewScreenshotsDisplayab
 
   private AppViewNavigator getAppViewNavigator() {
     return new AppViewNavigator(getFragmentNavigator(), getActivityNavigator(), isMultiStoreSearch,
-        defaultStoreName);
+        defaultStoreName, new AppNavigator(getFragmentNavigator()));
   }
 }

@@ -2,7 +2,7 @@ package cm.aptoide.pt.view;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -38,12 +38,7 @@ public interface FragmentProvider {
       StoreFragment.OpenType openType);
 
   @Deprecated Fragment newAppViewFragment(String packageName, String storeName,
-      AppViewFragment.OpenType openType);
-
-  @Deprecated Fragment newAppViewFragment(String md5);
-
-  @Deprecated Fragment newAppViewFragment(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag);
+      NewAppViewFragment.OpenType openType);
 
   @Deprecated Fragment newAppViewFragment(long appId, String packageName, String tag);
 
@@ -55,7 +50,7 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newAppViewFragment(SearchAdResult searchAdResult, String tag);
 
-  @Deprecated Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
+  @Deprecated Fragment newAppViewFragment(String packageName, NewAppViewFragment.OpenType openType);
 
   @Deprecated Fragment newFragmentTopStores();
 

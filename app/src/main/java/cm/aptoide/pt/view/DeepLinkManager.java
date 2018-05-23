@@ -14,7 +14,8 @@ import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -69,6 +70,7 @@ public class DeepLinkManager {
   private final DeepLinkAnalytics deepLinkAnalytics;
   private final StoreAnalytics storeAnalytics;
   private final AdsRepository adsRepository;
+  private final AppNavigator appNavigator;
   private final CompositeSubscription subscriptions;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
@@ -78,7 +80,7 @@ public class DeepLinkManager {
       NotificationAnalytics notificationAnalytics, NavigationTracker navigationTracker,
       SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
-      StoreAnalytics storeAnalytics, AdsRepository adsRepository) {
+      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -96,6 +98,7 @@ public class DeepLinkManager {
     this.deepLinkAnalytics = deepLinkAnalytics;
     this.storeAnalytics = storeAnalytics;
     this.adsRepository = adsRepository;
+    this.appNavigator = appNavigator;
     this.subscriptions = new CompositeSubscription();
   }
 
@@ -160,25 +163,25 @@ public class DeepLinkManager {
   }
 
   private void appViewDeepLinkUname(String uname) {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstanceUname(uname), true);
+    appNavigator.navigateWithUname(uname);
   }
 
   private void appViewDeepLink(String md5) {
-    fragmentNavigator.navigateTo(AppViewFragment.newInstance(md5), true);
+    appNavigator.navigateWithMd5(md5);
   }
 
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
-    AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
-        : AppViewFragment.OpenType.OPEN_ONLY;
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(appId, packageName, openType, ""), true);
+    NewAppViewFragment.OpenType openType =
+        showPopup ? NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
+            : NewAppViewFragment.OpenType.OPEN_ONLY;
+    appNavigator.navigateWithAppId(appId, packageName, openType, "");
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
-    AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
-        : AppViewFragment.OpenType.OPEN_ONLY;
-    fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newAppViewFragment(packageName, storeName, openType), true);
+    NewAppViewFragment.OpenType openType =
+        showPopup ? NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
+            : NewAppViewFragment.OpenType.OPEN_ONLY;
+    appNavigator.navigateWithPackageAndStoreNames(packageName, storeName, openType);
   }
 
   private void searchDeepLink(String query, boolean shortcutNavigation) {

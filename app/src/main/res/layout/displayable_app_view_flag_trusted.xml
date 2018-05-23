@@ -10,7 +10,6 @@
     android:id="@+id/good_app_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/button_border_grey"
     android:orientation="horizontal"
     style="@style/AppViewWidget"
     >

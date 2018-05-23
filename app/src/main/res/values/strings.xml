@@ -44,6 +44,9 @@
   <string name="bottomnavigation_button_apps">Apps</string>
 
   <!-- AppView -->
+  <string name="appview_short_developer_website">Website</string>
+  <string name="appview_short_developer_email">Email</string>
+  <string name="appview_short_developer_privacy_policy">Privacy Policy</string>
   <string name="appview_button_install">Install</string>
   <string name="appview_button_downgrade">Downgrade</string>
   <string name="appview_button_open">Open</string>
@@ -51,6 +54,7 @@
   <string name="appview_button_buy">Buy</string>
   <string name="appview_followers_count_text">%1$s   followers</string>
   <string name="appview_other_versions"><u>Other versions</u></string>
+  <string name="appview_newer_version">Newer version available</string>
   <string name="appview_latest_version_text">Latest version</string>
   <string name="appview_rate_this_app">rate this app</string>
   <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
@@ -62,6 +66,9 @@
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
   <string name="appcardview_title_no_stars" translatable="false">- -</string>
+  <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
+  <string name="appview_uploaded_by">App uploaded by</string>
+  <string name="appview_similar_apps">Similar apps</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -166,7 +173,7 @@
   <string name="reviewappview_short_comments_by_language_current_language_first">Current language first</string>
   <string name="reviewappview_short_comments_by_language_english">English</string>
 
-
+  <string name="appview_read_more">Read More</string>
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
   <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
@@ -175,7 +182,7 @@
         credibility and other user comments. Aptoide always recommends that you only install %1$s trusted apps.</string>
   <string name="dialog_install_warning_trusted_version_button">Trusted version</string>
   <string name="dialog_install_warning_get_trusted_version_button">Get</string>
-  <string name="flag_results">Flag results</string>
+  <string name="flag_results">Flag this app</string>
   <string name="helpful">Helpful</string>
   <string name="not_helpful">Not Helpful</string>
   <string name="description_not_available">No available description for this app</string>
@@ -543,6 +550,7 @@
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
 
   <string name="appc_message_appview_appcoins_reward">Try this app and get %s </string>
+  <string name="appview_short_downloading">Downloading</string>
 
 
 </resources>

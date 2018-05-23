@@ -6,6 +6,8 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,31 +22,37 @@ public class AppViewAnalytics {
   public static final String APP_VIEW_OPEN_FROM = "App_Viewed_Open_From";
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
-  public static final String DOWNGRADE_DIALOG = "Downgrade_Dialog";
   public static final String CLICK_INSTALL = "Clicked on install button";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
+  private static final String TYPE = "type";
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
+  private TimelineAnalytics timelineAnalytics;
+  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
+      NotLoggedInShareAnalytics notLoggedInShareAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
+    this.timelineAnalytics = timelineAnalytics;
+    this.notLoggedInShareAnalytics = notLoggedInShareAnalytics;
   }
 
-  public void sendEditorsChoiceClickEvent(ScreenTagHistory previousScreen, String packageName,
-      String editorsBrickPosition) {
+  public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
     analyticsManager.logEvent(
-        createEditorsChoiceClickEventMap(previousScreen, packageName, editorsBrickPosition),
-        EDITORS_CHOICE_CLICKS, AnalyticsManager.Action.CLICK, getViewName(false));
+        createEditorsChoiceClickEventMap(navigationTracker.getPreviousScreen(), packageName,
+            editorsBrickPosition), EDITORS_CHOICE_CLICKS, AnalyticsManager.Action.CLICK,
+        getViewName(false));
     analyticsManager.logEvent(
-        createEditorsClickEventMap(previousScreen, packageName, editorsBrickPosition),
-        HOME_PAGE_EDITORS_CHOICE_FLURRY, AnalyticsManager.Action.CLICK, getViewName(false));
+        createEditorsClickEventMap(navigationTracker.getPreviousScreen(), packageName,
+            editorsBrickPosition), HOME_PAGE_EDITORS_CHOICE_FLURRY, AnalyticsManager.Action.CLICK,
+        getViewName(false));
   }
 
   private Map<String, Object> createEditorsClickEventMap(ScreenTagHistory previousScreen,
@@ -69,17 +77,18 @@ public class AppViewAnalytics {
     return map;
   }
 
-  public void sendAppViewOpenedFromEvent(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge) {
-    analyticsManager.logEvent(
-        createAppViewedFromMap(previousScreen, currentScreen, packageName, appPublisher, badge),
+  public void sendAppViewOpenedFromEvent(String packageName, String appPublisher, String badge,
+      double appc) {
+    analyticsManager.logEvent(createAppViewedFromMap(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), packageName, appPublisher, badge, appc),
         APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
-    analyticsManager.logEvent(createAppViewDataMap(previousScreen, currentScreen, packageName),
-        OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
+    analyticsManager.logEvent(createAppViewDataMap(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), packageName, appc), OPEN_APP_VIEW,
+        AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private Map<String, Object> createAppViewDataMap(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName) {
+      ScreenTagHistory currentScreen, String packageName, double appc) {
     Map<String, String> packageMap = new HashMap<>();
     packageMap.put("package", packageName);
     Map<String, Object> data = new HashMap<>();
@@ -94,12 +103,14 @@ public class AppViewAnalytics {
     } else {
       data.put("previous_tag", APP_SHORTCUT);
     }
+    if (appc > 0) data.put("appcoins_type", "appcoins ads");
+
     return data;
   }
 
   private HashMap<String, Object> createAppViewedFromMap(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge)
-      throws NullPointerException {
+      ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge,
+      double appc) throws NullPointerException {
     HashMap<String, Object> map = new HashMap<>();
     if (previousScreen != null) {
       if (previousScreen.getFragment() != null) {
@@ -114,6 +125,8 @@ public class AppViewAnalytics {
         map.put("tag", currentScreen.getTag());
       }
     }
+    if (appc > 0) map.put("appcoins_type", "appcoins ads");
+
     map.put("package_name", packageName);
     map.put("application_publisher", appPublisher);
     map.put("trusted_badge", badge);
@@ -165,10 +178,22 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
+  public void sendSimilarAppsInteractEvent(String type) {
+    analyticsManager.logEvent(createSimilarAppsEventData(type), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
   private Map<String, Object> createFlagAppEventData(String action, String flagDetail) {
     Map<String, Object> map = new HashMap<>();
     map.put(ACTION, action);
     map.put("flag_details", flagDetail);
+    return map;
+  }
+
+  private Map<String, Object> createSimilarAppsEventData(String type) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(ACTION, "Open App on Recommended for you");
+    map.put("bundle_tag", type);
     return map;
   }
 
@@ -187,16 +212,6 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.INSTALL, getViewName(true));
   }
 
-  public void downgradeDialogContinue() {
-    analyticsManager.logEvent(createMapData(ACTION, "Continue"), DOWNGRADE_DIALOG,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void downgradeDialogCancel() {
-    analyticsManager.logEvent(createMapData(ACTION, "Cancel"), DOWNGRADE_DIALOG,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
   public void clickOnInstallButton(GetAppMeta.App app) {
     try {
       HashMap<String, Object> map = new HashMap<>();
@@ -210,6 +225,14 @@ public class AppViewAnalytics {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void clickOnInstallButton(String packageName, String developerName, String type) {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put(TYPE, type);
+    map.put(APPLICATION_NAME, packageName);
+    map.put(APPLICATION_PUBLISHER, developerName);
+    analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createMapData(String key, String value) {
@@ -226,5 +249,41 @@ public class AppViewAnalytics {
       AnalyticsManager.Action action) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.APPVIEW, action);
+  }
+
+  public void sendTimelineLoggedInInstallRecommendContinueEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
+  }
+
+  public void sendTimelineLoggedInInstallRecommendSkipEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
+  }
+
+  public void sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(String packageName) {
+    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
+  }
+
+  public void sendSuccessShareEvent() {
+    notLoggedInShareAnalytics.sendShareSuccess();
+  }
+
+  public void sendFailedShareEvent() {
+    notLoggedInShareAnalytics.sendShareFail();
+  }
+
+  public void sendLoggedInRecommendAppDialogShowEvent(String packageName) {
+    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
+  }
+
+  public void sendNotLoggedInRecommendAppDialogShowEvent(String packageName) {
+    notLoggedInShareAnalytics.sendNotLoggedInRecommendAppImpressionEvent(packageName);
+  }
+
+  public void sendDownloadPauseEvent(String packageName) {
+    downloadAnalytics.downloadInteractEvent(packageName, "pause");
+  }
+
+  public void sendDownloadCancelEvent(String packageName) {
+    downloadAnalytics.downloadInteractEvent(packageName, "cancel");
   }
 }

@@ -10,13 +10,15 @@ import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.download.view.DownloadsFragment;
-import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
+import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
+import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
@@ -88,4 +90,8 @@ public interface FragmentComponent {
   void inject(NewAccountFragment newAccountFragment);
 
   void inject(GetRewardAppCoinsAppsFragment getRewardAppCoinsAppsFragment);
+
+  void inject(NewAppViewFragment newAppViewFragment);
+
+  void inject(RateAndReviewsFragment rateAndReviewsFragment);
 }
