@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -201,6 +203,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ImageView pauseDownload;
   private ImageView resumeDownload;
   private DownloadAppViewModel.Action action;
+  private CollapsingToolbarLayout collapsingToolbarLayout;
   private AdsRepository adsRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
@@ -377,6 +380,23 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarSnap.attachToRecyclerView(similarApps);
 
     setupToolbar();
+
+    ((AppBarLayout) view.findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(
+        (appBarLayout, verticalOffset) -> {
+          float percentage =
+              ((float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange());
+          view.findViewById(R.id.app_icon)
+              .setAlpha(1 - (percentage * 1.20f));
+          view.findViewById(R.id.app_name)
+              .setAlpha(1 - (percentage * 1.20f));
+          ((ToolbarArcBackground) view.findViewById(R.id.toolbar_background_arc)).setScale(
+              percentage);
+        });
+
+    collapsingToolbarLayout =
+        ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
+    collapsingToolbarLayout.setExpandedTitleColor(
+        getResources().getColor(android.R.color.transparent));
     attachPresenter(presenter);
   }
 
@@ -483,6 +503,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     appId = -1;
     packageName = null;
     scrollView = null;
+    collapsingToolbarLayout = null;
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -520,6 +541,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void populateAppDetails(AppViewViewModel model) {
+    collapsingToolbarLayout.setTitle(model.getAppName());
     StoreTheme storeThemeEnum = StoreTheme.get(model.getStore());
 
     appName.setText(model.getAppName());

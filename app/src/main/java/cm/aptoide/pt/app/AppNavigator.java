@@ -55,8 +55,7 @@ public class AppNavigator {
   }
 
   public void navigateWithAppId(long appId, String packageName,
-      NewAppViewFragment.OpenType openType,
-      String tag) {
+      NewAppViewFragment.OpenType openType, String tag) {
     Bundle bundle = new Bundle();
     bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
     bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
