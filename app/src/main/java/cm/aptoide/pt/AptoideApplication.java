@@ -667,7 +667,8 @@ public abstract class AptoideApplication extends Application {
               SecurePreferencesImplementation.getInstance(getApplicationContext(),
                   getDefaultSharedPreferences()))) {
 
-            PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+            //TODO move this to MainActivity, and make necessary refactoring in both this class and MainActivity
+            //PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
             return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
                 .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
