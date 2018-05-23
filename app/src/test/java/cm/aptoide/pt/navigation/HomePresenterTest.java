@@ -164,7 +164,7 @@ public class HomePresenterTest {
     //When more in a bundle is clicked
     moreClickEvent.onNext(click);
     //Then it should send a more clicked analytics event
-    verify(homeAnalytics).sendTapOnMoreInteractEvent(0, localTopAppsBundle.getTitle(),
+    verify(homeAnalytics).sendTapOnMoreInteractEvent(0, localTopAppsBundle.getTag(),
         localTopAppsBundle.getContent()
             .size());
     //Then it should navigate with the specific action behaviour
@@ -279,7 +279,7 @@ public class HomePresenterTest {
     //When an user scrolls a bundle with items to the right
     bundleScrolledEvent.onNext(new HomeEvent(localTopAppsBundle, 2, HomeEvent.Type.SCROLL_RIGHT));
     //Then a scroll right analytics event should be sent
-    verify(homeAnalytics).sendScrollRightInteractEvent(2, localTopAppsBundle.getTitle(),
+    verify(homeAnalytics).sendScrollRightInteractEvent(2, localTopAppsBundle.getTag(),
         localTopAppsBundle.getContent()
             .size());
   }

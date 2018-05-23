@@ -35,14 +35,14 @@ public class HomeAnalyticsTest {
   @Test public void sendTapOnAppInteractEvent() throws Exception {
     //Given an initialized HomeAnalytics
     //When user clicks on an App
-    homeAnalytics.sendTapOnAppInteractEvent(4.7, "cm.aptoide.pt", 2, 5, "Best Apps", 9);
+    homeAnalytics.sendTapOnAppInteractEvent(4.7, "cm.aptoide.pt", 2, 5, "appcoins-iab", 9);
     //Then an Home_Interact event with 'tap on app' action,  app_rating, position, package_name, bundle_name, bundle_position and bundle_total_items is logged to the analytics manager
     HashMap<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_APP);
     data.put("app_rating", 4.7);
     data.put("package_name", "cm.aptoide.pt");
     data.put("app_position", 2);
-    data.put("bundle_name", "Best Apps");
+    data.put("bundle_tag", "appcoins-iab");
     data.put("bundle_position", 5);
     data.put("bundle_total_items", 9);
     verify(analyticsManager).logEvent(eq(data), eq("Home_Interact"),
@@ -74,14 +74,14 @@ public class HomeAnalyticsTest {
   @Test public void sendRecommendedAppInteractEvent() throws Exception {
     //Given an initialized HomeAnalytics
     //When user clicks on a recommended App
-    homeAnalytics.sendRecommendedAppInteractEvent(4.7, "cm.aptoide.pt", 0,
+    homeAnalytics.sendRecommendedAppInteractEvent(4.7, "cm.aptoide.pt", 0, "timeline-card",
         HomeEvent.Type.SOCIAL_CLICK);
-    //Then an Home_Interact event with 'tap on app' action,  app_rating, package_name, bundle_name, bundle_position is logged to the analytics manager
+    //Then an Home_Interact event with 'tap on app' action,  app_rating, package_name, bundle_tag, bundle_position is logged to the analytics manager
     HashMap<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_APP);
     data.put("app_rating", 4.7);
     data.put("package_name", "cm.aptoide.pt");
-    data.put("bundle_name", "recommendation card");
+    data.put("bundle_tag", "timeline-card");
     data.put("bundle_position", 0);
     verify(analyticsManager).logEvent(eq(data), eq("Home_Interact"),
         eq(AnalyticsManager.Action.OPEN), eq("home"));
@@ -90,11 +90,11 @@ public class HomeAnalyticsTest {
   @Test public void sendTapOnMoreInteractEvent() throws Exception {
     //Given an initialized HomeAnalytics
     //When user clicks on a more (in any bundle)
-    homeAnalytics.sendTapOnMoreInteractEvent(5, "Best Apps", 9);
-    //Then an Home_Interact event with 'tap on app' action,  app_rating, position, package_name, bundle_name, bundle_position and bundle_total_items is logged to the analytics manager
+    homeAnalytics.sendTapOnMoreInteractEvent(5, "appcoins-iab", 9);
+    //Then an Home_Interact event with 'tap on app' action,  app_rating, position, package_name, bundle_tag, bundle_position and bundle_total_items is logged to the analytics manager
     HashMap<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_MORE);
-    data.put("bundle_name", "Best Apps");
+    data.put("bundle_tag", "appcoins-iab");
     data.put("bundle_position", 5);
     data.put("bundle_total_items", 9);
     verify(analyticsManager).logEvent(eq(data), eq("Home_Interact"),
@@ -104,11 +104,11 @@ public class HomeAnalyticsTest {
   @Test public void sendScrollRightInteractEvent() throws Exception {
     //Given an initialized HomeAnalytics
     //When user scrolls right in a bundle with items
-    homeAnalytics.sendScrollRightInteractEvent(5, "Best Apps", 9);
+    homeAnalytics.sendScrollRightInteractEvent(5, "apps-group-editors-choice", 9);
     //Then an Home_Interact event with 'scroll right' action is logged to the analytics manager
     HashMap<String, Object> data = new HashMap<>();
     data.put("action", SCROLL_RIGHT);
-    data.put("bundle_name", "Best Apps");
+    data.put("bundle_tag", "apps-group-editors-choice");
     data.put("bundle_position", 5);
     data.put("bundle_total_items", 9);
     verify(analyticsManager).logEvent(eq(data), eq("Home_Interact"),

@@ -25,10 +25,10 @@ public class HomeAnalytics {
     this.analyticsManager = analyticsManager;
   }
 
-  public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleName, int itemsInBundle) {
+  public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleTag, int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_MORE);
-    data.put("bundle_name", bundleName);
+    data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
 
@@ -36,11 +36,11 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendScrollRightInteractEvent(int bundlePosition, String bundleName,
+  public void sendScrollRightInteractEvent(int bundlePosition, String bundleTag,
       int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", SCROLL_RIGHT);
-    data.put("bundle_name", bundleName);
+    data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.SCROLL,
@@ -62,13 +62,13 @@ public class HomeAnalytics {
   }
 
   public void sendTapOnAppInteractEvent(double appRating, String packageName, int appPosition,
-      int bundlePosition, String bundleName, int itemsInBundle) {
+      int bundlePosition, String bundleTag, int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_APP);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
     data.put("app_position", appPosition);
-    data.put("bundle_name", bundleName);
+    data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
 
@@ -77,12 +77,12 @@ public class HomeAnalytics {
   }
 
   public void sendRecommendedAppInteractEvent(double appRating, String packageName,
-      int bundlePosition, HomeEvent.Type type) {
+      int bundlePosition, String bundleTag, HomeEvent.Type type) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_APP);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
-    data.put("bundle_name", "recommendation card");
+    data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, HOME_INTERACT, parseAction(type),
