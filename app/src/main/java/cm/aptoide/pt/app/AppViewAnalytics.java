@@ -28,6 +28,7 @@ public class AppViewAnalytics {
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
+  private static final String TYPE = "type";
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -229,6 +230,14 @@ public class AppViewAnalytics {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void clickOnInstallButton(String packageName, String developerName, String type) {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put(TYPE, type);
+    map.put(APPLICATION_NAME, packageName);
+    map.put(APPLICATION_PUBLISHER, developerName);
+    analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private Map<String, Object> createMapData(String key, String value) {

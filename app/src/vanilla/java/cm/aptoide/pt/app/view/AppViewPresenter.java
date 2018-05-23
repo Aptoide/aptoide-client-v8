@@ -584,6 +584,10 @@ public class AppViewPresenter implements Presenter {
                       .flatMapCompletable(
                           appViewViewModel -> downloadApp(action).observeOn(viewScheduler)
                               .doOnCompleted(() -> {
+                                appViewAnalytics.clickOnInstallButton(
+                                    appViewViewModel.getPackageName(),
+                                    appViewViewModel.getDeveloper()
+                                        .getName(), action.toString());
                                 if (account.isLoggedIn()
                                     && appViewManager.shouldShowRecommendsPreviewDialog()) {
                                   view.showRecommendsDialog();
