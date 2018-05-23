@@ -627,18 +627,7 @@ public class AppViewPresenter implements Presenter {
                                     appViewViewModel.getPackageName(),
                                     appViewViewModel.getDeveloper()
                                         .getName(), action.toString());
-                                if (account.isLoggedIn()
-                                    && appViewManager.shouldShowRecommendsPreviewDialog()) {
-                                  view.showRecommendsDialog();
-                                  appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(
-                                      appViewViewModel.getPackageName());
-                                } else if (!account.isLoggedIn()
-                                    && appViewManager.canShowNotLoggedInDialog()) {
-                                  appViewNavigator.navigateToNotLoggedInShareFragmentForResult(
-                                      appViewViewModel.getPackageName());
-                                  appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(
-                                      appViewViewModel.getPackageName());
-                                }
+                                showRecommendsDialog(account.isLoggedIn(), appViewViewModel);
                               }));
                   break;
                 case OPEN:
@@ -660,6 +649,18 @@ public class AppViewPresenter implements Presenter {
         }, error -> {
           throw new IllegalStateException(error);
         });
+  }
+
+  private void showRecommendsDialog(boolean isLoggedIn, AppViewViewModel appViewViewModel) {
+    if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
+      view.showRecommendsDialog();
+      appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(appViewViewModel.getPackageName());
+    } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
+      appViewNavigator.navigateToNotLoggedInShareFragmentForResult(
+          appViewViewModel.getPackageName());
+      appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(
+          appViewViewModel.getPackageName());
+    }
   }
 
   private Completable downgradeApp(DownloadAppViewModel.Action action) {
