@@ -6,5 +6,5 @@
       android:centerY="70%"
       android:dither="true"
       android:endColor="@android:color/transparent"
-      android:startColor="@color/transparent_black"/>
+      android:startColor="@color/black_87_alpha"/>
 </shape>

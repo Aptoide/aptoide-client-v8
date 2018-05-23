@@ -44,6 +44,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -54,6 +56,7 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -63,12 +66,15 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
@@ -89,6 +95,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -196,6 +204,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ImageView resumeDownload;
   private DownloadAppViewModel.Action action;
   private CollapsingToolbarLayout collapsingToolbarLayout;
+  private AdsRepository adsRepository;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
+  private QManager qManager;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -210,6 +222,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
 
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    qManager = application.getQManager();
+    httpClient = application.getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
+    adsRepository = application.getAdsRepository();
     setHasOptionsMenu(true);
   }
 
@@ -935,6 +953,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void hideSimilarApps() {
     similarBottomView.setVisibility(View.GONE);
+  }
+
+  @Override public void extractReferrer(SearchAdResult searchAdResult) {
+    AptoideUtils.ThreadU.runOnUiThread(
+        () -> ReferrerUtils.extractReferrer(searchAdResult, ReferrerUtils.RETRIES, false,
+            adsRepository, httpClient, converterFactory, qManager,
+            getContext().getApplicationContext(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            new MinimalAdMapper()));
   }
 
   private void setTrustedBadge(Malware malware) {
