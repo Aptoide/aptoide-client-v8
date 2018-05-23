@@ -11,6 +11,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.view.AppViewConfiguration;
@@ -48,6 +49,7 @@ public class AppViewManager {
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
   private DetailedApp cachedApp;
+  private SearchAdResult searchAdResult;
   private SocialRepository socialRepository;
 
   public AppViewManager(UpdatesManager updatesManager, InstallManager installManager,
@@ -99,14 +101,16 @@ public class AppViewManager {
 
   public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
     return loadAdForSimilarApps(packageName, keyWords).flatMap(
-        ad -> loadRecommended(limit, packageName).map(
-            recommendedAppsRequestResult -> new SimilarAppsViewModel(ad,
+        adResult -> loadRecommended(limit, packageName).map(
+            recommendedAppsRequestResult -> new SimilarAppsViewModel(adResult.getMinimalAd(),
                 recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError())));
+                recommendedAppsRequestResult.getError(), adResult.getError())));
   }
 
-  public Single<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
-    return adsManager.loadAds(packageName, storeName);
+  public Single<SearchAdResult> loadAdsFromAppView() {
+    return adsManager.loadAds(cachedApp.getPackageName(), cachedApp.getStore()
+        .getName())
+        .map(SearchAdResult::new);
   }
 
   public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
@@ -162,7 +166,8 @@ public class AppViewManager {
     return appCenter.loadRecommendedApps(limit, packageName);
   }
 
-  private Single<MinimalAd> loadAdForSimilarApps(String packageName, List<String> keyWords) {
+  private Single<MinimalAdRequestResult> loadAdForSimilarApps(String packageName,
+      List<String> keyWords) {
     return adsManager.loadAd(packageName, keyWords);
   }
 
@@ -289,6 +294,18 @@ public class AppViewManager {
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
     return Completable.fromAction(
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+  }
+
+  public SearchAdResult getSearchAdResult() {
+    return searchAdResult;
+  }
+
+  public void setSearchAdResult(SearchAdResult searchAdResult) {
+    this.searchAdResult = searchAdResult;
+  }
+
+  public void handleAdsLogic(SearchAdResult searchAdResult) {
+    adsManager.handleAdsLogic(searchAdResult);
   }
 
   public boolean shouldShowRecommendsPreviewDialog() {

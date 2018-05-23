@@ -1229,6 +1229,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository) {
-    return new AdsManager(adsRepository);
+    return new AdsManager(adsRepository, AccessorFactory.getAccessorFor(
+        ((AptoideApplication) application.getApplicationContext()).getDatabase(),
+        StoredMinimalAd.class), new MinimalAdMapper());
   }
 }
