@@ -705,7 +705,7 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          throw new IllegalStateException(error);
+          throw new OnErrorNotImplementedException(error);
         });
   }
 
@@ -724,7 +724,7 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          throw new IllegalStateException(error);
+          throw new OnErrorNotImplementedException(error);
         });
   }
 
@@ -739,7 +739,7 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          throw new IllegalStateException(error);
+          throw new OnErrorNotImplementedException(error);
         });
   }
 
@@ -747,15 +747,17 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.dontShowAgainLoggedInRecommendsDialogClick()
-            .flatMapCompletable(__ -> appViewManager.dontShowLoggedInInstallRecommendsPreviewDialog())
+            .flatMapCompletable(
+                __ -> appViewManager.dontShowLoggedInInstallRecommendsPreviewDialog())
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-            .doOnNext(app -> appViewAnalytics.sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(
-                app.getPackageName()))
+            .doOnNext(
+                app -> appViewAnalytics.sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(
+                    app.getPackageName()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          throw new IllegalStateException(error);
+          throw new OnErrorNotImplementedException(error);
         });
   }
 
@@ -777,7 +779,7 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          throw new IllegalStateException(error);
+          throw new OnErrorNotImplementedException(error);
         });
   }
 }
