@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.install.Install;
 
 /**
@@ -41,23 +42,28 @@ public class DownloadStateParser {
     return downloadState;
   }
 
-  public DownloadAppViewModel.Action parseDownloadType(Install.InstallationType type) {
+  public DownloadAppViewModel.Action parseDownloadType(Install.InstallationType type,
+      boolean paidApp, GetAppMeta.Pay pay) {
     DownloadAppViewModel.Action action;
-    switch (type) {
-      case INSTALLED:
-        action = DownloadAppViewModel.Action.OPEN;
-        break;
-      case INSTALL:
-        action = DownloadAppViewModel.Action.INSTALL;
-        break;
-      case DOWNGRADE:
-        action = DownloadAppViewModel.Action.DOWNGRADE;
-        break;
-      case UPDATE:
-        action = DownloadAppViewModel.Action.UPDATE;
-        break;
-      default:
-        action = DownloadAppViewModel.Action.INSTALL;
+    if (paidApp && !pay.isPaid()) {
+      action = DownloadAppViewModel.Action.PAY;
+    } else {
+      switch (type) {
+        case INSTALLED:
+          action = DownloadAppViewModel.Action.OPEN;
+          break;
+        case INSTALL:
+          action = DownloadAppViewModel.Action.INSTALL;
+          break;
+        case DOWNGRADE:
+          action = DownloadAppViewModel.Action.DOWNGRADE;
+          break;
+        case UPDATE:
+          action = DownloadAppViewModel.Action.UPDATE;
+          break;
+        default:
+          action = DownloadAppViewModel.Action.INSTALL;
+      }
     }
     return action;
   }

@@ -14,6 +14,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.NestedScrollView;
@@ -43,10 +44,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
@@ -55,6 +58,10 @@ import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
+import cm.aptoide.pt.billing.exception.BillingException;
+import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
+import cm.aptoide.pt.billing.view.BillingActivity;
+import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -109,6 +116,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class NewAppViewFragment extends NavigationTrackFragment implements AppViewView {
   private static final String ORIGIN_TAG = "TAG";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
+  private static final int PAY_APP_REQUEST_CODE = 12;
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
@@ -208,6 +216,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
+  private PurchaseBundleMapper purchaseBundleMapper;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -227,6 +236,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     qManager = application.getQManager();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    purchaseBundleMapper = application.getPurchaseBundleMapper();
     adsRepository = application.getAdsRepository();
     setHasOptionsMenu(true);
   }
@@ -504,18 +514,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     packageName = null;
     scrollView = null;
     collapsingToolbarLayout = null;
-  }
-
-  @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putIntArray("ARTICLE_SCROLL_POSITION",
-        new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
   }
 
   @Override public void showLoading() {
@@ -1193,7 +1191,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
-      setButtonText(model.getAction());
+      setButtonText(model);
     }
   }
 
@@ -1267,7 +1265,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private void setButtonText(DownloadAppViewModel.Action action) {
+  private void setButtonText(DownloadAppViewModel model) {
+    DownloadAppViewModel.Action action = model.getAction();
     switch (action) {
       case UPDATE:
         install.setText(getResources().getString(R.string.appview_button_update));
@@ -1281,7 +1280,53 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       case DOWNGRADE:
         install.setText(getResources().getString(R.string.appview_button_downgrade));
         break;
+      case PAY:
+        install.setText(getContext().getString(R.string.appview_button_buy) + " (" + model.getPay()
+            .getSymbol() + " " + model.getPay()
+            .getPrice() + ")");
     }
+  }
+
+  public void buyApp(long appId) {
+    startActivityForResult(
+        BillingActivity.getIntent(getActivity(), appId, BuildConfig.APPLICATION_ID),
+        PAY_APP_REQUEST_CODE);
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    if (requestCode == PAY_APP_REQUEST_CODE) {
+      try {
+        final Bundle data = (intent != null) ? intent.getExtras() : null;
+        final PaidAppPurchase purchase =
+            (PaidAppPurchase) purchaseBundleMapper.map(resultCode, data);
+
+        FragmentActivity fragmentActivity = getActivity();
+        Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
+        installApp.putExtra(AppBoughtReceiver.APP_ID, getAppId());
+        installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
+        fragmentActivity.sendBroadcast(installApp);
+      } catch (Throwable throwable) {
+        if (throwable instanceof BillingException) {
+          Snackbar.make(getView(), R.string.user_cancelled, Snackbar.LENGTH_SHORT);
+        } else {
+          Snackbar.make(getView(), R.string.unknown_error, Snackbar.LENGTH_SHORT);
+        }
+      }
+    } else {
+      super.onActivityResult(requestCode, resultCode, intent);
+    }
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putIntArray("ARTICLE_SCROLL_POSITION",
+        new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
   }
 
   public enum BundleKeys {

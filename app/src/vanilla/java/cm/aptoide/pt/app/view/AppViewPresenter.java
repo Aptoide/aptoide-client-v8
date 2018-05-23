@@ -14,6 +14,7 @@ import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
@@ -38,6 +39,7 @@ public class AppViewPresenter implements Presenter {
 
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private final BillingAnalytics billingAnalytics;
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
@@ -50,13 +52,15 @@ public class AppViewPresenter implements Presenter {
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, StoreAnalytics storeAnalytics,
-      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
-      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
-      PermissionManager permissionManager, PermissionService permissionService) {
+      BillingAnalytics billingAnalytics, AppViewNavigator appViewNavigator,
+      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
+      CrashReport crashReport, PermissionManager permissionManager,
+      PermissionService permissionService) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
     this.storeAnalytics = storeAnalytics;
+    this.billingAnalytics = billingAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -505,7 +509,8 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadAppViewViewModel()
         .flatMap(
             appViewViewModel -> appViewManager.getDownloadAppViewModel(appViewViewModel.getMd5(),
-                appViewViewModel.getPackageName(), appViewViewModel.getVersionCode())
+                appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
+                appViewViewModel.isPaid(), appViewViewModel.getPay())
                 .first()
                 .observeOn(viewScheduler)
                 .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
@@ -618,6 +623,9 @@ public class AppViewPresenter implements Presenter {
                 case DOWNGRADE:
                   completable = downgradeApp(action);
                   break;
+                case PAY:
+                  completable = payApp(action);
+                  break;
                 default:
                   completable =
                       Completable.error(new IllegalArgumentException("Invalid type of action"));
@@ -629,6 +637,15 @@ public class AppViewPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> {
         });
+  }
+
+  private Completable payApp(DownloadAppViewModel.Action action) {
+    return appViewManager.loadAppViewViewModel()
+        .doOnSuccess(appViewViewModel -> {
+          billingAnalytics.sendPaymentViewShowEvent();
+          appViewNavigator.buyApp(appViewViewModel.getAppId());
+        })
+        .toCompletable();
   }
 
   private Completable downgradeApp(DownloadAppViewModel.Action action) {
@@ -667,7 +684,7 @@ public class AppViewPresenter implements Presenter {
             .toObservable())
         .filter(app -> !app.isLoading())
         .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode()))
+            app.getVersionCode(), app.isPaid(), app.getPay()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

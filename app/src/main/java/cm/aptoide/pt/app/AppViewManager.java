@@ -5,7 +5,6 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -271,11 +270,12 @@ public class AppViewManager {
   }
 
   public Observable<DownloadAppViewModel> getDownloadAppViewModel(String md5, String packageName,
-      int versionCode) {
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new DownloadAppViewModel(
-            downloadStateParser.parseDownloadType(install.getType()), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState())));
+            downloadStateParser.parseDownloadType(install.getType(), paidApp, pay),
+            install.getProgress(), downloadStateParser.parseDownloadState(install.getState()),
+            pay));
   }
 
   public Completable pauseDownload(String md5) {
