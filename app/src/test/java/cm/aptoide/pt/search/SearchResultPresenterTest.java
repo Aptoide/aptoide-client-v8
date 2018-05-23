@@ -79,7 +79,7 @@ public class SearchResultPresenterTest {
 
     presenter =
         new SearchResultPresenter(searchResultView, searchAnalytics, searchNavigator, crashReport,
-            Schedulers.immediate(), searchManager, "", trendingManager, searchSuggestionManager,
+            Schedulers.immediate(), searchManager, trendingManager, searchSuggestionManager,
             aptoideBottomNavigator, bottomNavigationMapper);
     //simulate view lifecycle event
     when(searchResultView.getLifecycle()).thenReturn(lifecycleEvent);
