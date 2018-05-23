@@ -734,7 +734,8 @@ public class AppViewPresenter implements Presenter {
         .flatMap(created -> view.skipRecommendsDialogClick()
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .doOnNext(app -> appViewAnalytics.sendTimelineInstallRecommendSkipEvents(
-                app.getPackageName())))
+                app.getPackageName()))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -749,7 +750,8 @@ public class AppViewPresenter implements Presenter {
             .flatMapCompletable(__ -> appViewManager.dontShowInstallRecommendsPreviewDialog())
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .doOnNext(app -> appViewAnalytics.sendTimelineInstallRecommendDontShowMeAgainEvents(
-                app.getPackageName())))
+                app.getPackageName()))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
