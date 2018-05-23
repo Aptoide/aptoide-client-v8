@@ -22,7 +22,6 @@ public class AppViewAnalytics {
   public static final String APP_VIEW_OPEN_FROM = "App_Viewed_Open_From";
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
-  public static final String DOWNGRADE_DIALOG = "Downgrade_Dialog";
   public static final String CLICK_INSTALL = "Clicked on install button";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
