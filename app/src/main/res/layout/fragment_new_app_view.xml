@@ -58,36 +58,36 @@
             android:layout_centerHorizontal="true"
             android:src="@mipmap/ic_launcher"
             />
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/trusted_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="40dp"
             android:layout_toEndOf="@id/app_icon"
             android:layout_toRightOf="@id/app_icon"
+            android:orientation="vertical"
             >
+          <ImageView
+              android:id="@+id/trusted_badge"
+              android:layout_width="33dp"
+              android:layout_height="36dp"
+              android:layout_gravity="center"
+              android:layout_marginBottom="6dp"
+              android:src="@drawable/ic_badge_trusted"
+              />
           <TextView
               android:id="@+id/trusted_text"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_alignParentBottom="true"
-              android:layout_marginLeft="48dp"
-              android:layout_marginStart="48dp"
+              android:layout_gravity="center"
               android:text="@string/appview_header_trusted_text"
               android:textAllCaps="true"
-              android:textColor="#4a4a4a"
+              android:textColor="@color/grey_900"
               android:textSize="10sp"
               />
-          <ImageView
-              android:id="@+id/trusted_badge"
-              android:layout_width="23dp"
-              android:layout_height="26dp"
-              android:layout_above="@id/trusted_text"
-              android:layout_marginBottom="6dp"
-              android:layout_marginLeft="60dp"
-              android:layout_marginStart="60dp"
-              android:src="@drawable/ic_badge_trusted"
-              />
-        </RelativeLayout>
+        </LinearLayout>
 
       </RelativeLayout>
 
@@ -116,8 +116,8 @@
           >
 
         <ImageView
-            android:layout_width="6dp"
-            android:layout_height="8dp"
+            android:layout_width="12dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_appview_download_icon"
             android:tint="@color/grey"
@@ -126,15 +126,16 @@
             android:id="@+id/header_downloads"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="3dp"
             android:layout_marginStart="3dp"
             android:textColor="@color/grey"
-            android:textSize="8sp"
+            android:textSize="10sp"
             tools:text="5 M"
             />
         <ImageView
-            android:layout_width="6dp"
-            android:layout_height="8dp"
+            android:layout_width="12dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
@@ -146,16 +147,17 @@
             android:id="@+id/header_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="3dp"
             android:layout_marginStart="3dp"
             android:textColor="@color/grey"
-            android:textSize="8sp"
+            android:textSize="10sp"
             tools:text="90.7 MB"
             />
 
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="9.5dp"
+            android:layout_width="12dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
@@ -167,10 +169,11 @@
             android:id="@+id/header_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="3dp"
             android:layout_marginStart="3dp"
             android:textColor="@color/grey"
-            android:textSize="8sp"
+            android:textSize="10sp"
             tools:text="4.2"
             />
       </LinearLayout>

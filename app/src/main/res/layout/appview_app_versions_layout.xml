@@ -61,6 +61,7 @@
         android:layout_height="32dp"
         android:layout_gravity="center"
         android:gravity="center"
+        android:minLines="2"
         android:text="@string/appview_other_versions"
         android:textColor="@color/default_color"
         android:textSize="12sp"
