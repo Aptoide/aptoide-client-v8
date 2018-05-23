@@ -28,7 +28,7 @@ public class ManagerPreferences {
    * @return true when updates should hide alpha and beta versions.
    */
   public static boolean getUpdatesFilterAlphaBetaKey(SharedPreferences sharedPreferences) {
-    return sharedPreferences.getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, false);
+    return sharedPreferences.getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, true);
   }
 
   /**
