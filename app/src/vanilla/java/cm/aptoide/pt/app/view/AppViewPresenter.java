@@ -103,6 +103,7 @@ public class AppViewPresenter implements Presenter {
     skipLoggedInRecommendsDialogClick();
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
+    handleAppBought();
   }
 
   private void handleFirstLoad() {
@@ -642,7 +643,9 @@ public class AppViewPresenter implements Presenter {
                   completable = downgradeApp(action);
                   break;
                 case PAY:
-                  completable = payApp(action);
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(appViewViewModel -> payApp(appViewViewModel.getAppId()));
                   break;
                 default:
                   completable =
@@ -671,13 +674,11 @@ public class AppViewPresenter implements Presenter {
     }
   }
 
-  private Completable payApp(DownloadAppViewModel.Action action) {
-    return appViewManager.loadAppViewViewModel()
-        .doOnSuccess(appViewViewModel -> {
-          billingAnalytics.sendPaymentViewShowEvent();
-          appViewNavigator.buyApp(appViewViewModel.getAppId());
-        })
-        .toCompletable();
+  private Completable payApp(long appId) {
+    return Completable.fromAction(() -> {
+      billingAnalytics.sendPaymentViewShowEvent();
+      appViewNavigator.buyApp(appId);
+    });
   }
 
   private Completable downgradeApp(DownloadAppViewModel.Action action) {
@@ -792,6 +793,23 @@ public class AppViewPresenter implements Presenter {
               appViewAnalytics.sendFailedShareEvent();
               crashReport.log(error);
             })
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleAppBought() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.appBought()
+            .flatMapCompletable(
+                appBoughClickEvent -> appViewManager.appBought(appBoughClickEvent.getAppId(),
+                    appBoughClickEvent.getPath()))
+            .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
+            .flatMapCompletable(__2 -> downloadApp(DownloadAppViewModel.Action.INSTALL))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

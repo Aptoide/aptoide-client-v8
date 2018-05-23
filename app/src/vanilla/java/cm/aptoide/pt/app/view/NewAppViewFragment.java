@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -141,6 +142,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> continueRecommendsDialogClick;
   private PublishSubject<Void> skipRecommendsDialogClick;
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
+  private PublishSubject<AppBoughClickEvent> appBought;
 
   private Integer positionY;
 
@@ -237,6 +239,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     continueRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
+    appBought = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -1191,6 +1194,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void showDownloadAppModel(DownloadAppViewModel model) {
     this.action = model.getAction();
+    if (model.getAction() == DownloadAppViewModel.Action.PAY) {
+      registerPaymentResult();
+    }
     if (model.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
@@ -1283,6 +1289,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public Observable<Void> dontShowAgainLoggedInRecommendsDialogClick() {
     return dontShowAgainRecommendsDialogClick;
+  }
+
+  @Override public Observable<AppBoughClickEvent> appBought() {
+    return appBought;
+  }
+
+  private void registerPaymentResult() {
+    AppBoughtReceiver appBoughtReceiver = new AppBoughtReceiver() {
+      @Override public void appBought(long appId, String path) {
+        appBought.onNext(new AppBoughClickEvent(path, appId));
+      }
+    };
+    getContext().registerReceiver(appBoughtReceiver,
+        new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {

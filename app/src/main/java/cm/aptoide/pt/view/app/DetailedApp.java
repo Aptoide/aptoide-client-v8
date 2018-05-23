@@ -12,7 +12,6 @@ import java.util.List;
 
 public class DetailedApp {
 
-  private final long id;
   private final String name;
   private final String packageName;
   private final long size;
@@ -28,7 +27,6 @@ public class DetailedApp {
   private final List<String> usedPermissions;
   private final long fileSize;
   private final String md5;
-  private final String path;
   private final String pathAlt;
   private final int versionCode;
   private final String versionName;
@@ -42,6 +40,8 @@ public class DetailedApp {
   private final boolean isPaid;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
+  private String path;
+  private long id;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
@@ -85,6 +85,10 @@ public class DetailedApp {
 
   public long getId() {
     return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -169,6 +173,10 @@ public class DetailedApp {
 
   public String getPath() {
     return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
   }
 
   public String getPathAlt() {
