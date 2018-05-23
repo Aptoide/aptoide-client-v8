@@ -207,16 +207,6 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.INSTALL, getViewName(true));
   }
 
-  public void downgradeDialogContinue() {
-    analyticsManager.logEvent(createMapData(ACTION, "Continue"), DOWNGRADE_DIALOG,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void downgradeDialogCancel() {
-    analyticsManager.logEvent(createMapData(ACTION, "Cancel"), DOWNGRADE_DIALOG,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
   public void clickOnInstallButton(GetAppMeta.App app) {
     try {
       HashMap<String, Object> map = new HashMap<>();
