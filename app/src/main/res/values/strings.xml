@@ -550,6 +550,7 @@
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
 
   <string name="appc_message_appview_appcoins_reward">Try this app and get %s </string>
+  <string name="appview_short_downloading">Downloading</string>
 
 
 </resources>
