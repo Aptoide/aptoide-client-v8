@@ -652,10 +652,18 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     reviewsAutoScroll.onNext(reviewsAdapter.getItemCount());
   }
 
-  @Override public void populateAds(SimilarAppsViewModel ads) {
-    similarAppsAdapter.update(mapToSimilar(ads));
-    similarDownloadsAdapter.update(mapToSimilar(ads));
+  @Override public void populateSimilar(SimilarAppsViewModel ads) {
+    similarAppsAdapter.update(mapToSimilar(ads, true));
+    similarDownloadsAdapter.update(mapToSimilar(ads, true));
+    similarBottomView.setVisibility(View.VISIBLE);
   }
+
+  @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
+    similarAppsAdapter.update(mapToSimilar(ads, false));
+    similarDownloadsAdapter.update(mapToSimilar(ads, false));
+    similarBottomView.setVisibility(View.VISIBLE);
+  }
+
 
   @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {
     return RxView.clicks(workingWellLayout)
@@ -1130,10 +1138,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private List<AppViewSimilarApp> mapToSimilar(SimilarAppsViewModel similarApps) {
+  private List<AppViewSimilarApp> mapToSimilar(SimilarAppsViewModel similarApps, boolean hasAd) {
     List<AppViewSimilarApp> resultList = new ArrayList<>();
 
-    resultList.add(new AppViewSimilarApp(null, similarApps.getAd()));
+    if (hasAd) resultList.add(new AppViewSimilarApp(null, similarApps.getAd()));
+
     for (Application app : similarApps.getRecommendedApps())
       resultList.add(new AppViewSimilarApp(app, null));
 
