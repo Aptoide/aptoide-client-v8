@@ -1301,10 +1301,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       case ERROR:
         showErrorDialog("", getContext().getString(R.string.error_occured));
         break;
-      case NOT_ENOUGH_SPACE_ERROR:
+      case NOT_ENOUGH_STORAGE_ERROR:
         showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
             getContext().getString(R.string.out_of_space_dialog_message));
         break;
+      default:
+        throw new IllegalStateException("Invalid Download State " + downloadState);
     }
   }
 
@@ -1339,7 +1341,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       case ERROR:
         showErrorDialog("", getContext().getString(R.string.error_occured));
         break;
-      case NOT_ENOUGH_SPACE_ERROR:
+      case NOT_ENOUGH_STORAGE_ERROR:
         showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
             getContext().getString(R.string.out_of_space_dialog_message));
         break;

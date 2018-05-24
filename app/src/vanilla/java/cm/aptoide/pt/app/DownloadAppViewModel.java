@@ -36,7 +36,7 @@ public class DownloadAppViewModel {
 
   public boolean hasError() {
     return downloadState.equals(DownloadState.ERROR) || downloadState.equals(
-        DownloadState.NOT_ENOUGH_SPACE_ERROR);
+        DownloadState.NOT_ENOUGH_STORAGE_ERROR);
   }
 
   public enum Error {
@@ -48,6 +48,6 @@ public class DownloadAppViewModel {
   }
 
   public enum DownloadState {
-    ACTIVE, PAUSE, COMPLETE, INDETERMINATE, ERROR, NOT_ENOUGH_SPACE_ERROR
+    ACTIVE, PAUSE, COMPLETE, INDETERMINATE, ERROR, NOT_ENOUGH_STORAGE_ERROR
   }
 }

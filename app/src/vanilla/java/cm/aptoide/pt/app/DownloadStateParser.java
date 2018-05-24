@@ -35,7 +35,7 @@ public class DownloadStateParser {
         downloadState = DownloadAppViewModel.DownloadState.ERROR;
         break;
       case NOT_ENOUGH_SPACE_ERROR:
-        downloadState = DownloadAppViewModel.DownloadState.NOT_ENOUGH_SPACE_ERROR;
+        downloadState = DownloadAppViewModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
         break;
       default:
         downloadState = DownloadAppViewModel.DownloadState.COMPLETE;
