@@ -159,7 +159,8 @@ public class HomePresenter implements Presenter {
                 .getTag(), click.getType()))
             .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
                 .getRating(), click.getApp()
-                .getPackageName(), click.getBundlePosition(), click.getBundle().getTag(), click.getType()))
+                .getPackageName(), click.getBundlePosition(), click.getBundle()
+                .getTag(), click.getType()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

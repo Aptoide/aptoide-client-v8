@@ -126,8 +126,8 @@
             >
 
           <ImageView
-              android:layout_width="6dp"
-              android:layout_height="8dp"
+              android:layout_width="12dp"
+              android:layout_height="16dp"
               android:layout_gravity="center_vertical"
               android:src="@drawable/ic_appview_download_icon"
               android:tint="@color/grey"
@@ -136,15 +136,16 @@
               android:id="@+id/header_downloads"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_gravity="center"
               android:layout_marginLeft="3dp"
               android:layout_marginStart="3dp"
               android:textColor="@color/grey"
-              android:textSize="8sp"
+              android:textSize="10sp"
               tools:text="5 M"
               />
           <ImageView
-              android:layout_width="6dp"
-              android:layout_height="8dp"
+              android:layout_width="12dp"
+              android:layout_height="16dp"
               android:layout_gravity="center_vertical"
               android:layout_marginLeft="15dp"
               android:layout_marginStart="15dp"
@@ -156,16 +157,17 @@
               android:id="@+id/header_size"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_gravity="center"
               android:layout_marginLeft="3dp"
               android:layout_marginStart="3dp"
               android:textColor="@color/grey"
-              android:textSize="8sp"
+              android:textSize="10sp"
               tools:text="90.7 MB"
               />
 
           <ImageView
-              android:layout_width="10dp"
-              android:layout_height="9.5dp"
+              android:layout_width="12dp"
+              android:layout_height="16dp"
               android:layout_gravity="center_vertical"
               android:layout_marginLeft="15dp"
               android:layout_marginStart="15dp"
@@ -177,10 +179,11 @@
               android:id="@+id/header_rating"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_gravity="center"
               android:layout_marginLeft="3dp"
               android:layout_marginStart="3dp"
               android:textColor="@color/grey"
-              android:textSize="8sp"
+              android:textSize="10sp"
               tools:text="4.2"
               />
         </LinearLayout>

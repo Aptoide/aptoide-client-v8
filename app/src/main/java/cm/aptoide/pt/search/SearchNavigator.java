@@ -22,8 +22,7 @@ public class SearchNavigator {
   }
 
   public SearchNavigator(FragmentNavigator navigator, String storeName, String storeTheme,
-      String defaultStoreName,
-      AppNavigator appNavigator) {
+      String defaultStoreName, AppNavigator appNavigator) {
     this.navigator = navigator;
     this.storeName = storeName;
     this.storeTheme = storeTheme;
