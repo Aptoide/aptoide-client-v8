@@ -98,6 +98,9 @@ import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
@@ -214,6 +217,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
+  private Subscription errorMessageSubscription;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -423,7 +427,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onDestroy() {
     super.onDestroy();
-
+    if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
+      errorMessageSubscription.unsubscribe();
+    }
     screenShotClick = null;
     readMoreClick = null;
     loginSnackClick = null;
@@ -1214,6 +1220,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       similarBottomView.setVisibility(View.VISIBLE);
       similarDownloadView.setVisibility(View.GONE);
       setButtonText(model.getAction());
+      if (model.hasError()) {
+        handleDownloadError(model.getDownloadState());
+      }
     }
   }
 
@@ -1300,6 +1309,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return dontShowAgainRecommendsDialogClick;
   }
 
+  private void handleDownloadError(DownloadAppViewModel.DownloadState downloadState) {
+    switch (downloadState) {
+      case ERROR:
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_STORAGE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
+        break;
+      default:
+        throw new IllegalStateException("Invalid Download State " + downloadState);
+    }
+  }
+
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
 
     LinearLayout.LayoutParams pauseShowing =
@@ -1342,9 +1365,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         downloadControlsLayout.setLayoutParams(pauseShowing);
         break;
       case ERROR:
-        // TODO: 5/10/18 define error state
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_STORAGE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
         break;
     }
+  }
+
+  private void showErrorDialog(String title, String message) {
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(eResponse -> {
+        }, error -> new OnErrorNotImplementedException(error));
   }
 
   private void setButtonText(DownloadAppViewModel.Action action) {
