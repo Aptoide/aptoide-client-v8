@@ -16,7 +16,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
@@ -152,7 +151,6 @@ public class AppService {
 
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
     if (loadingSimilarApps) {
-      Logger.w("APPSERVICE_STUFF", "You should never be seing thiiiiiiiis");
       return Single.just(new AppsList(true));
     }
     return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName),
