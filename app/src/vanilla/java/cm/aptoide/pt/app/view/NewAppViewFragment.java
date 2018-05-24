@@ -98,6 +98,8 @@ import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
@@ -1201,6 +1203,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
       setButtonText(model.getAction());
+      if (model.hasError()) {
+        handleDownloadError(model.getDownloadState());
+      }
     }
   }
 
@@ -1287,6 +1292,18 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return dontShowAgainRecommendsDialogClick;
   }
 
+  private void handleDownloadError(DownloadAppViewModel.DownloadState downloadState) {
+    switch (downloadState) {
+      case ERROR:
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_SPACE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
+        break;
+    }
+  }
+
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
     switch (downloadState) {
       case ACTIVE:
@@ -1316,9 +1333,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         resumeDownload.setVisibility(View.GONE);
         break;
       case ERROR:
-        // TODO: 5/10/18 define error state
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_SPACE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
         break;
     }
+  }
+
+  private void showErrorDialog(String title, String message) {
+    GenericDialogs.createGenericOkMessage(getContext(), title, message)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(eResponse -> {
+        }, error -> new OnErrorNotImplementedException(error));
   }
 
   private void setButtonText(DownloadAppViewModel.Action action) {
