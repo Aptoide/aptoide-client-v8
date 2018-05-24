@@ -360,6 +360,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     similarDownloadApps.setAdapter(similarDownloadsAdapter);
     similarApps.setAdapter(similarAppsAdapter);
+    similarDownloadApps.setLayoutManager(similarDownloadsLayout);
     similarApps.setLayoutManager(similarLayout);
 
     similarApps.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -367,7 +368,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           RecyclerView.State state) {
         int margin = AptoideUtils.ScreenU.getPixelsForDip(5, view.getResources());
         outRect.set(margin, margin, 0, margin);
-        similarDownloadApps.setLayoutManager(similarDownloadsLayout);
       }
     });
 
@@ -663,7 +663,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarDownloadsAdapter.update(mapToSimilar(ads, false));
     similarBottomView.setVisibility(View.VISIBLE);
   }
-
 
   @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {
     return RxView.clicks(workingWellLayout)

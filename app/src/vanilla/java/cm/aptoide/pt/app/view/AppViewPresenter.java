@@ -526,8 +526,10 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(model -> !model.hasError())
-        .flatMap(appViewModel -> Observable.merge(updateSuggestedApps(appViewModel),
-            updateReviews(appViewModel))
+        .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
+            updateReviews(appViewModel),
+            (similarAppsViewModel, reviewsViewModel) -> Observable.just(appViewModel))
+            .first()
             .map(__ -> appViewModel));
   }
 
