@@ -53,7 +53,7 @@
   <string name="appview_button_update">Update</string>
   <string name="appview_button_buy">Buy</string>
   <string name="appview_followers_count_text">%1$s   followers</string>
-  <string name="appview_other_versions"><u>Other versions</u></string>
+  <string name="appview_other_versions">Other versions</string>
   <string name="appview_newer_version">Newer version available</string>
   <string name="appview_latest_version_text">Latest version</string>
   <string name="appview_version_text">Version</string>
