@@ -143,6 +143,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View genericRetryButton;
   private View noNetworkRetryButton;
   private View reviewsLayout;
+  private View downloadControlsLayout;
 
   private ImageView appIcon;
   private TextView appName;
@@ -202,6 +203,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Button install;
   private LinearLayout downloadInfoLayout;
   private ProgressBar downloadProgressBar;
+  private TextView downloadProgressValue;
   private ImageView cancelDownload;
   private ImageView pauseDownload;
   private ImageView resumeDownload;
@@ -261,6 +263,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     reviewsLayout = view.findViewById(R.id.reviews_layout);
+    downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
     noNetworkRetryButton.setOnClickListener(click -> noNetworkRetryClick.onNext(null));
     genericRetryButton.setOnClickListener(click -> genericRetryClick.onNext(null));
     appIcon = (ImageView) view.findViewById(R.id.app_icon);
@@ -330,6 +333,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     install = ((Button) view.findViewById(R.id.appview_install_button));
     downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
     downloadProgressBar = ((ProgressBar) view.findViewById(R.id.appview_download_progress_bar));
+    downloadProgressValue = (TextView) view.findViewById(R.id.appview_download_progress_number);
     cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
@@ -1196,10 +1200,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (model.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
+      similarBottomView.setVisibility(View.GONE);
+      similarDownloadView.setVisibility(View.VISIBLE);
       setDownloadState(model.getProgress(), model.getDownloadState());
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
+      similarBottomView.setVisibility(View.VISIBLE);
+      similarDownloadView.setVisibility(View.GONE);
       setButtonText(model.getAction());
     }
   }
@@ -1288,32 +1296,45 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
+
+    LinearLayout.LayoutParams pauseShowing =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
+    LinearLayout.LayoutParams pauseHidden =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 2f);
     switch (downloadState) {
       case ACTIVE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
+        downloadProgressValue.setText(String.valueOf(progress) + "%");
         pauseDownload.setVisibility(View.VISIBLE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
         break;
       case INDETERMINATE:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.VISIBLE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
         break;
       case PAUSE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
+        downloadProgressValue.setText(String.valueOf(progress) + "%");
         pauseDownload.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.VISIBLE);
         resumeDownload.setVisibility(View.VISIBLE);
+        downloadControlsLayout.setLayoutParams(pauseHidden);
         break;
       case COMPLETE:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.VISIBLE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
         break;
       case ERROR:
         // TODO: 5/10/18 define error state

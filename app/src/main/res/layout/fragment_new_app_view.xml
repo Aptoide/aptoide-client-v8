@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     >
 
@@ -184,125 +185,6 @@
               />
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/download_progress_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="7dp"
-            android:visibility="gone"
-            tools:visibility="gone"
-            >
-
-          <CheckBox
-              android:id="@+id/share_in_timeline"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentLeft="true"
-              android:layout_alignParentStart="true"
-              android:layout_alignParentTop="true"
-              android:checked="true"
-              android:textColor="@color/separators_grey"
-              android:visibility="invisible"
-              />
-
-
-          <ProgressBar
-              android:id="@+id/download_progress"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_below="@+id/share_in_timeline"
-              android:layout_toLeftOf="@+id/actionContainer"
-              android:layout_toStartOf="@id/actionContainer"
-              android:indeterminate="false"
-              style="?android:attr/progressBarStyleHorizontal"
-              />
-
-          <TextView
-              android:id="@+id/text_progress"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignBaseline="@id/share_in_timeline"
-              android:layout_toLeftOf="@+id/actionContainer"
-              android:layout_toStartOf="@id/actionContainer"
-              android:ellipsize="end"
-              android:maxLines="1"
-              android:textColor="@color/default_color"
-              tools:text="80%"
-              />
-
-          <!--action: cancel pause resume-->
-          <LinearLayout
-              android:id="@+id/actionContainer"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentEnd="true"
-              android:layout_alignParentRight="true"
-              android:layout_marginLeft="20dp"
-              android:layout_marginStart="20dp"
-              >
-
-            <ImageView
-                android:id="@+id/ic_action_cancel"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="?attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:padding="5dp"
-                android:scaleType="center"
-                android:src="@drawable/cross"
-                />
-
-            <ImageView
-                android:id="@+id/ic_action_pause"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="?attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:padding="5dp"
-                android:scaleType="center"
-                android:src="@drawable/media_pause"
-                />
-
-            <ImageView
-                android:id="@+id/ic_action_resume"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:background="?attr/selectableItemBackground"
-                android:contentDescription="@null"
-                android:padding="5dp"
-                android:scaleType="center"
-                android:src="@drawable/media_play"
-                android:visibility="visible"
-                tools:visibility="visible"
-                />
-
-          </LinearLayout>
-
-          <include
-              layout="@layout/appview_recommed_card"
-              android:id="@+id/recommend_card"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_below="@id/actionContainer"
-              android:layout_marginTop="23dp"
-              />
-          <include
-              layout="@layout/appview_similar_layout"
-              android:id="@+id/similar_download_apps"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_below="@id/recommend_card"
-              android:layout_marginTop="9dp"
-              />
-        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/install_group"
@@ -315,6 +197,15 @@
 
           <include
               layout="@layout/install_app_view"/>
+
+          <include
+              layout="@layout/appview_similar_layout"
+              android:id="@+id/similar_download_apps"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="9dp"
+              android:visibility="gone"
+              />
 
           <include
               layout="@layout/displayable_app_view_appcoins_reward"
