@@ -288,4 +288,11 @@ public class AppViewManager {
   public Completable shareOnTimelineAsync(String packageName, long storeId) {
     return Completable.fromAction(() -> socialRepository.asyncShare(packageName, storeId, "app"));
   }
+
+  public Completable appBought(long appId, String path) {
+    return Completable.fromAction(() -> {
+      cachedApp.setId(appId);
+      cachedApp.setPath(path);
+    });
+  }
 }
