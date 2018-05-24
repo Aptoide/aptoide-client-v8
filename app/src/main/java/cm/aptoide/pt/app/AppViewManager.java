@@ -5,7 +5,9 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -40,6 +42,7 @@ public class AppViewManager {
   private final AptoideAccountManager aptoideAccountManager;
   private final AppViewConfiguration appViewConfiguration;
   private final int limit;
+  private final InstallAnalytics installAnalytics;
   private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
@@ -53,8 +56,8 @@ public class AppViewManager {
       StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
       AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics, int limit,
-      SocialRepository socialRepository) {
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -69,6 +72,7 @@ public class AppViewManager {
     this.downloadStateParser = downloadStateParser;
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
+    this.installAnalytics = installAnalytics;
     this.socialRepository = socialRepository;
     this.limit = limit;
   }
@@ -226,9 +230,14 @@ public class AppViewManager {
   }
 
   private void setupDownloadEvents(Download download, String packageName, long appId) {
-    appViewAnalytics.setupDownloadEvents(download,
-        notificationAnalytics.getCampaignId(packageName, appId),
-        notificationAnalytics.getAbTestingGroup(packageName, appId), AnalyticsManager.Action.CLICK);
+    int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
+    String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
+    appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
+        AnalyticsManager.Action.CLICK);
+    installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
+        downloadStateParser.getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
+        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), campaignId,
+        abTestGroup);
   }
 
   public Observable<DownloadAppViewModel> getDownloadAppViewModel(String md5, String packageName,

@@ -61,6 +61,7 @@ import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
 import cm.aptoide.pt.home.apps.AppsNavigator;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -255,13 +256,13 @@ import rx.schedulers.Schedulers;
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
       AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, Resources resources, WindowManager windowManager,
-      SocialRepository socialRepository) {
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      Resources resources, WindowManager windowManager, SocialRepository socialRepository) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-        notificationAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
-        socialRepository);
+        notificationAnalytics, installAnalytics,
+        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

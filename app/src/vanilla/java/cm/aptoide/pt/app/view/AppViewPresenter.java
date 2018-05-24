@@ -621,7 +621,8 @@ public class AppViewPresenter implements Presenter {
                   completable = appViewManager.loadAppViewViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(
-                          appViewViewModel -> downloadApp(action).observeOn(viewScheduler)
+                          appViewViewModel -> downloadApp(action, appViewViewModel.getPackageName(),
+                              appViewViewModel.getAppId()).observeOn(viewScheduler)
                               .doOnCompleted(() -> {
                                 appViewAnalytics.clickOnInstallButton(
                                     appViewViewModel.getPackageName(),
@@ -637,7 +638,10 @@ public class AppViewPresenter implements Presenter {
                           appViewViewModel -> openInstalledApp(appViewViewModel.getPackageName()));
                   break;
                 case DOWNGRADE:
-                  completable = downgradeApp(action);
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(appViewViewModel -> downgradeApp(action,
+                          appViewViewModel.getPackageName(), appViewViewModel.getAppId()));
                   break;
                 default:
                   completable =
@@ -666,11 +670,12 @@ public class AppViewPresenter implements Presenter {
     }
   }
 
-  private Completable downgradeApp(DownloadAppViewModel.Action action) {
+  private Completable downgradeApp(DownloadAppViewModel.Action action, String packageName,
+      long appId) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
-        .flatMapCompletable(__ -> downloadApp(action))
+        .flatMapCompletable(__ -> downloadApp(action, packageName, appId))
         .toCompletable();
   }
 
@@ -678,7 +683,8 @@ public class AppViewPresenter implements Presenter {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private Completable downloadApp(DownloadAppViewModel.Action action) {
+  private Completable downloadApp(DownloadAppViewModel.Action action, String packageName,
+      long appId) {
     return Observable.defer(() -> {
       if (appViewManager.showRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -690,7 +696,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
-            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, "", -1)))
+            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, packageName, appId)))
         .toCompletable();
   }
 
