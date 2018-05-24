@@ -108,17 +108,6 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> loadApp().flatMap(
             appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).toObservable()
                 .map(__1 -> appViewViewModel)))
-        .doOnNext(model -> {
-          if (!model.getEditorsChoice()
-              .isEmpty()) {
-            appViewAnalytics.sendEditorsChoiceClickEvent(model.getPackageName(),
-                model.getEditorsChoice());
-          }
-          appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
-              .getName(), model.getMalware()
-              .getRank()
-              .name(), model.getAppc());
-        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -517,6 +506,17 @@ public class AppViewPresenter implements Presenter {
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
+        .doOnNext(model -> {
+          if (!model.getEditorsChoice()
+              .isEmpty()) {
+            appViewAnalytics.sendEditorsChoiceClickEvent(model.getPackageName(),
+                model.getEditorsChoice());
+          }
+          appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
+              .getName(), model.getMalware()
+              .getRank()
+              .name(), model.getAppc());
+        })
         .observeOn(viewScheduler)
         .doOnNext(appViewModel -> {
           if (appViewModel.hasError()) {
@@ -526,8 +526,10 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .filter(model -> !model.hasError())
-        .flatMap(appViewModel -> Observable.merge(updateSuggestedApps(appViewModel),
-            updateReviews(appViewModel))
+        .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
+            updateReviews(appViewModel),
+            (similarAppsViewModel, reviewsViewModel) -> Observable.just(appViewModel))
+            .first()
             .map(__ -> appViewModel));
   }
 
@@ -535,11 +537,13 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadSimilarApps(appViewModel.getPackageName(), appViewModel.getMedia()
         .getKeywords())
         .observeOn(viewScheduler)
+        .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
           if (adsViewModel.hasError()) {
-            view.hideSimilarApps();
+            if (adsViewModel.hasRecommendedAppsError()) view.hideSimilarApps();
+            if (adsViewModel.hasAdError()) view.populateSimilarWithoutAds(adsViewModel);
           } else {
-            view.populateAds(adsViewModel);
+            view.populateSimilar(adsViewModel);
           }
         })
         .toObservable();
@@ -549,6 +553,7 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
         .getName(), view.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
+        .doOnError(__ -> view.hideReviews())
         .doOnSuccess(reviewsViewModel -> {
           if (reviewsViewModel.hasError()) {
             view.hideReviews();

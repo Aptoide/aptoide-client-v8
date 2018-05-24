@@ -37,7 +37,9 @@ public interface AppViewView extends InstallAppView {
 
   void populateReviews(ReviewsViewModel reviews, AppViewViewModel app);
 
-  void populateAds(SimilarAppsViewModel ads);
+  void populateSimilar(SimilarAppsViewModel ads);
+
+  void populateSimilarWithoutAds(SimilarAppsViewModel ads);
 
   Observable<FlagsVote.VoteType> clickWorkingFlag();
 
