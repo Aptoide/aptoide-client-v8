@@ -24,7 +24,6 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
-      android:weightSum="3"
       >
 
     <LinearLayout
@@ -39,6 +38,21 @@
         android:orientation="vertical"
         >
 
+
+      <FrameLayout
+          android:layout_width="fill_parent"
+          android:layout_height="4dp"
+          android:layout_marginBottom="4dp"
+          >
+
+        <ProgressBar
+            android:id="@+id/appview_download_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="4dp"
+            android:indeterminate="false"
+            style="?android:attr/progressBarStyleHorizontal"
+            />
+      </FrameLayout>
 
       <RelativeLayout
           android:id="@+id/appview_download_info_layout"
@@ -69,32 +83,18 @@
             />
       </RelativeLayout>
 
-
-      <FrameLayout
-          android:layout_width="fill_parent"
-          android:layout_height="4dp"
-          android:layout_marginBottom="4dp"
-          >
-
-        <ProgressBar
-            android:id="@+id/appview_download_progress_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="4dp"
-            android:indeterminate="false"
-            style="?android:attr/progressBarStyleHorizontal"
-            />
-      </FrameLayout>
-
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/install_controls_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="12dp"
-        android:layout_weight="2"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@+id/appview_download_progress_number"
+        android:layout_toRightOf="@+id/appview_download_progress_number"
+        android:layout_weight="4"
         android:gravity="end"
         android:orientation="horizontal"
         >
