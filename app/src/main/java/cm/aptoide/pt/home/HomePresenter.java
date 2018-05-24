@@ -77,7 +77,7 @@ public class HomePresenter implements Presenter {
                     .getRating(), click.getApp()
                     .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
                 click.getBundle()
-                    .getTitle(), click.getBundle()
+                    .getTag(), click.getBundle()
                     .getContent()
                     .size()))
             .map(appClick -> ((RewardApp) appClick.getApp()))
@@ -132,7 +132,7 @@ public class HomePresenter implements Presenter {
                     .getRating(), click.getApp()
                     .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
                 click.getBundle()
-                    .getTitle(), click.getBundle()
+                    .getTag(), click.getBundle()
                     .getContent()
                     .size()))
             .observeOn(viewScheduler)
@@ -159,7 +159,7 @@ public class HomePresenter implements Presenter {
                 .getTag(), click.getType()))
             .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
                 .getRating(), click.getApp()
-                .getPackageName(), click.getBundlePosition(), click.getType()))
+                .getPackageName(), click.getBundlePosition(), click.getBundle().getTag(), click.getType()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -202,7 +202,7 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.moreClicked()
             .doOnNext(homeMoreClick -> homeAnalytics.sendTapOnMoreInteractEvent(
                 homeMoreClick.getBundlePosition(), homeMoreClick.getBundle()
-                    .getTitle(), homeMoreClick.getBundle()
+                    .getTag(), homeMoreClick.getBundle()
                     .getContent()
                     .size()))
             .observeOn(viewScheduler)
@@ -221,7 +221,7 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.bundleScrolled()
             .doOnNext(click -> homeAnalytics.sendScrollRightInteractEvent(click.getBundlePosition(),
                 click.getBundle()
-                    .getTitle(), click.getBundle()
+                    .getTag(), click.getBundle()
                     .getContent()
                     .size()))
             .doOnError(crashReporter::log)

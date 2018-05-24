@@ -13,6 +13,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -86,7 +87,7 @@ public class SearchResultFragment extends BackButtonFragment
   private ImageView noResultsSearchButton;
   private View searchResultsLayout;
   private ProgressBar progressBar;
-  private LinearLayout allAndFollowedStoresButtonsLayout;
+  private CardView allAndFollowedStoresButtonsLayout;
   private Button followedStoresButton;
   private Button allStoresButton;
   private RecyclerView followedStoresResultList;
@@ -149,8 +150,9 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   public static SearchResultFragment newInstance(String currentQuery, String storeName,
-      String defaultStoreName) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, defaultStoreName);
+      String storeTheme, String defaultStoreName) {
+    SearchViewModel viewModel =
+        new SearchViewModel(currentQuery, storeName, storeTheme, defaultStoreName);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -159,7 +161,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void findChildViews(View view) {
-    allAndFollowedStoresButtonsLayout = (LinearLayout) view.findViewById(
+    allAndFollowedStoresButtonsLayout = (CardView) view.findViewById(
         R.id.fragment_search_result_all_followed_stores_buttons_layout);
     allStoresResultList =
         (RecyclerView) view.findViewById(R.id.fragment_search_result_all_stores_app_list);
@@ -520,11 +522,12 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-      allStoresButton.setBackgroundResource(0);
+      allStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
     }
     viewModel.setAllStoresSelected(false);
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      followedStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+    String storeTheme = viewModel.getStoreTheme();
+    if (storeThemeExists(storeTheme)) {
+      followedStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
           .getRoundGradientButtonDrawable());
     }
   }
@@ -532,17 +535,22 @@ public class SearchResultFragment extends BackButtonFragment
   private void setAllStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-      followedStoresButton.setBackgroundResource(0);
+      followedStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.white));
       allStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
     }
     viewModel.setAllStoresSelected(true);
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
-      allStoresButton.setBackgroundResource(StoreTheme.get(defaultThemeName)
+    String storeTheme = viewModel.getStoreTheme();
+    if (storeThemeExists(storeTheme)) {
+      allStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
           .getRoundGradientButtonDrawable());
     }
+  }
+
+  private boolean storeThemeExists(String storeTheme) {
+    return (storeTheme != null && storeTheme.length() > 0);
   }
 
   private boolean hasSearchResults() {
@@ -589,7 +597,7 @@ public class SearchResultFragment extends BackButtonFragment
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultFollowedStores,
             searchResultAdsFollowedStores, crashReport);
 
-    listItemPadding = getResources().getDimension(R.dimen.padding_very_very_small);
+    listItemPadding = getResources().getDimension(R.dimen.padding_tiny);
 
     final List<SearchAppResult> searchResultAllStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsAllStores = new ArrayList<>();
@@ -645,11 +653,30 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupTheme() {
-    if (defaultThemeName != null && defaultThemeName.length() > 0) {
+    if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
+      String storeTheme = viewModel.getStoreTheme();
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+      toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
+          .getGradientDrawable());
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
+        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
+            StoreTheme.get(storeTheme)
+                .getPrimaryColor()));
+        progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
+      } else {
+        progressBar.getIndeterminateDrawable()
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(storeTheme)
+                .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
+      }
+    }
+  }
+
+  private void setupDefaultTheme() {
+    if (storeThemeExists(defaultThemeName)) {
       ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
-      toolbar.setBackgroundResource(StoreTheme.get(defaultThemeName)
-          .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
@@ -667,7 +694,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void onDestroyView() {
     allStoresResultList.clearAnimation();
     followedStoresResultList.clearAnimation();
-    setupTheme();
+    setupDefaultTheme();
     super.onDestroyView();
   }
 

@@ -37,7 +37,6 @@ import rx.functions.Func2;
   private final CrashReport crashReport;
   private final Scheduler viewScheduler;
   private final SearchManager searchManager;
-  private final String defaultThemeName;
   private final TrendingManager trendingManager;
   private final SearchSuggestionManager suggestionManager;
   private final AptoideBottomNavigator bottomNavigator;
@@ -45,7 +44,7 @@ import rx.functions.Func2;
 
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
-      SearchManager searchManager, String defaultThemeName, TrendingManager trendingManager,
+      SearchManager searchManager, TrendingManager trendingManager,
       SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator,
       BottomNavigationMapper bottomNavigationMapper) {
     this.view = view;
@@ -54,7 +53,6 @@ import rx.functions.Func2;
     this.crashReport = crashReport;
     this.viewScheduler = viewScheduler;
     this.searchManager = searchManager;
-    this.defaultThemeName = defaultThemeName;
     this.trendingManager = trendingManager;
     this.suggestionManager = suggestionManager;
     this.bottomNavigator = bottomNavigator;
@@ -271,7 +269,8 @@ import rx.functions.Func2;
         .getStoreName();
     analytics.searchAppClick(view.getViewModel()
         .getCurrentQuery(), packageName, searchApp.getPosition());
-    navigator.goToAppView(appId, packageName, defaultThemeName, storeName);
+    navigator.goToAppView(appId, packageName, view.getViewModel()
+        .getStoreTheme(), storeName);
   }
 
   @VisibleForTesting public void handleClickFollowedStoresSearchButton() {
