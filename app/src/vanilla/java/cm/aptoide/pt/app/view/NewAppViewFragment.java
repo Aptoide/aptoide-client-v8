@@ -98,6 +98,7 @@ import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
@@ -213,6 +214,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
+  private Subscription errorMessageSubscription;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -419,7 +421,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onDestroy() {
     super.onDestroy();
-
+    if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
+      errorMessageSubscription.unsubscribe();
+    }
     screenShotClick = null;
     readMoreClick = null;
     loginSnackClick = null;
@@ -1343,7 +1347,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   private void showErrorDialog(String title, String message) {
-    GenericDialogs.createGenericOkMessage(getContext(), title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> new OnErrorNotImplementedException(error));
