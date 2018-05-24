@@ -211,18 +211,22 @@ public class AppService {
           mapToScreenShots(media.getScreenshots()), mapToVideo(media.getVideos()));
 
       if (app.isPaid()) {
-        return getPaidApp(app.getId()).map(paidApp -> new DetailedAppRequestResult(
-            new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-                app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(),
-                file.isGoodApp(), file.getMalware(), appFlags, file.getTags(),
-                file.getUsedFeatures(), file.getUsedPermissions(), file.getFilesize(), app.getMd5(),
-                file.getPath(), file.getPathAlt(), file.getVercode(), file.getVername(),
-                appDeveloper, app.getStore(), appMedia, appStats, app.getObb(), app.getPay(),
-                app.getUrls()
-                    .getW(), app.isPaid(), paidApp.getPayment()
-                .isPaid(), paidApp.getPath()
-                .getStringPath(), paidApp.getPayment()
-                .getStatus(), isLatestTrustedVersion(listAppVersions, file), uniqueName)));
+        return getPaidApp(app.getId()).map(paidApp -> {
+          app.getPay()
+              .setStatus(paidApp.getStatus());
+          return new DetailedAppRequestResult(
+              new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
+                  app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(),
+                  file.isGoodApp(), file.getMalware(), appFlags, file.getTags(),
+                  file.getUsedFeatures(), file.getUsedPermissions(), file.getFilesize(),
+                  app.getMd5(), file.getPath(), file.getPathAlt(), file.getVercode(),
+                  file.getVername(), appDeveloper, app.getStore(), appMedia, appStats, app.getObb(),
+                  app.getPay(), app.getUrls()
+                  .getW(), app.isPaid(), paidApp.getPayment()
+                  .isPaid(), paidApp.getPath()
+                  .getStringPath(), paidApp.getPayment()
+                  .getStatus(), isLatestTrustedVersion(listAppVersions, file), uniqueName));
+        });
       }
 
       DetailedApp detailedApp =
