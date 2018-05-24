@@ -1,9 +1,11 @@
 package cm.aptoide.pt.view.app;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
@@ -12,11 +14,13 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import java.util.ArrayList;
@@ -33,23 +37,28 @@ import rx.Single;
 public class AppService {
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
+  private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private final Resources resources;
   private boolean loadingApps;
   private boolean loadingSimilarApps;
 
   public AppService(StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      BodyInterceptor<BaseBody> bodyInterceptorV7,
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptorV7 = bodyInterceptorV7;
+    this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
   }
 
   private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
@@ -201,6 +210,21 @@ public class AppService {
       AppMedia appMedia = new AppMedia(media.getDescription(), media.getKeywords(), media.getNews(),
           mapToScreenShots(media.getScreenshots()), mapToVideo(media.getVideos()));
 
+      if (app.isPaid()) {
+        return getPaidApp(app.getId()).map(paidApp -> new DetailedAppRequestResult(
+            new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
+                app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(),
+                file.isGoodApp(), file.getMalware(), appFlags, file.getTags(),
+                file.getUsedFeatures(), file.getUsedPermissions(), file.getFilesize(), app.getMd5(),
+                file.getPath(), file.getPathAlt(), file.getVercode(), file.getVername(),
+                appDeveloper, app.getStore(), appMedia, appStats, app.getObb(), app.getPay(),
+                app.getUrls()
+                    .getW(), app.isPaid(), paidApp.getPayment()
+                .isPaid(), paidApp.getPath()
+                .getStringPath(), paidApp.getPayment()
+                .getStatus(), isLatestTrustedVersion(listAppVersions, file), uniqueName)));
+      }
+
       DetailedApp detailedApp =
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
               app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
@@ -213,6 +237,20 @@ public class AppService {
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
+  }
+
+  private Observable<PaidApp> getPaidApp(long appId) {
+    return GetApkInfoRequest.of(appId, bodyInterceptorV3, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences, resources)
+        .observe(true)
+        .flatMap(response -> {
+          if (response != null && response.isOk() && response.isPaid()) {
+            return Observable.just(response);
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No paid app found for app id " + appId));
+          }
+        });
   }
 
   private boolean isLatestTrustedVersion(ListAppVersions listAppVersions, File file) {

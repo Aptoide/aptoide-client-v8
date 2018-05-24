@@ -1122,11 +1122,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppService providesAppService(
       StoreCredentialsProvider storeCredentialsProvider, @Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("defaultInterceptorV3")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
 
-    return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
-        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
+    return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, bodyInterceptorV3,
+        okHttpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
+        application.getResources());
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {

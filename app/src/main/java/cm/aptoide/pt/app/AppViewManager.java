@@ -186,6 +186,7 @@ public class AppViewManager {
             stats.getGlobalRating(), stats.getPackageDownloads(), stats.getRating(),
             app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
             app.getAdded(), app.getObb(), app.getPay(), app.getWebUrls(), app.isPaid(),
+            app.wasPaid(), app.getPaidAppPath(), app.getPaymentStatus(),
             app.isLatestTrustedVersion(), app.getUniqueName(), appViewConfiguration.shouldInstall(),
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
