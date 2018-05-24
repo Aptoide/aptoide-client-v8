@@ -126,7 +126,7 @@ public class DialogBadgeV7 extends BaseDialog {
             v.findViewById(R.id.tr_signature)
                 .setVisibility(View.VISIBLE);
             ((TextView) v.findViewById(R.id.tv_reason_signature_validation)).setText(
-                getString(R.string.reason_signature));
+                getString(R.string.appviewbadge_message_signature_matches));
             break;
           case failed:
             // still in study by the UX team
@@ -135,7 +135,7 @@ public class DialogBadgeV7 extends BaseDialog {
             v.findViewById(R.id.iv_signature)
                 .setVisibility(View.INVISIBLE);
             ((TextView) v.findViewById(R.id.tv_reason_signature_validation)).setText(
-                getString(R.string.reason_failed));
+                getString(R.string.appviewbadge_message_signature_different));
             break;
           case blacklisted:
             // still in study by the UX team

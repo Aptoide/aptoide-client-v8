@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Installing ... "
+            android:text="@string/appview_short_downloading"
             style="@style/Aptoide.TextView.Medium.XS.Grey"
             />
 

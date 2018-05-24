@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +44,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -52,6 +56,7 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -61,12 +66,15 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
@@ -87,6 +95,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -120,6 +130,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> noNetworkRetryClick;
   private PublishSubject<Void> genericRetryClick;
   private PublishSubject<Void> ready;
+  private PublishSubject<Void> continueRecommendsDialogClick;
+  private PublishSubject<Void> skipRecommendsDialogClick;
+  private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
 
   private Integer positionY;
 
@@ -194,6 +207,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ImageView pauseDownload;
   private ImageView resumeDownload;
   private DownloadAppViewModel.Action action;
+  private CollapsingToolbarLayout collapsingToolbarLayout;
+  private AdsRepository adsRepository;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
+  private QManager qManager;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -208,6 +226,16 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
 
+    continueRecommendsDialogClick = PublishSubject.create();
+    skipRecommendsDialogClick = PublishSubject.create();
+    dontShowAgainRecommendsDialogClick = PublishSubject.create();
+
+    final AptoideApplication application =
+        (AptoideApplication) getContext().getApplicationContext();
+    qManager = application.getQManager();
+    httpClient = application.getDefaultClient();
+    converterFactory = WebService.getDefaultConverter();
+    adsRepository = application.getAdsRepository();
     setHasOptionsMenu(true);
   }
 
@@ -361,6 +389,23 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarSnap.attachToRecyclerView(similarApps);
 
     setupToolbar();
+
+    ((AppBarLayout) view.findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(
+        (appBarLayout, verticalOffset) -> {
+          float percentage =
+              ((float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange());
+          view.findViewById(R.id.app_icon)
+              .setAlpha(1 - (percentage * 1.20f));
+          view.findViewById(R.id.app_name)
+              .setAlpha(1 - (percentage * 1.20f));
+          ((ToolbarArcBackground) view.findViewById(R.id.toolbar_background_arc)).setScale(
+              percentage);
+        });
+
+    collapsingToolbarLayout =
+        ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
+    collapsingToolbarLayout.setExpandedTitleColor(
+        getResources().getColor(android.R.color.transparent));
     attachPresenter(presenter);
   }
 
@@ -467,6 +512,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     appId = -1;
     packageName = null;
     scrollView = null;
+    collapsingToolbarLayout = null;
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -506,6 +552,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void populateAppDetails(AppViewViewModel model) {
+    collapsingToolbarLayout.setTitle(model.getAppName());
     StoreTheme storeThemeEnum = StoreTheme.get(model.getStore());
 
     appName.setText(model.getAppName());
@@ -923,6 +970,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarBottomView.setVisibility(View.GONE);
   }
 
+  @Override public void extractReferrer(SearchAdResult searchAdResult) {
+    AptoideUtils.ThreadU.runOnUiThread(
+        () -> ReferrerUtils.extractReferrer(searchAdResult, ReferrerUtils.RETRIES, false,
+            adsRepository, httpClient, converterFactory, qManager,
+            getContext().getApplicationContext(),
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+            new MinimalAdMapper()));
+  }
+
   private void setTrustedBadge(Malware malware) {
     @DrawableRes int badgeResId;
     @StringRes int badgeMessageId;
@@ -1187,6 +1243,53 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void readyToDownload() {
     ready.onNext(null);
+  }
+
+  @Override public void showRecommendsDialog() {
+    LayoutInflater inflater = LayoutInflater.from(getActivity());
+    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    View dialogView = inflater.inflate(R.layout.logged_in_share, null);
+    alertDialog.setView(dialogView);
+
+    dialogView.findViewById(R.id.continue_button)
+        .setOnClickListener(__ -> {
+          continueRecommendsDialogClick.onNext(null);
+          alertDialog.dismiss();
+        });
+
+    dialogView.findViewById(R.id.skip_button)
+        .setOnClickListener(__ -> {
+          skipRecommendsDialogClick.onNext(null);
+          alertDialog.dismiss();
+        });
+
+    dialogView.findViewById(R.id.dont_show_button)
+        .setOnClickListener(__ -> {
+          dontShowAgainRecommendsDialogClick.onNext(null);
+          alertDialog.dismiss();
+        });
+    alertDialog.show();
+  }
+
+  @Override public void showNotLoggedInDialog() {
+
+  }
+
+  @Override public Observable<Void> continueLoggedInRecommendsDialogClick() {
+    return continueRecommendsDialogClick;
+  }
+
+  @Override public void showRecommendsThanksMessage() {
+    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public Observable<Void> skipLoggedInRecommendsDialogClick() {
+    return skipRecommendsDialogClick;
+  }
+
+  @Override public Observable<Void> dontShowAgainLoggedInRecommendsDialogClick() {
+    return dontShowAgainRecommendsDialogClick;
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {

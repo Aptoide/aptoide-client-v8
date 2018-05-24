@@ -239,7 +239,10 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideTvCardViewClick())
-        .doOnNext(__ -> view.startAptoideTvWebView())
+        .doOnNext(__ -> {
+          view.startAptoideTvWebView();
+          accountAnalytics.sendPromoteAptoideTVEvent();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -249,7 +252,10 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideUploaderCardViewClick())
-        .doOnNext(__ -> newAccountNavigator.navigateToUploader())
+        .doOnNext(__ -> {
+          newAccountNavigator.navigateToUploader();
+          accountAnalytics.sendPromoteAptoideUploaderEvent();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -259,7 +265,10 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideBackupCardViewClick())
-        .doOnNext(__ -> newAccountNavigator.navigateToBackupApps())
+        .doOnNext(__ -> {
+          newAccountNavigator.navigateToBackupApps();
+          accountAnalytics.sendPromoteAptoideBackupAppsEvent();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));

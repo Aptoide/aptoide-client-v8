@@ -51,6 +51,12 @@ public class AccountAnalytics {
   private AccountEvent facebookAndFlurrySuccessLoginEvent;
   private AccountEvent signUpEvent;
 
+  public static final String PROMOTE_APTOIDE_EVENT_NAME = "Promote_Aptoide";
+  private static final String PROMOTE_APTOIDE_PARAM_KEY = "aptoide_product";
+  private static final String PROMOTE_APTOIDE_TV_PARAM_VALUE = "TV";
+  private static final String PROMOTE_APTOIDE_UPLOADER_PARAM_VALUE = "Uploader";
+  private static final String PROMOTE_APTOIDE_BACKUP_APPS_PARAM_VALUE = "Backup Apps";
+
   public AccountAnalytics(NavigationTracker navigationTracker, CrashReport crashReport,
       AnalyticsManager analyticsManager) {
     this.navigationTracker = navigationTracker;
@@ -104,6 +110,33 @@ public class AccountAnalytics {
 
   public void sendFollowFriendsClickEvent() {
     analyticsManager.logEvent(new HashMap<>(), FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK,
+        getViewName(true));
+  }
+
+  public void sendPromoteAptoideTVEvent() {
+
+    HashMap params = new HashMap();
+    params.put(PROMOTE_APTOIDE_PARAM_KEY, PROMOTE_APTOIDE_TV_PARAM_VALUE);
+
+    analyticsManager.logEvent(params, PROMOTE_APTOIDE_EVENT_NAME, AnalyticsManager.Action.CLICK,
+        getViewName(true));
+  }
+
+  public void sendPromoteAptoideUploaderEvent() {
+
+    HashMap params = new HashMap();
+    params.put(PROMOTE_APTOIDE_PARAM_KEY, PROMOTE_APTOIDE_UPLOADER_PARAM_VALUE);
+
+    analyticsManager.logEvent(params, PROMOTE_APTOIDE_EVENT_NAME, AnalyticsManager.Action.CLICK,
+        getViewName(true));
+  }
+
+  public void sendPromoteAptoideBackupAppsEvent() {
+
+    HashMap params = new HashMap();
+    params.put(PROMOTE_APTOIDE_PARAM_KEY, PROMOTE_APTOIDE_BACKUP_APPS_PARAM_VALUE);
+
+    analyticsManager.logEvent(params, PROMOTE_APTOIDE_EVENT_NAME, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 

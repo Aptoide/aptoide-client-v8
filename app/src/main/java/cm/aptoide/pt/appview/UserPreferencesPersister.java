@@ -20,7 +20,17 @@ public class UserPreferencesPersister {
         .apply();
   }
 
+  public void save(String key, boolean value) {
+    sharedPreferences.edit()
+        .putBoolean(key, value)
+        .apply();
+  }
+
   public int get(String key, int defaultValue) {
     return sharedPreferences.getInt(key, defaultValue);
+  }
+
+  public boolean get(String key, boolean defaultValue) {
+    return sharedPreferences.getBoolean(key, defaultValue);
   }
 }

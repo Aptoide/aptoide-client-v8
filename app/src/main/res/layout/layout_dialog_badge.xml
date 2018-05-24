@@ -110,7 +110,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/reason_third_party"
+          android:text="@string/appviewbadge_message_signature_matches"
           style="@style/badgeReasonStyle"
           />
     </TableRow>
@@ -158,7 +158,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/reason_scanned"
+          android:text="@string/appviewbadge_message_virus_no"
           style="@style/badgeReasonStyle"
           />
     </TableRow>
@@ -182,7 +182,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/reason_manual"
+          android:text="@string/appviewbadge_message_virus_no"
           style="@style/badgeReasonStyle"
           />
     </TableRow>
@@ -199,7 +199,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/reason_unknown"
+          android:text="@string/appviewbadge_message_virus_in_analyses"
           style="@style/badgeReasonStyle"
           />
     </TableRow>

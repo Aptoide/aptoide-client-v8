@@ -168,6 +168,7 @@ import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
+import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -1186,10 +1187,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         application.getPackageManager());
   }
 
+  @Singleton @Provides NotLoggedInShareAnalytics providesNotLoggedInShareAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
+      AccountAnalytics accountAnalytics) {
+    return new NotLoggedInShareAnalytics(analyticsManager, navigationTracker, accountAnalytics);
+  }
+
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
+      NotLoggedInShareAnalytics notLoggedInShareAnalytics) {
+    return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
+        timelineAnalytics, notLoggedInShareAnalytics);
   }
 
   @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(
@@ -1220,6 +1229,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository) {
-    return new AdsManager(adsRepository);
+    return new AdsManager(adsRepository, AccessorFactory.getAccessorFor(
+        ((AptoideApplication) application.getApplicationContext()).getDatabase(),
+        StoredMinimalAd.class), new MinimalAdMapper());
   }
 }

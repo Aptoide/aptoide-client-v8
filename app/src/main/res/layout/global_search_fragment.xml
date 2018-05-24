@@ -56,39 +56,46 @@
       tools:visibility="visible"
       >
 
-
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
-        android:layout_width="262dp"
-        android:layout_height="29dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/search_buttons_background"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
         >
 
-      <Button
-          android:id="@+id/fragment_search_result_followed_stores_button"
-          android:layout_width="128dp"
-          android:layout_height="match_parent"
-          android:background="@null"
-          android:text="@string/followed_stores"
-          android:textColor="@color/silver_dark"
-          android:textSize="12sp"
-          />
+      <LinearLayout
+          android:layout_width="262dp"
+          android:layout_height="26.6dp"
+          android:layout_centerHorizontal="true"
+          android:layout_gravity="center"
+          android:background="@drawable/search_buttons_background"
+          android:gravity="center_horizontal"
+          android:orientation="horizontal"
+          >
 
-      <Button
-          android:id="@+id/fragment_search_result_all_stores_button"
-          android:layout_width="128dp"
-          android:layout_height="match_parent"
-          android:background="@drawable/default_search_button_background"
-          android:text="@string/all_stores"
-          android:textColor="@color/white"
-          android:textSize="12sp"
-          />
+        <Button
+            android:id="@+id/fragment_search_result_followed_stores_button"
+            android:layout_width="128dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/disabled_search_button_background"
+            android:text="@string/followed_stores"
+            android:textColor="@color/silver_dark"
+            android:textSize="10sp"
+            tools:ignore="SmallSp"
+            />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/fragment_search_result_all_stores_button"
+            android:layout_width="128dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/default_search_button_background"
+            android:text="@string/all_stores"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            tools:ignore="SmallSp"
+            />
+
+      </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_search_result_followed_stores_app_list"

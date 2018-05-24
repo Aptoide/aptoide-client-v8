@@ -13,9 +13,8 @@ import java.util.Map;
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final HttpKnockEventLogger knockEventLogger;
-  private List<SessionLogger> sessionLoggers;
   private final AnalyticsNormalizer analyticsNormalizer;
-
+  private List<SessionLogger> sessionLoggers;
   private Map<EventLogger, Collection<String>> eventLoggers;
 
   private AnalyticsManager(HttpKnockEventLogger knockLogger,

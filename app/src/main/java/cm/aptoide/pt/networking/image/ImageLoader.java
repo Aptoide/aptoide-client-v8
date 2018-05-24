@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.FutureTarget;
@@ -155,6 +156,22 @@ public class ImageLoader {
       return Glide.with(context)
           .load(url)
           .transform(new ShadowCircleTransformation(context, imageView))
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
+    }
+    return null;
+  }
+
+  public Target<GlideDrawable> loadWithShadowCircleTransformWithPlaceholder(String url,
+      ImageView imageView, int drawable) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .diskCacheStrategy(DiskCacheStrategy.NONE)
+          .placeholder(drawable)
+          .transform(new ShadowCircleTransformation(context))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -45,9 +44,11 @@ import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -60,7 +61,6 @@ import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
 import cm.aptoide.pt.home.apps.AppsNavigator;
-import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -80,6 +80,8 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
+import cm.aptoide.pt.timeline.SocialRepository;
+import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import dagger.Module;
 import dagger.Provides;
@@ -172,9 +174,7 @@ import rx.schedulers.Schedulers;
       TrendingManager trendingManager, SearchSuggestionManager searchSuggestionManager,
       BottomNavigationMapper bottomNavigationMapper) {
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
-        CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager,
-        ((AptoideApplication) fragment.getContext()
-            .getApplicationContext()).getDefaultThemeName(), trendingManager,
+        CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
   }
@@ -239,19 +239,29 @@ import rx.schedulers.Schedulers;
     return new DownloadStateParser();
   }
 
-  @FragmentScope @Provides AppViewManager providesAppViewManager(UpdatesManager updatesManager,
-      InstallManager installManager, DownloadFactory downloadFactory, AppCenter appCenter,
-      ReviewsManager reviewsManager, AdsManager adsManager, StoreManager storeManager,
-      FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
-      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      Resources resources, WindowManager windowManager) {
-    return new AppViewManager(updatesManager, installManager, downloadFactory, appCenter,
-        reviewsManager, adsManager, storeManager, flagManager, storeUtilsProxy,
-        aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser,
-        appViewAnalytics, notificationAnalytics,
-        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6));
+  @FragmentScope @Provides SocialRepository providesSocialRepository(
+      AptoideAccountManager accountManager,
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TimelineAnalytics timelineAnalytics,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new SocialRepository(accountManager, bodyInterceptorPoolV7,
+        WebService.getDefaultConverter(), okHttpClient, timelineAnalytics, tokenInvalidator,
+        sharedPreferences);
+  }
+
+  @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
+      DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
+      AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
+      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics, Resources resources, WindowManager windowManager,
+      SocialRepository socialRepository) {
+    return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
+        adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
+        appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
+        notificationAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
+        socialRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

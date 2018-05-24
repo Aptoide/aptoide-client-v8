@@ -228,8 +228,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
     if (hasSearchFromStoreFragment()) {
       searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
-      searchNavigator =
-          new SearchNavigator(getFragmentNavigator(), storeName, application.getDefaultStoreName(),
+      searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName, storeTheme,
+          application.getDefaultStoreName(),
               appNavigator);
       trendingManager = application.getTrendingManager();
       crashReport = CrashReport.getInstance();
@@ -262,6 +262,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     // execution-time generated ids for the desired resource
     ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
     ThemeUtils.setAptoideTheme(getActivity(), defaultTheme);
+    ThemeUtils.setStoreTheme(getActivity(), defaultTheme);
 
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);

@@ -372,7 +372,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-    appViewAnalytics = new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+    appViewAnalytics = new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
+        timelineAnalytics, notLoggedInShareAnalytics);
     appViewSimilarAppAnalytics =
         new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
 
@@ -1262,13 +1263,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
       badgeText.setText(badgeMessageId);
 
       if (getEditorsBrickPosition() != null) {
-        appViewAnalytics.sendEditorsChoiceClickEvent(
-            getPackageName(), getEditorsBrickPosition());
+        appViewAnalytics.sendEditorsChoiceClickEvent(getPackageName(), getEditorsBrickPosition());
       }
       appViewAnalytics.sendAppViewOpenedFromEvent(getPackageName(), app.getDeveloper()
-              .getName(), app.getFile()
-              .getMalware()
-              .getRank()
+          .getName(), app.getFile()
+          .getMalware()
+          .getRank()
           .name(), appRewardAppcoins);
       final Malware malware = app.getFile()
           .getMalware();
