@@ -135,7 +135,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> skipRecommendsDialogClick;
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
 
-  private Integer positionY;
   private boolean showSimilarDownload;
 
   //Views
