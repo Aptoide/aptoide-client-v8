@@ -1,6 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import cm.aptoide.pt.database.realm.RealmEvent;
+import cm.aptoide.pt.metrics.AnalyticsManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

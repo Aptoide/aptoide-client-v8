@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.pt.metrics;
 
 import java.io.IOException;
 import okhttp3.Call;

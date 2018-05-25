@@ -1,7 +1,6 @@
 package cm.aptoide.pt.updates.view;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -9,6 +8,7 @@ import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.metrics.AnalyticsManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 
 /**

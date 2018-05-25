@@ -7,7 +7,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.metrics.AnalyticsManager;
 
 /**
  * Created by pedroribeiro on 14/09/17.

@@ -1,7 +1,5 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.pt.metrics;
 
-import cm.aptoide.pt.ApplicationModule;
-import cm.aptoide.pt.FlavourApplicationModule;
 import java.util.Map;
 
 public interface EventLogger {

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.metrics.AnalyticsManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.util.ArrayList;
 import java.util.List;

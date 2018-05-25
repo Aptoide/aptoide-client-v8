@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.metrics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 

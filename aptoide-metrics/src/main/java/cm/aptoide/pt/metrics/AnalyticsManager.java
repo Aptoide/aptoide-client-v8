@@ -1,9 +1,6 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.pt.metrics;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.ApplicationModule;
-import cm.aptoide.pt.FlavourApplicationModule;
-import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,7 +35,7 @@ public class AnalyticsManager {
    * @param context The context of where the event took place
    */
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
-    Logger.d(TAG, "logEvent() called with: "
+    /*Logger.d(TAG, "logEvent() called with: "
         + "data = ["
         + data
         + "], eventName = ["
@@ -47,7 +44,7 @@ public class AnalyticsManager {
         + action
         + "], context = ["
         + context
-        + "]");
+        + "]"); */
     int eventsSent = 0;
     data = analyticsNormalizer.normalize(data);
     for (Map.Entry<EventLogger, Collection<String>> loggerEntry : eventLoggers.entrySet()) {
@@ -60,7 +57,7 @@ public class AnalyticsManager {
     }
 
     if (eventsSent <= 0) {
-      Logger.w(TAG, eventName + " event not sent ");
+   //   Logger.w(TAG, eventName + " event not sent ");
     }
   }
 

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.pt.metrics;
 
 /**
  * Created by jose_messejana on 31-01-2018.

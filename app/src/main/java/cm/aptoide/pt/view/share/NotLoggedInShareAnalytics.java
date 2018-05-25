@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.pt.metrics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 

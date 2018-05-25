@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.pt.metrics;
 
 import java.util.Map;
 
