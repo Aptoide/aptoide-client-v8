@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.install.Install;
 
 /**
@@ -43,9 +42,9 @@ public class DownloadStateParser {
   }
 
   public DownloadAppViewModel.Action parseDownloadType(Install.InstallationType type,
-      boolean paidApp, GetAppMeta.Pay pay) {
+      boolean paidApp, boolean wasPaid) {
     DownloadAppViewModel.Action action;
-    if (paidApp && !pay.isPaid()) {
+    if (paidApp && !wasPaid) {
       action = DownloadAppViewModel.Action.PAY;
     } else {
       switch (type) {

@@ -213,7 +213,8 @@ public class AppService {
       if (app.isPaid()) {
         return getPaidApp(app.getId()).map(paidApp -> {
           app.getPay()
-              .setStatus(paidApp.getStatus());
+              .setStatus(paidApp.getPayment()
+                  .getStatus());
           return new DetailedAppRequestResult(
               new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
                   app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(),

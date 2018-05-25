@@ -237,7 +237,7 @@ public class AppViewManager {
       int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new DownloadAppViewModel(
-            downloadStateParser.parseDownloadType(install.getType(), paidApp, pay),
+            downloadStateParser.parseDownloadType(install.getType(), paidApp, pay.isPaid()),
             install.getProgress(), downloadStateParser.parseDownloadState(install.getState()),
             pay));
   }
@@ -290,9 +290,10 @@ public class AppViewManager {
     return Completable.fromAction(() -> socialRepository.asyncShare(packageName, storeId, "app"));
   }
 
-  public Completable appBought(long appId, String path) {
+  public Completable appBought(String path) {
     return Completable.fromAction(() -> {
-      cachedApp.setId(appId);
+      cachedApp.getPay()
+          .setPaid();
       cachedApp.setPath(path);
     });
   }
