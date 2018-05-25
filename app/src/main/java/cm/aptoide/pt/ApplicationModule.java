@@ -66,6 +66,7 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
+import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -1121,11 +1122,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppService providesAppService(
       StoreCredentialsProvider storeCredentialsProvider, @Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("defaultInterceptorV3")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
 
-    return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, okHttpClient,
-        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
+    return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, bodyInterceptorV3,
+        okHttpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
+        application.getResources());
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {
@@ -1232,5 +1236,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AdsManager(adsRepository, AccessorFactory.getAccessorFor(
         ((AptoideApplication) application.getApplicationContext()).getDatabase(),
         StoredMinimalAd.class), new MinimalAdMapper());
+  }
+
+  @Singleton @Provides BillingAnalytics providesBillingAnalytics(AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new BillingAnalytics(BuildConfig.APPLICATION_ID, analyticsManager, navigationTracker);
   }
 }
