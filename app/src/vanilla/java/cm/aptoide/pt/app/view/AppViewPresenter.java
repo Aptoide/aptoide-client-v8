@@ -808,11 +808,16 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.appBought()
+            .flatMap(appBoughClickEvent -> appViewManager.loadAppViewViewModel()
+                .toObservable()
+                .filter(appViewViewModel -> appViewViewModel.getAppId()
+                    == appBoughClickEvent.getAppId())
+                .map(__2 -> appBoughClickEvent))
+            .first()
+            .observeOn(viewScheduler)
             .flatMapCompletable(
-                appBoughClickEvent -> appViewManager.appBought(appBoughClickEvent.getAppId(),
-                    appBoughClickEvent.getPath()))
-            .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
-            .flatMapCompletable(__2 -> downloadApp(DownloadAppViewModel.Action.INSTALL))
+                appBoughClickEvent -> appViewManager.appBought(appBoughClickEvent.getPath())
+                    .andThen(downloadApp(DownloadAppViewModel.Action.INSTALL)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

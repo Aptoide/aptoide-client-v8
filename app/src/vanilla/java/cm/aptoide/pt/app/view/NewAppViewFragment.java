@@ -1379,7 +1379,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
         FragmentActivity fragmentActivity = getActivity();
         Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
-        installApp.putExtra(AppBoughtReceiver.APP_ID, getAppId());
+        installApp.putExtra(AppBoughtReceiver.APP_ID, purchase.getProductId());
         installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
         fragmentActivity.sendBroadcast(installApp);
       } catch (Throwable throwable) {
