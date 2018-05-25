@@ -133,4 +133,6 @@ public interface AppViewView extends InstallAppView {
   void hideSimilarApps();
 
   void extractReferrer(SearchAdResult searchAdResult);
+
+  void recoverScrollViewState();
 }

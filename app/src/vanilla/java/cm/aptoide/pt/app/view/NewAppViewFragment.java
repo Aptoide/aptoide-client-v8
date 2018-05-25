@@ -34,7 +34,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -110,9 +109,8 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  */
 
 public class NewAppViewFragment extends NavigationTrackFragment implements AppViewView {
-  private static final String ORIGIN_TAG = "TAG";
+  private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
-
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   private Menu menu;
@@ -136,18 +134,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> continueRecommendsDialogClick;
   private PublishSubject<Void> skipRecommendsDialogClick;
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
-
-  private Integer positionY;
-
   //Views
-  private NestedScrollView scrollView;
   private View noNetworkErrorView;
   private View genericErrorView;
   private View genericRetryButton;
   private View noNetworkRetryButton;
   private View reviewsLayout;
   private View downloadControlsLayout;
-
   private ImageView appIcon;
   private TextView appName;
   private View trustedLayout;
@@ -178,7 +171,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private RecyclerView reviewsView;
   private Button rateAppButton;
   private Button showAllReviewsButton;
-
   private View goodAppLayoutWrapper;
   private View flagsLayoutWrapper;
   private View workingWellLayout;
@@ -201,7 +193,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View infoEmail;
   private View infoPrivacy;
   private View infoPermissions;
-
   private ProgressBar viewProgress;
   private View appview;
   private Button install;
@@ -218,6 +209,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Converter.Factory converterFactory;
   private QManager qManager;
   private Subscription errorMessageSubscription;
+  private NestedScrollView scrollView;
+  private int scrollViewY;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -248,21 +241,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     scrollView = (NestedScrollView) view.findViewById(R.id.scroll_view_app);
-
-    ViewTreeObserver vto = scrollView.getViewTreeObserver();
-    if (positionY != null) {
-      vto.addOnGlobalLayoutListener(() -> {
-        if (scrollView != null) scrollView.scrollTo(0, positionY);
-      });
-    } else if (savedInstanceState != null) {
-      int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
-      if (position != null) {
-        vto.addOnGlobalLayoutListener(() -> {
-          if (scrollView != null) scrollView.scrollTo(position[0], position[1]);
-        });
-      }
-    }
-
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
     genericErrorView = view.findViewById(R.id.generic_error);
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
@@ -410,6 +388,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
               percentage);
         });
 
+    handleRetainScrollStateInformation(savedInstanceState);
+
     collapsingToolbarLayout =
         ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
     collapsingToolbarLayout.setExpandedTitleColor(
@@ -423,6 +403,16 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta);
+  }
+
+  private void handleRetainScrollStateInformation(@Nullable Bundle savedInstanceState) {
+    int y;
+    if (savedInstanceState != null) {
+      y = savedInstanceState.getInt(KEY_SCROLL_Y, 0);
+    } else {
+      y = scrollViewY;
+    }
+    scrollViewY = y;
   }
 
   @Override public void onDestroy() {
@@ -439,7 +429,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     reviewsAutoScroll = null;
     noNetworkRetryClick = null;
     genericRetryClick = null;
-    positionY = null;
     dialogUtils = null;
     presenter = null;
   }
@@ -453,8 +442,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-
-    positionY = scrollView.getScrollY();
+    scrollViewY = scrollView.getScrollY();
     noNetworkErrorView = null;
     genericErrorView = null;
     genericRetryButton = null;
@@ -521,7 +509,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     actionBar = null;
     appId = -1;
     packageName = null;
-    scrollView = null;
     collapsingToolbarLayout = null;
   }
 
@@ -534,8 +521,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     if (scrollView != null) {
-      outState.putIntArray("ARTICLE_SCROLL_POSITION",
-          new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
+      outState.putInt(KEY_SCROLL_Y, scrollView.getScrollY());
     }
   }
 
@@ -622,7 +608,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
     setDeveloperDetails(model.getDeveloper());
     showAppview();
-
     downloadInfoLayout.setVisibility(View.GONE);
     install.setVisibility(View.VISIBLE);
   }
@@ -994,6 +979,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
             getContext().getApplicationContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             new MinimalAdMapper()));
+  }
+
+  @Override public void recoverScrollViewState() {
+    // TODO: 25/05/2018 remove this hack and find a better way to do it.
+    scrollView.post(() -> {
+      scrollView.scrollTo(0, scrollViewY);
+      scrollViewY = 0;
+    });
   }
 
   private void setTrustedBadge(Malware malware) {
