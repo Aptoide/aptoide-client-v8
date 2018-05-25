@@ -118,7 +118,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
-  private long appId;
   private String packageName;
   private NewScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
@@ -519,7 +518,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     menu = null;
     toolbar = null;
     actionBar = null;
-    appId = -1;
     packageName = null;
     scrollView = null;
     collapsingToolbarLayout = null;
@@ -551,10 +549,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     viewProgress.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);
-  }
-
-  @Override public long getAppId() {
-    return appId;
   }
 
   @Override public String getPackageName() {
@@ -906,7 +900,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .subscribe(response -> shareDialogClick.onNext(response));
   }
 
-  @Override public void showShareOnTvDialog() {
+  @Override public void showShareOnTvDialog(long appId) {
     if (AptoideUtils.SystemU.getConnectionType(
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
         .equals("mobile")) {
@@ -917,7 +911,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           }, err -> CrashReport.getInstance()
               .log(err));
     } else {
-      DialogFragment newFragment = RemoteInstallDialog.newInstance(getAppId());
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
       newFragment.show(getActivity().getSupportFragmentManager(),
           RemoteInstallDialog.class.getSimpleName());
     }
@@ -1225,8 +1219,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
-      similarBottomView.setVisibility(View.VISIBLE);
-      similarDownloadView.setVisibility(View.GONE);
       setButtonText(model.getAction());
       if (model.hasError()) {
         handleDownloadError(model.getDownloadState());
