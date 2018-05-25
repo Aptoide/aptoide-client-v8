@@ -113,17 +113,6 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> loadApp().flatMap(
             appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).toObservable()
                 .map(__1 -> appViewViewModel)))
-        .doOnNext(model -> {
-          if (!model.getEditorsChoice()
-              .isEmpty()) {
-            appViewAnalytics.sendEditorsChoiceClickEvent(model.getPackageName(),
-                model.getEditorsChoice());
-          }
-          appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
-              .getName(), model.getMalware()
-              .getRank()
-              .name(), model.getAppc());
-        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -430,21 +419,23 @@ public class AppViewPresenter implements Presenter {
   private void handleClickOnToolbar() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickToolbar())
-        .filter(menuItem -> menuItem != null)
-        .map(menuItem -> menuItem.getItemId())
-        .doOnNext(itemId -> {
-          switch (itemId) {
-            case R.id.menu_item_share:
-              view.showShareDialog();
-              break;
+        .flatMap(__ -> view.clickToolbar()
+            .flatMap(menuItem -> appViewManager.loadAppViewViewModel()
+                .toObservable()
+                .filter(appViewViewModel -> menuItem != null)
+                .doOnNext(appViewViewModel -> {
+                  switch (menuItem.getItemId()) {
 
-            case R.id.menu_remote_install:
-              appViewAnalytics.sendRemoteInstallEvent();
-              view.showShareOnTvDialog();
-              break;
-          }
-        })
+                    case R.id.menu_item_share:
+                      view.showShareDialog();
+                      break;
+
+                    case R.id.menu_remote_install:
+                      appViewAnalytics.sendRemoteInstallEvent();
+                      view.showShareOnTvDialog(appViewViewModel.getAppId());
+                      break;
+                  }
+                })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -523,6 +514,17 @@ public class AppViewPresenter implements Presenter {
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
+        .doOnNext(model -> {
+          if (!model.getEditorsChoice()
+              .isEmpty()) {
+            appViewAnalytics.sendEditorsChoiceClickEvent(model.getPackageName(),
+                model.getEditorsChoice());
+          }
+          appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
+              .getName(), model.getMalware()
+              .getRank()
+              .name(), model.getAppc());
+        })
         .observeOn(viewScheduler)
         .doOnNext(appViewModel -> {
           if (appViewModel.hasError()) {
@@ -531,9 +533,12 @@ public class AppViewPresenter implements Presenter {
             view.populateAppDetails(appViewModel);
           }
         })
+        .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
-        .flatMap(appViewModel -> Observable.merge(updateSuggestedApps(appViewModel),
-            updateReviews(appViewModel))
+        .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
+            updateReviews(appViewModel),
+            (similarAppsViewModel, reviewsViewModel) -> Observable.just(appViewModel))
+            .first()
             .map(__ -> appViewModel));
   }
 
@@ -541,11 +546,13 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadSimilarApps(appViewModel.getPackageName(), appViewModel.getMedia()
         .getKeywords())
         .observeOn(viewScheduler)
+        .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
           if (adsViewModel.hasError()) {
-            view.hideSimilarApps();
+            if (adsViewModel.hasRecommendedAppsError()) view.hideSimilarApps();
+            if (adsViewModel.hasAdError()) view.populateSimilarWithoutAds(adsViewModel);
           } else {
-            view.populateAds(adsViewModel);
+            view.populateSimilar(adsViewModel);
           }
         })
         .toObservable();
@@ -553,8 +560,9 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<ReviewsViewModel> updateReviews(AppViewViewModel appViewModel) {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
-        .getName(), view.getPackageName(), view.getLanguageFilter())
+        .getName(), appViewModel.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
+        .doOnError(__ -> view.hideReviews())
         .doOnSuccess(reviewsViewModel -> {
           if (reviewsViewModel.hasError()) {
             view.hideReviews();
@@ -627,7 +635,8 @@ public class AppViewPresenter implements Presenter {
                   completable = appViewManager.loadAppViewViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(
-                          appViewViewModel -> downloadApp(action).observeOn(viewScheduler)
+                          appViewViewModel -> downloadApp(action, appViewViewModel.getPackageName(),
+                              appViewViewModel.getAppId()).observeOn(viewScheduler)
                               .doOnCompleted(() -> {
                                 appViewAnalytics.clickOnInstallButton(
                                     appViewViewModel.getPackageName(),
@@ -643,7 +652,10 @@ public class AppViewPresenter implements Presenter {
                           appViewViewModel -> openInstalledApp(appViewViewModel.getPackageName()));
                   break;
                 case DOWNGRADE:
-                  completable = downgradeApp(action);
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(appViewViewModel -> downgradeApp(action,
+                          appViewViewModel.getPackageName(), appViewViewModel.getAppId()));
                   break;
                 case PAY:
                   completable = appViewManager.loadAppViewViewModel()
@@ -684,11 +696,12 @@ public class AppViewPresenter implements Presenter {
     });
   }
 
-  private Completable downgradeApp(DownloadAppViewModel.Action action) {
+  private Completable downgradeApp(DownloadAppViewModel.Action action, String packageName,
+      long appId) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
-        .flatMapCompletable(__ -> downloadApp(action))
+        .flatMapCompletable(__ -> downloadApp(action, packageName, appId))
         .toCompletable();
   }
 
@@ -696,7 +709,8 @@ public class AppViewPresenter implements Presenter {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private Completable downloadApp(DownloadAppViewModel.Action action) {
+  private Completable downloadApp(DownloadAppViewModel.Action action, String packageName,
+      long appId) {
     return Observable.defer(() -> {
       if (appViewManager.showRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -708,7 +722,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
-            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, "", -1)))
+            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, packageName, appId)))
         .toCompletable();
   }
 
@@ -815,9 +829,12 @@ public class AppViewPresenter implements Presenter {
                 .map(__2 -> appBoughClickEvent))
             .first()
             .observeOn(viewScheduler)
-            .flatMapCompletable(
-                appBoughClickEvent -> appViewManager.appBought(appBoughClickEvent.getPath())
-                    .andThen(downloadApp(DownloadAppViewModel.Action.INSTALL)))
+            .flatMap(appBoughClickEvent -> appViewManager.loadAppViewViewModel()
+                .flatMapCompletable(
+                    appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
+                        .andThen(downloadApp(DownloadAppViewModel.Action.INSTALL,
+                            appViewViewModel.getPackageName(), appViewViewModel.getAppId())))
+                .toObservable())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

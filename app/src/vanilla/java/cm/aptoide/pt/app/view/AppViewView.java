@@ -23,10 +23,6 @@ public interface AppViewView extends InstallAppView {
 
   void showAppview();
 
-  long getAppId();
-
-  String getPackageName();
-
   void populateAppDetails(AppViewViewModel detailedApp);
 
   void handleError(DetailedAppRequestResult.Error error);
@@ -37,7 +33,9 @@ public interface AppViewView extends InstallAppView {
 
   void populateReviews(ReviewsViewModel reviews, AppViewViewModel app);
 
-  void populateAds(SimilarAppsViewModel ads);
+  void populateSimilar(SimilarAppsViewModel ads);
+
+  void populateSimilarWithoutAds(SimilarAppsViewModel ads);
 
   Observable<FlagsVote.VoteType> clickWorkingFlag();
 
@@ -118,7 +116,7 @@ public interface AppViewView extends InstallAppView {
 
   void showShareDialog();
 
-  void showShareOnTvDialog();
+  void showShareOnTvDialog(long appId);
 
   void defaultShare(String appName, String wUrl);
 
@@ -131,4 +129,6 @@ public interface AppViewView extends InstallAppView {
   void hideSimilarApps();
 
   void extractReferrer(SearchAdResult searchAdResult);
+
+  void recoverScrollViewState();
 }

@@ -14,6 +14,7 @@
       android:orientation="vertical"
       >
     <TextView
+        android:id="@+id/latest_version_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -61,6 +62,7 @@
         android:layout_height="32dp"
         android:layout_gravity="center"
         android:gravity="center"
+        android:minLines="2"
         android:text="@string/appview_other_versions"
         android:textColor="@color/default_color"
         android:textSize="12sp"

@@ -43,6 +43,11 @@ public class DownloadAppViewModel {
     return pay;
   }
 
+  public boolean hasError() {
+    return downloadState.equals(DownloadState.ERROR) || downloadState.equals(
+        DownloadState.NOT_ENOUGH_STORAGE_ERROR);
+  }
+
   public enum Error {
     NETWORK, GENERIC
   }
@@ -52,6 +57,6 @@ public class DownloadAppViewModel {
   }
 
   public enum DownloadState {
-    ACTIVE, PAUSE, COMPLETE, INDETERMINATE, ERROR
+    ACTIVE, PAUSE, COMPLETE, INDETERMINATE, ERROR, NOT_ENOUGH_STORAGE_ERROR
   }
 }
