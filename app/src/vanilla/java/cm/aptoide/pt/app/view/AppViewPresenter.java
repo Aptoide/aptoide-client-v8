@@ -527,6 +527,7 @@ public class AppViewPresenter implements Presenter {
             view.populateAppDetails(appViewModel);
           }
         })
+        .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
             updateReviews(appViewModel),
