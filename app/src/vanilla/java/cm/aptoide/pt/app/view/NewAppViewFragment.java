@@ -112,6 +112,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class NewAppViewFragment extends NavigationTrackFragment implements AppViewView {
   private static final String ORIGIN_TAG = "TAG";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
+  private static final String SHOW_SIMILAR_DOWNLOAD = "show_similar_download";
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
@@ -264,7 +265,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     showSimilarDownload =
         showSimilarDownload || savedInstanceState != null && savedInstanceState.getBoolean(
-            "show_similar_download", false);
+            SHOW_SIMILAR_DOWNLOAD, false);
 
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
     genericErrorView = view.findViewById(R.id.generic_error);
@@ -534,7 +535,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putBoolean("show_similar_download", showSimilarDownload);
+    outState.putBoolean(SHOW_SIMILAR_DOWNLOAD, showSimilarDownload);
     if (scrollView != null) {
       outState.putIntArray("ARTICLE_SCROLL_POSITION",
           new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
