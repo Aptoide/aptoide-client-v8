@@ -112,14 +112,13 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class NewAppViewFragment extends NavigationTrackFragment implements AppViewView {
   private static final String ORIGIN_TAG = "TAG";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
+  private static final String SHOW_SIMILAR_DOWNLOAD = "show_similar_download";
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
-  private long appId;
-  private String packageName;
   private NewScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
   private AppViewSimilarAppsAdapter similarAppsAdapter;
@@ -138,6 +137,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
 
   private Integer positionY;
+  private boolean showSimilarDownload;
 
   //Views
   private NestedScrollView scrollView;
@@ -262,6 +262,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         });
       }
     }
+
+    showSimilarDownload =
+        showSimilarDownload || savedInstanceState != null && savedInstanceState.getBoolean(
+            SHOW_SIMILAR_DOWNLOAD, false);
 
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
     genericErrorView = view.findViewById(R.id.generic_error);
@@ -519,8 +523,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     menu = null;
     toolbar = null;
     actionBar = null;
-    appId = -1;
-    packageName = null;
     scrollView = null;
     collapsingToolbarLayout = null;
   }
@@ -533,6 +535,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
+    outState.putBoolean(SHOW_SIMILAR_DOWNLOAD, showSimilarDownload);
     if (scrollView != null) {
       outState.putIntArray("ARTICLE_SCROLL_POSITION",
           new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
@@ -553,13 +556,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     noNetworkErrorView.setVisibility(View.GONE);
   }
 
-  @Override public long getAppId() {
-    return appId;
-  }
-
-  @Override public String getPackageName() {
-    return packageName;
-  }
 
   @Override public void populateAppDetails(AppViewViewModel model) {
     collapsingToolbarLayout.setTitle(model.getAppName());
@@ -670,7 +666,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void populateSimilar(SimilarAppsViewModel ads) {
     similarAppsAdapter.update(mapToSimilar(ads, true));
     similarDownloadsAdapter.update(mapToSimilar(ads, true));
-    similarBottomView.setVisibility(View.VISIBLE);
+    if (showSimilarDownload) {
+      similarBottomView.setVisibility(View.GONE);
+      similarDownloadView.setVisibility(View.VISIBLE);
+    } else {
+      similarBottomView.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
@@ -906,7 +907,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .subscribe(response -> shareDialogClick.onNext(response));
   }
 
-  @Override public void showShareOnTvDialog() {
+  @Override public void showShareOnTvDialog(long appId) {
     if (AptoideUtils.SystemU.getConnectionType(
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
         .equals("mobile")) {
@@ -917,7 +918,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           }, err -> CrashReport.getInstance()
               .log(err));
     } else {
-      DialogFragment newFragment = RemoteInstallDialog.newInstance(getAppId());
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
       newFragment.show(getActivity().getSupportFragmentManager(),
           RemoteInstallDialog.class.getSimpleName());
     }
@@ -1221,12 +1222,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       install.setVisibility(View.GONE);
       similarBottomView.setVisibility(View.GONE);
       similarDownloadView.setVisibility(View.VISIBLE);
+      showSimilarDownload = true;
       setDownloadState(model.getProgress(), model.getDownloadState());
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
-      similarBottomView.setVisibility(View.VISIBLE);
-      similarDownloadView.setVisibility(View.GONE);
       setButtonText(model.getAction());
       if (model.hasError()) {
         handleDownloadError(model.getDownloadState());

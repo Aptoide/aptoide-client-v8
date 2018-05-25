@@ -414,21 +414,23 @@ public class AppViewPresenter implements Presenter {
   private void handleClickOnToolbar() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickToolbar())
-        .filter(menuItem -> menuItem != null)
-        .map(menuItem -> menuItem.getItemId())
-        .doOnNext(itemId -> {
-          switch (itemId) {
-            case R.id.menu_item_share:
-              view.showShareDialog();
-              break;
+        .flatMap(__ -> view.clickToolbar()
+            .flatMap(menuItem -> appViewManager.loadAppViewViewModel()
+                .toObservable()
+                .filter(appViewViewModel -> menuItem != null)
+                .doOnNext(appViewViewModel -> {
+                  switch (menuItem.getItemId()) {
 
-            case R.id.menu_remote_install:
-              appViewAnalytics.sendRemoteInstallEvent();
-              view.showShareOnTvDialog();
-              break;
-          }
-        })
+                    case R.id.menu_item_share:
+                      view.showShareDialog();
+                      break;
+
+                    case R.id.menu_remote_install:
+                      appViewAnalytics.sendRemoteInstallEvent();
+                      view.showShareOnTvDialog(appViewViewModel.getAppId());
+                      break;
+                  }
+                })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -551,7 +553,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<ReviewsViewModel> updateReviews(AppViewViewModel appViewModel) {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
-        .getName(), view.getPackageName(), view.getLanguageFilter())
+        .getName(), appViewModel.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideReviews())
         .doOnSuccess(reviewsViewModel -> {
