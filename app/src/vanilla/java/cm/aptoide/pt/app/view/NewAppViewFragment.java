@@ -388,7 +388,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
               percentage);
         });
 
-    handleRetainScrollStateInformation(savedInstanceState);
+    if (savedInstanceState != null) {
+      scrollViewY = savedInstanceState.getInt(KEY_SCROLL_Y, 0);
+    }
 
     collapsingToolbarLayout =
         ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
@@ -403,16 +405,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta);
-  }
-
-  private void handleRetainScrollStateInformation(@Nullable Bundle savedInstanceState) {
-    int y;
-    if (savedInstanceState != null) {
-      y = savedInstanceState.getInt(KEY_SCROLL_Y, 0);
-    } else {
-      y = scrollViewY;
-    }
-    scrollViewY = y;
   }
 
   @Override public void onDestroy() {
@@ -510,6 +502,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     appId = -1;
     packageName = null;
     collapsingToolbarLayout = null;
+    scrollView = null;
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -983,10 +976,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void recoverScrollViewState() {
     // TODO: 25/05/2018 remove this hack and find a better way to do it.
-    scrollView.post(() -> {
-      scrollView.scrollTo(0, scrollViewY);
-      scrollViewY = 0;
-    });
+    scrollView.post(() -> scrollView.scrollTo(0, scrollViewY));
   }
 
   private void setTrustedBadge(Malware malware) {
