@@ -553,7 +553,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<ReviewsViewModel> updateReviews(AppViewViewModel appViewModel) {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
-        .getName(), view.getPackageName(), view.getLanguageFilter())
+        .getName(), appViewModel.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideReviews())
         .doOnSuccess(reviewsViewModel -> {

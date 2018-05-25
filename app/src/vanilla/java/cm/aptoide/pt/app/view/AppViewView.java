@@ -23,8 +23,6 @@ public interface AppViewView extends InstallAppView {
 
   void showAppview();
 
-  String getPackageName();
-
   void populateAppDetails(AppViewViewModel detailedApp);
 
   void handleError(DetailedAppRequestResult.Error error);
