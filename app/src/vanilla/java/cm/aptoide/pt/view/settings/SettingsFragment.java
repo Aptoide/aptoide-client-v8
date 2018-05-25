@@ -35,7 +35,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AdultContentAnalytics;
-import cm.aptoide.pt.account.view.GenericWebviewFragment;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -44,6 +43,7 @@ import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -271,14 +271,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
             clicked -> fragmentNavigator.navigateTo(SendFeedbackFragment.newInstance(), true)));
 
     subscriptions.add(RxPreference.clicks(termsAndConditions)
-        .subscribe(clicked -> fragmentNavigator.navigateTo(
-            GenericWebviewFragment.newInstance(getString(R.string.terms_conditions_navigation_url),
-                getString(R.string.settings_terms_conditions)), true)));
+        .subscribe(clicked -> CustomTabsHelper.getInstance()
+            .openInChromeCustomTab(getString(R.string.terms_conditions_navigation_url),
+                getContext())));
 
     subscriptions.add(RxPreference.clicks(privacyPolicy)
-        .subscribe(clicked -> fragmentNavigator.navigateTo(
-            GenericWebviewFragment.newInstance(getString(R.string.privacy_policy_navigation_url),
-                getString(R.string.settings_privacy_policy)), true)));
+        .subscribe(clicked -> CustomTabsHelper.getInstance()
+            .openInChromeCustomTab(getString(R.string.privacy_policy_navigation_url),
+                getContext())));
 
     subscriptions.add(accountManager.enabled()
         .observeOn(AndroidSchedulers.mainThread())
