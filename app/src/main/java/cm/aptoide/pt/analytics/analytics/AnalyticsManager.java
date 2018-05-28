@@ -12,12 +12,12 @@ import java.util.Map;
 
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
-  private final HttpKnockEventLogger knockEventLogger;
+  private final KnockEventLogger knockEventLogger;
   private final AnalyticsNormalizer analyticsNormalizer;
   private List<SessionLogger> sessionLoggers;
   private Map<EventLogger, Collection<String>> eventLoggers;
 
-  private AnalyticsManager(HttpKnockEventLogger knockLogger,
+  private AnalyticsManager(KnockEventLogger knockLogger,
       Map<EventLogger, Collection<String>> eventLoggers, List<SessionLogger> sessionLoggers,
       AnalyticsNormalizer analyticsNormalizer) {
     this.knockEventLogger = knockLogger;
@@ -65,7 +65,8 @@ public class AnalyticsManager {
   }
 
   /**
-   * <p> Log a {@code url} to the {@link HttpKnockEventLogger}.</p>
+   * <p> Makes a simple request with the specified {@code url} with the {@link KnockEventLogger}.</p>
+   * <p> Response is not handled.</p>
    *
    * @param url The url to log.
    */
@@ -114,8 +115,7 @@ public class AnalyticsManager {
    */
   public static class Builder {
     private final Map<EventLogger, Collection<String>> eventLoggers;
-    private HttpKnockEventLogger httpKnockEventLogger;
-    private SessionLogger sessionLogger;
+    private KnockEventLogger knockEventLogger;
     private List<SessionLogger> sessionLoggers;
     private AnalyticsNormalizer analyticsNormalizer;
 
@@ -174,14 +174,14 @@ public class AnalyticsManager {
      * <p>If this builder was not started yet (see {@link #Builder()}), a
      * {@link NullPointerException} will occur.</p>
      *
-     * @param httpKnockEventLogger The {@code httpKnockEventLogger} to log the events.
+     * @param httpKnockEventLogger The {@code knockEventLogger} to log the events.
      *
      * @return A builder with the added {@link HttpKnockEventLogger}.
      *
      * @see NullPointerException
      */
-    public Builder setKnockLogger(HttpKnockEventLogger httpKnockEventLogger) {
-      this.httpKnockEventLogger = httpKnockEventLogger;
+    public Builder setKnockLogger(KnockEventLogger httpKnockEventLogger) {
+      this.knockEventLogger = httpKnockEventLogger;
       return this;
     }
 
@@ -201,31 +201,31 @@ public class AnalyticsManager {
     /**
      * <p>Builds an AnalyticsManager object.</p>
      *
-     * <p> An AnalyticsManager needs an {@link HttpKnockEventLogger} and at least one {@link
+     * <p> An AnalyticsManager needs an {@link KnockEventLogger} and at least one {@link
      * EventLogger}.</p>
      *
      * <p>If this builder was not started ( see {@link #Builder()} ), a
      * {@link NullPointerException} will occur.</p>
      *
-     * <p>If no {@link HttpKnockEventLogger} was added (see {@link #setKnockLogger(HttpKnockEventLogger)})
+     * <p>If no {@link KnockEventLogger} was added (see {@link #setKnockLogger(KnockEventLogger)})
      * an IllegalArgumentException will be thrown.</p>
      *
      * <p>If at least one {@link EventLogger} was not added (see {@link
      * #addLogger(EventLogger, Collection)}, an IllegalArgumentException will be thrown.</p>
      *
-     * @return An AnalyticsManager object with a {@code HttpKnockEventLogger}, {@code EventLogger}
+     * @return An AnalyticsManager object with a {@code KnockEventLogger}, {@code EventLogger}
      * and {@code SessionLogger}.
      *
      * @see NullPointerException
      */
     public AnalyticsManager build() {
-      if (httpKnockEventLogger == null) {
+      if (knockEventLogger == null) {
         throw new IllegalArgumentException("Analytics manager need an okhttp client");
       }
       if (eventLoggers.size() < 1) {
         throw new IllegalArgumentException("Analytics manager need at least one logger");
       }
-      return new AnalyticsManager(httpKnockEventLogger, eventLoggers, sessionLoggers,
+      return new AnalyticsManager(knockEventLogger, eventLoggers, sessionLoggers,
           analyticsNormalizer);
     }
   }

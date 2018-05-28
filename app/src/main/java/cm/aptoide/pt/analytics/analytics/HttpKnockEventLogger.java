@@ -11,15 +11,9 @@ import okhttp3.Response;
  * Created by trinkes on 11/01/2018.
  */
 
-public class HttpKnockEventLogger {
+public class HttpKnockEventLogger implements KnockEventLogger {
   private final OkHttpClient client;
 
-  /**
-   * <p> Creates a HttpKnockEventLogger that will allow to log ( {@link #log(String)} ) events
-   * through an {@code url}</p>
-   *
-   * @param client Can be used to send and read HTTP requests.
-   */
   public HttpKnockEventLogger(OkHttpClient client) {
     this.client = client;
   }
@@ -29,7 +23,7 @@ public class HttpKnockEventLogger {
    *
    * @param url Corresponds to the url to be requested.
    */
-  public void log(String url) {
+  @Override public void log(String url) {
     Request click = new Request.Builder().url(url)
         .build();
     client.newCall(click)
@@ -38,7 +32,7 @@ public class HttpKnockEventLogger {
 
           }
 
-          @Override public void onResponse(Call call, Response response) throws IOException {
+          @Override public void onResponse(Call call, Response response) {
             response.body()
                 .close();
           }
