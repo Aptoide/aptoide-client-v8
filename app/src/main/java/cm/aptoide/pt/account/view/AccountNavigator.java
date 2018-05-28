@@ -16,6 +16,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
+import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -156,14 +157,14 @@ public class AccountNavigator {
   }
 
   public void navigateToTermsAndConditions() {
-    fragmentNavigator.navigateTo(GenericWebviewFragment.newInstance(activityNavigator.getActivity()
-        .getString(R.string.terms_conditions_navigation_url), activityNavigator.getActivity()
-        .getString(R.string.settings_terms_conditions)), true);
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab(activityNavigator.getActivity()
+            .getString(R.string.terms_conditions_navigation_url), activityNavigator.getActivity());
   }
 
   public void navigateToPrivacyPolicy() {
-    fragmentNavigator.navigateTo(GenericWebviewFragment.newInstance(activityNavigator.getActivity()
-        .getString(R.string.privacy_policy_navigation_url), activityNavigator.getActivity()
-        .getString(R.string.settings_privacy_policy)), true);
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab(activityNavigator.getActivity()
+            .getString(R.string.privacy_policy_navigation_url), activityNavigator.getActivity());
   }
 }

@@ -53,7 +53,7 @@ public class NewAccountFragment extends BackButtonFragment
     NotBottomNavigationView {
 
   private static final float STROKE_SIZE = 0.04f;
-  private final String WHAT_IS_APTOIDETV_URL = "https://blog.aptoide.com/what-is-aptoidetv/";
+  private final String WHAT_IS_APTOIDETV_URL = "https://www.aptoide.com/legal/terms?header=0&menu=0";
   protected Toolbar toolbar;
   @Inject NewAccountNavigator newAccountNavigator;
   @Inject AccountAnalytics accountAnalytics;
