@@ -51,6 +51,7 @@ public class AppViewManager {
   private DetailedApp cachedApp;
   private SearchAdResult searchAdResult;
   private SocialRepository socialRepository;
+  private String marketName;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -58,7 +59,8 @@ public class AppViewManager {
       AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository) {
+      InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
+      String marketName) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -76,6 +78,7 @@ public class AppViewManager {
     this.installAnalytics = installAnalytics;
     this.socialRepository = socialRepository;
     this.limit = limit;
+    this.marketName = marketName;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -194,7 +197,7 @@ public class AppViewManager {
             app.isLatestTrustedVersion(), app.getUniqueName(), appViewConfiguration.shouldInstall(),
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
-            isStoreFollowed));
+            isStoreFollowed, marketName));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {
@@ -305,5 +308,9 @@ public class AppViewManager {
           .setPaid();
       cachedApp.setPath(path);
     });
+  }
+
+  public String getMarketName() {
+    return marketName;
   }
 }
