@@ -1,10 +1,8 @@
 package cm.aptoide.pt.analytics.analytics;
 
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,30 +16,29 @@ public class AptoideBiAnalytics {
 
   private static final String TAG = AptoideBiAnalytics.class.getSimpleName();
   private final EventsPersistence persistence;
+  private final SessionPersistence sessionPersistence;
   private final AptoideBiEventService service;
   private final CompositeSubscription subscriptions;
   private final long sendInterval;
   private final Scheduler timerScheduler;
   private final long initialDelay;
   private final CrashReport crashReport;
-  private final SharedPreferences sharedPreferences;
 
   /**
+   * @param sessionPersistence
    * @param sendInterval max time(in milliseconds) interval between event sends
-   * @param crashReport
-   * @param preferences
    */
-  public AptoideBiAnalytics(EventsPersistence persistence, AptoideBiEventService service,
-      CompositeSubscription subscriptions, Scheduler timerScheduler, long initialDelay,
-      long sendInterval, CrashReport crashReport, SharedPreferences preferences) {
+  public AptoideBiAnalytics(EventsPersistence persistence, SessionPersistence sessionPersistence,
+      AptoideBiEventService service, CompositeSubscription subscriptions, Scheduler timerScheduler,
+      long initialDelay, long sendInterval, CrashReport crashReport) {
     this.persistence = persistence;
+    this.sessionPersistence = sessionPersistence;
     this.service = service;
     this.subscriptions = subscriptions;
     this.timerScheduler = timerScheduler;
     this.sendInterval = sendInterval;
     this.initialDelay = initialDelay;
     this.crashReport = crashReport;
-    this.sharedPreferences = preferences;
   }
 
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
@@ -52,11 +49,11 @@ public class AptoideBiAnalytics {
   }
 
   public long getTimestamp() {
-    return ManagerPreferences.getSessionTimestamp(sharedPreferences);
+    return sessionPersistence.getTimestamp();
   }
 
   public void saveTimestamp(long timestamp) {
-    ManagerPreferences.saveSessionTimestamp(timestamp, sharedPreferences);
+    sessionPersistence.saveSessionTimestamp(timestamp);
   }
 
   public void setup() {

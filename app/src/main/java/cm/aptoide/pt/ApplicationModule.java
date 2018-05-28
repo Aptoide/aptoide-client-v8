@@ -59,6 +59,7 @@ import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
 import cm.aptoide.pt.analytics.analytics.SessionLogger;
+import cm.aptoide.pt.analytics.analytics.SharedPreferencesSessionPersistence;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
@@ -1037,9 +1038,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport,
       @Named("default") SharedPreferences preferences) {
     return new AptoideBiEventLogger(
-        new AptoideBiAnalytics(persistence, service, new CompositeSubscription(),
-            Schedulers.computation(), BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport, preferences),
+        new AptoideBiAnalytics(persistence, new SharedPreferencesSessionPersistence(preferences),
+            service, new CompositeSubscription(), Schedulers.computation(),
+            BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport),
         BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
   }
 

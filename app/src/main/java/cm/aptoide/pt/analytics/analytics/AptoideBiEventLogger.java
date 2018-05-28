@@ -7,7 +7,6 @@ import java.util.Map;
  */
 
 public class AptoideBiEventLogger implements EventLogger, SessionLogger {
-  private static final String TAG = AptoideBiEventLogger.class.getSimpleName();
   private final AptoideBiAnalytics service;
   private final long sessionInterval;
 

@@ -31,7 +31,7 @@ public class RetrofitAptoideBiService implements AptoideBiEventService {
       String appId, SharedPreferences sharedPreferences) {
     this.dateFormat = dateFormat;
     this.bodyInterceptor = bodyInterceptor;
-    httpClient = client;
+    this.httpClient = client;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.appId = appId;
