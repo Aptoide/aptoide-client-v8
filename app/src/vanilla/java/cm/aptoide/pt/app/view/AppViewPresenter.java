@@ -534,7 +534,24 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .flatMap(appViewModel -> {
-          if (appViewModel.getOpenType() == NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
+          if (appViewModel.getOpenType() == NewAppViewFragment.OpenType.OPEN_AND_INSTALL) {
+
+            return accountManager.accountStatus()
+                .observeOn(viewScheduler)
+                .flatMapCompletable(
+                    accountStatus -> downloadApp(DownloadAppViewModel.Action.INSTALL,
+                        appViewModel.getPackageName(), appViewModel.getAppId()).observeOn(
+                        viewScheduler)
+                        .doOnCompleted(() -> {
+                          appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                              appViewModel.getDeveloper()
+                                  .getName(), DownloadAppViewModel.Action.INSTALL.toString());
+                          showRecommendsDialog(accountStatus.isLoggedIn(),
+                              appViewModel.getPackageName());
+                        }))
+                .map(__ -> appViewModel);
+          } else if (appViewModel.getOpenType()
+              == NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
 
             return accountManager.accountStatus()
                 .observeOn(viewScheduler)
