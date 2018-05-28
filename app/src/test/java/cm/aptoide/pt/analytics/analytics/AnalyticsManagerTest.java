@@ -14,7 +14,8 @@ public class AnalyticsManagerTest {
     String eventName = "TestEvent";
     EventLogger eventLogger = mock(EventLogger.class);
     HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
-    AnalyticsNormalizer analyticsNormalizer = mock(AnalyticsNormalizer.class);
+    AnalyticsEventParametersNormalizer analyticsNormalizer =
+        mock(AnalyticsEventParametersNormalizer.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
@@ -33,7 +34,8 @@ public class AnalyticsManagerTest {
     String eventName = "TestEvent";
     EventLogger eventLogger = mock(EventLogger.class);
     HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
-    AnalyticsNormalizer analyticsNormalizer = mock(AnalyticsNormalizer.class);
+    AnalyticsEventParametersNormalizer analyticsNormalizer =
+        mock(AnalyticsEventParametersNormalizer.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))

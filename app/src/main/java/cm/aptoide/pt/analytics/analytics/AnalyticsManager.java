@@ -1,8 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.ApplicationModule;
-import cm.aptoide.pt.FlavourApplicationModule;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,13 +11,13 @@ import java.util.Map;
 public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final KnockEventLogger knockEventLogger;
-  private final AnalyticsNormalizer analyticsNormalizer;
+  private final AnalyticsEventParametersNormalizer analyticsNormalizer;
   private List<SessionLogger> sessionLoggers;
   private Map<EventLogger, Collection<String>> eventLoggers;
 
   private AnalyticsManager(KnockEventLogger knockLogger,
       Map<EventLogger, Collection<String>> eventLoggers, List<SessionLogger> sessionLoggers,
-      AnalyticsNormalizer analyticsNormalizer) {
+      AnalyticsEventParametersNormalizer analyticsNormalizer) {
     this.knockEventLogger = knockLogger;
     this.eventLoggers = eventLoggers;
     this.sessionLoggers = sessionLoggers;
@@ -29,8 +27,7 @@ public class AnalyticsManager {
   /**
    * <p>Logs the events to the correspondent event loggers.</p>
    *
-   * </p> Only the events whose {@code eventName} is listed on {@link FlavourApplicationModule} or
-   * {@link ApplicationModule} are logged.</p>
+   * </p> Only the events whose {@code eventName} is listed in the respective eventLoggers map are logged.</p>
    *
    * @param data The attributes of the event
    * @param eventName The name of the event to be logged.
@@ -117,7 +114,7 @@ public class AnalyticsManager {
     private final Map<EventLogger, Collection<String>> eventLoggers;
     private KnockEventLogger knockEventLogger;
     private List<SessionLogger> sessionLoggers;
-    private AnalyticsNormalizer analyticsNormalizer;
+    private AnalyticsEventParametersNormalizer analyticsNormalizer;
 
     /**
      * <p>Start the builder.</p>
@@ -186,14 +183,14 @@ public class AnalyticsManager {
     }
 
     /**
-     * <p>Sets a {@link AnalyticsNormalizer} that will allow to normalize event attributes
+     * <p>Sets a {@link AnalyticsEventParametersNormalizer} that will allow to normalize event attributes
      * according to the normalizer implementation.</p>
      *
      * @param analyticsNormalizer The {@code analyticsNormalizer} to normalize the events data.
      *
-     * @return A builder with the updated {@link AnalyticsNormalizer}
+     * @return A builder with the updated {@link AnalyticsEventParametersNormalizer}
      */
-    public Builder setAnalyticsNormalizer(AnalyticsNormalizer analyticsNormalizer) {
+    public Builder setAnalyticsNormalizer(AnalyticsEventParametersNormalizer analyticsNormalizer) {
       this.analyticsNormalizer = analyticsNormalizer;
       return this;
     }

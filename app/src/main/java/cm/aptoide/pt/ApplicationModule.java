@@ -44,8 +44,8 @@ import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
+import cm.aptoide.pt.analytics.analytics.AnalyticsEventParametersNormalizer;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
-import cm.aptoide.pt.analytics.analytics.AnalyticsNormalizer;
 import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventService;
@@ -1082,7 +1082,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("flurryEvents") Collection<String> flurryEvents,
       @Named("flurrySession") SessionLogger flurrySessionLogger,
       @Named("aptoideSession") SessionLogger aptoideSessionLogger,
-      @Named("normalizer") AnalyticsNormalizer analyticsNormalizer) {
+      @Named("normalizer") AnalyticsEventParametersNormalizer analyticsNormalizer) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
@@ -1095,8 +1095,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
-  @Singleton @Provides @Named("normalizer") AnalyticsNormalizer providesAnalyticsNormalizer() {
-    return new AnalyticsNormalizer();
+  @Singleton @Provides @Named("normalizer")
+  AnalyticsEventParametersNormalizer providesAnalyticsNormalizer() {
+    return new AnalyticsEventParametersNormalizer();
   }
 
   @Singleton @Provides AppShortcutsAnalytics providesAppShortcutsAnalytics(

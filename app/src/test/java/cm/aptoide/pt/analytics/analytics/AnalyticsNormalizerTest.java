@@ -14,10 +14,10 @@ import static org.junit.Assert.assertTrue;
 
 public class AnalyticsNormalizerTest {
 
-  private AnalyticsNormalizer analyticsNormalizer;
+  private AnalyticsEventParametersNormalizer analyticsNormalizer;
 
   @Before public void setupAnalyticsNormalizer() {
-    analyticsNormalizer = new AnalyticsNormalizer();
+    analyticsNormalizer = new AnalyticsEventParametersNormalizer();
   }
 
   @Test public void normalizeNullEventAttributeValuesToEmptyString() {
