@@ -1136,7 +1136,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       rateAppButton.setVisibility(View.GONE);
 
       if (gRating == 0) {
-        emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
+        emptyReviewTextView.setText(R.string.appview_rate_this_app);
       }
     }
   }
