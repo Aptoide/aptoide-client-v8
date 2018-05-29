@@ -279,7 +279,7 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
     return new AppViewConfiguration(arguments.getLong(BundleKeys.APP_ID.name(), -1),
-        arguments.getString(BundleKeys.PACKAGE_NAME.name(), ""),
+        arguments.getString(BundleKeys.PACKAGE_NAME.name(), null),
         arguments.getString(BundleKeys.STORE_NAME.name(), null),
         arguments.getString(BundleKeys.STORE_THEME.name(), ""),
         Parcels.unwrap(arguments.getParcelable(BundleKeys.MINIMAL_AD.name())),
