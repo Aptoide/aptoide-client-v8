@@ -14,6 +14,7 @@ import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
@@ -38,6 +39,7 @@ public class AppViewPresenter implements Presenter {
 
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private final BillingAnalytics billingAnalytics;
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
@@ -50,13 +52,15 @@ public class AppViewPresenter implements Presenter {
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, StoreAnalytics storeAnalytics,
-      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
-      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
-      PermissionManager permissionManager, PermissionService permissionService) {
+      BillingAnalytics billingAnalytics, AppViewNavigator appViewNavigator,
+      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
+      CrashReport crashReport, PermissionManager permissionManager,
+      PermissionService permissionService) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
     this.storeAnalytics = storeAnalytics;
+    this.billingAnalytics = billingAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -99,6 +103,7 @@ public class AppViewPresenter implements Presenter {
     skipLoggedInRecommendsDialogClick();
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
+    handleAppBought();
   }
 
   private void handleFirstLoad() {
@@ -414,21 +419,23 @@ public class AppViewPresenter implements Presenter {
   private void handleClickOnToolbar() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickToolbar())
-        .filter(menuItem -> menuItem != null)
-        .map(menuItem -> menuItem.getItemId())
-        .doOnNext(itemId -> {
-          switch (itemId) {
-            case R.id.menu_item_share:
-              view.showShareDialog();
-              break;
+        .flatMap(__ -> view.clickToolbar()
+            .flatMap(menuItem -> appViewManager.loadAppViewViewModel()
+                .toObservable()
+                .filter(appViewViewModel -> menuItem != null)
+                .doOnNext(appViewViewModel -> {
+                  switch (menuItem.getItemId()) {
 
-            case R.id.menu_remote_install:
-              appViewAnalytics.sendRemoteInstallEvent();
-              view.showShareOnTvDialog();
-              break;
-          }
-        })
+                    case R.id.menu_item_share:
+                      view.showShareDialog();
+                      break;
+
+                    case R.id.menu_remote_install:
+                      appViewAnalytics.sendRemoteInstallEvent();
+                      view.showShareOnTvDialog(appViewViewModel.getAppId());
+                      break;
+                  }
+                })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -498,7 +505,8 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadAppViewViewModel()
         .flatMap(
             appViewViewModel -> appViewManager.getDownloadAppViewModel(appViewViewModel.getMd5(),
-                appViewViewModel.getPackageName(), appViewViewModel.getVersionCode())
+                appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
+                appViewViewModel.isPaid(), appViewViewModel.getPay())
                 .first()
                 .observeOn(viewScheduler)
                 .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
@@ -525,6 +533,7 @@ public class AppViewPresenter implements Presenter {
             view.populateAppDetails(appViewModel);
           }
         })
+        .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
             updateReviews(appViewModel),
@@ -551,7 +560,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<ReviewsViewModel> updateReviews(AppViewViewModel appViewModel) {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
-        .getName(), view.getPackageName(), view.getLanguageFilter())
+        .getName(), appViewModel.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideReviews())
         .doOnSuccess(reviewsViewModel -> {
@@ -648,6 +657,11 @@ public class AppViewPresenter implements Presenter {
                       .flatMapCompletable(appViewViewModel -> downgradeApp(action,
                           appViewViewModel.getPackageName(), appViewViewModel.getAppId()));
                   break;
+                case PAY:
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(appViewViewModel -> payApp(appViewViewModel.getAppId()));
+                  break;
                 default:
                   completable =
                       Completable.error(new IllegalArgumentException("Invalid type of action"));
@@ -673,6 +687,13 @@ public class AppViewPresenter implements Presenter {
       appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(
           appViewViewModel.getPackageName());
     }
+  }
+
+  private Completable payApp(long appId) {
+    return Completable.fromAction(() -> {
+      billingAnalytics.sendPaymentViewShowEvent();
+      appViewNavigator.buyApp(appId);
+    });
   }
 
   private Completable downgradeApp(DownloadAppViewModel.Action action, String packageName,
@@ -713,7 +734,7 @@ public class AppViewPresenter implements Presenter {
             .toObservable())
         .filter(app -> !app.isLoading())
         .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode()))
+            app.getVersionCode(), app.isPaid(), app.getPay()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -789,6 +810,31 @@ public class AppViewPresenter implements Presenter {
               appViewAnalytics.sendFailedShareEvent();
               crashReport.log(error);
             })
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleAppBought() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.appBought()
+            .flatMap(appBoughClickEvent -> appViewManager.loadAppViewViewModel()
+                .toObservable()
+                .filter(appViewViewModel -> appViewViewModel.getAppId()
+                    == appBoughClickEvent.getAppId())
+                .map(__2 -> appBoughClickEvent))
+            .first()
+            .observeOn(viewScheduler)
+            .flatMap(appBoughClickEvent -> appViewManager.loadAppViewViewModel()
+                .flatMapCompletable(
+                    appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
+                        .andThen(downloadApp(DownloadAppViewModel.Action.INSTALL,
+                            appViewViewModel.getPackageName(), appViewViewModel.getAppId())))
+                .toObservable())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

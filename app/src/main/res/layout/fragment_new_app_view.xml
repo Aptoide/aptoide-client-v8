@@ -248,6 +248,7 @@
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:layout_marginTop="9dp"
+            android:nestedScrollingEnabled="false"
             android:paddingEnd="0dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"

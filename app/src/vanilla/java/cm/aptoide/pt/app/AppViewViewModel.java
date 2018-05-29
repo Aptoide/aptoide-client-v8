@@ -26,6 +26,9 @@ public class AppViewViewModel {
   private final GetAppMeta.Pay pay;
   private final String webUrls;
   private final boolean isPaid;
+  private final boolean wasPaid;
+  private final String paidAppPath;
+  private final String paymentStatus;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
   private final OpenType shouldInstall;
@@ -68,9 +71,10 @@ public class AppViewViewModel {
       String path, String pathAlt, int versionCode, String versionName, String packageName,
       long size, int downloads, AppRating globalRating, int packageDownloads, AppRating rating,
       AppDeveloper appDeveloper, String graphic, String icon, AppMedia media, String modified,
-      String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid,
-      boolean isLatestTrustedVersion, String uniqueName, OpenType shouldInstall, double appc,
-      SearchAdResult minimalAd, String editorsChoice, String originTag, boolean isStoreFollowed) {
+      String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid,
+      String paidAppPath, String paymentStatus, boolean isLatestTrustedVersion, String uniqueName,
+      OpenType shouldInstall, double appc, SearchAdResult minimalAd, String editorsChoice,
+      String originTag, boolean isStoreFollowed) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -103,6 +107,9 @@ public class AppViewViewModel {
     this.pay = pay;
     this.webUrls = webUrls;
     this.isPaid = isPaid;
+    this.wasPaid = wasPaid;
+    this.paidAppPath = paidAppPath;
+    this.paymentStatus = paymentStatus;
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
     this.shouldInstall = shouldInstall;
@@ -149,6 +156,9 @@ public class AppViewViewModel {
     this.pay = null;
     this.webUrls = null;
     this.isPaid = false;
+    this.wasPaid = false;
+    this.paidAppPath = "";
+    this.paymentStatus = "";
     this.isLatestTrustedVersion = false;
     this.uniqueName = "";
     this.shouldInstall = null;
@@ -194,6 +204,9 @@ public class AppViewViewModel {
     this.pay = null;
     this.webUrls = null;
     this.isPaid = false;
+    this.wasPaid = false;
+    this.paidAppPath = "";
+    this.paymentStatus = "";
     this.isLatestTrustedVersion = false;
     this.uniqueName = "";
     this.shouldInstall = null;
@@ -375,5 +388,17 @@ public class AppViewViewModel {
 
   public boolean isLatestTrustedVersion() {
     return isLatestTrustedVersion;
+  }
+
+  public boolean wasPaid() {
+    return wasPaid;
+  }
+
+  public String getPaidAppPath() {
+    return paidAppPath;
+  }
+
+  public String getPaymentStatus() {
+    return paymentStatus;
   }
 }

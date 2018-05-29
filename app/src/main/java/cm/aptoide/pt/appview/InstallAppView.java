@@ -1,6 +1,7 @@
 package cm.aptoide.pt.appview;
 
 import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.view.AppBoughClickEvent;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 
@@ -43,4 +44,6 @@ public interface InstallAppView extends View {
   Observable<Void> skipLoggedInRecommendsDialogClick();
 
   Observable<Void> dontShowAgainLoggedInRecommendsDialogClick();
+
+  Observable<AppBoughClickEvent> appBought();
 }

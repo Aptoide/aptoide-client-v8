@@ -22,7 +22,11 @@ public abstract class AppBoughtReceiver extends BroadcastReceiver {
   @Override public void onReceive(Context context, Intent intent) {
     String action = intent.getAction();
     if (TextUtils.equals(action, APP_BOUGHT)) {
-      appBought(intent.getLongExtra(APP_ID, -1), intent.getStringExtra(APP_PATH));
+      String productId = intent.getStringExtra(APP_ID);
+      String appIdString = productId.replace("product", "");
+      long appId = Long.valueOf(appIdString)
+          .longValue();
+      appBought(appId, intent.getStringExtra(APP_PATH));
     }
   }
 
