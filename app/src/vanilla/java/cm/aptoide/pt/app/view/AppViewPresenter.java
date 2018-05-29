@@ -481,9 +481,10 @@ public class AppViewPresenter implements Presenter {
   private void handleClickOnRetry() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> Observable.merge(view.clickNoNetworkRetry(), view.clickGenericRetry()))
-        .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> loadApp())
+        .flatMap(__ -> Observable.merge(view.clickNoNetworkRetry(), view.clickGenericRetry())
+            .doOnNext(__1 -> view.showLoading())
+            .flatMap(__2 -> loadApp())
+            .retry())
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -515,6 +516,14 @@ public class AppViewPresenter implements Presenter {
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
+        .observeOn(viewScheduler)
+        .doOnNext(appViewModel -> {
+          if (appViewModel.hasError()) {
+            view.handleError(appViewModel.getError());
+          } else {
+            view.populateAppDetails(appViewModel);
+          }
+        })
         .doOnNext(model -> {
           if (!model.getEditorsChoice()
               .isEmpty()) {
@@ -525,14 +534,6 @@ public class AppViewPresenter implements Presenter {
               .getName(), model.getMalware()
               .getRank()
               .name(), model.getAppc());
-        })
-        .observeOn(viewScheduler)
-        .doOnNext(appViewModel -> {
-          if (appViewModel.hasError()) {
-            view.handleError(appViewModel.getError());
-          } else {
-            view.populateAppDetails(appViewModel);
-          }
         })
         .flatMap(appViewModel -> {
           if (appViewModel.getOpenType() == NewAppViewFragment.OpenType.OPEN_AND_INSTALL) {
