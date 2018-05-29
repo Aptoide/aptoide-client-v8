@@ -537,6 +537,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       outState.putIntArray("ARTICLE_SCROLL_POSITION",
           new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
     }
+    outState.putBoolean(BundleKeys.IS_FIRST_LOAD.name(), false);
   }
 
   @Override public void showLoading() {
@@ -1407,7 +1408,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   public enum BundleKeys {
-    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG,
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG, IS_FIRST_LOAD,
   }
 
   public enum OpenType {

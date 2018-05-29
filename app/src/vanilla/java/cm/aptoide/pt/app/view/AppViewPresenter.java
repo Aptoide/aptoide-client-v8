@@ -509,10 +509,10 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(model -> {
           if (!model.getEditorsChoice()
               .isEmpty()) {
-            appViewAnalytics.sendEditorsChoiceClickEvent(model.getPackageName(),
+            appViewManager.sendEditorsChoiceClickEvent(model.getPackageName(),
                 model.getEditorsChoice());
           }
-          appViewAnalytics.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
+          appViewManager.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
               .getName(), model.getMalware()
               .getRank()
               .name(), model.getAppc());

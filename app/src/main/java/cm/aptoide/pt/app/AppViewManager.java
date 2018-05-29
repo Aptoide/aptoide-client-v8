@@ -50,6 +50,7 @@ public class AppViewManager {
   private DetailedApp cachedApp;
   private SearchAdResult searchAdResult;
   private SocialRepository socialRepository;
+  private boolean isFirstLoad;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -75,6 +76,7 @@ public class AppViewManager {
     this.installAnalytics = installAnalytics;
     this.socialRepository = socialRepository;
     this.limit = limit;
+    this.isFirstLoad = true;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -294,5 +296,20 @@ public class AppViewManager {
 
   public Completable shareOnTimelineAsync(String packageName, long storeId) {
     return Completable.fromAction(() -> socialRepository.asyncShare(packageName, storeId, "app"));
+  }
+
+  public void sendAppViewOpenedFromEvent(String packageName, String publisher, String badge,
+      double appc) {
+    if (isFirstLoad) {
+      appViewAnalytics.sendAppViewOpenedFromEvent(packageName, publisher, badge, appc);
+      isFirstLoad = false;
+    }
+  }
+
+  public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
+    if (isFirstLoad) {
+      appViewAnalytics.sendEditorsChoiceClickEvent(packageName, editorsBrickPosition);
+      isFirstLoad = false;
+    }
   }
 }
