@@ -679,21 +679,7 @@ public abstract class AptoideApplication extends Application {
               SecurePreferencesImplementation.getInstance(getApplicationContext(),
                   getDefaultSharedPreferences()))) {
 
-            //TODO move this to MainActivity, and make necessary refactoring in both this class and MainActivity
-            //PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-
-            PreferencesXmlParser preferencesXmlParser = new PreferencesXmlParser();
-
-            Logger.d(TAG, "XML START ");
-            XmlResourceParser parser = getResources().getXml(R.xml.settings);
-            try {
-              List<String[]> parsedPrefsList = preferencesXmlParser.parse(parser);
-              for (String[] keyValue : parsedPrefsList) {
-                Logger.d(TAG, "keyValue: " + keyValue[0] + " -- " + keyValue[1]);
-              }
-            } catch (IOException | XmlPullParserException e) {
-              e.printStackTrace();
-            }
+            setSharedPreferencesValues();
 
             return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
                 .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
@@ -701,6 +687,22 @@ public abstract class AptoideApplication extends Application {
 
           return Completable.complete();
         });
+  }
+
+  private void setSharedPreferencesValues() {
+    PreferencesXmlParser preferencesXmlParser = new PreferencesXmlParser();
+
+    XmlResourceParser parser = getResources().getXml(R.xml.settings);
+    try {
+      List<String[]> parsedPrefsList = preferencesXmlParser.parse(parser);
+      for (String[] keyValue : parsedPrefsList) {
+        getDefaultSharedPreferences().edit()
+            .putBoolean(keyValue[0], Boolean.valueOf(keyValue[1]))
+            .apply();
+      }
+    } catch (IOException | XmlPullParserException e) {
+      e.printStackTrace();
+    }
   }
 
   // todo re-factor all this code to proper Rx
