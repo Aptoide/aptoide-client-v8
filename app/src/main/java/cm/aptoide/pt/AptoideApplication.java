@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
+import android.util.Xml;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -93,6 +96,7 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.sync.rx.RxSyncScheduler;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -111,6 +115,10 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -122,7 +130,11 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 import okhttp3.OkHttpClient;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import rx.Completable;
 import rx.Observable;
 import rx.functions.Action1;
@@ -669,6 +681,19 @@ public abstract class AptoideApplication extends Application {
 
             //TODO move this to MainActivity, and make necessary refactoring in both this class and MainActivity
             //PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
+            PreferencesXmlParser preferencesXmlParser = new PreferencesXmlParser();
+
+            Logger.d(TAG, "XML START ");
+            XmlResourceParser parser = getResources().getXml(R.xml.settings);
+            try {
+              List<String[]> parsedPrefsList = preferencesXmlParser.parse(parser);
+              for (String[] keyValue : parsedPrefsList) {
+                Logger.d(TAG, "keyValue: " + keyValue[0] + " -- " + keyValue[1]);
+              }
+            } catch (IOException | XmlPullParserException e) {
+              e.printStackTrace();
+            }
 
             return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
                 .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
