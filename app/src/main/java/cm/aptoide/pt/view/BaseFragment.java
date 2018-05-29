@@ -27,9 +27,9 @@ public abstract class BaseFragment extends RxFragment {
     }
   }
 
-  @Override public void onDestroyView() {
+  @Override public void onDestroy() {
     fragmentComponent = null;
-    super.onDestroyView();
+    super.onDestroy();
   }
 
   @Override public void onDetach() {

@@ -977,6 +977,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     scrollView.post(() -> scrollView.scrollTo(0, scrollViewY));
   }
 
+  @Override public Observable<DownloadAppViewModel.Action> showOpenAndInstallDialog(String title,
+      String appName) {
+    return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
+        getContext().getString(R.string.installapp_alrt, appName))
+        .filter(response -> response.equals(YES))
+        .map(__ -> action);
+  }
+
   private void setTrustedBadge(Malware malware) {
     @DrawableRes int badgeResId;
     @StringRes int badgeMessageId;
@@ -1128,7 +1136,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       rateAppButton.setVisibility(View.GONE);
 
       if (gRating == 0) {
-        emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
+        emptyReviewTextView.setText(R.string.appview_rate_this_app);
       }
     }
   }
