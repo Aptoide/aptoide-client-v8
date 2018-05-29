@@ -31,7 +31,7 @@ public class AppViewViewModel {
   private final String paymentStatus;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
-  private final OpenType shouldInstall;
+  private final OpenType openType;
   private final double appc;
   private final SearchAdResult minimalAd;
   private final String editorsChoice;
@@ -64,6 +64,7 @@ public class AppViewViewModel {
   private final String icon;
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
+  private final String marketName;
 
   public AppViewViewModel(long appId, String appName, Store store, String storeTheme,
       boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
@@ -73,8 +74,8 @@ public class AppViewViewModel {
       AppDeveloper appDeveloper, String graphic, String icon, AppMedia media, String modified,
       String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid,
       String paidAppPath, String paymentStatus, boolean isLatestTrustedVersion, String uniqueName,
-      OpenType shouldInstall, double appc, SearchAdResult minimalAd, String editorsChoice,
-      String originTag, boolean isStoreFollowed) {
+      OpenType openType, double appc, SearchAdResult minimalAd, String editorsChoice,
+      String originTag, boolean isStoreFollowed, String marketName) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -112,12 +113,13 @@ public class AppViewViewModel {
     this.paymentStatus = paymentStatus;
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
-    this.shouldInstall = shouldInstall;
+    this.openType = openType;
     this.appc = appc;
     this.minimalAd = minimalAd;
     this.editorsChoice = editorsChoice;
     this.originTag = originTag;
     this.isStoreFollowed = isStoreFollowed;
+    this.marketName = marketName;
     this.loading = false;
     this.error = null;
   }
@@ -161,11 +163,12 @@ public class AppViewViewModel {
     this.paymentStatus = "";
     this.isLatestTrustedVersion = false;
     this.uniqueName = "";
-    this.shouldInstall = null;
+    this.openType = null;
     this.appc = -1;
     this.minimalAd = null;
     this.editorsChoice = "";
     this.originTag = "";
+    marketName = "";
     this.isStoreFollowed = false;
     this.error = null;
   }
@@ -209,11 +212,12 @@ public class AppViewViewModel {
     this.paymentStatus = "";
     this.isLatestTrustedVersion = false;
     this.uniqueName = "";
-    this.shouldInstall = null;
+    this.openType = null;
     this.appc = -1;
     this.minimalAd = null;
     this.editorsChoice = "";
     this.originTag = "";
+    marketName = "";
     this.isStoreFollowed = false;
     this.loading = false;
   }
@@ -362,8 +366,8 @@ public class AppViewViewModel {
     return uniqueName;
   }
 
-  public OpenType getShouldInstall() {
-    return shouldInstall;
+  public OpenType getOpenType() {
+    return openType;
   }
 
   public double getAppc() {
@@ -400,5 +404,9 @@ public class AppViewViewModel {
 
   public String getPaymentStatus() {
     return paymentStatus;
+  }
+
+  public String getMarketName() {
+    return marketName;
   }
 }

@@ -258,12 +258,14 @@ import rx.schedulers.Schedulers;
       AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      Resources resources, WindowManager windowManager, SocialRepository socialRepository) {
+      Resources resources, WindowManager windowManager, SocialRepository socialRepository,
+      @Named("marketName") String marketName) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
-        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository);
+        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
+        marketName);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
