@@ -514,6 +514,14 @@ public class AppViewPresenter implements Presenter {
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
+        .observeOn(viewScheduler)
+        .doOnNext(appViewModel -> {
+          if (appViewModel.hasError()) {
+            view.handleError(appViewModel.getError());
+          } else {
+            view.populateAppDetails(appViewModel);
+          }
+        })
         .doOnNext(model -> {
           if (!model.getEditorsChoice()
               .isEmpty()) {
@@ -524,14 +532,6 @@ public class AppViewPresenter implements Presenter {
               .getName(), model.getMalware()
               .getRank()
               .name(), model.getAppc());
-        })
-        .observeOn(viewScheduler)
-        .doOnNext(appViewModel -> {
-          if (appViewModel.hasError()) {
-            view.handleError(appViewModel.getError());
-          } else {
-            view.populateAppDetails(appViewModel);
-          }
         })
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
