@@ -423,6 +423,7 @@ public class AppViewPresenter implements Presenter {
             .flatMap(menuItem -> appViewManager.loadAppViewViewModel()
                 .toObservable()
                 .filter(appViewViewModel -> menuItem != null)
+                .observeOn(viewScheduler)
                 .doOnNext(appViewViewModel -> {
                   switch (menuItem.getItemId()) {
 
