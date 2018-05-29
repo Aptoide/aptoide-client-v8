@@ -10,5 +10,6 @@ include 'app',
     ':utils',
     ':aptoide-account-manager',
     ':aptoide-database',
-    ':downloadmanager'
+    ':downloadmanager',
+    ':aptoide-analytics'
 

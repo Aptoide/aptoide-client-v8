@@ -1,6 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.crashreports.CrashLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class AptoideBiAnalytics {
   private final long sendInterval;
   private final Scheduler timerScheduler;
   private final long initialDelay;
-  private final CrashReport crashReport;
+  private final CrashLogger crashReport;
 
   /**
    * @param sessionPersistence

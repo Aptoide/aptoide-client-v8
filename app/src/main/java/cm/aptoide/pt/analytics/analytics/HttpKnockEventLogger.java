@@ -7,10 +7,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by trinkes on 11/01/2018.
- */
-
 public class HttpKnockEventLogger implements KnockEventLogger {
   private final OkHttpClient client;
 
