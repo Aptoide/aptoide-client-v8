@@ -423,6 +423,7 @@ public class AppViewPresenter implements Presenter {
             .flatMap(menuItem -> appViewManager.loadAppViewViewModel()
                 .toObservable()
                 .filter(appViewViewModel -> menuItem != null)
+                .observeOn(viewScheduler)
                 .doOnNext(appViewViewModel -> {
                   switch (menuItem.getItemId()) {
 
@@ -533,6 +534,42 @@ public class AppViewPresenter implements Presenter {
             view.populateAppDetails(appViewModel);
           }
         })
+        .flatMap(appViewModel -> {
+          if (appViewModel.getOpenType() == NewAppViewFragment.OpenType.OPEN_AND_INSTALL) {
+
+            return accountManager.accountStatus()
+                .observeOn(viewScheduler)
+                .flatMapCompletable(
+                    accountStatus -> downloadApp(DownloadAppViewModel.Action.INSTALL,
+                        appViewModel.getPackageName(), appViewModel.getAppId()).observeOn(
+                        viewScheduler)
+                        .doOnCompleted(() -> {
+                          appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                              appViewModel.getDeveloper()
+                                  .getName(), DownloadAppViewModel.Action.INSTALL.toString());
+                          showRecommendsDialog(accountStatus.isLoggedIn(),
+                              appViewModel.getPackageName());
+                        }))
+                .map(__ -> appViewModel);
+          } else if (appViewModel.getOpenType()
+              == NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
+
+            return accountManager.accountStatus()
+                .observeOn(viewScheduler)
+                .flatMap(account -> view.showOpenAndInstallDialog(appViewModel.getMarketName(),
+                    appViewModel.getAppName())
+                    .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
+                        appViewModel.getAppId()).observeOn(viewScheduler)
+                        .doOnCompleted(() -> {
+                          appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                              appViewModel.getDeveloper()
+                                  .getName(), action.toString());
+                          showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName());
+                        })))
+                .map(__ -> appViewModel);
+          }
+          return Observable.just(appViewModel);
+        })
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
@@ -642,7 +679,8 @@ public class AppViewPresenter implements Presenter {
                                     appViewViewModel.getPackageName(),
                                     appViewViewModel.getDeveloper()
                                         .getName(), action.toString());
-                                showRecommendsDialog(account.isLoggedIn(), appViewViewModel);
+                                showRecommendsDialog(account.isLoggedIn(),
+                                    appViewViewModel.getPackageName());
                               }));
                   break;
                 case OPEN:
@@ -677,15 +715,13 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void showRecommendsDialog(boolean isLoggedIn, AppViewViewModel appViewViewModel) {
+  private void showRecommendsDialog(boolean isLoggedIn, String packageName) {
     if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
       view.showRecommendsDialog();
-      appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(appViewViewModel.getPackageName());
+      appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
     } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
-      appViewNavigator.navigateToNotLoggedInShareFragmentForResult(
-          appViewViewModel.getPackageName());
-      appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(
-          appViewViewModel.getPackageName());
+      appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
+      appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
     }
   }
 
