@@ -133,7 +133,7 @@
           android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
           android:gravity="center_vertical"
-          android:text="See Permissions"
+          android:text="@string/permissions"
           android:textColor="@color/black"
           android:textSize="14sp"
           />
