@@ -6,7 +6,6 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -60,9 +59,9 @@
           android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
           android:gravity="center_vertical"
+          android:text="@string/appview_short_developer_website"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="14sp"
-          tools:text="Website"
           />
     </LinearLayout>
 
@@ -85,9 +84,9 @@
           android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
           android:gravity="center_vertical"
+          android:text="@string/appview_short_developer_email"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="14sp"
-          tools:text="Email"
           />
     </LinearLayout>
     <LinearLayout
@@ -109,9 +108,9 @@
           android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
           android:gravity="center_vertical"
+          android:text="@string/appview_short_developer_privacy_policy"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="14sp"
-          tools:text="Privacy Policy"
           />
     </LinearLayout>
 
@@ -133,7 +132,7 @@
           android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
           android:gravity="center_vertical"
-          android:text="See Permissions"
+          android:text="@string/permissions"
           android:textColor="@color/black"
           android:textSize="14sp"
           />
