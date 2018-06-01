@@ -8,16 +8,15 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public class PreferencesXmlParser {
 
-  private final String TAG = PreferencesXmlParser.class.getSimpleName();
   private final String NAMESPACE = "http://schemas.android.com/apk/res/android";
   private final String DEFAULT_VALUE = "defaultValue";
   private final String KEY = "key";
 
-  int eventType = -1;
+  private int eventType = -1;
 
   public List<String[]> parse(XmlResourceParser parser) throws IOException, XmlPullParserException {
     ArrayList<String[]> data = new ArrayList<>();
-    while (eventType != parser.END_DOCUMENT) {
+    while (eventType != XmlResourceParser.END_DOCUMENT) {
       if (eventType == XmlResourceParser.START_TAG) {
         String defaultValue = parser.getAttributeValue(NAMESPACE, DEFAULT_VALUE);
         String key = parser.getAttributeValue(NAMESPACE, KEY);
