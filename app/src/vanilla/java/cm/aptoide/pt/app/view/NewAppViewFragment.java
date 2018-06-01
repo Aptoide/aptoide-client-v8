@@ -1103,24 +1103,18 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private void setDeveloperDetails(AppDeveloper developer) {
     if (!TextUtils.isEmpty(developer.getWebsite())) {
       infoWebsite.setVisibility(View.VISIBLE);
-      ((TextView) infoWebsite.findViewById(R.id.website_text)).setText(
-          getString(R.string.appview_short_developer_website));
     } else {
       infoWebsite.setVisibility(View.GONE);
     }
 
     if (!TextUtils.isEmpty(developer.getEmail())) {
       infoEmail.setVisibility(View.VISIBLE);
-      ((TextView) infoEmail.findViewById(R.id.email_text)).setText(
-          getString(R.string.appview_short_developer_email));
     } else {
       infoEmail.setVisibility(View.GONE);
     }
 
     if (!TextUtils.isEmpty(developer.getPrivacy())) {
       infoPrivacy.setVisibility(View.VISIBLE);
-      ((TextView) infoPrivacy.findViewById(R.id.privacy_text)).setText(
-          getString(R.string.appview_short_developer_privacy_policy));
     } else {
       infoPrivacy.setVisibility(View.GONE);
     }
