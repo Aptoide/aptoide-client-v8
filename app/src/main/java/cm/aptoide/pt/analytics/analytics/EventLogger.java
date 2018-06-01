@@ -1,15 +1,10 @@
 package cm.aptoide.pt.analytics.analytics;
 
-import cm.aptoide.pt.ApplicationModule;
-import cm.aptoide.pt.FlavourApplicationModule;
 import java.util.Map;
 
 public interface EventLogger {
   /**
-   * <p>Sends an {@code event} to the correspondent {@code EventLogger(s)}.</p>
-   *
-   * <p>Only the events whose {@code eventName} is listed on {@link FlavourApplicationModule} or
-   * {@link ApplicationModule} are logged.</p>
+   * <p>Sends an event with parameters.</p>
    *
    * @param eventName The name of the event to be logged.
    * @param data The attributes of the event.
