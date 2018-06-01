@@ -157,7 +157,7 @@ public class AppViewManager {
         .equals(uniqueName)) {
       return createAppViewViewModel(cachedApp);
     }
-    return appCenter.loadDetailedAppAppFromUniqueName(uniqueName)
+    return appCenter.loadDetailedAppFromUniqueName(uniqueName)
         .flatMap(result -> map(result));
   }
 
@@ -179,7 +179,7 @@ public class AppViewManager {
   private Single<AppViewViewModel> createAppViewViewModel(DetailedApp app) {
     AppStats stats = app.getStats();
     cachedApp = app;
-    return isStoreFollowed(cachedApp.getStore()
+    return isStoreFollowed(app.getStore()
         .getId()).map(
         isStoreFollowed -> new AppViewViewModel(app.getId(), app.getName(), app.getStore(),
             appViewConfiguration.getStoreTheme(), app.isGoodApp(), app.getMalware(),
@@ -240,7 +240,7 @@ public class AppViewManager {
         abTestGroup);
   }
 
-  public Observable<DownloadAppViewModel> getDownloadAppViewModel(String md5, String packageName,
+  public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
       int versionCode) {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new DownloadAppViewModel(

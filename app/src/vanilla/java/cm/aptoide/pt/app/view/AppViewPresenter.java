@@ -497,7 +497,7 @@ public class AppViewPresenter implements Presenter {
   private Observable<AppViewViewModel> loadApp() {
     return appViewManager.loadAppViewViewModel()
         .flatMap(
-            appViewViewModel -> appViewManager.getDownloadAppViewModel(appViewViewModel.getMd5(),
+            appViewViewModel -> appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
                 appViewViewModel.getPackageName(), appViewViewModel.getVersionCode())
                 .first()
                 .observeOn(viewScheduler)
@@ -712,7 +712,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(create -> appViewManager.loadAppViewViewModel()
             .toObservable())
         .filter(app -> !app.isLoading())
-        .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), app.getPackageName(),
+        .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
             app.getVersionCode()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))
