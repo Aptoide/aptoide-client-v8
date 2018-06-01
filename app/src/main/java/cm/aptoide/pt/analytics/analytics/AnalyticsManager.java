@@ -1,7 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class AnalyticsManager {
     }
 
     if (eventsSent <= 0) {
-      Logger.w(TAG, eventName + " event not sent ");
+      debugLogger.logEventNotSent(TAG, eventName);
     }
   }
 
