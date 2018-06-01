@@ -171,30 +171,30 @@ public class AnalyticsManager {
     }
 
     /**
-     * <p>Sets a {@link HttpKnockEventLogger} that will allow to register a
+     * <p>Sets a {@link KnockEventLogger} that will allow to register a
      * service to log a Knock URL {@code String}.</p>
      *
      * <p>If this builder was not started yet (see {@link #Builder()}), a
      * {@link NullPointerException} will occur.</p>
      *
-     * @param httpKnockEventLogger The {@code knockEventLogger} to log the events.
+     * @param knockEventLogger The {@code knockEventLogger} to log the events.
      *
-     * @return A builder with the added {@link HttpKnockEventLogger}.
+     * @return A builder with the added {@link KnockEventLogger}.
      *
      * @see NullPointerException
      */
-    public Builder setKnockLogger(KnockEventLogger httpKnockEventLogger) {
-      this.knockEventLogger = httpKnockEventLogger;
+    public Builder setKnockLogger(KnockEventLogger knockEventLogger) {
+      this.knockEventLogger = knockEventLogger;
       return this;
     }
 
     /**
-     * <p>Sets a {@link AnalyticsEventParametersNormalizer} that will allow to normalize event attributes
+     * <p>Sets a {@link KeyValueNormalizer} that will allow to normalize event attributes
      * according to the normalizer implementation.</p>
      *
      * @param analyticsNormalizer The {@code analyticsNormalizer} to normalize the events data.
      *
-     * @return A builder with the updated {@link AnalyticsEventParametersNormalizer}
+     * @return A builder with the updated {@link KeyValueNormalizer}
      */
     public Builder setAnalyticsNormalizer(KeyValueNormalizer analyticsNormalizer) {
       this.analyticsNormalizer = analyticsNormalizer;
