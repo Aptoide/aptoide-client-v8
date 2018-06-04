@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InstallType;
-import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -21,6 +20,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppRating;
 import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.DetailedApp;
@@ -51,7 +51,6 @@ public class AppViewManagerTest {
 
   private final int limit = 18;
   @Mock private InstallManager installManager;
-  @Mock private DownloadFactory downloadFactory;
   @Mock private AppCenter appCenter;
   @Mock private ReviewsManager reviewsManager;
   @Mock private AdsManager adsManager;
@@ -59,29 +58,27 @@ public class AppViewManagerTest {
   @Mock private FlagManager flagManager;
   @Mock private StoreUtilsProxy storeUtilsProxy;
   @Mock private AptoideAccountManager aptoideAccountManager;
-  @Mock private AppViewConfiguration appViewConfiguration;
   @Mock private InstallAnalytics installAnalytics;
   @Mock private PreferencesManager preferencesManager;
-  @Mock private DownloadStateParser downloadStateParser;
   @Mock private AppViewAnalytics appViewAnalytics;
   @Mock private NotificationAnalytics notificationAnalytics;
-  @Mock private DetailedApp cachedApp;
-  @Mock private MinimalAd minimalAd;
-  @Mock private DetailedAppRequestResult detailedAppRequestResult;
-  @Mock private ReviewRequestResult reviewRequestResult;
-  @Mock private MinimalAdRequestResult minimalAdRequestResult;
-  @Mock private AppsList appsList;
-  @Mock private SearchAdResult searchAdResult;
   @Mock private Store store;
-  @Mock private AppStats stats;
   @Mock private SocialRepository socialRepository;
   @Mock private GenericResponseV2 genericResponseV2;
   @Mock private Download download;
-  @Mock private Install install;
+  @Mock private DownloadFactory downloadFactory;
+  private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
+  private AppStats appStats;
 
   @Before public void setupAppViewManagerTest() {
     MockitoAnnotations.initMocks(this);
+    downloadStateParser = new DownloadStateParser();
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
+            "", "");
+    AppRating appRating = new AppRating(1, 1, Collections.emptyList());
+    appStats = new AppStats(appRating, appRating, 1, 1);
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
@@ -92,19 +89,24 @@ public class AppViewManagerTest {
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
-            null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null, stats,
-            null, null, null, true, true, null);
+            null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
+            appStats, null, null, null, true, true, null);
+
+    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
+            "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
-    when(appViewConfiguration.getAppId()).thenReturn((long) 1);
-    when(appViewConfiguration.getStoreName()).thenReturn("anyString");
-    when(appViewConfiguration.getPackageName()).thenReturn("anyString");
-
+    //And a result is returned
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
-    //And an app is returned with success
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(detailedApp);
-
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
@@ -135,18 +137,22 @@ public class AppViewManagerTest {
   @Test public void loadAppViewModelTestWithMd5Test() {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
-            null, null, null, null, (long) 1, "md5", null, null, 1, null, null, store, null, stats,
-            null, null, null, true, true, null);
+            null, null, null, null, (long) 1, "md5", null, null, 1, null, null, store, null,
+            appStats, null, null, null, true, true, null);
+    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "md5", "",
+            0.0, "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
-    when(appViewConfiguration.getAppId()).thenReturn((long) -1);
-    when(appViewConfiguration.hasMd5()).thenReturn(true);
-    when(appViewConfiguration.getMd5()).thenReturn("md5");
-
+    //And a result is returned
     when(appCenter.loadDetailedAppFromMd5("md5")).thenReturn(Single.just(detailedAppRequestResult));
-    //And an app is returned with success
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(detailedApp);
-
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
@@ -163,7 +169,6 @@ public class AppViewManagerTest {
     Assert.assertEquals(false, appViewViewModel.hasError());
 
     //Test if app is cached
-    when(cachedApp.getMd5()).thenReturn("md5");
     appViewViewModel = appViewManager.loadAppViewViewModel()
         .toBlocking()
         .value();
@@ -179,20 +184,23 @@ public class AppViewManagerTest {
   @Test public void loadAppViewViewModelWithUniqueNameTest() {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
-            null, null, null, null, (long) 1, "any", null, null, 1, null, null, store, null, stats,
-            null, null, null, true, true, "uniqueName");
+            null, null, null, null, (long) 1, "any", null, null, 1, null, null, store, null,
+            appStats, null, null, null, true, true, "uniqueName");
+    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "",
+            "uniqueName", 0.0, "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
-    when(appViewConfiguration.getAppId()).thenReturn((long) -1);
-    when(appViewConfiguration.hasMd5()).thenReturn(false);
-    when(appViewConfiguration.hasUniqueName()).thenReturn(true);
-    when(appViewConfiguration.getUniqueName()).thenReturn("uniqueName");
-
+    //And a result is returned with success
     when(appCenter.loadDetailedAppFromUniqueName("uniqueName")).thenReturn(
         Single.just(detailedAppRequestResult));
-    //And an app is returned with success
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(detailedApp);
-
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
@@ -209,7 +217,6 @@ public class AppViewManagerTest {
     Assert.assertEquals(false, appViewViewModel.hasError());
 
     //Test if app is cached
-    when(cachedApp.getUniqueName()).thenReturn("uniqueName");
     appViewViewModel = appViewManager.loadAppViewViewModel()
         .toBlocking()
         .value();
@@ -224,20 +231,21 @@ public class AppViewManagerTest {
   @Test public void loadAppViewViewModelDefaultTest() {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "", (long) 1, "any", "any", "any", "any", true, null, null,
-            null, null, null, (long) 1, "any", null, null, 1, null, null, store, null, stats, null,
-            null, null, true, true, "uniqueName");
+            null, null, null, (long) 1, "any", null, null, 1, null, null, store, null, appStats,
+            null, null, null, true, true, "uniqueName");
+    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) -1, "", "", "", null, null, "", "", 0.0, "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
-    when(appViewConfiguration.getAppId()).thenReturn((long) -1);
-    when(appViewConfiguration.hasMd5()).thenReturn(false);
-    when(appViewConfiguration.hasUniqueName()).thenReturn(false);
-    when(appViewConfiguration.getPackageName()).thenReturn("");
-    when(appViewConfiguration.getStoreName()).thenReturn("");
-
+    //And a result is returned with success
     when(appCenter.loadDetailedApp("", "")).thenReturn(Single.just(detailedAppRequestResult));
-    //And an app is returned with success
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(detailedApp);
-
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
@@ -253,7 +261,6 @@ public class AppViewManagerTest {
     Assert.assertEquals(false, appViewViewModel.hasError());
 
     //Test if app is cached
-    when(cachedApp.getPackageName()).thenReturn("");
     when(store.getName()).thenReturn("");
     appViewViewModel = appViewManager.loadAppViewViewModel()
         .toBlocking()
@@ -267,17 +274,21 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadAppViewViewModelWithLoadingStateTest() {
+    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(true);
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
+            "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     //When the presenter ask for an App
-    when(appViewConfiguration.getAppId()).thenReturn((long) 1);
-    when(appViewConfiguration.getStoreName()).thenReturn("anyString");
-    when(appViewConfiguration.getPackageName()).thenReturn("anyString");
-
+    //And a result is returned
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
-    //And the result is a state of loading
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(null);
-    when(detailedAppRequestResult.isLoading()).thenReturn(true);
 
     //Then an AppViewViewModel should be returned with a null app, with loading and no errors
     appViewManager.loadAppViewViewModel()
@@ -287,19 +298,23 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadAppViewViewModelWithErrorTest() {
+    DetailedAppRequestResult detailedAppRequestResult =
+        new DetailedAppRequestResult(DetailedAppRequestResult.Error.NETWORK);
+
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
+            "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     //When the presenter ask for an App
-    when(appViewConfiguration.getAppId()).thenReturn((long) 1);
-    when(appViewConfiguration.getStoreName()).thenReturn("anyString");
-    when(appViewConfiguration.getPackageName()).thenReturn("anyString");
-
+    //And a result is returned
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
-    //And the result is an Error
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(null);
-    when(detailedAppRequestResult.isLoading()).thenReturn(false);
-    when(detailedAppRequestResult.hasError()).thenReturn(true);
-    when(detailedAppRequestResult.getError()).thenReturn(DetailedAppRequestResult.Error.NETWORK);
 
     //Then an AppViewViewModel should be returned with a null app, with no loading and an error
     appViewManager.loadAppViewViewModel()
@@ -309,18 +324,23 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadAppViewViewModelWithDefaultErrorTest() {
+    DetailedAppRequestResult detailedAppRequestResult =
+        new DetailedAppRequestResult(DetailedAppRequestResult.Error.GENERIC);
+
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
+            "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     //When the presenter ask for an App
-    when(appViewConfiguration.getAppId()).thenReturn((long) 1);
-    when(appViewConfiguration.getStoreName()).thenReturn("anyString");
-    when(appViewConfiguration.getPackageName()).thenReturn("anyString");
-
+    //And a result is returned
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
-    //And the result is an unknown error
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(null);
-    when(detailedAppRequestResult.isLoading()).thenReturn(false);
-    when(detailedAppRequestResult.hasError()).thenReturn(false);
 
     //Then an AppViewViewModel should be returned with a null app, with no loading and with a generic error
     appViewManager.loadAppViewViewModel()
@@ -330,12 +350,9 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadReviewsViewModelTest() {
-
-    //When the presenter ask for a Review
+    ReviewRequestResult reviewRequestResult = new ReviewRequestResult(Collections.emptyList());
+    //When the presenter ask for a Review and a result is returned
     when(reviewsManager.loadReviews("", "", 3, "")).thenReturn(Single.just(reviewRequestResult));
-    when(reviewRequestResult.getReviewList()).thenReturn(Collections.emptyList());
-    when(reviewRequestResult.getError()).thenReturn(null);
-    when(reviewRequestResult.isLoading()).thenReturn(false);
 
     ReviewsViewModel reviewsViewModel = appViewManager.loadReviewsViewModel("", "", "")
         .toBlocking()
@@ -351,17 +368,16 @@ public class AppViewManagerTest {
     List<String> keywords = new ArrayList<>();
     keywords.add("key");
 
+    MinimalAd minimalAd =
+        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
+            (long) 1);
+    MinimalAdRequestResult minimalAdRequestResult = new MinimalAdRequestResult(minimalAd);
+    AppsList appsList = new AppsList(Collections.emptyList(), false, 0);
+
     //When the presenters asks for the Similar Apps bundle
+    //And the result returns an Ad and a list of SimilarApps (empty or not)
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
-    //And the result returns an Ad and a list of SimilarApps (empty or not)
-    when(minimalAdRequestResult.getMinimalAd()).thenReturn(minimalAd);
-    when(minimalAdRequestResult.getError()).thenReturn(null);
-
-    when(appsList.getList()).thenReturn(Collections.emptyList());
-    when(appsList.getError()).thenReturn(null);
-    when(appsList.isLoading()).thenReturn(false);
-
     SimilarAppsViewModel similarAppsViewModel =
         appViewManager.loadSimilarApps("anyString", keywords)
             .toBlocking()
@@ -382,17 +398,14 @@ public class AppViewManagerTest {
     List<String> keywords = new ArrayList<>();
     keywords.add("key");
 
+    MinimalAdRequestResult minimalAdRequestResult =
+        new MinimalAdRequestResult(AppsList.Error.GENERIC);
+    AppsList appsList = new AppsList(Collections.emptyList(), false, 0);
+
     //When the presenters asks for the Similar Apps bundle
+    //And the result of the Ad request returns no Ad and the result of the Recommended Apps return a list of SimilarApps (empty or not)
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
-
-    //And the result of the Ad request returns no Ad and the result of the Recommended Apps return a list of SimilarApps (empty or not)
-    when(minimalAdRequestResult.getMinimalAd()).thenReturn(null);
-    when(minimalAdRequestResult.getError()).thenReturn(AppsList.Error.GENERIC);
-
-    when(appsList.getList()).thenReturn(Collections.emptyList());
-    when(appsList.getError()).thenReturn(null);
-    when(appsList.isLoading()).thenReturn(false);
 
     SimilarAppsViewModel similarAppsViewModel =
         appViewManager.loadSimilarApps("anyString", keywords)
@@ -417,16 +430,24 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "anyString", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            stats, null, null, null, true, true, null);
-    when(appViewConfiguration.getAppId()).thenReturn((long) 1);
-    when(appViewConfiguration.getStoreName()).thenReturn("anyString");
-    when(appViewConfiguration.getPackageName()).thenReturn("anyString");
+            appStats, null, null, null, true, true, null);
+    MinimalAd minimalAd =
+        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
+            (long) 1);
+    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
+
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
+            "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(detailedApp);
-
-    when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
     appViewManager.loadAppViewViewModel()
@@ -515,16 +536,23 @@ public class AppViewManagerTest {
     //Cache App (Test preparation)
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "packageName", (long) 1, "any", "any", "any", "any", true,
-            null, null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            stats, null, null, null, true, true, null);
-    when(appViewConfiguration.getAppId()).thenReturn((long) 1);
-    when(appViewConfiguration.getStoreName()).thenReturn("anyString");
-    when(appViewConfiguration.getPackageName()).thenReturn("packageName");
+            null, null, null, null, null, (long) 1, "", null, null, 1, null, null, store, null,
+            appStats, null, null, null, true, true, "");
+
+    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
+
+    AppViewConfiguration appViewConfiguration =
+        new AppViewConfiguration((long) 1, "packageName", "anyString", "", null, null, "", "", 0.0,
+            "", "");
+
+    appViewManager =
+        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));
-    when(detailedAppRequestResult.getDetailedApp()).thenReturn(detailedApp);
-
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
@@ -535,17 +563,14 @@ public class AppViewManagerTest {
     //DownloadApp Test
 
     //When the presenter asks to download an App
-    when(downloadStateParser.parseDownloadAction(DownloadAppViewModel.Action.INSTALL)).thenReturn(
-        1);
-    when(downloadFactory.create(detailedApp, 1)).thenReturn(download);
+    int action = downloadStateParser.parseDownloadAction(DownloadAppViewModel.Action.INSTALL);
+    when(downloadFactory.create(detailedApp, action)).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
-    when(downloadStateParser.getInstallType(3)).thenReturn(InstallType.INSTALL);
-    when(downloadStateParser.getOrigin(3)).thenReturn(Origin.INSTALL);
 
     //Then the AppViewManager should return a Complete when the download starts
     appViewManager.downloadApp(DownloadAppViewModel.Action.INSTALL, "packageName", 1)
@@ -565,15 +590,12 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadDownloadAppViewModelTest() {
+    Install install =
+        new Install(2, Install.InstallationStatus.INSTALLING, Install.InstallationType.INSTALL,
+            false, 1, "md5", "packageName", 1, "", "", "");
+
     //When the presenter asks for the downloadAppViewModel
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));
-    when(install.getType()).thenReturn(Install.InstallationType.INSTALL);
-    when(install.getProgress()).thenReturn(2);
-    when(install.getState()).thenReturn(Install.InstallationStatus.INSTALLING);
-    when(downloadStateParser.parseDownloadType(Install.InstallationType.INSTALL)).thenReturn(
-        DownloadAppViewModel.Action.INSTALL);
-    when(downloadStateParser.parseDownloadState(Install.InstallationStatus.INSTALLING)).thenReturn(
-        DownloadAppViewModel.DownloadState.ACTIVE);
 
     DownloadAppViewModel downloadAppViewModel =
         appViewManager.loadDownloadAppViewModel("md5", "packageName", 1)
@@ -610,8 +632,6 @@ public class AppViewManagerTest {
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
-    when(downloadStateParser.getInstallType(3)).thenReturn(InstallType.INSTALL);
-    when(downloadStateParser.getOrigin(3)).thenReturn(Origin.INSTALL);
 
     //Then the appViewManager should return a Complete when the request is done
     appViewManager.resumeDownload("md5", "packageName", 1)
@@ -640,12 +660,14 @@ public class AppViewManagerTest {
   }
 
   @Test public void setAndGetSearchAdResultTest() {
+    SearchAdResult searchAdResult = new SearchAdResult();
     //When the presenter asks for the SearchAdResult after setting it, it should return the same SearchAdResult
     appViewManager.setSearchAdResult(searchAdResult);
     Assert.assertEquals(searchAdResult, appViewManager.getSearchAdResult());
   }
 
   @Test public void handleAdsLogicTest() {
+    SearchAdResult searchAdResult = new SearchAdResult();
     //When the presenter aks the AppViewManager to handle the Ads logic
     appViewManager.handleAdsLogic(searchAdResult);
     //It should delegate that to the adsManager
