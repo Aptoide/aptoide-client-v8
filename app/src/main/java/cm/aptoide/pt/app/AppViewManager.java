@@ -223,7 +223,10 @@ public class AppViewManager {
       long appId) {
     increaseInstallClick();
     return Observable.just(
-        downloadFactory.create(cachedApp, downloadStateParser.parseDownloadAction(downloadAction)))
+        downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
+            cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
+            cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
+            cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)))
         .toCompletable();
