@@ -208,14 +208,14 @@ public class AppViewManager {
   }
 
   private void increaseInstallClick() {
-    preferencesManager.setNotLoggedInInstallClicks();
+    preferencesManager.increaseNotLoggedInInstallClicks();
   }
 
-  public boolean showRootInstallWarningPopup() {
+  public boolean shouldShowRootInstallWarningPopup() {
     return installManager.showWarning();
   }
 
-  public void saveRootInstallWarning(Boolean answer) {
+  public void allowRootInstall(Boolean answer) {
     installManager.rootInstallAllowed(answer);
   }
 
@@ -240,7 +240,7 @@ public class AppViewManager {
         abTestGroup);
   }
 
-  public Observable<DownloadAppViewModel> getDownloadAppViewModel(String md5, String packageName,
+  public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
       int versionCode) {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new DownloadAppViewModel(

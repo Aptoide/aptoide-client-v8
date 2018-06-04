@@ -14,7 +14,7 @@ public class PreferencesManager {
     this.persister = persister;
   }
 
-  public void setNotLoggedInInstallClicks() {
+  public void increaseNotLoggedInInstallClicks() {
     int oldValue = persister.get(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, 0);
     persister.save(ManagedKeys.NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS, oldValue + 1);
   }

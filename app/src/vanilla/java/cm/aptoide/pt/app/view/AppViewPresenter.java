@@ -497,7 +497,7 @@ public class AppViewPresenter implements Presenter {
   private Observable<AppViewViewModel> loadApp() {
     return appViewManager.loadAppViewViewModel()
         .flatMap(
-            appViewViewModel -> appViewManager.getDownloadAppViewModel(appViewViewModel.getMd5(),
+            appViewViewModel -> appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
                 appViewViewModel.getPackageName(), appViewViewModel.getVersionCode())
                 .first()
                 .observeOn(viewScheduler)
@@ -691,9 +691,9 @@ public class AppViewPresenter implements Presenter {
   private Completable downloadApp(DownloadAppViewModel.Action action, String packageName,
       long appId) {
     return Observable.defer(() -> {
-      if (appViewManager.showRootInstallWarningPopup()) {
+      if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
-            .doOnNext(answer -> appViewManager.saveRootInstallWarning(answer))
+            .doOnNext(answer -> appViewManager.allowRootInstall(answer))
             .map(__ -> action);
       }
       return Observable.just(action);
@@ -712,7 +712,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(create -> appViewManager.loadAppViewViewModel()
             .toObservable())
         .filter(app -> !app.isLoading())
-        .flatMap(app -> appViewManager.getDownloadAppViewModel(app.getMd5(), app.getPackageName(),
+        .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
             app.getVersionCode()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))
