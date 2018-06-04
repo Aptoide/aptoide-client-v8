@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.analytics.AnalyticsManager;
 import java.util.Map;
 
 /**

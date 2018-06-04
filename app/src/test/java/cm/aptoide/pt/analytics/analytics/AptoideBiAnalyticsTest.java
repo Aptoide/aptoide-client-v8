@@ -2,6 +2,7 @@ package cm.aptoide.pt.analytics.analytics;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import java.util.ArrayList;
 import java.util.HashMap;

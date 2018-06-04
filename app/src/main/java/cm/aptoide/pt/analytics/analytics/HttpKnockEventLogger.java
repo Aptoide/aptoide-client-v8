@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.analytics.KnockEventLogger;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;

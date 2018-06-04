@@ -1,5 +1,8 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.EventLogger;
+import cm.aptoide.analytics.SessionLogger;
 import java.util.Map;
 
 /**

@@ -2,7 +2,7 @@ package cm.aptoide.analytics;
 
 import java.util.Map;
 
-interface KeyValueNormalizer {
+public interface KeyValueNormalizer {
   /**
    * Parses a Key Value map input to something where missing values or errors are handled.
    * In Vanilla for example null values are parsed into empty strings.

@@ -1,6 +1,8 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.os.Bundle;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.EventLogger;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.Map;

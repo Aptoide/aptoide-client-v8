@@ -8,7 +8,7 @@ package cm.aptoide.pt.app.view.displayable;
 import android.widget.Button;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;

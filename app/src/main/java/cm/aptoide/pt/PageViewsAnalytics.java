@@ -1,6 +1,6 @@
 package cm.aptoide.pt;
 
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 

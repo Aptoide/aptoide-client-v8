@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.analytics.KeyValueNormalizer;
 import java.util.Map;
 
 public class AnalyticsEventParametersNormalizer implements KeyValueNormalizer {

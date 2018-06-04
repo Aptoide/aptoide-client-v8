@@ -1,5 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.EventLogger;
 import cm.aptoide.pt.logger.Logger;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;

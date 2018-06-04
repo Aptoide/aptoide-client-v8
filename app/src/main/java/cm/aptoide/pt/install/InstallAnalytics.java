@@ -4,7 +4,7 @@ import android.net.ConnectivityManager;
 import android.telephony.TelephonyManager;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.InstallType;

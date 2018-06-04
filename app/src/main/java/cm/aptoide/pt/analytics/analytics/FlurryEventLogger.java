@@ -1,6 +1,9 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.content.Context;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.EventLogger;
+import cm.aptoide.analytics.SessionLogger;
 import cm.aptoide.pt.logger.Logger;
 import com.flurry.android.FlurryAgent;
 import java.util.HashMap;

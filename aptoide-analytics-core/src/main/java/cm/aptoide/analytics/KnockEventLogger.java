@@ -1,6 +1,6 @@
 package cm.aptoide.analytics;
 
-interface KnockEventLogger {
+public interface KnockEventLogger {
 
   void log(String url);
 }

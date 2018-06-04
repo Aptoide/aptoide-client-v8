@@ -1,6 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
