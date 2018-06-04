@@ -1,56 +1,53 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics;
 
-import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.analytics.EventLogger;
-import cm.aptoide.analytics.implementation.AnalyticsEventParametersNormalizer;
-import cm.aptoide.analytics.implementation.HttpKnockEventLogger;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import org.mockito.Mockito;
 
 public class AnalyticsManagerTest {
-  @Test public void sendSupportedEvent() throws Exception {
+  @Test public void sendSupportedEvent() {
     String eventName = "TestEvent";
-    EventLogger eventLogger = mock(EventLogger.class);
-    HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
-    AnalyticsEventParametersNormalizer analyticsNormalizer =
-        mock(AnalyticsEventParametersNormalizer.class);
+    EventLogger eventLogger = Mockito.mock(EventLogger.class);
+    KnockEventLogger knockEventLogger = Mockito.mock(KnockEventLogger.class);
+    KeyValueNormalizer analyticsNormalizer = Mockito.mock(KeyValueNormalizer.class);
+    DebugLogger debugLogger = Mockito.mock(DebugLogger.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
             .setKnockLogger(knockEventLogger)
             .setAnalyticsNormalizer(analyticsNormalizer)
+            .setDebugLogger(debugLogger)
             .build();
 
     Map<String, Object> data = new HashMap<>();
     AnalyticsManager.Action action = AnalyticsManager.Action.OPEN;
     String context = "timeline";
     analyticsManager.logEvent(data, eventName, action, context);
-    verify(eventLogger).log(eventName, data, action, context);
+    Mockito.verify(eventLogger)
+        .log(eventName, data, action, context);
   }
 
-  @Test public void sendUnsupportedEvent() throws Exception {
+  @Test public void sendUnsupportedEvent() {
     String eventName = "TestEvent";
-    EventLogger eventLogger = mock(EventLogger.class);
-    HttpKnockEventLogger knockEventLogger = mock(HttpKnockEventLogger.class);
-    AnalyticsEventParametersNormalizer analyticsNormalizer =
-        mock(AnalyticsEventParametersNormalizer.class);
+    EventLogger eventLogger = Mockito.mock(EventLogger.class);
+    KnockEventLogger knockEventLogger = Mockito.mock(KnockEventLogger.class);
+    KeyValueNormalizer analyticsNormalizer = Mockito.mock(KeyValueNormalizer.class);
+    DebugLogger debugLogger = Mockito.mock(DebugLogger.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
             .setKnockLogger(knockEventLogger)
             .setAnalyticsNormalizer(analyticsNormalizer)
+            .setDebugLogger(debugLogger)
             .build();
 
     Map<String, Object> data = new HashMap<>();
     AnalyticsManager.Action action = AnalyticsManager.Action.OPEN;
     String context = "timeline";
     analyticsManager.logEvent(data, "Unsupported event", action, context);
-    verify(eventLogger, times(0)).log(eventName, data, action, context);
+    Mockito.verify(eventLogger, Mockito.times(0))
+        .log(eventName, data, action, context);
   }
 }
