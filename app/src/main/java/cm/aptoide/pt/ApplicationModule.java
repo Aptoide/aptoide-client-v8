@@ -44,7 +44,7 @@ import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
-import cm.aptoide.pt.analytics.analytics.AnalyticsEventParametersNormalizer;
+import cm.aptoide.analytics.implementation.AnalyticsEventParametersNormalizer;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.analytics.analytics.AptoideBiAnalytics;
 import cm.aptoide.pt.analytics.analytics.AptoideBiEventLogger;

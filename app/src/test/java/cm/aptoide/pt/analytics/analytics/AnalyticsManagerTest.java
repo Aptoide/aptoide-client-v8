@@ -2,6 +2,7 @@ package cm.aptoide.pt.analytics.analytics;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
+import cm.aptoide.analytics.implementation.AnalyticsEventParametersNormalizer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
