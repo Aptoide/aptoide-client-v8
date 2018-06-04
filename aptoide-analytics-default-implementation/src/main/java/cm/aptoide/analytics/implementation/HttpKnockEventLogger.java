@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics.implementation;
 
 import cm.aptoide.analytics.KnockEventLogger;
 import java.io.IOException;
