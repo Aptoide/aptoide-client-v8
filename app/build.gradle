@@ -452,7 +452,8 @@ dependencies {
 
   fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 
-  compile project(":aptoide-analytics")
+  compile project(path: ':aptoide-analytics-core')
+  compile project(path: ':aptoide-analytics-default-implementation')
 }
 
 String getDate() {

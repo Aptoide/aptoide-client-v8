@@ -11,5 +11,6 @@ include 'app',
     ':aptoide-account-manager',
     ':aptoide-database',
     ':downloadmanager',
-    ':aptoide-analytics'
+    ':aptoide-analytics-core',
+    ':aptoide-analytics-default-implementation'
 

@@ -17,4 +17,8 @@ public class LogcatDebugLogger implements DebugLogger {
         + context
         + "]");
   }
+
+  @Override public void logEventNotSent(String tag, String eventName) {
+    Logger.w(tag, eventName + " event not sent ");
+  }
 }
