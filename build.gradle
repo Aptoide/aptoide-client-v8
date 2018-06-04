@@ -80,7 +80,7 @@ ext {
   MATERIAL_TAB_STRIP_VERSION = '1.1.0'
 
   // Glide
-  GLIDE_VERSION = '3.7.0'
+  GLIDE_VERSION = '4.7.1'
 
   // Facebook Android SDK
   FACEBOOK_ANDROID_SDK_VERSION = '4.17.0'
