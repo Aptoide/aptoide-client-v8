@@ -136,7 +136,7 @@ import rx.CompletableSubscriber;
       view = activity.findViewById(android.R.id.content);
     }
     if (view == null) {
-      Logger.e(TAG, new IllegalStateException("Unable to find a view to bind this snack too"));
+      Logger.getInstance().e(TAG, new IllegalStateException("Unable to find a view to bind this snack too"));
       return null;
     }
     return view;

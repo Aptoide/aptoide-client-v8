@@ -27,7 +27,7 @@ public class FacebookEventLogger implements EventLogger {
     } else {
       facebook.logEvent(eventName);
     }
-    Logger.d(TAG, "log() called with: "
+    Logger.getInstance().d(TAG, "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

@@ -145,10 +145,10 @@ public class FirstLaunchAnalytics {
 
       utmInputStream.close();
     } catch (IOException e) {
-      Logger.d(TAG, "problem parsing utm/no utm file");
+      Logger.getInstance().d(TAG, "problem parsing utm/no utm file");
       return false;
     } catch (PackageManager.NameNotFoundException e) {
-      Logger.d(TAG, "No package name utm file.");
+      Logger.getInstance().d(TAG, "No package name utm file.");
       return false;
     } catch (NullPointerException e) {
       if (myZipFile != null) {
@@ -160,7 +160,7 @@ public class FirstLaunchAnalytics {
         }
         return false;
       }
-      Logger.d(TAG, "No utm file.");
+      Logger.getInstance().d(TAG, "No utm file.");
     }
     return true;
   }
@@ -170,7 +170,7 @@ public class FirstLaunchAnalytics {
     try {
       tracking = createTrackingObject(getTrackingFile(application));
     } catch (Exception e) {
-      Logger.d(TAG, "Failed to parse utm/tracking files");
+      Logger.getInstance().d(TAG, "Failed to parse utm/tracking files");
       return new Tracking(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
     }
     return tracking;
@@ -211,12 +211,12 @@ public class FirstLaunchAnalytics {
     Bundle parameters = new Bundle();
     parameters.putString(key, value);
     AppEventsLogger.updateUserProperties(parameters,
-        response -> Logger.d("Facebook Analytics: ", response.toString()));
+        response -> Logger.getInstance().d("Facebook Analytics: ", response.toString()));
   }
 
   private void setUserPropertiesWithBundle(Bundle data) {
     AppEventsLogger.updateUserProperties(data,
-        response -> Logger.d("Facebook Analytics: ", response.toString()));
+        response -> Logger.getInstance().d("Facebook Analytics: ", response.toString()));
   }
 
   public void setUserProperties(String utmSource, String utmMedium, String utmCampaign,

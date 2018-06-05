@@ -88,7 +88,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
             })
             .flatMap(downloads -> displayable.getInstallManager()
                 .startInstalls(downloads))
-            .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+            .subscribe(aVoid -> Logger.getInstance().i(TAG, "Update task completed"),
                 throwable -> throwable.printStackTrace()));
       }, () -> {
       });

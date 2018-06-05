@@ -71,12 +71,12 @@ public class FileUtils {
 
       return true;
     } catch (IOException e) {
-      Logger.e(TAG, e.getMessage());
+      Logger.getInstance().e(TAG, e.getMessage());
       if (fos != null) {
         try {
           fos.close();
         } catch (IOException e1) {
-          Logger.e(TAG, e1.getMessage());
+          Logger.getInstance().e(TAG, e1.getMessage());
         }
       }
     }
@@ -198,7 +198,7 @@ public class FileUtils {
       if (outputFile.exists()) {
         outputFile.delete();
       }
-      Logger.e(TAG, e.getMessage());
+      Logger.getInstance().e(TAG, e.getMessage());
       //				toReturn = false;
       throw new RuntimeException(e);
     } finally {
@@ -212,7 +212,7 @@ public class FileUtils {
         .observeOn(Schedulers.io())
         .flatMap(filePath -> Observable.fromCallable(() -> {
           long size = deleteDir(filePath);
-          Logger.d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
+          Logger.getInstance().d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
           return size;
         })
             .onErrorResumeNext(throwable -> Observable.empty()))

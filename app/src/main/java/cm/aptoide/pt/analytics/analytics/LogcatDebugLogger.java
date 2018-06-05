@@ -8,7 +8,7 @@ import java.util.Map;
 public class LogcatDebugLogger implements DebugLogger {
   @Override public void logDebug(String tag, Map<String, Object> data, String eventName,
       AnalyticsManager.Action action, String context) {
-    Logger.d(tag, "logEvent() called with: "
+    Logger.getInstance().d(tag, "logEvent() called with: "
         + "data = ["
         + data
         + "], eventName = ["
@@ -21,6 +21,6 @@ public class LogcatDebugLogger implements DebugLogger {
   }
 
   @Override public void logEventNotSent(String tag, String eventName) {
-    Logger.w(tag, eventName + " event not sent ");
+    Logger.getInstance().w(tag, eventName + " event not sent ");
   }
 }

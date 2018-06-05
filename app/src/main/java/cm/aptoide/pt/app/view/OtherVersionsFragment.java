@@ -142,7 +142,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     //super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "Other versions should refresh? " + create);
+    Logger.getInstance().d(TAG, "Other versions should refresh? " + create);
 
     ArrayList<String> list = new ArrayList<>();
     if (storeName != null) {

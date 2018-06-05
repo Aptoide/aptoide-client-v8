@@ -104,7 +104,7 @@ public class InstalledIntentService extends IntentService {
   }
 
   protected void onPackageAdded(String packageName) {
-    Logger.d(TAG, "Package added: " + packageName);
+    Logger.getInstance().d(TAG, "Package added: " + packageName);
 
     PackageInfo packageInfo = databaseOnPackageAdded(packageName);
     checkAndBroadcastReferrer(packageName);
@@ -112,13 +112,13 @@ public class InstalledIntentService extends IntentService {
   }
 
   protected void onPackageReplaced(String packageName) {
-    Logger.d(TAG, "Packaged replaced: " + packageName);
+    Logger.getInstance().d(TAG, "Packaged replaced: " + packageName);
     PackageInfo packageInfo = databaseOnPackageReplaced(packageName);
     sendInstallEvent(packageName, packageInfo);
   }
 
   protected void onPackageRemoved(String packageName) {
-    Logger.d(TAG, "Packaged removed: " + packageName);
+    Logger.getInstance().d(TAG, "Packaged removed: " + packageName);
     databaseOnPackageRemoved(packageName);
   }
 
@@ -193,7 +193,7 @@ public class InstalledIntentService extends IntentService {
 
     installManager.onUpdateConfirmed(new Installed(packageInfo, packageManager))
         .andThen(updatesRepository.remove(update))
-        .subscribe(() -> Logger.d(TAG, "databaseOnPackageReplaced: " + packageName),
+        .subscribe(() -> Logger.getInstance().d(TAG, "databaseOnPackageReplaced: " + packageName),
             throwable -> CrashReport.getInstance()
                 .log(throwable));
     return packageInfo;
@@ -202,7 +202,7 @@ public class InstalledIntentService extends IntentService {
   private void databaseOnPackageRemoved(String packageName) {
     installManager.onAppRemoved(packageName)
         .andThen(Completable.fromAction(() -> updatesRepository.remove(packageName)))
-        .subscribe(() -> Logger.d(TAG, "databaseOnPackageRemoved: " + packageName),
+        .subscribe(() -> Logger.getInstance().d(TAG, "databaseOnPackageRemoved: " + packageName),
             throwable -> CrashReport.getInstance()
                 .log(throwable));
   }

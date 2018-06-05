@@ -262,7 +262,7 @@ public class CommentDialogFragment
             .observe(true, true);
     }
     // default case
-    Logger.e(this.getTag(), "Unable to create reply due to missing comment type");
+    Logger.getInstance().e(this.getTag(), "Unable to create reply due to missing comment type");
     return Observable.empty();
   }
 

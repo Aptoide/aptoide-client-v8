@@ -334,7 +334,7 @@ public abstract class AptoideApplication extends Application {
         .log(throwable));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
-    Logger.v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
+    Logger.getInstance().v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
   }
 
@@ -603,7 +603,7 @@ public abstract class AptoideApplication extends Application {
     getFileManager().purgeCache()
         .first()
         .toSingle()
-        .subscribe(cleanedSize -> Logger.d(TAG,
+        .subscribe(cleanedSize -> Logger.getInstance().d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
             err -> CrashReport.getInstance()
                 .log(err));
@@ -636,15 +636,15 @@ public abstract class AptoideApplication extends Application {
   private Completable checkAppSecurity() {
     return Completable.fromAction(() -> {
       if (SecurityUtils.checkAppSignature(this) != SecurityUtils.VALID_APP_SIGNATURE) {
-        Logger.w(TAG, "app signature is not valid!");
+        Logger.getInstance().w(TAG, "app signature is not valid!");
       }
 
       if (SecurityUtils.checkEmulator()) {
-        Logger.w(TAG, "application is running on an emulator");
+        Logger.getInstance().w(TAG, "application is running on an emulator");
       }
 
       if (SecurityUtils.checkDebuggable(this)) {
-        Logger.w(TAG, "application has debug flag active");
+        Logger.getInstance().w(TAG, "application has debug flag active");
       }
     });
   }
@@ -782,7 +782,7 @@ public abstract class AptoideApplication extends Application {
       // get the installed apps
       List<PackageInfo> installedApps =
           AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
-      Logger.v(TAG, "Found " + installedApps.size() + " user installed apps.");
+      Logger.getInstance().v(TAG, "Found " + installedApps.size() + " user installed apps.");
 
       // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
       Collections.sort(installedApps,

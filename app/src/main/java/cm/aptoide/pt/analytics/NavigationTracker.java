@@ -24,7 +24,7 @@ public class NavigationTracker {
       historyList.add(screenTagHistory);
       pageViewsAnalytics.sendPageViewedEvent(getViewName(true), getViewName(false),
           screenTagHistory.getStore());
-      Logger.d(TAG, "NavigationTracker size: "
+      Logger.getInstance().d(TAG, "NavigationTracker size: "
           + historyList.size()
           + "   Registering screen: "
           + screenTagHistory);

@@ -194,7 +194,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "Other versions should refresh? " + create);
+    Logger.getInstance().d(TAG, "Other versions should refresh? " + create);
     fetchRating(refresh);
   }
 

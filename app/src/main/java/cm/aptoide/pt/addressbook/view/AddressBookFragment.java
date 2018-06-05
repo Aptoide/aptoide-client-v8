@@ -217,7 +217,7 @@ public class AddressBookFragment extends UIComponentFragment
           }
 
           @Override public void onError(FacebookException error) {
-            Logger.e(this.getClass()
+            Logger.getInstance().e(this.getClass()
                 .getName(), error.getMessage());
           }
         });

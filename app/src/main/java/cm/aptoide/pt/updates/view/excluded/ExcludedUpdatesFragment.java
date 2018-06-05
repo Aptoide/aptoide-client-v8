@@ -51,7 +51,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
+    Logger.getInstance().d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     fetchExcludedUpdates();
   }
 

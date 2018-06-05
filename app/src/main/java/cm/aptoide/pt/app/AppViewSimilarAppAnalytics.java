@@ -31,14 +31,14 @@ public class AppViewSimilarAppAnalytics {
 
     analyticsManager.logEvent(null, APP_VIEW_SIMILAR_APP_SLIDE_IN, AnalyticsManager.Action.CLICK,
         getViewName(true));
-    Logger.w(TAG, "Facebook Event: " + APP_VIEW_SIMILAR_APP_SLIDE_IN);
+    Logger.getInstance().w(TAG, "Facebook Event: " + APP_VIEW_SIMILAR_APP_SLIDE_IN);
   }
 
   public void openSimilarApp() {
     Map<String, Object> parameters = createMapData(ACTION, "Open App View");
     analyticsManager.logEvent(parameters, SIMILAR_APP_INTERACT, AnalyticsManager.Action.CLICK,
         getViewName(true));
-    Logger.w(TAG, "Facebook Event: " + SIMILAR_APP_INTERACT + " : " + parameters.toString());
+    Logger.getInstance().w(TAG, "Facebook Event: " + SIMILAR_APP_INTERACT + " : " + parameters.toString());
   }
 
   private Map<String, Object> createMapData(String key, String value) {

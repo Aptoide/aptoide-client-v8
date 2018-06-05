@@ -95,7 +95,7 @@ public class InviteFriendsFragment extends UIComponentFragment
         message.setText(R.string.addressbook_we_werent_able_to_connect_you);
         break;
       default:
-        Logger.d(this.getClass()
+        Logger.getInstance().d(this.getClass()
             .getSimpleName(), "Wrong openMode type.");
     }
   }

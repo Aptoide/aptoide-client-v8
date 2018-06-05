@@ -228,8 +228,8 @@ public class DeepLinkManager {
                   .map(success -> stores);
             }
           })
-          .subscribe(stores -> Logger.d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
-            Logger.e(TAG, "newrepoDeepLink: " + throwable);
+          .subscribe(stores -> Logger.getInstance().d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
+            Logger.getInstance().e(TAG, "newrepoDeepLink: " + throwable);
             CrashReport.getInstance()
                 .log(throwable);
           }));
@@ -312,13 +312,13 @@ public class DeepLinkManager {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE_NOT_LOGGED_IN);
             bottomNavigationNavigator.navigateToStore();
           }
-        }, throwable -> Logger.e(TAG, "myStoreDeepLink: " + throwable)));
+        }, throwable -> Logger.getInstance().e(TAG, "myStoreDeepLink: " + throwable)));
   }
 
   private void pickAppDeeplink() {
     subscriptions.add(adsRepository.getAdForShortcut()
         .subscribe(ad -> appViewDeepLink(ad.getAppId(), ad.getPackageName(), false),
-            throwable -> Logger.e(TAG, "pickAppDeepLink: " + throwable)));
+            throwable -> Logger.getInstance().e(TAG, "pickAppDeepLink: " + throwable)));
   }
 
   private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,

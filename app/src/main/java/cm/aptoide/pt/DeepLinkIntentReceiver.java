@@ -95,7 +95,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     deepLinkAnalytics.website(uri);
     shortcutNavigation = false;
 
-    Logger.v(TAG, "uri: " + uri);
+    Logger.getInstance().v(TAG, "uri: " + uri);
 
     dealWithShortcuts();
 
@@ -189,7 +189,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
       String json = new String(Base64.decode(param.getBytes(), 0));
 
-      Logger.d("AptoideAptWord", json);
+      Logger.getInstance().d("AptoideAptWord", json);
 
       GetAdsResponse.Ad ad = null;
       try {
@@ -273,7 +273,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
        */
       deepLinkAnalytics.websiteFromThankYouWebPage();
       String appId = u.getQueryParameter("app_id");
-      Logger.v(TAG, "aptoide thank you: app id: " + appId);
+      Logger.getInstance().v(TAG, "aptoide thank you: app id: " + appId);
       if (TextUtils.isEmpty(appId)) {
         return null;
       } else {
@@ -303,7 +303,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
          */
         bundleId = u.getLastPathSegment();
       }
-      Logger.v(TAG, "aptoide web site: bundle: " + bundleId);
+      Logger.getInstance().v(TAG, "aptoide web site: bundle: " + bundleId);
       if (!TextUtils.isEmpty(bundleId)) {
         try {
           Uri uri = Uri.parse(
@@ -314,10 +314,10 @@ public class DeepLinkIntentReceiver extends ActivityView {
                   + bundleId
                   + "/limit=30/sort=downloads7d", "utf-8")
                   + "&storetheme=default");
-          Logger.v(TAG, "aptoide web site: bundle: " + uri.toString());
+          Logger.getInstance().v(TAG, "aptoide web site: bundle: " + uri.toString());
           return dealWithAptoideSchema(uri);
         } catch (Exception e) {
-          Logger.e(TAG, "dealWithAptoideWebsite: ", e);
+          Logger.getInstance().e(TAG, "dealWithAptoideWebsite: ", e);
           return null;
         }
       }
@@ -328,7 +328,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
        * store
        */
       deepLinkAnalytics.websiteFromStoreWebPage();
-      Logger.v(TAG, "aptoide web site: store: " + u.getLastPathSegment());
+      Logger.getInstance().v(TAG, "aptoide web site: store: " + u.getLastPathSegment());
       ArrayList<String> list = new ArrayList<String>();
       list.add(u.getLastPathSegment());
       return startWithRepo(list);
@@ -341,14 +341,14 @@ public class DeepLinkIntentReceiver extends ActivityView {
          * App view
          */
         deepLinkAnalytics.websiteFromAppViewWebPage();
-        Logger.v(TAG, "aptoide web site: app view: " + appName[0]);
+        Logger.getInstance().v(TAG, "aptoide web site: app view: " + appName[0]);
         return startAppView(appName[0]);
       } else if (appName != null && appName.length == 3) {
         /**
          * Home
          */
         deepLinkAnalytics.websiteFromHomeWebPage();
-        Logger.v(TAG, "aptoide web site: home: " + appName[0]);
+        Logger.getInstance().v(TAG, "aptoide web site: home: " + appName[0]);
         return startFromHome();
       }
     }

@@ -119,7 +119,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         .subscribe(__ -> {
           finishLoading();
         }, err -> {
-          Logger.e(TAG, "listing updates or installed threw an exception");
+          Logger.getInstance().e(TAG, "listing updates or installed threw an exception");
           CrashReport.getInstance()
               .log(err);
           finishLoading();
@@ -167,7 +167,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       }
     }
     addDisplayables(updatesDisplayablesList, false);
-    Logger.v(TAG, "listed updates");
+    Logger.getInstance().v(TAG, "listed updates");
   }
 
   private Completable showUpdateMessage(List<Update> updates) {
@@ -218,7 +218,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
-    Logger.v(TAG, "listed installed apps");
+    Logger.getInstance().v(TAG, "listed installed apps");
   }
 
   /**

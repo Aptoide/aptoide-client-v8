@@ -32,7 +32,7 @@ public class FabricEventLogger implements EventLogger {
             .toString());
       }
     }
-    Logger.d(TAG, "log() called with: "
+    Logger.getInstance().d(TAG, "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

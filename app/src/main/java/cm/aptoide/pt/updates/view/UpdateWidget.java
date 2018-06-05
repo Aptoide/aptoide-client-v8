@@ -165,7 +165,7 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
           .setPositiveButton(R.string.yes, (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
               compositeSubscription.add(updateRepository.setExcluded(packageName, true)
-                  .subscribe(success -> Logger.d(TAG,
+                  .subscribe(success -> Logger.getInstance().d(TAG,
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
                         ShowMessage.asSnack(context, R.string.unknown_error);

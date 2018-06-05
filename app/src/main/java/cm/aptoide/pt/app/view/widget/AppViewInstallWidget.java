@@ -428,7 +428,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             // TODO: 12/07/2017 this code doesnt run
-                            Logger.d(TAG, "Installing");
+                            Logger.getInstance().d(TAG, "Installing");
                           }, throwable -> crashReport.log(throwable)));
                 }
               }
@@ -653,7 +653,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .toObservable()
                 .doOnSubscribe(() -> setupEvents(download, getInstallType(download.getAction()),
                     getOrigin(download.getAction()))))
-            .subscribe(downloadProgress -> Logger.d(TAG, "Installing"),
+            .subscribe(downloadProgress -> Logger.getInstance().d(TAG, "Installing"),
                 err -> crashReport.log(err)));
       });
     }

@@ -51,7 +51,7 @@ public abstract class ExtendedView<T> {
 
 		@Override
 		public void onNullReference(View v) {
-			Logger.e(TAG, "reference was GC'ed");
+			Logger.getInstance().e(TAG, "reference was GC'ed");
 		}
 	}
 

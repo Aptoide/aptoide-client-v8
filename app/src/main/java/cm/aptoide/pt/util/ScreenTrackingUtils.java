@@ -46,7 +46,7 @@ public class ScreenTrackingUtils {
     history.add(screenName);
     CrashReport.getInstance()
         .log(SCREEN_HISTORY, history.toString());
-    Logger.d(TAG, "addScreenToHistory: " + history.toString());
+    Logger.getInstance().d(TAG, "addScreenToHistory: " + history.toString());
   }
 
   /**
@@ -62,7 +62,7 @@ public class ScreenTrackingUtils {
         .log(NUMBER_OF_SCREENS_ON_BACK_STACK, String.valueOf(numberScreensOnBackStack));
     CrashReport.getInstance()
         .log(LIFE_CYCLE_STATE, LifeCycle.CREATE.toString());
-    Logger.d(TAG, "incrementNumberOfScreens: NOS: "
+    Logger.getInstance().d(TAG, "incrementNumberOfScreens: NOS: "
         + NUMBER_OF_SCREENS
         + ", NOSOBS: "
         + NUMBER_OF_SCREENS_ON_BACK_STACK);
@@ -77,7 +77,7 @@ public class ScreenTrackingUtils {
         .log(NUMBER_OF_SCREENS_ON_BACK_STACK, String.valueOf(numberScreensOnBackStack));
     CrashReport.getInstance()
         .log(LIFE_CYCLE_STATE, LifeCycle.DESTROY.toString());
-    Logger.d(TAG, "decrementNumberOfScreens: NOSOBS: " + String.valueOf(numberScreensOnBackStack));
+    Logger.getInstance().d(TAG, "decrementNumberOfScreens: NOSOBS: " + String.valueOf(numberScreensOnBackStack));
   }
 
   public enum LifeCycle {CREATE, DESTROY}

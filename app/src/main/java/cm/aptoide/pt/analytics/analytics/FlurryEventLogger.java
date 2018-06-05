@@ -29,7 +29,7 @@ public class FlurryEventLogger implements EventLogger, SessionLogger {
     } else {
       FlurryAgent.logEvent(eventName);
     }
-    Logger.d(TAG, "log() called with: "
+    Logger.getInstance().d(TAG, "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

@@ -35,7 +35,7 @@ public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallbac
           try {
             fragment = (LoginSignUpCredentialsFragment) navigatorChild.getFragment();
           } catch (ClassCastException ex) {
-            Logger.e(TAG, ex);
+            Logger.getInstance().e(TAG, ex);
           }
 
           if (fragment == null) {

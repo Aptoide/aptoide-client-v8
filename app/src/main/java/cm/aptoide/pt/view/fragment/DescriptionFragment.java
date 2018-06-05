@@ -184,7 +184,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
             finishLoading();
           }, false);
     } else {
-      Logger.e(TAG, "App id unavailable");
+      Logger.getInstance().e(TAG, "App id unavailable");
       setDataUnavailable();
     }
   }
