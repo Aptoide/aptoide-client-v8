@@ -451,8 +451,7 @@ public class AppViewManagerTest {
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
     appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
+        .subscribe();
 
     //Test loadAdsFromAppView
     //When the presenters asks for an Ad
@@ -557,8 +556,7 @@ public class AppViewManagerTest {
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
     appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
+        .subscribe();
 
     //DownloadApp Test
 
