@@ -1,8 +1,8 @@
 package cm.aptoide.analytics.implementation;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.DebugLogger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +23,16 @@ public class AptoideBiAnalytics {
   private final Scheduler timerScheduler;
   private final long initialDelay;
   private final CrashLogger crashReport;
+  private final DebugLogger debugLogger;
 
   /**
    * @param sessionPersistence
    * @param sendInterval max time(in milliseconds) interval between event sends
+   * @param debugLogger
    */
   public AptoideBiAnalytics(EventsPersistence persistence, SessionPersistence sessionPersistence,
       AptoideBiEventService service, CompositeSubscription subscriptions, Scheduler timerScheduler,
-      long initialDelay, long sendInterval, CrashLogger crashReport) {
+      long initialDelay, long sendInterval, CrashLogger crashReport, DebugLogger debugLogger) {
     this.persistence = persistence;
     this.sessionPersistence = sessionPersistence;
     this.service = service;
@@ -39,13 +41,15 @@ public class AptoideBiAnalytics {
     this.sendInterval = sendInterval;
     this.initialDelay = initialDelay;
     this.crashReport = crashReport;
+    this.debugLogger = debugLogger;
   }
 
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
     persistence.save(new Event(eventName, data, action, context, System.currentTimeMillis()))
         .subscribe(() -> {
-        }, throwable -> Log.w(TAG, "cannot save the event due to " + throwable.getMessage()));
+        }, throwable -> debugLogger.w(TAG,
+            "cannot save the event due to " + throwable.getMessage()));
   }
 
   public long getTimestamp() {

@@ -56,7 +56,6 @@ import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
 import cm.aptoide.pt.analytics.analytics.FacebookEventLogger;
 import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
-import cm.aptoide.pt.analytics.analytics.LogcatDebugLogger;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
@@ -119,6 +118,7 @@ import cm.aptoide.pt.install.installer.InstallationProvider;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.link.AptoideInstallParser;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV3;
@@ -1042,8 +1042,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new AptoideBiAnalytics(persistence, new SharedPreferencesSessionPersistence(preferences),
             service, new CompositeSubscription(), Schedulers.computation(),
             BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport),
-        BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport,
+            Logger.getInstance()), BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
   }
 
   @Singleton @Provides @Named("fabric") EventLogger providesFabricEventLogger(Answers fabric) {
@@ -1095,7 +1095,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
         .setAnalyticsNormalizer(analyticsNormalizer)
-        .setDebugLogger(new LogcatDebugLogger())
+        .setDebugLogger(Logger.getInstance())
         .build();
   }
 

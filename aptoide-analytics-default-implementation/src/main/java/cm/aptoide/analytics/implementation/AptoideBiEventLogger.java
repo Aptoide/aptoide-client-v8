@@ -13,9 +13,6 @@ public class AptoideBiEventLogger implements EventLogger, SessionLogger {
   private final AptoideBiAnalytics service;
   private final long sessionInterval;
 
-  private final String EVENT_NAME = "SESSION";
-  private final String CONTEXT_NAME = "APPLICATION";
-
   public AptoideBiEventLogger(AptoideBiAnalytics service, long sessionInterval) {
     this.service = service;
     this.sessionInterval = sessionInterval;
@@ -34,12 +31,11 @@ public class AptoideBiEventLogger implements EventLogger, SessionLogger {
   @Override public void startSession() {
     long currentTimeElapsed = System.currentTimeMillis() - service.getTimestamp();
     if (currentTimeElapsed > sessionInterval) {
-      service.log(EVENT_NAME, null, AnalyticsManager.Action.OPEN, CONTEXT_NAME);
+      service.log("SESSION", null, AnalyticsManager.Action.OPEN, "APPLICATION");
     }
     service.saveTimestamp(System.currentTimeMillis());
   }
 
   @Override public void endSession() {
-
   }
 }

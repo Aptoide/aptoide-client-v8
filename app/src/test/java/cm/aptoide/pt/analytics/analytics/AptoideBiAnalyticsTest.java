@@ -3,6 +3,7 @@ package cm.aptoide.pt.analytics.analytics;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.DebugLogger;
 import cm.aptoide.analytics.implementation.AptoideBiAnalytics;
 import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.Event;
@@ -39,6 +40,7 @@ public class AptoideBiAnalyticsTest {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     SessionPersistence sessionPersistence = mock(SessionPersistence.class);
+    DebugLogger debugLogger = mock(DebugLogger.class);
     CrashReport crashReport = mock(CrashReport.class);
     String eventName = "test event";
     String context = "test context";
@@ -47,7 +49,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, sessionPersistence, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 0, 200, crashReport);
+            new CompositeSubscription(), scheduler, 0, 200, crashReport, debugLogger);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -68,6 +70,7 @@ public class AptoideBiAnalyticsTest {
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     SessionPersistence sessionPersistence = mock(SessionPersistence.class);
     CrashReport crashReport = mock(CrashReport.class);
+    DebugLogger debugLogger = mock(DebugLogger.class);
     String eventName = "test event";
     String context = "test context";
     Map<String, Object> data = new HashMap<>();
@@ -75,7 +78,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, sessionPersistence, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 0, 200, crashReport);
+            new CompositeSubscription(), scheduler, 0, 200, crashReport, debugLogger);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -98,6 +101,7 @@ public class AptoideBiAnalyticsTest {
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     SessionPersistence sessionPersistence = mock(SessionPersistence.class);
     CrashReport crashReport = mock(CrashReport.class);
+    DebugLogger debugLogger = mock(DebugLogger.class);
     String eventName = "test event";
     String context = "test context";
     Map<String, Object> data = new HashMap<>();
@@ -105,7 +109,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, sessionPersistence, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 200000, 20000, crashReport);
+            new CompositeSubscription(), scheduler, 200000, 20000, crashReport, debugLogger);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
