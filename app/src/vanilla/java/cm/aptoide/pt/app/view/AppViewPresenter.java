@@ -462,7 +462,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> accountManager.accountStatus())
         .observeOn(viewScheduler)
         .flatMap(account -> {
-          if (account.isLoggedIn()) {
+          if (!account.isLoggedIn()) {
             view.displayNotLoggedInSnack();
             return Observable.just(false);
           } else {
