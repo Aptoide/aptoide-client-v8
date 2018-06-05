@@ -1,6 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.content.SharedPreferences;
+import cm.aptoide.analytics.implementation.SessionPersistence;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 
 public class SharedPreferencesSessionPersistence implements SessionPersistence {

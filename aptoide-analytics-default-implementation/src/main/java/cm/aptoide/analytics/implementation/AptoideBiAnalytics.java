@@ -1,10 +1,8 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics.implementation;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.crashreports.CrashLogger;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,7 @@ public class AptoideBiAnalytics {
    */
   public AptoideBiAnalytics(EventsPersistence persistence, SessionPersistence sessionPersistence,
       AptoideBiEventService service, CompositeSubscription subscriptions, Scheduler timerScheduler,
-      long initialDelay, long sendInterval, CrashReport crashReport) {
+      long initialDelay, long sendInterval, CrashLogger crashReport) {
     this.persistence = persistence;
     this.sessionPersistence = sessionPersistence;
     this.service = service;
@@ -47,7 +45,7 @@ public class AptoideBiAnalytics {
       String context) {
     persistence.save(new Event(eventName, data, action, context, System.currentTimeMillis()))
         .subscribe(() -> {
-        }, throwable -> Logger.w(TAG, "cannot save the event due to " + throwable.getMessage()));
+        }, throwable -> Log.w(TAG, "cannot save the event due to " + throwable.getMessage()));
   }
 
   public long getTimestamp() {

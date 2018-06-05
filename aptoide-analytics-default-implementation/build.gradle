@@ -1,4 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+retrolambda {
+  jvmArgs '-noverify'
+}
 
 android {
   compileSdkVersion 25
@@ -20,6 +24,10 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
@@ -27,7 +35,8 @@ dependencies {
   compile 'com.android.support:appcompat-v7:25.4.0'
   testCompile 'junit:junit:4.12'
 
-  compile project(path: ':aptoide-analytics-core')
+  compile "com.squareup.okhttp3:okhttp:3.6.0"
+  compile "io.reactivex:rxjava:1.2.7"
 
-  compile("com.squareup.okhttp3:okhttp:3.6.0")
+  compile project(path: ':aptoide-analytics-core')
 }

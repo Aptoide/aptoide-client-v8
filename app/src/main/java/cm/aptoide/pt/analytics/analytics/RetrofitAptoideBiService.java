@@ -1,6 +1,8 @@
 package cm.aptoide.pt.analytics.analytics;
 
 import android.content.SharedPreferences;
+import cm.aptoide.analytics.implementation.AptoideBiEventService;
+import cm.aptoide.analytics.implementation.Event;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics.implementation;
 
 import java.util.List;
 import rx.Completable;

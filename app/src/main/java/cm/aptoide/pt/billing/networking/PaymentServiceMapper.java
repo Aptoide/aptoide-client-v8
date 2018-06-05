@@ -5,11 +5,11 @@
 
 package cm.aptoide.pt.billing.networking;
 
+import cm.aptoide.analytics.implementation.CrashLogger;
 import cm.aptoide.pt.billing.BillingIdManager;
 import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.billing.payment.AdyenPaymentService;
 import cm.aptoide.pt.billing.payment.PaymentService;
-import cm.aptoide.pt.crashreports.CrashLogger;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import java.util.ArrayList;
 import java.util.List;

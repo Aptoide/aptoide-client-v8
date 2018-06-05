@@ -1,6 +1,7 @@
 package cm.aptoide.pt.crashreports;
 
 import android.util.Log;
+import cm.aptoide.analytics.implementation.CrashLogger;
 import java.util.ArrayList;
 
 public class CrashReport implements CrashLogger {

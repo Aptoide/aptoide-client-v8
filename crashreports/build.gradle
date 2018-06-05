@@ -47,6 +47,8 @@ dependencies {
   })
   testCompile 'junit:junit:4.12'
 
+  compile project(path: ':aptoide-analytics-default-implementation')
+
   debugCompile project(path: ':utils', configuration: 'debug')
   releaseCompile project(path: ':utils', configuration: 'release')
 }

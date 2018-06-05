@@ -1,4 +1,4 @@
-package cm.aptoide.pt.crashreports;
+package cm.aptoide.analytics.implementation;
 
 /**
  * Created by neuro on 09-12-2016.
