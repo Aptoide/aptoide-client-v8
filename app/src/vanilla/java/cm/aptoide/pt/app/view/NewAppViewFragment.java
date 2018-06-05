@@ -952,7 +952,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void scrollReviews(Integer position) {
-    reviewsView.smoothScrollToPosition(position);
+    if (reviewsView != null) reviewsView.smoothScrollToPosition(position);
   }
 
   @Override public void hideReviews() {
@@ -974,7 +974,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void recoverScrollViewState() {
     // TODO: 25/05/2018 remove this hack and find a better way to do it.
-    scrollView.post(() -> scrollView.scrollTo(0, scrollViewY));
+
+    scrollView.post(() -> {
+      if (scrollView != null) scrollView.scrollTo(0, scrollViewY);
+    });
   }
 
   @Override public Observable<DownloadAppViewModel.Action> showOpenAndInstallDialog(String title,
