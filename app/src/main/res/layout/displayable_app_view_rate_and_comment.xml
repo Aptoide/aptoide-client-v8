@@ -93,7 +93,7 @@
       android:layout_toEndOf="@+id/rating_layout"
       android:layout_toRightOf="@+id/rating_layout"
       android:visibility="gone"
-      tools:visibility="invisible"
+      tools:visibility="visible"
       >
 
     <LinearLayout
@@ -106,27 +106,24 @@
         android:orientation="vertical"
         >
 
+      <ImageView
+          android:layout_width="match_parent"
+          android:layout_height="41dp"
+          android:src="@drawable/ic_star_moving"
+          />
       <TextView
           android:id="@+id/empty_review_text"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
+          android:layout_height="wrap_content"
           android:gravity="top|center_horizontal"
           android:lines="2"
           android:paddingTop="10dp"
-          android:text="@string/rate_this_app"
+          android:text="@string/appview_rate_this_app"
           android:textColor="@color/silver_dark"
           android:textSize="@dimen/text_size_medium_large"
           />
 
     </LinearLayout>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/linearLayout2"
-        android:src="@drawable/ic_star_moving"
-        />
 
   </RelativeLayout>
 
@@ -165,16 +162,16 @@
         android:textAllCaps="true"
         android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
-        android:visibility="invisible"
+        android:visibility="visible"
         style="@style/Aptoide.Button.Ghost.Grey"
         />
 
     <RelativeLayout
         android:layout_width="113dp"
         android:layout_height="113dp"
-        android:layout_above="@id/rate_this_button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="12dp"

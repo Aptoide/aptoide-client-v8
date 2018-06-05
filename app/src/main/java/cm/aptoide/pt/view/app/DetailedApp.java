@@ -12,7 +12,6 @@ import java.util.List;
 
 public class DetailedApp {
 
-  private final long id;
   private final String name;
   private final String packageName;
   private final long size;
@@ -28,7 +27,6 @@ public class DetailedApp {
   private final List<String> usedPermissions;
   private final long fileSize;
   private final String md5;
-  private final String path;
   private final String pathAlt;
   private final int versionCode;
   private final String versionName;
@@ -40,8 +38,56 @@ public class DetailedApp {
   private final GetAppMeta.Pay pay;
   private final String webUrls;
   private final boolean isPaid;
+  private final boolean wasPaid;
+  private final String paidAppPath;
+  private final String paymentStatus;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
+  private String path;
+  private long id;
+
+  public DetailedApp(long id, String name, String packageName, long size, String icon,
+      String graphic, String added, String modified, boolean isGoodApp, Malware malware,
+      AppFlags appFlags, List<String> tags, List<String> usedFeatures, List<String> usedPermissions,
+      long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
+      AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
+      GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid, String paidAppPath,
+      String paymentStatus, boolean isLatestTrustedVersion, String uniqueName) {
+
+    this.id = id;
+    this.name = name;
+    this.packageName = packageName;
+    this.size = size;
+    this.icon = icon;
+    this.graphic = graphic;
+    this.added = added;
+    this.modified = modified;
+    this.isGoodApp = isGoodApp;
+    this.malware = malware;
+    this.appFlags = appFlags;
+    this.tags = tags;
+    this.usedFeatures = usedFeatures;
+    this.usedPermissions = usedPermissions;
+    this.fileSize = fileSize;
+    this.md5 = md5;
+    this.path = path;
+    this.pathAlt = pathAlt;
+    this.versionCode = versionCode;
+    this.versionName = versionName;
+    this.appDeveloper = appDeveloper;
+    this.store = store;
+    this.media = media;
+    this.stats = stats;
+    this.obb = obb;
+    this.pay = pay;
+    this.webUrls = webUrls;
+    this.isPaid = isPaid;
+    this.wasPaid = wasPaid;
+    this.paidAppPath = paidAppPath;
+    this.paymentStatus = paymentStatus;
+    this.isLatestTrustedVersion = isLatestTrustedVersion;
+    this.uniqueName = uniqueName;
+  }
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
@@ -79,12 +125,19 @@ public class DetailedApp {
     this.pay = pay;
     this.webUrls = webUrls;
     this.isPaid = isPaid;
+    this.wasPaid = false;
+    this.paidAppPath = "";
+    this.paymentStatus = "";
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
   }
 
   public long getId() {
     return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -171,6 +224,10 @@ public class DetailedApp {
     return path;
   }
 
+  public void setPath(String path) {
+    this.path = path;
+  }
+
   public String getPathAlt() {
     return pathAlt;
   }
@@ -201,5 +258,17 @@ public class DetailedApp {
 
   public boolean isLatestTrustedVersion() {
     return isLatestTrustedVersion;
+  }
+
+  public String getPaidAppPath() {
+    return paidAppPath;
+  }
+
+  public String getPaymentStatus() {
+    return paymentStatus;
+  }
+
+  public boolean wasPaid() {
+    return wasPaid;
   }
 }

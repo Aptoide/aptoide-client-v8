@@ -43,6 +43,7 @@ import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
+import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -257,26 +258,30 @@ import rx.schedulers.Schedulers;
       AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      Resources resources, WindowManager windowManager, SocialRepository socialRepository) {
+      Resources resources, WindowManager windowManager, SocialRepository socialRepository,
+      @Named("marketName") String marketName) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
-        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository);
+        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
+        marketName);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics, StoreAnalytics storeAnalytics,
-      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
-      AptoideAccountManager accountManager, CrashReport crashReport) {
+      BillingAnalytics billingAnalytics, AppViewNavigator appViewNavigator,
+      AppViewManager appViewManager, AptoideAccountManager accountManager,
+      CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics, storeAnalytics,
-        appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()));
+        billingAnalytics, appViewNavigator, appViewManager, accountManager,
+        AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
+        ((PermissionService) fragment.getContext()));
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
     return new AppViewConfiguration(arguments.getLong(BundleKeys.APP_ID.name(), -1),
-        arguments.getString(BundleKeys.PACKAGE_NAME.name(), ""),
+        arguments.getString(BundleKeys.PACKAGE_NAME.name(), null),
         arguments.getString(BundleKeys.STORE_NAME.name(), null),
         arguments.getString(BundleKeys.STORE_THEME.name(), ""),
         Parcels.unwrap(arguments.getParcelable(BundleKeys.MINIMAL_AD.name())),

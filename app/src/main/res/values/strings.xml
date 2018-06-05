@@ -57,7 +57,7 @@
   <string name="appview_newer_version">Newer version available</string>
   <string name="appview_latest_version_text">Latest version</string>
   <string name="appview_version_text">Version</string>
-  <string name="appview_rate_this_app">rate this app</string>
+  <string name="appview_rate_this_app">Rate this app</string>
   <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
   <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t contain any threats!</string>
   <string name="appview_rating_card_text">Rating</string>
@@ -162,7 +162,6 @@
 
   <!--Rate-->
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
-  <string name="rate_this_app">Rate this app</string>
   <string name="reviewappview_button_open">Open</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
