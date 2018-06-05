@@ -110,7 +110,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-
+    // view.findViewById(R.id.main_content).setBackgroundColor(Color.BLUE);
     try {
       bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.login_signup_layout));
     } catch (IllegalArgumentException ex) {

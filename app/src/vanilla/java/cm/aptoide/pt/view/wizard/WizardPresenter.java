@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.wizard;
 
+import android.graphics.Color;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -12,10 +13,13 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChangeListener {
 
+  private static int[] pageColors = new int[] { Color.RED, Color.GREEN, Color.BLUE };
+
   private final WizardView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
   private final AccountAnalytics accountAnalytics;
+
 
   public WizardPresenter(WizardView view, AptoideAccountManager accountManager,
       CrashReport crashReport, AccountAnalytics accountAnalytics) {
@@ -53,6 +57,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    view.handleColorTransitions(position, positionOffset, positionOffsetPixels);
   }
 
   @Override public void onPageSelected(int position) {
@@ -60,6 +65,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
       //Inside the wizards third page
       accountAnalytics.enterAccountScreen(AccountAnalytics.AccountOrigins.WIZARD);
     }
+
     view.handleSelectedPage(position);
   }
 

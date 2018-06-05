@@ -2,16 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white"
+    android:background="@android:color/transparent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingBottom="56dp"
     >
 
   <LinearLayout
+      android:id="@+id/main_content"
       android:layout_width="match_parent"
       android:layout_height="380dp"
-      android:background="@color/aptoide_orange"
+      android:background="@android:color/transparent"
       android:gravity="center"
       >
     <ImageView

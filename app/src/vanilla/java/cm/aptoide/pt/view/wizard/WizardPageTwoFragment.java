@@ -37,6 +37,7 @@ public class WizardPageTwoFragment extends BackButtonFragment {
     ((TextView) view.findViewById(R.id.description)).setText(
         R.string.wizard_sub_title_viewpager_two);
     ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_2);
+    //view.findViewById(R.id.main_content).setBackgroundColor(Color.GREEN);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

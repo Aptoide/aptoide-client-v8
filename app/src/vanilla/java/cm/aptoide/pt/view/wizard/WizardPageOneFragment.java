@@ -24,6 +24,7 @@ public class WizardPageOneFragment extends BackButtonFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    //view.findViewById(R.id.main_content).setBackgroundColor(Color.RED);
     clickHandler = new ClickHandler() {
       @Override public boolean handle() {
         return false;

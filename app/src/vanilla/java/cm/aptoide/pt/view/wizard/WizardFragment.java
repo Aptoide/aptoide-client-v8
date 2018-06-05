@@ -1,7 +1,14 @@
 package cm.aptoide.pt.view.wizard;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -42,6 +49,7 @@ public class WizardFragment extends UIComponentFragment
   public static final int LAYOUT = R.layout.fragment_wizard;
   private static final String PAGE_INDEX = "page_index";
   AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
+  ValueAnimator colorAnimation;
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -49,9 +57,11 @@ public class WizardFragment extends UIComponentFragment
   private List<RadioButton> wizardButtons;
   private View skipOrNextLayout;
   private LoginBottomSheet loginBottomSheet;
+  private View animatedColorView;
   private boolean isInPortraitMode;
   private int currentPosition;
   private Runnable registerViewpagerCurrentItem;
+  private boolean startTransition;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -91,14 +101,25 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    animatedColorView = view.findViewById(R.id.animated_color_view);
+    startTransition = false;
     pageChangeListener = new AptoideViewPager.SimpleOnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
       @Override public void onPageSelected(int position) {
         if (position == 0) {
           navigationTracker.registerScreen(
               ScreenTagHistory.Builder.build(WizardPageOneFragment.class.getSimpleName(), "0"));
         }
       }
+
+      @Override public void onPageScrollStateChanged(int state) {
+      }
     };
+
     super.onViewCreated(view, savedInstanceState);
   }
 
@@ -191,9 +212,129 @@ public class WizardFragment extends UIComponentFragment
     }
   }
 
+  public void handleColorTransitions(int position, float positionOffset, int positionOffsetPixels) {
+    Integer[] endColors = {
+        getContext().getResources().getColor(R.color.wizard_page_1_end_color),
+        getContext().getResources().getColor(R.color.wizard_page_2_end_color),
+        getContext().getResources().getColor(R.color.default_orange_gradient_end)
+    };
+    Integer[] startColors = {
+        getContext().getResources().getColor(R.color.wizard_page_1_start_color),
+        getContext().getResources().getColor(R.color.wizard_page_2_start_color),
+        getContext().getResources().getColor(R.color.default_orange_gradient_start)
+    };
+
+    Drawable[] gradients = {
+        getContext().getResources().getDrawable(R.drawable.wizard_page_1_gradient),
+        getContext().getResources().getDrawable(R.drawable.light_green_gradient),
+        getContext().getResources().getDrawable(R.drawable.aptoide_gradient)
+    };
+
+    ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+
+    if (position < (viewPagerAdapter.getCount() - 1)
+        && position < (endColors.length) - 1
+        && positionOffset != 0) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && startTransition) {
+        Drawable[] list = { gradients[position], new ColorDrawable(startColors[position]) };
+        TransitionDrawable d = new TransitionDrawable(list);
+        animatedColorView.setBackground(d);
+        d.startTransition(300);
+        startTransition = false;
+      }
+      animatedColorView.setBackgroundColor(
+          (Integer) argbEvaluator.evaluate(positionOffset, startColors[position],
+              startColors[position + 1]));
+    } else {
+      if (position < endColors.length) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+          Drawable[] list = {
+              new ColorDrawable(endColors[position]), gradients[position]
+          };
+
+          TransitionDrawable d = new TransitionDrawable(list);
+          animatedColorView.setBackground(d);
+          d.startTransition(300);
+          startTransition = true;
+        }
+      }
+    }
+  }
+
+  //@Override public void handleColorTransitions(int position, float positionOffset, int positionOffsetPixels) {
+  //  Integer[] endColors = {
+  //      getContext().getResources().getColor(R.color.wizard_page_1_end_color),
+  //      getContext().getResources().getColor(R.color.wizard_page_2_end_color),
+  //      getContext().getResources().getColor(R.color.default_orange_gradient_end)
+  //  };
+  //  Integer[] startColors = {
+  //      getContext().getResources().getColor(R.color.wizard_page_1_start_color),
+  //      getContext().getResources().getColor(R.color.wizard_page_2_start_color),
+  //      getContext().getResources().getColor(R.color.default_orange_gradient_start)
+  //  };
+  //
+  //  Logger.i("OOOOOOFFFFFFSSEEEEEET!!!!!: ", Float.toString(positionOffset));
+  //
+  //  if (position < (viewPagerAdapter.getCount() - 1)
+  //      && position < (endColors.length) - 1
+  //      && positionOffset != 0) {
+  //    int[] colors = {
+  //        gradientMap(startColors[position], endColors[position], positionOffset),
+  //        gradientMap(startColors[position + 1], endColors[position + 1], 1 - positionOffset)
+  //    };
+  //    GradientDrawable gradient =
+  //        new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
+  //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+  //      animatedColorView.setBackground(gradient);
+  //    }
+  //  } else if (position < startColors.length) {
+  //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+  //      switch (position) {
+  //        case 0:
+  //          animatedColorView.setBackground(getContext().getResources()
+  //              .getDrawable(R.drawable.wizard_page_1_gradient));
+  //          break;
+  //        case 1:
+  //          animatedColorView.setBackground(getContext().getResources()
+  //              .getDrawable(R.drawable.light_green_gradient));
+  //          break;
+  //        case 2:
+  //          animatedColorView.setBackground(getContext().getResources()
+  //              .getDrawable(R.drawable.aptoide_gradient));
+  //          break;
+  //        default:
+  //          break;
+  //      }
+  //    }
+  //  }
+  //}
+
   @Override public int getWizardButtonsCount() {
     return wizardButtons.size();
   }
+
+  private int gradientMap(int startColor, int endColor, float offset) {
+
+    int startRed = Color.red(startColor);
+    int startGreen = Color.green(startColor);
+    int startBlue = Color.blue(startColor);
+    int endRed = Color.red(endColor);
+    int endGreen = Color.green(endColor);
+    int endBlue = Color.blue(endColor);
+
+    if (offset < 0.1 || offset > 0.95) {
+      int finalRed = Math.round((1 - offset) * startRed + offset * endRed);
+      int finalGreen = Math.round((1 - offset) * startGreen + offset * endGreen);
+      int finalBlue = Math.round((1 - offset) * startBlue + offset * endBlue);
+      return Color.rgb(finalRed, finalGreen, finalBlue);
+    } else if (offset > 0 && offset <= 0.099999999) {
+      return startColor;
+    } else {
+      return endColor;
+    }
+  }
+
+  //TODO: DELETE THIS!!!!
 
   private void createRadioButtons() {
     // set button dimension
