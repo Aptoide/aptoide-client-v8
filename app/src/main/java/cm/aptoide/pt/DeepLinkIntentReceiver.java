@@ -21,6 +21,7 @@ import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -477,6 +478,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
             .first();
       } catch (NoNetworkConnectionException exception) {
         intent = startFromHome();
+        return intent;
+      } catch (AptoideWsV7Exception exception) {
+        intent = startFromSearch(packageName);
         return intent;
       }
     }
