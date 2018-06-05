@@ -83,7 +83,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
@@ -101,7 +101,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -148,7 +148,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -195,7 +195,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -241,7 +241,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -283,7 +283,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
 
     //When the presenter ask for an App
     //And a result is returned
@@ -309,7 +309,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
 
     //When the presenter ask for an App
     //And a result is returned
@@ -335,7 +335,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
 
     //When the presenter ask for an App
     //And a result is returned
@@ -444,7 +444,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "marketName");
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -548,7 +548,7 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository);
+            installAnalytics, limit, socialRepository, "anyString");
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -596,7 +596,7 @@ public class AppViewManagerTest {
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));
 
     DownloadAppViewModel downloadAppViewModel =
-        appViewManager.loadDownloadAppViewModel("md5", "packageName", 1)
+        appViewManager.loadDownloadAppViewModel("md5", "packageName", 1, false, null)
             .toBlocking()
             .first();
 
