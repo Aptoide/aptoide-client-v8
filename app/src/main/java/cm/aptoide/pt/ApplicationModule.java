@@ -34,6 +34,7 @@ import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.EventsPersistence;
 import cm.aptoide.analytics.implementation.FabricEventLogger;
 import cm.aptoide.analytics.implementation.FacebookEventLogger;
+import cm.aptoide.analytics.implementation.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.HttpKnockEventLogger;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -55,7 +56,6 @@ import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
-import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
@@ -1022,7 +1022,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("flurry") FlurryEventLogger providesFlurryLogger() {
-    return new FlurryEventLogger(application);
+    return new FlurryEventLogger(application, Logger.getInstance());
   }
 
   @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
