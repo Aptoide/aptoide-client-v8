@@ -56,5 +56,8 @@ dependencies {
     transitive = true
   }
 
+  // Facebook
+  compile "com.facebook.android:facebook-android-sdk:4.17.0"
+
   compile project(path: ':aptoide-analytics-core')
 }

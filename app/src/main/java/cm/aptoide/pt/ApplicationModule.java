@@ -1018,7 +1018,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("facebook") EventLogger providesFacebookEventLogger(
       AppEventsLogger facebook) {
-    return new FacebookEventLogger(facebook);
+    return new FacebookEventLogger(facebook, Logger.getInstance());
   }
 
   @Singleton @Provides @Named("flurry") FlurryEventLogger providesFlurryLogger() {

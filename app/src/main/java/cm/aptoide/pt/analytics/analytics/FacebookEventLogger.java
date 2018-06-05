@@ -2,8 +2,8 @@ package cm.aptoide.pt.analytics.analytics;
 
 import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.DebugLogger;
 import cm.aptoide.analytics.EventLogger;
-import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import java.util.Map;
 
@@ -14,9 +14,11 @@ import java.util.Map;
 public class FacebookEventLogger implements EventLogger {
   private static final String TAG = FacebookEventLogger.class.getSimpleName();
   private final AppEventsLogger facebook;
+  private final DebugLogger logger;
 
-  public FacebookEventLogger(AppEventsLogger facebook) {
+  public FacebookEventLogger(AppEventsLogger facebook, DebugLogger logger) {
     this.facebook = facebook;
+    this.logger = logger;
   }
 
   @Override
@@ -27,7 +29,7 @@ public class FacebookEventLogger implements EventLogger {
     } else {
       facebook.logEvent(eventName);
     }
-    Logger.getInstance().d(TAG, "log() called with: "
+    logger.d(TAG, "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["
