@@ -1,23 +1,21 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics.implementation;
 
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.DebugLogger;
 import cm.aptoide.analytics.EventLogger;
-import cm.aptoide.pt.logger.Logger;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by trinkes on 11/01/2018.
- */
-
 public class FabricEventLogger implements EventLogger {
   private static final String TAG = FabricEventLogger.class.getSimpleName();
   private final Answers fabric;
+  private final DebugLogger logger;
 
-  public FabricEventLogger(Answers fabric) {
+  public FabricEventLogger(Answers fabric, DebugLogger logger) {
     this.fabric = fabric;
+    this.logger = logger;
   }
 
   @Override
@@ -32,7 +30,7 @@ public class FabricEventLogger implements EventLogger {
             .toString());
       }
     }
-    Logger.getInstance().d(TAG, "log() called with: "
+    logger.d(TAG, "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

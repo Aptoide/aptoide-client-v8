@@ -32,6 +32,7 @@ import cm.aptoide.analytics.implementation.AptoideBiAnalytics;
 import cm.aptoide.analytics.implementation.AptoideBiEventLogger;
 import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.EventsPersistence;
+import cm.aptoide.analytics.implementation.FabricEventLogger;
 import cm.aptoide.analytics.implementation.HttpKnockEventLogger;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -53,7 +54,6 @@ import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
-import cm.aptoide.pt.analytics.analytics.FabricEventLogger;
 import cm.aptoide.pt.analytics.analytics.FacebookEventLogger;
 import cm.aptoide.pt.analytics.analytics.FlurryEventLogger;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
@@ -1047,7 +1047,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("fabric") EventLogger providesFabricEventLogger(Answers fabric) {
-    return new FabricEventLogger(fabric);
+    return new FabricEventLogger(fabric, Logger.getInstance());
   }
 
   @Singleton @Provides HttpKnockEventLogger providesknockEventLogger(
