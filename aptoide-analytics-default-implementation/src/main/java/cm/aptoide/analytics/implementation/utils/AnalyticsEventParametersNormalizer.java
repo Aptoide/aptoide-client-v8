@@ -1,4 +1,4 @@
-package cm.aptoide.analytics.implementation;
+package cm.aptoide.analytics.implementation.utils;
 
 import cm.aptoide.analytics.KeyValueNormalizer;
 import java.util.Map;

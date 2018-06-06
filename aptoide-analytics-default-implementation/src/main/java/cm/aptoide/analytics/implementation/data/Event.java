@@ -1,4 +1,4 @@
-package cm.aptoide.analytics.implementation;
+package cm.aptoide.analytics.implementation.data;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package cm.aptoide.analytics.implementation;
+package cm.aptoide.analytics.implementation.loggers;
 
 import android.content.Context;
 import cm.aptoide.analytics.AnalyticsManager;

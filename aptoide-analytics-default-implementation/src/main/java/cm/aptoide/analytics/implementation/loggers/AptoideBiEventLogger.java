@@ -1,8 +1,9 @@
-package cm.aptoide.analytics.implementation;
+package cm.aptoide.analytics.implementation.loggers;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
 import cm.aptoide.analytics.SessionLogger;
+import cm.aptoide.analytics.implementation.AptoideBiAnalytics;
 import java.util.Map;
 
 /**

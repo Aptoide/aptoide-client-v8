@@ -1,5 +1,6 @@
 package cm.aptoide.analytics.implementation;
 
+import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;

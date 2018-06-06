@@ -6,7 +6,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.DebugLogger;
 import cm.aptoide.analytics.implementation.AptoideBiAnalytics;
 import cm.aptoide.analytics.implementation.AptoideBiEventService;
-import cm.aptoide.analytics.implementation.Event;
+import cm.aptoide.analytics.implementation.data.Event;
 import cm.aptoide.analytics.implementation.EventsPersistence;
 import cm.aptoide.analytics.implementation.SessionPersistence;
 import cm.aptoide.pt.crashreports.CrashReport;

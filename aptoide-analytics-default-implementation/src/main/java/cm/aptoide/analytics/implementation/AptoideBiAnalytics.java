@@ -3,6 +3,7 @@ package cm.aptoide.analytics.implementation;
 import android.support.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.DebugLogger;
+import cm.aptoide.analytics.implementation.data.Event;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

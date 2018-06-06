@@ -1,4 +1,4 @@
-package cm.aptoide.analytics.implementation;
+package cm.aptoide.analytics.implementation.network;
 
 public class AnalyticsBaseBody {
   private String aptoideId;

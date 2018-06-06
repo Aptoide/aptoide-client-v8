@@ -1,5 +1,7 @@
-package cm.aptoide.analytics.implementation;
+package cm.aptoide.analytics.implementation.network;
 
+import cm.aptoide.analytics.implementation.AptoideBiEventService;
+import cm.aptoide.analytics.implementation.data.Event;
 import java.text.DateFormat;
 import java.util.Date;
 import retrofit2.Response;
