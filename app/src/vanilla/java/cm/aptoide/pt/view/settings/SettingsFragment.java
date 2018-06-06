@@ -47,6 +47,7 @@ import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -87,6 +88,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String SEND_FEEDBACK_PREFERENCE_KEY = "sendFeedback";
   private static final String TERMS_AND_CONDITIONS_PREFERENCE_KEY = "termsConditions";
   private static final String PRIVACY_POLICY_PREFERENCE_KEY = "privacyPolicy";
+  private static final String DELETE_ACCOUNT = "deleteAccount";
 
   protected Toolbar toolbar;
   private Context context;
@@ -108,6 +110,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Preference sendFeedback;
   private Preference termsAndConditions;
   private Preference privacyPolicy;
+  private Preference deleteAccount;
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
@@ -118,6 +121,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private String defaultThemeName;
   private AdultContentAnalytics adultContentAnalytics;
   private FragmentNavigator fragmentNavigator;
+  private AuthenticationPersistence authenticationPersistence;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -138,6 +142,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     fragmentNavigator = ((ActivityResultNavigator) getActivity()).getFragmentNavigator();
+    authenticationPersistence = application.getAuthenticationPersistence();
     adultContentConfirmationDialog =
         new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
             .setPositiveButton(R.string.yes)
@@ -221,6 +226,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     sendFeedback = findPreference(SEND_FEEDBACK_PREFERENCE_KEY);
     termsAndConditions = findPreference(TERMS_AND_CONDITIONS_PREFERENCE_KEY);
     privacyPolicy = findPreference(PRIVACY_POLICY_PREFERENCE_KEY);
+    deleteAccount = findPreference(DELETE_ACCOUNT);
 
     setupClickHandlers();
   }
@@ -257,6 +263,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
     autoUpdatepreference.setSummary(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
             getContext().getResources(), marketName));
+
+    subscriptions.add(RxPreference.clicks(deleteAccount)
+        .flatMapSingle(__ -> authenticationPersistence.getAuthentication())
+        .map(authentication -> authentication.getAccessToken())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(accessToken -> openDeleteAccountView(accessToken))
+        .subscribe());
 
     subscriptions.add(RxPreference.clicks(socialCampaignNotifications)
         .subscribe(isChecked -> handleSocialNotifications(
@@ -545,6 +558,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
         return true;
       }
     });
+  }
+
+  private void openDeleteAccountView(String accessToken) {
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab("https://www.aptoide.com/account/delete?access_token=" + accessToken,
+            getContext());
   }
 
   private void handleSocialNotifications(Boolean isChecked) {
