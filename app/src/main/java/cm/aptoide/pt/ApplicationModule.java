@@ -57,6 +57,7 @@ import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
+import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.analytics.analytics.RetrofitAptoideBiService;
@@ -734,6 +735,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         aptoidePackage, qManager, Cdn.WEB, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
+  @Singleton @Provides @Named("analytics-interceptor")
+  AnalyticsBodyInterceptorV7 provideAnalyticsBodyInterceptorV7(
+      AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
+      @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
+      @Named("aptoidePackage") String aptoidePackage) {
+    return new AnalyticsBodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5sum,
+        aptoidePackage, resources, BuildConfig.VERSION_CODE, qManager, sharedPreferences);
+  }
+
   @Singleton @Provides QManager provideQManager(
       @Named("default") SharedPreferences sharedPreferences, Resources resources,
       WindowManager windowManager) {
@@ -995,14 +1005,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RealmEventPersistence(database, mapper);
   }
 
-  @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(@Named("pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient defaultClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences defaultSharedPreferences,
-      Converter.Factory converterFactory, RetrofitAptoideBiService.ServiceV7 serviceV7) {
+  @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(
+      RetrofitAptoideBiService.ServiceV7 serviceV7,
+      @Named("analytics-interceptor") AnalyticsBodyInterceptorV7 bodyInterceptor) {
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    return new RetrofitAptoideBiService(dateFormat, BuildConfig.APPLICATION_ID, serviceV7);
+    return new RetrofitAptoideBiService(dateFormat, serviceV7, bodyInterceptor);
   }
 
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(

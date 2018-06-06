@@ -2,15 +2,11 @@ package cm.aptoide.pt.analytics.analytics;
 
 import java.util.Map;
 
-class AnalyticsEventRequestBody {
-  private final String aptoidePackage;
+class AnalyticsEventRequestBody extends AnalyticsBaseBody {
   private final Map<String, Object> data;
   private final String timestamp;
 
-  public AnalyticsEventRequestBody(String aptoidePackage, Map<String, Object> data,
-      String timestamp) {
-    super();
-    this.aptoidePackage = aptoidePackage;
+  public AnalyticsEventRequestBody(Map<String, Object> data, String timestamp) {
     this.data = data;
     this.timestamp = timestamp;
   }
@@ -21,9 +17,5 @@ class AnalyticsEventRequestBody {
 
   public Map<String, Object> getData() {
     return data;
-  }
-
-  public String getAptoidePackage() {
-    return aptoidePackage;
   }
 }
