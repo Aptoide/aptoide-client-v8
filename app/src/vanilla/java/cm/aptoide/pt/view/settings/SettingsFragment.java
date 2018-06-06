@@ -249,13 +249,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
+  private void handleDeleteAccountVisibility() {
+    subscriptions.add(accountManager.accountStatus()
+        .doOnNext(account -> deleteAccount.setVisible(account.isLoggedIn()))
+        .subscribe());
+  }
+
   private boolean shouldRefreshUpdates(String key) {
     return key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY) || key.equals(
         ManagedKeys.HWSPECS_FILTER) || key.equals(ManagedKeys.UPDATES_SYSTEM_APPS_KEY);
   }
 
   private void setupClickHandlers() {
-
+    handleDeleteAccountVisibility();
     Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
     autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
