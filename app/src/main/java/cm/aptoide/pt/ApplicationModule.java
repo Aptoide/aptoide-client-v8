@@ -976,6 +976,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(SearchSuggestionRemoteRepository.class);
   }
 
+  @Singleton @Provides RetrofitAptoideBiService.ServiceV7 providesAptoideBiService(
+      @Named("retrofit-v7") Retrofit retrofit) {
+    return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
+  }
+
   @Singleton @Provides CrashReport providesCrashReports() {
     return CrashReport.getInstance();
   }
@@ -994,11 +999,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient defaultClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences defaultSharedPreferences,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, RetrofitAptoideBiService.ServiceV7 serviceV7) {
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    return new RetrofitAptoideBiService(dateFormat, bodyInterceptorPoolV7, defaultClient,
-        converterFactory, tokenInvalidator, BuildConfig.APPLICATION_ID, defaultSharedPreferences);
+    return new RetrofitAptoideBiService(dateFormat, BuildConfig.APPLICATION_ID, serviceV7);
   }
 
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(

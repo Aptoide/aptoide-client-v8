@@ -1,17 +1,14 @@
 package cm.aptoide.pt.analytics.analytics;
 
-import android.content.SharedPreferences;
 import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.Event;
-import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.AnalyticsEventRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import java.text.DateFormat;
 import java.util.Date;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
+import retrofit2.Response;
+import retrofit2.http.Body;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 import rx.Completable;
 import rx.Observable;
 
@@ -20,38 +17,33 @@ import rx.Observable;
  */
 
 public class RetrofitAptoideBiService implements AptoideBiEventService {
+  private final ServiceV7 serviceV7;
   private DateFormat dateFormat;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
-  private OkHttpClient httpClient;
-  private Converter.Factory converterFactory;
-  private TokenInvalidator tokenInvalidator;
   private String appId;
-  private SharedPreferences sharedPreferences;
 
-  public RetrofitAptoideBiService(DateFormat dateFormat, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient client, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      String appId, SharedPreferences sharedPreferences) {
+  public RetrofitAptoideBiService(DateFormat dateFormat, String appId, ServiceV7 serviceV7) {
     this.dateFormat = dateFormat;
-    this.bodyInterceptor = bodyInterceptor;
-    this.httpClient = client;
-    this.converterFactory = converterFactory;
-    this.tokenInvalidator = tokenInvalidator;
     this.appId = appId;
-    this.sharedPreferences = sharedPreferences;
+    this.serviceV7 = serviceV7;
   }
 
   @Override public Completable send(Event event) {
-    Date date = new Date(event.getTimeStamp());
-    return AnalyticsEventRequest.of(event.getEventName(), event.getContext(), event.getAction()
-            .name(), event.getData(), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        appId, sharedPreferences, dateFormat.format(date))
-        .observe(true, false)
+    return serviceV7.sendEvent(event.getEventName(), event.getAction()
+        .name(), event.getContext(), new AnalyticsEventRequestBody(appId, event.getData(),
+        dateFormat.format(new Date(event.getTimeStamp()))))
         .onErrorResumeNext(throwable -> {
-          if (throwable instanceof NoNetworkConnectionException) {
+          if (throwable instanceof IllegalStateException) {
             return Observable.error(throwable);
           }
           return Observable.empty();
         })
         .toCompletable();
+  }
+
+  public interface ServiceV7 {
+    @POST("user/addEvent/name={name}/action={action}/context={context}")
+    Observable<Response<BaseV7Response>> sendEvent(@Path(value = "name") String name,
+        @Path(value = "action") String action, @Path(value = "context") String context,
+        @Body AnalyticsEventRequestBody body);
   }
 }
