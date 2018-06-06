@@ -1,8 +1,6 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics.implementation;
 
 import android.content.SharedPreferences;
-import cm.aptoide.analytics.implementation.SessionPersistence;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 
 public class SharedPreferencesSessionPersistence implements SessionPersistence {
 
@@ -13,10 +11,12 @@ public class SharedPreferencesSessionPersistence implements SessionPersistence {
   }
 
   @Override public void saveSessionTimestamp(long timestamp) {
-    ManagerPreferences.saveSessionTimestamp(timestamp, sharedPreferences);
+    sharedPreferences.edit()
+        .putLong("session_timestamp", timestamp)
+        .apply();
   }
 
   @Override public long getTimestamp() {
-    return ManagerPreferences.getSessionTimestamp(sharedPreferences);
+    return sharedPreferences.getLong("session_timestamp", 0);
   }
 }
