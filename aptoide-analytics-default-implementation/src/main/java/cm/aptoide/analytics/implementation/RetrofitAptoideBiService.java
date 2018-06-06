@@ -1,9 +1,5 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics.implementation;
 
-import cm.aptoide.analytics.implementation.AnalyticsBodyInterceptor;
-import cm.aptoide.analytics.implementation.AnalyticsEventRequestBody;
-import cm.aptoide.analytics.implementation.AptoideBiEventService;
-import cm.aptoide.analytics.implementation.Event;
 import java.text.DateFormat;
 import java.util.Date;
 import retrofit2.Response;
