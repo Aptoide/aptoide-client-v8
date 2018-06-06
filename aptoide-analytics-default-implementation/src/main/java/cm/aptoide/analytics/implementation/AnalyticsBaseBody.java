@@ -1,6 +1,6 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics.implementation;
 
-class AnalyticsBaseBody {
+public class AnalyticsBaseBody {
   private String aptoideId;
   private String accessToken;
   private int aptoideVercode;

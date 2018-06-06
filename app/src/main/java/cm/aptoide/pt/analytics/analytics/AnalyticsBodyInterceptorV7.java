@@ -2,6 +2,8 @@ package cm.aptoide.pt.analytics.analytics;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import cm.aptoide.analytics.implementation.AnalyticsBaseBody;
+import cm.aptoide.analytics.implementation.AnalyticsBodyInterceptor;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;

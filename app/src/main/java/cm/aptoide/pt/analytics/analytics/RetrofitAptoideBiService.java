@@ -1,5 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.analytics.implementation.AnalyticsBodyInterceptor;
+import cm.aptoide.analytics.implementation.AnalyticsEventRequestBody;
 import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.Event;
 import java.text.DateFormat;
@@ -10,10 +12,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Completable;
 import rx.Observable;
-
-/**
- * Created by trinkes on 12/01/2018.
- */
 
 public class RetrofitAptoideBiService implements AptoideBiEventService {
   private final ServiceV7 serviceV7;
