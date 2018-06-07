@@ -3,7 +3,7 @@ package cm.aptoide.pt.install;
 import android.net.ConnectivityManager;
 import android.telephony.TelephonyManager;
 import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.AppContext;

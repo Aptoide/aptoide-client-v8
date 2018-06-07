@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 
 /**

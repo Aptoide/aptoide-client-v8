@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics;
+package cm.aptoide.analytics.implementation.navigation;
 
 /**
  * Created by pedroribeiro on 29/09/17.

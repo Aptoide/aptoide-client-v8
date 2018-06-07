@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.view.NotBottomNavigationView;

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics;
 
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import org.junit.Test;
 

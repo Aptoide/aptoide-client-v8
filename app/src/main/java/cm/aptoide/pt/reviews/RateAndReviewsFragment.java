@@ -12,7 +12,7 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics;
 
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.PageViewsAnalytics;
 import cm.aptoide.pt.logger.Logger;
 import java.util.Collections;

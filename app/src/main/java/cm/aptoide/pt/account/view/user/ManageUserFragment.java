@@ -22,7 +22,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
