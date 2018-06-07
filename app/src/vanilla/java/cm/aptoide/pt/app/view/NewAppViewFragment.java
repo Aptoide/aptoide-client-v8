@@ -422,7 +422,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta);
+    return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta.name());
   }
 
   @Override public void onDestroy() {

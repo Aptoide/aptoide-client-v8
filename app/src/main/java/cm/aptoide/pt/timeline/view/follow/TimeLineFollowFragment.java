@@ -64,7 +64,7 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), "", storeContext);
+        .getSimpleName(), "", storeContext.name());
   }
 
   @Override public void onDestroyView() {

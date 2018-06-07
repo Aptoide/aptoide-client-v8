@@ -11,7 +11,7 @@ public class ScreenTagHistoryTest {
   @Test public void checkIfNullFragmentReturnEmptyStringFragment() {
     //Given a ScreenTagHistory with null fragment
     ScreenTagHistory screenTagHistory =
-        ScreenTagHistory.Builder.build(null, "tag", StoreContext.home);
+        ScreenTagHistory.Builder.build(null, "tag", StoreContext.home.name());
 
     //When fragment getter is requested
     //Then it should return an empty string
@@ -23,7 +23,7 @@ public class ScreenTagHistoryTest {
   @Test public void checkIfNullTagReturnEmptyStringTag() {
     //Given a ScreenTagHistory with null tag
     ScreenTagHistory screenTagHistory =
-        ScreenTagHistory.Builder.build("fragment", null, StoreContext.home);
+        ScreenTagHistory.Builder.build("fragment", null, StoreContext.home.name());
 
     //When tag getter is requested
     //Then it should return an empty string

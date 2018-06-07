@@ -50,7 +50,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
             StoreContext storeContext = adapter.getItemStore();
 
             ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker()
-                .registerScreen(ScreenTagHistory.Builder.build(currentView, tag, storeContext));
+                .registerScreen(
+                    ScreenTagHistory.Builder.build(currentView, tag, storeContext.name()));
           }
         }
       }

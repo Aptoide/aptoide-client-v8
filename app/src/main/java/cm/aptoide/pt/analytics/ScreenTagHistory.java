@@ -1,7 +1,5 @@
 package cm.aptoide.pt.analytics;
 
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-
 /**
  * Created by pedroribeiro on 29/09/17.
  */
@@ -70,17 +68,17 @@ public class ScreenTagHistory {
     }
 
     public static ScreenTagHistory build(String fragment, String tag) {
-      return build(fragment, tag, StoreContext.home);
+      return build(fragment, tag, "home");
     }
 
-    public static ScreenTagHistory build(String fragment, String tag, StoreContext storeContext) {
+    public static ScreenTagHistory build(String fragment, String tag, String storeContext) {
       String store;
       if (storeContext == null) {
         store = "";
-      } else if (storeContext.equals(StoreContext.home)) {
+      } else if (storeContext.equals("home")) {
         store = APTOIDE_MAIN_HISTORY_STORE;
       } else {
-        store = storeContext.name();
+        store = storeContext;
       }
       return new ScreenTagHistory(fragment, tag, store);
     }

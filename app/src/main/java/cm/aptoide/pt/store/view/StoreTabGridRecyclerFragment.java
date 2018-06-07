@@ -113,7 +113,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), tag, storeContext);
+        .getSimpleName(), tag, storeContext.name());
   }
 
   @Override public void loadExtras(Bundle args) {
