@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics.analytics;
+package cm.aptoide.analytics.implementation;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
