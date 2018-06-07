@@ -1,4 +1,4 @@
-package cm.aptoide.analytics.implementation;
+package cm.aptoide.analytics.implementation.utils;
 
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
 import java.util.HashMap;
