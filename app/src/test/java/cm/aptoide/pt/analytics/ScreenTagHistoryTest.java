@@ -1,7 +1,6 @@
 package cm.aptoide.pt.analytics;
 
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -11,8 +10,7 @@ public class ScreenTagHistoryTest {
 
   @Test public void checkIfNullFragmentReturnEmptyStringFragment() {
     //Given a ScreenTagHistory with null fragment
-    ScreenTagHistory screenTagHistory =
-        ScreenTagHistory.Builder.build(null, "tag", StoreContext.home.name());
+    ScreenTagHistory screenTagHistory = ScreenTagHistory.Builder.build(null, "tag", "home");
 
     //When fragment getter is requested
     //Then it should return an empty string
@@ -23,8 +21,7 @@ public class ScreenTagHistoryTest {
 
   @Test public void checkIfNullTagReturnEmptyStringTag() {
     //Given a ScreenTagHistory with null tag
-    ScreenTagHistory screenTagHistory =
-        ScreenTagHistory.Builder.build("fragment", null, StoreContext.home.name());
+    ScreenTagHistory screenTagHistory = ScreenTagHistory.Builder.build("fragment", null, "home");
 
     //When tag getter is requested
     //Then it should return an empty string
