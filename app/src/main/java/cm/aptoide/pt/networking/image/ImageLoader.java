@@ -170,7 +170,6 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          //   .diskCacheStrategy(DiskCacheStrategy.NONE)
           .apply(new RequestOptions().transform(new ShadowCircleTransformation(context))
               .placeholder(drawable))
           .into(imageView);
@@ -245,7 +244,6 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
-          //   .placeholder(drawable)
           .apply(new RequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, strokeSize))
               .placeholder(drawable))
@@ -453,15 +451,6 @@ public class ImageLoader {
 
   public void loadWithRoundCorners(String image, int radius, int margin, ImageView previewImage) {
     Context context = weakContext.get();
- /*   if (context != null) {
-      Glide.with(context)
-          .load(image)
-          .apply(new RequestOptions().centerCrop()
-          .bitmapTransform(new CenterCrop(context),
-              new RoundedCornersTransform(context, radius, margin,
-                  RoundedCornersTransform.CornerType.LEFT))
-          .into(previewImage);
-    } */
 
     if (context != null) {
       Glide.with(context)
