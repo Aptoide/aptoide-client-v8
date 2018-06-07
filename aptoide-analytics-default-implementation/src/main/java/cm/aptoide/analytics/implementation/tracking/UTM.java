@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics;
+package cm.aptoide.analytics.implementation.tracking;
 
 /**
  * Created by pedroribeiro on 29/06/17.

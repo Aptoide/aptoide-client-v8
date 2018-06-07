@@ -3,6 +3,8 @@ package cm.aptoide.pt.analytics;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import cm.aptoide.analytics.implementation.tracking.Tracking;
+import cm.aptoide.analytics.implementation.tracking.UTM;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
