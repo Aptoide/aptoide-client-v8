@@ -109,7 +109,7 @@ android {
     fairy {
       dimension "mode"
       applicationIdSuffix "testfairy"
-      versionName "8.6.4." + getDate()
+      versionName "9.0.0." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
     }
   }
