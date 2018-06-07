@@ -21,7 +21,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;

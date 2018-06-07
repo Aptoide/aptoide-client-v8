@@ -1,23 +1,24 @@
-package cm.aptoide.pt.analytics;
+package cm.aptoide.analytics.implementation.navigation;
 
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.PageViewsAnalytics;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.analytics.DebugLogger;
+import cm.aptoide.analytics.implementation.PageViewsAnalytics;
 import java.util.Collections;
 import java.util.List;
 
 public class NavigationTracker {
 
   private static final String TAG = NavigationTracker.class.getSimpleName();
-  private final TrackerFilter trackerFilter;
+  private final ViewNameFilter viewNameFilter;
+  private final DebugLogger logger;
   private List<ScreenTagHistory> historyList;
   private PageViewsAnalytics pageViewsAnalytics;
 
-  public NavigationTracker(List<ScreenTagHistory> historyList, TrackerFilter trackerFilter,
-      PageViewsAnalytics pageViewsAnalytics) {
+  public NavigationTracker(List<ScreenTagHistory> historyList, ViewNameFilter viewNameFilter,
+      PageViewsAnalytics pageViewsAnalytics, DebugLogger logger) {
     this.historyList = historyList;
-    this.trackerFilter = trackerFilter;
+    this.viewNameFilter = viewNameFilter;
     this.pageViewsAnalytics = pageViewsAnalytics;
+    this.logger = logger;
   }
 
   public void registerScreen(ScreenTagHistory screenTagHistory) {
@@ -25,7 +26,7 @@ public class NavigationTracker {
       historyList.add(screenTagHistory);
       pageViewsAnalytics.sendPageViewedEvent(getViewName(true), getViewName(false),
           screenTagHistory.getStore());
-      Logger.getInstance().d(TAG, "NavigationTracker size: "
+      logger.d(TAG, "NavigationTracker size: "
           + historyList.size()
           + "   Registering screen: "
           + screenTagHistory);
@@ -69,7 +70,7 @@ public class NavigationTracker {
   }
 
   private boolean filter(ScreenTagHistory screenTagHistory) {
-    return trackerFilter.filter(screenTagHistory.getFragment());
+    return viewNameFilter.filter(screenTagHistory.getFragment());
   }
 
   public String getPrettyScreenHistory() {

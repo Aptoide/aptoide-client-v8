@@ -3,7 +3,7 @@ package cm.aptoide.pt.account;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountValidationException;
-import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;

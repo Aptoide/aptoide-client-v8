@@ -7,7 +7,7 @@ import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.account.view.MyAccountFragment;
 import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.account.view.MyAccountPresenter;
-import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt;
+package cm.aptoide.analytics.implementation;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import java.util.HashMap;

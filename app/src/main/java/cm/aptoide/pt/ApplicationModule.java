@@ -27,17 +27,18 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
 import cm.aptoide.analytics.SessionLogger;
-import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
 import cm.aptoide.analytics.implementation.AptoideBiAnalytics;
-import cm.aptoide.analytics.implementation.loggers.AptoideBiEventLogger;
 import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.EventsPersistence;
+import cm.aptoide.analytics.implementation.PageViewsAnalytics;
+import cm.aptoide.analytics.implementation.loggers.AptoideBiEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FabricEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
+import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -56,7 +57,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
@@ -805,7 +806,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides NavigationTracker provideNavigationTracker(
       PageViewsAnalytics pageViewsAnalytics) {
-    return new NavigationTracker(new ArrayList<>(), new TrackerFilter(), pageViewsAnalytics);
+    return new NavigationTracker(new ArrayList<>(), new TrackerFilter(), pageViewsAnalytics,
+        Logger.getInstance());
   }
 
   @Singleton @Provides Database provideDatabase() {
