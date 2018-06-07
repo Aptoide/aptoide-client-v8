@@ -38,8 +38,18 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
     appName.setText(((UpdateApp) app).getName());
-    progressBar.setProgress(((UpdateApp) app).getProgress());
-    updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
+
+    if (((UpdateApp) app).isIndeterminate()) {
+      progressBar.setIndeterminate(true);
+      cancelButton.setVisibility(View.GONE);
+      resumeButton.setVisibility(View.GONE);
+    } else {
+      progressBar.setIndeterminate(false);
+      progressBar.setProgress(((UpdateApp) app).getProgress());
+      updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
+      cancelButton.setVisibility(View.VISIBLE);
+      resumeButton.setVisibility(View.VISIBLE);
+    }
     cancelButton.setOnClickListener(
         cancel -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.CANCEL_UPDATE)));
     resumeButton.setOnClickListener(

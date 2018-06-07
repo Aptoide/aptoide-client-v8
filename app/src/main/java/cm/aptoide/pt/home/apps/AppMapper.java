@@ -45,8 +45,7 @@ public class AppMapper {
         status = DownloadApp.Status.COMPLETED;
         break;
       default:
-        status = DownloadApp.Status.COMPLETED;
-        break;
+        throw new IllegalStateException("Invalid installation status");
     }
     return status;
   }
