@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics;
+package cm.aptoide.analytics.implementation;
 
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import org.junit.Test;
