@@ -1,7 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * Created by pedroribeiro on 28/06/17.
  */
@@ -149,7 +147,7 @@ public class BiUtmAnalyticsRequestBody extends BaseBody {
 
   public static class App {
     private String url;
-    @JsonProperty("package") private String packageName;
+    private String packageName;
 
     public App() {
     }
