@@ -46,24 +46,29 @@ public class DownloadStateParser {
     return downloadState;
   }
 
-  public DownloadAppViewModel.Action parseDownloadType(Install.InstallationType type) {
+  public DownloadAppViewModel.Action parseDownloadType(Install.InstallationType type,
+      boolean paidApp, boolean wasPaid) {
     DownloadAppViewModel.Action action;
-    switch (type) {
-      case INSTALLED:
-        action = DownloadAppViewModel.Action.OPEN;
-        break;
-      case INSTALL:
-        action = DownloadAppViewModel.Action.INSTALL;
-        break;
-      case DOWNGRADE:
-        action = DownloadAppViewModel.Action.DOWNGRADE;
-        break;
-      case UPDATE:
-        action = DownloadAppViewModel.Action.UPDATE;
-        break;
-      default:
-        action = DownloadAppViewModel.Action.INSTALL;
-        break;
+    if (paidApp && !wasPaid) {
+      action = DownloadAppViewModel.Action.PAY;
+    } else {
+      switch (type) {
+        case INSTALLED:
+          action = DownloadAppViewModel.Action.OPEN;
+          break;
+        case INSTALL:
+          action = DownloadAppViewModel.Action.INSTALL;
+          break;
+        case DOWNGRADE:
+          action = DownloadAppViewModel.Action.DOWNGRADE;
+          break;
+        case UPDATE:
+          action = DownloadAppViewModel.Action.UPDATE;
+          break;
+        default:
+          action = DownloadAppViewModel.Action.INSTALL;
+          break;
+      }
     }
     return action;
   }

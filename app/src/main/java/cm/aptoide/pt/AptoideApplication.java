@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
@@ -93,6 +94,7 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.sync.rx.RxSyncScheduler;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
@@ -111,6 +113,7 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -123,6 +126,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
+import org.xmlpull.v1.XmlPullParserException;
 import rx.Completable;
 import rx.Observable;
 import rx.functions.Action1;
@@ -673,8 +677,7 @@ public abstract class AptoideApplication extends Application {
               SecurePreferencesImplementation.getInstance(getApplicationContext(),
                   getDefaultSharedPreferences()))) {
 
-            //TODO move this to MainActivity, and make necessary refactoring in both this class and MainActivity
-            //PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+            setSharedPreferencesValues();
 
             return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
                 .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
@@ -682,6 +685,22 @@ public abstract class AptoideApplication extends Application {
 
           return Completable.complete();
         });
+  }
+
+  private void setSharedPreferencesValues() {
+    PreferencesXmlParser preferencesXmlParser = new PreferencesXmlParser();
+
+    XmlResourceParser parser = getResources().getXml(R.xml.settings);
+    try {
+      List<String[]> parsedPrefsList = preferencesXmlParser.parse(parser);
+      for (String[] keyValue : parsedPrefsList) {
+        getDefaultSharedPreferences().edit()
+            .putBoolean(keyValue[0], Boolean.valueOf(keyValue[1]))
+            .apply();
+      }
+    } catch (IOException | XmlPullParserException e) {
+      e.printStackTrace();
+    }
   }
 
   // todo re-factor all this code to proper Rx

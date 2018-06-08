@@ -66,6 +66,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     storeId = getArguments().getLong(STORE_ID);
   }
 
@@ -77,7 +78,6 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
         savedInstanceState.putParcelable(LIST_STATE_KEY, null);
       }
     }
-    getFragmentComponent(savedInstanceState).inject(this);
 
     appClicks = PublishSubject.create();
     refreshEvent = PublishSubject.create();

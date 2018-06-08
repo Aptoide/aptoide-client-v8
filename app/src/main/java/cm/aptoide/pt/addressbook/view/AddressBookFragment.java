@@ -114,7 +114,6 @@ public class AddressBookFragment extends UIComponentFragment
   // needs the views binded or the app will crash
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
     AccessToken accessToken = AccessToken.getCurrentAccessToken();
     if (accessToken != null) {
       if (!accessToken.isExpired()) {
