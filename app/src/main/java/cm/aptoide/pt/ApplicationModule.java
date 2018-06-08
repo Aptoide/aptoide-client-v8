@@ -36,6 +36,7 @@ import cm.aptoide.analytics.implementation.loggers.FabricEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
@@ -57,7 +58,6 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
@@ -1017,7 +1017,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(
       AnalyticsManager analyticsManager) {
-    return new FirstLaunchAnalytics(analyticsManager);
+    return new FirstLaunchAnalytics(analyticsManager, Logger.getInstance());
   }
 
   @Singleton @Provides @Named("aptoideLogger") EventLogger providesAptoideEventLogger(
