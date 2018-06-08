@@ -55,12 +55,6 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   }
 
   public Displayable popDisplayable() {
-    //return Single.fromCallable(() -> {
-    //  Displayable pop = displayables.pop();
-    //  notifyItemRemoved(displayables.size());
-    //  return pop;
-    //}).toBlocking().value();
-
     Displayable pop = displayables.pop();
     notifyItemRemoved(displayables.size());
     return pop;

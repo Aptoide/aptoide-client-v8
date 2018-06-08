@@ -13,10 +13,18 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
 import cm.aptoide.pt.install.PackageRepository;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -34,7 +42,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final WSWidgetsUtils widgetsUtils;
-  private final BaseRequestWithStore.StoreCredentials storeCredentials;
+  private final StoreCredentialsProvider storeCredentialsProvider;
   private final String clientUniqueId;
   private final boolean isGooglePlayServicesAvailable;
   private final String partnerId;
@@ -48,14 +56,14 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final PackageRepository packageRepository;
   private final int latestPackagesCount;
   private final int randomPackagesCount;
-  private int total;
-  private boolean loading;
+  private Map<String, Integer> total;
+  private Map<String, Boolean> loading;
 
-  public RemoteBundleDataSource(int limit, int initialTotal,
+  public RemoteBundleDataSource(int limit, Map<String, Integer> initialTotal,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okHttpClient,
       Converter.Factory converterFactory, BundlesResponseMapper mapper,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      WSWidgetsUtils widgetsUtils, BaseRequestWithStore.StoreCredentials storeCredentials,
+      WSWidgetsUtils widgetsUtils, StoreCredentialsProvider storeCredentialsProvider,
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       AptoideAccountManager accountManager, String filters, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
@@ -70,7 +78,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.widgetsUtils = widgetsUtils;
-    this.storeCredentials = storeCredentials;
+    this.storeCredentialsProvider = storeCredentialsProvider;
     this.clientUniqueId = clientUniqueId;
     this.isGooglePlayServicesAvailable = isGooglePlayServicesAvailable;
     this.partnerId = partnerId;
@@ -83,10 +91,12 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.packageRepository = packageRepository;
     this.latestPackagesCount = latestPackagesCount;
     this.randomPackagesCount = randomPackagesCount;
+    loading = new HashMap<>();
   }
 
-  private Single<HomeBundlesModel> getBundles(int offset, int limit, boolean invalidateHttpCache) {
-    if (loading) {
+  private Single<HomeBundlesModel> getHomeBundles(int offset, int limit,
+      boolean invalidateHttpCache, String key) {
+    if (isLoading(key)) {
       return Single.just(new HomeBundlesModel(true));
     }
     final boolean adultContentEnabled = accountManager.enabled()
@@ -97,16 +107,35 @@ public class RemoteBundleDataSource implements BundleDataSource {
 
     return getPackages().flatMap(
         packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient, converterFactory,
-            bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils, storeCredentials,
-            clientUniqueId, isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters,
-            resources, windowManager, connectivityManager, versionCodeProvider, packageNames)
+            bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
+            storeCredentialsProvider.fromUrl(""), clientUniqueId, isGooglePlayServicesAvailable,
+            partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
+            versionCodeProvider, packageNames)
             .observe(invalidateHttpCache, false)
-            .doOnSubscribe(() -> loading = true)
-            .doOnUnsubscribe(() -> loading = false)
-            .doOnTerminate(() -> loading = false)
-            .flatMap(this::mapHomeResponse)
+            .doOnSubscribe(() -> loading.put(key, true))
+            .doOnUnsubscribe(() -> loading.put(key, false))
+            .doOnTerminate(() -> loading.put(key, false))
+            .flatMap(homeResponse -> mapHomeResponse(homeResponse, key))
             .toSingle()
             .onErrorReturn(this::createErrorAppsList));
+  }
+
+  public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit) {
+    final boolean adultContentEnabled = accountManager.enabled()
+        .first()
+        .toSingle()
+        .toBlocking()
+        .value();
+    BaseRequestWithStore.StoreCredentials storeCredentials = storeCredentialsProvider.fromUrl(url);
+
+    GetStoreWidgetsRequest.Body body = new GetStoreWidgetsRequest.Body(storeCredentials,
+        WidgetsArgs.createDefault(resources, windowManager), limit);
+    body.setOffset(offset);
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
+        .get(), body, bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
+        sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
+        partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
+        versionCodeProvider, new WSWidgetsUtils());
   }
 
   private Single<List<String>> getPackages() {
@@ -124,12 +153,15 @@ public class RemoteBundleDataSource implements BundleDataSource {
     }
   }
 
-  @NonNull private Observable<HomeBundlesModel> mapHomeResponse(GetStoreWidgets homeResponse) {
+  @NonNull
+  private Observable<HomeBundlesModel> mapHomeResponse(GetStoreWidgets homeResponse, String key) {
     if (homeResponse.isOk()) {
       List<HomeBundle> homeBundles = mapper.fromWidgetsToBundles(homeResponse.getDataList()
           .getList());
-      total = homeResponse.getDataList()
+      homeBundles = removeEmptyBundles(homeBundles);
+      int responseBundletotal = homeResponse.getDataList()
           .getTotal();
+      total.put(key, responseBundletotal);
       return Observable.just(new HomeBundlesModel(homeBundles, false, homeResponse.getDataList()
           .getNext()));
     }
@@ -137,15 +169,63 @@ public class RemoteBundleDataSource implements BundleDataSource {
         new IllegalStateException("Could not obtain home bundles from server."));
   }
 
-  @Override public Single<HomeBundlesModel> loadFreshHomeBundles() {
-    return getBundles(0, limit, true);
+  @Override public Single<HomeBundlesModel> loadFreshHomeBundles(String key) {
+    return getHomeBundles(0, limit, true, key);
   }
 
-  @Override public Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit) {
-    return getBundles(offset, limit, false);
+  @Override public Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key) {
+    return getHomeBundles(offset, limit, false, key);
   }
 
-  @Override public boolean hasMore(Integer offset) {
-    return offset < total && !loading;
+  @Override public boolean hasMore(Integer offset, String key) {
+    return offset < getTotal(key) && !isLoading(key);
+  }
+
+  @Override public Single<HomeBundlesModel> loadFreshBundleForEvent(String url, String key) {
+    return getEventBundles(url, true, key, 0, limit);
+  }
+
+  @Override
+  public Single<HomeBundlesModel> loadNextBundleForEvent(String url, int offset, String key,
+      int limit) {
+    return getEventBundles(url, false, key, offset, limit);
+  }
+
+  private Single<HomeBundlesModel> getEventBundles(String url, boolean invalidateHttpCache,
+      String key, int offset, int limit) {
+    if (isLoading(key)) {
+      return Single.just(new HomeBundlesModel(true));
+    }
+    String newUrl = url.replace(V7.getHost(sharedPreferences), "");
+    return getMoreBundlesRequest(newUrl, offset, limit).observe(invalidateHttpCache, false)
+        .doOnSubscribe(() -> loading.put(key, true))
+        .doOnUnsubscribe(() -> loading.put(key, false))
+        .doOnTerminate(() -> loading.put(key, false))
+        .flatMap(homeResponse -> mapHomeResponse(homeResponse, key))
+        .toSingle()
+        .onErrorReturn(this::createErrorAppsList);
+  }
+
+  private boolean isLoading(String key) {
+    return (loading.containsKey(key) && loading.get(key));
+  }
+
+  private int getTotal(String key) {
+    if (total.containsKey(key)) {
+      return total.get(key);
+    } else {
+      return Integer.MAX_VALUE;
+    }
+  }
+
+  private List<HomeBundle> removeEmptyBundles(List<HomeBundle> homeBundles) {
+    List<HomeBundle> newHomeBundleList = new ArrayList<>();
+    for (HomeBundle homeBundle : homeBundles) {
+      if (!homeBundle.getContent()
+          .isEmpty()) {
+        newHomeBundleList.add(homeBundle);
+      }
+    }
+    return newHomeBundleList;
   }
 }

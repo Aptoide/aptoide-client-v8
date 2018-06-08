@@ -48,7 +48,7 @@ public class GetStoreWidgetsRequest
   private final WSWidgetsUtils widgetsUtils;
   private boolean bypassServerCache;
 
-  private GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+  public GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       StoreCredentials storeCredentials, String clientUniqueId,
@@ -157,6 +157,12 @@ public class GetStoreWidgetsRequest
       super(storeCredentials);
       this.widgetsArgs = widgetsArgs;
       this.limit = 5;
+    }
+
+    public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs, int limit) {
+      super(storeCredentials);
+      this.widgetsArgs = widgetsArgs;
+      this.limit = limit;
     }
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs,

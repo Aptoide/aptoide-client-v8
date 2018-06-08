@@ -13,19 +13,29 @@ import rx.Single;
 
 public class FakeBundleDataSource implements BundleDataSource {
 
-  @Override public Single<HomeBundlesModel> loadFreshHomeBundles() {
+  @Override public Single<HomeBundlesModel> loadFreshHomeBundles(String key) {
     return getHomeBundles();
   }
 
-  @Override public Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit) {
-    return loadFreshHomeBundles();
+  @Override public Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key) {
+    return loadFreshHomeBundles(key);
   }
 
-  @Override public boolean hasMore(Integer offset) {
+  @Override public boolean hasMore(Integer offset, String title) {
     return true;
   }
 
-  public Single<HomeBundlesModel> getHomeBundles() {
+  @Override public Single<HomeBundlesModel> loadFreshBundleForEvent(String url, String key) {
+    return null;
+  }
+
+  @Override
+  public Single<HomeBundlesModel> loadNextBundleForEvent(String url, int offset, String key,
+      int limit) {
+    return null;
+  }
+
+  private Single<HomeBundlesModel> getHomeBundles() {
     return Single.just(new HomeBundlesModel(getFakeBundles(), false, 0));
   }
 
