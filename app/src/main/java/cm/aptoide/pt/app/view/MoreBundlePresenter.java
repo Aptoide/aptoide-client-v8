@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.HomeAnalytics;
@@ -27,7 +28,7 @@ public class MoreBundlePresenter implements Presenter {
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
   private final BundleEvent bundleEvent;
-  private final HomeAnalytics homeAnalytics; //Remove or create own analytic class
+  private final HomeAnalytics homeAnalytics;
 
   public MoreBundlePresenter(MoreBundleView view, MoreBundleManager moreBundleManager,
       Scheduler viewScheduler, CrashReport crashReporter, HomeNavigator homeNavigator,
@@ -62,7 +63,7 @@ public class MoreBundlePresenter implements Presenter {
     handleBundleScrolledRight();
   }
 
-  private void onCreateSetupToolbar() {
+  @VisibleForTesting public void onCreateSetupToolbar() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -71,7 +72,7 @@ public class MoreBundlePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void onCreateLoadBundles() {
+  @VisibleForTesting public void onCreateLoadBundles() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -106,7 +107,7 @@ public class MoreBundlePresenter implements Presenter {
     }
   }
 
-  private void handleAppClick() {
+  @VisibleForTesting public void handleAppClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
@@ -130,7 +131,7 @@ public class MoreBundlePresenter implements Presenter {
         });
   }
 
-  private void handleAdClick() {
+  @VisibleForTesting public void handleAdClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
@@ -145,7 +146,7 @@ public class MoreBundlePresenter implements Presenter {
         });
   }
 
-  private void handleMoreClick() {
+  @VisibleForTesting public void handleMoreClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
@@ -164,7 +165,7 @@ public class MoreBundlePresenter implements Presenter {
         });
   }
 
-  private void handleBundleScrolledRight() {
+  @VisibleForTesting public void handleBundleScrolledRight() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.bundleScrolled()
@@ -182,7 +183,7 @@ public class MoreBundlePresenter implements Presenter {
         });
   }
 
-  private void handleBottomReached() {
+  @VisibleForTesting public void handleBottomReached() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reachesBottom()
@@ -215,7 +216,7 @@ public class MoreBundlePresenter implements Presenter {
         });
   }
 
-  private void handlePullToRefresh() {
+  @VisibleForTesting public void handlePullToRefresh() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
@@ -244,7 +245,7 @@ public class MoreBundlePresenter implements Presenter {
         });
   }
 
-  private void handleRetryClick() {
+  @VisibleForTesting public void handleRetryClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
