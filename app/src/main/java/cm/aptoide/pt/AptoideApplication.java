@@ -16,6 +16,8 @@ import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -23,8 +25,6 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
@@ -334,7 +334,8 @@ public abstract class AptoideApplication extends Application {
         .log(throwable));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
-    Logger.getInstance().v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
+    Logger.getInstance()
+        .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
   }
 
@@ -603,8 +604,8 @@ public abstract class AptoideApplication extends Application {
     getFileManager().purgeCache()
         .first()
         .toSingle()
-        .subscribe(cleanedSize -> Logger.getInstance().d(TAG,
-            "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
+        .subscribe(cleanedSize -> Logger.getInstance()
+                .d(TAG, "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
             err -> CrashReport.getInstance()
                 .log(err));
   }
@@ -630,21 +631,26 @@ public abstract class AptoideApplication extends Application {
   private Completable sendAppStartToAnalytics() {
     return firstLaunchAnalytics.sendAppStart(this, defaultSharedPreferences,
         WebService.getDefaultConverter(), getDefaultClient(),
-        getAccountSettingsBodyInterceptorPoolV7(), getTokenInvalidator());
+        getAccountSettingsBodyInterceptorPoolV7(), getTokenInvalidator(),
+        SecurePreferences.isFirstRun(defaultSharedPreferences),
+        getIdsRepository().getUniqueIdentifier());
   }
 
   private Completable checkAppSecurity() {
     return Completable.fromAction(() -> {
       if (SecurityUtils.checkAppSignature(this) != SecurityUtils.VALID_APP_SIGNATURE) {
-        Logger.getInstance().w(TAG, "app signature is not valid!");
+        Logger.getInstance()
+            .w(TAG, "app signature is not valid!");
       }
 
       if (SecurityUtils.checkEmulator()) {
-        Logger.getInstance().w(TAG, "application is running on an emulator");
+        Logger.getInstance()
+            .w(TAG, "application is running on an emulator");
       }
 
       if (SecurityUtils.checkDebuggable(this)) {
-        Logger.getInstance().w(TAG, "application has debug flag active");
+        Logger.getInstance()
+            .w(TAG, "application has debug flag active");
       }
     });
   }
@@ -782,7 +788,8 @@ public abstract class AptoideApplication extends Application {
       // get the installed apps
       List<PackageInfo> installedApps =
           AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
-      Logger.getInstance().v(TAG, "Found " + installedApps.size() + " user installed apps.");
+      Logger.getInstance()
+          .v(TAG, "Found " + installedApps.size() + " user installed apps.");
 
       // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
       Collections.sort(installedApps,
