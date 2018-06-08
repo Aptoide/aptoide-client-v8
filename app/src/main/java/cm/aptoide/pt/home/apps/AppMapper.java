@@ -92,6 +92,7 @@ public class AppMapper {
         break;
       case PAUSED:
       case IN_QUEUE:
+      case INITIAL_STATE:
         status = UpdateApp.UpdateStatus.STANDBY;
         break;
       case INSTALLING:

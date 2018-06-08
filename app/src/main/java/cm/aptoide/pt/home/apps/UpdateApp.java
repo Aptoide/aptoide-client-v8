@@ -68,6 +68,10 @@ public class UpdateApp implements App {
     return isIndeterminate;
   }
 
+  public void setIndeterminate(boolean isIndeterminate) {
+    this.isIndeterminate = isIndeterminate;
+  }
+
   @Override public boolean equals(Object obj) {
     if (!(obj instanceof UpdateApp)) {
       return false;
@@ -82,6 +86,10 @@ public class UpdateApp implements App {
 
   public long getAppId() {
     return appId;
+  }
+
+  public void setStatus(UpdateStatus status) {
+    this.updateStatus = status;
   }
 
   public enum UpdateStatus {

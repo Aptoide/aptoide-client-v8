@@ -237,6 +237,7 @@ public class AppsPresenter implements Presenter {
                   return Observable.just(true);
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
+                .doOnNext(__ -> view.showIndeterminateApp(app))
                 .flatMapCompletable(__3 -> appsManager.updateApp(app)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

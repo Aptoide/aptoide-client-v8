@@ -321,4 +321,16 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     updatesToRemove.removeAll(updatesList);
     return updatesToRemove;
   }
+
+  public void setAppIndeterminate(App app) {
+    int indexOfApp = listOfApps.indexOf(app);
+    if (indexOfApp != -1) {
+      App application = listOfApps.get(indexOfApp);
+      if (application.getType() == App.Type.UPDATE) {
+        ((UpdateApp) application).setIndeterminate(true);
+        ((UpdateApp) application).setStatus(UpdateApp.UpdateStatus.STANDBY);
+        notifyItemChanged(indexOfApp);
+      }
+    }
+  }
 }
