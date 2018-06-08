@@ -347,6 +347,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.setAppIndeterminate(app);
   }
 
+  @Override public void showIndeterminateAllUpdates() {
+    adapter.setAllUpdatesIndeterminate();
+  }
+
   private void showAppsList() {
     recyclerView.scrollToPosition(0);
     hideLoadingProgressBar();

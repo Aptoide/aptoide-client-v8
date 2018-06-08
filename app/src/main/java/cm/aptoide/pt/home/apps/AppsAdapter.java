@@ -327,10 +327,21 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     if (indexOfApp != -1) {
       App application = listOfApps.get(indexOfApp);
       if (application.getType() == App.Type.UPDATE) {
-        ((UpdateApp) application).setIndeterminate(true);
-        ((UpdateApp) application).setStatus(UpdateApp.UpdateStatus.STANDBY);
-        notifyItemChanged(indexOfApp);
+        setIndeterminate(indexOfApp, (UpdateApp) application);
       }
+    }
+  }
+
+  private void setIndeterminate(int indexOfApp, UpdateApp application) {
+    application.setIndeterminate(true);
+    application.setStatus(UpdateApp.UpdateStatus.STANDBY);
+    notifyItemChanged(indexOfApp);
+  }
+
+  public void setAllUpdatesIndeterminate() {
+    List<App> updatesList = getUpdateApps();
+    for (App app : updatesList) {
+      setAppIndeterminate(((UpdateApp) app));
     }
   }
 }

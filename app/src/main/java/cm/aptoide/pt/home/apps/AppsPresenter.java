@@ -270,6 +270,7 @@ public class AppsPresenter implements Presenter {
         .flatMap(created -> view.updateAll()
             .flatMap(__ -> permissionManager.requestExternalStoragePermission(permissionService))
             .retry())
+        .doOnNext(__ -> view.showIndeterminateAllUpdates())
         .observeOn(computation)
         .flatMapCompletable(app -> appsManager.updateAll())
         .observeOn(viewScheduler)
