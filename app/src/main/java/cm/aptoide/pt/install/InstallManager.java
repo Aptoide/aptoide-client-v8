@@ -289,8 +289,10 @@ public class InstallManager {
     Install.InstallationStatus status = Install.InstallationStatus.UNINSTALLED;
     if (download != null) {
       switch (download.getOverallDownloadStatus()) {
-        case Download.FILE_MISSING:
         case Download.INVALID_STATUS:
+          status = Install.InstallationStatus.INITIAL_STATE;
+          break;
+        case Download.FILE_MISSING:
         case Download.NOT_DOWNLOADED:
         case Download.COMPLETED:
           status = Install.InstallationStatus.UNINSTALLED;
@@ -339,6 +341,9 @@ public class InstallManager {
       case Installed.STATUS_WAITING:
         isIndeterminate =
             download != null && download.getOverallDownloadStatus() == Download.COMPLETED;
+    }
+    if (download != null && download.getOverallDownloadStatus() == Download.INVALID_STATUS) {
+      isIndeterminate = true;
     }
     return isIndeterminate;
   }
