@@ -11,18 +11,18 @@ public class AnalyticsManager {
   private static final String TAG = AnalyticsManager.class.getSimpleName();
   private final KnockEventLogger knockEventLogger;
   private final KeyValueNormalizer analyticsNormalizer;
-  private final DebugLogger logger;
+  private final AnalyticsLogger analyticsLogger;
   private List<SessionLogger> sessionLoggers;
   private Map<EventLogger, Collection<String>> eventLoggers;
 
-  private AnalyticsManager(KnockEventLogger knockLogger, DebugLogger logger,
+  private AnalyticsManager(KnockEventLogger knockLogger,
       Map<EventLogger, Collection<String>> eventLoggers, List<SessionLogger> sessionLoggers,
-      KeyValueNormalizer analyticsNormalizer) {
+      KeyValueNormalizer analyticsNormalizer, AnalyticsLogger analyticsLogger) {
     this.knockEventLogger = knockLogger;
-    this.logger = logger;
     this.eventLoggers = eventLoggers;
     this.sessionLoggers = sessionLoggers;
     this.analyticsNormalizer = analyticsNormalizer;
+    this.analyticsLogger = analyticsLogger;
   }
 
   /**
@@ -36,7 +36,7 @@ public class AnalyticsManager {
    * @param context The context of where the event took place
    */
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
-    logger.d(TAG, "logEvent() called with: "
+    analyticsLogger.logDebug(TAG, "logEvent() called with: "
         + "data = ["
         + data
         + "], eventName = ["
@@ -58,7 +58,7 @@ public class AnalyticsManager {
     }
 
     if (eventsSent <= 0) {
-      logger.w(TAG, eventName + " event not sent ");
+      analyticsLogger.logWarningDebug(TAG, eventName + " event not sent ");
     }
   }
 
@@ -116,7 +116,7 @@ public class AnalyticsManager {
     private KnockEventLogger knockEventLogger;
     private List<SessionLogger> sessionLoggers;
     private KeyValueNormalizer analyticsNormalizer;
-    private DebugLogger logger;
+    private AnalyticsLogger analyticsLogger;
 
     /**
      * <p>Start the builder.</p>
@@ -171,10 +171,10 @@ public class AnalyticsManager {
      *
      * @param logger the logger implementation
      *
-     * @return A builder with the added {@link DebugLogger}
+     * @return A builder with the added {@link AnalyticsLogger}
      */
-    public Builder setDebugLogger(DebugLogger logger) {
-      this.logger = logger;
+    public Builder setDebugLogger(AnalyticsLogger logger) {
+      this.analyticsLogger = logger;
       return this;
     }
 
@@ -236,11 +236,11 @@ public class AnalyticsManager {
       if (eventLoggers.size() < 1) {
         throw new IllegalArgumentException("Analytics manager need at least one logger");
       }
-      if (logger == null) {
+      if (analyticsLogger == null) {
         throw new IllegalArgumentException("Analytics manager need a Debug Logger");
       }
-      return new AnalyticsManager(knockEventLogger, logger, eventLoggers, sessionLoggers,
-          analyticsNormalizer);
+      return new AnalyticsManager(knockEventLogger, eventLoggers, sessionLoggers,
+          analyticsNormalizer, analyticsLogger);
     }
   }
 }

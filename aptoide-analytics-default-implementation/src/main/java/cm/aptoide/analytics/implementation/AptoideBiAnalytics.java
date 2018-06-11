@@ -1,8 +1,8 @@
 package cm.aptoide.analytics.implementation;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.analytics.DebugLogger;
 import cm.aptoide.analytics.implementation.data.Event;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class AptoideBiAnalytics {
   private final Scheduler timerScheduler;
   private final long initialDelay;
   private final CrashLogger crashReport;
-  private final DebugLogger debugLogger;
+  private final AnalyticsLogger debugLogger;
 
   /**
    * @param sessionPersistence
@@ -33,7 +33,7 @@ public class AptoideBiAnalytics {
    */
   public AptoideBiAnalytics(EventsPersistence persistence, SessionPersistence sessionPersistence,
       AptoideBiEventService service, CompositeSubscription subscriptions, Scheduler timerScheduler,
-      long initialDelay, long sendInterval, CrashLogger crashReport, DebugLogger debugLogger) {
+      long initialDelay, long sendInterval, CrashLogger crashReport, AnalyticsLogger debugLogger) {
     this.persistence = persistence;
     this.sessionPersistence = sessionPersistence;
     this.service = service;
@@ -49,7 +49,7 @@ public class AptoideBiAnalytics {
       String context) {
     persistence.save(new Event(eventName, data, action, context, System.currentTimeMillis()))
         .subscribe(() -> {
-        }, throwable -> debugLogger.w(TAG,
+        }, throwable -> debugLogger.logWarningDebug(TAG,
             "cannot save the event due to " + throwable.getMessage()));
   }
 

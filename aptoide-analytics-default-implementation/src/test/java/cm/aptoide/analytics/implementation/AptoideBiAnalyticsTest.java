@@ -2,13 +2,8 @@ package cm.aptoide.analytics.implementation;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.analytics.DebugLogger;
-import cm.aptoide.analytics.implementation.AptoideBiAnalytics;
-import cm.aptoide.analytics.implementation.AptoideBiEventService;
-import cm.aptoide.analytics.implementation.CrashLogger;
-import cm.aptoide.analytics.implementation.EventsPersistence;
-import cm.aptoide.analytics.implementation.SessionPersistence;
 import cm.aptoide.analytics.implementation.data.Event;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +35,7 @@ public class AptoideBiAnalyticsTest {
     AptoideBiEventService aptoideBiEventService = mock(AptoideBiEventService.class);
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     SessionPersistence sessionPersistence = mock(SessionPersistence.class);
-    DebugLogger debugLogger = mock(DebugLogger.class);
+    AnalyticsLogger debugLogger = mock(AnalyticsLogger.class);
     CrashLogger crashReport = mock(CrashLogger.class);
     String eventName = "test event";
     String context = "test context";
@@ -70,7 +65,7 @@ public class AptoideBiAnalyticsTest {
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     SessionPersistence sessionPersistence = mock(SessionPersistence.class);
     CrashLogger crashReport = mock(CrashLogger.class);
-    DebugLogger debugLogger = mock(DebugLogger.class);
+    AnalyticsLogger debugLogger = mock(AnalyticsLogger.class);
     String eventName = "test event";
     String context = "test context";
     Map<String, Object> data = new HashMap<>();
@@ -101,7 +96,7 @@ public class AptoideBiAnalyticsTest {
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     SessionPersistence sessionPersistence = mock(SessionPersistence.class);
     CrashLogger crashReport = mock(CrashLogger.class);
-    DebugLogger debugLogger = mock(DebugLogger.class);
+    AnalyticsLogger debugLogger = mock(AnalyticsLogger.class);
     String eventName = "test event";
     String context = "test context";
     Map<String, Object> data = new HashMap<>();

@@ -1,7 +1,7 @@
 package cm.aptoide.analytics.implementation.loggers;
 
+import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.analytics.DebugLogger;
 import cm.aptoide.analytics.EventLogger;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -11,9 +11,9 @@ import java.util.Set;
 public class FabricEventLogger implements EventLogger {
   private static final String TAG = FabricEventLogger.class.getSimpleName();
   private final Answers fabric;
-  private final DebugLogger logger;
+  private final AnalyticsLogger logger;
 
-  public FabricEventLogger(Answers fabric, DebugLogger logger) {
+  public FabricEventLogger(Answers fabric, AnalyticsLogger logger) {
     this.fabric = fabric;
     this.logger = logger;
   }
@@ -30,7 +30,7 @@ public class FabricEventLogger implements EventLogger {
             .toString());
       }
     }
-    logger.d(TAG, "log() called with: "
+    logger.logDebug(TAG, "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["

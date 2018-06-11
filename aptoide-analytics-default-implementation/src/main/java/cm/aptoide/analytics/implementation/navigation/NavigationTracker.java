@@ -1,6 +1,6 @@
 package cm.aptoide.analytics.implementation.navigation;
 
-import cm.aptoide.analytics.DebugLogger;
+import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.implementation.PageViewsAnalytics;
 import java.util.Collections;
 import java.util.List;
@@ -9,12 +9,12 @@ public class NavigationTracker {
 
   private static final String TAG = NavigationTracker.class.getSimpleName();
   private final ViewNameFilter viewNameFilter;
-  private final DebugLogger logger;
+  private final AnalyticsLogger logger;
   private List<ScreenTagHistory> historyList;
   private PageViewsAnalytics pageViewsAnalytics;
 
   public NavigationTracker(List<ScreenTagHistory> historyList, ViewNameFilter viewNameFilter,
-      PageViewsAnalytics pageViewsAnalytics, DebugLogger logger) {
+      PageViewsAnalytics pageViewsAnalytics, AnalyticsLogger logger) {
     this.historyList = historyList;
     this.viewNameFilter = viewNameFilter;
     this.pageViewsAnalytics = pageViewsAnalytics;
@@ -26,7 +26,7 @@ public class NavigationTracker {
       historyList.add(screenTagHistory);
       pageViewsAnalytics.sendPageViewedEvent(getViewName(true), getViewName(false),
           screenTagHistory.getStore());
-      logger.d(TAG, "NavigationTracker size: "
+      logger.logDebug(TAG, "NavigationTracker size: "
           + historyList.size()
           + "   Registering screen: "
           + screenTagHistory);

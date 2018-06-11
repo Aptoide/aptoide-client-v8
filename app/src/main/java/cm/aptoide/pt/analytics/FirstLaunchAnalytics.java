@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.analytics.DebugLogger;
 import cm.aptoide.analytics.implementation.tracking.Tracking;
 import cm.aptoide.analytics.implementation.tracking.UTM;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -54,14 +54,14 @@ public class FirstLaunchAnalytics {
   private static final String TAG = FirstLaunchAnalytics.class.getSimpleName();
 
   private final AnalyticsManager analyticsManager;
-  private final DebugLogger logger;
+  private final AnalyticsLogger logger;
   private String utmSource = UNKNOWN;
   private String utmMedium = UNKNOWN;
   private String utmCampaign = UNKNOWN;
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
 
-  public FirstLaunchAnalytics(AnalyticsManager analyticsManager, DebugLogger logger) {
+  public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger) {
     this.analyticsManager = analyticsManager;
     this.logger = logger;
   }
@@ -147,10 +147,10 @@ public class FirstLaunchAnalytics {
 
       utmInputStream.close();
     } catch (IOException e) {
-      logger.d(TAG, "problem parsing utm/no utm file");
+      logger.logDebug(TAG, "problem parsing utm/no utm file");
       return false;
     } catch (PackageManager.NameNotFoundException e) {
-      logger.d(TAG, "No package name utm file.");
+      logger.logDebug(TAG, "No package name utm file.");
       return false;
     } catch (NullPointerException e) {
       if (myZipFile != null) {
@@ -162,7 +162,7 @@ public class FirstLaunchAnalytics {
         }
         return false;
       }
-      logger.d(TAG, "No utm file.");
+      logger.logDebug(TAG, "No utm file.");
     }
     return true;
   }
@@ -172,7 +172,7 @@ public class FirstLaunchAnalytics {
     try {
       tracking = createTrackingObject(getTrackingFile(application));
     } catch (Exception e) {
-      logger.d(TAG, "Failed to parse utm/tracking files");
+      logger.logDebug(TAG, "Failed to parse utm/tracking files");
       return new Tracking(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
     }
     return tracking;
@@ -213,12 +213,12 @@ public class FirstLaunchAnalytics {
     Bundle parameters = new Bundle();
     parameters.putString(key, value);
     AppEventsLogger.updateUserProperties(parameters,
-        response -> logger.d("Facebook Analytics: ", response.toString()));
+        response -> logger.logDebug("Facebook Analytics: ", response.toString()));
   }
 
   private void setUserPropertiesWithBundle(Bundle data) {
     AppEventsLogger.updateUserProperties(data,
-        response -> logger.d("Facebook Analytics: ", response.toString()));
+        response -> logger.logDebug("Facebook Analytics: ", response.toString()));
   }
 
   private void setUserProperties(String utmSource, String utmMedium, String utmCampaign,

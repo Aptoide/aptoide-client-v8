@@ -12,7 +12,7 @@ public class AnalyticsManagerTest {
     EventLogger eventLogger = Mockito.mock(EventLogger.class);
     KnockEventLogger knockEventLogger = Mockito.mock(KnockEventLogger.class);
     KeyValueNormalizer analyticsNormalizer = Mockito.mock(KeyValueNormalizer.class);
-    DebugLogger debugLogger = Mockito.mock(DebugLogger.class);
+    AnalyticsLogger debugLogger = Mockito.mock(AnalyticsLogger.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))
@@ -34,7 +34,7 @@ public class AnalyticsManagerTest {
     EventLogger eventLogger = Mockito.mock(EventLogger.class);
     KnockEventLogger knockEventLogger = Mockito.mock(KnockEventLogger.class);
     KeyValueNormalizer analyticsNormalizer = Mockito.mock(KeyValueNormalizer.class);
-    DebugLogger debugLogger = Mockito.mock(DebugLogger.class);
+    AnalyticsLogger debugLogger = Mockito.mock(AnalyticsLogger.class);
 
     AnalyticsManager analyticsManager =
         new AnalyticsManager.Builder().addLogger(eventLogger, Arrays.asList(eventName))

@@ -1,8 +1,8 @@
 package cm.aptoide.analytics.implementation.loggers;
 
 import android.content.Context;
+import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.analytics.DebugLogger;
 import cm.aptoide.analytics.EventLogger;
 import cm.aptoide.analytics.SessionLogger;
 import com.flurry.android.FlurryAgent;
@@ -15,10 +15,10 @@ import java.util.Map;
 
 public class FlurryEventLogger implements EventLogger, SessionLogger {
   private static final String TAG = FlurryEventLogger.class.getSimpleName();
-  private final DebugLogger logger;
+  private final AnalyticsLogger logger;
   private Context context;
 
-  public FlurryEventLogger(Context context, DebugLogger logger) {
+  public FlurryEventLogger(Context context, AnalyticsLogger logger) {
     this.context = context;
     this.logger = logger;
   }
@@ -31,7 +31,7 @@ public class FlurryEventLogger implements EventLogger, SessionLogger {
     } else {
       FlurryAgent.logEvent(eventName);
     }
-    logger.d(TAG, "log() called with: "
+    logger.logDebug(TAG, "log() called with: "
         + "eventName = ["
         + eventName
         + "], data = ["
