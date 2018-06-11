@@ -749,9 +749,9 @@ public class AppViewPresenter implements Presenter {
   private Completable downloadApp(DownloadAppViewModel.Action action, String packageName,
       long appId) {
     return Observable.defer(() -> {
-      if (appViewManager.showRootInstallWarningPopup()) {
+      if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
-            .doOnNext(answer -> appViewManager.saveRootInstallWarning(answer))
+            .doOnNext(answer -> appViewManager.allowRootInstall(answer))
             .map(__ -> action);
       }
       return Observable.just(action);

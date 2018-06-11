@@ -521,12 +521,12 @@ public class AppViewManagerTest {
     //When the presenter asks to if it should show a warning popup, and it's supposed to show
     when(installManager.showWarning()).thenReturn(true);
     //Then it should return true
-    Assert.assertEquals(true, appViewManager.showRootInstallWarningPopup());
+    Assert.assertEquals(true, appViewManager.shouldShowRootInstallWarningPopup());
   }
 
   @Test public void saveRootInstallWarningTest() {
     //When the presenter asks to save a rootInstallWaring
-    appViewManager.saveRootInstallWarning(true);
+    appViewManager.allowRootInstall(true);
     //Then a method from the installManager should be called
     verify(installManager).rootInstallAllowed(true);
   }
@@ -562,7 +562,10 @@ public class AppViewManagerTest {
 
     //When the presenter asks to download an App
     int action = downloadStateParser.parseDownloadAction(DownloadAppViewModel.Action.INSTALL);
-    when(downloadFactory.create(detailedApp, action)).thenReturn(download);
+    when(downloadFactory.create(action, detailedApp.getName(), detailedApp.getPackageName(),
+        detailedApp.getMd5(), detailedApp.getIcon(), detailedApp.getVersionName(),
+        detailedApp.getVersionCode(), detailedApp.getPath(), detailedApp.getPathAlt(),
+        detailedApp.getObb())).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
@@ -576,7 +579,7 @@ public class AppViewManagerTest {
         .assertCompleted();
 
     //And it should set the install clicks if not logged in the preferences to show pop-up in the 2nd and 4th time
-    verify(preferencesManager).setNotLoggedInInstallClicks();
+    verify(preferencesManager).increaseNotLoggedInInstallClicks();
     //And it should ask the installManager to start the download
     verify(installManager).install(download);
     //And it should set the necessary analytics
