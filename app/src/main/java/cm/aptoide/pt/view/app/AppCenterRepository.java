@@ -105,7 +105,7 @@ public class AppCenterRepository {
     return appService.loadDetailedAppFromMd5(md5);
   }
 
-  public Single<DetailedAppRequestResult> loadDetailedAppAppFromUniqueName(String uniqueName) {
+  public Single<DetailedAppRequestResult> loadDetailedAppFromUniqueName(String uniqueName) {
     return appService.loadDetailedAppFromUniqueName(uniqueName);
   }
 

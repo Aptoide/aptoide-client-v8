@@ -76,6 +76,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
+
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("#.#");
@@ -86,7 +88,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
-    getFragmentComponent(savedInstanceState).inject(this);
     if (savedInstanceState != null) {
       if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
         listState = savedInstanceState.getParcelable(LIST_STATE_KEY);

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.view.fragment;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -239,9 +238,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
-      bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
-          .getColor(StoreTheme.get(storeTheme)
-              .getPrimaryColor())));
+      bar.setBackgroundDrawable(getActivity().getResources()
+          .getDrawable(StoreTheme.get(storeTheme)
+              .getGradientDrawable()));
     }
   }
 

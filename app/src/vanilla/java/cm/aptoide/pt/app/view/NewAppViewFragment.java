@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -14,6 +15,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.NestedScrollView;
@@ -34,7 +36,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,10 +44,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
@@ -55,6 +58,10 @@ import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
+import cm.aptoide.pt.billing.exception.BillingException;
+import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
+import cm.aptoide.pt.billing.view.BillingActivity;
+import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -110,16 +117,16 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  */
 
 public class NewAppViewFragment extends NavigationTrackFragment implements AppViewView {
-  private static final String ORIGIN_TAG = "TAG";
+  private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
+  private static final String SHOW_SIMILAR_DOWNLOAD = "show_similar_download";
+  private static final int PAY_APP_REQUEST_CODE = 12;
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
-  private long appId;
-  private String packageName;
   private NewScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
   private AppViewSimilarAppsAdapter similarAppsAdapter;
@@ -136,18 +143,17 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> continueRecommendsDialogClick;
   private PublishSubject<Void> skipRecommendsDialogClick;
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
+  private PublishSubject<AppBoughClickEvent> appBought;
 
-  private Integer positionY;
+  private boolean showSimilarDownload;
 
   //Views
-  private NestedScrollView scrollView;
   private View noNetworkErrorView;
   private View genericErrorView;
   private View genericRetryButton;
   private View noNetworkRetryButton;
   private View reviewsLayout;
   private View downloadControlsLayout;
-
   private ImageView appIcon;
   private TextView appName;
   private View trustedLayout;
@@ -178,7 +184,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private RecyclerView reviewsView;
   private Button rateAppButton;
   private Button showAllReviewsButton;
-
   private View goodAppLayoutWrapper;
   private View flagsLayoutWrapper;
   private View workingWellLayout;
@@ -201,7 +206,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View infoEmail;
   private View infoPrivacy;
   private View infoPermissions;
-
   private ProgressBar viewProgress;
   private View appview;
   private Button install;
@@ -217,7 +221,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
+  private PurchaseBundleMapper purchaseBundleMapper;
   private Subscription errorMessageSubscription;
+  private NestedScrollView scrollView;
+  private int scrollViewY;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -235,12 +242,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     continueRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
+    appBought = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     qManager = application.getQManager();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
+    purchaseBundleMapper = application.getPurchaseBundleMapper();
     adsRepository = application.getAdsRepository();
     setHasOptionsMenu(true);
   }
@@ -248,21 +257,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     scrollView = (NestedScrollView) view.findViewById(R.id.scroll_view_app);
-
-    ViewTreeObserver vto = scrollView.getViewTreeObserver();
-    if (positionY != null) {
-      vto.addOnGlobalLayoutListener(() -> {
-        if (scrollView != null) scrollView.scrollTo(0, positionY);
-      });
-    } else if (savedInstanceState != null) {
-      int[] position = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
-      if (position != null) {
-        vto.addOnGlobalLayoutListener(() -> {
-          if (scrollView != null) scrollView.scrollTo(position[0], position[1]);
-        });
-      }
-    }
-
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
     genericErrorView = view.findViewById(R.id.generic_error);
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
@@ -410,6 +404,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
               percentage);
         });
 
+    if (savedInstanceState != null) {
+      scrollViewY = savedInstanceState.getInt(KEY_SCROLL_Y, 0);
+    }
+
     collapsingToolbarLayout =
         ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
     collapsingToolbarLayout.setExpandedTitleColor(
@@ -439,7 +437,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     reviewsAutoScroll = null;
     noNetworkRetryClick = null;
     genericRetryClick = null;
-    positionY = null;
     dialogUtils = null;
     presenter = null;
   }
@@ -453,8 +450,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-
-    positionY = scrollView.getScrollY();
+    scrollViewY = scrollView.getScrollY();
     noNetworkErrorView = null;
     genericErrorView = null;
     genericRetryButton = null;
@@ -519,24 +515,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     menu = null;
     toolbar = null;
     actionBar = null;
-    appId = -1;
-    packageName = null;
     scrollView = null;
     collapsingToolbarLayout = null;
-  }
-
-  @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    if (scrollView != null) {
-      outState.putIntArray("ARTICLE_SCROLL_POSITION",
-          new int[] { scrollView.getScrollX(), scrollView.getScrollY() });
-    }
   }
 
   @Override public void showLoading() {
@@ -551,14 +531,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     viewProgress.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);
-  }
-
-  @Override public long getAppId() {
-    return appId;
-  }
-
-  @Override public String getPackageName() {
-    return packageName;
   }
 
   @Override public void populateAppDetails(AppViewViewModel model) {
@@ -622,7 +594,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
     setDeveloperDetails(model.getDeveloper());
     showAppview();
-
     downloadInfoLayout.setVisibility(View.GONE);
     install.setVisibility(View.VISIBLE);
   }
@@ -670,7 +641,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void populateSimilar(SimilarAppsViewModel ads) {
     similarAppsAdapter.update(mapToSimilar(ads, true));
     similarDownloadsAdapter.update(mapToSimilar(ads, true));
-    similarBottomView.setVisibility(View.VISIBLE);
+    if (showSimilarDownload) {
+      similarBottomView.setVisibility(View.GONE);
+      similarDownloadView.setVisibility(View.VISIBLE);
+    } else {
+      similarBottomView.setVisibility(View.VISIBLE);
+    }
   }
 
   @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
@@ -906,7 +882,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .subscribe(response -> shareDialogClick.onNext(response));
   }
 
-  @Override public void showShareOnTvDialog() {
+  @Override public void showShareOnTvDialog(long appId) {
     if (AptoideUtils.SystemU.getConnectionType(
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
         .equals("mobile")) {
@@ -917,7 +893,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
           }, err -> CrashReport.getInstance()
               .log(err));
     } else {
-      DialogFragment newFragment = RemoteInstallDialog.newInstance(getAppId());
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
       newFragment.show(getActivity().getSupportFragmentManager(),
           RemoteInstallDialog.class.getSimpleName());
     }
@@ -976,7 +952,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void scrollReviews(Integer position) {
-    reviewsView.smoothScrollToPosition(position);
+    if (reviewsView != null) reviewsView.smoothScrollToPosition(position);
   }
 
   @Override public void hideReviews() {
@@ -994,6 +970,22 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
             getContext().getApplicationContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             new MinimalAdMapper()));
+  }
+
+  @Override public void recoverScrollViewState() {
+    // TODO: 25/05/2018 remove this hack and find a better way to do it.
+
+    scrollView.post(() -> {
+      if (scrollView != null) scrollView.scrollTo(0, scrollViewY);
+    });
+  }
+
+  @Override public Observable<DownloadAppViewModel.Action> showOpenAndInstallDialog(String title,
+      String appName) {
+    return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
+        getContext().getString(R.string.installapp_alrt, appName))
+        .filter(response -> response.equals(YES))
+        .map(__ -> action);
   }
 
   private void setTrustedBadge(Malware malware) {
@@ -1141,7 +1133,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       rateAppButton.setVisibility(View.GONE);
 
       if (gRating == 0) {
-        emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
+        emptyReviewTextView.setText(R.string.appview_rate_this_app);
       }
     }
   }
@@ -1210,18 +1202,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void showDownloadAppModel(DownloadAppViewModel model) {
     this.action = model.getAction();
+    if (model.getAction() == DownloadAppViewModel.Action.PAY) {
+      registerPaymentResult();
+    }
     if (model.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
       similarBottomView.setVisibility(View.GONE);
       similarDownloadView.setVisibility(View.VISIBLE);
+      showSimilarDownload = true;
       setDownloadState(model.getProgress(), model.getDownloadState());
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
-      similarBottomView.setVisibility(View.VISIBLE);
-      similarDownloadView.setVisibility(View.GONE);
-      setButtonText(model.getAction());
+      setButtonText(model);
       if (model.hasError()) {
         handleDownloadError(model.getDownloadState());
       }
@@ -1311,6 +1305,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return dontShowAgainRecommendsDialogClick;
   }
 
+  @Override public Observable<AppBoughClickEvent> appBought() {
+    return appBought;
+  }
+
   private void handleDownloadError(DownloadAppViewModel.DownloadState downloadState) {
     switch (downloadState) {
       case ERROR:
@@ -1323,6 +1321,16 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       default:
         throw new IllegalStateException("Invalid Download State " + downloadState);
     }
+  }
+
+  private void registerPaymentResult() {
+    AppBoughtReceiver appBoughtReceiver = new AppBoughtReceiver() {
+      @Override public void appBought(long appId, String path) {
+        appBought.onNext(new AppBoughClickEvent(path, appId));
+      }
+    };
+    getContext().registerReceiver(appBoughtReceiver,
+        new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
   }
 
   private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
@@ -1383,7 +1391,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         }, error -> new OnErrorNotImplementedException(error));
   }
 
-  private void setButtonText(DownloadAppViewModel.Action action) {
+  private void setButtonText(DownloadAppViewModel model) {
+    DownloadAppViewModel.Action action = model.getAction();
     switch (action) {
       case UPDATE:
         install.setText(getResources().getString(R.string.appview_button_update));
@@ -1397,6 +1406,57 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       case DOWNGRADE:
         install.setText(getResources().getString(R.string.appview_button_downgrade));
         break;
+      case PAY:
+        install.setText(
+            String.format("%s (%s %s)", getContext().getString(R.string.appview_button_buy),
+                model.getPay()
+                    .getSymbol(), model.getPay()
+                    .getPrice()));
+        break;
+    }
+  }
+
+  public void buyApp(long appId) {
+    startActivityForResult(
+        BillingActivity.getIntent(getActivity(), appId, BuildConfig.APPLICATION_ID),
+        PAY_APP_REQUEST_CODE);
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    if (requestCode == PAY_APP_REQUEST_CODE) {
+      try {
+        final Bundle data = (intent != null) ? intent.getExtras() : null;
+        final PaidAppPurchase purchase =
+            (PaidAppPurchase) purchaseBundleMapper.map(resultCode, data);
+
+        FragmentActivity fragmentActivity = getActivity();
+        Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
+        installApp.putExtra(AppBoughtReceiver.APP_ID, purchase.getProductId());
+        installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
+        fragmentActivity.sendBroadcast(installApp);
+      } catch (Throwable throwable) {
+        if (throwable instanceof BillingException) {
+          Snackbar.make(getView(), R.string.user_cancelled, Snackbar.LENGTH_SHORT);
+        } else {
+          Snackbar.make(getView(), R.string.unknown_error, Snackbar.LENGTH_SHORT);
+        }
+      }
+    } else {
+      super.onActivityResult(requestCode, resultCode, intent);
+    }
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putBoolean(SHOW_SIMILAR_DOWNLOAD, showSimilarDownload);
+    if (scrollView != null) {
+      outState.putInt(KEY_SCROLL_Y, scrollView.getScrollY());
     }
   }
 
