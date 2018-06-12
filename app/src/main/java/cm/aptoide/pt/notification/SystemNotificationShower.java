@@ -168,7 +168,7 @@ public class SystemNotificationShower implements Presenter {
   private void loadImage(Context context, int notificationId, Notification notification, String url,
       RemoteViews expandedView, @IdRes int viewId) {
     NotificationTarget notificationTarget =
-        new NotificationTarget(context, expandedView, viewId, notification, notificationId);
+        new NotificationTarget(context, viewId, expandedView, notification, notificationId);
     ImageLoader.with(context)
         .loadImageToNotification(notificationTarget, url);
   }

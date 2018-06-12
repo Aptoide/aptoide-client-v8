@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,7 +11,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 
 /**
@@ -27,7 +27,7 @@ public class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
   private TextView userName;
   private TextView addedDate;
   private TextView commentText;
-  private Target<GlideDrawable> imageLoadingTarget;
+  private Target<Drawable> imageLoadingTarget;
 
   public MiniTopReviewViewHolder(View itemView) {
     super(itemView);
@@ -64,7 +64,8 @@ public class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
 
   public void cancelImageLoad() {
     if (imageLoadingTarget != null) {
-      ImageLoader.cancel(imageLoadingTarget);
+      ImageLoader.cancel(itemView.getContext()
+          .getApplicationContext(), imageLoadingTarget);
     }
   }
 }

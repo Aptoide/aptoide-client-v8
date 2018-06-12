@@ -1,12 +1,12 @@
 package cm.aptoide.pt.share;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
@@ -57,9 +57,9 @@ public class ShareDialogs {
           .create();
 
       ImageLoader.with(context)
-          .loadIntoTarget(storeIcon, new SimpleTarget<GlideDrawable>() {
-            @Override public void onResourceReady(GlideDrawable resource,
-                GlideAnimation<? super GlideDrawable> glideAnimation) {
+          .loadIntoTarget(storeIcon, new SimpleTarget<Drawable>() {
+            @Override public void onResourceReady(Drawable resource,
+                Transition<? super Drawable> glideAnimation) {
               alertDialog.setIcon(resource);
             }
           });

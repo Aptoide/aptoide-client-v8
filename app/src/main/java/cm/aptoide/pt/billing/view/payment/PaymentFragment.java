@@ -1,5 +1,6 @@
 package cm.aptoide.pt.billing.view.payment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,9 +31,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxRadioGroup;
 import java.util.HashSet;
@@ -278,7 +278,7 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
     }
   }
 
-  private static class RadioButtonTarget extends SimpleTarget<GlideDrawable> {
+  private static class RadioButtonTarget extends SimpleTarget<Drawable> {
 
     private RadioButton radioButton;
 
@@ -287,8 +287,8 @@ public class PaymentFragment extends PermissionServiceFragment implements Paymen
       this.radioButton = radioButton;
     }
 
-    @Override public void onResourceReady(GlideDrawable glideDrawable,
-        GlideAnimation<? super GlideDrawable> glideAnimation) {
+    @Override public void onResourceReady(Drawable glideDrawable,
+        Transition<? super Drawable> glideAnimation) {
       radioButton.setCompoundDrawablesWithIntrinsicBounds(null, null, glideDrawable.getCurrent(),
           null);
     }
