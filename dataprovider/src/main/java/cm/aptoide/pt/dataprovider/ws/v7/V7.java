@@ -354,11 +354,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
         @Path(value = "action") String action, @Path(value = "context") String context,
-        @Body AnalyticsEventRequest.Body body);
-
-    @POST("user/addEvent/name={name}/action={action}/context={context}")
-    Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
-        @Path(value = "action") String action, @Path(value = "context") String context,
         @Body BiUtmAnalyticsRequestBody body);
 
     @POST("user/shareTimeline/access_token={accessToken}") Observable<ShareCardResponse> shareCard(
