@@ -48,7 +48,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
-  private static final int VISIBLE_THRESHOLD = 2;
+  private static final int VISIBLE_THRESHOLD = 1;
   @Inject MoreBundlePresenter presenter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
@@ -64,11 +64,13 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   private View noNetworkRetryButton;
   private View retryButton;
   private Toolbar toolbar;
+  private PublishSubject<Boolean> notifyItemsAdded;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
+    notifyItemsAdded = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("#.#");
     setHasOptionsMenu(true);
   }
@@ -213,8 +215,8 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   }
 
   @Override public Observable<Object> reachesBottom() {
-    return RxRecyclerView.scrollEvents(bundlesList)
-        .map(scroll -> isEndReached())
+    return Observable.merge(RxRecyclerView.scrollEvents(bundlesList)
+        .map(scroll -> isEndReached()), notifyItemsAdded)
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
         .cast(Object.class);
@@ -231,8 +233,8 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   }
 
   @Override public void showMoreHomeBundles(List<HomeBundle> bundles) {
-
     adapter.add(bundles);
+    notifyItemsAdded.onNext(false);
   }
 
   @Override public void hideRefresh() {

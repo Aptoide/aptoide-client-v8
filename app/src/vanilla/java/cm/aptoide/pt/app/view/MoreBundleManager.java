@@ -25,10 +25,23 @@ public class MoreBundleManager {
   }
 
   public Single<HomeBundlesModel> loadNextBundles(String title, String url) {
-    return bundlesRepository.loadNextBundles(title, url);
+    return bundlesRepository.loadNextBundles(title, url)
+        .flatMap(homeBundlesModel -> {
+          if (isOnlyEmptyBundles(homeBundlesModel)) {
+            return loadNextBundles(title, url);
+          }
+          return Single.just(homeBundlesModel);
+        });
   }
 
   public boolean hasMore(String title) {
     return bundlesRepository.hasMore(title);
+  }
+
+  private boolean isOnlyEmptyBundles(HomeBundlesModel homeBundlesModel) {
+    return !homeBundlesModel.hasErrors()
+        && !homeBundlesModel.isLoading()
+        && homeBundlesModel.getList()
+        .isEmpty();
   }
 }
