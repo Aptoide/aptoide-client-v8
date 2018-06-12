@@ -129,7 +129,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     BaseRequestWithStore.StoreCredentials storeCredentials = storeCredentialsProvider.fromUrl(url);
 
     GetStoreWidgetsRequest.Body body = new GetStoreWidgetsRequest.Body(storeCredentials,
-        WidgetsArgs.createDefault(resources, windowManager), limit);
+        WidgetsArgs.createWithLineMultiplier(resources, windowManager, 3), limit);
     body.setOffset(offset);
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
         .get(), body, bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,

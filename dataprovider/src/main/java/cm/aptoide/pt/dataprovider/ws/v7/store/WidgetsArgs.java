@@ -25,7 +25,18 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
 
   public static WidgetsArgs createDefault(Resources resources, WindowManager windowManager) {
     return new WidgetsArgs().add(Key.APPS_GROUP,
-        Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 3)
+        Type.APPS_GROUP.getPerLineCount(resources, windowManager))
+        .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount(resources, windowManager))
+        .add(Key.MY_STORES_SUBSCRIBED,
+            Type.MY_STORES_SUBSCRIBED.getPerLineCount(resources, windowManager))
+        .add(Key.STORES_RECOMMENDED,
+            Type.STORES_RECOMMENDED.getPerLineCount(resources, windowManager));
+  }
+
+  public static WidgetsArgs createWithLineMultiplier(Resources resources,
+      WindowManager windowManager, int multiplier) {
+    return new WidgetsArgs().add(Key.APPS_GROUP,
+        Type.APPS_GROUP.getPerLineCount(resources, windowManager) * multiplier)
         .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount(resources, windowManager))
         .add(Key.MY_STORES_SUBSCRIBED,
             Type.MY_STORES_SUBSCRIBED.getPerLineCount(resources, windowManager))

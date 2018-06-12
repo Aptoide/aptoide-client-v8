@@ -52,6 +52,10 @@ public class BundlesResponseMapper {
         Object viewObject = widget.getViewObject();
         String title = widget.getTitle();
         if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
+          if (event != null && event.getName()
+              .equals(Event.Name.getStoreWidgets)) {
+            event.setName(Event.Name.getMoreBundle);
+          }
           appBundles.add(new AppBundle(title, applicationsToApps(
               ((ListApps) viewObject).getDataList()
                   .getList(), type, widgetTag), type, event, widgetTag));

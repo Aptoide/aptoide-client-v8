@@ -30,6 +30,8 @@ public class StoreTabFragmentChooser {
       case myStores:
         return MyStoresFragment.newInstance();
       case getStoreWidgets:
+        return GetStoreWidgetsFragment.newInstance(addAdultFilter);
+      case getMoreBundle:
         return new MoreBundleFragment();
       case getAds:
         return GetAdsFragment.newInstance();
