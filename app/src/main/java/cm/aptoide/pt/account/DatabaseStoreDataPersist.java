@@ -34,7 +34,7 @@ public class DatabaseStoreDataPersist {
         .toList()
         .toSingle()
         .doOnSuccess(stores -> {
-          Logger.d("DatabaseStoreDataPersist",
+          Logger.getInstance().d("DatabaseStoreDataPersist",
               "nr stores= " + (stores != null ? stores.size() : 0));
         });
   }

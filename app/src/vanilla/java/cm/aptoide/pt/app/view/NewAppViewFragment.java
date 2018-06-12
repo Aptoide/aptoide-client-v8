@@ -48,7 +48,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -420,7 +420,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta);
+    return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta.name());
   }
 
   @Override public void onDestroy() {

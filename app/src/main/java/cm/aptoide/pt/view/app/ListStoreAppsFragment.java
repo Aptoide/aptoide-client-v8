@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;

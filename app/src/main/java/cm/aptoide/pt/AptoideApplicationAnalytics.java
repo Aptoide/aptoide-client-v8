@@ -14,13 +14,13 @@ public class AptoideApplicationAnalytics {
     Bundle bundle = new Bundle();
     bundle.putString("Logged In", isLoggedIn ? "Logged In" : "Not Logged In");
     AppEventsLogger.updateUserProperties(bundle,
-        response -> Logger.d("Facebook Analytics: ", response.toString()));
+        response -> Logger.getInstance().d("Facebook Analytics: ", response.toString()));
   }
 
   public void setPackageDimension(String packageName) {
     Bundle bundle = new Bundle();
     bundle.putString("aptoide_package", packageName);
     AppEventsLogger.updateUserProperties(bundle,
-        response -> Logger.d("Facebook Analytics: ", response.toString()));
+        response -> Logger.getInstance().d("Facebook Analytics: ", response.toString()));
   }
 }

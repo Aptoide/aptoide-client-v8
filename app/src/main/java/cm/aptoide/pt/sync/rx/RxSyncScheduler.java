@@ -1,6 +1,6 @@
 package cm.aptoide.pt.sync.rx;
 
-import cm.aptoide.pt.crashreports.CrashLogger;
+import cm.aptoide.analytics.implementation.CrashLogger;
 import cm.aptoide.pt.sync.Sync;
 import cm.aptoide.pt.sync.SyncScheduler;
 import java.util.Map;

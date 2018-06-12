@@ -68,7 +68,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           .newSAXParser();
       AutoUpdateHandler autoUpdateHandler = new AutoUpdateHandler();
 
-      Logger.d("TAG", "Requesting auto-update from " + url);
+      Logger.getInstance().d("TAG", "Requesting auto-update from " + url);
       connection = (HttpURLConnection) new URL(url).openConnection();
 
       connection.setConnectTimeout(10000);

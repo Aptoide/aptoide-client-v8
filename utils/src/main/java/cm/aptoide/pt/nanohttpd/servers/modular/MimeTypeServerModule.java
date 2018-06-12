@@ -37,7 +37,7 @@ public class MimeTypeServerModule implements ServerModule {
     String uri = session.getUri();
     InputStream mbuffer;
 
-    Logger.d(TAG, "serve() called with: " + "uri = [" + uri + "]");
+    Logger.getInstance().d(TAG, "serve() called with: " + "uri = [" + uri + "]");
 
     if (uri != null) {
       for (MimeType mimeType : MimeType.values()) {

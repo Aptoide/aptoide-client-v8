@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;

@@ -11,8 +11,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -88,7 +88,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
             })
             .flatMap(downloads -> displayable.getInstallManager()
                 .startInstalls(downloads))
-            .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+            .subscribe(aVoid -> Logger.getInstance().i(TAG, "Update task completed"),
                 throwable -> throwable.printStackTrace()));
       }, () -> {
       });

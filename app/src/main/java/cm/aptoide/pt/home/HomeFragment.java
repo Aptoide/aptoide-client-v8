@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -114,7 +114,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), "", StoreContext.home);
+        .getSimpleName(), "", StoreContext.home.name());
   }
 
   @Nullable @Override

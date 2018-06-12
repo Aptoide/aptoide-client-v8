@@ -17,8 +17,8 @@ import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -95,7 +95,7 @@ public class AddStoreDialog extends BaseDialog {
               + " must extend class "
               + ActivityResultNavigator.class.getSimpleName());
 
-      Logger.e(TAG, exception);
+      Logger.getInstance().e(TAG, exception);
       throw exception;
     }
     orientationManager = new ScreenOrientationManager(activity, activity.getWindowManager());
@@ -260,10 +260,10 @@ public class AddStoreDialog extends BaseDialog {
         .flatMapSingle(query -> searchSuggestionManager.getSuggestionsForStore(query)
             .onErrorResumeNext(err -> {
               if (err instanceof TimeoutException) {
-                Logger.i(TAG, "Timeout reached while waiting for store suggestions");
+                Logger.getInstance().i(TAG, "Timeout reached while waiting for store suggestions");
                 return Single.just(suggestionCursorAdapter.getSuggestions());
               }
-              Logger.w(TAG, "handleStoreRemoteQuery: ", err);
+              Logger.getInstance().w(TAG, "handleStoreRemoteQuery: ", err);
               return Single.error(err);
             })
             .observeOn(AndroidSchedulers.mainThread())

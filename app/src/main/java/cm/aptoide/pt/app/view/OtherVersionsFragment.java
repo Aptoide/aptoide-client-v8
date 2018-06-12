@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -142,7 +142,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     //super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "Other versions should refresh? " + create);
+    Logger.getInstance().d(TAG, "Other versions should refresh? " + create);
 
     ArrayList<String> list = new ArrayList<>();
     if (storeName != null) {

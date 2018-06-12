@@ -35,19 +35,19 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
   }
 
   @Override public void call(Subscriber<? super Void> subscriber) {
-    Logger.d(TAG, "call: start with installation id: " + installId);
+    Logger.getInstance().d(TAG, "call: start with installation id: " + installId);
     try {
       Shell shell = RootShell.getShell(true);
 
       if (!RootShell.isRootAvailable()) {
         subscriber.onError(new InstallationException("No root permissions"));
-        Logger.d(TAG, "call: root not available");
+        Logger.getInstance().d(TAG, "call: root not available");
         return;
       }
       analytics.rootInstallStart();
       Command installCommand = new Command(installId, command) {
         @Override public void commandOutput(int id, String line) {
-          Logger.d(TAG, "commandOutput: " + line);
+          Logger.getInstance().d(TAG, "commandOutput: " + line);
           if (id == installId && line.toLowerCase()
               .equals(SUCCESS_OUTPUT_CONFIRMATION)) {
             success = true;
@@ -56,7 +56,7 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
         }
 
         @Override public void commandTerminated(int id, String reason) {
-          Logger.d(TAG, "commandTerminated: " + reason);
+          Logger.getInstance().d(TAG, "commandTerminated: " + reason);
           super.commandTerminated(id, reason);
           if (installId == id) {
             if (reason.equals(TIMEOUT_EXCEPTION)) {
@@ -71,7 +71,7 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
         }
 
         @Override public void commandCompleted(int id, int exitcode) {
-          Logger.d(TAG, "commandCompleted: " + exitcode);
+          Logger.getInstance().d(TAG, "commandCompleted: " + exitcode);
           if (!subscriber.isUnsubscribed() && installId == id) {
             if (success || exitcode == 0) {
               subscriber.onCompleted();
@@ -102,7 +102,7 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
       } else if (e instanceof TimeoutException) {
         subscriber.onError(new RootCommandTimeoutException());
         analytics.rootInstallTimeout();
-        Logger.d(TAG, "call: timeout reached");
+        Logger.getInstance().d(TAG, "call: timeout reached");
       } else {
         analytics.rootInstallFail(e);
         subscriber.onError(e);

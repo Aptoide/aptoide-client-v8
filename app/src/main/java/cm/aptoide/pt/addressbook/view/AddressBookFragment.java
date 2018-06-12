@@ -18,9 +18,9 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.ContactsRepository;
 import cm.aptoide.pt.addressbook.utils.ContactUtils;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.FacebookModel;
 import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
@@ -216,7 +216,7 @@ public class AddressBookFragment extends UIComponentFragment
           }
 
           @Override public void onError(FacebookException error) {
-            Logger.e(this.getClass()
+            Logger.getInstance().e(this.getClass()
                 .getName(), error.getMessage());
           }
         });

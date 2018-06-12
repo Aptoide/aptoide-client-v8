@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
@@ -51,7 +51,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
+    Logger.getInstance().d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     fetchExcludedUpdates();
   }
 

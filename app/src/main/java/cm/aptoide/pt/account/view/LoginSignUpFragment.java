@@ -7,7 +7,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.presenter.LoginSignUpView;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;

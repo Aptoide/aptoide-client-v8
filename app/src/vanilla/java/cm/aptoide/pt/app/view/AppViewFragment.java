@@ -37,9 +37,9 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -471,7 +471,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     }
 
     if (getAppId() >= 0) {
-      Logger.d(TAG, "loading app info using app ID");
+      Logger.getInstance().d(TAG, "loading app info using app ID");
       subscription =
           appRepository.getApp(getAppId(), refresh, isSponsored(), getStoreName(), getPackageName(),
               refresh)
@@ -514,7 +514,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
                 .log(key_uname, getUname());
           });
     } else {
-      Logger.d(TAG, "loading app info using app package name");
+      Logger.getInstance().d(TAG, "loading app info using app package name");
       subscription =
           appRepository.getApp(getPackageName(), refresh, isSponsored(), getStoreName(), refresh)
               .map(getApp -> getApp)
@@ -947,7 +947,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   @Override public void scroll(Position position) {
     RecyclerView rView = getRecyclerView();
     if (rView == null || getAdapter().getItemCount() == 0) {
-      Logger.e(TAG, "Recycler view is null or there are no elements in the adapter");
+      Logger.getInstance().e(TAG, "Recycler view is null or there are no elements in the adapter");
       return;
     }
 

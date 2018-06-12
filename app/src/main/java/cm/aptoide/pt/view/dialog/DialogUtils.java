@@ -158,7 +158,7 @@ import rx.subscriptions.Subscriptions;
         // WS success listener
         final SuccessRequestListener<BaseV7Response> successRequestListener = response -> {
           if (response.isOk()) {
-            Logger.d(TAG, "review added");
+            Logger.getInstance().d(TAG, "review added");
             ShowMessage.asSnack(activity, R.string.review_success);
             ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
             subscriber.onNext(GenericDialogs.EResponse.YES);
@@ -276,7 +276,7 @@ import rx.subscriptions.Subscriptions;
 
       final SuccessRequestListener<BaseV7Response> successRequestListener = response -> {
         if (response.isOk()) {
-          Logger.d(TAG, "review added");
+          Logger.getInstance().d(TAG, "review added");
           ShowMessage.asSnack(activity, R.string.review_success);
           ManagerPreferences.setForceServerRefreshFlag(true, sharedPreferences);
           if (onPositiveCallback != null) {

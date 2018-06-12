@@ -81,7 +81,7 @@ public class AppViewDeveloperWidget extends Widget<AppViewDeveloperDisplayable> 
 			try {
 				scrollable = ((Scrollable) fragmentShower.getLastV4());
 			} catch (ClassCastException ex) {
-				Logger.e(TAG, ex);
+				Logger.getInstance().e(TAG, ex);
 			}
 
 			if (scrollable != null) {

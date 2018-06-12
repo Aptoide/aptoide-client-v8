@@ -55,7 +55,7 @@ public abstract class FragmentView extends BaseFragment implements View {
     try {
       activityResultNavigator = (ActivityResultNavigator) activity;
     } catch (ClassCastException ignored) {
-      Logger.e(TAG, String.format("Parent activity must implement %s interface",
+      Logger.getInstance().e(TAG, String.format("Parent activity must implement %s interface",
           ActivityResultNavigator.class.getName()));
     }
   }

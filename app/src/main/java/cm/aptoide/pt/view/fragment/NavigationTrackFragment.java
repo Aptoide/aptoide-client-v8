@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.PageViewsAnalytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.PageViewsAnalytics;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.analytics.AnalyticsManager;
 
 /**
  * Created by pedroribeiro on 14/09/17.

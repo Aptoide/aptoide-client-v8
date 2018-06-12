@@ -427,7 +427,7 @@ public class RootShell {
 
       return false;
     } catch (Exception e) {
-      Logger.e(TAG, e);
+      Logger.getInstance().e(TAG, e);
       return false;
     }
   }

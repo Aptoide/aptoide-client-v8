@@ -35,8 +35,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AdultContentAnalytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -237,7 +237,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
       repository.sync(true, false)
           .andThen(repository.getAll(false))
           .first()
-          .subscribe(updates -> Logger.d(TAG, "updates refreshed"),
+          .subscribe(updates -> Logger.getInstance().d(TAG, "updates refreshed"),
               throwable -> CrashReport.getInstance()
                   .log(throwable));
     }

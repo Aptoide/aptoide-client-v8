@@ -38,7 +38,7 @@ public class WidgetFactory {
         .inflate(viewType, parent, false);
     Widget w = AptoideApplication.getDisplayableWidgetMapping()
         .newWidget(view, viewType);
-    //Logger.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
+    //Logger.getInstance().d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
     return w;
   }
 

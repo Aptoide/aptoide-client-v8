@@ -317,7 +317,7 @@ public class DisplayableWidgetMapping {
           .log(e);
       String errMsg =
           String.format("Error instantiating displayable '%s'", displayableClass.getName());
-      Logger.e(TAG, errMsg, e);
+      Logger.getInstance().e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);
     }
   }
@@ -342,7 +342,7 @@ public class DisplayableWidgetMapping {
       CrashReport.getInstance()
           .log(e);
       String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName());
-      Logger.e(TAG, errMsg, e);
+      Logger.getInstance().e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);
     }
   }

@@ -24,11 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -96,7 +96,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         @Override public void onPageSelected(int position) {
           if (position == 0) {
             navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
-                .getSimpleName(), "home", storeContext));
+                .getSimpleName(), "home", storeContext.name()));
           }
         }
       };
@@ -169,7 +169,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), "", storeContext);
+        .getSimpleName(), "", storeContext.name());
   }
 
   @Override public void onAttach(Activity activity) {

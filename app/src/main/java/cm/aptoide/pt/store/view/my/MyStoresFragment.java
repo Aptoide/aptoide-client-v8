@@ -155,7 +155,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     Observable<List<Store>> storesObservable = storeRepository.getAll()
         .skip(1)
         .doOnNext(__ -> {
-          Logger.d(TAG, "Store database changed, reloading...");
+          Logger.getInstance().d(TAG, "Store database changed, reloading...");
           reloadData();
         });
 

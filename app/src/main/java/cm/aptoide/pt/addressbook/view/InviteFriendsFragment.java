@@ -10,9 +10,9 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.presenter.InviteFriendsPresenter;
@@ -95,7 +95,7 @@ public class InviteFriendsFragment extends UIComponentFragment
         message.setText(R.string.addressbook_we_werent_able_to_connect_you);
         break;
       default:
-        Logger.d(this.getClass()
+        Logger.getInstance().d(this.getClass()
             .getSimpleName(), "Wrong openMode type.");
     }
   }

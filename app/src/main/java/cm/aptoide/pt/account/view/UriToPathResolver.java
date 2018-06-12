@@ -31,7 +31,7 @@ public class UriToPathResolver {
         return cursor.getString(column_index);
       }
     } catch (Exception ex) {
-      Logger.e(TAG, ex);
+      Logger.getInstance().e(TAG, ex);
     } finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();

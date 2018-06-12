@@ -492,7 +492,7 @@ public class AppViewPresenter implements Presenter {
   private Observable<Integer> scheduleAnimations(int topReviewsCount) {
     if (topReviewsCount <= 1) {
       // not enough elements for animation
-      Logger.w(TAG, "Not enough top reviews to do paging animation.");
+      Logger.getInstance().w(TAG, "Not enough top reviews to do paging animation.");
       return Observable.empty();
     }
 

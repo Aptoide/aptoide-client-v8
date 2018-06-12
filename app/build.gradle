@@ -455,6 +455,9 @@ dependencies {
   annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   fairyCompile "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
+
+  compile project(path: ':aptoide-analytics-core')
+  compile project(path: ':aptoide-analytics-default-implementation')
 }
 
 String getDate() {

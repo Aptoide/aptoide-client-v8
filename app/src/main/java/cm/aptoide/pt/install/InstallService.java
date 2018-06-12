@@ -61,7 +61,7 @@ public class InstallService extends BaseService {
   @Override public void onCreate() {
     super.onCreate();
     getApplicationComponent().inject(this);
-    Logger.d(TAG, "Install service is starting");
+    Logger.getInstance().d(TAG, "Install service is starting");
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     installManager = application.getInstallManager();
     marketName = application.getMarketName();

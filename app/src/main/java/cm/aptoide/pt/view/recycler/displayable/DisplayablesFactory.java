@@ -17,7 +17,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginDisplayable;
 import cm.aptoide.pt.account.view.user.CreateStoreDisplayable;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.app.view.GridAppListDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
