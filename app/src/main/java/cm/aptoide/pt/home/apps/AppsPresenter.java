@@ -195,7 +195,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> Observable.merge(view.resumeUpdate(), view.retryUpdate()))
-        .doOnNext(app -> view.showIndeterminateApp(app))
+        .doOnNext(app -> view.setStandbyState(app))
         .flatMapCompletable(app -> appsManager.resumeUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -207,7 +207,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelUpdate())
-        .doOnNext(app -> view.showIndeterminateApp(app))
+        .doOnNext(app -> view.setStandbyState(app))
         .doOnNext(app -> appsManager.cancelUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -219,7 +219,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseUpdate())
-        .doOnNext(app -> view.showIndeterminateApp(app))
+        .doOnNext(app -> view.setStandbyState(app))
         .doOnNext(app -> appsManager.pauseUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -240,7 +240,7 @@ public class AppsPresenter implements Presenter {
                   return Observable.just(true);
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
-                .doOnNext(__ -> view.showIndeterminateApp(app))
+                .doOnNext(__ -> view.setStandbyState(app))
                 .flatMapCompletable(__3 -> appsManager.updateApp(app)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

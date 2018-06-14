@@ -343,8 +343,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.removeCanceledDownload(app);
   }
 
-  @Override public void showIndeterminateApp(App app) {
-    adapter.setAppIndeterminate(app);
+  @Override public void setStandbyState(App app) {
+    adapter.setAppStandby(app);
   }
 
   @Override public void showIndeterminateAllUpdates() {

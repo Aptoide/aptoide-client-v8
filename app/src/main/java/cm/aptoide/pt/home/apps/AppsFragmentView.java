@@ -72,7 +72,7 @@ public interface AppsFragmentView extends View {
 
   void removeCanceledDownload(App app);
 
-  void showIndeterminateApp(App app);
+  void setStandbyState(App app);
 
   void showIndeterminateAllUpdates();
 }

@@ -322,7 +322,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return updatesToRemove;
   }
 
-  public void setAppIndeterminate(App app) {
+  public void setAppStandby(App app) {
     int indexOfApp = listOfApps.indexOf(app);
     if (indexOfApp != -1) {
       App application = listOfApps.get(indexOfApp);
@@ -341,7 +341,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   public void setAllUpdatesIndeterminate() {
     List<App> updatesList = getUpdateApps();
     for (App app : updatesList) {
-      setAppIndeterminate(((UpdateApp) app));
+      setAppStandby(((UpdateApp) app));
     }
   }
 }
