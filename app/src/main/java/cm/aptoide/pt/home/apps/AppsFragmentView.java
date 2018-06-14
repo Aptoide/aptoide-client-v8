@@ -71,4 +71,8 @@ public interface AppsFragmentView extends View {
   void hidePullToRefresh();
 
   void removeCanceledDownload(App app);
+
+  void setStandbyState(App app);
+
+  void showIndeterminateAllUpdates();
 }

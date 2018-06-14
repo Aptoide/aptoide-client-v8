@@ -21,6 +21,7 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
   private ImageView cancelButton;
   private ImageView resumeButton;
   private PublishSubject<AppClick> cancelUpdate;
+  private TextView updateState;
 
   public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> cancelUpdate) {
     super(itemView);
@@ -31,6 +32,7 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     updateProgress = (TextView) itemView.findViewById(R.id.apps_updates_progress_number);
     cancelButton = (ImageView) itemView.findViewById(R.id.apps_updates_cancel_button);
     resumeButton = (ImageView) itemView.findViewById(R.id.apps_updates_resume_download);
+    updateState = (TextView) itemView.findViewById(R.id.apps_updates_update_state);
     this.cancelUpdate = cancelUpdate;
   }
 
@@ -38,8 +40,24 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
     appName.setText(((UpdateApp) app).getName());
-    progressBar.setProgress(((UpdateApp) app).getProgress());
-    updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
+
+    if (((UpdateApp) app).isIndeterminate()) {
+      progressBar.setIndeterminate(true);
+      cancelButton.setVisibility(View.GONE);
+      resumeButton.setVisibility(View.GONE);
+      updateProgress.setVisibility(View.GONE);
+      updateState.setText(itemView.getResources()
+          .getString(R.string.apps_short_updating));
+    } else {
+      progressBar.setIndeterminate(false);
+      progressBar.setProgress(((UpdateApp) app).getProgress());
+      updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
+      cancelButton.setVisibility(View.VISIBLE);
+      resumeButton.setVisibility(View.VISIBLE);
+      updateProgress.setVisibility(View.VISIBLE);
+      updateState.setText(itemView.getResources()
+          .getString(R.string.apps_short_update_paused));
+    }
     cancelButton.setOnClickListener(
         cancel -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.CANCEL_UPDATE)));
     resumeButton.setOnClickListener(

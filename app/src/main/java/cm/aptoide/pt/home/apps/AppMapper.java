@@ -45,8 +45,7 @@ public class AppMapper {
         status = DownloadApp.Status.COMPLETED;
         break;
       default:
-        status = DownloadApp.Status.COMPLETED;
-        break;
+        throw new IllegalStateException("Invalid installation status");
     }
     return status;
   }
@@ -93,6 +92,7 @@ public class AppMapper {
         break;
       case PAUSED:
       case IN_QUEUE:
+      case INITIAL_STATE:
         status = UpdateApp.UpdateStatus.STANDBY;
         break;
       case INSTALLING:

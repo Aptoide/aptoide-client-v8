@@ -250,6 +250,7 @@ public class AppsManager {
 
   private Observable<Install> getUpdates(Installed installedApp) {
     return installManager.getInstallations()
+        .first()
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.empty();
