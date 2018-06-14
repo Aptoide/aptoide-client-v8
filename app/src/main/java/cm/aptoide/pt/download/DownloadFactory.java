@@ -241,8 +241,8 @@ public class DownloadFactory {
     download.setPackageName(autoUpdateInfo.packageName);
     download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
-        createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path, autoUpdateInfo.md5, null,
-            null, autoUpdateInfo.vercode, null));
+        createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path + UPDATE_ACTION,
+            autoUpdateInfo.md5, null, null, autoUpdateInfo.vercode, null));
     return download;
   }
 
