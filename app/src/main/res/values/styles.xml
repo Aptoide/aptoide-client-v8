@@ -156,7 +156,11 @@
     <item name="android:focusable">true</item>
   </style>
 
-  <style name="Toolbar" parent="@style/Theme.AppCompat"></style>
+  <style name="Toolbar" parent="@style/Theme.AppCompat">
+    <item name="android:background">?attr/toolbarBackground</item>
+    <item name="android:textColor">?attr/toolbarTextColor</item>
+    <item name="android:colorControlNormal">@color/white</item>
+  </style>
 
   <style name="ToolbarDark" parent="@style/Theme.AppCompat">
     <!--<item name="pstsIndicatorColor">@color/aptoide_orange</item>-->

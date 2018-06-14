@@ -43,7 +43,6 @@
           android:id="@+id/name"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:ellipsize="end"
           android:lines="2"
           style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           />
@@ -83,7 +82,6 @@
             android:gravity="end"
             android:text="@string/all_title_ad"
             tools:ignore="SmallSp"
-            tools:text="Ad"
             style="@style/Aptoide.TextView.Regular.XXS.Black"
             />
 
