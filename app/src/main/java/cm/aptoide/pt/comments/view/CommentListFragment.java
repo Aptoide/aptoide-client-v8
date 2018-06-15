@@ -23,12 +23,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.comments.CommentNode;
 import cm.aptoide.pt.comments.ComplexComment;
@@ -249,7 +249,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), "", storeContext.name());
+        .getSimpleName(), "", storeContext != null ? storeContext.name() : null);
   }
 
   void refreshData() {
