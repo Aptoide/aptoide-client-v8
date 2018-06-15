@@ -17,22 +17,22 @@ public class FakeBundleDataSource implements BundleDataSource {
     return getHomeBundles();
   }
 
+  @Override public Single<HomeBundlesModel> loadFreshBundleForEvent(String url, String key) {
+    return getHomeBundles();
+  }
+
   @Override public Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key) {
     return loadFreshHomeBundles(key);
-  }
-
-  @Override public boolean hasMore(Integer offset, String title) {
-    return true;
-  }
-
-  @Override public Single<HomeBundlesModel> loadFreshBundleForEvent(String url, String key) {
-    return null;
   }
 
   @Override
   public Single<HomeBundlesModel> loadNextBundleForEvent(String url, int offset, String key,
       int limit) {
-    return null;
+    return getHomeBundles();
+  }
+
+  @Override public boolean hasMore(Integer offset, String title) {
+    return true;
   }
 
   private Single<HomeBundlesModel> getHomeBundles() {
