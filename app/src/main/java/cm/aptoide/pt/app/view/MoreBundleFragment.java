@@ -1,22 +1,31 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.app.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.R;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.home.AdClick;
+import cm.aptoide.pt.home.AppHomeEvent;
+import cm.aptoide.pt.home.BundlesAdapter;
+import cm.aptoide.pt.home.HomeBundle;
+import cm.aptoide.pt.home.HomeEvent;
+import cm.aptoide.pt.home.ProgressBundle;
+import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -30,19 +39,17 @@ import rx.Observable;
 import rx.subjects.PublishSubject;
 
 /**
- * Created by jdandrade on 05/03/2018.
+ * Created by D01 on 04/06/2018.
  */
 
-public class HomeFragment extends NavigationTrackFragment implements HomeView {
+public class MoreBundleFragment extends NavigationTrackFragment implements MoreBundleView {
 
-  private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
-
+  private static final String MORE_LIST_STATE_KEY = "cm.aptoide.pt.more.ListState";
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
-  private static final int VISIBLE_THRESHOLD = 2;
-  private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
-  @Inject HomePresenter presenter;
+  private static final int VISIBLE_THRESHOLD = 1;
+  @Inject MoreBundlePresenter presenter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -56,52 +63,35 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private Parcelable listState;
   private View noNetworkRetryButton;
   private View retryButton;
-  private ImageView userAvatar;
-  private BottomNavigationActivity bottomNavigationActivity;
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    if (activity instanceof BottomNavigationActivity) {
-      bottomNavigationActivity = ((BottomNavigationActivity) activity);
-    }
-  }
-
-  @Override public void onDestroy() {
-    uiEventsListener = null;
-    oneDecimalFormatter = null;
-    adClickedEvents = null;
-    userAvatar = null;
-    super.onDestroy();
-  }
+  private Toolbar toolbar;
+  private PublishSubject<Boolean> notifyItemsAdded;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
-
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
+    notifyItemsAdded = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("#.#");
+    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    if (bottomNavigationActivity != null) {
-      bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
-    }
+    getFragmentComponent(savedInstanceState).inject(this);
     if (savedInstanceState != null) {
-      if (savedInstanceState.containsKey(LIST_STATE_KEY)) {
-        listState = savedInstanceState.getParcelable(LIST_STATE_KEY);
-        savedInstanceState.putParcelable(LIST_STATE_KEY, null);
+      if (savedInstanceState.containsKey(MORE_LIST_STATE_KEY)) {
+        listState = savedInstanceState.getParcelable(MORE_LIST_STATE_KEY);
+        savedInstanceState.putParcelable(MORE_LIST_STATE_KEY, null);
       }
     }
-    userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
-    bundlesList = (RecyclerView) view.findViewById(R.id.bundles_list);
+    bundlesList = (RecyclerView) view.findViewById(R.id.more_bundles_list);
     genericErrorView = view.findViewById(R.id.generic_error);
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
+    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     retryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.more_refresh_layout);
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
@@ -109,24 +99,30 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
+    AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
+    appCompatActivity.setSupportActionBar(toolbar);
+    ActionBar actionBar = appCompatActivity.getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    }
     attachPresenter(presenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), "", StoreContext.home.name());
+        .getSimpleName(), "", StoreContext.home);
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_home, container, false);
+    return inflater.inflate(R.layout.more_bundles_view, container, false);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     if (bundlesList != null) {
-      outState.putParcelable(LIST_STATE_KEY, bundlesList.getLayoutManager()
+      outState.putParcelable(MORE_LIST_STATE_KEY, bundlesList.getLayoutManager()
           .onSaveInstanceState());
     }
   }
@@ -141,12 +137,28 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     genericErrorView = null;
     noNetworkErrorView = null;
     progressBar = null;
+    toolbar = null;
     super.onDestroyView();
   }
 
-  @Override public void onDetach() {
-    bottomNavigationActivity = null;
-    super.onDetach();
+  @Override public void onDestroy() {
+    uiEventsListener = null;
+    oneDecimalFormatter = null;
+    adClickedEvents = null;
+    super.onDestroy();
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_empty, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void showBundles(List<HomeBundle> bundles) {
@@ -183,23 +195,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     }
   }
 
-  @Override public Observable<Void> refreshes() {
-    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
-  }
-
-  @Override public Observable<Object> reachesBottom() {
-    return RxRecyclerView.scrollEvents(bundlesList)
-        .map(scroll -> isEndReached())
-        .distinctUntilChanged()
-        .filter(isEnd -> isEnd)
-        .cast(Object.class);
-  }
-
-  @Override public Observable<HomeEvent> moreClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.MORE));
-  }
-
   @Override public Observable<AppHomeEvent> appClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.APP))
@@ -208,6 +203,23 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<AdClick> adClicked() {
     return adClickedEvents;
+  }
+
+  @Override public Observable<HomeEvent> moreClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.MORE));
+  }
+
+  @Override public Observable<Void> refreshes() {
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
+  @Override public Observable<Object> reachesBottom() {
+    return Observable.merge(RxRecyclerView.scrollEvents(bundlesList)
+        .map(scroll -> isEndReached()), notifyItemsAdded)
+        .distinctUntilChanged()
+        .filter(isEnd -> isEnd)
+        .cast(Object.class);
   }
 
   @Override public void showLoadMore() {
@@ -222,6 +234,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void showMoreHomeBundles(List<HomeBundle> bundles) {
     adapter.add(bundles);
+    notifyItemsAdded.onNext(false);
   }
 
   @Override public void hideRefresh() {
@@ -248,40 +261,9 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .debounce(200, TimeUnit.MILLISECONDS);
   }
 
-  @Override public Observable<AppHomeEvent> rewardAppClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.REWARD_APP))
-        .cast(AppHomeEvent.class);
-  }
-
-  @Override public Observable<AppHomeEvent> recommendedAppClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
-        .equals(HomeEvent.Type.SOCIAL_INSTALL))
-        .cast(AppHomeEvent.class);
-  }
-
-  @UiThread @Override public void scrollToTop() {
-    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
-    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-    if (lastVisibleItemPosition > 10) {
-      bundlesList.scrollToPosition(10);
-    }
-    bundlesList.smoothScrollToPosition(0);
-  }
-
-  @Override public void setUserImage(String userAvatarUrl) {
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar,
-            R.drawable.ic_account_circle);
-  }
-
-  @Override public Observable<Void> imageClick() {
-    return RxView.clicks(userAvatar);
-  }
-
-  @Override public void showAvatar() {
-    userAvatar.setVisibility(View.VISIBLE);
+  @Override public void setToolbarInfo(String title) {
+    toolbar.setTitle(Translator.translate(title, getContext(), ""));
+    toolbar.setLogo(R.drawable.logo_toolbar);
   }
 
   private boolean isEndReached() {

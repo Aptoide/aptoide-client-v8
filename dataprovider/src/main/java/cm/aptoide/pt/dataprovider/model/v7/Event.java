@@ -11,7 +11,7 @@ package cm.aptoide.pt.dataprovider.model.v7;
 public class Event {
 
   private Type type; // API, v3
-  private Name name; // listApps, getStore, getStoreWidgets, getApkComments
+  private Name name; // listApps, getStore, getStoreWidgets, getApkComments, getMoreBundle
   private String action;
   private GetStoreWidgets.WSWidget.Data data;
 
@@ -112,7 +112,7 @@ public class Event {
 
   public enum Name {
     // Api
-    listApps, listStores, getUser, getStore, getStoreWidgets, //getReviews,
+    listApps, listStores, getUser, getStore, getStoreWidgets, getMoreBundle,//getReviews,
     //getApkComments,
     listReviews, listComments, getMyStoresSubscribed, getStoresRecommended,
 

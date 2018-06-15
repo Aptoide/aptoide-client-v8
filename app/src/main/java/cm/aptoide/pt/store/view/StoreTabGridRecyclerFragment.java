@@ -214,7 +214,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     setupToolbar();
   }
 
-  private static class BundleCons {
+  public static class BundleCons {
 
     public static final String TYPE = "type";
     public static final String NAME = "name";

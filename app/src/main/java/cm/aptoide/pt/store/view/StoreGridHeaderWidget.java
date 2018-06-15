@@ -67,8 +67,7 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
                       storeContext);
             } else {
               displayable.getStoreTabNavigator()
-                  .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,
-                      false);
+                  .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext);
             }
           }));
     }
