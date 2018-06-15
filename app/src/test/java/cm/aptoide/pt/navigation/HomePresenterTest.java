@@ -106,7 +106,7 @@ public class HomePresenterTest {
     //Then the progress indicator should be shown
     verify(view).showLoading();
     //Then the home should be displayed
-    verify(view).showHomeBundles(bundlesModel.getList());
+    verify(view).showBundles(bundlesModel.getList());
     //Then the progress indicator should be hidden
     verify(view).hideLoading();
   }

@@ -108,7 +108,7 @@ public class HomePresenter implements Presenter {
             handleError(bundlesModel.getError());
           } else if (!bundlesModel.isLoading()) {
             view.hideLoading();
-            view.showHomeBundles(bundlesModel.getList());
+            view.showBundles(bundlesModel.getList());
           }
         });
   }
@@ -290,7 +290,7 @@ public class HomePresenter implements Presenter {
             handleError(bundlesModel.getError());
           } else {
             if (!bundlesModel.isLoading()) {
-              view.showHomeBundles(bundlesModel.getList());
+              view.showBundles(bundlesModel.getList());
             }
           }
         });
