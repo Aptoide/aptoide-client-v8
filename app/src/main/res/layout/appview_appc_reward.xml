@@ -10,7 +10,7 @@
     android:layout_marginRight="9dp"
     android:layout_marginStart="9dp"
     android:layout_marginTop="5dp"
-    android:background="@drawable/grey_message_background_border"
+    android:background="@drawable/background_arrow_appc_reward"
     android:orientation="horizontal"
     >
 

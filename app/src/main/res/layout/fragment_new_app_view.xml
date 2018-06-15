@@ -212,7 +212,7 @@
               />
 
           <include
-              layout="@layout/displayable_app_view_appcoins_reward"
+              layout="@layout/appview_appc_reward"
               android:id="@+id/appc_layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
