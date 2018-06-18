@@ -792,7 +792,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     DialogPermissions dialogPermissions =
         DialogPermissions.newInstance(app.getAppName(), app.getVersionName(), app.getIcon(),
             AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),
-                false));
+                false), app.getUsedPermissions());
     dialogPermissions.show(getActivity().getSupportFragmentManager(), "");
   }
 
