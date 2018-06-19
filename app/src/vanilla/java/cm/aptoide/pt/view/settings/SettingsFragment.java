@@ -32,11 +32,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AdultContentAnalytics;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -243,9 +243,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
       repository.sync(true, false)
           .andThen(repository.getAll(false))
           .first()
-          .subscribe(updates -> Logger.getInstance().d(TAG, "updates refreshed"),
-              throwable -> CrashReport.getInstance()
-                  .log(throwable));
+          .subscribe(updates -> Logger.getInstance()
+              .d(TAG, "updates refreshed"), throwable -> CrashReport.getInstance()
+              .log(throwable));
     }
   }
 
@@ -291,13 +291,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     subscriptions.add(RxPreference.clicks(termsAndConditions)
         .subscribe(clicked -> CustomTabsHelper.getInstance()
-            .openInChromeCustomTab(getString(R.string.terms_conditions_navigation_url),
-                getContext())));
+            .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext())));
 
     subscriptions.add(RxPreference.clicks(privacyPolicy)
         .subscribe(clicked -> CustomTabsHelper.getInstance()
-            .openInChromeCustomTab(getString(R.string.privacy_policy_navigation_url),
-                getContext())));
+            .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext())));
 
     subscriptions.add(accountManager.enabled()
         .observeOn(AndroidSchedulers.mainThread())
@@ -568,7 +566,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void openDeleteAccountView(String accessToken) {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab("https://www.aptoide.com/account/delete?access_token=" + accessToken,
+        .openInChromeCustomTab(getString(R.string.settings_url_delete_account, accessToken),
             getContext());
   }
 
