@@ -539,11 +539,15 @@
   <string name="home_recommends">%s recommends</string>
   <string name="bundles_short_reward_app_appc" translatable="false">%s APPC</string>
 
-  <!--Terms and Conditions URL navigation-->
-  <string name="terms_conditions_navigation_url" translatable="false">https://www.aptoide.com/legal/terms?header=0&amp;menu=0</string>
-  <string name="privacy_policy_navigation_url" translatable="false">https://www.aptoide.com/legal/privacy?header=0&amp;menu=0</string>
 
   <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
+
+
+  <!--URL -->
+  <string name="all_url_terms_conditions" translatable="false">https://www.aptoide.com/legal/terms?header=0&amp;menu=0</string>
+  <string name="all_url_privacy_policy" translatable="false">https://www.aptoide.com/legal/privacy?header=0&amp;menu=0</string>
+  <string name="settings_url_delete_account" translatable="false">https://www.aptoide.com/account/delete?access_token=%1$s</string>
+
 
   <!--APPC-->
   <string name="appc_title_iab">Spend your AppCoins</string>
