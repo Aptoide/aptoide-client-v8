@@ -1,43 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
+
+  <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingEnd="@dimen/recycler_margin"
+        android:paddingLeft="@dimen/recycler_margin"
+        android:paddingRight="@dimen/recycler_margin"
+        android:paddingStart="@dimen/recycler_margin"
+        />
+
+
+  </android.support.v4.widget.SwipeRefreshLayout>
 
   <include layout="@layout/app_bar_layout"/>
 
-  <FrameLayout
-      android:layout_width="match_parent"
+  <include
+      layout="@layout/partial_view_incl_no_network"
+      android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      >
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
-      <android.support.v7.widget.RecyclerView
-          android:id="@+id/recycler_view"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:clipToPadding="false"
-          android:paddingEnd="@dimen/recycler_margin"
-          android:paddingLeft="@dimen/recycler_margin"
-          android:paddingRight="@dimen/recycler_margin"
-          android:paddingStart="@dimen/recycler_margin"
-          />
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="?attr/actionBarSize"
+      />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+  <include
+      layout="@layout/partial_view_error"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="?attr/actionBarSize"
+      />
 
-    <include layout="@layout/partial_view_incl_no_network"/>
+  <include layout="@layout/partial_view_progress_bar"/>
 
-    <include layout="@layout/partial_view_error"/>
-
-    <include layout="@layout/partial_view_progress_bar"/>
-
-  </FrameLayout>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
 
