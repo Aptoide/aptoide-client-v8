@@ -180,6 +180,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AnalyticsManager analyticsManager;
   @Inject InstallAnalytics installAnalytics;
   @Inject FirstLaunchAnalytics firstLaunchAnalytics;
+  @Inject InvalidRefreshTokenLogoutManager invalidRefreshTokenLogoutManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -341,6 +342,7 @@ public abstract class AptoideApplication extends Application {
     Logger.getInstance()
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
+    invalidRefreshTokenLogoutManager.start();
   }
 
   public ApplicationComponent getApplicationComponent() {
