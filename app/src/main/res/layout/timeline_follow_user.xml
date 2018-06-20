@@ -33,8 +33,10 @@
       android:layout_centerVertical="true"
       android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_toEndOf="@+id/main_icon"
       android:layout_toLeftOf="@+id/separator_vertical"
       android:layout_toRightOf="@+id/main_icon"
+      android:layout_toStartOf="@id/separator_vertical"
       android:orientation="vertical"
       >
 

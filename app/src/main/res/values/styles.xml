@@ -185,7 +185,9 @@
 
   <style name="badgeReasonStyle">
     <item name="android:paddingRight">44dp</item>
+    <item name="android:paddingEnd">44dp</item>
     <item name="android:paddingLeft">4dp</item>
+    <item name="android:paddingStart">4dp</item>
     <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
     <item name="android:textSize">12sp</item>
   </style>
