@@ -1,56 +1,54 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.app.view;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.HomeAnalytics;
+import cm.aptoide.pt.home.HomeBundlesModel;
+import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.BundleEvent;
 import cm.aptoide.pt.view.app.Application;
-import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
 /**
- * Created by jdandrade on 07/03/2018.
+ * Created by D01 on 04/06/2018.
  */
 
-public class HomePresenter implements Presenter {
+public class MoreBundlePresenter implements Presenter {
 
-  private final HomeView view;
-  private final Home home;
+  private final MoreBundleView view;
+  private final MoreBundleManager moreBundleManager;
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
-  private final AptoideAccountManager accountManager;
+  private final BundleEvent bundleEvent;
   private final HomeAnalytics homeAnalytics;
 
-  public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager,
-      HomeAnalytics homeAnalytics) {
+  public MoreBundlePresenter(MoreBundleView view, MoreBundleManager moreBundleManager,
+      Scheduler viewScheduler, CrashReport crashReporter, HomeNavigator homeNavigator,
+      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
     this.view = view;
-    this.home = home;
+    this.moreBundleManager = moreBundleManager;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
-    this.accountManager = accountManager;
+    this.bundleEvent = bundleEvent;
     this.homeAnalytics = homeAnalytics;
   }
 
   @Override public void present() {
+    onCreateSetupToolbar();
+
     onCreateLoadBundles();
 
-    loadUserImage();
-
     handleAppClick();
-
-    handleRewardAppClick();
-
-    handleRecommendedAppClick();
 
     handleAdClick();
 
@@ -60,33 +58,18 @@ public class HomePresenter implements Presenter {
 
     handlePullToRefresh();
 
-    handleBottomNavigationEvents();
-
     handleRetryClick();
-
-    handleUserImageClick();
 
     handleBundleScrolledRight();
   }
 
-  private void handleRewardAppClick() {
+  @VisibleForTesting public void onCreateSetupToolbar() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.rewardAppClicked()
-            .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
-                    .getRating(), click.getApp()
-                    .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
-                click.getBundle()
-                    .getTag(), click.getBundle()
-                    .getContent()
-                    .size()))
-            .map(appClick -> ((RewardApp) appClick.getApp()))
-            .doOnNext(rewardApp -> homeNavigator.navigateToRewardAppView(rewardApp.getAppId(),
-                rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getRewardValue()))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .observeOn(viewScheduler)
+        .doOnNext(created -> view.setToolbarInfo(bundleEvent.getTitle()))
         .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void onCreateLoadBundles() {
@@ -101,7 +84,7 @@ public class HomePresenter implements Presenter {
   }
 
   @NonNull private Single<HomeBundlesModel> loadBundles() {
-    return home.loadHomeBundles()
+    return moreBundleManager.loadBundle(bundleEvent.getTitle(), bundleEvent.getAction())
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
           if (bundlesModel.hasErrors()) {
@@ -143,40 +126,6 @@ public class HomePresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  @VisibleForTesting public void handleRecommendedAppClick() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.recommendedAppClicked()
-            .observeOn(viewScheduler)
-            .doOnNext(click -> homeNavigator.navigateToRecommendsAppView(click.getApp()
-                .getAppId(), click.getApp()
-                .getPackageName(), click.getApp()
-                .getTag(), click.getType()))
-            .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
-                .getRating(), click.getApp()
-                .getPackageName(), click.getBundlePosition(), click.getBundle()
-                .getTag(), click.getType()))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleBottomNavigationEvents() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> homeNavigator.bottomNavigation())
-        .observeOn(viewScheduler)
-        .doOnNext(navigated -> view.scrollToTop())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
@@ -238,7 +187,7 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reachesBottom()
-            .filter(__ -> home.hasMore())
+            .filter(__ -> moreBundleManager.hasMore(bundleEvent.getTitle()))
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
             .flatMapSingle(bottomReached -> loadNextBundles())
@@ -252,7 +201,7 @@ public class HomePresenter implements Presenter {
   }
 
   @NonNull private Single<HomeBundlesModel> loadNextBundles() {
-    return home.loadNextHomeBundles()
+    return moreBundleManager.loadNextBundles(bundleEvent.getTitle(), bundleEvent.getAction())
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
           if (bundlesModel.hasErrors()) {
@@ -282,7 +231,7 @@ public class HomePresenter implements Presenter {
   }
 
   @NonNull private Single<HomeBundlesModel> loadFreshBundles() {
-    return home.loadFreshHomeBundles()
+    return moreBundleManager.loadFreshBundles(bundleEvent.getTitle(), bundleEvent.getAction())
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
           view.hideRefresh();
@@ -307,48 +256,5 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
-  }
-
-  @VisibleForTesting public void loadUserImage() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> accountManager.accountStatus())
-        .flatMap(account -> getUserAvatar(account))
-        .observeOn(viewScheduler)
-        .doOnNext(userAvatarUrl -> {
-          if (userAvatarUrl != null) {
-            view.setUserImage(userAvatarUrl);
-          } else {
-            view.setDefaultUserImage();
-          }
-          view.showAvatar();
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  @VisibleForTesting public void handleUserImageClick() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.imageClick()
-            .observeOn(viewScheduler)
-            .doOnNext(account -> homeNavigator.navigateToMyAccount())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private Observable<String> getUserAvatar(Account account) {
-    String userAvatarUrl = null;
-    if (account != null && account.isLoggedIn()) {
-      userAvatarUrl = account.getAvatar();
-    }
-    return Observable.just(userAvatarUrl);
   }
 }

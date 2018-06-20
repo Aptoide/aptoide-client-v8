@@ -3,9 +3,9 @@ package cm.aptoide.pt.download;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
@@ -263,7 +263,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public enum AppContext {
-    TIMELINE, APPVIEW, UPDATE_TAB, DOWNLOADS
+    TIMELINE, APPVIEW, UPDATE_TAB, AUTO_UPDATE, DOWNLOADS
   }
 
   public enum Origin {

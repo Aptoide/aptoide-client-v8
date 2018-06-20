@@ -10,10 +10,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.view.ContextThemeWrapper;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -29,6 +31,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.DefaultHandler2;
+import rx.Observable;
 
 public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo> {
 
@@ -41,13 +44,13 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private final int updateDialogIcon;
   private final boolean alwaysUpdate;
   private final String marketName;
-
+  private final DownloadAnalytics downloadAnalytics;
   private ProgressDialog dialog;
 
   public AutoUpdate(ActivityView activity, DownloadFactory downloadFactory,
       PermissionManager permissionManager, InstallManager installManager, Resources resources,
       String autoUpdateUrl, @DrawableRes int updateDialogIcon, boolean alwaysUpdate,
-      String marketName) {
+      String marketName, DownloadAnalytics downloadAnalytics) {
     this.url = autoUpdateUrl;
     this.activity = activity;
     this.permissionManager = permissionManager;
@@ -57,6 +60,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     this.updateDialogIcon = updateDialogIcon;
     this.alwaysUpdate = alwaysUpdate;
     this.marketName = marketName;
+    this.downloadAnalytics = downloadAnalytics;
   }
 
   @Override protected AutoUpdateInfo doInBackground(Void... params) {
@@ -68,7 +72,9 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           .newSAXParser();
       AutoUpdateHandler autoUpdateHandler = new AutoUpdateHandler();
 
-      Logger.getInstance().d("TAG", "Requesting auto-update from " + url);
+      Logger.getInstance()
+          .d(this.getClass()
+              .getName(), "Requesting auto-update from " + url);
       connection = (HttpURLConnection) new URL(url).openConnection();
 
       connection.setConnectTimeout(10000);
@@ -152,8 +158,12 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           permissionManager.requestDownloadAccess(activity)
               .flatMap(
                   permissionGranted -> permissionManager.requestExternalStoragePermission(activity))
-              .flatMap(success -> installManager.install(downloadFactory.create(autoUpdateInfo))
-                  .toObservable())
+              .flatMap(success -> Observable.just(downloadFactory.create(autoUpdateInfo))
+                  .flatMap(download -> installManager.install(download)
+                      .toObservable()
+                      .doOnSubscribe(() -> downloadAnalytics.downloadStartEvent(download,
+                          AnalyticsManager.Action.CLICK,
+                          DownloadAnalytics.AppContext.AUTO_UPDATE))))
               .first()
               .flatMap(downloadProgress -> installManager.getInstall(autoUpdateInfo.md5,
                   autoUpdateInfo.packageName, autoUpdateInfo.vercode))

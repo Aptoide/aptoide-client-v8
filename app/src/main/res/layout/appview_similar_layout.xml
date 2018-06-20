@@ -12,8 +12,7 @@
       android:layout_marginStart="11dp"
       android:layout_marginTop="8dp"
       android:text="@string/appview_similar_apps"
-      android:textColor="@color/black_87_alpha"
-      android:textSize="17sp"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
   <android.support.v7.widget.RecyclerView
