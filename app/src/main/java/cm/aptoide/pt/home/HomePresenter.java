@@ -260,10 +260,10 @@ public class HomePresenter implements Presenter {
           } else {
             if (!bundlesModel.isLoading()) {
               view.showMoreHomeBundles(bundlesModel.getList());
+              view.hideLoading();
             }
           }
           view.hideShowMore();
-          view.hideLoading();
         });
   }
 
@@ -301,8 +301,8 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
-            .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(reachesBottom -> loadNextBundles())
+            .doOnNext(click -> view.showLoading())
+            .flatMapSingle(click -> loadNextBundles())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {

@@ -209,10 +209,10 @@ public class MoreBundlePresenter implements Presenter {
           } else {
             if (!bundlesModel.isLoading()) {
               view.showMoreHomeBundles(bundlesModel.getList());
+              view.hideLoading();
             }
           }
           view.hideShowMore();
-          view.hideLoading();
         });
   }
 
