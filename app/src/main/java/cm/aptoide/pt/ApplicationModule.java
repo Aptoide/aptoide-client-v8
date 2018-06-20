@@ -416,10 +416,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides IdsRepository provideIdsRepository(
       @Named("default") SharedPreferences defaultSharedPreferences,
       ContentResolver contentResolver) {
+    Context applicationContext = application.getApplicationContext();
     return new IdsRepository(
-        SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
-            defaultSharedPreferences), application,
-        Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID));
+        SecurePreferencesImplementation.getInstance(applicationContext, defaultSharedPreferences),
+        applicationContext, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID));
   }
 
   @Singleton @Provides ContentResolver provideContentResolver() {
