@@ -13,27 +13,23 @@ import cm.aptoide.pt.app.view.OfficialAppDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppWidget;
 import cm.aptoide.pt.app.view.OtherVersionDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewOtherVersionsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateResultsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAdDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.app.view.widget.AppViewDescriptionWidget;
-import cm.aptoide.pt.app.view.widget.AppViewDeveloperWidget;
 import cm.aptoide.pt.app.view.widget.AppViewFlagThisWidget;
 import cm.aptoide.pt.app.view.widget.AppViewInstallWidget;
 import cm.aptoide.pt.app.view.widget.AppViewOtherVersionsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewRateAndReviewsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewRateResultsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewRewardAppWidget;
-import cm.aptoide.pt.app.view.widget.AppViewScreenshotsWidget;
 import cm.aptoide.pt.app.view.widget.AppViewStoreWidget;
 import cm.aptoide.pt.app.view.widget.AppViewSuggestedAdWidget;
 import cm.aptoide.pt.app.view.widget.AppViewSuggestedAppWidget;
@@ -213,12 +209,6 @@ public class DisplayableWidgetMapping {
     // appView widgets / displayables
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewDescriptionWidget.class,
         AppViewDescriptionDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewDeveloperWidget.class,
-        AppViewDeveloperDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewScreenshotsWidget.class,
-        AppViewScreenshotsDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AppViewInstallWidget.class, AppViewInstallDisplayable.class));
