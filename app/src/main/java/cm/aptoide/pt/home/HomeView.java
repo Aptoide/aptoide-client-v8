@@ -52,4 +52,6 @@ public interface HomeView extends View {
   void showAvatar();
 
   Observable<HomeEvent> bundleScrolled();
+
+  void setDefaultUserImage();
 }

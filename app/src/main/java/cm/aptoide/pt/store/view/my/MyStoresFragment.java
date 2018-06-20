@@ -155,7 +155,8 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     Observable<List<Store>> storesObservable = storeRepository.getAll()
         .skip(1)
         .doOnNext(__ -> {
-          Logger.getInstance().d(TAG, "Store database changed, reloading...");
+          Logger.getInstance()
+              .d(TAG, "Store database changed, reloading...");
           reloadData();
         });
 
@@ -202,5 +203,10 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
 
   @Override public void showAvatar() {
     userAvatar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void setDefaultUserImage() {
+    ImageLoader.with(getContext())
+        .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
   }
 }

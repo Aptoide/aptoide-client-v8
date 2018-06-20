@@ -365,13 +365,14 @@ public class AppsPresenter implements Presenter {
   private void loadUserImage() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> accountManager.accountStatus()
-            .first())
+        .flatMap(created -> accountManager.accountStatus())
         .flatMap(account -> getUserAvatar(account))
         .observeOn(viewScheduler)
         .doOnNext(userAvatarUrl -> {
           if (userAvatarUrl != null) {
             view.setUserImage(userAvatarUrl);
+          } else {
+            view.setDefaultUserImage();
           }
           view.showAvatar();
         })

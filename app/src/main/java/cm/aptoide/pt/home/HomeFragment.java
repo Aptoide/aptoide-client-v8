@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import cm.aptoide.pt.R;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -282,6 +282,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return uiEventsListener.filter(click -> click.getType()
         .equals(HomeEvent.Type.SCROLL_RIGHT))
         .debounce(200, TimeUnit.MILLISECONDS);
+  }
+
+  @Override public void setDefaultUserImage() {
+    ImageLoader.with(getContext())
+        .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
   }
 
   private boolean isEndReached() {
