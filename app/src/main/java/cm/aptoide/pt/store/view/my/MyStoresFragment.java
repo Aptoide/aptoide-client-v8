@@ -208,4 +208,9 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
   @Override public void showAvatar() {
     if (userAvatar != null) userAvatar.setVisibility(View.VISIBLE);
   }
+
+  @Override public void setDefaultUserImage() {
+    ImageLoader.with(getContext())
+        .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
+  }
 }

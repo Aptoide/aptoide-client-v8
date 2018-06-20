@@ -75,4 +75,6 @@ public interface AppsFragmentView extends View {
   void setStandbyState(App app);
 
   void showIndeterminateAllUpdates();
+
+  void setDefaultUserImage();
 }

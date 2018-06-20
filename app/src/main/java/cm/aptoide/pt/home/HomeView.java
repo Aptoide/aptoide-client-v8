@@ -20,4 +20,6 @@ public interface HomeView extends BundleView {
   Observable<Void> imageClick();
 
   void showAvatar();
+
+  void setDefaultUserImage();
 }

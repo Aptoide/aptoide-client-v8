@@ -229,6 +229,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -693,7 +694,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("extraID") String extraId) {
     return new RefreshTokenInvalidator(bodyInterceptor, httpClient,
         WebService.getDefaultConverter(), sharedPreferences, extraId, new NoOpTokenInvalidator(),
-        authenticationPersistence);
+        authenticationPersistence, PublishSubject.create());
+  }
+
+  @Singleton @Provides InvalidRefreshTokenLogoutManager provideInvalidRefreshTokenLogoutManager(
+      AptoideAccountManager aptoideAccountManager, TokenInvalidator refreshTokenInvalidator) {
+    return new InvalidRefreshTokenLogoutManager(aptoideAccountManager,
+        ((RefreshTokenInvalidator) refreshTokenInvalidator));
   }
 
   @Singleton @Provides @Named("no-authentication-v3")
