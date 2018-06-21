@@ -22,7 +22,7 @@ public class AppViewRewardAppDisplayable extends AppViewDisplayable {
   }
 
   @Override public int getViewLayout() {
-    return R.layout.displayable_app_view_appcoins_reward;
+    return R.layout.appview_appc_reward;
   }
 
   public double getAppcoinsReward() {

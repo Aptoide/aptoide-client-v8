@@ -231,11 +231,13 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
                 .getList();
             commentAdder.addComment(comments);
           } else {
-            Logger.getInstance().e(TAG, "error loading comments");
+            Logger.getInstance()
+                .e(TAG, "error loading comments");
             ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
           }
         }, err -> {
-          Logger.getInstance().e(TAG, err);
+          Logger.getInstance()
+              .e(TAG, err);
           ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
         }, true);
   }
@@ -249,32 +251,37 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
           ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .execute(response -> {
             if (response == null) {
-              Logger.getInstance().e(TAG, "empty response");
+              Logger.getInstance()
+                  .e(TAG, "empty response");
               return;
             }
 
             if (response.getError() != null) {
-              Logger.getInstance().e(TAG, response.getError()
-                  .getDescription());
+              Logger.getInstance()
+                  .e(TAG, response.getError()
+                      .getDescription());
               return;
             }
 
             List<BaseV7Response.Error> errorList = response.getErrors();
             if (errorList != null && !errorList.isEmpty()) {
               for (final BaseV7Response.Error error : errorList) {
-                Logger.getInstance().e(TAG, error.getDescription());
+                Logger.getInstance()
+                    .e(TAG, error.getDescription());
               }
               return;
             }
 
             // success
-            Logger.getInstance().d(TAG, String.format("review %d was marked as %s", reviewId,
-                positive ? "positive" : "negative"));
+            Logger.getInstance()
+                .d(TAG, String.format("review %d was marked as %s", reviewId,
+                    positive ? "positive" : "negative"));
             setHelpButtonsClickable(true);
             ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
           }, err -> {
             ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
-            Logger.getInstance().e(TAG, err);
+            Logger.getInstance()
+                .e(TAG, err);
             setHelpButtonsClickable(true);
           }, true);
     } else {

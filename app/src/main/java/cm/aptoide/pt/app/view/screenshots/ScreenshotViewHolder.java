@@ -20,7 +20,7 @@ import rx.subjects.PublishSubject;
  * Created by franciscocalado on 08/05/18.
  */
 
-public class NewScreenshotViewHolder extends RecyclerView.ViewHolder {
+public class ScreenshotViewHolder extends RecyclerView.ViewHolder {
   @LayoutRes static final int LAYOUT_ID = R.layout.row_item_screenshots_gallery;
   private static final String PORTRAIT = "PORTRAIT";
   private final PublishSubject<ScreenShotClickEvent> screenShotClick;
@@ -28,7 +28,7 @@ public class NewScreenshotViewHolder extends RecyclerView.ViewHolder {
   private ImageView play_button;
   private FrameLayout media_layout;
 
-  NewScreenshotViewHolder(View itemView, PublishSubject<ScreenShotClickEvent> screenShotClick) {
+  ScreenshotViewHolder(View itemView, PublishSubject<ScreenShotClickEvent> screenShotClick) {
     super(itemView);
     assignViews(itemView);
     this.screenShotClick = screenShotClick;

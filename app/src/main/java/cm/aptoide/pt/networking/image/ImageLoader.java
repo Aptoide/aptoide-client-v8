@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
@@ -327,8 +328,9 @@ public class ImageLoader {
   public Target<Drawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
+      Uri uri = Uri.parse(AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager));
       return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager))
+          .load(uri)
           .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");

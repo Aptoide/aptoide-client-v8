@@ -41,15 +41,18 @@ public class POSTCacheInterceptor implements Interceptor {
     if (cache.contains(request)) {
       Response cachedResponse = cache.get(request);
       if (cachedResponse != null) {
-        Logger.getInstance().v(TAG, String.format("cache hit '%s'", request.url()));
+        Logger.getInstance()
+            .v(TAG, String.format("cache hit '%s'", request.url()));
         return cachedResponse;
       }
 
-      Logger.getInstance().v(TAG, String.format("cache hit but with null result '%s'", request.url()));
+      Logger.getInstance()
+          .v(TAG, String.format("cache hit but with null result '%s'", request.url()));
     }
 
     // in case of a cache miss, go to the network
-    Logger.getInstance().v(TAG, String.format("cache miss '%s'", request.url()));
+    Logger.getInstance()
+        .v(TAG, String.format("cache miss '%s'", request.url()));
     Response response = chain.proceed(request);
 
     // we only cache successful responses

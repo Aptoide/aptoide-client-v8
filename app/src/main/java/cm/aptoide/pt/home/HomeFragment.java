@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import cm.aptoide.pt.R;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -149,7 +149,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     super.onDetach();
   }
 
-  @Override public void showHomeBundles(List<HomeBundle> bundles) {
+  @Override public void showBundles(List<HomeBundle> bundles) {
     adapter.update(bundles);
     if (listState != null) {
       bundlesList.getLayoutManager()
@@ -206,19 +206,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(AppHomeEvent.class);
   }
 
-  @Override public Observable<AppHomeEvent> rewardAppClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.REWARD_APP))
-        .cast(AppHomeEvent.class);
-  }
-
-  @Override public Observable<AppHomeEvent> recommendedAppClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
-        .equals(HomeEvent.Type.SOCIAL_INSTALL))
-        .cast(AppHomeEvent.class);
-  }
-
   @Override public Observable<AdClick> adClicked() {
     return adClickedEvents;
   }
@@ -235,15 +222,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void showMoreHomeBundles(List<HomeBundle> bundles) {
     adapter.add(bundles);
-  }
-
-  @UiThread @Override public void scrollToTop() {
-    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
-    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-    if (lastVisibleItemPosition > 10) {
-      bundlesList.scrollToPosition(10);
-    }
-    bundlesList.smoothScrollToPosition(0);
   }
 
   @Override public void hideRefresh() {
@@ -264,6 +242,34 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
   }
 
+  @Override public Observable<HomeEvent> bundleScrolled() {
+    return uiEventsListener.filter(click -> click.getType()
+        .equals(HomeEvent.Type.SCROLL_RIGHT))
+        .debounce(200, TimeUnit.MILLISECONDS);
+  }
+
+  @Override public Observable<AppHomeEvent> rewardAppClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.REWARD_APP))
+        .cast(AppHomeEvent.class);
+  }
+
+  @Override public Observable<AppHomeEvent> recommendedAppClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
+        .equals(HomeEvent.Type.SOCIAL_INSTALL))
+        .cast(AppHomeEvent.class);
+  }
+
+  @UiThread @Override public void scrollToTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      bundlesList.scrollToPosition(10);
+    }
+    bundlesList.smoothScrollToPosition(0);
+  }
+
   @Override public void setUserImage(String userAvatarUrl) {
     ImageLoader.with(getContext())
         .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar,
@@ -278,10 +284,9 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     userAvatar.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<HomeEvent> bundleScrolled() {
-    return uiEventsListener.filter(click -> click.getType()
-        .equals(HomeEvent.Type.SCROLL_RIGHT))
-        .debounce(200, TimeUnit.MILLISECONDS);
+  @Override public void setDefaultUserImage() {
+    ImageLoader.with(getContext())
+        .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
   }
 
   private boolean isEndReached() {

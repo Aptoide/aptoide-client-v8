@@ -31,26 +31,24 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewDeveloperDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -471,7 +469,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     }
 
     if (getAppId() >= 0) {
-      Logger.getInstance().d(TAG, "loading app info using app ID");
+      Logger.getInstance()
+          .d(TAG, "loading app info using app ID");
       subscription =
           appRepository.getApp(getAppId(), refresh, isSponsored(), getStoreName(), getPackageName(),
               refresh)
@@ -514,7 +513,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
                 .log(key_uname, getUname());
           });
     } else {
-      Logger.getInstance().d(TAG, "loading app info using app package name");
+      Logger.getInstance()
+          .d(TAG, "loading app info using app package name");
       subscription =
           appRepository.getApp(getPackageName(), refresh, isSponsored(), getStoreName(), refresh)
               .map(getApp -> getApp)
@@ -856,13 +856,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
             installedRepository));
 
     // only show screen shots / video if the app has them
-    if (isMediaAvailable(media)) {
-      displayables.add(new AppViewScreenshotsDisplayable(app, appViewAnalytics));
-    }
     displayables.add(new AppViewDescriptionDisplayable(getApp, appViewAnalytics));
 
     displayables.add(new AppViewFlagThisDisplayable(getApp, appViewAnalytics));
-    displayables.add(new AppViewDeveloperDisplayable(getApp));
 
     return displayables;
   }
@@ -947,7 +943,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   @Override public void scroll(Position position) {
     RecyclerView rView = getRecyclerView();
     if (rView == null || getAdapter().getItemCount() == 0) {
-      Logger.getInstance().e(TAG, "Recycler view is null or there are no elements in the adapter");
+      Logger.getInstance()
+          .e(TAG, "Recycler view is null or there are no elements in the adapter");
       return;
     }
 

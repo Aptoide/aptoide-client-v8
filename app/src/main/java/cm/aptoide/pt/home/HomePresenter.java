@@ -108,7 +108,7 @@ public class HomePresenter implements Presenter {
             handleError(bundlesModel.getError());
           } else if (!bundlesModel.isLoading()) {
             view.hideLoading();
-            view.showHomeBundles(bundlesModel.getList());
+            view.showBundles(bundlesModel.getList());
           }
         });
   }
@@ -260,10 +260,10 @@ public class HomePresenter implements Presenter {
           } else {
             if (!bundlesModel.isLoading()) {
               view.showMoreHomeBundles(bundlesModel.getList());
+              view.hideLoading();
             }
           }
           view.hideShowMore();
-          view.hideLoading();
         });
   }
 
@@ -290,7 +290,7 @@ public class HomePresenter implements Presenter {
             handleError(bundlesModel.getError());
           } else {
             if (!bundlesModel.isLoading()) {
-              view.showHomeBundles(bundlesModel.getList());
+              view.showBundles(bundlesModel.getList());
             }
           }
         });
@@ -301,8 +301,8 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
-            .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(reachesBottom -> loadNextBundles())
+            .doOnNext(click -> view.showLoading())
+            .flatMapSingle(click -> loadNextBundles())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
@@ -312,13 +312,14 @@ public class HomePresenter implements Presenter {
   @VisibleForTesting public void loadUserImage() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> accountManager.accountStatus()
-            .first())
+        .flatMap(created -> accountManager.accountStatus())
         .flatMap(account -> getUserAvatar(account))
         .observeOn(viewScheduler)
         .doOnNext(userAvatarUrl -> {
           if (userAvatarUrl != null) {
             view.setUserImage(userAvatarUrl);
+          } else {
+            view.setDefaultUserImage();
           }
           view.showAvatar();
         })

@@ -7,13 +7,13 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -108,7 +108,8 @@ public class DeepLinkManager {
         appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
         appViewDeepLink(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1),
-            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY), true);
+            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY), true,
+            intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksKeys.APK_FY, false));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
         appViewDeepLink(
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
@@ -170,10 +171,15 @@ public class DeepLinkManager {
     appNavigator.navigateWithMd5(md5);
   }
 
-  private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
-    NewAppViewFragment.OpenType openType =
-        showPopup ? NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
-            : NewAppViewFragment.OpenType.OPEN_ONLY;
+  private void appViewDeepLink(long appId, String packageName, boolean showPopup, boolean isApkfy) {
+    NewAppViewFragment.OpenType openType;
+    if (isApkfy) {
+      openType = NewAppViewFragment.OpenType.APK_FY_INSTALL_POPUP;
+    } else {
+      openType = showPopup ? NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
+          : NewAppViewFragment.OpenType.OPEN_ONLY;
+    }
+
     appNavigator.navigateWithAppId(appId, packageName, openType, "");
   }
 
@@ -228,8 +234,10 @@ public class DeepLinkManager {
                   .map(success -> stores);
             }
           })
-          .subscribe(stores -> Logger.getInstance().d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
-            Logger.getInstance().e(TAG, "newrepoDeepLink: " + throwable);
+          .subscribe(stores -> Logger.getInstance()
+              .d(TAG, "newrepoDeepLink: all stores added"), throwable -> {
+            Logger.getInstance()
+                .e(TAG, "newrepoDeepLink: " + throwable);
             CrashReport.getInstance()
                 .log(throwable);
           }));
@@ -312,13 +320,15 @@ public class DeepLinkManager {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE_NOT_LOGGED_IN);
             bottomNavigationNavigator.navigateToStore();
           }
-        }, throwable -> Logger.getInstance().e(TAG, "myStoreDeepLink: " + throwable)));
+        }, throwable -> Logger.getInstance()
+            .e(TAG, "myStoreDeepLink: " + throwable)));
   }
 
   private void pickAppDeeplink() {
     subscriptions.add(adsRepository.getAdForShortcut()
-        .subscribe(ad -> appViewDeepLink(ad.getAppId(), ad.getPackageName(), false),
-            throwable -> Logger.getInstance().e(TAG, "pickAppDeepLink: " + throwable)));
+        .subscribe(ad -> appViewDeepLink(ad.getAppId(), ad.getPackageName(), false, false),
+            throwable -> Logger.getInstance()
+                .e(TAG, "pickAppDeepLink: " + throwable)));
   }
 
   private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,

@@ -234,6 +234,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -421,10 +422,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides IdsRepository provideIdsRepository(
       @Named("default") SharedPreferences defaultSharedPreferences,
       ContentResolver contentResolver) {
+    Context applicationContext = application.getApplicationContext();
     return new IdsRepository(
-        SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
-            defaultSharedPreferences), application,
-        Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID));
+        SecurePreferencesImplementation.getInstance(applicationContext, defaultSharedPreferences),
+        applicationContext, Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID));
   }
 
   @Singleton @Provides ContentResolver provideContentResolver() {
@@ -698,7 +699,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("extraID") String extraId) {
     return new RefreshTokenInvalidator(bodyInterceptor, httpClient,
         WebService.getDefaultConverter(), sharedPreferences, extraId, new NoOpTokenInvalidator(),
-        authenticationPersistence);
+        authenticationPersistence, PublishSubject.create());
+  }
+
+  @Singleton @Provides InvalidRefreshTokenLogoutManager provideInvalidRefreshTokenLogoutManager(
+      AptoideAccountManager aptoideAccountManager, TokenInvalidator refreshTokenInvalidator) {
+    return new InvalidRefreshTokenLogoutManager(aptoideAccountManager,
+        ((RefreshTokenInvalidator) refreshTokenInvalidator));
   }
 
   @Singleton @Provides @Named("no-authentication-v3")
@@ -1197,10 +1204,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       QManager qManager, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
-    return new RemoteBundleDataSource(5, Integer.MAX_VALUE, bodyInterceptorPoolV7, okHttpClient,
+    return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
-        new StoreCredentialsProviderImpl(
-            AccessorFactory.getAccessorFor(database, Store.class)).fromUrl(""),
+        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
         idsRepository.getUniqueIdentifier(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
         ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
@@ -1211,7 +1217,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesRepository providesBundleRepository(
       @Named("remote") BundleDataSource remoteBundleDataSource) {
-    return new BundlesRepository(remoteBundleDataSource, new ArrayList<>(), 0, 5);
+    return new BundlesRepository(remoteBundleDataSource, new HashMap<>(), new HashMap<>(), 5);
   }
 
   @Singleton @Provides AdMapper providesAdMapper() {

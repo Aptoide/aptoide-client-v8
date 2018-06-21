@@ -586,6 +586,21 @@ public class AppViewPresenter implements Presenter {
                         })
                                 .observeOn(viewScheduler))))
                 .map(__ -> appViewModel);
+          } else if (appViewModel.getOpenType()
+              == NewAppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
+            return accountManager.accountStatus()
+                .observeOn(viewScheduler)
+                .flatMap(account -> view.showOpenAndInstallApkFyDialog(appViewModel.getMarketName(),
+                    appViewModel.getAppName())
+                    .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
+                        appViewModel.getAppId()).observeOn(viewScheduler)
+                        .doOnCompleted(() -> {
+                          appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                              appViewModel.getDeveloper()
+                                  .getName(), action.toString());
+                          showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName());
+                        })))
+                .map(__ -> appViewModel);
           }
           return Observable.just(appViewModel);
         })

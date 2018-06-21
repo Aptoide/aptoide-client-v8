@@ -1,6 +1,5 @@
 package cm.aptoide.pt.analytics;
 
-import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -8,11 +7,13 @@ import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.tracking.Tracking;
 import cm.aptoide.analytics.implementation.tracking.UTM;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import java.io.IOException;
@@ -84,19 +85,20 @@ public class FirstLaunchAnalytics {
     return data;
   }
 
-  public Completable sendAppStart(Application application, SharedPreferences sharedPreferences,
-      Converter.Factory converterFactory, OkHttpClient okHttpClient,
-      BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
-      boolean isFirstRun, String uniqueIdentifier) {
+  public Completable sendAppStart(android.app.Application application,
+      SharedPreferences sharedPreferences, Converter.Factory converterFactory,
+      OkHttpClient okHttpClient, BodyInterceptor<BaseBody> bodyInterceptor,
+      TokenInvalidator tokenInvalidator) {
 
     FacebookSdk.sdkInitialize(application);
     AppEventsLogger.activateApp(application);
     AppEventsLogger.newLogger(application);
     return Observable.fromCallable(() -> {
-      AppEventsLogger.setUserID(uniqueIdentifier);
+      AppEventsLogger.setUserID((((AptoideApplication) application).getIdsRepository()
+          .getUniqueIdentifier()));
       return null;
     })
-        .filter(firstRun -> isFirstRun)
+        .filter(firstRun -> SecurePreferences.isFirstRun(sharedPreferences))
         .doOnNext(dimensions -> setupDimensions(application))
         .doOnNext(facebookFirstLaunch -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
             utmContent, entryPoint))

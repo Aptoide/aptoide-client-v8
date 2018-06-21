@@ -211,7 +211,7 @@
       android:id="@+id/dialog_ok_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="right"
+      android:layout_gravity="end"
       android:background="?attr/selectableItemBackground"
       android:paddingBottom="8dp"
       android:paddingTop="8dp"

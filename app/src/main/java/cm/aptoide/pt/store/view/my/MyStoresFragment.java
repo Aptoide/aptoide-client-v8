@@ -90,7 +90,9 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
     registerForViewChanges();
-    userAvatar = (ImageView) getView().findViewById(R.id.user_actionbar_icon);
+    if (getView() != null) {
+      userAvatar = (ImageView) getView().findViewById(R.id.user_actionbar_icon);
+    }
     attachPresenter(myStoresPresenter);
   }
 
@@ -99,8 +101,8 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     return requestFactoryCdnPool.newStoreWidgets(url)
         .observe(refresh, bypassServerCache)
         .observeOn(Schedulers.io())
-        .flatMap(getStoreWidgets -> parseDisplayables(getStoreWidgets))
-        .map(list -> addFollowStoreDisplayable(list));
+        .flatMap(this::parseDisplayables)
+        .map(this::addFollowStoreDisplayable);
   }
 
   @Nullable @Override
@@ -155,7 +157,8 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     Observable<List<Store>> storesObservable = storeRepository.getAll()
         .skip(1)
         .doOnNext(__ -> {
-          Logger.getInstance().d(TAG, "Store database changed, reloading...");
+          Logger.getInstance()
+              .d(TAG, "Store database changed, reloading...");
           reloadData();
         });
 
@@ -191,9 +194,11 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
   }
 
   @Override public void setUserImage(String userAvatarUrl) {
-    ImageLoader.with(getContext())
-        .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar,
-            R.drawable.ic_account_circle);
+    if (userAvatar != null) {
+      ImageLoader.with(getContext())
+          .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar,
+              R.drawable.ic_account_circle);
+    }
   }
 
   @Override public Observable<Void> imageClick() {
@@ -201,6 +206,11 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
   }
 
   @Override public void showAvatar() {
-    userAvatar.setVisibility(View.VISIBLE);
+    if (userAvatar != null) userAvatar.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void setDefaultUserImage() {
+    ImageLoader.with(getContext())
+        .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
   }
 }

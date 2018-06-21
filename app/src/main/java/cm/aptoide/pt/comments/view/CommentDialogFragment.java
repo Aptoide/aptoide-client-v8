@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -262,7 +262,8 @@ public class CommentDialogFragment
             .observe(true, true);
     }
     // default case
-    Logger.getInstance().e(this.getTag(), "Unable to create reply due to missing comment type");
+    Logger.getInstance()
+        .e(this.getTag(), "Unable to create reply due to missing comment type");
     return Observable.empty();
   }
 

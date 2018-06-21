@@ -106,7 +106,7 @@ public class HomePresenterTest {
     //Then the progress indicator should be shown
     verify(view).showLoading();
     //Then the home should be displayed
-    verify(view).showHomeBundles(bundlesModel.getList());
+    verify(view).showBundles(bundlesModel.getList());
     //Then the progress indicator should be hidden
     verify(view).hideLoading();
   }
@@ -121,6 +121,18 @@ public class HomePresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the generic error message should be shown in the UI
     verify(view).showGenericError();
+  }
+
+  @Test public void errorLoadingBundles_ShowsNetworkError() {
+    //Given an initialised HomePresenter
+    presenter.onCreateLoadBundles();
+    //When the loading of bundlesModel is requested
+    //And an unexpected error occured
+    when(home.loadHomeBundles()).thenReturn(
+        Single.just(new HomeBundlesModel(HomeBundlesModel.Error.NETWORK)));
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //Then the generic error message should be shown in the UI
+    verify(view).showNetworkError();
   }
 
   @Test public void appClicked_NavigateToAppView() {

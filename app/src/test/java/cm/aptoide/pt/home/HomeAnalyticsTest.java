@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;

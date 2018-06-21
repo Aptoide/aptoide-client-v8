@@ -65,7 +65,8 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
   @Override public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
       String authTokenType, String[] requiredFeatures, Bundle options)
       throws NetworkErrorException {
-    Logger.getInstance().v(TAG, "Adding account: type=" + accountType);
+    Logger.getInstance()
+        .v(TAG, "Adding account: type=" + accountType);
     return createAuthActivityIntentBundle(response, accountType, requiredFeatures, authTokenType,
         null, options);
   }
@@ -91,7 +92,8 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     String authToken = androidAccountManager.peekAuthToken(account, authTokenType);
 
-    Logger.getInstance().v(TAG, "peekAuthToken returned - " + account + " " + authToken);
+    Logger.getInstance()
+        .v(TAG, "peekAuthToken returned - " + account + " " + authToken);
 
     // Lets give another try to authenticate the user
 
@@ -101,7 +103,8 @@ class AccountAuthenticator extends AbstractAccountAuthenticator {
     result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
     result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
 
-    Logger.getInstance().v(TAG, "getAuthToken returning - " + account + " " + authToken);
+    Logger.getInstance()
+        .v(TAG, "getAuthToken returning - " + account + " " + authToken);
 
     return result;
 

@@ -16,9 +16,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
@@ -113,7 +113,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), tag, storeContext.name());
+        .getSimpleName(), tag, storeContext != null ? storeContext.name() : null);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -214,7 +214,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     setupToolbar();
   }
 
-  private static class BundleCons {
+  public static class BundleCons {
 
     public static final String TYPE = "type";
     public static final String NAME = "name";

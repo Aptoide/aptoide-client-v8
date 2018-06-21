@@ -22,7 +22,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withContentDesc
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static cm.aptoide.pt.UITests.goToSettings;
 import static cm.aptoide.pt.UITests.skipWizard;
-import static org.hamcrest.Matchers.allOf;
 
 /**
  * Created by jose_messejana on 24-10-2017.

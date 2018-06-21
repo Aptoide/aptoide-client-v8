@@ -220,17 +220,17 @@ public final class PRNGFixes {
    */
   public static class LinuxPRNGSecureRandom extends SecureRandomSpi {
 
-        /*
-         * IMPLEMENTATION NOTE: Requests to generate bytes and to mix in a seed
-         * are passed through to the Linux PRNG (/dev/urandom). Instances of
-         * this class seed themselves by mixing in the current time, PID, UID,
-         * build fingerprint, and hardware serial number (where available) into
-         * Linux PRNG.
-         *
-         * Concurrency: Read requests to the underlying Linux PRNG are
-         * serialized (on sLock) to ensure that multiple threads do not get
-         * duplicated PRNG output.
-         */
+    /*
+     * IMPLEMENTATION NOTE: Requests to generate bytes and to mix in a seed
+     * are passed through to the Linux PRNG (/dev/urandom). Instances of
+     * this class seed themselves by mixing in the current time, PID, UID,
+     * build fingerprint, and hardware serial number (where available) into
+     * Linux PRNG.
+     *
+     * Concurrency: Read requests to the underlying Linux PRNG are
+     * serialized (on sLock) to ensure that multiple threads do not get
+     * duplicated PRNG output.
+     */
 
     private static final File URANDOM_FILE = new File("/dev/urandom");
 
