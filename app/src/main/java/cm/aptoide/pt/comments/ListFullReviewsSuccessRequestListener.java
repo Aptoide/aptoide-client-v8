@@ -94,7 +94,7 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
       displayables.add(
           new RateAndReviewCommentDisplayable(new ReviewWithAppName(fragment.getAppName(), review),
               new ConcreteItemCommentAdder(count, fragment, review), review.getCommentList()
-              .getTotal(), fragmentNavigator, fragmentProvider));
+              .getTotal()));
 
       if (review.getId() == fragment.getReviewId()) {
         index = count;
