@@ -28,7 +28,8 @@ public class AnalyticsManager {
   /**
    * <p>Logs the events to the correspondent event loggers.</p>
    *
-   * </p> Only the events whose {@code eventName} is listed in the respective eventLoggers map are logged.</p>
+   * </p> Only the events whose {@code eventName} is listed in the respective eventLoggers map are
+   * logged.</p>
    *
    * @param data The attributes of the event
    * @param eventName The name of the event to be logged.
@@ -63,7 +64,8 @@ public class AnalyticsManager {
   }
 
   /**
-   * <p> Makes a simple request with the specified {@code url} with the {@link KnockEventLogger}.</p>
+   * <p> Makes a simple request with the specified {@code url} with the {@link
+   * KnockEventLogger}.</p>
    * <p> Response is not handled.</p>
    *
    * @param url The url to log.
