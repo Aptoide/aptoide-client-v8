@@ -43,12 +43,13 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -1258,11 +1259,32 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     ready.onNext(null);
   }
 
-  @Override public void showRecommendsDialog() {
+  @Override public void showRecommendsDialog(Experiment experiment) {
     LayoutInflater inflater = LayoutInflater.from(getActivity());
     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     View dialogView = inflater.inflate(R.layout.logged_in_share, null);
     alertDialog.setView(dialogView);
+
+    String experimentAssignment;
+
+    if (experiment.isExperimentOver() || !experiment.isPartOfExperiment()) {
+      experimentAssignment = "default";
+    } else {
+      experimentAssignment = experiment.getAssignment();
+    }
+
+    switch (experimentAssignment) {
+      case "default":
+      case "continue":
+        ((Button) dialogView.findViewById(R.id.continue_button)).setText(
+            R.string.appview_button_continue);
+        break;
+      case "share":
+        ((Button) dialogView.findViewById(R.id.continue_button)).setText(
+            R.string.timeline_button_share);
+        break;
+    }
+    ((Button) dialogView.findViewById(R.id.continue_button)).setText(experiment.getPayload());
 
     dialogView.findViewById(R.id.continue_button)
         .setOnClickListener(__ -> {

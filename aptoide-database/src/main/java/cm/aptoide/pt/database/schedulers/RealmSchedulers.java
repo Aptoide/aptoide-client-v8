@@ -37,7 +37,7 @@ public final class RealmSchedulers {
     return getInstance().threadScheduler;
   }
 
-  /**
+  /**Å
    * Spin-Lock to create a single instance of {@link RealmSchedulers}
    */
   private static RealmSchedulers getInstance() {

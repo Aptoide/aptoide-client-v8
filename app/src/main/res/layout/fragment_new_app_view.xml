@@ -92,10 +92,9 @@
                 android:id="@+id/trusted_badge"
                 android:layout_width="23dp"
                 android:layout_height="26dp"
-                android:layout_above="@id/trusted_text"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginStart="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
                 android:src="@drawable/ic_badge_trusted"
                 />
           </RelativeLayout>

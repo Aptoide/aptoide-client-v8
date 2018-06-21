@@ -1,27 +1,44 @@
 package cm.aptoide.pt.abtesting;
 
+import rx.Observable;
+import rx.Single;
+
 /**
  * Created by franciscocalado on 15/06/18.
  */
 
 public class ABTestManager {
-  private ABTestCenter abTestCenter;
+  private ABTestCenterRepository abTestCenterRepository;
 
-  public ABTestManager(ABTestCenter abTestCenter) {
-    this.abTestCenter = abTestCenter;
+  public ABTestManager(ABTestCenterRepository abTestCenterRepository) {
+    this.abTestCenterRepository = abTestCenterRepository;
   }
 
-  public void getExperiment(Experiments experiment, String id) {
+  public Single<Experiment> getExperiment(ExperimentType experiment) {
+    return abTestCenterRepository.getExperiment(experiment)
+        .toSingle();
   }
 
-  public void recordImpression(Experiments experiment, String id) {
+  public Observable<Boolean> recordImpression(ExperimentType experiment) {
+    return abTestCenterRepository.recordImpression(experiment);
   }
 
-  public void recordAction(Experiments experiment, String action, String id) {
+  public Observable<Boolean> recordAction(ExperimentType experiment) {
+    return abTestCenterRepository.recordAction(experiment);
   }
 
-  public enum Experiments {
-    SHARE_DIALOG,
+  public enum ExperimentType {
+    SHARE_DIALOG("android_implement");
+
+    private String name;
+
+    ExperimentType(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
   }
 
 }
