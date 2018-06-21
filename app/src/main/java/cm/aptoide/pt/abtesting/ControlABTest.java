@@ -20,14 +20,16 @@ public class ControlABTest<T> implements ABTest<T> {
   }
 
   @Override public Observable<ParticipatingExperiment> participate() {
-    Logger.getInstance().d("ControlABTest",
-        "AB test manager not initialized. Participate called in control AB Test: " + name);
+    Logger.getInstance()
+        .d("ControlABTest",
+            "AB test manager not initialized. Participate called in control AB Test: " + name);
     return null;
   }
 
   @Override public Observable<ConvertedExperiment> convert() {
-    Logger.getInstance().d("ControlABTest",
-        "AB test manager not initialized. Convert called in control AB Test: " + name);
+    Logger.getInstance()
+        .d("ControlABTest",
+            "AB test manager not initialized. Convert called in control AB Test: " + name);
     return null;
   }
 
@@ -36,8 +38,9 @@ public class ControlABTest<T> implements ABTest<T> {
   }
 
   @Override public Observable<Boolean> prefetch() {
-    Logger.getInstance().d("ControlABTest",
-        "AB test manager not initialized. Prefetch called in control AB Test: " + name);
+    Logger.getInstance()
+        .d("ControlABTest",
+            "AB test manager not initialized. Prefetch called in control AB Test: " + name);
     return null;
   }
 }

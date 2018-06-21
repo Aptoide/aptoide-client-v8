@@ -10,9 +10,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -183,7 +183,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
             finishLoading();
           }, false);
     } else {
-      Logger.getInstance().e(TAG, "App id unavailable");
+      Logger.getInstance()
+          .e(TAG, "App id unavailable");
       setDataUnavailable();
     }
   }

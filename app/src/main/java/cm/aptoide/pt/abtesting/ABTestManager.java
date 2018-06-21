@@ -45,10 +45,12 @@ public class ABTestManager {
   }
 
   public Observable<Void> initialize(String clientId) {
-    Logger.getInstance().i(TAG, "initialize() called with: " + "clientId = [" + clientId + "]");
+    Logger.getInstance()
+        .i(TAG, "initialize() called with: " + "clientId = [" + clientId + "]");
     initializeSixpack(clientId);
     registerTests();
-    return prefetchTests().doOnNext(success -> Logger.getInstance().i(TAG, "ABTestManager initialized"));
+    return prefetchTests().doOnNext(success -> Logger.getInstance()
+        .i(TAG, "ABTestManager initialized"));
   }
 
   private void initializeSixpack(String clientId) {

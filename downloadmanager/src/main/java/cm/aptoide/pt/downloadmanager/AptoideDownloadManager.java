@@ -172,9 +172,11 @@ public class AptoideDownloadManager {
                 .setOverallDownloadStatus(Download.PAUSED);
           }
           downloadAccessor.save(downloads);
-          Logger.getInstance().d(TAG, "Downloads paused");
+          Logger.getInstance()
+              .d(TAG, "Downloads paused");
         }, err -> {
-          Logger.getInstance().e(TAG, err);
+          Logger.getInstance()
+              .e(TAG, err);
         });
   }
 
@@ -203,12 +205,14 @@ public class AptoideDownloadManager {
             if (download != null) {
               new DownloadTask(downloadAccessor, download, fileUtils, analytics, this, apkPath,
                   obbPath, downloadsStoragePath, fileDownloader).startDownload();
-              Logger.getInstance().d(TAG, "Download with md5 " + download.getMd5() + " started");
+              Logger.getInstance()
+                  .d(TAG, "Download with md5 " + download.getMd5() + " started");
             } else {
               isDownloading = false;
               cacheHelper.cleanCache()
-                  .subscribe(cleanedSize -> Logger.getInstance().d(TAG,
-                      "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
+                  .subscribe(cleanedSize -> Logger.getInstance()
+                          .d(TAG,
+                              "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
                       throwable -> {
                         CrashReport.getInstance()
                             .log(throwable);
@@ -251,7 +255,8 @@ public class AptoideDownloadManager {
           deleteDownloadFromDb(download.getMd5());
         }, throwable -> {
           if (throwable instanceof NullPointerException) {
-            Logger.getInstance().d(TAG, "Download item was null, are you pressing on remove button too fast?");
+            Logger.getInstance()
+                .d(TAG, "Download item was null, are you pressing on remove button too fast?");
           } else {
             throwable.printStackTrace();
           }
@@ -288,10 +293,12 @@ public class AptoideDownloadManager {
 
   public Void pauseDownload(String md5) {
     internalPause(md5).subscribe(download -> {
-      Logger.getInstance().d(TAG, "Download with " + md5 + " paused");
+      Logger.getInstance()
+          .d(TAG, "Download with " + md5 + " paused");
     }, throwable -> {
       if (throwable instanceof DownloadNotFoundException) {
-        Logger.getInstance().d(TAG, "there are no download to pause with the md5: " + md5);
+        Logger.getInstance()
+            .d(TAG, "there are no download to pause with the md5: " + md5);
       } else {
         throwable.printStackTrace();
       }

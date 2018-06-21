@@ -1,7 +1,7 @@
 package cm.aptoide.pt.billing;
 
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.billing.payment.Payment;
 import cm.aptoide.pt.billing.product.InAppProduct;
 import cm.aptoide.pt.billing.product.Product;

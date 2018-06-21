@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -18,9 +21,6 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.ContactsRepository;
 import cm.aptoide.pt.addressbook.utils.ContactUtils;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.FacebookModel;
 import cm.aptoide.pt.dataprovider.model.v7.TwitterModel;
@@ -216,8 +216,9 @@ public class AddressBookFragment extends UIComponentFragment
           }
 
           @Override public void onError(FacebookException error) {
-            Logger.getInstance().e(this.getClass()
-                .getName(), error.getMessage());
+            Logger.getInstance()
+                .e(this.getClass()
+                    .getName(), error.getMessage());
           }
         });
   }

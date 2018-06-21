@@ -47,7 +47,8 @@ public class IdsRepository {
     String aptoideId = sharedPreferences.getString(APTOIDE_CLIENT_UUID, null);
     if (!TextUtils.isEmpty(aptoideId)) {
       // if we already have the aptoide client uuid, return it
-      Logger.getInstance().v(TAG, "getUniqueIdentifier: in sharedPreferences: " + aptoideId);
+      Logger.getInstance()
+          .v(TAG, "getUniqueIdentifier: in sharedPreferences: " + aptoideId);
       return aptoideId;
     }
     // else, we generate a aptoide client uuid and save it locally for further use
@@ -59,17 +60,20 @@ public class IdsRepository {
     if (TextUtils.isEmpty(aptoideId)) {
       aptoideId = getAndroidId();
       if (!TextUtils.isEmpty(aptoideId)) {
-        Logger.getInstance().v(TAG, "getUniqueIdentifier: getAndroidId: " + aptoideId);
+        Logger.getInstance()
+            .v(TAG, "getUniqueIdentifier: getAndroidId: " + aptoideId);
       }
     } else {
-      Logger.getInstance().v(TAG, "getUniqueIdentifier: getGoogleAdvertisingId: " + aptoideId);
+      Logger.getInstance()
+          .v(TAG, "getUniqueIdentifier: getGoogleAdvertisingId: " + aptoideId);
     }
 
     // if android id is null or empty use random generated UUID
     if (TextUtils.isEmpty(aptoideId)) {
       aptoideId = UUID.randomUUID()
           .toString();
-      Logger.getInstance().v(TAG, "getUniqueIdentifier: randomUUID: " + aptoideId);
+      Logger.getInstance()
+          .v(TAG, "getUniqueIdentifier: randomUUID: " + aptoideId);
     }
 
     sharedPreferences.edit()

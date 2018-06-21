@@ -70,7 +70,8 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     cache = new ObjectMapper().readValue(cacheFile,
         new TypeReference<ConcurrentHashMap<String, ResponseCacheEntry>>() {
         });
-    Logger.getInstance().d(TAG, "Loaded cache file");
+    Logger.getInstance()
+        .d(TAG, "Loaded cache file");
   }
 
   @Override public void destroy() {
@@ -117,7 +118,8 @@ public class L2Cache extends StringBaseCache<Request, Response> {
    */
   private void store() throws IOException {
     new ObjectMapper().writeValue(cacheFile, cache);
-    Logger.getInstance().d(TAG, "Stored cache file");
+    Logger.getInstance()
+        .d(TAG, "Stored cache file");
   }
 
   @Override public void put(String key, Response response) {
@@ -158,13 +160,15 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     try {
       Headers headers = response.headers();
       if (headers.size() <= 0) {
-        Logger.getInstance().d(TAG, "not caching the response due to empty headers");
+        Logger.getInstance()
+            .d(TAG, "not caching the response due to empty headers");
         return 0;
       }
 
       List<String> cacheControlHeaders = headers.values(CACHE_CONTROL_HEADER);
       if (cacheControlHeaders.size() <= 0) {
-        Logger.getInstance().d(TAG, "not caching the response due to empty Cache-Control header");
+        Logger.getInstance()
+            .d(TAG, "not caching the response due to empty Cache-Control header");
         return 0;
       }
 

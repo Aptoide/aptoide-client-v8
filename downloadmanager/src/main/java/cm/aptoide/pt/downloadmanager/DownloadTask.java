@@ -111,7 +111,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
     download.setOverallProgress((int) Math.floor((float) progress / download.getFilesToDownload()
         .size()));
     saveDownloadInDb(download);
-    Logger.getInstance().d(TAG, "Download: " + download.getMd5() + " Progress: " + download.getOverallProgress());
+    Logger.getInstance()
+        .d(TAG, "Download: " + download.getMd5() + " Progress: " + download.getOverallProgress());
     return download;
   }
 
@@ -206,10 +207,12 @@ class DownloadTask extends FileDownloadLargeFileListener {
           }
           return checkMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
             if (fileMoved) {
-              Logger.getInstance().d(TAG, "Download md5 match");
+              Logger.getInstance()
+                  .d(TAG, "Download md5 match");
               file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
             } else {
-              Logger.getInstance().e(TAG, "Download md5 is not correct");
+              Logger.getInstance()
+                  .e(TAG, "Download md5 is not correct");
               downloadManager.deleteDownloadlFiles(download);
               download.setDownloadError(Download.GENERIC_ERROR);
               setDownloadStatus(Download.ERROR, download, task);
@@ -227,7 +230,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
     stopDownloadQueue(download);
     if (e instanceof FileDownloadHttpException
         && ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
-      Logger.getInstance().d(TAG, "File not found on link: " + task.getUrl());
+      Logger.getInstance()
+          .d(TAG, "File not found on link: " + task.getUrl());
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
         if (TextUtils.equals(fileToDownload.getLink(), task.getUrl()) && !TextUtils.isEmpty(
             fileToDownload.getAltLink())) {
@@ -239,7 +243,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
         }
       }
     } else {
-      Logger.getInstance().d(TAG, "Error on download: " + download.getMd5());
+      Logger.getInstance()
+          .d(TAG, "Error on download: " + download.getMd5());
       // Apparently throwable e can be null.
       if (e != null) {
         e.printStackTrace();

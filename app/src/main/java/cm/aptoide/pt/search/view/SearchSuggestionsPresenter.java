@@ -105,7 +105,8 @@ import rx.Single;
                 .flatMapSingle(query -> searchSuggestionManager.getSuggestionsForApp(query)
                     .onErrorResumeNext(err -> {
                       if (err instanceof TimeoutException) {
-                        Logger.getInstance().i(TAG, "Timeout reached while waiting for application suggestions");
+                        Logger.getInstance()
+                            .i(TAG, "Timeout reached while waiting for application suggestions");
                         return Single.just(suggestionCursorAdapter.getSuggestions());
                       }
                       return Single.error(err);

@@ -153,7 +153,8 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   }
 
   @Override public void onClick(View v) {
-    Logger.getInstance().d(TAG, "showing other version for app with id = " + appId);
+    Logger.getInstance()
+        .d(TAG, "showing other version for app with id = " + appId);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
         .newAppViewFragment(appId, packageName, null, storeName, ""), true);
   }

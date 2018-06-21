@@ -232,7 +232,8 @@ public class AppViewFlagThisWidget extends Widget<AppViewFlagThisDisplayable> {
 
             if (response.hasErrors()) {
               for (final ErrorResponse errorResponse : response.getErrors()) {
-                Logger.getInstance().e(TAG, errorResponse.getErrorDescription());
+                Logger.getInstance()
+                    .e(TAG, errorResponse.getErrorDescription());
               }
             }
 

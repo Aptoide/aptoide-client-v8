@@ -236,9 +236,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
       repository.sync(true, false)
           .andThen(repository.getAll(false))
           .first()
-          .subscribe(updates -> Logger.getInstance().d(TAG, "updates refreshed"),
-              throwable -> CrashReport.getInstance()
-                  .log(throwable));
+          .subscribe(updates -> Logger.getInstance()
+              .d(TAG, "updates refreshed"), throwable -> CrashReport.getInstance()
+              .log(throwable));
     }
   }
 

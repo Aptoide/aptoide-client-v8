@@ -18,11 +18,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
@@ -165,8 +165,9 @@ public class UpdateWidget extends Widget<UpdateDisplayable> {
           .setPositiveButton(R.string.yes, (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
               compositeSubscription.add(updateRepository.setExcluded(packageName, true)
-                  .subscribe(success -> Logger.getInstance().d(TAG,
-                      String.format("Update with package name %s was excluded", packageName)),
+                  .subscribe(success -> Logger.getInstance()
+                          .d(TAG,
+                              String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
                         ShowMessage.asSnack(context, R.string.unknown_error);
                         CrashReport.getInstance()

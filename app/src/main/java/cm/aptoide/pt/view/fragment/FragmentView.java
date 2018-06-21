@@ -55,9 +55,16 @@ public abstract class FragmentView extends BaseFragment implements View {
     try {
       activityResultNavigator = (ActivityResultNavigator) activity;
     } catch (ClassCastException ignored) {
-      Logger.getInstance().e(TAG, String.format("Parent activity must implement %s interface",
-          ActivityResultNavigator.class.getName()));
+      Logger.getInstance()
+          .e(TAG, String.format("Parent activity must implement %s interface",
+              ActivityResultNavigator.class.getName()));
     }
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    ScreenTrackingUtils.getInstance()
+        .decrementNumberOfScreens();
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,12 +73,6 @@ public abstract class FragmentView extends BaseFragment implements View {
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultThemeName();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    ScreenTrackingUtils.getInstance()
-        .decrementNumberOfScreens();
   }
 
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {

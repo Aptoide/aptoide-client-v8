@@ -8,10 +8,12 @@ public class ConsoleLogger implements CrashLogger {
   private static final String TAG = ConsoleLogger.class.getName();
 
   @Override public void log(Throwable throwable) {
-    Logger.getInstance().e(TAG, "Exception found", throwable);
+    Logger.getInstance()
+        .e(TAG, "Exception found", throwable);
   }
 
   @Override public void log(String key, String value) {
-    Logger.getInstance().w(TAG, "logString : key: " + key + " , value: " + value);
+    Logger.getInstance()
+        .w(TAG, "logString : key: " + key + " , value: " + value);
   }
 }

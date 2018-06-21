@@ -143,8 +143,9 @@ public class SocialRepository {
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {
-          Logger.getInstance().d(this.getClass()
-              .getSimpleName(), baseV7Response.toString());
+          Logger.getInstance()
+              .d(this.getClass()
+                  .getSimpleName(), baseV7Response.toString());
           timelineAnalytics.sendSocialActionEvent(timelineSocialActionData);
         }, throwable -> throwable.printStackTrace());
   }

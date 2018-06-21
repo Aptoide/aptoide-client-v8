@@ -7,8 +7,8 @@ package cm.aptoide.pt.app.view.screenshots;
 
 import android.os.Bundle;
 import android.view.View;
-import cm.aptoide.pt.R;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;

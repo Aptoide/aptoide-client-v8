@@ -289,7 +289,8 @@ public class AccountServiceV3 implements AccountService {
           }
         })
         .retryWhen(observableError -> retryOnTicket(observableError).doOnNext(__ -> {
-          Logger.getInstance().w("AccountManagerService", "retryOnTicket() doOnNext()");
+          Logger.getInstance()
+              .w("AccountManagerService", "retryOnTicket() doOnNext()");
         }));
   }
 }

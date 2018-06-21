@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.app.view.displayable;
 
-import cm.aptoide.pt.R;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;

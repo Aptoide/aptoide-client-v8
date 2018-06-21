@@ -152,7 +152,8 @@ public class StoreUtils {
   }
 
   public static String split(String repoUrl) {
-    Logger.getInstance().d("Aptoide-RepoUtils", "Splitting " + repoUrl);
+    Logger.getInstance()
+        .d("Aptoide-RepoUtils", "Splitting " + repoUrl);
     repoUrl = formatRepoUri(repoUrl);
     return repoUrl.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
   }
@@ -167,11 +168,13 @@ public class StoreUtils {
 
     if (repoUri.length() != 0 && repoUri.charAt(repoUri.length() - 1) != '/') {
       repoUri = repoUri + '/';
-      Logger.getInstance().d("Aptoide-ManageRepo", "repo uri: " + repoUri);
+      Logger.getInstance()
+          .d("Aptoide-ManageRepo", "repo uri: " + repoUri);
     }
     if (!repoUri.startsWith("http://")) {
       repoUri = "http://" + repoUri;
-      Logger.getInstance().d("Aptoide-ManageRepo", "repo uri: " + repoUri);
+      Logger.getInstance()
+          .d("Aptoide-ManageRepo", "repo uri: " + repoUri);
     }
 
     return repoUri;

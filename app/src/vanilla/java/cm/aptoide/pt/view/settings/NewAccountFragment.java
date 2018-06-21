@@ -20,10 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
-import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -53,7 +53,8 @@ public class NewAccountFragment extends BackButtonFragment
     NotBottomNavigationView {
 
   private static final float STROKE_SIZE = 0.04f;
-  private final String WHAT_IS_APTOIDETV_URL = "https://www.aptoide.com/legal/terms?header=0&menu=0";
+  private final String WHAT_IS_APTOIDETV_URL =
+      "https://www.aptoide.com/legal/terms?header=0&menu=0";
   protected Toolbar toolbar;
   @Inject NewAccountNavigator newAccountNavigator;
   @Inject AccountAnalytics accountAnalytics;
