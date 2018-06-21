@@ -388,7 +388,7 @@
   <string name="write_your_comment">Write your comment</string>
 
   <!-- Dialogs -->
-  <string name="installapp_alrt">Do you want to install: \n\n %s?</string>
+  <string name="installapp_alrt">Do you want to install: \n\n%s?</string>
 
   <!-- App permission -->
   <string name="permissions">See permissions</string>

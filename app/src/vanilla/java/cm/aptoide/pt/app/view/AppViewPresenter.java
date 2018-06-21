@@ -492,7 +492,8 @@ public class AppViewPresenter implements Presenter {
   private Observable<Integer> scheduleAnimations(int topReviewsCount) {
     if (topReviewsCount <= 1) {
       // not enough elements for animation
-      Logger.getInstance().w(TAG, "Not enough top reviews to do paging animation.");
+      Logger.getInstance()
+          .w(TAG, "Not enough top reviews to do paging animation.");
       return Observable.empty();
     }
 
@@ -558,6 +559,21 @@ public class AppViewPresenter implements Presenter {
             return accountManager.accountStatus()
                 .observeOn(viewScheduler)
                 .flatMap(account -> view.showOpenAndInstallDialog(appViewModel.getMarketName(),
+                    appViewModel.getAppName())
+                    .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
+                        appViewModel.getAppId()).observeOn(viewScheduler)
+                        .doOnCompleted(() -> {
+                          appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                              appViewModel.getDeveloper()
+                                  .getName(), action.toString());
+                          showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName());
+                        })))
+                .map(__ -> appViewModel);
+          } else if (appViewModel.getOpenType()
+              == NewAppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
+            return accountManager.accountStatus()
+                .observeOn(viewScheduler)
+                .flatMap(account -> view.showOpenAndInstallApkFyDialog(appViewModel.getMarketName(),
                     appViewModel.getAppName())
                     .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
                         appViewModel.getAppId()).observeOn(viewScheduler)
