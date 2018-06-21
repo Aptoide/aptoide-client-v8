@@ -992,6 +992,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .map(__ -> action);
   }
 
+  @Override
+  public Observable<DownloadAppViewModel.Action> showOpenAndInstallApkFyDialog(String title,
+      String appName) {
+    return GenericDialogs.createGenericOkCancelMessageWithCustomView(getContext(), title,
+        getContext().getString(R.string.installapp_alrt, appName), R.layout.apkfy_onboard_message)
+        .filter(response -> response.equals(YES))
+        .map(__ -> action);
+  }
+
   private void setTrustedBadge(Malware malware) {
     @DrawableRes int badgeResId;
     @StringRes int badgeMessageId;
@@ -1478,6 +1487,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     OPEN_AND_INSTALL, /**
      * open the appView and ask user if want to install the app
      */
-    OPEN_WITH_INSTALL_POPUP
+    OPEN_WITH_INSTALL_POPUP, /**
+     * open the appView and ask user if want to install the app
+     */
+    APK_FY_INSTALL_POPUP
   }
 }

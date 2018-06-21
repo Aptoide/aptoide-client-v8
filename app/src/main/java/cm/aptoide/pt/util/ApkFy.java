@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -38,8 +37,7 @@ public class ApkFy {
       if (appId != null) {
         intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
         intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, appId);
-        intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.SHOULD_INSTALL,
-            AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP);
+        intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APK_FY, true);
       }
       SecurePreferences.setApkFyRun(securePreferences);
     }
@@ -69,7 +67,8 @@ public class ApkFy {
         CrashReport.getInstance()
             .log("APKFY_APP_ID", appId);
       }
-      Logger.getInstance().d(TAG, e.getMessage());
+      Logger.getInstance()
+          .d(TAG, e.getMessage());
       CrashReport.getInstance()
           .log(e);
     }
