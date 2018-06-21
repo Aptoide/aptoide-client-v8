@@ -575,15 +575,15 @@ public class AppViewPresenter implements Presenter {
                         ABTestManager.ExperimentType.SHARE_DIALOG)
                         .flatMapCompletable(
                             experiment -> downloadApp(action, appViewModel.getPackageName(),
-                        appViewModel.getAppId()).observeOn(viewScheduler)
+                                appViewModel.getAppId()).observeOn(viewScheduler)
                                 .observeOn(viewScheduler)
-                        .doOnCompleted(() -> {
-                          appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
-                              appViewModel.getDeveloper()
-                                  .getName(), action.toString());
-                          showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName(),
-                              experiment);
-                        })
+                                .doOnCompleted(() -> {
+                                  appViewAnalytics.clickOnInstallButton(
+                                      appViewModel.getPackageName(), appViewModel.getDeveloper()
+                                          .getName(), action.toString());
+                                  showRecommendsDialog(account.isLoggedIn(),
+                                      appViewModel.getPackageName(), experiment);
+                                })
                                 .observeOn(viewScheduler))))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
@@ -592,14 +592,20 @@ public class AppViewPresenter implements Presenter {
                 .observeOn(viewScheduler)
                 .flatMap(account -> view.showOpenAndInstallApkFyDialog(appViewModel.getMarketName(),
                     appViewModel.getAppName())
-                    .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
-                        appViewModel.getAppId()).observeOn(viewScheduler)
-                        .doOnCompleted(() -> {
-                          appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
-                              appViewModel.getDeveloper()
-                                  .getName(), action.toString());
-                          showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName());
-                        })))
+                    .flatMapCompletable(action -> appViewManager.getABTestingExperiment(
+                        ABTestManager.ExperimentType.SHARE_DIALOG)
+                        .flatMapCompletable(
+                            experiment -> downloadApp(action, appViewModel.getPackageName(),
+                                appViewModel.getAppId()).observeOn(viewScheduler)
+                                .observeOn(viewScheduler)
+                                .doOnCompleted(() -> {
+                                  appViewAnalytics.clickOnInstallButton(
+                                      appViewModel.getPackageName(), appViewModel.getDeveloper()
+                                          .getName(), action.toString());
+                                  showRecommendsDialog(account.isLoggedIn(),
+                                      appViewModel.getPackageName(), experiment);
+                                })
+                                .observeOn(viewScheduler))))
                 .map(__ -> appViewModel);
           }
           return Observable.just(appViewModel);

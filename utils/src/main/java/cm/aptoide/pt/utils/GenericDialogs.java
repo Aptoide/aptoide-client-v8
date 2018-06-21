@@ -94,7 +94,8 @@ public class GenericDialogs {
   }
 
   /**
-   * Show an AlertDialog with the {@code title} and the {@code message} and a custom {@code view}. The Alert dialog has an
+   * Show an AlertDialog with the {@code title} and the {@code message} and a custom {@code view}.
+   * The Alert dialog has an
    * "ok" button.
    *
    * @param title Title to apply on AlertDialog

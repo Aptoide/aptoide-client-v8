@@ -9,8 +9,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;

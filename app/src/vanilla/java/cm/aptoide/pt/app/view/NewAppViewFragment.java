@@ -1288,6 +1288,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     switch (experimentAssignment) {
       case "default":
+        ((Button) dialogView.findViewById(R.id.continue_button)).setText(
+            R.string.appview_button_continue);
+        break;
       case "continue":
         ((Button) dialogView.findViewById(R.id.continue_button)).setText(
             R.string.appview_button_continue);
