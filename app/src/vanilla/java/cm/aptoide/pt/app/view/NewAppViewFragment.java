@@ -1300,7 +1300,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
             R.string.timeline_button_share);
         break;
     }
-    ((Button) dialogView.findViewById(R.id.continue_button)).setText(experiment.getPayload());
 
     dialogView.findViewById(R.id.continue_button)
         .setOnClickListener(__ -> {

@@ -2,7 +2,7 @@ package cm.aptoide.pt.abtesting;
 
 import java.util.HashMap;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by franciscocalado on 18/06/18.
@@ -26,7 +26,9 @@ public class ABTestCenterRepository {
       if (!localCache.get(experiment.getName())
           .getExperiment()
           .isExpired() && !localCache.get(experiment.getName())
-          .hasError()) {
+          .hasError() && !localCache.get(experiment.getName())
+          .getExperiment()
+          .isExperimentOver()) {
         return Observable.just(localCache.get(experiment.getName())
             .getExperiment());
       } else {
@@ -36,7 +38,7 @@ public class ABTestCenterRepository {
       }
     }
     return persistence.get(ABTestManager.ExperimentType.SHARE_DIALOG)
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(Schedulers.io())
         .flatMap(model -> {
           if (!model.hasError()) {
             return Observable.just(model.getExperiment());
