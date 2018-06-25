@@ -63,7 +63,6 @@
   <string name="appview_rating_card_text">Rating</string>
   <string name="appview_button_read_all">read all <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Trusted</string>
-  <string name="appview_rate_this_app_text">Rate this app</string>
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
   <string name="appcardview_title_no_stars" translatable="false">- -</string>
@@ -340,12 +339,6 @@
 
   <!--??-->
   <string name="read_more">See more</string>
-  <string name="flag_this_app_good">Good</string>
-  <string name="flag_this_app_button_text">Flag this app</string>
-  <string name="flag_this_app_need_licence">Needs license</string>
-  <string name="flag_this_app_fake">Fake</string>
-  <string name="flag_this_app_freeze">Freeze</string>
-  <string name="flag_this_app_virus">Virus</string>
   <string name="active">Active</string>
   <string name="completed">Completed</string>
   <string name="stand_by">Standby</string>
@@ -469,7 +462,6 @@
   <string name="share_store">Share Store</string>
 
   <!-- Search Widget-->
-  <string name="manually_reviewed">Good app guaranteed: this application passed the security tests for virus, malware and other malicious attacks and doesn\'t contain any threats</string>
   <string name="no_search_results_message">There are no results for your search. \nTry using other words.</string>
 
   <!-- Search Fragment -->
