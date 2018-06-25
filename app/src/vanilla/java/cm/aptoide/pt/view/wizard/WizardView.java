@@ -5,16 +5,15 @@ import cm.aptoide.pt.presenter.View;
 import rx.Completable;
 import rx.Observable;
 
-interface WizardView extends View {
+public interface WizardView extends View {
   Completable createWizardAdapter(Account account);
 
   Observable<Void> skipWizardClick();
-
-  void goToNextPage();
 
   void skipWizard();
 
   void handleSelectedPage(int selectedPage);
 
-  int getWizardButtonsCount();
+  void handleColorTransitions(int position, float positionOffset, int positionOffsetPixels,
+      Integer[] transitionColors);
 }

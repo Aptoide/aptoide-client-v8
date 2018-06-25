@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -89,6 +90,8 @@ import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.wizard.WizardPresenter;
+import cm.aptoide.pt.view.wizard.WizardView;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
@@ -313,5 +316,18 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides BundleEvent providesBundleEvent() {
     return new BundleEvent(arguments.getString(BundleCons.TITLE),
         arguments.getString(BundleCons.ACTION));
+  }
+
+  @FragmentScope @Provides WizardPresenter providesWizardPresenter(
+      AptoideAccountManager aptoideAccountManager, CrashReport crashReport,
+      AccountAnalytics accountAnalytics) {
+    Integer[] transitionColors = {
+        fragment.getContext()
+            .getResources().getColor(R.color.wizard_color_1_blue), fragment.getContext()
+        .getResources().getColor(R.color.wizard_color_2_green), fragment.getContext()
+        .getResources().getColor(R.color.wizard_color_3_orange)
+    };
+    return new WizardPresenter((WizardView) fragment, aptoideAccountManager, crashReport,
+        accountAnalytics, transitionColors);
   }
 }

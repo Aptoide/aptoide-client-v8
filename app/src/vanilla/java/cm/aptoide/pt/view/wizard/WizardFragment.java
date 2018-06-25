@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.wizard;
 
+import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,13 +11,9 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -25,6 +22,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -42,6 +40,7 @@ public class WizardFragment extends UIComponentFragment
   public static final int LAYOUT = R.layout.fragment_wizard;
   private static final String PAGE_INDEX = "page_index";
   AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
+  @Inject WizardPresenter wizardPresenter;
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -52,6 +51,7 @@ public class WizardFragment extends UIComponentFragment
   private boolean isInPortraitMode;
   private int currentPosition;
   private Runnable registerViewpagerCurrentItem;
+  private View animatedColorView;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -90,8 +90,15 @@ public class WizardFragment extends UIComponentFragment
         .getSimpleName());
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    animatedColorView = view.findViewById(R.id.animated_color_view);
     pageChangeListener = new AptoideViewPager.SimpleOnPageChangeListener() {
+
       @Override public void onPageSelected(int position) {
         if (position == 0) {
           navigationTracker.registerScreen(
@@ -122,15 +129,8 @@ public class WizardFragment extends UIComponentFragment
             skipOrNextLayout.setVisibility(View.VISIBLE);
           }
         });
-
-    final AptoideAccountManager accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    final AccountAnalytics accountAnalytics =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountAnalytics();
-    WizardPresenter presenter =
-        new WizardPresenter(this, accountManager, CrashReport.getInstance(), accountAnalytics);
-    attachPresenter(presenter);
-    viewPager.addOnPageChangeListener(presenter);
+    attachPresenter(wizardPresenter);
+    viewPager.addOnPageChangeListener(wizardPresenter);
     viewPager.addOnPageChangeListener(pageChangeListener);
     registerViewpagerCurrentItem =
         () -> pageChangeListener.onPageSelected(viewPager.getCurrentItem());
@@ -146,6 +146,7 @@ public class WizardFragment extends UIComponentFragment
     skipText = null;
     viewPager.setAdapter(null);
     viewPager = null;
+    animatedColorView = null;
     super.onDestroyView();
   }
 
@@ -161,12 +162,6 @@ public class WizardFragment extends UIComponentFragment
 
   @Override public Observable<Void> skipWizardClick() {
     return RxView.clicks(skipText);
-  }
-
-  @Override public void goToNextPage() {
-    if (viewPager.getCurrentItem() < viewPagerAdapter.getCount() - 1) {
-      viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-    }
   }
 
   @Override public void skipWizard() {
@@ -191,8 +186,18 @@ public class WizardFragment extends UIComponentFragment
     }
   }
 
-  @Override public int getWizardButtonsCount() {
-    return wizardButtons.size();
+  @Override
+  public void handleColorTransitions(int position, float positionOffset, int positionOffsetPixels,
+      Integer[] transitionColors) {
+    if (position < (viewPagerAdapter.getCount() - 1) && position < (transitionColors.length - 1)) {
+      ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+      int argbEvaluation =
+          (Integer) argbEvaluator.evaluate(positionOffset, transitionColors[position],
+              transitionColors[position + 1]);
+      animatedColorView.setBackgroundColor(argbEvaluation);
+    } else {
+      animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 1]);
+    }
   }
 
   private void createRadioButtons() {

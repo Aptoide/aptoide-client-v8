@@ -154,7 +154,11 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_login_sign_up;
+    if (navigateToHome) {
+      return R.layout.fragment_login_signup_wizard_layout;
+    } else {
+      return R.layout.fragment_login_sign_up;
+    }
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

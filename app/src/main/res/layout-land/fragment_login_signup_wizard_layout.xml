@@ -1,30 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-android:fitsSystemWindows="true"
--->
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_orange_gradient"
+    android:background="@color/default_color"
     android:orientation="vertical"
     android:paddingBottom="@dimen/bottom_skip_bar_height"
     >
-
   <ScrollView
+      xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:background="@color/white"
       >
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="20dp"
         >
 
       <android.support.design.widget.AppBarLayout
@@ -40,30 +36,8 @@ android:fitsSystemWindows="true"
           android:layout_width="200dp"
           android:layout_height="50dp"
           android:layout_gravity="center_horizontal"
-          android:layout_margin="20dp"
-          android:src="@drawable/wizard_3"
-          />
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="10dp"
-          android:text="@string/login_sign_up_title"
-          android:textColor="@color/white"
-          style="@style/OnBoarding.Title.TextView"
-          />
-
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:paddingEnd="10dp"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
-          android:paddingStart="10dp"
-          android:text="@string/wizard_sub_title_viewpager_three"
-          android:textColor="@color/white"
-          style="@style/OnBoarding.SubTitle.TextView"
+          android:layout_marginTop="14dp"
+          android:src="@drawable/app_logo_colourful"
           />
 
     </LinearLayout>
