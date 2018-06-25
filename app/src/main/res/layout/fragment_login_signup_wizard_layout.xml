@@ -31,7 +31,7 @@ android:fitsSystemWindows="true"
           android:id="@+id/appbar"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:visibility="gone"
+          android:visibility="invisible"
           >
         <include layout="@layout/toolbar"/>
       </android.support.design.widget.AppBarLayout>

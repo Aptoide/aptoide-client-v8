@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -106,6 +107,9 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setLogo(R.drawable.logo_toolbar);
     toolbar.setTitle(toolbarTitle);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      toolbar.setElevation(0);
+    }
   }
 
   @Override public void bindViews(View view) {
@@ -121,14 +125,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment
     if (bottomSheetBehavior != null) {
       mainContent = view.findViewById(R.id.main_content);
       originalBottomPadding = withBottomBar ? mainContent.getPaddingBottom() : 0;
-      if (withBottomBar) {
-        view.findViewById(R.id.appbar)
-            .setVisibility(View.GONE);
-      } else {
-        view.findViewById(R.id.appbar)
-            .setVisibility(View.VISIBLE);
-        toolbarTitle = getString(R.string.my_account_title_my_account);
-      }
+      toolbarTitle = getString(R.string.my_account_title_my_account);
       mainContent.setPadding(0, 0, 0, originalBottomPadding);
       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
