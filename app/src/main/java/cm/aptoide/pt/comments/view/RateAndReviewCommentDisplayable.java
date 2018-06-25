@@ -18,10 +18,6 @@ public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithA
   public RateAndReviewCommentDisplayable() {
   }
 
-  public RateAndReviewCommentDisplayable(ReviewWithAppName pojo) {
-    super(pojo);
-  }
-
   public RateAndReviewCommentDisplayable(ReviewWithAppName pojo, CommentAdder commentAdder,
       int numberComments) {
     super(pojo);
@@ -43,9 +39,5 @@ public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithA
 
   @Override public int getViewLayout() {
     return R.layout.displayable_rate_and_review;
-  }
-
-  public void itemClicked() {
-
   }
 }
