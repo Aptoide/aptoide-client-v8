@@ -76,7 +76,7 @@ public class AccountNavigator {
       fragmentNavigator.navigateTo(NewAccountFragment.newInstance(), true);
     } else {
       accountAnalytics.enterAccountScreen(accountOrigins);
-      fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false), true);
+      fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false, false), true);
     }
   }
 
