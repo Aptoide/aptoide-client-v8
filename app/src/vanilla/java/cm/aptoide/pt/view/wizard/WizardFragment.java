@@ -52,6 +52,7 @@ public class WizardFragment extends UIComponentFragment
   private int currentPosition;
   private Runnable registerViewpagerCurrentItem;
   private View animatedColorView;
+  private Integer[] transitionColors;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -93,6 +94,11 @@ public class WizardFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    transitionColors = new Integer[] {
+        getContext().getResources().getColor(R.color.wizard_color_1_blue),
+        getContext().getResources().getColor(R.color.wizard_color_2_green),
+        getContext().getResources().getColor(R.color.wizard_color_3_orange)
+    };
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -187,8 +193,7 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override
-  public void handleColorTransitions(int position, float positionOffset, int positionOffsetPixels,
-      Integer[] transitionColors) {
+  public void handleColorTransitions(int position, float positionOffset, int positionOffsetPixels) {
     if (position < (viewPagerAdapter.getCount() - 1) && position < (transitionColors.length - 1)) {
       ArgbEvaluator argbEvaluator = new ArgbEvaluator();
       int argbEvaluation =

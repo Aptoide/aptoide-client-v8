@@ -16,15 +16,13 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
   private final AccountAnalytics accountAnalytics;
-  private final Integer[] transitionColors;
 
   public WizardPresenter(WizardView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, AccountAnalytics accountAnalytics, Integer[] transitionColors) {
+      CrashReport crashReport, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.accountAnalytics = accountAnalytics;
-    this.transitionColors = transitionColors;
   }
 
   private Completable createViewsAndButtons() {
@@ -55,7 +53,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    view.handleColorTransitions(position, positionOffset, positionOffsetPixels, transitionColors);
+    view.handleColorTransitions(position, positionOffset, positionOffsetPixels);
   }
 
   @Override public void onPageSelected(int position) {
