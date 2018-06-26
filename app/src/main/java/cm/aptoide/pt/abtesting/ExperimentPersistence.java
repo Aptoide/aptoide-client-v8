@@ -1,6 +1,5 @@
 package cm.aptoide.pt.abtesting;
 
-import rx.Completable;
 import rx.Observable;
 
 /**
@@ -9,7 +8,7 @@ import rx.Observable;
 
 public interface ExperimentPersistence {
 
-  Completable save(String experimentName, Experiment experiment);
+  void save(String experimentName, Experiment experiment);
 
   Observable<ExperimentModel> get(ABTestManager.ExperimentType experimentType);
 }

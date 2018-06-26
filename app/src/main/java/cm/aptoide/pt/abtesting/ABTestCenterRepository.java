@@ -33,19 +33,22 @@ public class ABTestCenterRepository {
             .getExperiment());
       } else {
         return service.getExperiment(experiment)
-            .map(experimentToCache -> cacheExperiment(experimentToCache, experiment.getName()))
-            .flatMap(experimentModel -> Observable.just(experimentModel.getExperiment()));
+            .flatMap(experimentToCache -> cacheExperiment(experimentToCache,
+                experiment.getName()).flatMap(
+                __ -> Observable.just(experimentToCache.getExperiment())));
       }
     }
     return persistence.get(ABTestManager.ExperimentType.SHARE_DIALOG)
         .observeOn(Schedulers.io())
         .flatMap(model -> {
-          if (!model.hasError()) {
+          if (!model.hasError() && !model.getExperiment()
+              .isExpired()) {
             return Observable.just(model.getExperiment());
           } else {
             return service.getExperiment(experiment)
-                .map(experimentToCache -> cacheExperiment(experimentToCache, experiment.getName()))
-                .flatMap(experimentModel -> Observable.just(experimentModel.getExperiment()));
+                .flatMap(experimentToCache -> cacheExperiment(experimentToCache,
+                    experiment.getName()).flatMap(
+                    __ -> Observable.just(experimentToCache.getExperiment())));
           }
         });
   }
@@ -73,13 +76,13 @@ public class ABTestCenterRepository {
     return Observable.just(false);
   }
 
-  private ExperimentModel cacheExperiment(ExperimentModel experiment, String experimentName) {
+  private Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
 
     if (localCache.containsKey(experimentName)) localCache.remove(experimentName);
 
     localCache.put(experimentName, experiment);
     persistence.save(experimentName, experiment.getExperiment());
-    return experiment;
+    return Observable.just(null);
   }
 }
 

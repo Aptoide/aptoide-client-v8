@@ -3,7 +3,6 @@ package cm.aptoide.pt.abtesting;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.RealmExperiment;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import rx.Completable;
 import rx.Observable;
 
 /**
@@ -20,15 +19,11 @@ public class RealmExperimentPersistence implements ExperimentPersistence {
     this.mapper = mapper;
   }
 
-  @Override public Completable save(String experimentName, Experiment experiment) {
-    return Completable.fromEmitter(completableEmitter -> {
-      try {
-        database.insert(mapper.map(experimentName, experiment));
-        completableEmitter.onCompleted();
-      } catch (JsonProcessingException e) {
-        completableEmitter.onError(e);
-      }
-    });
+  @Override public void save(String experimentName, Experiment experiment) {
+    try {
+      database.insert(mapper.map(experimentName, experiment));
+    } catch (JsonProcessingException e) {
+    }
   }
 
   @Override public Observable<ExperimentModel> get(ABTestManager.ExperimentType experimentType) {

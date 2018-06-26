@@ -339,7 +339,8 @@ public class AppViewManager {
     return marketName;
   }
 
-  public Single<Experiment> getABTestingExperiment(ABTestManager.ExperimentType experimentType) {
+  public Observable<Experiment> getABTestingExperiment(
+      ABTestManager.ExperimentType experimentType) {
     return abTestManager.getExperiment(experimentType);
   }
 

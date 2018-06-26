@@ -1,7 +1,6 @@
 package cm.aptoide.pt.abtesting;
 
 import rx.Observable;
-import rx.Single;
 
 /**
  * Created by franciscocalado on 15/06/18.
@@ -14,9 +13,9 @@ public class ABTestManager {
     this.abTestCenterRepository = abTestCenterRepository;
   }
 
-  public Single<Experiment> getExperiment(ExperimentType experiment) {
+  public Observable<Experiment> getExperiment(ExperimentType experiment) {
     return abTestCenterRepository.getExperiment(experiment)
-        .toSingle();
+        .first();
   }
 
   public Observable<Boolean> recordImpression(ExperimentType experiment) {
@@ -28,7 +27,7 @@ public class ABTestManager {
   }
 
   public enum ExperimentType {
-    SHARE_DIALOG("android_implement");
+    SHARE_DIALOG("android_implement"), BUTTON_COLOR("dumb_test");
 
     private String name;
 
