@@ -201,7 +201,11 @@ public class WizardFragment extends UIComponentFragment
               transitionColors[position + 1]);
       animatedColorView.setBackgroundColor(argbEvaluation);
     } else {
-      animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 1]);
+      if (viewPagerAdapter.getCount() == 2) {
+        animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 2]);
+      } else {
+        animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 1]);
+      }
     }
   }
 
