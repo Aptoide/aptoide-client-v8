@@ -89,6 +89,8 @@ import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.wizard.WizardPresenter;
+import cm.aptoide.pt.view.wizard.WizardView;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
@@ -313,5 +315,12 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides BundleEvent providesBundleEvent() {
     return new BundleEvent(arguments.getString(BundleCons.TITLE),
         arguments.getString(BundleCons.ACTION));
+  }
+
+  @FragmentScope @Provides WizardPresenter providesWizardPresenter(
+      AptoideAccountManager aptoideAccountManager, CrashReport crashReport,
+      AccountAnalytics accountAnalytics) {
+    return new WizardPresenter((WizardView) fragment, aptoideAccountManager, crashReport,
+        accountAnalytics);
   }
 }

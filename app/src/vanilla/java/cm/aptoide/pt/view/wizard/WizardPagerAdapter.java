@@ -34,7 +34,7 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
         fragment = WizardPageTwoFragment.newInstance();
         break;
       case WIZARD_LOGIN_POSITION:
-        fragment = LoginSignUpFragment.newInstance(true, false, true);
+        fragment = LoginSignUpFragment.newInstance(true, false, true, true);
         break;
       default:
         throw new IllegalArgumentException("Invalid wizard fragment position: " + position);
