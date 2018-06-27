@@ -46,7 +46,6 @@ import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
-import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -80,7 +79,6 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
-import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -275,14 +273,12 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
-      AccountNavigator accountNavigator, AppViewAnalytics analytics, StoreAnalytics storeAnalytics,
-      BillingAnalytics billingAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
-    return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics, storeAnalytics,
-        billingAnalytics, appViewNavigator, appViewManager, accountManager,
-        AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()));
+      AccountNavigator accountNavigator, AppViewAnalytics analytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, CrashReport crashReport) {
+    return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
+        appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
+        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()));
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
