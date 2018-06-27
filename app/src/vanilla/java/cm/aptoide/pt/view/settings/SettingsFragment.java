@@ -52,7 +52,6 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.util.SettingsConstants;
@@ -60,7 +59,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -130,6 +128,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     adultContentAnalytics = application.getAdultContentAnalytics();
@@ -189,8 +188,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     if (defaultThemeName != null) {
-      ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
+      //ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
+      //ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);
@@ -466,7 +465,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     hwSpecs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       @Override public boolean onPreferenceClick(Preference preference) {
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        AlertDialog.Builder alertDialogBuilder =
+            new AlertDialog.Builder(context, R.style.AlertDialogAptoide);
         alertDialogBuilder.setTitle(getString(R.string.setting_hwspecstitle));
         alertDialogBuilder.setIcon(android.R.drawable.ic_menu_info_details)
             .setMessage(getString(R.string.setting_sdk_version)
@@ -495,6 +495,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 //                            + (ApplicationAptoide.PARTNERID!=null ? "\nPartner ID:"
                 // + ApplicationAptoide.PARTNERID : "")
             )
+
             .setCancelable(false)
             .setNeutralButton(getString(android.R.string.ok),
                 new DialogInterface.OnClickListener() {

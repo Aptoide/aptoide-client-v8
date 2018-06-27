@@ -206,11 +206,41 @@
     <item name="android:textSize">@dimen/appview_title_text_size</item>
   </style>
 
+  <style name="Aptoide.Preference" parent="@style/Preference">
+    <item name="android:layout">@layout/preference_layout</item>
+  </style>
+
+  <style name="Aptoide.Preference.Information" parent="@style/Preference.Information">
+    <item name="android:layout">@layout/preference_layout</item>
+  </style>
+
+  <style name="Aptoide.Preference.SwitchPreferenceCompat" parent="@style/Preference.SwitchPreferenceCompat">
+    <item name="android:layout">@layout/preference_layout</item>
+  </style>
+
+  <style name="Aptoide.Preference.DialogPreference" parent="@style/Preference.DialogPreference">
+    <item name="android:layout">@layout/preference_layout</item>
+  </style>
+
+  <style name="Aptoide.Preference.DialogPreference.EditTextPreference" parent="@style/Preference.DialogPreference.EditTextPreference">
+    <item name="android:layout">@layout/preference_layout</item>
+    <item name="android:dialogLayout">@layout/preference_dialog_edittext_layout</item>
+    <item name="android:textColorSecondary">?attr/preferenceTitleColor</item>
+
+  </style>
+
+  <!--Preferences Theme-->
   <style name="Aptoide.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
     <item name="android:layout">@layout/fragment_aptoide_preferences</item>
     <item name="android:labelTextSize">@dimen/text_size_medium</item>
     <item name="android:textSize">@dimen/text_size_medium</item>
     <item name="android:windowTitleSize">@dimen/text_size_large</item>
+    <item name="preferenceStyle">@style/Aptoide.Preference</item>
+    <item name="switchPreferenceCompatStyle">@style/Aptoide.Preference.SwitchPreferenceCompat</item>
+    <item name="dialogPreferenceStyle">@style/Aptoide.Preference.DialogPreference</item>
+    <item name="editTextPreferenceStyle">
+      @style/Aptoide.Preference.DialogPreference.EditTextPreference
+    </item>
   </style>
 
   <style name="AppViewWidgetFirst" parent="@style/AppViewWidget">
@@ -471,10 +501,13 @@
   </style>
 
   <style name="AlertDialogAptoide" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
-    <item name="android:textColor">?attr/titleTextColor</item>
+    <item name="android:colorAccent">?attr/preferenceTitleColor</item>
+    <item name="android:textColor">?attr/preferenceTitleColor</item>
+    <item name="android:textColorPrimary">?attr/preferenceTitleColor</item>
+    <item name="android:textColorSecondary">?attr/preferenceTitleColor</item>
     <item name="android:buttonStyle">@style/AlertTextAppearanceAptoide</item>
   </style>
-
+  ?attr/preferenceTitleColor
   <style name="Widget.Aptoide.defaultColorText" parent="Base.TextAppearance.AppCompat.Small">
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>

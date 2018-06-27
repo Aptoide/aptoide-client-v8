@@ -99,6 +99,10 @@
   <attr format="reference" name="installButtonBackground"/>
   <attr format="reference" name="toolbarBackground"/>
   <attr format="color" name="toolbarTextColor"/>
+  <attr format="color" name="preferenceTitleColor"/>
+  <attr format="dimension" name="preferenceTitleTextSize"/>
+  <attr format="color" name="preferenceSummaryColor"/>
+  <attr format="dimension" name="preferenceSummaryTextSize"/>
 
 
   <declare-styleable name="RadarScan">

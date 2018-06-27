@@ -32,6 +32,10 @@
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
 
     <!--for settings preference theme-->
+    <item name="preferenceTitleColor">@color/black_87_alpha</item>
+    <item name="preferenceTitleTextSize">16sp</item>
+    <item name="preferenceSummaryColor">@color/grey_medium</item>
+    <item name="preferenceSummaryTextSize">14dp</item>
     <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
     <!--background-->
@@ -125,7 +129,8 @@
     <item name="alertDialogTheme">@style/AlertDialogAptoide</item>
   </style>
 
-  <style name="AptoideThemeDefault" parent="AppBaseTheme"></style>
+  <style name="AptoideThemeDefault" parent="AppBaseTheme">
+  </style>
 
   <style name="AppBaseTheme.NoTitle">
     <item name="android:windowNoTitle">true</item>
