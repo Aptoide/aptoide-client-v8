@@ -1,7 +1,7 @@
 package cm.aptoide.pt.store.view;
 
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

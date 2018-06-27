@@ -16,7 +16,6 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.updates.view.UpdateDisplayable;
-import cm.aptoide.pt.view.app.DetailedApp;
 import io.realm.RealmList;
 
 /**
@@ -242,32 +241,30 @@ public class DownloadFactory {
     download.setPackageName(autoUpdateInfo.packageName);
     download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
-        createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path, autoUpdateInfo.md5, null,
-            null, autoUpdateInfo.vercode, null));
+        createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path + UPDATE_ACTION,
+            autoUpdateInfo.md5, null, null, autoUpdateInfo.vercode, null));
     return download;
   }
 
-  public Download create(DetailedApp app, int downloadAction) {
-    validateApp(app.getMd5(), app.getObb(), app.getPackageName(), app.getName(), app.getPath(),
-        app.getPathAlt());
+  public Download create(int downloadAction, String appName, String packageName, String md5,
+      String icon, String versionName, int versionCode, String appPath, String appPathAlt,
+      Obb obb) {
+    validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
 
-    String path = app.getPath();
-    String altPath = app.getPathAlt();
-
-    ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
+    ApkPaths downloadPaths = getDownloadPaths(downloadAction, appPath, appPathAlt);
 
     Download download = new Download();
-    download.setMd5(app.getMd5());
-    download.setIcon(app.getIcon());
-    download.setAppName(app.getName());
+    download.setMd5(md5);
+    download.setIcon(icon);
+    download.setAppName(appName);
     download.setAction(downloadAction);
-    download.setPackageName(app.getPackageName());
-    download.setVersionCode(app.getVersionCode());
-    download.setVersionName(app.getVersionName());
+    download.setPackageName(packageName);
+    download.setVersionCode(versionCode);
+    download.setVersionName(versionName);
 
     download.setFilesToDownload(
-        createFileList(app.getMd5(), app.getPackageName(), downloadPaths.path, app.getMd5(),
-            app.getObb(), downloadPaths.altPath, app.getVersionCode(), app.getVersionName()));
+        createFileList(md5, packageName, downloadPaths.path, md5, obb, downloadPaths.altPath,
+            versionCode, versionName));
 
     return download;
   }

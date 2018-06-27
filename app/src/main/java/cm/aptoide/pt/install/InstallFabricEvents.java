@@ -1,7 +1,7 @@
 package cm.aptoide.pt.install;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import java.util.HashMap;

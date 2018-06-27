@@ -60,8 +60,9 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
                 exitNavigationFragmentTag), true);
         break;
       default:
-        Logger.d(this.getClass()
-            .getSimpleName(), "Wrong openMode type.");
+        Logger.getInstance()
+            .d(this.getClass()
+                .getSimpleName(), "Wrong openMode type.");
     }
   }
 

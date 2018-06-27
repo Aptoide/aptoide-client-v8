@@ -6,8 +6,8 @@
 package cm.aptoide.pt.store.view.featured;
 
 import android.support.annotation.LayoutRes;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 

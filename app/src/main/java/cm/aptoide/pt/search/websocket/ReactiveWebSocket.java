@@ -62,39 +62,45 @@ public class ReactiveWebSocket {
     @Override public void onOpen(WebSocket webSocket, Response response) {
       super.onOpen(webSocket, response);
       emitter.onNext(new SocketEvent(SocketEvent.Status.OPEN));
-      Logger.v(TAG, "onOpen ::");
+      Logger.getInstance()
+          .v(TAG, "onOpen ::");
     }
 
     @Override public void onMessage(WebSocket webSocket, String text) {
       super.onMessage(webSocket, text);
       emitter.onNext(
           new SocketEvent(SocketEvent.Status.MESSAGE, text.getBytes(Charset.forName("UTF-8"))));
-      Logger.v(TAG, "onMessage (String) :: message = " + text);
+      Logger.getInstance()
+          .v(TAG, "onMessage (String) :: message = " + text);
     }
 
     @Override public void onMessage(WebSocket webSocket, ByteString bytes) {
       super.onMessage(webSocket, bytes);
       emitter.onNext(new SocketEvent(SocketEvent.Status.MESSAGE, bytes.toByteArray()));
-      Logger.v(TAG, "onMessage (bytes) :: size = " + bytes.size());
+      Logger.getInstance()
+          .v(TAG, "onMessage (bytes) :: size = " + bytes.size());
     }
 
     @Override public void onClosing(WebSocket webSocket, int code, String reason) {
       super.onClosing(webSocket, code, reason);
       emitter.onNext(new SocketEvent(SocketEvent.Status.CLOSING));
-      Logger.v(TAG, "onClosing :: ");
+      Logger.getInstance()
+          .v(TAG, "onClosing :: ");
     }
 
     @Override public void onClosed(WebSocket webSocket, int code, String reason) {
       super.onClosed(webSocket, code, reason);
       emitter.onNext(new SocketEvent(SocketEvent.Status.CLOSED));
       emitter.onCompleted();
-      Logger.v(TAG, "onClosed :: ");
+      Logger.getInstance()
+          .v(TAG, "onClosed :: ");
     }
 
     @Override public void onFailure(WebSocket webSocket, Throwable throwable, Response response) {
       super.onFailure(webSocket, throwable, response);
       emitter.onError(throwable);
-      Logger.v(TAG, "onFailure :: ");
+      Logger.getInstance()
+          .v(TAG, "onFailure :: ");
     }
   }
 }

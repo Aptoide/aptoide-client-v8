@@ -67,6 +67,14 @@
     **[] $VALUES;
     public *;
 }
+-dontwarn com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool
+-dontwarn com.bumptech.glide.load.resource.bitmap.Downsampler
+-dontwarn com.bumptech.glide.load.resource.bitmap.HardwareConfigState
+-dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
+-dontwarn com.bumptech.glide.load.engine.bitmap_recycle.SizeConfigStrategy
+-dontwarn com.bumptech.glide.load.resource.bitmap.TransformationUtils
+-dontwarn com.bumptech.glide.manager.RequestManagerRetriever
+-dontwarn com.bumptech.glide.util.Util$1
 
 ### TestFairy
 -keep class com.testfairy.** { *; }

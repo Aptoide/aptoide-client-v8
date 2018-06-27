@@ -213,12 +213,6 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
     } else {
       showHideReplies.setVisibility(View.GONE);
     }
-
-    compositeSubscription.add(RxView.clicks(itemView)
-        .doOnNext(click -> displayable.itemClicked())
-        .subscribe(__ -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable)));
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
@@ -231,11 +225,13 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
                 .getList();
             commentAdder.addComment(comments);
           } else {
-            Logger.e(TAG, "error loading comments");
+            Logger.getInstance()
+                .e(TAG, "error loading comments");
             ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
           }
         }, err -> {
-          Logger.e(TAG, err);
+          Logger.getInstance()
+              .e(TAG, err);
           ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
         }, true);
   }
@@ -249,32 +245,37 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
           ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
           .execute(response -> {
             if (response == null) {
-              Logger.e(TAG, "empty response");
+              Logger.getInstance()
+                  .e(TAG, "empty response");
               return;
             }
 
             if (response.getError() != null) {
-              Logger.e(TAG, response.getError()
-                  .getDescription());
+              Logger.getInstance()
+                  .e(TAG, response.getError()
+                      .getDescription());
               return;
             }
 
             List<BaseV7Response.Error> errorList = response.getErrors();
             if (errorList != null && !errorList.isEmpty()) {
               for (final BaseV7Response.Error error : errorList) {
-                Logger.e(TAG, error.getDescription());
+                Logger.getInstance()
+                    .e(TAG, error.getDescription());
               }
               return;
             }
 
             // success
-            Logger.d(TAG, String.format("review %d was marked as %s", reviewId,
-                positive ? "positive" : "negative"));
+            Logger.getInstance()
+                .d(TAG, String.format("review %d was marked as %s", reviewId,
+                    positive ? "positive" : "negative"));
             setHelpButtonsClickable(true);
             ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
           }, err -> {
             ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
-            Logger.e(TAG, err);
+            Logger.getInstance()
+                .e(TAG, err);
             setHelpButtonsClickable(true);
           }, true);
     } else {

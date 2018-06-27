@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/aptoide_orange"
+    android:background="@color/tw__transparent"
     android:gravity="center_horizontal"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/bottom_skip_bar_height"
@@ -24,7 +24,7 @@
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_weight="1"
-      android:background="@color/white"
+      android:background="@color/tw__transparent"
       android:gravity="center"
       android:orientation="vertical"
       android:padding="10dp"
@@ -35,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/wizard_title_viewpager_one"
+        android:textColor="@color/white"
         style="@style/OnBoarding.Title.TextView"
         />
     <TextView

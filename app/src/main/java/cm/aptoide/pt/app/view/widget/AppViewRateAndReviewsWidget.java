@@ -6,6 +6,7 @@
 package cm.aptoide.pt.app.view.widget;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -43,7 +44,6 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
@@ -283,7 +283,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
   private Observable<Integer> scheduleAnimations(int topReviewsCount) {
     if (topReviewsCount <= 1) {
       // not enough elements for animation
-      Logger.w(TAG, "Not enough top reviews to do paging animation.");
+      Logger.getInstance()
+          .w(TAG, "Not enough top reviews to do paging animation.");
       return Observable.empty();
     }
 
@@ -337,7 +338,7 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
     private TextView userName;
     private TextView addedDate;
     private TextView commentText;
-    private Target<GlideDrawable> imageLoadingTarget;
+    private Target<Drawable> imageLoadingTarget;
 
     private MiniTopReviewViewHolder(View itemView) {
       super(itemView);
@@ -374,7 +375,8 @@ public class AppViewRateAndReviewsWidget extends Widget<AppViewRateAndCommentsDi
 
     public void cancelImageLoad() {
       if (imageLoadingTarget != null) {
-        ImageLoader.cancel(imageLoadingTarget);
+        ImageLoader.cancel(itemView.getContext()
+            .getApplicationContext(), imageLoadingTarget);
       }
     }
   }

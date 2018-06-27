@@ -1,7 +1,7 @@
 package cm.aptoide.pt.updates.view;
 
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;

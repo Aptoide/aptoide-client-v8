@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.logger.Logger;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,14 +31,16 @@ public class AppViewSimilarAppAnalytics {
 
     analyticsManager.logEvent(null, APP_VIEW_SIMILAR_APP_SLIDE_IN, AnalyticsManager.Action.CLICK,
         getViewName(true));
-    Logger.w(TAG, "Facebook Event: " + APP_VIEW_SIMILAR_APP_SLIDE_IN);
+    Logger.getInstance()
+        .w(TAG, "Facebook Event: " + APP_VIEW_SIMILAR_APP_SLIDE_IN);
   }
 
   public void openSimilarApp() {
     Map<String, Object> parameters = createMapData(ACTION, "Open App View");
     analyticsManager.logEvent(parameters, SIMILAR_APP_INTERACT, AnalyticsManager.Action.CLICK,
         getViewName(true));
-    Logger.w(TAG, "Facebook Event: " + SIMILAR_APP_INTERACT + " : " + parameters.toString());
+    Logger.getInstance()
+        .w(TAG, "Facebook Event: " + SIMILAR_APP_INTERACT + " : " + parameters.toString());
   }
 
   private Map<String, Object> createMapData(String key, String value) {

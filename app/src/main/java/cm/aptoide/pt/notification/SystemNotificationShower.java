@@ -14,10 +14,10 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.NotificationApplicationView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotification;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -168,7 +168,7 @@ public class SystemNotificationShower implements Presenter {
   private void loadImage(Context context, int notificationId, Notification notification, String url,
       RemoteViews expandedView, @IdRes int viewId) {
     NotificationTarget notificationTarget =
-        new NotificationTarget(context, expandedView, viewId, notification, notificationId);
+        new NotificationTarget(context, viewId, expandedView, notification, notificationId);
     ImageLoader.with(context)
         .loadImageToNotification(notificationTarget, url);
   }

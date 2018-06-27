@@ -3,14 +3,16 @@ package cm.aptoide.pt.analytics;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import cm.aptoide.analytics.AnalyticsLogger;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.tracking.Tracking;
+import cm.aptoide.analytics.implementation.tracking.UTM;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -32,10 +34,10 @@ import rx.schedulers.Schedulers;
 public class FirstLaunchAnalytics {
 
   public static final String FIRST_LAUNCH = "Aptoide_First_Launch";
-  public static final String EVENT_NAME = "FIRST_LAUNCH";
-  public static final String GMS = "GMS";
-  public static final String HAS_HGMS = "Has GMS";
-  public static final String NO_GMS = "No GMS";
+  private static final String EVENT_NAME = "FIRST_LAUNCH";
+  private static final String GMS = "GMS";
+  private static final String HAS_HGMS = "Has GMS";
+  private static final String NO_GMS = "No GMS";
   private static final String URL = "app_url";
   private static final String PACKAGE = "app_package";
   private static final String COUNTRY = "country";
@@ -53,14 +55,16 @@ public class FirstLaunchAnalytics {
   private static final String TAG = FirstLaunchAnalytics.class.getSimpleName();
 
   private final AnalyticsManager analyticsManager;
+  private final AnalyticsLogger logger;
   private String utmSource = UNKNOWN;
   private String utmMedium = UNKNOWN;
   private String utmCampaign = UNKNOWN;
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
 
-  public FirstLaunchAnalytics(AnalyticsManager analyticsManager) {
+  public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger) {
     this.analyticsManager = analyticsManager;
+    this.logger = logger;
   }
 
   public void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
@@ -145,10 +149,10 @@ public class FirstLaunchAnalytics {
 
       utmInputStream.close();
     } catch (IOException e) {
-      Logger.d(TAG, "problem parsing utm/no utm file");
+      logger.logDebug(TAG, "problem parsing utm/no utm file");
       return false;
     } catch (PackageManager.NameNotFoundException e) {
-      Logger.d(TAG, "No package name utm file.");
+      logger.logDebug(TAG, "No package name utm file.");
       return false;
     } catch (NullPointerException e) {
       if (myZipFile != null) {
@@ -160,7 +164,7 @@ public class FirstLaunchAnalytics {
         }
         return false;
       }
-      Logger.d(TAG, "No utm file.");
+      logger.logDebug(TAG, "No utm file.");
     }
     return true;
   }
@@ -170,7 +174,7 @@ public class FirstLaunchAnalytics {
     try {
       tracking = createTrackingObject(getTrackingFile(application));
     } catch (Exception e) {
-      Logger.d(TAG, "Failed to parse utm/tracking files");
+      logger.logDebug(TAG, "Failed to parse utm/tracking files");
       return new Tracking(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
     }
     return tracking;
@@ -211,21 +215,21 @@ public class FirstLaunchAnalytics {
     Bundle parameters = new Bundle();
     parameters.putString(key, value);
     AppEventsLogger.updateUserProperties(parameters,
-        response -> Logger.d("Facebook Analytics: ", response.toString()));
+        response -> logger.logDebug("Facebook Analytics: ", response.toString()));
   }
 
   private void setUserPropertiesWithBundle(Bundle data) {
     AppEventsLogger.updateUserProperties(data,
-        response -> Logger.d("Facebook Analytics: ", response.toString()));
+        response -> logger.logDebug("Facebook Analytics: ", response.toString()));
   }
 
-  public void setUserProperties(String utmSource, String utmMedium, String utmCampaign,
+  private void setUserProperties(String utmSource, String utmMedium, String utmCampaign,
       String utmContent, String entryPoint) {
     setUserPropertiesWithBundle(
         createUserPropertiesBundle(utmSource, utmMedium, utmCampaign, utmContent, entryPoint));
   }
 
-  public Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
+  private Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
       String utmContent, String entryPoint) {
     Bundle data = new Bundle();
     data.putString(UTM_SOURCE, utmSource);
@@ -236,7 +240,7 @@ public class FirstLaunchAnalytics {
     return data;
   }
 
-  public void setUTMDimensionsToUnknown() {
+  private void setUTMDimensionsToUnknown() {
     Bundle data = new Bundle();
     data.putString(UTM_SOURCE, UNKNOWN);
     data.putString(UTM_MEDIUM, UNKNOWN);

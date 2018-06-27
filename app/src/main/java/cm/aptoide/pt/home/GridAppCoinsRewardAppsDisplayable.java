@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 

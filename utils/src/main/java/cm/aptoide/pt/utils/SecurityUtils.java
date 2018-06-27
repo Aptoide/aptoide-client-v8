@@ -46,8 +46,9 @@ public final class SecurityUtils {
         md.update(signature.toByteArray());
         final String currentSignature = Base64.encodeToString(md.digest(), Base64.DEFAULT);
 
-        Logger.d(TAG,
-            String.format("Include this string as a value for SIGNATURE: %s", currentSignature));
+        Logger.getInstance()
+            .d(TAG, String.format("Include this string as a value for SIGNATURE: %s",
+                currentSignature));
 
         //compare signatures
 
@@ -57,7 +58,8 @@ public final class SecurityUtils {
       }
     } catch (Exception e) {
       //assumes an issue in checking signature., but we let the caller decide on what to do.
-      Logger.w(TAG, "checkAppSignature(Context)", e);
+      Logger.getInstance()
+          .w(TAG, "checkAppSignature(Context)", e);
     }
 
     return INVALID_APP_SIGNATURE;

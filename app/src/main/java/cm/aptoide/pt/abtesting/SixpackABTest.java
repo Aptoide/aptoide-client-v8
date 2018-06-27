@@ -52,8 +52,8 @@ public class SixpackABTest<T> implements ABTest<T> {
           }
           return participatingExperiment;
         })
-        .doOnNext(exp -> Logger.i(TAG,
-            "Participating on test and the alternative is " + alternative().toString()));
+        .doOnNext(exp -> Logger.getInstance()
+            .i(TAG, "Participating on test and the alternative is " + alternative().toString()));
   }
 
   @Override public Observable<ConvertedExperiment> convert() {
@@ -61,7 +61,8 @@ public class SixpackABTest<T> implements ABTest<T> {
         .subscribeOn(Schedulers.io())
         .filter(isParticipating -> isParticipating)
         .map(isParticipating -> participatingExperiment.convert())
-        .doOnNext(success -> Logger.i(TAG, "convert Test: " + alternative().toString()));
+        .doOnNext(success -> Logger.getInstance()
+            .i(TAG, "convert Test: " + alternative().toString()));
   }
 
   @Override public T alternative() {

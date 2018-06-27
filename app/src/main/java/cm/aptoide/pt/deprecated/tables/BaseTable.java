@@ -64,7 +64,8 @@ public abstract class BaseTable {
       //			db.execSQL(DROP_TABLE_SQL + tableName);
       //			db.endTransaction();
 
-      Logger.d(TAG, "Table " + tableName + " migrated with success.");
+      Logger.getInstance()
+          .d(TAG, "Table " + tableName + " migrated with success.");
     } catch (Exception e) {
       CrashReport.getInstance()
           .log(e);

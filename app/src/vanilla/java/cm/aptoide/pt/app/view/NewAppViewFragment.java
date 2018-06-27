@@ -43,12 +43,12 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -56,8 +56,8 @@ import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
-import cm.aptoide.pt.app.view.screenshots.NewScreenshotsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
+import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter;
 import cm.aptoide.pt.billing.exception.BillingException;
 import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
 import cm.aptoide.pt.billing.view.BillingActivity;
@@ -78,6 +78,7 @@ import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
+import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -127,7 +128,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
-  private NewScreenshotsAdapter screenshotsAdapter;
+  private ScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
   private AppViewSimilarAppsAdapter similarAppsAdapter;
   private AppViewSimilarAppsAdapter similarDownloadsAdapter;
@@ -339,7 +340,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
 
     screenshotsAdapter =
-        new NewScreenshotsAdapter(new ArrayList<>(), new ArrayList<>(), screenShotClick);
+        new ScreenshotsAdapter(new ArrayList<>(), new ArrayList<>(), screenShotClick);
     screenshots.setAdapter(screenshotsAdapter);
 
     LinearLayoutManagerWithSmoothScroller layoutManager =
@@ -420,7 +421,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta);
+    return ScreenTagHistory.Builder.build("AppViewFragment", "", StoreContext.meta.name());
   }
 
   @Override public void onDestroy() {
@@ -788,7 +789,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void navigateToDeveloperPermissions(AppViewViewModel app) {
-    DialogPermissions dialogPermissions = DialogPermissions.newInstance(app);
+    DialogPermissions dialogPermissions =
+        DialogPermissions.newInstance(app.getAppName(), app.getVersionName(), app.getIcon(),
+            AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),
+                false), app.getUsedPermissions());
     dialogPermissions.show(getActivity().getSupportFragmentManager(), "");
   }
 
@@ -984,6 +988,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       String appName) {
     return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
         getContext().getString(R.string.installapp_alrt, appName))
+        .filter(response -> response.equals(YES))
+        .map(__ -> action);
+  }
+
+  @Override
+  public Observable<DownloadAppViewModel.Action> showOpenAndInstallApkFyDialog(String title,
+      String appName) {
+    return GenericDialogs.createGenericOkCancelMessageWithCustomView(getContext(), title,
+        getContext().getString(R.string.installapp_alrt, appName), R.layout.apkfy_onboard_message)
         .filter(response -> response.equals(YES))
         .map(__ -> action);
   }
@@ -1474,6 +1487,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     OPEN_AND_INSTALL, /**
      * open the appView and ask user if want to install the app
      */
-    OPEN_WITH_INSTALL_POPUP
+    OPEN_WITH_INSTALL_POPUP, /**
+     * open the appView and ask user if want to install the app
+     */
+    APK_FY_INSTALL_POPUP
   }
 }

@@ -8,9 +8,13 @@ import rx.Single;
 
 public interface BundleDataSource {
 
-  Single<HomeBundlesModel> loadFreshHomeBundles();
+  Single<HomeBundlesModel> loadFreshHomeBundles(String key);
 
-  Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit);
+  Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key);
 
-  boolean hasMore(Integer offset);
+  boolean hasMore(Integer offset, String title);
+
+  Single<HomeBundlesModel> loadFreshBundleForEvent(String url, String key);
+
+  Single<HomeBundlesModel> loadNextBundleForEvent(String url, int offset, String key, int limit);
 }

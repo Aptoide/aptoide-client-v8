@@ -1,5 +1,7 @@
 package cm.aptoide.pt.analytics.analytics;
 
+import cm.aptoide.analytics.implementation.EventsPersistence;
+import cm.aptoide.analytics.implementation.data.Event;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.RealmEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;

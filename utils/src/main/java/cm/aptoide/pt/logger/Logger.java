@@ -13,58 +13,70 @@ import android.util.Log;
 public class Logger {
 
   private static boolean DBG;
+  private static Logger instance = null;
 
-  public static void v(String tag, String msg) {
+  public synchronized static Logger getInstance() {
+    if (instance == null) {
+      instance = new Logger();
+    }
+    return instance;
+  }
+
+  public static void setDBG(boolean DBG) {
+    Logger.DBG = DBG;
+  }
+
+  public void v(String tag, String msg) {
     if (DBG && msg != null) {
       Log.v(tag, msg);
     }
   }
 
-  public static void v(String tag, String msg, Throwable tr) {
+  public void v(String tag, String msg, Throwable tr) {
     if (DBG && msg != null) {
       Log.v(tag, msg, tr);
     }
   }
 
-  public static void d(Object object, String msg) {
+  public void d(Object object, String msg) {
     d(object.getClass()
         .getSimpleName(), msg);
   }
 
-  public static void d(String tag, String msg) {
+  public void d(String tag, String msg) {
     if (DBG && msg != null) {
       Log.d(tag, msg);
     }
   }
 
-  public static void d(String tag, String msg, Throwable tr) {
+  public void d(String tag, String msg, Throwable tr) {
     if (DBG && msg != null) {
       Log.d(tag, msg, tr);
     }
   }
 
-  public static void i(Object object, String msg) {
+  public void i(Object object, String msg) {
     i(object.getClass()
         .getSimpleName(), msg);
   }
 
-  public static void i(String tag, String msg) {
+  public void i(String tag, String msg) {
     if (DBG && msg != null) {
       Log.i(tag, msg);
     }
   }
 
-  public static void i(Class clz, String msg) {
+  public void i(Class clz, String msg) {
     i(clz.getSimpleName(), msg);
   }
 
-  public static void w(String TAG, String msg) {
+  public void w(String TAG, String msg) {
     if (msg != null) {
       Log.w(TAG, msg);
     }
   }
 
-  public static void w(String TAG, String msg, Throwable tr) {
+  public void w(String TAG, String msg, Throwable tr) {
     if (msg != null) {
       Log.w(TAG, msg, tr);
     }
@@ -73,7 +85,7 @@ public class Logger {
   /**
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  public static void e(Object object, String msg) {
+  public void e(Object object, String msg) {
     e(object.getClass()
         .getName(), msg);
   }
@@ -81,7 +93,7 @@ public class Logger {
   /**
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  public static void e(String TAG, String msg) {
+  public void e(String TAG, String msg) {
     if (msg != null) {
       Log.e(TAG, msg);
     }
@@ -90,7 +102,7 @@ public class Logger {
   /**
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  public static void e(Object object, Throwable tr) {
+  public void e(Object object, Throwable tr) {
     e(object.getClass()
         .getName(), tr);
   }
@@ -98,20 +110,16 @@ public class Logger {
   /**
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  public static void e(String TAG, Throwable tr) {
+  public void e(String TAG, Throwable tr) {
     Log.e(TAG, "", tr);
   }
 
   /**
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  public static void e(String TAG, String msg, Throwable tr) {
+  public void e(String TAG, String msg, Throwable tr) {
     if (msg != null) {
       Log.e(TAG, msg, tr);
     }
-  }
-
-  public static void setDBG(boolean DBG) {
-    Logger.DBG = DBG;
   }
 }

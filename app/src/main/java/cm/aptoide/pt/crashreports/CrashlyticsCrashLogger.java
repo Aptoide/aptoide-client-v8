@@ -1,5 +1,6 @@
 package cm.aptoide.pt.crashreports;
 
+import cm.aptoide.analytics.implementation.CrashLogger;
 import com.crashlytics.android.Crashlytics;
 
 /**

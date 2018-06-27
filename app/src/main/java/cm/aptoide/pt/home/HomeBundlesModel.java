@@ -54,6 +54,10 @@ public class HomeBundlesModel {
     return error != null;
   }
 
+  public boolean isListEmpty() {
+    return list.isEmpty();
+  }
+
   public enum Error {
     NETWORK, GENERIC,
   }

@@ -23,7 +23,8 @@ public class RequestContactsAccessOnSubscribe implements Observable.OnSubscribe<
         subscriber.onCompleted();
       }
     }, () -> {
-      Logger.d(TAG, "Permission denied to access contacts");
+      Logger.getInstance()
+          .d(TAG, "Permission denied to access contacts");
       if (!subscriber.isUnsubscribed()) {
         subscriber.onNext(false);
         subscriber.onCompleted();

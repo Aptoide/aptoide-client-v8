@@ -195,6 +195,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> Observable.merge(view.resumeUpdate(), view.retryUpdate()))
+        .doOnNext(app -> view.setStandbyState(app))
         .flatMapCompletable(app -> appsManager.resumeUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -206,6 +207,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelUpdate())
+        .doOnNext(app -> view.setStandbyState(app))
         .doOnNext(app -> appsManager.cancelUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -217,6 +219,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseUpdate())
+        .doOnNext(app -> view.setStandbyState(app))
         .doOnNext(app -> appsManager.pauseUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -237,6 +240,7 @@ public class AppsPresenter implements Presenter {
                   return Observable.just(true);
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
+                .doOnNext(__ -> view.setStandbyState(app))
                 .flatMapCompletable(__3 -> appsManager.updateApp(app)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -266,6 +270,7 @@ public class AppsPresenter implements Presenter {
         .flatMap(created -> view.updateAll()
             .flatMap(__ -> permissionManager.requestExternalStoragePermission(permissionService))
             .retry())
+        .doOnNext(__ -> view.showIndeterminateAllUpdates())
         .observeOn(computation)
         .flatMapCompletable(app -> appsManager.updateAll())
         .observeOn(viewScheduler)
@@ -360,13 +365,14 @@ public class AppsPresenter implements Presenter {
   private void loadUserImage() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> accountManager.accountStatus()
-            .first())
+        .flatMap(created -> accountManager.accountStatus())
         .flatMap(account -> getUserAvatar(account))
         .observeOn(viewScheduler)
         .doOnNext(userAvatarUrl -> {
           if (userAvatarUrl != null) {
             view.setUserImage(userAvatarUrl);
+          } else {
+            view.setDefaultUserImage();
           }
           view.showAvatar();
         })

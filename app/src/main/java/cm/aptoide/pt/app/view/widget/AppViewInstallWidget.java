@@ -21,12 +21,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -428,7 +428,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             // TODO: 12/07/2017 this code doesnt run
-                            Logger.d(TAG, "Installing");
+                            Logger.getInstance()
+                                .d(TAG, "Installing");
                           }, throwable -> crashReport.log(throwable)));
                 }
               }
@@ -653,8 +654,8 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 .toObservable()
                 .doOnSubscribe(() -> setupEvents(download, getInstallType(download.getAction()),
                     getOrigin(download.getAction()))))
-            .subscribe(downloadProgress -> Logger.d(TAG, "Installing"),
-                err -> crashReport.log(err)));
+            .subscribe(downloadProgress -> Logger.getInstance()
+                .d(TAG, "Installing"), err -> crashReport.log(err)));
       });
     }
   }

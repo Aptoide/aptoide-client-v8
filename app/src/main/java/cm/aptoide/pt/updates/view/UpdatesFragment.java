@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
@@ -119,7 +119,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         .subscribe(__ -> {
           finishLoading();
         }, err -> {
-          Logger.e(TAG, "listing updates or installed threw an exception");
+          Logger.getInstance()
+              .e(TAG, "listing updates or installed threw an exception");
           CrashReport.getInstance()
               .log(err);
           finishLoading();
@@ -167,7 +168,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       }
     }
     addDisplayables(updatesDisplayablesList, false);
-    Logger.v(TAG, "listed updates");
+    Logger.getInstance()
+        .v(TAG, "listed updates");
   }
 
   private Completable showUpdateMessage(List<Update> updates) {
@@ -218,7 +220,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           installedRepository));
     }
     addDisplayables(installedDisplayablesList, false);
-    Logger.v(TAG, "listed installed apps");
+    Logger.getInstance()
+        .v(TAG, "listed installed apps");
   }
 
   /**

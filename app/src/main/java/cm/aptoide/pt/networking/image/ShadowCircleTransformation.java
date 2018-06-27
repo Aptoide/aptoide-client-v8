@@ -12,10 +12,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import java.security.MessageDigest;
 
 /**
  * Created by marcelobenites on 7/26/16.
@@ -26,7 +28,7 @@ public class ShadowCircleTransformation extends BitmapTransformation {
   private final float spaceBetween;
 
   public ShadowCircleTransformation(Context context, View view) {
-    super(context);
+    super();
     // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view
     // to make sure it will work. There is a performance penalty by doing that.
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -36,7 +38,7 @@ public class ShadowCircleTransformation extends BitmapTransformation {
   }
 
   public ShadowCircleTransformation(Context context) {
-    super(context);
+    super();
     // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view
     // to make sure it will work. There is a performance penalty by doing that.
     shadowColor = Color.WHITE;
@@ -46,7 +48,7 @@ public class ShadowCircleTransformation extends BitmapTransformation {
 
   public ShadowCircleTransformation(Context context, View view, @ColorInt int shadowColor,
       float spaceBetween, float strokeSize) {
-    super(context);
+    super();
     this.strokeSize = strokeSize;
     // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view
     // to make sure it will work. There is a performance penalty by doing that.
@@ -56,7 +58,7 @@ public class ShadowCircleTransformation extends BitmapTransformation {
   }
 
   public ShadowCircleTransformation(Context context, View view, @ColorInt int shadowColor) {
-    super(context);
+    super();
     // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view
     // to make sure it will work. There is a performance penalty by doing that.
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -66,7 +68,7 @@ public class ShadowCircleTransformation extends BitmapTransformation {
   }
 
   public ShadowCircleTransformation(Context context, View view, float strokeSize) {
-    super(context);
+    super();
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     this.strokeSize = strokeSize;
     shadowColor = Color.WHITE;
@@ -114,7 +116,11 @@ public class ShadowCircleTransformation extends BitmapTransformation {
     return result;
   }
 
-  @Override public String getId() {
+  public String getId() {
     return getClass().getName();
+  }
+
+  @Override public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
   }
 }

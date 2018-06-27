@@ -159,7 +159,8 @@ public class PartnersLaunchView extends ActivityView {
       }
 
       @Override public void onFailure(Call<RemoteBootConfig> call, Throwable t) {
-        Logger.e("PartnersConfiguration", "Failed to get remote boot config: " + t.getMessage());
+        Logger.getInstance()
+            .e("PartnersConfiguration", "Failed to get remote boot config: " + t.getMessage());
         handleSplashScreenTimer();
       }
     });

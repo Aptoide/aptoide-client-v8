@@ -15,11 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.ScreenTagHistory;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -341,6 +341,19 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void removeCanceledDownload(App app) {
     adapter.removeCanceledDownload(app);
+  }
+
+  @Override public void setStandbyState(App app) {
+    adapter.setAppStandby(app);
+  }
+
+  @Override public void showIndeterminateAllUpdates() {
+    adapter.setAllUpdatesIndeterminate();
+  }
+
+  @Override public void setDefaultUserImage() {
+    ImageLoader.with(getContext())
+        .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
   }
 
   private void showAppsList() {

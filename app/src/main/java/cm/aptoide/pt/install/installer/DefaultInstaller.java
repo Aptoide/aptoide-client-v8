@@ -264,7 +264,8 @@ public class DefaultInstaller implements Installer {
       //file://....apk for < nougat
       photoURI = Uri.fromFile(file);
     }
-    Logger.v(TAG, photoURI.toString());
+    Logger.getInstance()
+        .v(TAG, photoURI.toString());
 
     intent.setDataAndType(photoURI, "application/vnd.android.package-archive");
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

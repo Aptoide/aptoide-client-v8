@@ -111,7 +111,8 @@ public class AptoideUtils {
         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
         return info.versionCode;
       } catch (PackageManager.NameNotFoundException e) {
-        Logger.e(TAG, e);
+        Logger.getInstance()
+            .e(TAG, e);
         return -1;
       }
     }
@@ -125,7 +126,8 @@ public class AptoideUtils {
       try {
         return convToHex(computeSha1(text.getBytes("iso-8859-1")));
       } catch (UnsupportedEncodingException e) {
-        Logger.e(TAG, "computeSha1(String)", e);
+        Logger.getInstance()
+            .e(TAG, "computeSha1(String)", e);
       }
       return "";
     }
@@ -146,7 +148,8 @@ public class AptoideUtils {
         md.update(bytes, 0, bytes.length);
         return md.digest();
       } catch (NoSuchAlgorithmException e) {
-        Logger.e(TAG, e);
+        Logger.getInstance()
+            .e(TAG, e);
       }
 
       return new byte[0];
@@ -161,11 +164,14 @@ public class AptoideUtils {
         byte[] bytes = mac.doFinal(value.getBytes("UTF-8"));
         return convToHex(bytes);
       } catch (NoSuchAlgorithmException e) {
-        Logger.e(TAG, e);
+        Logger.getInstance()
+            .e(TAG, e);
       } catch (UnsupportedEncodingException e) {
-        Logger.e(TAG, e);
+        Logger.getInstance()
+            .e(TAG, e);
       } catch (InvalidKeyException e) {
-        Logger.e(TAG, e);
+        Logger.getInstance()
+            .e(TAG, e);
       }
       return "";
     }
@@ -229,7 +235,8 @@ public class AptoideUtils {
         }
         md5hash = tmp.concat(md5hash);
       }
-      Logger.v(TAG, "computeMd5: duration: " + (System.currentTimeMillis() - time) + " ms");
+      Logger.getInstance()
+          .v(TAG, "computeMd5: duration: " + (System.currentTimeMillis() - time) + " ms");
       return md5hash;
     }
 
@@ -424,7 +431,8 @@ public class AptoideUtils {
         bitmap = Bitmap.createBitmap(v1.getDrawingCache());
         v1.setDrawingCacheEnabled(false);
       } catch (Exception e) {
-        Logger.e("FeedBackActivity-screenshot", "Exception: " + e.getMessage());
+        Logger.getInstance()
+            .e("FeedBackActivity-screenshot", "Exception: " + e.getMessage());
         return null;
       }
 
@@ -437,10 +445,12 @@ public class AptoideUtils {
         fout.flush();
         fout.close();
       } catch (FileNotFoundException e) {
-        Logger.e("FeedBackActivity-screenshot", "FileNotFoundException: " + e.getMessage());
+        Logger.getInstance()
+            .e("FeedBackActivity-screenshot", "FileNotFoundException: " + e.getMessage());
         return null;
       } catch (IOException e) {
-        Logger.e("FeedBackActivity-screenshot", "IOException: " + e.getMessage());
+        Logger.getInstance()
+            .e("FeedBackActivity-screenshot", "IOException: " + e.getMessage());
         return null;
       }
       return imageFile;
@@ -477,7 +487,8 @@ public class AptoideUtils {
         try {
           return valueOf(screen);
         } catch (Exception e) {
-          Logger.e(TAG, e);
+          Logger.getInstance()
+              .e(TAG, e);
           return notfound;
         }
       }
@@ -616,8 +627,9 @@ public class AptoideUtils {
         final String resourceEntryName = resources.getResourceEntryName(resId);
         final String displayLanguage = Locale.getDefault()
             .getDisplayLanguage();
-        Logger.e("UnknownFormatConversion",
-            "String: " + resourceEntryName + " Locale: " + displayLanguage);
+        Logger.getInstance()
+            .e("UnknownFormatConversion",
+                "String: " + resourceEntryName + " Locale: " + displayLanguage);
         result = ResourseU.getString(resId, resources);
       }
       return result;
@@ -786,7 +798,8 @@ public class AptoideUtils {
         process = Runtime.getRuntime()
             .exec("logcat -d");
       } catch (IOException e) {
-        Logger.e("FeedBackActivity-readLogs", "IOException: " + e.getMessage());
+        Logger.getInstance()
+            .e("FeedBackActivity-readLogs", "IOException: " + e.getMessage());
         return null;
       }
       FileOutputStream outputStream;
@@ -817,7 +830,8 @@ public class AptoideUtils {
         outputStream.write(log.toString()
             .getBytes());
       } catch (IOException e) {
-        Logger.e(TAG, e);
+        Logger.getInstance()
+            .e(TAG, e);
         return logsFile;
       }
 
@@ -848,7 +862,8 @@ public class AptoideUtils {
               }
             }
           } catch (Exception e) {
-            Logger.e(TAG, e);
+            Logger.getInstance()
+                .e(TAG, e);
             throw new RuntimeException(e);
           }
         }
@@ -926,15 +941,18 @@ public class AptoideUtils {
         if (null == currUid) {
           retval = false;
           exitSu = false;
-          Logger.d("ROOT", "Can't get root access or denied by user");
+          Logger.getInstance()
+              .d("ROOT", "Can't get root access or denied by user");
         } else if (currUid.contains("uid=0")) {
           retval = true;
           exitSu = true;
-          Logger.d("ROOT", "Root access granted");
+          Logger.getInstance()
+              .d("ROOT", "Root access granted");
         } else {
           retval = false;
           exitSu = true;
-          Logger.d("ROOT", "Root access rejected: " + currUid);
+          Logger.getInstance()
+              .d("ROOT", "Root access rejected: " + currUid);
         }
 
         if (exitSu) {
@@ -946,8 +964,9 @@ public class AptoideUtils {
         // Probably broken pipe exception on trying to write to output stream (os) after su failed, meaning that the device is not rooted
 
         retval = false;
-        Logger.d("ROOT", "Root access rejected [" + e.getClass()
-            .getName() + "] : " + e.getMessage());
+        Logger.getInstance()
+            .d("ROOT", "Root access rejected [" + e.getClass()
+                .getName() + "] : " + e.getMessage());
       }
 
       return retval;
@@ -962,7 +981,8 @@ public class AptoideUtils {
       Observable.just(null)
           .observeOn(Schedulers.io())
           .subscribe(o -> runnable.run(), e -> {
-            Logger.e(TAG, e);
+            Logger.getInstance()
+                .e(TAG, e);
             throw new RuntimeException(e);
           });
     }
@@ -1262,7 +1282,8 @@ public class AptoideUtils {
           screen = db.toString();
         }
       } catch (Exception e) {
-        Logger.e(TAG, e);
+        Logger.getInstance()
+            .e(TAG, e);
         throw e;
       }
 
@@ -1327,7 +1348,7 @@ public class AptoideUtils {
       int sizeX = (int) (baseLineXNotification * densityMultiplier);
       int sizeY = (int) (baseLineYNotification * densityMultiplier);
 
-      //Logger.d("Aptoide-IconSize", "Size is " + size);
+      //Logger.getInstance().d("Aptoide-IconSize", "Size is " + size);
 
       //return sizeX + "x" + sizeY;
       String[] splittedUrl = splitUrlExtension(url);
@@ -1383,7 +1404,7 @@ public class AptoideUtils {
 
       int size = Math.round(baseLineAvatar * densityMultiplier);
 
-      //Logger.d("Aptoide-IconSize", "Size is " + size);
+      //Logger.getInstance().d("Aptoide-IconSize", "Size is " + size);
 
       //return size + "x" + size;
 
@@ -1446,7 +1467,8 @@ public class AptoideUtils {
           }
         }
       } catch (Exception e) {
-        Logger.e(TAG, e);
+        Logger.getInstance()
+            .e(TAG, e);
         throw e;
       }
       return iconUrl;
@@ -1530,14 +1552,10 @@ public class AptoideUtils {
 
     public void end() {
       long endTime = System.currentTimeMillis();
-      Logger.d(TAG, "Thread: "
-          + Thread.currentThread()
-          .getId()
-          + " Method:"
-          + methodName
-          + " - Total execution time: "
-          + (endTime - startTime)
-          + "ms");
+      Logger.getInstance()
+          .d(TAG, "Thread: " + Thread.currentThread()
+              .getId() + " Method:" + methodName + " - Total execution time: " + (endTime
+              - startTime) + "ms");
     }
   }
 

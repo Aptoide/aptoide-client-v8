@@ -5,18 +5,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/tw__transparent"
     android:orientation="vertical"
     android:weightSum="9"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
-  <cm.aptoide.pt.view.custom.AptoideViewPager
-      android:id="@+id/view_pager"
+  <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      tools:background="@color/indigo"
-      />
+      >
+    <View
+        android:id="@+id/animated_color_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <cm.aptoide.pt.view.custom.AptoideViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/tw__transparent"
+        tools:background="@color/indigo"
+        />
+  </FrameLayout>
 
   <LinearLayout
       android:id="@+id/skip_next_layout"

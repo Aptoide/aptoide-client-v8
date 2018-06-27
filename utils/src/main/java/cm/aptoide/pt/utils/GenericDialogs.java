@@ -94,6 +94,40 @@ public class GenericDialogs {
   }
 
   /**
+   * Show an AlertDialog with the {@code title} and the {@code message} and a custom {@code view}.
+   * The Alert dialog has an
+   * "ok" button.
+   *
+   * @param title Title to apply on AlertDialog
+   * @param message Message to asSnack on AlertDialog
+   *
+   * @return A Observable that shows the dialog when subscribed and return the action made by
+   * user. This action is represented by EResponse
+   *
+   * @see EResponse
+   */
+  public static Observable<EResponse> createGenericOkCancelMessageWithCustomView(Context context,
+      String title, String message, int layoutId) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+      final AlertDialog dialog = new AlertDialog.Builder(context).setTitle(title)
+          .setMessage(message)
+          .setView(layoutId)
+          .setPositiveButton(android.R.string.ok, (listener, which) -> {
+            subscriber.onNext(EResponse.YES);
+            subscriber.onCompleted();
+          })
+          .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+            subscriber.onNext(EResponse.CANCEL);
+            subscriber.onCompleted();
+          })
+          .create();
+      // cleaning up
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
+      dialog.show();
+    });
+  }
+
+  /**
    * Show an AlertDialog with the {@code title} and the {@code message}. The Alert dialog has an
    * "ok" button.
    *

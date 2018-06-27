@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -27,8 +29,6 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -40,6 +40,9 @@ import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
+import cm.aptoide.pt.app.view.MoreBundleManager;
+import cm.aptoide.pt.app.view.MoreBundlePresenter;
+import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
@@ -79,12 +82,15 @@ import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.wizard.WizardPresenter;
+import cm.aptoide.pt.view.wizard.WizardView;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
@@ -291,5 +297,30 @@ import rx.schedulers.Schedulers;
         arguments.getDouble(BundleKeys.APPC.name(), -1),
         arguments.getString(BundleKeys.EDITORS_CHOICE_POSITION.name(), ""),
         arguments.getString(BundleKeys.ORIGIN_TAG.name(), ""));
+  }
+
+  @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(
+      MoreBundleManager moreBundleManager, CrashReport crashReport, HomeNavigator homeNavigator,
+      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
+    return new MoreBundlePresenter((MoreBundleView) fragment, moreBundleManager,
+        AndroidSchedulers.mainThread(), crashReport, homeNavigator, adMapper, bundleEvent,
+        homeAnalytics);
+  }
+
+  @FragmentScope @Provides MoreBundleManager providesGetStoreManager(
+      BundlesRepository bundlesRepository) {
+    return new MoreBundleManager(bundlesRepository);
+  }
+
+  @FragmentScope @Provides BundleEvent providesBundleEvent() {
+    return new BundleEvent(arguments.getString(BundleCons.TITLE),
+        arguments.getString(BundleCons.ACTION));
+  }
+
+  @FragmentScope @Provides WizardPresenter providesWizardPresenter(
+      AptoideAccountManager aptoideAccountManager, CrashReport crashReport,
+      AccountAnalytics accountAnalytics) {
+    return new WizardPresenter((WizardView) fragment, aptoideAccountManager, crashReport,
+        accountAnalytics);
   }
 }

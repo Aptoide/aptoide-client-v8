@@ -104,7 +104,8 @@ public class BootConfigJSONUtils {
       throws JsonProcessingException {
     final String json = objectMapper.writeValueAsString(remoteBootConfig);
     PartnersSecurePreferences.setRemoteBootConfigJSONString(json, sharedPreferences);
-    Logger.d(TAG + " saved ", json);
+    Logger.getInstance()
+        .d(TAG + " saved ", json);
   }
 
   /**

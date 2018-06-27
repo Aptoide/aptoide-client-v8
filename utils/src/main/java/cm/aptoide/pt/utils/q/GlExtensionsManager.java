@@ -60,7 +60,8 @@ class GlExtensionsManager {
     }
 
     if (computedValue == null || "".equals(computedValue)) {
-      Logger.w(TAG, "Supported OpenGL Extensions is empty!");
+      Logger.getInstance()
+          .w(TAG, "Supported OpenGL Extensions is empty!");
     }
 
     return computedValue != null ? computedValue : "";

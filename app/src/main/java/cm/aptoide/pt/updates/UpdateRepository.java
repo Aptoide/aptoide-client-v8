@@ -77,7 +77,8 @@ public class UpdateRepository {
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache,
       boolean bypassServerCache) {
-    Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
+    Logger.getInstance()
+        .d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager)
         .observe(bypassCache, bypassServerCache)
@@ -102,8 +103,9 @@ public class UpdateRepository {
         .toList()
         .toSingle()
         .flatMap(updateList -> {
-          Logger.d(TAG, String.format("filter %d updates for non excluded and save the remainder",
-              updateList.size()));
+          Logger.getInstance()
+              .d(TAG, String.format("filter %d updates for non excluded and save the remainder",
+                  updateList.size()));
           return saveNonExcludedUpdates(updateList);
         }));
   }

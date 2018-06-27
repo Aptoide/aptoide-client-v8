@@ -1,6 +1,7 @@
 package cm.aptoide.pt;
 
 import android.os.Environment;
+import cm.aptoide.analytics.implementation.PageViewsAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.LoginPreferences;

@@ -10,6 +10,7 @@ import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.download.view.DownloadsFragment;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.settings.NewAccountFragment;
+import cm.aptoide.pt.view.wizard.WizardFragment;
 import dagger.Subcomponent;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class })
@@ -94,4 +96,8 @@ public interface FragmentComponent {
   void inject(NewAppViewFragment newAppViewFragment);
 
   void inject(RateAndReviewsFragment rateAndReviewsFragment);
+
+  void inject(MoreBundleFragment moreBundleFragment);
+
+  void inject(WizardFragment wizardFragment);
 }

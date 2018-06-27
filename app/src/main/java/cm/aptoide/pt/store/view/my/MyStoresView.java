@@ -16,4 +16,6 @@ public interface MyStoresView extends View {
   Observable<Void> imageClick();
 
   void showAvatar();
+
+  void setDefaultUserImage();
 }

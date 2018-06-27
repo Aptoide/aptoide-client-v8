@@ -55,7 +55,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     try {
       load();
     } catch (IOException e) {
-      //Logger.e(TAG, e);
+      //Logger.getInstance().e(TAG, e);
       // do nothing in case of an IOException. Android File.fileExists() and File.canRead()
       // are not viable, so an exception is thrown in case the cache file does not exist
       // but that exception is not relevant to the common developer and only causes confusion
@@ -70,7 +70,8 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     cache = new ObjectMapper().readValue(cacheFile,
         new TypeReference<ConcurrentHashMap<String, ResponseCacheEntry>>() {
         });
-    Logger.d(TAG, "Loaded cache file");
+    Logger.getInstance()
+        .d(TAG, "Loaded cache file");
   }
 
   @Override public void destroy() {
@@ -117,7 +118,8 @@ public class L2Cache extends StringBaseCache<Request, Response> {
    */
   private void store() throws IOException {
     new ObjectMapper().writeValue(cacheFile, cache);
-    Logger.d(TAG, "Stored cache file");
+    Logger.getInstance()
+        .d(TAG, "Stored cache file");
   }
 
   @Override public void put(String key, Response response) {
@@ -158,13 +160,15 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     try {
       Headers headers = response.headers();
       if (headers.size() <= 0) {
-        Logger.d(TAG, "not caching the response due to empty headers");
+        Logger.getInstance()
+            .d(TAG, "not caching the response due to empty headers");
         return 0;
       }
 
       List<String> cacheControlHeaders = headers.values(CACHE_CONTROL_HEADER);
       if (cacheControlHeaders.size() <= 0) {
-        Logger.d(TAG, "not caching the response due to empty Cache-Control header");
+        Logger.getInstance()
+            .d(TAG, "not caching the response due to empty Cache-Control header");
         return 0;
       }
 

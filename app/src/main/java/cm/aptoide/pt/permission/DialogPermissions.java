@@ -19,9 +19,6 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.AppViewViewModel;
-import cm.aptoide.pt.dataprovider.model.v7.GetApp;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.permissions.ApkPermission;
 import cm.aptoide.pt.permissions.ApkPermissionGroup;
 import cm.aptoide.pt.util.AppUtils;
@@ -38,37 +35,20 @@ import java.util.List;
  */
 public class DialogPermissions extends DialogFragment {
 
-  private GetApp getApp;
-  private AppViewViewModel app;
   private String appName;
   private String versionName;
   private String icon;
   private String size;
+  private List<String> usedPermissions;
 
-  public static DialogPermissions newInstance(GetApp getApp) {
-    GetAppMeta.App app = getApp.getNodes()
-        .getMeta()
-        .getData();
+  public static DialogPermissions newInstance(String appName, String versionName, String icon,
+      String size, List<String> usedPermissions) {
     DialogPermissions dialog = new DialogPermissions();
-    dialog.getApp = getApp;
-    dialog.appName = app.getName();
-    dialog.versionName = app.getFile()
-        .getVername();
-    dialog.icon = app.getIcon();
-    dialog.size = AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFile()
-        .getFilesize(), app.getObb()), false);
-    return dialog;
-  }
-
-  public static DialogPermissions newInstance(AppViewViewModel app) {
-    DialogPermissions dialog = new DialogPermissions();
-    dialog.app = app;
-    dialog.appName = app.getAppName();
-    dialog.versionName = app.getVersionName();
-    dialog.icon = app.getIcon();
-    dialog.size =
-        AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),
-            false);
+    dialog.appName = appName;
+    dialog.versionName = versionName;
+    dialog.icon = icon;
+    dialog.size = size;
+    dialog.usedPermissions = usedPermissions;
     return dialog;
   }
 
@@ -110,18 +90,6 @@ public class DialogPermissions extends DialogFragment {
         .into((ImageView) v.findViewById(R.id.dialog_appview_icon));
 
     final TableLayout tableLayout = (TableLayout) v.findViewById(R.id.dialog_table_permissions);
-
-    final List<String> usedPermissions;
-
-    if (getApp != null) {
-      usedPermissions = getApp.getNodes()
-          .getMeta()
-          .getData()
-          .getFile()
-          .getUsedPermissions();
-    } else {
-      usedPermissions = app.getUsedPermissions();
-    }
 
     List<ApkPermission> apkPermissions =
         AptoideUtils.SystemU.parsePermissions(getContext(), usedPermissions);

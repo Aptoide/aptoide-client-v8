@@ -43,7 +43,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   }
 
   @Override public void onCreate(SQLiteDatabase db) {
-    Logger.w(TAG, "onCreate() called");
+    Logger.getInstance()
+        .w(TAG, "onCreate() called");
 
     // do nothing here.
     packageManager = context.getPackageManager();
@@ -51,12 +52,13 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   }
 
   @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    Logger.w(TAG, "onUpgrade() called with: "
-        + "oldVersion = ["
-        + oldVersion
-        + "], newVersion = ["
-        + newVersion
-        + "]");
+    Logger.getInstance()
+        .w(TAG, "onUpgrade() called with: "
+            + "oldVersion = ["
+            + oldVersion
+            + "], newVersion = ["
+            + newVersion
+            + "]");
 
     OLD_DATABASE_VERSION = oldVersion;
     migrate(db);
@@ -67,12 +69,13 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   @Override public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     super.onDowngrade(db, oldVersion, newVersion);
-    Logger.w(TAG, "onDowngrade() called with: "
-        + "oldVersion = ["
-        + oldVersion
-        + "], newVersion = ["
-        + newVersion
-        + "]");
+    Logger.getInstance()
+        .w(TAG, "onDowngrade() called with: "
+            + "oldVersion = ["
+            + oldVersion
+            + "], newVersion = ["
+            + newVersion
+            + "]");
 
     migrate(db);
 
@@ -86,7 +89,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     if (!ManagerPreferences.needsSqliteDbMigration(sharedPreferences)) {
       return;
     }
-    Logger.w(TAG, "Migrating database started....");
+    Logger.getInstance()
+        .w(TAG, "Migrating database started....");
 
     try {
       new Repo().migrate(db, AccessorFactory.getAccessorFor(
@@ -130,7 +134,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       CrashReport.getInstance()
           .log(aggregateExceptions);
     }
-    Logger.w(TAG, "Migrating database finished.");
+    Logger.getInstance()
+        .w(TAG, "Migrating database finished.");
   }
 
   private void logException(Exception ex) {

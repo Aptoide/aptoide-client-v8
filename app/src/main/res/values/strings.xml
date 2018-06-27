@@ -63,13 +63,15 @@
   <string name="appview_rating_card_text">Rating</string>
   <string name="appview_button_read_all">read all <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Trusted</string>
-  <string name="appview_rate_this_app_text">Rate this app</string>
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You might also like</string>
   <string name="appcardview_title_no_stars" translatable="false">- -</string>
   <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
   <string name="appview_uploaded_by">App uploaded by</string>
   <string name="appview_similar_apps">Similar apps</string>
+  <string name="appview_short_downloading">Downloading</string>
+  <string name="appview_message_apkfy">And feel free to keep Aptoide installed in your device to access the best apps, all safe apps with no restrictions!</string>
+
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -337,12 +339,6 @@
 
   <!--??-->
   <string name="read_more">See more</string>
-  <string name="flag_this_app_good">Good</string>
-  <string name="flag_this_app_button_text">Flag this app</string>
-  <string name="flag_this_app_need_licence">Needs license</string>
-  <string name="flag_this_app_fake">Fake</string>
-  <string name="flag_this_app_freeze">Freeze</string>
-  <string name="flag_this_app_virus">Virus</string>
   <string name="active">Active</string>
   <string name="completed">Completed</string>
   <string name="stand_by">Standby</string>
@@ -385,7 +381,7 @@
   <string name="write_your_comment">Write your comment</string>
 
   <!-- Dialogs -->
-  <string name="installapp_alrt">Do you want to install: \n\n %s?</string>
+  <string name="installapp_alrt">Do you want to install: \n\n%s?</string>
 
   <!-- App permission -->
   <string name="permissions">See permissions</string>
@@ -466,7 +462,6 @@
   <string name="share_store">Share Store</string>
 
   <!-- Search Widget-->
-  <string name="manually_reviewed">Good app guaranteed: this application passed the security tests for virus, malware and other malicious attacks and doesn\'t contain any threats</string>
   <string name="no_search_results_message">There are no results for your search. \nTry using other words.</string>
 
   <!-- Search Fragment -->
@@ -539,18 +534,20 @@
   <string name="home_recommends">%s recommends</string>
   <string name="bundles_short_reward_app_appc" translatable="false">%s APPC</string>
 
-  <!--Terms and Conditions URL navigation-->
-  <string name="terms_conditions_navigation_url" translatable="false">https://www.aptoide.com/legal/terms?header=0&amp;menu=0</string>
-  <string name="privacy_policy_navigation_url" translatable="false">https://www.aptoide.com/legal/privacy?header=0&amp;menu=0</string>
 
   <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
+
+
+  <!--URL -->
+  <string name="all_url_terms_conditions" translatable="false">https://www.aptoide.com/legal/terms?header=0&amp;menu=0</string>
+  <string name="all_url_privacy_policy" translatable="false">https://www.aptoide.com/legal/privacy?header=0&amp;menu=0</string>
+  <string name="settings_url_delete_account" translatable="false">https://www.aptoide.com/account/delete?access_token=%1$s</string>
+
 
   <!--APPC-->
   <string name="appc_title_iab">Spend your AppCoins</string>
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
-
   <string name="appc_message_appview_appcoins_reward">Try this app and get %s </string>
-  <string name="appview_short_downloading">Downloading</string>
 
 
 </resources>

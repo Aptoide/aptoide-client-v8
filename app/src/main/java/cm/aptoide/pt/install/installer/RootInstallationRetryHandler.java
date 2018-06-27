@@ -51,7 +51,8 @@ public class RootInstallationRetryHandler {
           }
         })
         .subscribe(rootInstallErrorNotification -> {
-        }, throwable -> Logger.e(TAG, "start: " + throwable));
+        }, throwable -> Logger.getInstance()
+            .e(TAG, "start: " + throwable));
   }
 
   private void showNotification(List<Install> installs) {

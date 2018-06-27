@@ -76,7 +76,7 @@ public class AccountNavigator {
       fragmentNavigator.navigateTo(NewAccountFragment.newInstance(), true);
     } else {
       accountAnalytics.enterAccountScreen(accountOrigins);
-      fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false), true);
+      fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false, false), true);
     }
   }
 
@@ -159,12 +159,12 @@ public class AccountNavigator {
   public void navigateToTermsAndConditions() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.terms_conditions_navigation_url), activityNavigator.getActivity());
+            .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity());
   }
 
   public void navigateToPrivacyPolicy() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.privacy_policy_navigation_url), activityNavigator.getActivity());
+            .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity());
   }
 }

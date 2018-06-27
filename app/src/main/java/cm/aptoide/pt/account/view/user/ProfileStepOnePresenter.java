@@ -59,7 +59,8 @@ public class ProfileStepOnePresenter implements Presenter {
                       }
                     })
                     .toObservable())
-            .doOnError(throwable -> Logger.e(TAG, throwable))
+            .doOnError(throwable -> Logger.getInstance()
+                .e(TAG, throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

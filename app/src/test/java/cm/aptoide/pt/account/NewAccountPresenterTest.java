@@ -92,7 +92,6 @@ public class NewAccountPresenterTest {
 
     newAccountPresenter.checkIfStoreIsInvalidAndRefresh();
 
-
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then it should update the view

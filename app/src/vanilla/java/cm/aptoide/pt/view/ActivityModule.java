@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
@@ -22,8 +24,6 @@ import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.analytics.NavigationTracker;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -31,6 +31,7 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationAnalytics;
@@ -117,11 +118,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides AutoUpdate provideAutoUpdate(DownloadFactory downloadFactory,
-      PermissionManager permissionManager, Resources resources) {
+      PermissionManager permissionManager, Resources resources,
+      DownloadAnalytics downloadAnalytics) {
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     return new AutoUpdate((ActivityView) activity, downloadFactory, permissionManager,
         application.getInstallManager(), resources, autoUpdateUrl, R.mipmap.ic_launcher, false,
-        marketName);
+        marketName, downloadAnalytics);
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(

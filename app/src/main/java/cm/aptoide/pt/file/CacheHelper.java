@@ -50,7 +50,8 @@ public class CacheHelper implements CacheManager {
           for (int i = 0; i < sizes.size(); i++) {
             size += sizes.get(i);
           }
-          Logger.d(TAG, "Cache cleaned: " + AptoideUtils.StringU.formatBytes(size, false));
+          Logger.getInstance()
+              .d(TAG, "Cache cleaned: " + AptoideUtils.StringU.formatBytes(size, false));
           return size;
         })
         .subscribeOn(Schedulers.io());
@@ -103,7 +104,8 @@ public class CacheHelper implements CacheManager {
     long deletedSize = 0;
     if ((now - file.lastModified()) > timeToCache) {
       long fileSize = file.length();
-      Logger.d(TAG, "removeFile: " + file.getAbsolutePath());
+      Logger.getInstance()
+          .d(TAG, "removeFile: " + file.getAbsolutePath());
       //update deleted size if file was deleted
       if (file.delete()) {
         deletedSize = fileSize;

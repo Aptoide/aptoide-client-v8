@@ -1,5 +1,7 @@
 package cm.aptoide.pt.analytics;
 
+import cm.aptoide.analytics.implementation.tracking.Tracking;
+import cm.aptoide.analytics.implementation.tracking.UTM;
 import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
 
 /**

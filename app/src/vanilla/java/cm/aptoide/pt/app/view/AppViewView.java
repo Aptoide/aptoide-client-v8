@@ -134,4 +134,7 @@ public interface AppViewView extends InstallAppView {
   void recoverScrollViewState();
 
   Observable<DownloadAppViewModel.Action> showOpenAndInstallDialog(String title, String appName);
+
+  Observable<DownloadAppViewModel.Action> showOpenAndInstallApkFyDialog(String title,
+      String appName);
 }

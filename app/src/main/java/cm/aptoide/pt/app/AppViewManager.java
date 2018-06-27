@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -215,14 +215,14 @@ public class AppViewManager {
   }
 
   private void increaseInstallClick() {
-    preferencesManager.setNotLoggedInInstallClicks();
+    preferencesManager.increaseNotLoggedInInstallClicks();
   }
 
-  public boolean showRootInstallWarningPopup() {
+  public boolean shouldShowRootInstallWarningPopup() {
     return installManager.showWarning();
   }
 
-  public void saveRootInstallWarning(Boolean answer) {
+  public void allowRootInstall(Boolean answer) {
     installManager.rootInstallAllowed(answer);
   }
 
@@ -230,7 +230,10 @@ public class AppViewManager {
       long appId) {
     increaseInstallClick();
     return Observable.just(
-        downloadFactory.create(cachedApp, downloadStateParser.parseDownloadAction(downloadAction)))
+        downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
+            cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
+            cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
+            cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)))
         .toCompletable();

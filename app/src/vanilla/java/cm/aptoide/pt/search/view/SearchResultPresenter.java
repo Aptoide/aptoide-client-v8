@@ -424,7 +424,8 @@ import rx.functions.Func2;
         .flatMapSingle(query -> suggestionManager.getSuggestionsForApp(query)
             .onErrorResumeNext(err -> {
               if (err instanceof TimeoutException) {
-                Logger.i(TAG, "Timeout reached while waiting for application suggestions");
+                Logger.getInstance()
+                    .i(TAG, "Timeout reached while waiting for application suggestions");
               }
               return Single.error(err);
             })

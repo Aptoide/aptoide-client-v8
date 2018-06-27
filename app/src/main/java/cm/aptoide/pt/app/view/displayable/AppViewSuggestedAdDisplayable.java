@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app.view.displayable;
 
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.analytics.NavigationTracker;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 

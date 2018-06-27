@@ -2,7 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import cm.aptoide.pt.analytics.analytics.AnalyticsManager;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
@@ -250,6 +250,7 @@ public class AppsManager {
 
   private Observable<Install> getUpdates(Installed installedApp) {
     return installManager.getInstallations()
+        .first()
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.empty();
