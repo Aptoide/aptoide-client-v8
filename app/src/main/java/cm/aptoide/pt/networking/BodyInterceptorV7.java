@@ -45,6 +45,8 @@ public class BodyInterceptorV7 implements BodyInterceptor<BaseBody> {
 
           if (authentication.isAuthenticated()) {
             body.setAccessToken(authentication.getAccessToken());
+          } else {
+            body.setAccessToken(null);
           }
 
           body.setAptoideId(idsRepository.getUniqueIdentifier());
