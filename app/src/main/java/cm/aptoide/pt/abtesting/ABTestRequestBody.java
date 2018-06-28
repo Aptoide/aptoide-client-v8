@@ -7,13 +7,13 @@ import java.util.List;
  * Created by franciscocalado on 19/06/18.
  */
 
-public class ABTestImpressionBody {
+public class ABTestRequestBody {
 
   private List<Data> events;
 
-  public ABTestImpressionBody() {
+  public ABTestRequestBody(String action) {
     events = new ArrayList<>();
-    events.add(new Data());
+    events.add(new Data(action));
   }
 
   public List<Data> getEvents() {
@@ -23,8 +23,8 @@ public class ABTestImpressionBody {
   public static class Data {
     private String name;
 
-    Data() {
-      name = "IMPRESSION";
+    Data(String action) {
+      name = action;
     }
 
     public String getName() {

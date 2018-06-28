@@ -5,7 +5,7 @@ package cm.aptoide.pt.abtesting;
  */
 
 public class Experiment {
-  private static final long TWENTY_FOUR_HOURS = 864000000;
+  private static final long TWENTY_FOUR_HOURS = 86400000;
 
   private long requestTime;
   private String assignment;

@@ -27,7 +27,7 @@ public class ABTestManager {
   }
 
   public enum ExperimentType {
-    SHARE_DIALOG("android_implement"), BUTTON_COLOR("dumb_test");
+    SHARE_DIALOG("android_implement");
 
     private String name;
 

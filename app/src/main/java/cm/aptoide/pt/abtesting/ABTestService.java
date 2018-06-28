@@ -13,6 +13,7 @@ import rx.Observable;
  */
 
 public class ABTestService {
+  private static final String IMPRESSION = "IMPRESSION";
   private static final String EXPERIMENT_OVER = "EXPERIMENT_EXPIRED";
   private static final String EXPERIMENT_PAUSED = "EXPERIMENT_PAUSED";
   private static final String EXPERIMENT_NOT_FOUND = "EXPERIMENT_NOT_FOUND";
@@ -33,7 +34,8 @@ public class ABTestService {
   }
 
   public Observable<Boolean> recordImpression(ABTestManager.ExperimentType experiment) {
-    return service.recordImpression(experiment.getName(), aptoideId, new ABTestImpressionBody())
+    return service.recordImpression(experiment.getName(), aptoideId,
+        new ABTestRequestBody(IMPRESSION))
         .doOnNext(voidResponse -> Logger.getInstance()
             .d(this.getClass()
                 .getName(), "response : " + voidResponse.isSuccessful()))
@@ -44,7 +46,7 @@ public class ABTestService {
   public Observable<Boolean> recordAction(ABTestManager.ExperimentType experimentType,
       String assignment) {
     return service.recordAction(experimentType.getName(), aptoideId,
-        new ABTestActionBody(assignment))
+        new ABTestRequestBody(assignment))
         .map(__ -> true);
   }
 
@@ -71,10 +73,10 @@ public class ABTestService {
     @POST("events/applications/Android/experiments/{experimentName}/users/{aptoideId}")
     Observable<Response<Void>> recordImpression(
         @Path(value = "experimentName") String experimentName,
-        @Path(value = "aptoideId") String aptoideId, @Body ABTestImpressionBody body);
+        @Path(value = "aptoideId") String aptoideId, @Body ABTestRequestBody body);
 
     @POST("events/applications/Android/experiments/{experimentName}/users/{aptoideId}")
     Observable<Response<Void>> recordAction(@Path(value = "experimentName") String experimentName,
-        @Path(value = "aptoideId") String aptoideId, @Body ABTestActionBody body);
+        @Path(value = "aptoideId") String aptoideId, @Body ABTestRequestBody body);
   }
 }
