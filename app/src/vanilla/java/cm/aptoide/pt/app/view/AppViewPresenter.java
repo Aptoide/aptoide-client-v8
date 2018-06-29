@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -99,7 +100,7 @@ public class AppViewPresenter implements Presenter {
     handleAppBought();
   }
 
-  private void handleFirstLoad() {
+  @VisibleForTesting public void handleFirstLoad() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
