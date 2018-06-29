@@ -265,6 +265,10 @@ import cm.aptoide.pt.utils.AptoideUtils;
       case "Play-it!":
         translated = context.getString(R.string.title_play_it);
         break;
+      case "Editors Choice":
+      case "Editor's Choice":
+      case "Editors' Choice":
+        translated = context.getString(R.string.home_title_editors_choice);
       case "More Editors Choice":
       case "More Editor's Choice":
       case "More Editors' Choice":
