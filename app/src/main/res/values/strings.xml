@@ -270,6 +270,7 @@
   <string name="essential_apps">Essential Apps</string>
   <string name="summer_apps">Summer Apps</string>
   <string name="title_play_it">Play-It!</string>
+  <string name="home_title_editors_choice">Editors\' Choice</string>
 
 
   <!--home Fragment-->
@@ -443,7 +444,6 @@
   <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
 
   <string name="order_popup_title3">Adult Content</string>
-  <string name="more_editors_choice">More Editors\' Choice</string>
   <string name="more_versions">More Versions</string>
 
   <!-- Review Activity-->
