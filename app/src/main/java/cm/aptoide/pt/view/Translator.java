@@ -270,11 +270,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
       case "Editors' Choice":
         translated = context.getString(R.string.home_title_editors_choice);
         break;
-      case "More Editors Choice":
-      case "More Editor's Choice":
-      case "More Editors' Choice":
-        translated = context.getString(R.string.more_editors_choice);
-        break;
       case "Comments in this store":
       case "Comments on this store":
         translated = context.getString(R.string.comment_store_title);
