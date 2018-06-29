@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -45,15 +44,12 @@ public class AppViewPresenterTest {
   @Mock private AppViewManager appViewManager;
   @Mock private AptoideAccountManager accountManager;
   @Mock private CrashReport crashReporter;
-  @Mock private Account account;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
-  private PublishSubject<Account> accountStatusEvent;
   private AppViewViewModel appViewViewModel;
   private AppViewViewModel errorAppViewViewModel;
   private DownloadAppViewModel downloadAppViewModel;
-  private SimilarAppsViewModel similarAppsViewModel;
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
@@ -62,7 +58,6 @@ public class AppViewPresenterTest {
         permissionService);
 
     lifecycleEvent = PublishSubject.create();
-    accountStatusEvent = PublishSubject.create();
 
     Malware malware = new Malware();
     malware.setRank(Malware.Rank.CRITICAL);
@@ -86,9 +81,6 @@ public class AppViewPresenterTest {
         DownloadAppViewModel.DownloadState.ACTIVE, null);
 
     errorAppViewViewModel = new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC);
-    // similarAppsViewModel = new SimilarAppsViewModel(
-    //new MinimalAd("", 0, "", "", "", 123, 111, "", "aptoide", "www.icones.pt",
-    //  "no description available", 1231, 5, Long.valueOf(0)), );
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
   }
@@ -225,144 +217,4 @@ public class AppViewPresenterTest {
             .getRank()
             .name(), emptyEditorsChoiceAppViewViewModel.getAppc());
   }
-
-  /**
-
-   @Test public void handleFirstAppLoadOpenTest() {
-   //Given an initialized presenter
-   presenter.handleFirstLoad();
-   //When the app model is requested
-   when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
-   //when the download model is requested
-   when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
-   appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-   appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
-   Observable.just(downloadAppViewModel));
-   //when the loadSimilar apps is called
-   //when(appViewManager.loadSimilarApps(appViewViewModel.getPackageName(),
-   //appViewViewModel.getMedia()
-   //  .getKeywords())).thenReturn(Single.just());
-   //Then the loading should be shown
-   verify(view).showLoading();
-   //Then should set the download information
-   verify(view).showDownloadAppModel(downloadAppViewModel);
-   //Then should set the download ready to download
-   verify(view).readyToDownload();
-   //Then should show all the app details
-   verify(view).populateAppDetails(appViewViewModel);
-   //Then should send editors choice event
-   verify(appViewManager).sendEditorsChoiceClickEvent(appViewViewModel.getPackageName(),
-   appViewViewModel.getEditorsChoice());
-   //Then should send the open app view event
-   verify(appViewManager).sendAppViewOpenedFromEvent(appViewViewModel.getPackageName(),
-   appViewViewModel.getDeveloper()
-   .getName(), appViewViewModel.getMalware()
-   .getRank()
-   .name(), appViewViewModel.getAppc());
-   //then the view should recover its scroll state
-   verify(view).recoverScrollViewState();
-   //then update the suggested apps
-   //verify(appViewManager).loadSimilarApps();
-   //then
-   }
-
-   @Test public void handleFirstAppLoadOpenAndInstallTest() {
-   //Given an initialized presenter
-   presenter.handleFirstLoad();
-   //When the app model is requested
-   when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
-   //when the download model is requested
-   when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
-   appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-   appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
-   Observable.just(downloadAppViewModel));
-   //Then the loading should be shown
-   verify(view).showLoading();
-   //Then should set the download information
-   verify(view).showDownloadAppModel(downloadAppViewModel);
-   //Then should set the download ready to download
-   verify(view).readyToDownload();
-   //Then should show all the app details
-   verify(view).populateAppDetails(appViewViewModel);
-   //Then should send editors choice event
-   verify(appViewManager).sendEditorsChoiceClickEvent(appViewViewModel.getPackageName(),
-   appViewViewModel.getEditorsChoice());
-   //Then should send the open app view event
-   verify(appViewManager).sendAppViewOpenedFromEvent(appViewViewModel.getPackageName(),
-   appViewViewModel.getDeveloper()
-   .getName(), appViewViewModel.getMalware()
-   .getRank()
-   .name(), appViewViewModel.getAppc());
-   //todo handle open and install open type
-   //then the view should recover its scroll state
-   verify(view).recoverScrollViewState();
-   }
-
-   @Test public void handleFirstAppLoadOpenWithInstallPopupTest() {
-   //Given an initialized presenter
-   presenter.handleFirstLoad();
-   //When the app model is requested
-   when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
-   //when the download model is requested
-   when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
-   appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-   appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
-   Observable.just(downloadAppViewModel));
-   //Then the loading should be shown
-   verify(view).showLoading();
-   //Then should set the download information
-   verify(view).showDownloadAppModel(downloadAppViewModel);
-   //Then should set the download ready to download
-   verify(view).readyToDownload();
-   //Then should show all the app details
-   verify(view).populateAppDetails(appViewViewModel);
-   //Then should send editors choice event
-   verify(appViewManager).sendEditorsChoiceClickEvent(appViewViewModel.getPackageName(),
-   appViewViewModel.getEditorsChoice());
-   //Then should send the open app view event
-   verify(appViewManager).sendAppViewOpenedFromEvent(appViewViewModel.getPackageName(),
-   appViewViewModel.getDeveloper()
-   .getName(), appViewViewModel.getMalware()
-   .getRank()
-   .name(), appViewViewModel.getAppc());
-
-   //todo handle install popup open type
-   //then the view should recover its scroll state
-   verify(view).recoverScrollViewState();
-   }
-
-   @Test public void handleFirstApkfyInstallPopupTest() {
-   //Given an initialized presenter
-   presenter.handleFirstLoad();
-   //When the app model is requested
-   when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
-   //when the download model is requested
-   when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
-   appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-   appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
-   Observable.just(downloadAppViewModel));
-   //Then the loading should be shown
-   verify(view).showLoading();
-   //Then should set the download information
-   verify(view).showDownloadAppModel(downloadAppViewModel);
-   //Then should set the download ready to download
-   verify(view).readyToDownload();
-   //Then should show all the app details
-   verify(view).populateAppDetails(appViewViewModel);
-   //Then should send editors choice event
-   verify(appViewManager).sendEditorsChoiceClickEvent(appViewViewModel.getPackageName(),
-   appViewViewModel.getEditorsChoice());
-   //Then should send the open app view event
-   verify(appViewManager).sendAppViewOpenedFromEvent(appViewViewModel.getPackageName(),
-   appViewViewModel.getDeveloper()
-   .getName(), appViewViewModel.getMalware()
-   .getRank()
-   .name(), appViewViewModel.getAppc());
-   //todo handle install popup APKFY
-   //then the view should recover its scroll state
-   verify(view).recoverScrollViewState();
-   }
-
-   **/
-  //todo create error case, create no editors choice case, create all open types cases
 }
