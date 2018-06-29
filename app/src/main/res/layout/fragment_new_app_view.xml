@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
-    android:theme="@style/AptoideThemeDefault"
+    android:theme="@style/AppBaseTheme"
     >
 
   <include

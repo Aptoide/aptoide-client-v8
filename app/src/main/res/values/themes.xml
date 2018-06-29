@@ -21,6 +21,7 @@
     <item name="toolbarTheme">@style/Toolbar</item>
     <item name="toolbarBackground">@drawable/aptoide_gradient</item>
     <item name="toolbarTextColor">@color/white</item>
+    <item name="actionMenuTextColor">@color/white</item>
 
     <!--Buttons-->
     <item name="raisedButtonBackground">@drawable/aptoide_gradient_rounded</item>

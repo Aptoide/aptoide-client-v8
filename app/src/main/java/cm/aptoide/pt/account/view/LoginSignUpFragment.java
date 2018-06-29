@@ -108,8 +108,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   }
 
   public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setLogo(R.drawable.logo_toolbar);
-    toolbar.setTitle(toolbarTitle);
+    toolbar.setTitle("");
   }
 
   @Override public void bindViews(View view) {

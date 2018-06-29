@@ -187,11 +187,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    if (defaultThemeName != null) {
-      //ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
-      //ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
-    }
-
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
