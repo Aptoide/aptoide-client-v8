@@ -1233,9 +1233,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
-      NotLoggedInShareAnalytics notLoggedInShareAnalytics) {
+      NotLoggedInShareAnalytics notLoggedInShareAnalytics, BillingAnalytics billingAnalytics,
+      StoreAnalytics storeAnalytics) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        timelineAnalytics, notLoggedInShareAnalytics);
+        timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
   }
 
   @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(

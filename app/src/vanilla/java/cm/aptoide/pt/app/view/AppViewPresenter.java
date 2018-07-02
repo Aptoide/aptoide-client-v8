@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -14,14 +15,12 @@ import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
-import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
-import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
@@ -39,11 +38,9 @@ public class AppViewPresenter implements Presenter {
 
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
-  private final BillingAnalytics billingAnalytics;
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
-  private StoreAnalytics storeAnalytics;
   private AppViewNavigator appViewNavigator;
   private AppViewManager appViewManager;
   private AptoideAccountManager accountManager;
@@ -51,16 +48,13 @@ public class AppViewPresenter implements Presenter {
   private CrashReport crashReport;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
-      AppViewAnalytics appViewAnalytics, StoreAnalytics storeAnalytics,
-      BillingAnalytics billingAnalytics, AppViewNavigator appViewNavigator,
+      AppViewAnalytics appViewAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
       CrashReport crashReport, PermissionManager permissionManager,
       PermissionService permissionService) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
-    this.storeAnalytics = storeAnalytics;
-    this.billingAnalytics = billingAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -106,7 +100,7 @@ public class AppViewPresenter implements Presenter {
     handleAppBought();
   }
 
-  private void handleFirstLoad() {
+  @VisibleForTesting public void handleFirstLoad() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
@@ -245,8 +239,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.clickStoreLayout())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(app -> {
-          storeAnalytics.sendStoreOpenEvent("App View", app.getStore()
-              .getName(), true);
+          appViewAnalytics.sendStoreOpenEvent(app.getStore());
           appViewAnalytics.sendOpenStoreEvent();
           appViewNavigator.navigateToStore(app.getStore());
         })
@@ -744,7 +737,7 @@ public class AppViewPresenter implements Presenter {
 
   private Completable payApp(long appId) {
     return Completable.fromAction(() -> {
-      billingAnalytics.sendPaymentViewShowEvent();
+      appViewAnalytics.sendPaymentViewShowEvent();
       appViewNavigator.buyApp(appId);
     });
   }
