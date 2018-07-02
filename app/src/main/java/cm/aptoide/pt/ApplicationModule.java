@@ -41,6 +41,11 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
+import cm.aptoide.pt.abtesting.ABTestCenterRepository;
+import cm.aptoide.pt.abtesting.ABTestManager;
+import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.RealmExperimentMapper;
+import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -996,6 +1001,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
+      @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl("http://wasabi-api.aptoide.com/api/v1/")
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
@@ -1004,6 +1019,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides RetrofitAptoideBiService.ServiceV7 providesAptoideBiService(
       @Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
+  }
+
+  @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
+      @Named("retrofit-AB") Retrofit retrofit) {
+    return retrofit.create(ABTestService.ServiceV7.class);
   }
 
   @Singleton @Provides CrashReport providesCrashReports() {
@@ -1275,5 +1295,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides BillingAnalytics providesBillingAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new BillingAnalytics(BuildConfig.APPLICATION_ID, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
+      IdsRepository idsRepository) {
+    return new ABTestService(serviceV7, idsRepository.getUniqueIdentifier());
+  }
+
+  @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(
+      Database database) {
+    return new RealmExperimentPersistence(database, new RealmExperimentMapper());
+  }
+
+  @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
+      ABTestService abTestService, RealmExperimentPersistence persistence) {
+    return new ABTestCenterRepository(abTestService, new HashMap<>(), persistence);
+  }
+
+  @Singleton @Provides ABTestManager providesABTestManager(
+      ABTestCenterRepository abTestCenterRepository) {
+    return new ABTestManager(abTestCenterRepository);
   }
 }
