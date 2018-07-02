@@ -18,6 +18,7 @@
 
   <!--Social Media-->
   <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Connect with Facebook</string>
   <string name="twitter">Twitter</string>
   <string name="all_button_feedback_send">Send feedback</string>
 

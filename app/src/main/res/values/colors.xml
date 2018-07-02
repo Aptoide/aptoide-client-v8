@@ -12,6 +12,8 @@
   <color name="white">#FFF</color>
   <color name="grey_700">#616161</color>
   <color name="grey_900">#212121</color>
+  <color name="google_grey">#666666</color>
+  <color name="facebook_blue">#3b5999</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>
