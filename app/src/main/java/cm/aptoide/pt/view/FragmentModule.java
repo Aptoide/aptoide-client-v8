@@ -282,7 +282,8 @@ import rx.subjects.PublishSubject;
       AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()));
+        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()),
+        PublishSubject.create());
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
