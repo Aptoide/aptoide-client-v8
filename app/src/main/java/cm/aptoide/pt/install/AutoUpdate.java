@@ -139,7 +139,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
     AptoideApplication.setAutoUpdateWasCalled(true);
 
     ContextThemeWrapper wrapper = new ContextThemeWrapper(activity,
-        activity.obtainStyledAttributes(new int[] { R.attr.alertDialog })
+        activity.obtainStyledAttributes(new int[] { R.attr.dialogTheme })
             .getResourceId(0, 0));
     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper);
     final AlertDialog updateSelfDialog = dialogBuilder.create();
