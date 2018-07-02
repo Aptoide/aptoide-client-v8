@@ -74,7 +74,6 @@ public class SocialBundle implements HomeBundle {
   }
 
   public String getCardType() {
-    Log.d("TAG123", name);
     if (name.equals("Aptoide")) {
       return CardType.APTOIDE_RECOMMENDS.toString();
     } else {
