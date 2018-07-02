@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import android.support.annotation.DrawableRes;
+import android.util.Log;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.view.app.Application;
@@ -72,11 +73,32 @@ public class SocialBundle implements HomeBundle {
     return name;
   }
 
+  public String getCardType() {
+    if (name.equals("Aptoide")) {
+      return CardType.APTOIDE_RECOMMENDS.toString();
+    } else {
+      return CardType.SOCIAL_RECOMMENDATIONS.toString();
+    }
+  }
+
   public int getDrawableId() {
     return drawableId;
   }
 
   public boolean hasAvatar() {
     return userIcon != null && !userIcon.isEmpty();
+  }
+
+  public enum CardType {
+
+    SOCIAL_RECOMMENDATIONS {
+      @Override public String toString() {
+        return "social recommendations";
+      }
+    }, APTOIDE_RECOMMENDS {
+      @Override public String toString() {
+        return "aptoide recommends";
+      }
+    };
   }
 }
