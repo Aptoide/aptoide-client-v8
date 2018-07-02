@@ -34,4 +34,8 @@
   <color name="platinum_medal_secodary">#96D0E9</color>
   <color name="progress_bar_color">#e6e5e6</color>
 
+  <!-- Wizard Colors -->
+  <color name="wizard_color_1_blue">#35A1A7</color>
+  <color name="wizard_color_2_green">#69B131</color>
+  <color name="wizard_color_3_orange">#FE6F49</color>
 </resources>

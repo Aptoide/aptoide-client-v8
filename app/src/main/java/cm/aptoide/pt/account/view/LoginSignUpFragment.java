@@ -18,6 +18,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String NAVIGATE_TO_HOME = "clean_back_stack";
+  private static final String IS_WIZARD = "is_wizard";
   private static final String ACCOUNT_TYPE = "account_type";
   private static final String AUTH_TYPE = "auth_type";
   private static final String IS_NEW_ACCOUNT = "is_new_account";
@@ -31,15 +32,17 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   private String toolbarTitle;
   private boolean dismissToNavigateToMainView;
   private boolean navigateToHome;
+  private boolean isWizard;
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
-      boolean dismissToNavigateToMainView, boolean navigateToHome) {
-    return newInstance(withBottomBar, dismissToNavigateToMainView, navigateToHome, "", "", true);
+      boolean dismissToNavigateToMainView, boolean navigateToHome, boolean isWizard) {
+    return newInstance(withBottomBar, dismissToNavigateToMainView, navigateToHome, "", "", true,
+        isWizard);
   }
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
       boolean dismissToNavigateToMainView, boolean navigateToHome, String accountType,
-      String authType, boolean isNewAccount) {
+      String authType, boolean isNewAccount, boolean isWizard) {
     Bundle args = new Bundle();
     args.putBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR, withBottomBar);
     args.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
@@ -47,7 +50,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment
     args.putString(ACCOUNT_TYPE, accountType);
     args.putString(AUTH_TYPE, authType);
     args.putBoolean(IS_NEW_ACCOUNT, isNewAccount);
-
+    args.putBoolean(IS_WIZARD, isWizard);
     LoginSignUpFragment fragment = new LoginSignUpFragment();
     fragment.setArguments(args);
     return fragment;
@@ -63,6 +66,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment
     withBottomBar = args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
     dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
     navigateToHome = args.getBoolean(NAVIGATE_TO_HOME);
+    isWizard = args.getBoolean(IS_WIZARD);
   }
 
   @Override public void onAttach(Context context) {
@@ -121,14 +125,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment
     if (bottomSheetBehavior != null) {
       mainContent = view.findViewById(R.id.main_content);
       originalBottomPadding = withBottomBar ? mainContent.getPaddingBottom() : 0;
-      if (withBottomBar) {
-        view.findViewById(R.id.appbar)
-            .setVisibility(View.GONE);
-      } else {
-        view.findViewById(R.id.appbar)
-            .setVisibility(View.VISIBLE);
-        toolbarTitle = getString(R.string.my_account_title_my_account);
-      }
+      toolbarTitle = getString(R.string.my_account_title_my_account);
       mainContent.setPadding(0, 0, 0, originalBottomPadding);
       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
@@ -154,7 +151,11 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_login_sign_up;
+    if (isWizard) {
+      return R.layout.fragment_login_signup_wizard_layout;
+    } else {
+      return R.layout.fragment_login_sign_up;
+    }
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

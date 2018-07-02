@@ -3,9 +3,12 @@ package cm.aptoide.pt.app;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import java.util.HashMap;
@@ -33,15 +36,20 @@ public class AppViewAnalytics {
   private NavigationTracker navigationTracker;
   private TimelineAnalytics timelineAnalytics;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
+  private BillingAnalytics billingAnalytics;
+  private StoreAnalytics storeAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
-      NotLoggedInShareAnalytics notLoggedInShareAnalytics) {
+      NotLoggedInShareAnalytics notLoggedInShareAnalytics, BillingAnalytics billingAnalytics,
+      StoreAnalytics storeAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
     this.timelineAnalytics = timelineAnalytics;
     this.notLoggedInShareAnalytics = notLoggedInShareAnalytics;
+    this.billingAnalytics = billingAnalytics;
+    this.storeAnalytics = storeAnalytics;
   }
 
   public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
@@ -285,5 +293,13 @@ public class AppViewAnalytics {
 
   public void sendDownloadCancelEvent(String packageName) {
     downloadAnalytics.downloadInteractEvent(packageName, "cancel");
+  }
+
+  public void sendPaymentViewShowEvent() {
+    billingAnalytics.sendPaymentViewShowEvent();
+  }
+
+  public void sendStoreOpenEvent(Store store) {
+    storeAnalytics.sendStoreOpenEvent("App View", store.getName(), true);
   }
 }
