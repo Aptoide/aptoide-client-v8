@@ -24,7 +24,8 @@ public class LoginActivity extends LoginBottomSheetActivity {
 
     if (savedInstanceState == null) {
       getFragmentNavigator().navigateToWithoutBackSave(
-          LoginSignUpFragment.newInstance(false, true, false, accountType, authType, isNewAccount),
+          LoginSignUpFragment.newInstance(false, true, false, accountType, authType, isNewAccount,
+              false),
           true);
     }
   }

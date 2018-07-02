@@ -370,8 +370,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
+    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     appViewAnalytics = new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        timelineAnalytics, notLoggedInShareAnalytics);
+        timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
     appViewSimilarAppAnalytics =
         new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
 
@@ -380,7 +381,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
         new ShareAppHelper(accountManager, accountNavigator, getActivity(), timelineAnalytics,
             sharedPreferences, application.isCreateStoreUserPrivacyEnabled());
     downloadFactory = new DownloadFactory(getMarketName());
-    storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
 
     crashReport = CrashReport.getInstance();

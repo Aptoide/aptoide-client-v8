@@ -142,9 +142,9 @@
             android:layout_height="36dp"
             android:background="@color/light_custom_gray"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/explore_button"
+            app:layout_constraintEnd_toStartOf="@+id/explore_button"
             app:layout_constraintLeft_toRightOf="@id/followers"
-            app:layout_constraintRight_toLeftOf="@+id/explore_button"
+            app:layout_constraintRight_toLeftOf="@id/explore_button"
             app:layout_constraintStart_toEndOf="@id/followers"
             app:layout_constraintTop_toTopOf="parent"
             />

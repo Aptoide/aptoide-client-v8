@@ -96,14 +96,12 @@ import cm.aptoide.pt.updates.view.installed.InstalledAppDisplayable;
 import cm.aptoide.pt.updates.view.installed.InstalledAppWidget;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.EmptyDisplayable;
-import cm.aptoide.pt.view.recycler.displayable.FooterDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.FooterRowDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.MessageWhiteBgDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
 import cm.aptoide.pt.view.recycler.widget.EmptyWidget;
 import cm.aptoide.pt.view.recycler.widget.FooterRowWidget;
-import cm.aptoide.pt.view.recycler.widget.FooterWidget;
 import cm.aptoide.pt.view.recycler.widget.GridAdWidget;
 import cm.aptoide.pt.view.recycler.widget.GridAppCoinsRewardAppsWidget;
 import cm.aptoide.pt.view.recycler.widget.GridDisplayWidget;
@@ -162,9 +160,6 @@ public class DisplayableWidgetMapping {
     // common widgets / displayables
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AppBrickWidget.class, AppBrickDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(FooterWidget.class, FooterDisplayable.class));
-
     // grid widgets / displayables
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(GridAppWidget.class, GridAppDisplayable.class));

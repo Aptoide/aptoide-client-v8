@@ -31,6 +31,7 @@ import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.settings.NewAccountFragment;
+import cm.aptoide.pt.view.wizard.WizardFragment;
 import dagger.Subcomponent;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class })
@@ -97,4 +98,6 @@ public interface FragmentComponent {
   void inject(RateAndReviewsFragment rateAndReviewsFragment);
 
   void inject(MoreBundleFragment moreBundleFragment);
+
+  void inject(WizardFragment wizardFragment);
 }

@@ -237,10 +237,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         if (INVALID_ACCESS_TOKEN_CODE.equals(((AptoideWsV7Exception) throwable).getBaseResponse()
             .getError()
             .getCode())) {
-
           if (!accessTokenRetry) {
             accessTokenRetry = true;
             return tokenInvalidator.invalidateAccessToken()
+                .delay(500, TimeUnit.MILLISECONDS)
                 .andThen(V7.this.observe(bypassCache));
           } else {
             return Observable.error(new NetworkErrorException());

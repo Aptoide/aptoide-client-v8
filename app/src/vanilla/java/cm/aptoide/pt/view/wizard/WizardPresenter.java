@@ -53,6 +53,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
 
   @Override
   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    view.handleColorTransitions(position, positionOffset, positionOffsetPixels);
   }
 
   @Override public void onPageSelected(int position) {
