@@ -63,11 +63,12 @@ public class RefreshTokenInvalidator implements TokenInvalidator {
                 (throwable, i) -> {
                   if (i < MAX_REFRESH_TOKEN_RETRIES) {
                     if (throwable instanceof AptoideWsV3Exception) {
-                      return Observable.just(null);
+                      return null;
                     }
                   } else {
                     if (throwable instanceof AptoideWsV3Exception) {
                       logoutSubject.onNext(null);
+                      return Completable.complete();
                     }
                   }
                   throw new RuntimeException(throwable);

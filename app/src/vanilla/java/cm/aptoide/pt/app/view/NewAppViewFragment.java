@@ -1297,10 +1297,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     alertDialog.show();
   }
 
-  @Override public void showNotLoggedInDialog() {
-
-  }
-
   @Override public Observable<Void> continueLoggedInRecommendsDialogClick() {
     return continueRecommendsDialogClick;
   }

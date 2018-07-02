@@ -208,7 +208,6 @@ public class DisplayablesFactory {
             displayables.add(appDisplayablePojo);
           }
         }
-        displayables.add(new FooterDisplayable(wsWidget, wsWidget.getTag(), storeContext));
       }
     } else if (Layout.LIST.equals(wsWidget.getData()
         .getLayout())) {

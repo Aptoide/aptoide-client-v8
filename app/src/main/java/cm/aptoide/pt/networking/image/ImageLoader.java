@@ -328,10 +328,15 @@ public class ImageLoader {
   public Target<Drawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Uri uri = Uri.parse(AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager));
-      return Glide.with(context)
-          .load(uri)
-          .into(imageView);
+      String newImageUrl = AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager);
+      if (newImageUrl != null) {
+        Uri uri = Uri.parse(newImageUrl);
+        return Glide.with(context)
+            .load(uri)
+            .into(imageView);
+      } else {
+        Log.e(TAG, "newImageUrl is null");
+      }
     } else {
       Log.e(TAG, "::load() Context is null");
     }

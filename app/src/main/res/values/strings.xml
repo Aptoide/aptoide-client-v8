@@ -70,7 +70,7 @@
   <string name="appview_uploaded_by">App uploaded by</string>
   <string name="appview_similar_apps">Similar apps</string>
   <string name="appview_short_downloading">Downloading</string>
-  <string name="appview_message_apkfy">And feel free to keep Aptoide installed in your device to access the best apps, all safe apps with no restrictions!</string>
+  <string name="appview_message_apkfy">Keep Aptoide installed in your device to keep all your apps updated! Discover new apps in our unrestricted app store.</string>
 
 
   <!-- AppView developer area-->
@@ -270,6 +270,7 @@
   <string name="essential_apps">Essential Apps</string>
   <string name="summer_apps">Summer Apps</string>
   <string name="title_play_it">Play-It!</string>
+  <string name="home_title_editors_choice">Editors\' Choice</string>
 
 
   <!--home Fragment-->
@@ -443,7 +444,6 @@
   <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
 
   <string name="order_popup_title3">Adult Content</string>
-  <string name="more_editors_choice">More Editors\' Choice</string>
   <string name="more_versions">More Versions</string>
 
   <!-- Review Activity-->
