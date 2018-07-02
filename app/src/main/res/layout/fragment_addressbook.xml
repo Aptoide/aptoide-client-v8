@@ -248,7 +248,6 @@
       android:id="@+id/addressbook_allow_find"
       android:layout_width="0dp"
       android:layout_height="48dp"
-      android:background="@drawable/addressbook_button_rectangle_shape"
       android:text="@string/addressbook_allow_friends_find"
       app:layout_constraintBottom_toTopOf="@+id/addressbook_2nd_msg"
       app:layout_constraintEnd_toEndOf="parent"
