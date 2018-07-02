@@ -77,13 +77,14 @@ public class HomeAnalytics {
   }
 
   public void sendRecommendedAppInteractEvent(double appRating, String packageName,
-      int bundlePosition, String bundleTag, HomeEvent.Type type) {
+      int bundlePosition, String bundleTag, String cardType, HomeEvent.Type type) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_APP);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
     data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
+    data.put("card_type", cardType);
 
     analyticsManager.logEvent(data, HOME_INTERACT, parseAction(type),
         navigationTracker.getViewName(true));
