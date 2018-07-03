@@ -14,19 +14,28 @@ import rx.subjects.PublishSubject;
 
 class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
-  private final PublishSubject<AdClick> adClickedEvents;
+  private final PublishSubject<AdHomeEvent> adClickedEvents;
   private List<AdClick> ads;
+  private HomeBundle homeBundle;
+  private int bundlePosition;
 
   public AdsInBundleAdapter(List<AdClick> ads, DecimalFormat oneDecimalFormatter,
-      PublishSubject<AdClick> adClickedEvents) {
+      PublishSubject<AdHomeEvent> adClickedEvents) {
     this.ads = ads;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adClickedEvents;
+    this.homeBundle = null;
+    this.bundlePosition = -1;
   }
 
   public void update(List<AdClick> ads) {
     this.ads = ads;
     notifyDataSetChanged();
+  }
+
+  public void updateBundle(HomeBundle homeBundle, int bundlePosition) {
+    this.homeBundle = homeBundle;
+    this.bundlePosition = bundlePosition;
   }
 
   @Override public AdInBundleViewHolder onCreateViewHolder(ViewGroup parent, int position) {
@@ -36,7 +45,7 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   }
 
   @Override public void onBindViewHolder(AdInBundleViewHolder viewHolder, int position) {
-    viewHolder.setApp(ads.get(position));
+    viewHolder.setApp(ads.get(position), homeBundle, bundlePosition, position);
   }
 
   @Override public int getItemCount() {

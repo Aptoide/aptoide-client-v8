@@ -17,10 +17,10 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
   private final TextView nameTextView;
   private final ImageView iconView;
   private final TextView rating;
-  private final PublishSubject<AdClick> adClickedEvents;
+  private final PublishSubject<AdHomeEvent> adClickedEvents;
   private final DecimalFormat oneDecimalFormatter;
 
-  public AdInBundleViewHolder(View itemView, PublishSubject<AdClick> adClickedEvents,
+  public AdInBundleViewHolder(View itemView, PublishSubject<AdHomeEvent> adClickedEvents,
       DecimalFormat oneDecimalFormatter) {
     super(itemView);
     nameTextView = ((TextView) itemView.findViewById(R.id.name));
@@ -30,15 +30,15 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
     this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
-  public void setApp(AdClick ad) {
-    nameTextView.setText(ad.getAd()
+  public void setApp(AdClick adClick, HomeBundle homeBundle, int bundlePosition, int position) {
+    nameTextView.setText(adClick.getAd()
         .getData()
         .getName());
     ImageLoader.with(itemView.getContext())
-        .loadWithRoundCorners(ad.getAd()
+        .loadWithRoundCorners(adClick.getAd()
             .getData()
             .getIcon(), 8, iconView, R.drawable.placeholder_square);
-    float rating = ad.getAd()
+    float rating = adClick.getAd()
         .getData()
         .getStars();
     if (rating == 0) {
@@ -46,6 +46,7 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
     } else {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
-    itemView.setOnClickListener(v -> adClickedEvents.onNext(ad));
+    itemView.setOnClickListener(v -> adClickedEvents.onNext(
+        new AdHomeEvent(adClick, position, homeBundle, bundlePosition, HomeEvent.Type.AD)));
   }
 }

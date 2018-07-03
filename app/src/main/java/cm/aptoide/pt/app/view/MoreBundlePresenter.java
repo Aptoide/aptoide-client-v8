@@ -135,6 +135,7 @@ public class MoreBundlePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
+            .map(homeEvent -> homeEvent.getAdClick())
             .map(adMapper.mapAdToSearchAd())
             .observeOn(viewScheduler)
             .doOnNext(homeNavigator::navigateToAppView)
