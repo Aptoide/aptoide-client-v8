@@ -8,6 +8,7 @@
     android:layout_marginRight="30dp"
     android:layout_marginStart="30dp"
     android:orientation="vertical"
+    android:theme="@style/AppBaseTheme"
     >
 
   <ImageView
@@ -35,8 +36,8 @@
       android:gravity="center"
       android:lineSpacingExtra="5dp"
       android:lines="2"
-      android:textColor="?android:attr/textColorSecondary"
       tools:text="@string/we_didn_t_find_any_contacts_that_are_using_aptoide"
+      style="@style/Aptoide.TextView.Regular.S.GreyMedium"
       />
 
   <TextView
@@ -47,44 +48,39 @@
       android:gravity="center_horizontal"
       android:text="@string/addressbook_invite_friends"
       android:textColor="@color/aptoide_orange"
-      android:textSize="15sp"
       android:textStyle="bold"
+      style="@style/Aptoide.TextView.Regular.M"
       />
 
   <Button
       android:id="@+id/addressbook_share_social"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
       android:layout_above="@+id/addressbook_allow_find"
-      android:background="@drawable/addressbook_button_rectangle_shape"
       android:padding="10dp"
       android:text="@string/share_options_share_external"
-      style="?attr/customButton"
+      style="@style/Aptoide.Button"
       />
 
 
   <Button
       android:id="@+id/addressbook_allow_find"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
       android:layout_above="@+id/addressbook_done"
       android:layout_marginTop="5dp"
-      android:background="@drawable/addressbook_button_rectangle_shape"
       android:padding="10dp"
       android:text="@string/addressbook_allow_friends_find"
-      style="?attr/customButton"
+      style="@style/Aptoide.Button"
       />
 
   <Button
       android:id="@+id/addressbook_done"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:layout_marginBottom="10dp"
       android:layout_marginTop="5dp"
       android:padding="10dp"
       android:text="@string/done"
       android:textColor="@color/default_color"
-      style="?attr/customButtonThinLine"
+      style="@style/Aptoide.Button.Ghost"
       />
 </RelativeLayout>

@@ -2,8 +2,9 @@
 <resources>
 
   <!--ui guidelines: buttons height-->
-  <dimen name="button_height">52dp</dimen>
-  <dimen name="button_small_height">44dp</dimen>
+  <dimen name="install_button_height">56dp</dimen>
+  <dimen name="button_height">48dp</dimen>
+  <dimen name="button_small_height">40dp</dimen>
 
 
   <dimen name="tabsHeight">48dp</dimen>

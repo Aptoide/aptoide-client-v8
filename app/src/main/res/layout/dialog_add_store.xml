@@ -63,11 +63,10 @@
           android:layout_height="match_parent"
           android:layout_alignParentRight="true"
           android:layout_centerHorizontal="true"
-          android:background="@drawable/add_dialog_top_button_border_shape"
           android:ellipsize="end"
           android:maxLines="1"
           android:text="@string/follow"
-          style="?android:attr/segmentedButtonStyle"
+          style="@style/Aptoide.Button"
           />
 
     </RelativeLayout>
@@ -77,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height"
         android:layout_marginTop="10dp"
-        android:background="@drawable/add_dialog_top_button_border_shape"
+        android:background="@drawable/aptoide_gradient"
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical"
         >

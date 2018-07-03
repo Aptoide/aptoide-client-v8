@@ -7,6 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
+    android:theme="@style/AppBaseTheme"
     >
   <RelativeLayout
       android:layout_width="match_parent"

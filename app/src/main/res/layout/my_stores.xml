@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     >
 
-  <include layout="@layout/action_bar"/>
+  <include layout="@layout/action_bar_stores"/>
 
   <android.support.v4.widget.SwipeRefreshLayout
       android:id="@+id/swipe_container"

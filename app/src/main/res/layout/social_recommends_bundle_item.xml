@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:theme="@style/AppBaseTheme"
     >
   <LinearLayout
       android:layout_width="match_parent"
@@ -52,7 +53,6 @@
             android:id="@+id/recommended_app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
             android:maxLines="1"
             tools:text="ASF Wallet"
             style="@style/Aptoide.TextView.Regular.S.BlackAlpha"

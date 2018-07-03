@@ -24,7 +24,6 @@
     <Button
         android:id="@+id/read_all_button"
         android:layout_width="match_parent"
-        android:layout_height="39.3dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -130,7 +129,6 @@
   <Button
       android:id="@+id/rate_this_button2"
       android:layout_width="match_parent"
-      android:layout_height="39.3dp"
       android:layout_alignParentBottom="true"
       android:layout_centerHorizontal="true"
       android:fontFamily="@string/font_family_medium"
@@ -155,7 +153,6 @@
     <Button
         android:id="@+id/rate_this_button"
         android:layout_width="127.7dp"
-        android:layout_height="39.3dp"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:text="@string/appview_rate_this_app"

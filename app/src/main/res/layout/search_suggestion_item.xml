@@ -27,7 +27,6 @@
       android:layout_marginTop="15dp"
       android:gravity="center_vertical"
       android:maxLines="1"
-      tools:ellipsize="end"
       tools:text="Clash Royal"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />

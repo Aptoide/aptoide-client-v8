@@ -7,6 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
+    android:theme="@style/AppBaseTheme"
     >
   <RelativeLayout
       android:layout_width="match_parent"
@@ -28,10 +29,9 @@
         android:layout_marginRight="30dp"
         android:layout_toEndOf="@+id/app_icon"
         android:layout_toRightOf="@+id/app_icon"
-        android:ellipsize="end"
         android:maxLines="1"
         tools:text="Clash Royale"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
     <ImageView
         android:id="@+id/star_icon"
@@ -53,9 +53,8 @@
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@id/star_icon"
         android:layout_toRightOf="@id/star_icon"
-        android:textSize="10sp"
         tools:text="4.2"
-        style="@style/Aptoide.TextView.Medium.S.Black"
+        style="@style/Aptoide.TextView.Medium.XXS"
         />
     <TextView
         android:id="@+id/downloads"
@@ -65,7 +64,6 @@
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@id/app_icon"
         android:layout_toRightOf="@id/app_icon"
-        android:textSize="12sp"
         tools:text="1M Downloads"
         style="@style/Aptoide.TextView.Regular.XS.Grey"
         />
@@ -93,7 +91,6 @@
         android:layout_toRightOf="@id/store_icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="12sp"
         tools:text="Royale App Store"
         style="@style/Aptoide.TextView.Regular.XS.Grey"
         />

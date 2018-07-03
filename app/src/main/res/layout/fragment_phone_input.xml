@@ -58,6 +58,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="50dp"
       android:drawableLeft="@drawable/follow_add_icon"
+      android:gravity="end"
       android:inputType="phone"
       android:maxEms="3"
       android:maxLength="3"
@@ -94,13 +95,11 @@
   <Button
       android:id="@+id/addressbook_phone_input_save"
       android:layout_width="match_parent"
-      android:layout_height="48dp"
       android:layout_marginBottom="30dp"
       android:layout_marginEnd="30dp"
       android:layout_marginLeft="30dp"
       android:layout_marginRight="30dp"
       android:layout_marginStart="30dp"
-      android:background="@drawable/addressbook_button_rectangle_shape"
       android:paddingEnd="30dp"
       android:paddingLeft="30dp"
       android:paddingRight="30dp"
@@ -115,6 +114,7 @@
       tools:layout_constraintLeft_creator="1"
       tools:layout_constraintRight_creator="1"
       tools:layout_constraintTop_creator="1"
+      style="@style/Aptoide.Button"
       />
 
   <TextView

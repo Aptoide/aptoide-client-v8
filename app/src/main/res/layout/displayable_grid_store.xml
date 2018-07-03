@@ -32,7 +32,6 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:ellipsize="end"
         android:maxLines="1"
         tools:text="@string/apps"
         style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
