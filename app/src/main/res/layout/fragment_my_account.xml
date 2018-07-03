@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/AppBaseTheme"
     >
   <LinearLayout
       android:layout_width="match_parent"
@@ -13,12 +15,15 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
+        android:layout_height="wrap_content"
+        android:background="?attr/toolbarBackground"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         >
 
       <include
           layout="@layout/toolbar"
           android:id="@+id/toolbar"
+
           />
 
     </android.support.design.widget.AppBarLayout>
@@ -39,7 +44,6 @@
           android:layout_marginTop="24dp"
           android:gravity="center"
           android:text="@string/newaccount_signin_message"
-          android:textColor="@color/black"
           style="@style/Aptoide.TextView.Regular.M"
           />
       <Button
@@ -51,9 +55,7 @@
           android:layout_marginRight="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="16dp"
-          android:background="@color/aptoide_orange"
           android:text="@string/newaccount_signin"
-          android:textAllCaps="true"
           style="@style/Aptoide.Button"
           />
 
@@ -95,43 +97,32 @@
           android:layout_marginTop="16dp"
           android:gravity="center"
           android:text="@string/newaccount_create_store_message"
-          android:textColor="@color/black"
-          android:textSize="17sp"
           android:visibility="gone"
           style="@style/Aptoide.TextView.Regular.M"
           />
       <Button
           android:id="@+id/create_store_button"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:layout_marginTop="16dp"
-          android:background="@color/aptoide_orange"
           android:text="@string/newaccount_create_store"
-          android:textAllCaps="true"
           android:visibility="gone"
           style="@style/Aptoide.Button"
           />
       <Button
           android:id="@+id/find_friends_button"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:layout_marginTop="8dp"
-          android:background="@color/aptoide_orange"
           android:text="@string/newaccount_find_friends"
-          android:textAllCaps="true"
           style="@style/Aptoide.Button"
           />
       <Button
           android:id="@+id/logout_button"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:layout_marginTop="8dp"
-          android:background="@color/aptoide_orange"
           android:text="@string/newaccount_log_out"
-          android:textAllCaps="true"
           style="@style/Aptoide.Button"
           />
     </LinearLayout>

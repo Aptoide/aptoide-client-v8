@@ -3,13 +3,10 @@
 
 <android.support.design.widget.AppBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_bar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/toolbarBackground"
-    app:theme="@style/AppBaseTheme"
     >
 
   <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,6 +15,7 @@
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
       android:layout_gravity="center"
+      android:background="@drawable/main_orange_gradient"
       android:gravity="center"
       android:minHeight="112dp"
       app:layout_collapseMode="pin"

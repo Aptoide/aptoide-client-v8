@@ -89,6 +89,22 @@
 
   <attr format="reference" name="alertDialog"/>
 
+  <!--New styles attributes-->
+  <attr format="reference" name="raisedButtonBackground"/>
+  <attr format="reference" name="ghostButtonBackground"/>
+  <attr format="color" name="raisedButtonTextColor"/>
+  <attr format="string" name="buttonTextFont"/>
+  <attr format="dimension" name="buttonTextSize"/>
+  <attr format="dimension" name="buttonTextSizeSmall"/>
+  <attr format="reference" name="installButtonBackground"/>
+  <attr format="reference" name="toolbarBackground"/>
+  <attr format="color" name="toolbarTextColor"/>
+  <attr format="color" name="preferenceTitleColor"/>
+  <attr format="dimension" name="preferenceTitleTextSize"/>
+  <attr format="color" name="preferenceSummaryColor"/>
+  <attr format="dimension" name="preferenceSummaryTextSize"/>
+
+
   <declare-styleable name="RadarScan">
     <attr format="color" name="circleColor"/>
     <attr format="color" name="radarColor"/>

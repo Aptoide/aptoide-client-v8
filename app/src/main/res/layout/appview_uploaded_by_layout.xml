@@ -111,14 +111,13 @@
     <Button
         android:id="@+id/follow_button"
         android:layout_width="96dp"
-        android:layout_height="36dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/follow"
-        android:textSize="10sp"
-        style="@style/Aptoide.Button.Ghost"
+        style="@style/Aptoide.Button.Ghost.S"
         />
   </RelativeLayout>
 
