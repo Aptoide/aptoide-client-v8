@@ -122,7 +122,7 @@ public class ImageLoader {
         placeHolderDrawableId);
   }
 
-  private Target<Drawable> loadWithCircleTransformAndPlaceHolder(String url, ImageView imageView,
+  public Target<Drawable> loadWithCircleTransformAndPlaceHolder(String url, ImageView imageView,
       @DrawableRes int placeHolderDrawableId) {
     Context context = weakContext.get();
     if (context != null) {
