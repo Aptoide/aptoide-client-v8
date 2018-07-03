@@ -9,7 +9,6 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
-import android.view.ContextThemeWrapper;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -138,10 +137,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
 
     AptoideApplication.setAutoUpdateWasCalled(true);
 
-    ContextThemeWrapper wrapper = new ContextThemeWrapper(activity,
-        activity.obtainStyledAttributes(new int[] { R.attr.dialogTheme })
-            .getResourceId(0, 0));
-    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(wrapper);
+    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
     final AlertDialog updateSelfDialog = dialogBuilder.create();
     updateSelfDialog.setTitle(activity.getText(R.string.update_self_title));
     updateSelfDialog.setIcon(updateDialogIcon);

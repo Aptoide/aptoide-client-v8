@@ -87,8 +87,6 @@
   <attr format="reference" name="defaultTextStyle"/>
   <attr format="reference|color" name="appviewRatingCardTextColor"/>
 
-  <attr format="reference" name="alertDialog"/>
-
   <declare-styleable name="RadarScan">
     <attr format="color" name="circleColor"/>
     <attr format="color" name="radarColor"/>
