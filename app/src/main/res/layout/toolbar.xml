@@ -14,6 +14,6 @@
       android:background="@drawable/main_orange_gradient"
       android:theme="?attr/toolbarTheme"
       app:layout_scrollFlags="scroll|enterAlways"
-      app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+      app:titleMarginStart="25dp"
       />
 </merge>
