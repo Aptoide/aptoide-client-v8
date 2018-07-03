@@ -74,7 +74,7 @@
               />
           <View
               android:layout_width="104dp"
-              android:layout_height="104dp"
+              android:layout_height="1dp"
               />
 
           <LinearLayout
