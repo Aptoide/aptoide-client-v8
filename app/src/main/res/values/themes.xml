@@ -6,7 +6,6 @@
 <resources>
 
   <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-    <!--<item name="android:buttonStyle">?attr/customButton</item>-->
 
     <item name="android:windowBackground">@color/default_background_color</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>

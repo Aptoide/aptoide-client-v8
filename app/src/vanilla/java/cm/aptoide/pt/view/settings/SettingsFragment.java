@@ -128,7 +128,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     adultContentAnalytics = application.getAdultContentAnalytics();

@@ -567,8 +567,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     storeFollowers.setText(String.format("%s", AptoideUtils.StringU.withSuffix(model.getStore()
         .getStats()
         .getSubscribers())));
-    //storeFollow.setBackgroundDrawable(
-    //    storeThemeEnum.getButtonLayoutDrawable(getResources(), getContext().getTheme()));
+
     if (model.isStoreFollowed()) {
       storeFollow.setText(R.string.followed);
     } else {
