@@ -1,7 +1,6 @@
 package cm.aptoide.pt.home;
 
 import android.support.annotation.DrawableRes;
-import android.util.Log;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.view.app.Application;
@@ -20,9 +19,10 @@ public class SocialBundle implements HomeBundle {
   private final int drawableId;
   private final String userIcon;
   private final String name;
+  private final CardType cardType;
 
   public SocialBundle(List<Application> apps, BundleType type, Event event, String tag,
-      String userIcon, String name) {
+      String userIcon, String name, CardType cardType) {
     this.title = "n/a";
     this.apps = apps;
     this.type = type;
@@ -30,11 +30,12 @@ public class SocialBundle implements HomeBundle {
     this.tag = tag;
     this.userIcon = userIcon;
     this.name = name;
+    this.cardType = cardType;
     this.drawableId = R.drawable.placeholder_square;
   }
 
   public SocialBundle(List<Application> apps, BundleType type, Event event, String tag,
-      @DrawableRes int drawableId, String name) {
+      @DrawableRes int drawableId, String name, CardType cardType) {
     this.title = "n/a";
     this.apps = apps;
     this.type = type;
@@ -42,6 +43,7 @@ public class SocialBundle implements HomeBundle {
     this.tag = tag;
     this.drawableId = drawableId;
     this.name = name;
+    this.cardType = cardType;
     this.userIcon = "";
   }
 
@@ -74,11 +76,7 @@ public class SocialBundle implements HomeBundle {
   }
 
   public String getCardType() {
-    if (name.equals("Aptoide")) {
-      return CardType.APTOIDE_RECOMMENDS.toString();
-    } else {
-      return CardType.SOCIAL_RECOMMENDATIONS.toString();
-    }
+    return cardType.toString();
   }
 
   public int getDrawableId() {
