@@ -87,8 +87,6 @@
   <attr format="reference" name="defaultTextStyle"/>
   <attr format="reference|color" name="appviewRatingCardTextColor"/>
 
-  <attr format="reference" name="alertDialog"/>
-
   <!--New styles attributes-->
   <attr format="reference" name="raisedButtonBackground"/>
   <attr format="reference" name="ghostButtonBackground"/>
