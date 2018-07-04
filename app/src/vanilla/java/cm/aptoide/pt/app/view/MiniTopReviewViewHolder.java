@@ -47,7 +47,6 @@ public class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
     String imageUrl = review.getReviewUser()
         .getAvatar();
     Context context = itemView.getContext();
-    //Context context = itemView.getContext().getApplicationContext();
     imageLoadingTarget = ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(imageUrl, userIconImageView,
             R.drawable.layer_1);

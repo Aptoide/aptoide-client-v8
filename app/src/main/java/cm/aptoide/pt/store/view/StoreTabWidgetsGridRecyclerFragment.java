@@ -74,7 +74,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
 
-  protected Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
+  public Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .concatMapEager(wsWidget -> {

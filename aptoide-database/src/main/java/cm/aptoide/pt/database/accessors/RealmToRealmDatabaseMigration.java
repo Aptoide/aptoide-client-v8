@@ -389,5 +389,17 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+
+    if (oldVersion == 8094) {
+      schema.create("RealmExperiment")
+          .addField("experimentName", String.class, FieldAttribute.PRIMARY_KEY)
+          .addField("requestTime", long.class)
+          .addField("assignment", String.class)
+          .addField("payload", String.class)
+          .addField("partOfExperiment", boolean.class)
+          .addField("experimentOver", boolean.class);
+
+      oldVersion++;
+    }
   }
 }

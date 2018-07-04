@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -97,6 +98,7 @@ import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 @Module public class FragmentModule {
 
@@ -259,13 +261,15 @@ import rx.schedulers.Schedulers;
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
+      ABTestManager abTestManager,
       AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       Resources resources, WindowManager windowManager, SocialRepository socialRepository,
       @Named("marketName") String marketName) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
-        adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
+        adsManager, storeManager, flagManager, abTestManager, storeUtilsProxy,
+        aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
@@ -278,7 +282,8 @@ import rx.schedulers.Schedulers;
       AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()));
+        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()),
+        PublishSubject.create());
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
