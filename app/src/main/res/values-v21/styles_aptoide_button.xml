@@ -12,30 +12,45 @@
     <item name="colorControlHighlight">?attr/colorPrimaryDark</item>
   </style>
 
+
+  <style name="Aptoide.Button.Ghost.GreyFogLight.Google">
+    <item name="android:paddingRight">20dp</item>
+    <item name="android:paddingLeft">20dp</item>
+    <item name="background">@color/white</item>
+    <item name="android:drawableLeft">@drawable/google_icon_copy</item>
+    <item name="android:text">@string/google</item>
+    <item name="android:textColor">@color/google_grey</item>
+    <item name="android:contentDescription">@string/google</item>
+  </style>
+
+  <style name="Aptoide.Button.Ghost.GreyFogLight.GoogleFull">
+    <item name="android:paddingRight">50dp</item>
+    <item name="android:paddingLeft">50dp</item>
+    <item name="background">@color/white</item>
+    <item name="android:drawableLeft">@drawable/google_icon_copy</item>
+    <item name="android:text">@string/connect_google</item>
+    <item name="android:textColor">@color/google_grey</item>
+    <item name="android:contentDescription">@string/google</item>
+  </style>
+
   <style name="Aptoide.Button.Facebook">
-    <item name="android:colorButtonNormal">@color/facebook</item>
-    <item name="android:colorControlHighlight">@color/facebook_highlight</item>
+    <item name="android:paddingRight">20dp</item>
+    <item name="android:paddingLeft">20dp</item>
+    <item name="android:background">@drawable/facebook_button_rounded</item>
     <item name="android:drawableLeft">@drawable/f_copy</item>
-    <item name="android:text">@string/connect_with_facebook</item>
+    <item name="android:text">@string/facebook</item>
+    <item name="android:textColor">@color/white</item>
     <item name="android:contentDescription">@string/com_facebook_loginview_log_in_button_long</item>
   </style>
 
-
-  <style name="Aptoide.Button.Google">
-    <item name="android:colorButtonNormal">@color/google</item>
-    <item name="android:colorControlHighlight">@color/google_highlight</item>
-    <item name="android:drawableLeft">@drawable/google_plus_ic</item>
-    <item name="android:text">@string/connect_with_google</item>
-    <item name="android:contentDescription">@string/google</item>
-  </style>
-
-  <style name="Aptoide.Button.Ghost.GreyFogLight.Google">
-    <item name="android:colorButtonNormal">@color/white</item>
-    <item name="android:colorControlHighlight">@color/white</item>
-    <item name="android:drawableLeft">@drawable/google_icon_copy</item>
-    <item name="android:text">@string/google</item>
-    <item name="android:textColor">@color/grey_700</item>
-    <item name="android:contentDescription">@string/google</item>
+  <style name="Aptoide.Button.FacebookFull">
+    <item name="android:paddingRight">50dp</item>
+    <item name="android:paddingLeft">50dp</item>
+    <item name="android:background">@drawable/facebook_button_rounded</item>
+    <item name="android:drawableLeft">@drawable/f_copy</item>
+    <item name="android:text">@string/connect_with_facebook</item>
+    <item name="android:textColor">@color/white</item>
+    <item name="android:contentDescription">@string/com_facebook_loginview_log_in_button_long</item>
   </style>
 
 </resources>

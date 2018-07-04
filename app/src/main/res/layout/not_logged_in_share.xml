@@ -161,9 +161,7 @@
           android:id="@+id/not_logged_in_share_facebook_button"
           android:layout_width="wrap_content"
           android:layout_weight="0.50"
-          android:text="@string/facebook"
           android:textAllCaps="false"
-          android:theme="@style/Aptoide.Button.Facebook"
           style="@style/Aptoide.Button.Facebook"
           />
 
@@ -174,10 +172,8 @@
           android:layout_marginLeft="8dp"
           android:layout_marginStart="8dp"
           android:layout_weight="0.50"
-          android:text="@string/google"
           android:textAllCaps="false"
-          android:theme="@style/Aptoide.Button.Google"
-          style="@style/Aptoide.Button.Google"
+          style="@style/Aptoide.Button.Ghost.GreyFogLight.Google"
           />
 
     </LinearLayout>

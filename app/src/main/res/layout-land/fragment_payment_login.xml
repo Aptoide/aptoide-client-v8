@@ -12,14 +12,17 @@
       android:id="@+id/fragment_payment_login_app_bar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:background="?attr/toolbarBackground"
+      app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+
       >
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/fragment_payment_login_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="?attr/toolbarTheme"
         app:logo="@drawable/logo_toolbar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/my_account_title_my_account"
         app:titleMarginStart="32dp"
         />
@@ -90,9 +93,7 @@
           android:layout_marginEnd="8dp"
           android:layout_marginRight="8dp"
           android:layout_weight="1"
-          android:text="@string/facebook"
-          android:theme="@style/Aptoide.Button.Facebook"
-          style="@style/Widget.AppCompat.Button"
+          style="@style/Aptoide.Button.Facebook"
           />
 
       <Button
@@ -102,9 +103,7 @@
           android:layout_marginLeft="8dp"
           android:layout_marginStart="8dp"
           android:layout_weight="1"
-          android:text="@string/google"
-          android:theme="@style/Aptoide.Button.Google"
-          style="@style/Widget.AppCompat.Button"
+          style="@style/Aptoide.Button.Ghost.GreyFogLight.Google"
           />
     </LinearLayout>
 
