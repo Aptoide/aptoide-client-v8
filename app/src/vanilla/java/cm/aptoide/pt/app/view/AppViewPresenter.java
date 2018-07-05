@@ -762,20 +762,16 @@ public class AppViewPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private Observable<Void> showRecommendsDialog(boolean isLoggedIn, String packageName,
-      Experiment experiment) {
+  private void showRecommendsDialog(boolean isLoggedIn, String packageName, Experiment experiment) {
     if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
       view.showRecommendsDialog(experiment);
       appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
       dialogImpression.onNext(true);
-      return Observable.just(null);
     } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
       appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
       appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
       dialogImpression.onNext(false);
-      return Observable.just(null);
     }
-    return Observable.just(null);
   }
 
   private Completable payApp(long appId) {
