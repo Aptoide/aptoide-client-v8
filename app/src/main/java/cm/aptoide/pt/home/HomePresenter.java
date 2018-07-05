@@ -5,6 +5,7 @@ import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.app.Application;
@@ -186,8 +187,20 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
+            .doOnNext(adHomeEvent -> homeAnalytics.sendAdInteractEvent(adHomeEvent.getAdClick()
+                .getAd()
+                .getData()
+                .getStars(), adHomeEvent.getAdClick()
+                .getAd()
+                .getData()
+                .getPackageName(), adHomeEvent.getBundlePosition(), adHomeEvent.getBundle()
+                .getTag(), adHomeEvent.getType()))
+            .map(adHomeEvent -> adHomeEvent.getAdClick())
             .map(adMapper.mapAdToSearchAd())
             .observeOn(viewScheduler)
+            .doOnError(throwable -> Logger.getInstance()
+                .e(this.getClass()
+                    .getCanonicalName(), throwable))
             .doOnNext(homeNavigator::navigateToAppView)
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

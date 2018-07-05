@@ -3,8 +3,13 @@ package cm.aptoide.pt.navigation;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.home.AdBundle;
 import cm.aptoide.pt.home.AdClick;
+import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.AdsTagWrapper;
 import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
@@ -17,6 +22,8 @@ import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.app.Application;
+import java.util.Collections;
+import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,6 +33,9 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,7 +58,7 @@ public class HomePresenterTest {
   private HomeBundlesModel bundlesModel;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<AppHomeEvent> appClickEvent;
-  private PublishSubject<AdClick> adClickEvent;
+  private PublishSubject<AdHomeEvent> adClickEvent;
   private PublishSubject<HomeEvent> moreClickEvent;
   private PublishSubject<Object> bottomReachedEvent;
   private PublishSubject<Void> pullToRefreshEvent;
@@ -147,12 +157,18 @@ public class HomePresenterTest {
   }
 
   @Test public void adClicked_NavigateToAppView() {
+
+    AdHomeEvent event = createAdHomeEvent();
+
+
     //Given an initialised HomePresenter
     presenter.handleAdClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an app is clicked
-    adClickEvent.onNext(null);
+    adClickEvent.onNext(event);
     //then it should navigate to the App's detail View
+    verify(homeAnalytics).sendAdInteractEvent(anyInt(), anyString(), anyInt(), anyString(),
+        eq(HomeEvent.Type.AD));
     verify(homeNavigator).navigateToAppView(any());
   }
 
@@ -294,5 +310,54 @@ public class HomePresenterTest {
     verify(homeAnalytics).sendScrollRightInteractEvent(2, localTopAppsBundle.getTag(),
         localTopAppsBundle.getContent()
             .size());
+  }
+
+  private AdHomeEvent createAdHomeEvent() {
+    GetAdsResponse.Data data = new GetAdsResponse.Data();
+    data.setId(0);
+    data.setName("name");
+    data.setRepo("repo");
+    data.setPackageName("packageName");
+    data.setMd5sum("md5sum");
+    data.setSize(1);
+    data.setVercode(2);
+    data.setVername("verName");
+    data.setIcon("icon");
+    data.setDownloads(3);
+    data.setStars(4);
+    data.setDescription("description");
+    data.setAdded(new Date());
+    data.setModified(new Date());
+    data.setUpdated(new Date());
+
+    GetAdsResponse.Info info = new GetAdsResponse.Info();
+    info.setAdId(0);
+    info.setAdType("adType");
+    info.setCpcUrl("cpcUrl");
+    info.setCpdUrl("cpdUrl");
+    info.setCpiUrl("cpiUrl");
+
+    GetAdsResponse.Partner partner = new GetAdsResponse.Partner();
+    GetAdsResponse.Partner.Data partnerData = new GetAdsResponse.Partner.Data();
+    GetAdsResponse.Partner.Info partnerInfo = new GetAdsResponse.Partner.Info();
+    partner.setData(partnerData);
+    partner.setInfo(partnerInfo);
+
+    GetAdsResponse.Partner tracker = new GetAdsResponse.Partner();
+    tracker.setData(partnerData);
+    tracker.setInfo(partnerInfo);
+
+    GetAdsResponse.Ad ad = new GetAdsResponse.Ad();
+    ad.setData(data);
+    ad.setInfo(info);
+    ad.setPartner(partner);
+    ad.setTracker(tracker);
+    AdClick adClick = new AdClick(ad, "tag");
+
+    AdBundle adBundle =
+        new AdBundle("title", new AdsTagWrapper(Collections.emptyList(), "tag2"), new Event(),
+            "tag3");
+
+    return new AdHomeEvent(adClick, 1, adBundle, 1, HomeEvent.Type.AD);
   }
 }

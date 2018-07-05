@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.home.AdClick;
+import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.BundlesAdapter;
 import cm.aptoide.pt.home.HomeBundle;
@@ -53,7 +53,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
-  private PublishSubject<AdClick> adClickedEvents;
+  private PublishSubject<AdHomeEvent> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericErrorView;
@@ -218,7 +218,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
         .cast(AppHomeEvent.class);
   }
 
-  @Override public Observable<AdClick> adClicked() {
+  @Override public Observable<AdHomeEvent> adClicked() {
     return adClickedEvents;
   }
 

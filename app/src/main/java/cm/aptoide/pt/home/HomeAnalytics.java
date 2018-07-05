@@ -90,8 +90,21 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
+  public void sendAdInteractEvent(int appRating, String packageName, int bundlePosition,
+      String bundleTag, HomeEvent.Type type) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP_ON_APP);
+    data.put("app_rating", appRating);
+    data.put("package_name", packageName);
+    data.put("bundle_tag", bundleTag);
+    data.put("bundle_position", bundlePosition);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, parseAction(type),
+        navigationTracker.getViewName(true));
+  }
+
   private AnalyticsManager.Action parseAction(HomeEvent.Type type) {
-    if (type.equals(HomeEvent.Type.SOCIAL_CLICK)) {
+    if (type.equals(HomeEvent.Type.SOCIAL_CLICK) || type.equals(HomeEvent.Type.AD)) {
       return AnalyticsManager.Action.OPEN;
     } else if (type.equals(HomeEvent.Type.SOCIAL_INSTALL)) {
       return AnalyticsManager.Action.INSTALL;

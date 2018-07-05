@@ -27,7 +27,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final RecyclerView appsList;
 
   public AdsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<AdClick> adClickedEvents) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
@@ -57,6 +57,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
         ((AptoideApplication) itemView.getContext()
             .getApplicationContext()).getMarketName()));
 
+    appsInBundleAdapter.updateBundle(homeBundle, position);
     appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
     appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {

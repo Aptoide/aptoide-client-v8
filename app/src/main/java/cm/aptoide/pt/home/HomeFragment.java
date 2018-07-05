@@ -46,7 +46,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
-  private PublishSubject<AdClick> adClickedEvents;
+  private PublishSubject<AdHomeEvent> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericErrorView;
@@ -206,7 +206,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(AppHomeEvent.class);
   }
 
-  @Override public Observable<AdClick> adClicked() {
+  @Override public Observable<AdHomeEvent> adClicked() {
     return adClickedEvents;
   }
 

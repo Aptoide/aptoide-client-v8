@@ -1,6 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
-import cm.aptoide.pt.home.AdClick;
+import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeEvent;
@@ -30,7 +30,7 @@ public interface BundleView extends View {
 
   Observable<AppHomeEvent> appClicked();
 
-  Observable<AdClick> adClicked();
+  Observable<AdHomeEvent> adClicked();
 
   void showLoadMore();
 
