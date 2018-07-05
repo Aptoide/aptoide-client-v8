@@ -544,21 +544,20 @@ public class AppViewPresenter implements Presenter {
 
             return accountManager.accountStatus()
                 .first()
-                .flatMap(accountStatus -> appViewManager.getABTestingExperiment(
-                    ABTestManager.ExperimentType.SHARE_DIALOG)
-                    .observeOn(viewScheduler)
-                    .flatMapCompletable(
-                        experiment -> downloadApp(DownloadAppViewModel.Action.INSTALL,
-                            appViewModel.getPackageName(), appViewModel.getAppId()).observeOn(
-                            viewScheduler)
-                            .doOnCompleted(() -> {
-                              appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
-                                  appViewModel.getDeveloper()
-                                      .getName(), DownloadAppViewModel.Action.INSTALL.toString());
-                              showRecommendsDialog(accountStatus.isLoggedIn(),
-                                  appViewModel.getPackageName(), experiment);
-                            })
-                            .observeOn(viewScheduler)))
+                .observeOn(viewScheduler)
+                .flatMapCompletable(
+                    accountStatus -> downloadApp(DownloadAppViewModel.Action.INSTALL,
+                        appViewModel.getPackageName(), appViewModel.getAppId()).doOnCompleted(
+                        () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                            appViewModel.getDeveloper()
+                                .getName(), DownloadAppViewModel.Action.INSTALL.toString()))
+                        .andThen(appViewManager.getABTestingExperiment(
+                            ABTestManager.ExperimentType.SHARE_DIALOG)
+                            .observeOn(viewScheduler)
+                            .doOnNext(experiment -> showRecommendsDialog(accountStatus.isLoggedIn(),
+                                appViewModel.getPackageName(), experiment)))
+                        .toCompletable()
+                        .observeOn(viewScheduler))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
               == NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
@@ -568,19 +567,18 @@ public class AppViewPresenter implements Presenter {
                 .observeOn(viewScheduler)
                 .flatMap(account -> view.showOpenAndInstallDialog(appViewModel.getMarketName(),
                     appViewModel.getAppName())
-                    .flatMap(action -> appViewManager.getABTestingExperiment(
-                        ABTestManager.ExperimentType.SHARE_DIALOG)
-                        .flatMapCompletable(
-                            experiment -> downloadApp(action, appViewModel.getPackageName(),
-                                appViewModel.getAppId()).observeOn(viewScheduler)
-                                .doOnCompleted(() -> {
-                                  appViewAnalytics.clickOnInstallButton(
-                                      appViewModel.getPackageName(), appViewModel.getDeveloper()
-                                          .getName(), action.toString());
-                                  showRecommendsDialog(account.isLoggedIn(),
-                                      appViewModel.getPackageName(), experiment);
-                                })
-                                .observeOn(viewScheduler))))
+                    .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
+                        appViewModel.getAppId()).doOnCompleted(
+                        () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                            appViewModel.getDeveloper()
+                                .getName(), action.toString()))
+                        .andThen(appViewManager.getABTestingExperiment(
+                            ABTestManager.ExperimentType.SHARE_DIALOG)
+                            .observeOn(viewScheduler)
+                            .doOnNext(experiment -> showRecommendsDialog(account.isLoggedIn(),
+                                appViewModel.getPackageName(), experiment)))
+                        .toCompletable()
+                        .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
               == NewAppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
@@ -589,19 +587,18 @@ public class AppViewPresenter implements Presenter {
                 .observeOn(viewScheduler)
                 .flatMap(account -> view.showOpenAndInstallApkFyDialog(appViewModel.getMarketName(),
                     appViewModel.getAppName())
-                    .flatMap(action -> appViewManager.getABTestingExperiment(
-                        ABTestManager.ExperimentType.SHARE_DIALOG)
-                        .flatMapCompletable(
-                            experiment -> downloadApp(action, appViewModel.getPackageName(),
-                                appViewModel.getAppId()).observeOn(viewScheduler)
-                                .doOnCompleted(() -> {
-                                  appViewAnalytics.clickOnInstallButton(
-                                      appViewModel.getPackageName(), appViewModel.getDeveloper()
-                                          .getName(), action.toString());
-                                  showRecommendsDialog(account.isLoggedIn(),
-                                      appViewModel.getPackageName(), experiment);
-                                })
-                                .observeOn(viewScheduler))))
+                    .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
+                        appViewModel.getAppId()).observeOn(viewScheduler)
+                        .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
+                            appViewModel.getPackageName(), appViewModel.getDeveloper()
+                                .getName(), action.toString()))
+                        .andThen(appViewManager.getABTestingExperiment(
+                            ABTestManager.ExperimentType.SHARE_DIALOG)
+                            .observeOn(viewScheduler)
+                            .doOnNext(experiment -> showRecommendsDialog(account.isLoggedIn(),
+                                appViewModel.getPackageName(), experiment)))
+                        .toCompletable()
+                        .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
           }
           return Observable.just(appViewModel);
@@ -707,20 +704,19 @@ public class AppViewPresenter implements Presenter {
                 case INSTALL:
                 case UPDATE:
                   completable = appViewManager.loadAppViewViewModel()
-                      .flatMapCompletable(appViewViewModel -> appViewManager.getABTestingExperiment(
-                          ABTestManager.ExperimentType.SHARE_DIALOG)
-                          .flatMapCompletable(
-                              experiment -> downloadApp(action, appViewViewModel.getPackageName(),
-                                  appViewViewModel.getAppId()).observeOn(viewScheduler)
-                                  .doOnCompleted(() -> {
-                                    appViewAnalytics.clickOnInstallButton(
-                                        appViewViewModel.getPackageName(),
-                                        appViewViewModel.getDeveloper()
-                                            .getName(), action.toString());
-                                    showRecommendsDialog(account.isLoggedIn(),
-                                        appViewViewModel.getPackageName(), experiment);
-                                  }))
-                          .toCompletable());
+                      .flatMapCompletable(
+                          appViewViewModel -> downloadApp(action, appViewViewModel.getPackageName(),
+                              appViewViewModel.getAppId()).observeOn(viewScheduler)
+                              .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
+                                  appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
+                                      .getName(), action.toString()))
+                              .andThen(appViewManager.getABTestingExperiment(
+                                  ABTestManager.ExperimentType.SHARE_DIALOG)
+                                  .observeOn(viewScheduler)
+                                  .doOnNext(experiment -> showRecommendsDialog(account.isLoggedIn(),
+                                      appViewViewModel.getPackageName(), experiment)))
+                              .toCompletable());
+
                   break;
                 case OPEN:
                   completable = appViewManager.loadAppViewViewModel()

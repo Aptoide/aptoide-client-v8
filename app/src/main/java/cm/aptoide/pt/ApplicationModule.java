@@ -1004,7 +1004,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
       @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
-    return new Retrofit.Builder().baseUrl("http://wasabi-api.aptoide.com/api/v1/")
+    return new Retrofit.Builder().baseUrl("https://abtesting.aptoide.com/api/v1/")
         .client(httpClient)
         .addCallAdapterFactory(rxCallAdapterFactory)
         .addConverterFactory(converterFactory)

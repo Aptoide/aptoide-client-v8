@@ -43,6 +43,9 @@ public class ABTestCenterRepository {
         .flatMap(model -> {
           if (!model.hasError() && !model.getExperiment()
               .isExpired()) {
+            if (!localCache.containsKey(experiment.getName())) {
+              localCache.put(experiment.getName(), model);
+            }
             return Observable.just(model.getExperiment());
           } else {
             return service.getExperiment(experiment)
