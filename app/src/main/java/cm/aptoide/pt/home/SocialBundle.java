@@ -19,9 +19,10 @@ public class SocialBundle implements HomeBundle {
   private final int drawableId;
   private final String userIcon;
   private final String name;
+  private final CardType cardType;
 
   public SocialBundle(List<Application> apps, BundleType type, Event event, String tag,
-      String userIcon, String name) {
+      String userIcon, String name, CardType cardType) {
     this.title = "n/a";
     this.apps = apps;
     this.type = type;
@@ -29,11 +30,12 @@ public class SocialBundle implements HomeBundle {
     this.tag = tag;
     this.userIcon = userIcon;
     this.name = name;
+    this.cardType = cardType;
     this.drawableId = R.drawable.placeholder_square;
   }
 
   public SocialBundle(List<Application> apps, BundleType type, Event event, String tag,
-      @DrawableRes int drawableId, String name) {
+      @DrawableRes int drawableId, String name, CardType cardType) {
     this.title = "n/a";
     this.apps = apps;
     this.type = type;
@@ -41,6 +43,7 @@ public class SocialBundle implements HomeBundle {
     this.tag = tag;
     this.drawableId = drawableId;
     this.name = name;
+    this.cardType = cardType;
     this.userIcon = "";
   }
 
@@ -72,11 +75,28 @@ public class SocialBundle implements HomeBundle {
     return name;
   }
 
+  public String getCardType() {
+    return cardType.toString();
+  }
+
   public int getDrawableId() {
     return drawableId;
   }
 
   public boolean hasAvatar() {
     return userIcon != null && !userIcon.isEmpty();
+  }
+
+  public enum CardType {
+
+    SOCIAL_RECOMMENDATIONS {
+      @Override public String toString() {
+        return "social recommendations";
+      }
+    }, APTOIDE_RECOMMENDS {
+      @Override public String toString() {
+        return "aptoide recommends";
+      }
+    };
   }
 }

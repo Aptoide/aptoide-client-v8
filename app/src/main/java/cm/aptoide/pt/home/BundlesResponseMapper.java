@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static cm.aptoide.pt.home.SocialBundle.CardType.APTOIDE_RECOMMENDS;
+import static cm.aptoide.pt.home.SocialBundle.CardType.SOCIAL_RECOMMENDATIONS;
+
 /**
  * Created by jdandrade on 08/03/2018.
  */
@@ -84,11 +87,11 @@ public class BundlesResponseMapper {
                     new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
                         widgetTag, card.getUser()
                         .getAvatar(), card.getUser()
-                        .getName()));
+                        .getName(), SOCIAL_RECOMMENDATIONS));
               } else {
                 appBundles.add(
                     new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
-                        widgetTag, R.mipmap.ic_launcher, marketName));
+                        widgetTag, R.mipmap.ic_launcher, marketName, APTOIDE_RECOMMENDS));
               }
             }
           }

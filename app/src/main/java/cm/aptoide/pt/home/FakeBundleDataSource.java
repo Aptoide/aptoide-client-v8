@@ -90,7 +90,7 @@ public class FakeBundleDataSource implements BundleDataSource {
         1000000, "asf.wallet.android.com", 36057221, ""));
     appBundles.add(new SocialBundle(apps, HomeBundle.BundleType.SOCIAL, null, "TAG",
         "http://pool.img.aptoide.com/asf-store/3bf5adf05843f9f28c486d5ddef8f873_ravatar.jpg",
-        "asf-store"));
+        "asf-store", SocialBundle.CardType.SOCIAL_RECOMMENDATIONS));
     return appBundles;
   }
 }
