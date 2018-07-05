@@ -501,9 +501,9 @@
   </style>
 
   <style name="AlertDialogAptoide" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+    <item name="android:theme">@style/AppBaseTheme</item>
     <item name="android:colorAccent">?attr/preferenceTitleColor</item>
-    <item name="android:textColor">?attr/preferenceTitleColor</item>
-    <item name="android:textColorPrimary">?attr/preferenceTitleColor</item>
+    <item name="android:textColorPrimary">@android:color/black</item>
     <item name="android:textColorSecondary">?attr/preferenceTitleColor</item>
     <item name="android:buttonStyle">@style/AlertTextAppearanceAptoide</item>
   </style>

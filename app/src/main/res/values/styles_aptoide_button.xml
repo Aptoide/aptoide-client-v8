@@ -47,6 +47,11 @@
     <item name="android:textColor">@color/grey</item>
   </style>
 
+  <style name="Aptoide.Button.Ghost.S.Grey">
+    <item name="android:background">@drawable/btn_ghost_theme_grey_fog_light</item>
+    <item name="android:textColor">@color/grey</item>
+  </style>
+
   <style name="Aptoide.Button.S.Gradient">
     <item name="android:background">@drawable/aptoide_gradient</item>
   </style>
