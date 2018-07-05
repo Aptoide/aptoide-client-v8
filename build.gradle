@@ -26,6 +26,9 @@ task clean(type: Delete) {
   delete rootProject.buildDir
 }
 
+// Gradle wrapper version is being specified dynamically here to prevent IDEA
+// from controlling version.
+// This will override gradle-wrapper.properties
 task wrapper(type: Wrapper) {
   gradleVersion = '3.5'
   distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
