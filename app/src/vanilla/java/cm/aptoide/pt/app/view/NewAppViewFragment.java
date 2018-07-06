@@ -1294,7 +1294,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         ((Button) dialogView.findViewById(R.id.continue_button)).setText(
             R.string.appview_button_continue);
         break;
-      case "share":
+      case "recommend":
         ((Button) dialogView.findViewById(R.id.continue_button)).setText(
             R.string.appview_button_share);
         break;

@@ -27,7 +27,7 @@ public class ABTestManager {
   }
 
   public enum ExperimentType {
-    SHARE_DIALOG("android_implement");
+    SHARE_DIALOG("ASV-recommend_continue_test");
 
     private String name;
 

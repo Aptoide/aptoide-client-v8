@@ -61,7 +61,7 @@
   <!-- social recommend flow -->
   <string name="appview_button_skip">Skip</string>
   <string name="appview_button_continue">Continue</string>
-  <string name="appview_button_share">Share</string>
+  <string name="appview_button_share">Recommend</string>
 
   <string name="appview_button_close">Close</string>
   <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
