@@ -1,5 +1,6 @@
 package cm.aptoide.pt.networking.image;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.FutureTarget;
@@ -94,7 +96,7 @@ public class ImageLoader {
             with(context)
             .asBitmap()
             .load(uri)
-            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+            .apply(getRequestOptions())
             .into(-1, -1). // full size
             get();
       } catch (InterruptedException e) {
@@ -128,8 +130,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new CircleTransform())
+          .apply(getRequestOptions().transform(new CircleTransform())
               .placeholder(placeHolderDrawableId))
           .into(imageView);
     } else {
@@ -144,8 +145,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(drawableId)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new CircleTransform()))
+          .apply(getRequestOptions().transform(new CircleTransform()))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -158,8 +158,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new ShadowCircleTransformation(context, imageView)))
+          .apply(getRequestOptions().transform(new ShadowCircleTransformation(context, imageView)))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -173,8 +172,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new ShadowCircleTransformation(context))
+          .apply(getRequestOptions().transform(new ShadowCircleTransformation(context))
               .placeholder(drawable))
           .into(imageView);
     } else {
@@ -189,9 +187,8 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new ShadowCircleTransformation(context, imageView, color, spaceBetween,
-                  strokeSize)))
+          .apply(getRequestOptions().transform(
+              new ShadowCircleTransformation(context, imageView, color, spaceBetween, strokeSize)))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -205,8 +202,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(drawableId)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new ShadowCircleTransformation(context, imageView)))
+          .apply(getRequestOptions().transform(new ShadowCircleTransformation(context, imageView)))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -220,8 +216,8 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new ShadowCircleTransformation(context, imageView, shadowColor)))
+          .apply(getRequestOptions().transform(
+              new ShadowCircleTransformation(context, imageView, shadowColor)))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -235,8 +231,8 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new ShadowCircleTransformation(context, imageView, strokeSize)))
+          .apply(getRequestOptions().transform(
+              new ShadowCircleTransformation(context, imageView, strokeSize)))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -250,8 +246,8 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new ShadowCircleTransformation(context, imageView, strokeSize))
+          .apply(getRequestOptions().transform(
+              new ShadowCircleTransformation(context, imageView, strokeSize))
               .placeholder(drawable))
           .into(imageView);
     } else {
@@ -266,8 +262,8 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(drawableId)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new ShadowCircleTransformation(context, imageView, shadowColor)))
+          .apply(getRequestOptions().transform(
+              new ShadowCircleTransformation(context, imageView, shadowColor)))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -282,7 +278,7 @@ public class ImageLoader {
       return Glide.with(context.getApplicationContext())
           .asBitmap()
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+          .apply(getRequestOptions())
           .into(notificationTarget);
     } else {
       Log.e(TAG, "::loadImageToNotification() Context is null");
@@ -295,7 +291,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(drawableId)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+          .apply(getRequestOptions())
           .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
@@ -310,8 +306,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(
               AptoideUtils.IconSizeU.screenshotToThumb(url, orientation, windowManager, resources))
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .placeholder(loadingPlaceHolder))
+          .apply(getRequestOptions().placeholder(loadingPlaceHolder))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadScreenshotToThumb() Context is null");
@@ -325,8 +320,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .placeholder(loadingPlaceHolder))
+          .apply(getRequestOptions().placeholder(loadingPlaceHolder))
           .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
@@ -342,7 +336,7 @@ public class ImageLoader {
         Uri uri = Uri.parse(newImageUrl);
         return Glide.with(context)
             .load(uri)
-            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+            .apply(getRequestOptions())
             .into(imageView);
       } else {
         Log.e(TAG, "newImageUrl is null");
@@ -363,8 +357,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .centerCrop())
+          .apply(getRequestOptions().centerCrop())
           .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
@@ -411,7 +404,7 @@ public class ImageLoader {
             with(context)
             .asBitmap()
             .load(apkIconPath)
-            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+            .apply(getRequestOptions())
             .into(-1, -1) // full size
             .get();
       } catch (InterruptedException e) {
@@ -431,8 +424,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(drawableId)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new CircleTransform()))
+          .apply(getRequestOptions().transform(new CircleTransform()))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
@@ -446,8 +438,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new CircleTransform()))
+          .apply(getRequestOptions().transform(new CircleTransform()))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
@@ -461,8 +452,7 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transform(new CircleTransform())
+          .apply(getRequestOptions().transform(new CircleTransform())
               .placeholder(defaultImagePlaceholder))
           .into(imageView);
     } else {
@@ -477,8 +467,8 @@ public class ImageLoader {
     if (context != null) {
       Glide.with(context)
           .load(image)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .transforms(new CenterCrop(), new RoundedCornersTransform(context, radius, margin,
+          .apply(getRequestOptions().transforms(new CenterCrop(),
+              new RoundedCornersTransform(context, radius, margin,
                   RoundedCornersTransform.CornerType.LEFT)))
           .into(previewImage);
     }
@@ -490,8 +480,7 @@ public class ImageLoader {
     if (context != null) {
       Glide.with(context)
           .load(image)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-              .centerCrop()
+          .apply(getRequestOptions().centerCrop()
               .placeholder(placeHolderDrawableId)
               .transforms(new CenterCrop(), new RoundedCornersTransform(context, radius, 0,
                   RoundedCornersTransform.CornerType.ALL)))
@@ -504,8 +493,21 @@ public class ImageLoader {
     if (context != null) {
       Glide.with(context)
           .load(imageUrl)
-          .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+          .apply(getRequestOptions())
           .into(simpleTarget);
     }
+  }
+
+  @SuppressLint("CheckResult") @NonNull private RequestOptions getRequestOptions() {
+    RequestOptions requestOptions = new RequestOptions();
+    DecodeFormat decodeFormat;
+    if (Build.VERSION.SDK_INT >= 26) {
+      decodeFormat = DecodeFormat.PREFER_ARGB_8888;
+      requestOptions.disallowHardwareConfig();
+    } else {
+      decodeFormat = DecodeFormat.PREFER_RGB_565;
+    }
+    return requestOptions.format(decodeFormat)
+        .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
   }
 }
