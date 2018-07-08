@@ -112,9 +112,12 @@ public class SimilarDisplayable extends CardDisplayable {
   }
 
   public Spannable getSimilarAppsText(Context context) {
-    StringBuilder similarAppsText = new StringBuilder(
-        context.getString(R.string.displayable_social_timeline_similar_to,
-            similarAppsNames.get(0)));
+    String text = "";
+    if (!similarAppsNames.isEmpty()) {
+      text = similarAppsNames.get(0);
+    }
+    StringBuilder similarAppsText =
+        new StringBuilder(context.getString(R.string.displayable_social_timeline_similar_to, text));
     for (int i = 1; i < similarAppsNames.size() - 1; i++) {
       similarAppsText.append(", ");
       similarAppsText.append(similarAppsNames.get(i));

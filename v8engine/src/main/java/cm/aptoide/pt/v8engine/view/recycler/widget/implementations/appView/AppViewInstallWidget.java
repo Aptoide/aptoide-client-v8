@@ -366,6 +366,7 @@ import rx.android.schedulers.AndroidSchedulers;
             Download download =
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                     downloadAction);
+            showVideoAdIfAvailable();
             return installManager.install(getContext(), download)
                 .doOnSubscribe(() -> setupEvents(download));
           })
@@ -422,6 +423,10 @@ import rx.android.schedulers.AndroidSchedulers;
         installHandler.onClick(v);
       }
     };
+  }
+
+  protected void showVideoAdIfAvailable() {
+
   }
 
   private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app,

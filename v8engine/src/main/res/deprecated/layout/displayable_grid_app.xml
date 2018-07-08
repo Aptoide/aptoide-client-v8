@@ -9,7 +9,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
-    >
+>
 
   <RelativeLayout
       android:layout_width="match_parent"
@@ -18,7 +18,7 @@
       android:paddingBottom="5dp"
       android:paddingTop="8dp"
       style="?attr/backgroundCard"
-      >
+  >
 
     <ImageView
         android:id="@+id/icon"
@@ -27,9 +27,9 @@
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
-        />
+    />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/icon"
@@ -39,12 +39,14 @@
         android:paddingRight="3dp"
         android:paddingStart="3dp"
         android:paddingTop="3dp"
-        >
+    >
 
       <TextView
           android:id="@+id/name"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
           android:ellipsize="end"
           android:lines="2"
           android:paddingEnd="3dp"
@@ -53,12 +55,15 @@
           android:paddingStart="3dp"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="14sp"
-          />
+      />
 
       <TextView
           android:id="@+id/downloads"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_below="@id/name"
           android:maxLines="1"
           android:paddingEnd="3dp"
           android:paddingLeft="3dp"
@@ -66,13 +71,16 @@
           android:paddingStart="3dp"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="12sp"
-          />
+      />
 
       <!--style="?android:attr/ratingBarStyleIndicator"-->
       <RatingBar
           android:id="@+id/ratingbar"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_below="@id/downloads"
           android:layout_marginLeft="5dp"
           android:layout_marginStart="5dp"
           android:layout_marginTop="5dp"
@@ -80,28 +88,34 @@
           android:isIndicator="true"
           android:numStars="5"
           style="?attr/gridItemRatingBar"
-          />
+      />
 
       <TextView
           android:id="@+id/store_name"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_below="@id/ratingbar"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="@dimen/text_size_small"
           android:visibility="gone"
-          />
+      />
 
       <TextView
           android:id="@+id/added_time"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_below="@id/store_name"
           android:drawableLeft="@drawable/ic_timestamp"
           android:drawableStart="@drawable/ic_timestamp"
           android:textSize="@dimen/text_size_small"
           android:visibility="gone"
-          />
+      />
 
-    </LinearLayout>
+    </RelativeLayout>
 
   </RelativeLayout>
 

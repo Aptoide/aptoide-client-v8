@@ -60,7 +60,7 @@ public class ToolboxContentProvider extends ContentProvider {
 
   @Override public boolean onCreate() {
     securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
-    final String authority = Application.getConfiguration().getContentAuthority();
+    final String authority = BuildConfig.APPLICATION_ID + ".UpdatesProvider";
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     uriMatcher.addURI(authority, "token", TOKEN);
     uriMatcher.addURI(authority, "refreshToken", REFRESH_TOKEN);

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -16,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -25,6 +27,7 @@ import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.LanguageUtils;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -58,6 +61,15 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     navManager = NavigationManagerV4.Builder.buildWith(this);
 
     super.onCreate(savedInstanceState);
+
+    //If the user had previously chosen a language, the app is displayed in that language, if not, it starts with the device's language as default
+    String lang = ManagerPreferences.getLanguage();
+    Resources res = getResources();
+    DisplayMetrics dm = res.getDisplayMetrics();
+    android.content.res.Configuration conf = res.getConfiguration();
+    conf.locale = LanguageUtils.getLocaleFromString(lang);
+    res.updateConfiguration(conf, dm);
+
     // https://fabric.io/downloads/gradle/ndk
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
@@ -83,8 +95,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   }
 
   private void setUpAnalytics() {
-    Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
-    Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
     Analytics.Dimensions.setGmsPresent(
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
   }
@@ -127,46 +137,45 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     // got this error on fabric => added this check
     if (grantResults.length == 0) {
       super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-    switch (requestCode) {
+    } else {
+      switch (requestCode) {
 
-      case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // Permission Granted
-          Logger.i(TAG, "access to read and write to external storage was granted");
-          if (toRunWhenAccessToFileSystemIsGranted != null) {
-            toRunWhenAccessToFileSystemIsGranted.call();
+        case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
+          if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission Granted
+            Logger.i(TAG, "access to read and write to external storage was granted");
+            if (toRunWhenAccessToFileSystemIsGranted != null) {
+              toRunWhenAccessToFileSystemIsGranted.call();
+            }
+          } else {
+            if (toRunWhenAccessToFileSystemIsDenied != null) {
+              toRunWhenAccessToFileSystemIsDenied.call();
+            }
+            ShowMessage.asSnack(findViewById(android.R.id.content),
+                "access to read and write to external " + "storage" + " was denied");
           }
-        } else {
-          if (toRunWhenAccessToFileSystemIsDenied != null) {
-            toRunWhenAccessToFileSystemIsDenied.call();
-          }
-          ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to read and write to external " +
-                  "storage" +
-                  " was denied");
-        }
-        break;
+          break;
 
-      case ACCESS_TO_ACCOUNTS_REQUEST_ID:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // Permission Granted
-          Logger.i(TAG, "access to get accounts was granted");
-          if (toRunWhenAccessToAccountsIsGranted != null) {
-            toRunWhenAccessToAccountsIsGranted.call();
+        case ACCESS_TO_ACCOUNTS_REQUEST_ID:
+          if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission Granted
+            Logger.i(TAG, "access to get accounts was granted");
+            if (toRunWhenAccessToAccountsIsGranted != null) {
+              toRunWhenAccessToAccountsIsGranted.call();
+            }
+          } else {
+            if (toRunWhenAccessToAccountsIsDenied != null) {
+              toRunWhenAccessToAccountsIsDenied.call();
+            }
+            ShowMessage.asSnack(findViewById(android.R.id.content),
+                "access to get accounts was denied");
           }
-        } else {
-          if (toRunWhenAccessToAccountsIsDenied != null) {
-            toRunWhenAccessToAccountsIsDenied.call();
-          }
-          ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to get accounts was denied");
-        }
-        break;
+          break;
 
-      default:
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        break;
+        default:
+          super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+          break;
+      }
     }
   }
 

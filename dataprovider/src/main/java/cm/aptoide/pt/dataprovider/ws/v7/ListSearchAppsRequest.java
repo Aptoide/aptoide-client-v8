@@ -90,7 +90,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     return interfaces.listSearchApps(body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody
+  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey
       implements Endless {
 
     @Getter private Integer limit;

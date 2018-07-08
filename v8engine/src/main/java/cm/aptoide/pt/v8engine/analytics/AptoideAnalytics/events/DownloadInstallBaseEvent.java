@@ -91,6 +91,6 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
   }
 
   public enum AppContext {
-    TIMELINE, APPVIEW, UPDATE_TAB, SCHEDULED, DOWNLOADS
+    TIMELINE, APPVIEW, UPDATE_TAB, SCHEDULED, DOWNLOADS, FIRST_INSTALL
   }
 }

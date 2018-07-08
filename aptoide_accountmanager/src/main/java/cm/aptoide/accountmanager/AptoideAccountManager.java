@@ -74,8 +74,7 @@ import static cm.aptoide.pt.preferences.Application.getContext;
 
 /**
  * Created by trinkes on 4/18/16. <li>{@link #openAccountManager(Context)}</li> <li>{@link
- * #openAccountManager(Context, boolean)}</li> <li>{@link #openAccountManager(Context,
- * Bundle)}</li>
+ * #openAccountManager(Context, boolean)}</li> <li>{@link #openAccountManager(Context, * Bundle)}</li>
  * <li>{@link #openAccountManager(Context, Bundle, boolean)}</li> <li>{@link
  * #getAccessToken()}</li>
  * <li>{@link #getUserEmail()}</li> <li>{@link #onActivityResult(Activity, int, int, Intent)}</li>
@@ -95,8 +94,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   /**
    * This constant is used to send the broadcast when an account is removed
    */
-  public static final String ACCOUNT_REMOVED_BROADCAST_KEY = "cm.aptoide.accountmanager" + "" +
-      ".removedaccount.broadcast";
+  public static final String ACCOUNT_REMOVED_BROADCAST_KEY =
+      "cm.aptoide.accountmanager" + "" + ".removedaccount.broadcast";
 
   private final static AptoideAccountManager instance = new AptoideAccountManager();
   private static final AptoideClientUUID aptoideClientUuid =
@@ -207,17 +206,28 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   /**
-   * This method should be used to login users for ABAN
+   * This method should be used to login users for Mobile verification Login
    *
    * @param phoneNumber users inserted phonenumber
-   * @param token users token sended by Aban
+   * @param token users token sended by the Mobile provider
    * @param username users inserted username
    */
-  public static void openAccountManager(ILoginInterface loginInterface, Context context,
+  @Partners public static void openAccountManager(ILoginInterface loginInterface, Context context,
       String phoneNumber, String token, String username) {
     setMCallback(loginInterface);
-    AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username,
-        context);
+    switch (cm.aptoide.pt.preferences.Application.getConfiguration().getDefaultStore()) {
+      case "aban-app-store":
+        AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username,
+            context);
+        break;
+      case "dsc-market":
+        AptoideAccountManager.loginUserCredentials(LoginMode.DSC, phoneNumber, token, username,
+            context);
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Unknown Login Mode! Please check if you added to the LoginMode Enum");
+    }
   }
 
   static AptoideAccountManager getInstance() {
@@ -400,8 +410,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * with the user info
    */
   private static void saveUserInfo(CheckUserCredentialsJson checkUserCredentialsJson) {
-    Logger.d(TAG, "saveUserInfo() called with: " + "checkUserCredentialsJson = [" +
-        checkUserCredentialsJson + "]");
+    Logger.d(TAG, "saveUserInfo() called with: "
+        + "checkUserCredentialsJson = ["
+        + checkUserCredentialsJson
+        + "]");
 
     if (checkUserCredentialsJson.getStatus().equals("OK")) {
 
@@ -683,7 +695,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
               AptoideAccountManager.loginUserCredentials(LoginMode.APTOIDE, email, password, null);
             }
             genericPleaseWaitDialog.dismiss();
-            e.printStackTrace();
+            CrashReport.getInstance().log(e);
           }, true);
     } else {
       genericPleaseWaitDialog.dismiss();

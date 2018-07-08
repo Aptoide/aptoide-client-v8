@@ -17,9 +17,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.managed.Preferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
@@ -68,6 +70,10 @@ public class DefaultInstaller implements Installer {
   @Override public Observable<Void> install(Context context, String md5) {
     Analytics.RootInstall.installationType(ManagerPreferences.allowRootInstallation(),
         AptoideUtils.SystemU.isRooted());
+    String urlcpd = Preferences.get().getString(md5, null);
+    if (urlcpd != null) {
+      DataproviderUtils.AdNetworksUtils.knockCpd(urlcpd);
+    }
     return installationProvider.getInstallation(md5)
         .observeOn(Schedulers.computation())
         .doOnNext(installation -> moveInstallationFiles(installation))
@@ -78,7 +84,7 @@ public class DefaultInstaller implements Installer {
             return systemInstall(context, installation.getFile()).onErrorResumeNext(
                 Observable.fromCallable(
                     () -> rootInstall(installation.getFile(), installation.getPackageName(),
-                        installation.getVersionCode())))
+                        installation.getVersionCode(), context)))
                 .onErrorResumeNext(
                     defaultInstall(context, installation.getFile(), installation.getPackageName()));
           }
@@ -145,9 +151,10 @@ public class DefaultInstaller implements Installer {
         new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(file)));
   }
 
-  private Void rootInstall(File file, String packageName, int versionCode)
+  private Void rootInstall(File file, String packageName, int versionCode, Context context)
       throws InstallationException {
     if (!AptoideUtils.SystemU.isRooted()) {
+      defaultInstall(context, file, packageName);
       throw new InstallationException("No root permissions");
     } else if (!ManagerPreferences.allowRootInstallation()) {
       throw new InstallationException("User doesn't allow root installation");

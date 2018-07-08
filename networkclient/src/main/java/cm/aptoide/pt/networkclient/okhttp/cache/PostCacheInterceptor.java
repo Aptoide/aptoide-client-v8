@@ -1,5 +1,6 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import java.io.IOException;
 import okhttp3.Headers;
@@ -20,12 +21,16 @@ public class PostCacheInterceptor implements Interceptor {
     this.cache = cache;
   }
 
-  @Override public Response intercept(Chain chain) throws IOException {
+  @Override public Response intercept(Chain chain) {
     final Request request = chain.request();
 
     // we only intercept and cache POST requests
     if (!request.method().equalsIgnoreCase("POST")) {
-      return chain.proceed(request);
+      try {
+        return chain.proceed(request);
+      } catch (IOException e) {
+        CrashReport.getInstance().log(e);
+      }
     }
 
     // we shouldn't cache the response if the client explicitly asked us not to
@@ -33,7 +38,11 @@ public class PostCacheInterceptor implements Interceptor {
     if (headers.size() > 0) {
       for (String bypassCacheHeaderValue : headers.values(BYPASS_HEADER_KEY)) {
         if (bypassCacheHeaderValue.equalsIgnoreCase(BYPASS_HEADER_VALUE)) {
-          return chain.proceed(request);
+          try {
+            return chain.proceed(request);
+          } catch (IOException e) {
+            CrashReport.getInstance().log(e);
+          }
         }
       }
     }
@@ -51,10 +60,15 @@ public class PostCacheInterceptor implements Interceptor {
 
     // in case of a cache miss, go to the network
     Logger.v(TAG, String.format("cache miss '%s'", request.url()));
-    Response response = chain.proceed(request);
+    Response response = null;
+    try {
+      response = chain.proceed(request);
+    } catch (IOException e) {
+      CrashReport.getInstance().log(e);
+    }
 
     // we only cache successful responses
-    if (response.isSuccessful()) {
+    if (response != null && response.isSuccessful()) {
       cache.put(request, response);
     }
     return response;

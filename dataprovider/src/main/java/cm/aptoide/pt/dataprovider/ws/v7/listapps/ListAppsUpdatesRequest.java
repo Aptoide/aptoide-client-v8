@@ -7,7 +7,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -126,26 +126,18 @@ import rx.schedulers.Schedulers;
         n + SPLIT_SIZE > apksData.size() ? n + apksData.size() % SPLIT_SIZE : n + SPLIT_SIZE));
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
+  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey {
 
     @Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;
     @Getter private List<Long> storeIds;
     @Setter @Getter private String aaid;
-    @Getter private String notApkTags;
     @Getter private String notPackageTags;
 
     public Body(List<ApksData> apksData, List<Long> storeIds, String aaid) {
       this.apksData = apksData;
       this.storeIds = storeIds;
       this.aaid = aaid;
-      setNotApkTags();
       setSystemAppsUpdates();
-    }
-
-    private void setNotApkTags() {
-      if (ManagerPreferences.getUpdatesFilterAlphaBetaKey()) {
-        this.notApkTags = "alpha,beta";
-      }
     }
 
     private void setSystemAppsUpdates() {
@@ -162,8 +154,11 @@ import rx.schedulers.Schedulers;
       this.setAptoideVercode(body.getAptoideVercode());
       this.aaid = body.getAaid();
       this.setAptoideId(body.getAptoideId());
-      this.notApkTags = body.getNotApkTags();
       this.notPackageTags = body.getNotPackageTags();
+      this.setAptoideMd5sum(body.getAptoideMd5sum());
+      this.setAptoidePackage(body.getAptoidePackage());
+      this.setOem_id(body.getOem_id());
+      this.setConfig_type(body.getConfig_type());
     }
   }
 

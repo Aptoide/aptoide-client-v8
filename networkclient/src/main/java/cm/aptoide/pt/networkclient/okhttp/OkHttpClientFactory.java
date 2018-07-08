@@ -84,6 +84,7 @@ public class OkHttpClientFactory {
     //		}
     clientBuilder.readTimeout(45, TimeUnit.SECONDS);
     clientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+    clientBuilder.connectTimeout(45, TimeUnit.SECONDS);
     clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
     for (Interceptor interceptor : interceptors) {
       clientBuilder.addInterceptor(interceptor);

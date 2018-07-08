@@ -41,7 +41,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private ProgressDialog dialog;
   private PermissionManager permissionManager;
 
-  AutoUpdate(AptoideBaseActivity activity, Installer installer, DownloadFactory downloadFactory,
+  public AutoUpdate(AptoideBaseActivity activity, Installer installer, DownloadFactory downloadFactory,
       AptoideDownloadManager downloadManager, PermissionManager permissionManager) {
     this.activity = activity;
     this.installer = installer;
@@ -58,7 +58,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
       SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
       AutoUpdateHandler autoUpdateHandler = new AutoUpdateHandler();
 
-      Logger.d("TAG", "Requesting auto-update from " + url);
+      Logger.d(TAG, "Requesting auto-update from " + url);
       connection = (HttpURLConnection) new URL(url).openConnection();
 
       connection.setConnectTimeout(10000);
@@ -88,18 +88,13 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           e.printStackTrace();
         }
       }
-    } catch (ParserConfigurationException e) {
-      e.printStackTrace();
-      CrashReport.getInstance().log(e);
-    } catch (SAXException e) {
-      e.printStackTrace();
-      CrashReport.getInstance().log(e);
-    } catch (MalformedURLException e) {
+    } catch (ParserConfigurationException | MalformedURLException | SAXException e) {
       e.printStackTrace();
       CrashReport.getInstance().log(e);
     } catch (IOException e) {
-      e.printStackTrace();
-      CrashReport.getInstance().log(e);
+      Logger.w(TAG, "The URL "
+          + url
+          + " does not response or no OTA updates are available for this AppStore");
     } finally {
       if (connection != null) {
         connection.disconnect();

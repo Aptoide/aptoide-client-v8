@@ -303,8 +303,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Partners @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
-    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
-    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
     Analytics.Stores.enter(storeName);
   }
 

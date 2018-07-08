@@ -7,6 +7,7 @@ package cm.aptoide.pt.preferences.managed;
 
 import android.preference.PreferenceManager;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -53,6 +54,10 @@ public class ManagerPreferences {
 
   public static boolean getGeneralDownloadsMobile() {
     return Preferences.get().getBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, true);
+  }
+
+  public static void setGeneralDownloadsMobile(boolean state) {
+    Preferences.get().edit().putBoolean(ManagedKeys.GENERAL_DOWNLOADS_MOBILE, state).apply();
   }
 
   public static boolean getAnimationsEnabledStatus() {
@@ -193,5 +198,14 @@ public class ManagerPreferences {
   public static boolean isFirstRunV7() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.FIRST_RUN_V7, true);
+  }
+
+
+  public static String getLanguage(){
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext()).getString(ManagedKeys.LANGUAGE, AptoideUtils.SystemU.getCountryCode());
+  }
+
+  public static void setLanguage(String language){
+    Preferences.get().edit().putString(ManagedKeys.LANGUAGE, language).apply();
   }
 }

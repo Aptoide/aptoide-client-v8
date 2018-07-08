@@ -242,33 +242,26 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     + ": "
                     + AptoideUtils.SystemU.getSdkVer()
                     + "\n"
-                    +
-                    getString(R.string.setting_screen_size)
+                    + getString(R.string.setting_screen_size)
                     + ": "
                     + AptoideUtils.ScreenU.getScreenSize()
-                    +
-                    "\n"
-                    +
-                    getString(R.string.setting_esgl_version)
+                    + "\n"
+                    + getString(R.string.setting_esgl_version)
                     + ": "
                     + AptoideUtils.SystemU.getGlEsVer()
                     + "\n"
-                    +
-                    getString(R.string.screenCode)
+                    + getString(R.string.screenCode)
                     + ": "
                     + AptoideUtils.ScreenU.getNumericScreenSize()
-                    +
-                    "/"
+                    + "/"
                     + AptoideUtils.ScreenU.getDensityDpi()
                     + "\n"
-                    +
-                    getString(R.string.cpuAbi)
+                    + getString(R.string.cpuAbi)
                     + ": "
                     + AptoideUtils.SystemU.getAbis()
                 //                            + (ApplicationAptoide.PARTNERID!=null ? "\nPartner ID:"
                 // + ApplicationAptoide.PARTNERID : "")
             )
-            .setCancelable(false)
             .setNeutralButton(getString(android.R.string.ok),
                 new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int id) {
@@ -316,8 +309,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         }
 
         ((TextView) view.findViewById(R.id.aptoide_version)).setText(
-            getString(R.string.version) + " " +
-                versionName + " (" + versionCode + ")");
+            getString(R.string.version) + " " + versionName + " (" + versionCode + ")");
 
         ((TextView) view.findViewById(R.id.credits)).setMovementMethod(
             LinkMovementMethod.getInstance());

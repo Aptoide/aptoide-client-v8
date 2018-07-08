@@ -86,6 +86,12 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
           parameters.put("authMode", "aban");
           parameters.put("oauthUser", nameForGoogle);
           break;
+        case DSC:
+          parameters.put("oauthUserName", username);
+          parameters.put("oauthToken", password);
+          parameters.put("authMode", "dsc");
+          parameters.put("oauthUser", nameForGoogle);
+          break;
       }
     }
     if (refreshToken != null) {

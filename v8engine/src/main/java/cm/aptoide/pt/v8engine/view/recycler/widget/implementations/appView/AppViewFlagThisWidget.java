@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v2.ErrorResponse;
@@ -200,7 +201,8 @@ import rx.android.schedulers.AndroidSchedulers;
               }
 
               if (voteSubmitted) {
-                ShowMessage.asSnack(v, R.string.vote_submitted);
+                Toast.makeText(getContext(), R.string.vote_submitted, Toast.LENGTH_LONG).show();
+                //ShowMessage.asSnack(getRootView(), R.string.vote_submitted);
                 return;
               }
             }
@@ -212,11 +214,13 @@ import rx.android.schedulers.AndroidSchedulers;
             }
 
             setAllButtonsUnPressed(v);
-            ShowMessage.asSnack(v, R.string.unknown_error);
+            Toast.makeText(getContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
+            //ShowMessage.asSnack(getRootView(), R.string.unknown_error);
           }, error -> {
             CrashReport.getInstance().log(error);
             setAllButtonsUnPressed(v);
-            ShowMessage.asSnack(v, R.string.unknown_error);
+            Toast.makeText(getContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
+            //ShowMessage.asSnack(getRootView(), R.string.unknown_error);
           }));
     };
   }

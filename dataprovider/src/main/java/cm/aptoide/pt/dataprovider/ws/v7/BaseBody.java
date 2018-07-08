@@ -24,4 +24,8 @@ import lombok.EqualsAndHashCode;
   private boolean mature;
   private String q;
   private String country;
+  private String aptoideMd5sum;
+  private String aptoidePackage;
+  private String oem_id;
+  private String config_type;
 }

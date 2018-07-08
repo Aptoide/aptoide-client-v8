@@ -12,7 +12,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.2.3'
+    classpath 'com.android.tools.build:gradle:2.3.3'
     classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
@@ -31,7 +31,6 @@ allprojects {
   repositories {
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
-    maven { url 'http://maven.localytics.com/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
   }
@@ -50,7 +49,7 @@ ext {
 
   //JW stands for Jake Wharton
 
-  APPLICATION_ID = 'cm.aptoide.pt'
+  APPLICATION_ID = 'com.aptoide.partners'
 
   //
   // gradle build script vars
@@ -65,11 +64,11 @@ ext {
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '25.0.1'
-  SUPPORT_ANNOTATIONS_LIB_VERSION = '25.0.1'
+  SUPPORT_LIB_VERSION = '25.2.0'
+  SUPPORT_ANNOTATIONS_LIB_VERSION = '25.2.0'
 
   // Google Play Services
-  PLAY_SERVICES_VERSION = '9.8.0'
+  PLAY_SERVICES_VERSION = '10.2.1'
 
   JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
 
@@ -117,9 +116,6 @@ ext {
   PAYPAL_SDK = '2.15.0'
 
   SUPER_USER_LIB_VERSION = '1.0.0.+'
-
-  // Localytics Android SDK
-  LOCALYTICS_VERSION = '4.1.0'
 
   // Flurry Android SDK
   FLURRY_VERSION = '6.4.2'

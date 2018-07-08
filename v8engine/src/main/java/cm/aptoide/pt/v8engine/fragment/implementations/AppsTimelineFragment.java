@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
@@ -32,6 +33,8 @@ import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -98,6 +101,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private PermissionManager permissionManager;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
+  private boolean isSocialLoginAvailable;
 
   public static AppsTimelineFragment newInstance(String action, String storeName) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -123,6 +127,20 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     timelineMetricsManager = new TimelineMetricsManager(Analytics.getInstance());
     socialRepository = new SocialRepository();
+    isSocialLoginAvailable = isAnySocialLoginAvailable();
+  }
+
+  /**
+   * @return true if any social login is available
+   */
+  @Partners private boolean isAnySocialLoginAvailable() {
+    for (AptoidePreferencesConfiguration.SocialLogin socialLogin : AptoidePreferencesConfiguration.SocialLogin
+        .values()) {
+      if (Application.getConfiguration().isLoginAvailable(socialLogin)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -188,20 +206,26 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
       List<String> packages) {
+
     return getDisplayableList(packages, 0, refresh).doOnNext(
         item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
       if (!displayableDatalist.getList().isEmpty()) {
         if (AptoideAccountManager.isLoggedIn()) {
           return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
-            displayableDatalist.getList()
-                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
+            if (isSocialLoginAvailable) {
+              displayableDatalist.getList()
+                  .add(0,
+                      new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
+            }
             return displayableDatalist;
           }).onErrorReturn(throwable -> {
             CrashReport.getInstance().log(throwable);
             return displayableDatalist;
           });
         } else {
-          displayableDatalist.getList().add(0, new TimelineLoginDisplayable());
+          if (isSocialLoginAvailable) {
+            displayableDatalist.getList().add(0, new TimelineLoginDisplayable());
+          }
           return Observable.just(displayableDatalist);
         }
       } else {

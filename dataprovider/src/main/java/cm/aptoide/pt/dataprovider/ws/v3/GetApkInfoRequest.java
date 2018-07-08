@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v3.PaidApp;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import rx.Observable;
 
 /**
@@ -39,7 +40,7 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     options.put("cmtlimit", "5");
     options.put("payinfo", "true");
     options.put("q", Api.Q);
-    options.put("lang", Api.LANG);
+    options.put("lang", ManagerPreferences.getLanguage());
 
     addNetworkInformation(operatorManager, options);
 

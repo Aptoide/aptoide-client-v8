@@ -5,15 +5,27 @@
 
 package cm.aptoide.pt.dataprovider.repository;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
+
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.UUID;
 
@@ -49,6 +61,7 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
 
   @Override public synchronized String getUniqueIdentifier() {
     String aptoideId = sharedPreferences.getString(APTOIDE_CLIENT_UUID, null);
+
     if (!TextUtils.isEmpty(aptoideId)) {
       // if we already have the aptoide client uuid, return it
       return aptoideId;
@@ -59,18 +72,21 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     aptoideId = getGoogleAdvertisingId();
 
     // if preferred UUID is null or empty use android id
-    if (TextUtils.isEmpty(aptoideId)) {
-      aptoideId = getAndroidId();
-    }
+    //if (TextUtils.isEmpty(aptoideId)) {
+    //  aptoideId = getAndroidId();
+    //}
+//
+    //// if android id is null or empty use random generated UUID
+    //if (TextUtils.isEmpty(aptoideId)) {
+    //  aptoideId = UUID.randomUUID().toString();
+    //}
 
-    // if android id is null or empty use random generated UUID
-    if (TextUtils.isEmpty(aptoideId)) {
-      aptoideId = UUID.randomUUID().toString();
-    }
+    //sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
 
-    sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
     return aptoideId;
   }
+
+
 
   @Override public synchronized String getGoogleAdvertisingId() {
     String googleAdvertisingId = sharedPreferences.getString(GOOGLE_ADVERTISING_ID_CLIENT, null);
@@ -78,18 +94,85 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
       return googleAdvertisingId;
     }
 
-    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
-      try {
-        googleAdvertisingId = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
-      } catch (Exception e) {
+    //if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
+    //  try {
+    //    googleAdvertisingId = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
+    //  } catch (Exception e) {
+    //    CrashReport.getInstance().log(e);
+    //  }
+    //}
+
+    //sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, googleAdvertisingId).apply();
+    //sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
+
+
+    //ADDED
+    GoogleIDThread googleIDThread = new GoogleIDThread();
+    Thread gIDThread = new Thread(googleIDThread);
+    gIDThread.start();
+
+
+    googleAdvertisingId = googleIDThread.getGoogleId();
+
+    //if (TextUtils.isEmpty(googleAdvertisingId)) {
+    //  googleAdvertisingId = getAndroidId();
+    //}
+//
+    //// if android id is null or empty use random generated UUID
+    //if (TextUtils.isEmpty(googleAdvertisingId)) {
+    //  googleAdvertisingId = UUID.randomUUID().toString();
+    //}
+    //sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, googleAdvertisingId).apply();
+    return googleAdvertisingId;
+  }
+
+
+  private class GoogleIDThread implements Runnable{
+    private String googleId;
+
+    @Override
+    public void run(){
+      try{
+        AdvertisingIdClient.Info adInfo = null;
+        if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
+          try {
+            adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
+          } catch (IOException e) {
+            CrashReport.getInstance().log(e);
+          }catch (IllegalStateException e) {
+            CrashReport.getInstance().log(e);
+          }catch (GooglePlayServicesNotAvailableException e) {
+            CrashReport.getInstance().log(e);
+          }catch (GooglePlayServicesRepairableException e) {
+            CrashReport.getInstance().log(e);
+          }
+          if(adInfo != null){
+            // preferred UUID
+            googleId = adInfo.getId();
+            sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, googleId).apply();
+            sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
+
+            //if preferred UUID is null or empty use android id
+            if (TextUtils.isEmpty(googleId)) {
+              googleId = getAndroidId();
+            }
+            // if android id is null or empty use random generated UUID
+            if (TextUtils.isEmpty(googleId)) {
+              googleId = UUID.randomUUID().toString();
+            }
+            sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, googleId).apply();
+          }
+        }
+      }catch(Exception e){
         CrashReport.getInstance().log(e);
       }
     }
 
-    sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, googleAdvertisingId).apply();
-    sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
-    return googleAdvertisingId;
+    public String getGoogleId(){
+      return googleId;
+    }
   }
+
 
   @Override public synchronized String getAdvertisingId() {
     String advertisingId = sharedPreferences.getString(ADVERTISING_ID_CLIENT, null);

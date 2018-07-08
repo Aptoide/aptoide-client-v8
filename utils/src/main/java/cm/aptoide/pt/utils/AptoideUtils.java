@@ -148,19 +148,17 @@ public class AptoideUtils {
 
       String cpuAbi = SystemU.getAbis();
 
-      String filters =
-          (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "")
-              + "maxSdk="
-              + minSdk
-              +
-              "&maxScreen="
-              + minScreen
-              + "&maxGles="
-              + minGlEs
-              + "&myCPU="
-              + cpuAbi
-              + "&myDensity="
-              + density;
+      String filters = (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "")
+          + "maxSdk="
+          + minSdk
+          + "&maxScreen="
+          + minScreen
+          + "&maxGles="
+          + minGlEs
+          + "&myCPU="
+          + cpuAbi
+          + "&myDensity="
+          + density;
       filters = addOpenGLExtensions(filters);
 
       return Base64.encodeToString(filters.getBytes(), 0)
@@ -536,8 +534,7 @@ public class AptoideUtils {
       // but we assume their ratio is correct.
       double screenWidthInPixels = (double) config.screenWidthDp * dm.density;
       double screenHeightInPixels = screenWidthInPixels * dm.heightPixels / dm.widthPixels;
-      return (int) (screenWidthInPixels + .5) + "x" +
-          (int) (screenHeightInPixels + .5);
+      return (int) (screenWidthInPixels + .5) + "x" + (int) (screenHeightInPixels + .5);
     }
 
     public enum Size {
@@ -731,6 +728,25 @@ public class AptoideUtils {
     private static final String TAG = "SystemU";
     public static String JOLLA_ALIEN_DEVICE = "alien_jolla_bionic";
 
+    private static String aptoideMd5sum;
+
+    public static String getAptoideMd5sum() {
+      if (aptoideMd5sum == null) {
+        aptoideMd5sum = caculateMd5Sum();
+      }
+      return aptoideMd5sum;
+    }
+
+    private static String caculateMd5Sum() {
+      try {
+        return AptoideUtils.AlgorithmU.computeMd5(
+            context.getPackageManager().getPackageInfo(context.getPackageName(), 0));
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+      return null;
+    }
+
     public static String getProduct() {
       return Build.PRODUCT.replace(";", " ");
     }
@@ -767,9 +783,7 @@ public class AptoideUtils {
     }
 
     public static String getCountryCode() {
-      return context.getResources().getConfiguration().locale.getLanguage()
-          + "_"
-          + context.getResources().getConfiguration().locale.getCountry();
+      return "fa_IR";
     }
 
     public static PackageInfo getPackageInfo(String packageName) {
@@ -827,6 +841,19 @@ public class AptoideUtils {
 
     public static List<PackageInfo> getAllInstalledApps() {
       return context.getPackageManager().getInstalledPackages(PackageManager.GET_SIGNATURES);
+    }
+
+    /**
+     * Check if app with given packageName is installed
+     */
+    public static boolean isAppInstalled(String packagename) {
+      List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
+      for (PackageInfo packageInfo : installedApps) {
+        if (packageInfo.packageName.equals(packagename)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     public static String getApkLabel(PackageInfo packageInfo) {
@@ -1632,8 +1659,7 @@ public class AptoideUtils {
           + methodName
           + " - Total execution time: "
           + (endTime - startTime)
-          +
-          "ms");
+          + "ms");
     }
   }
 
@@ -1715,8 +1741,23 @@ public class AptoideUtils {
       //String currentUserId = getUserId();
       //String myscr = sPref.getInt(EnumPreferences.SCREEN_WIDTH.name(), 0) + "x" + sPref.getInt(EnumPreferences.SCREEN_HEIGHT.name(), 0);
 
-      DisplayMetrics displayMetrics = new DisplayMetrics();
-      String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+      //DisplayMetrics displayMetrics = new DisplayMetrics();
+      String myscr; //= displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+
+      WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+      if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+        Display display = wm.getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        myscr = width + "x" + height;
+      } else {
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        myscr = width + "x" + height;
+      }
 
       StringBuilder sb =
           new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");

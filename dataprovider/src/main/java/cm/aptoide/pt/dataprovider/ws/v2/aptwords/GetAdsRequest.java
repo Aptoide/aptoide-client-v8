@@ -58,9 +58,9 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofHomepage(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature, int numberOfColumns) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID,
+    return of(Location.homepage, Type.ADS.getPerLineCount() * numberOfColumns, aptoideClientUUID,
         googlePlayServicesAvailable, oemid, mature);
   }
 
@@ -88,6 +88,18 @@ import rx.Observable;
     GetAdsRequest getAdsRequest =
         ofPackageName(Location.appview, packageName, aptoideClientUUID, googlePlayServicesAvailable,
             oemid, mature);
+
+    getAdsRequest.setRepo(storeName);
+
+    return getAdsRequest;
+  }
+
+  public static GetAdsRequest ofFirstInstallOrganic(String packageName, String storeName,
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+
+    GetAdsRequest getAdsRequest =
+        ofPackageName(Location.firstinstall, packageName, aptoideClientUUID,
+            googlePlayServicesAvailable, oemid, mature);
 
     getAdsRequest.setRepo(storeName);
 
@@ -140,10 +152,17 @@ import rx.Observable;
         googlePlayServicesAvailable, oemid, mature);
   }
 
-  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature) {
-    return of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
-        oemid, mature);
+  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature, String excludedPackages){
+      GetAdsRequest getAdsRequest = of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable, oemid, mature);
+      getAdsRequest.setExcludedPackage(excludedPackages);
+      return getAdsRequest;
+  }
+
+  @Partners public static GetAdsRequest ofNotification(String aptoideClientUUID,
+      boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature,
+      String excludedPackage) {
+    return of(Location.notification, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
+        oemid, mature).setExcludedPackage(excludedPackage);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
@@ -152,7 +171,7 @@ import rx.Observable;
     HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
 
     parameters.put("q", Api.Q);
-    parameters.put("lang", Api.LANG);
+    parameters.put("lang", ManagerPreferences.getLanguage());
     parameters.put("cpuid", aptoideClientUUID);
     parameters.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
     parameters.put("location", location.toString());
@@ -211,14 +230,11 @@ import rx.Observable;
   }
 
   public enum Location {
-    homepage("native-aptoide:homepage"),
-    appview("native-aptoide:appview"),
-    middleappview("native-aptoide:middleappview"),
-    search("native-aptoide:search"),
-    secondinstall("native-aptoide:secondinstall"),
-    secondtry("native-aptoide:secondtry"),
-    aptoidesdk("sdk-aptoide:generic"),
-    firstinstall("native-aptoide:first-install");
+    homepage("native-aptoide:homepage"), appview("native-aptoide:appview"), middleappview(
+        "native-aptoide:middleappview"), search("native-aptoide:search"), secondinstall(
+        "native-aptoide:secondinstall"), secondtry("native-aptoide:secondtry"), aptoidesdk(
+        "sdk-aptoide:generic"), firstinstall("native-aptoide:first-install"), notification(
+        "native-aptoide:notifications");
 
     private final String value;
 

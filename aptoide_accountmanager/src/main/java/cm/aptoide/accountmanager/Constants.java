@@ -10,8 +10,6 @@ public class Constants {
    */
   public static final String ACCOUNT_TYPE =
       cm.aptoide.pt.preferences.Application.getConfiguration().getAccountType();
-  public static final String IS_LOCALYTICS_ENABLE_KEY = "IS_LOCALYTICS_ENABLE_KEY";
-  public static final String IS_LOCALYTICS_FIRST_SESSION = "IS_LOCALYTICS_FIRST_SESSION";
   final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
   final static String ARG_AUTH_TYPE = "AUTH_TYPE";
   final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";

@@ -40,10 +40,6 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 
   protected abstract void assignViews(View itemView);
 
-  protected NavigationManagerV4 getNavigationManager() {
-    return appNav;
-  }
-
   @CallSuper public void unbindView() {
     if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
       compositeSubscription.clear();
@@ -59,4 +55,12 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
   }
 
   public abstract void bindView(T displayable);
+
+  /*public View getRootView() {
+    return getNavigationManager().peekLast().getView();
+  }*/
+
+  protected NavigationManagerV4 getNavigationManager() {
+    return appNav;
+  }
 }

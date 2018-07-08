@@ -105,7 +105,6 @@ android {
   buildTypes {
     release {
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "false"
-      manifestPlaceholders = [LOCALYTICS_APP_KEY: project.LOCALYTICS_RELEASE_KEY]
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true
@@ -116,7 +115,6 @@ android {
     debug {
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       ext.enableCrashlytics = false
-      manifestPlaceholders = [LOCALYTICS_APP_KEY: project.LOCALYTICS_DEBUG_KEY]
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true

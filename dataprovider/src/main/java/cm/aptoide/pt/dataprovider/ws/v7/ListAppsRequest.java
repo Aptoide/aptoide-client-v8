@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -62,18 +63,31 @@ import rx.Observable;
     @Getter private Integer limit;
     @Getter @Setter private int offset;
     @Getter @Setter private Integer groupId;
+    @Getter private String notApkTags;
 
     public Body(StoreCredentials storeCredentials) {
       super(storeCredentials);
+      setNotApkTags();
     }
 
     public Body(StoreCredentials storeCredentials, int limit) {
       super(storeCredentials);
       this.limit = limit;
+      setNotApkTags();
     }
 
     public Body(int groupId) {
       this.groupId = groupId;
+      setNotApkTags();
+    }
+
+    /**
+     * Method to check not Apk Tags on this particular request
+     */
+    private void setNotApkTags() {
+      if (ManagerPreferences.getUpdatesFilterAlphaBetaKey()) {
+        this.notApkTags = "alpha,beta";
+      }
     }
   }
 }
