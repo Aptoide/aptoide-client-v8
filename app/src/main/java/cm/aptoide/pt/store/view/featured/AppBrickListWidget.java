@@ -7,7 +7,6 @@ package cm.aptoide.pt.store.view.featured;
 
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -16,6 +15,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import java.text.DecimalFormat;
 
 /**
  * Created by neuro on 09-05-2016.
@@ -23,28 +23,42 @@ import com.jakewharton.rxbinding.view.RxView;
 public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
 
   private TextView name;
+  private ImageView appIcon;
   private ImageView graphic;
-  private RatingBar ratingBar;
+  private TextView rating;
+  private DecimalFormat oneDecimalFormatter;
 
   public AppBrickListWidget(View itemView) {
     super(itemView);
+    oneDecimalFormatter = new DecimalFormat("#.#");
   }
 
   @Override protected void assignViews(View itemView) {
+    appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
     name = (TextView) itemView.findViewById(R.id.app_name);
     graphic = (ImageView) itemView.findViewById(R.id.featured_graphic);
-    ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
+    rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
   @Override public void bindView(AppBrickListDisplayable displayable) {
     App app = displayable.getPojo();
 
     ImageLoader.with(getContext())
+        .load(app.getIcon(), R.drawable.placeholder_square, appIcon);
+
+    ImageLoader.with(getContext())
         .load(app.getGraphic(), R.drawable.placeholder_brick, graphic);
     name.setText(app.getName());
-    ratingBar.setRating(app.getStats()
+
+    float rating = app.getStats()
         .getRating()
-        .getAvg());
+        .getAvg();
+    if (rating == 0) {
+      this.rating.setText(R.string.appcardview_title_no_stars);
+    } else {
+      this.rating.setText(oneDecimalFormatter.format(rating));
+    }
+
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {
           getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
