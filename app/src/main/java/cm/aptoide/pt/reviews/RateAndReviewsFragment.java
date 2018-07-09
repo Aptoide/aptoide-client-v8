@@ -37,7 +37,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -64,7 +63,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   @Inject AppNavigator appNavigator;
   private SharedPreferences preferences;
-  private IdsRepository idsRepository;
   private DialogUtils dialogUtils;
   private long reviewId;
   private String storeName;
@@ -192,6 +190,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     }
   }
 
+  @Override public void onDestroyView() {
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
+    ThemeUtils.setStoreTheme(getActivity(), getDefaultTheme());
+    super.onDestroyView();
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     Logger.getInstance()
@@ -291,7 +295,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    idsRepository = ((AptoideApplication) getContext().getApplicationContext()).getIdsRepository();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     baseBodyInterceptor =
