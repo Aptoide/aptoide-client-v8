@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by Neurophobic Animal on 06/07/2016.
-  -->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/brick_app_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="184dp"
+    app:cardCornerRadius="6dp"
+    app:cardUseCompatPadding="true"
     >
 
   <ImageView
@@ -17,46 +15,79 @@
       android:layout_height="wrap_content"
       android:adjustViewBounds="true"
       android:contentDescription="@null"
+      android:scaleType="fitXY"
       />
 
   <RelativeLayout
-      android:layout_width="wrap_content"
-      android:layout_height="50dp"
+      android:layout_width="match_parent"
+      android:layout_height="100dp"
       android:layout_alignParentBottom="true"
-      android:background="@drawable/gradient_black"
-      android:gravity="bottom"
-      android:orientation="horizontal"
-      android:padding="4dp"
+      android:layout_gravity="bottom"
+      android:background="@color/tw__transparent"
       >
-
-    <TextView
-        android:id="@+id/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:paddingEnd="1.5dp"
-        android:paddingRight="1.5dp"
-        android:textColor="?attr/inverseTextColor"
-        tools:text="Little Commander worl world II"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        >
+
+      <TextView
+          android:id="@+id/app_name"
+          android:layout_width="260dp"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="11dp"
+          android:layout_marginLeft="70dp"
+          android:layout_marginRight="11dp"
+          android:layout_marginStart="70dp"
+          android:layout_marginTop="6dp"
+          android:ellipsize="end"
+          android:maxLines="1"
+          tools:text="Little Commander world world II"
+          style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+          />
+
+      <ImageView
+          android:id="@+id/rating_icon_star"
+          android:layout_width="12dp"
+          android:layout_height="12dp"
+          android:layout_centerVertical="true"
+          android:layout_toLeftOf="@+id/rating_label"
+          android:layout_toStartOf="@+id/rating_label"
+          android:adjustViewBounds="true"
+          android:src="@drawable/ic_star_black"
+          />
+
+      <TextView
+          android:id="@+id/rating_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="12dp"
+          android:layout_marginLeft="5dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginStart="5dp"
+          tools:ignore="SmallSp"
+          tools:text="2.3"
+          style="@style/Aptoide.TextView.Medium.XS.Black"
+          />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="52dp"
+        tools:src="@color/red"
         />
-
-
-    <RatingBar
-        android:id="@+id/ratingbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/app_name"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="3dp"
-        android:clickable="false"
-        android:isIndicator="true"
-        android:numStars="5"
-        style="?android:attr/ratingBarStyleSmall"
-        />
-
   </RelativeLayout>
 
-</RelativeLayout>
+</android.support.v7.widget.CardView>
