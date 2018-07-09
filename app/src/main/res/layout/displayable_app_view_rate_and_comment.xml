@@ -32,7 +32,7 @@
         android:textAllCaps="true"
         android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
-        style="@style/Aptoide.Button.Ghost.Grey"
+        style="@style/Aptoide.Button.Ghost.S.Grey"
         />
 
     <TextView
@@ -138,7 +138,7 @@
       android:textColor="@color/silver_dark"
       android:textSize="@dimen/text_size_small"
       tools:visibility="gone"
-      style="@style/Aptoide.Button.Ghost.Grey"
+      style="@style/Aptoide.Button.Ghost.S.Grey"
       />
   <RelativeLayout
       android:id="@+id/rating_layout"
@@ -160,7 +160,7 @@
         android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
         android:visibility="visible"
-        style="@style/Aptoide.Button.Ghost.Grey"
+        style="@style/Aptoide.Button.Ghost.S.Grey"
         />
 
     <RelativeLayout
