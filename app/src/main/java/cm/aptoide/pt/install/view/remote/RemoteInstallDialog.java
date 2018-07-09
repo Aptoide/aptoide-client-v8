@@ -125,7 +125,6 @@ public class RemoteInstallDialog extends BaseDialog implements RemoteInstallatio
     List<ReceiverDevice> devices = new ArrayList<>();
     adapter = new ReceiverDeviceAdapter(getActivity().getApplicationContext(),
         R.layout.row_remote_install, devices);
-    adapter.setAppId(app);
     listView.setAdapter(adapter);
   }
 

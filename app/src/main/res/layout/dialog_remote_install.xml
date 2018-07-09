@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rounded_corners_bg"
@@ -20,9 +21,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="8sp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="17dp"
-        android:paddingLeft="7dp"
         android:text="@string/remote_install_title"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#ff6600"
@@ -81,6 +82,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
+      tools:visibility="gone"
       >
 
     <ListView
@@ -164,46 +166,58 @@
       android:layout_height="wrap_content"
       android:orientation="vertical"
       android:visibility="gone"
+      tools:visibility="visible"
       >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="17dp"
         android:layout_marginTop="17dp"
-        android:gravity="center"
         android:orientation="horizontal"
         android:visibility="visible"
         >
-
-      <TextView
-          android:id="@+id/no_connection_text"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="50.7dp"
-          android:layout_marginRight="50.7dp"
-          android:autoLink="web"
-          android:text="@string/remote_install_nowifi"
-          android:textColor="#999999"
-          android:textSize="14.1sp"
-          android:visibility="visible"
-          style="?android:textAppearanceSmall"
-          />
 
       <Button
           android:id="@+id/help_btn"
           android:layout_width="53.7dp"
           android:layout_height="25.7dp"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
           android:layout_gravity="center_vertical"
+          android:layout_marginEnd="17dp"
+          android:layout_marginRight="17dp"
           android:background="@drawable/rounded_corners_primary3"
           android:ellipsize="none"
           android:text="@string/remote_install_help"
           android:textColor="@color/white"
-          android:textSize="12.5sp"
+          android:textSize="12.0sp"
           />
 
-    </LinearLayout>
+      <TextView
+          android:id="@+id/no_connection_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@id/help_btn"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_alignRight="@id/help_btn"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="60dp"
+          android:layout_marginLeft="25dp"
+          android:layout_marginRight="60dp"
+          android:layout_marginStart="25dp"
+          android:autoLink="web"
+          android:text="@string/remote_install_nowifi"
+          android:textColor="#999999"
+          android:textSize="12.5sp"
+          android:visibility="visible"
+          style="?android:textAppearanceSmall"
+          />
+
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"

@@ -76,7 +76,6 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.AppUtils;
@@ -537,7 +536,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void populateAppDetails(AppViewViewModel model) {
     collapsingToolbarLayout.setTitle(model.getAppName());
-    StoreTheme storeThemeEnum = StoreTheme.get(model.getStore());
 
     appName.setText(model.getAppName());
     ImageLoader.with(getContext())

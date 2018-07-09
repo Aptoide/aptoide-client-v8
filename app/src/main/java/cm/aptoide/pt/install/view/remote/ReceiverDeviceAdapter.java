@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install.view.remote;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ public class ReceiverDeviceAdapter
   private Context context;
   private List<ReceiverDevice> devices;
   private int resource;
-  private String appId;
 
   public ReceiverDeviceAdapter(Context context, int resource, List<ReceiverDevice> devices) {
     super(context, resource, devices);
@@ -43,7 +43,8 @@ public class ReceiverDeviceAdapter
     }
   }
 
-  @Override public View getView(int position, View convertView, ViewGroup parent) {
+  @NonNull @Override
+  public View getView(int position, View convertView, @NonNull ViewGroup parent) {
     ReceiverDevice app = getItem(position);
 
     if (convertView == null) {
@@ -51,12 +52,8 @@ public class ReceiverDeviceAdapter
           .inflate(R.layout.row_remote_install, parent, false);
     }
     TextView deviceName = (TextView) convertView.findViewById(R.id.deviceNameText);
-    deviceName.setText(app.getDeviceName());
+    if (app != null) deviceName.setText(app.getDeviceName());
 
     return convertView;
-  }
-
-  public void setAppId(String appId) {
-    this.appId = appId;
   }
 }
