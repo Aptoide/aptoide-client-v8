@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -39,11 +42,14 @@ import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.target.Target;
 import com.jakewharton.rxbinding.view.RxView;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -52,8 +58,9 @@ import rx.functions.Action1;
 /**
  * Created by sithengineer on 30/06/16.
  */
-@Displayables({ AppViewRateAndCommentsDisplayable.class }) public class AppViewRateAndReviewsWidget
-    extends Widget<AppViewRateAndCommentsDisplayable> {
+@Displayables({AppViewRateAndCommentsDisplayable.class})
+public class AppViewRateAndReviewsWidget
+        extends Widget<AppViewRateAndCommentsDisplayable> {
 
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
@@ -62,6 +69,7 @@ import rx.functions.Action1;
   private final DialogUtils dialogUtils;
   private View emptyReviewsLayout;
   private View ratingLayout;
+  private View saramadLayout;
   private View commentsLayout;
 
   private TextView usersVotedTextView;
@@ -85,14 +93,16 @@ import rx.functions.Action1;
     super(itemView);
 
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+            DataProvider.getContext());
     dialogUtils = new DialogUtils();
   }
 
-  @Override protected void assignViews(View itemView) {
+  @Override
+  protected void assignViews(View itemView) {
     emptyReviewsLayout = itemView.findViewById(R.id.empty_reviews_layout);
     ratingLayout = itemView.findViewById(R.id.rating_layout);
     commentsLayout = itemView.findViewById(R.id.comments_layout);
+    saramadLayout = itemView.findViewById(R.id.saramad_layout);
 
     usersVotedTextView = (TextView) itemView.findViewById(R.id.users_voted);
     emptyReviewTextView = (TextView) itemView.findViewById(R.id.empty_review_text);
@@ -104,10 +114,11 @@ import rx.functions.Action1;
 
     topReviewsList = (RecyclerView) itemView.findViewById(R.id.top_comments_list);
     topReviewsProgress =
-        (ContentLoadingProgressBar) itemView.findViewById(R.id.top_comments_progress);
+            (ContentLoadingProgressBar) itemView.findViewById(R.id.top_comments_progress);
   }
 
-  @Override public void bindView(AppViewRateAndCommentsDisplayable displayable) {
+  @Override
+  public void bindView(AppViewRateAndCommentsDisplayable displayable) {
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
     GetAppMeta.Stats stats = app.getStats();
@@ -127,28 +138,36 @@ import rx.functions.Action1;
 
     final FragmentActivity context = getContext();
     Action1<Void> rateOnClickHandler =
-        __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
-            () -> loadReviews());
+            __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
+                    () -> loadReviews());
     compositeSubscription.add(
-        RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
+            RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
     compositeSubscription.add(
-        RxView.clicks(rateThisButtonLarge).subscribe(rateOnClickHandler, handleError));
+            RxView.clicks(rateThisButtonLarge).subscribe(rateOnClickHandler, handleError));
     compositeSubscription.add(
-        RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
+            RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
 
     final FragmentShower fragmentShower = (FragmentShower) context;
     Action1<Void> commentsOnClickListener = __ -> {
       fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
-          .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
-              app.getPackageName(), app.getStore().getAppearance().getTheme()));
+              .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
+                      app.getPackageName(), app.getStore().getAppearance().getTheme()));
     };
     compositeSubscription.add(
-        RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
+            RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
     compositeSubscription.add(
-        RxView.clicks(commentsLayout).subscribe(commentsOnClickListener, handleError));
+            RxView.clicks(commentsLayout).subscribe(commentsOnClickListener, handleError));
+
+
+    Action1<Void> saramadOnClickListener = __ -> {
+      Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+      getContext().startActivity(browserIntent);
+
+    };
+    compositeSubscription.add(RxView.clicks(saramadLayout).subscribe(saramadOnClickListener, handleError));
 
     LinearLayoutManagerWithSmoothScroller layoutManager =
-        new LinearLayoutManagerWithSmoothScroller(context, LinearLayoutManager.HORIZONTAL, false);
+            new LinearLayoutManagerWithSmoothScroller(context, LinearLayoutManager.HORIZONTAL, false);
     topReviewsList.setLayoutManager(layoutManager);
     // because otherwise the AppBar won't be collapsed
     topReviewsList.setNestedScrollingEnabled(false);
@@ -162,30 +181,30 @@ import rx.functions.Action1;
 
   private void loadTopReviews(String storeName, String packageName) {
     Subscription subscription =
-        ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-            .observe(true)
-            .observeOn(AndroidSchedulers.mainThread())
-            .map(listReviews -> {
-              List<Review> reviews = listReviews.getDatalist().getList();
-              if (reviews == null || reviews.isEmpty()) {
-                loadedData(false);
-                return new TopReviewsAdapter();
-              }
+            ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
+                    AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+                    .observe(true)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map(listReviews -> {
+                      List<Review> reviews = listReviews.getDatalist().getList();
+                      if (reviews == null || reviews.isEmpty()) {
+                        loadedData(false);
+                        return new TopReviewsAdapter();
+                      }
 
-              loadedData(true);
-              final List<Review> list = listReviews.getDatalist().getList();
-              return new TopReviewsAdapter(list.toArray(new Review[list.size()]));
-            })
-            .doOnNext(topReviewsAdapter -> topReviewsList.setAdapter(topReviewsAdapter))
-            .flatMap(topReviewsAdapter -> scheduleAnimations(topReviewsAdapter.getItemCount()))
-            .subscribe(topReviewsAdapter -> {
-              // does nothing
-            }, err -> {
-              loadedData(false);
-              topReviewsList.setAdapter(new TopReviewsAdapter());
-              CrashReport.getInstance().log(err);
-            });
+                      loadedData(true);
+                      final List<Review> list = listReviews.getDatalist().getList();
+                      return new TopReviewsAdapter(list.toArray(new Review[list.size()]));
+                    })
+                    .doOnNext(topReviewsAdapter -> topReviewsList.setAdapter(topReviewsAdapter))
+                    .flatMap(topReviewsAdapter -> scheduleAnimations(topReviewsAdapter.getItemCount()))
+                    .subscribe(topReviewsAdapter -> {
+                      // does nothing
+                    }, err -> {
+                      loadedData(false);
+                      topReviewsList.setAdapter(new TopReviewsAdapter());
+                      CrashReport.getInstance().log(err);
+                    });
     compositeSubscription.add(subscription);
   }
 
@@ -220,14 +239,14 @@ import rx.functions.Action1;
     }
 
     return Observable.range(0, topReviewsCount)
-        .concatMap(pos -> Observable.just(pos)
-            .delay(TIME_BETWEEN_SCROLL, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(pos2 -> topReviewsList.smoothScrollToPosition(pos2)));
+            .concatMap(pos -> Observable.just(pos)
+                    .delay(TIME_BETWEEN_SCROLL, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext(pos2 -> topReviewsList.smoothScrollToPosition(pos2)));
   }
 
   private static final class TopReviewsAdapter
-      extends RecyclerView.Adapter<MiniTopReviewViewHolder> {
+          extends RecyclerView.Adapter<MiniTopReviewViewHolder> {
 
     private final Review[] reviews;
 
@@ -239,21 +258,25 @@ import rx.functions.Action1;
       this.reviews = reviews;
     }
 
-    @Override public MiniTopReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override
+    public MiniTopReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
       LayoutInflater inflater = LayoutInflater.from(parent.getContext());
       return new MiniTopReviewViewHolder(
-          inflater.inflate(MiniTopReviewViewHolder.LAYOUT_ID, parent, false));
+              inflater.inflate(MiniTopReviewViewHolder.LAYOUT_ID, parent, false));
     }
 
-    @Override public void onBindViewHolder(MiniTopReviewViewHolder holder, int position) {
+    @Override
+    public void onBindViewHolder(MiniTopReviewViewHolder holder, int position) {
       holder.setup(reviews[position]);
     }
 
-    @Override public int getItemCount() {
+    @Override
+    public int getItemCount() {
       return reviews == null ? 0 : reviews.length;
     }
 
-    @Override public void onViewRecycled(MiniTopReviewViewHolder holder) {
+    @Override
+    public void onViewRecycled(MiniTopReviewViewHolder holder) {
       holder.cancelImageLoad();
       super.onViewRecycled(holder);
     }
@@ -292,8 +315,8 @@ import rx.functions.Action1;
       Context context = itemView.getContext();
       //Context context = itemView.getContext().getApplicationContext();
       imageLoadingTarget = ImageLoader.with(context)
-          .loadWithCircleTransformAndPlaceHolderAvatarSize(imageUrl, userIconImageView,
-              R.drawable.layer_1);
+              .loadWithCircleTransformAndPlaceHolderAvatarSize(imageUrl, userIconImageView,
+                      R.drawable.layer_1);
       userName.setText(review.getUser().getName());
       ratingBar.setRating(review.getStats().getRating());
       commentTitle.setText(review.getTitle());
