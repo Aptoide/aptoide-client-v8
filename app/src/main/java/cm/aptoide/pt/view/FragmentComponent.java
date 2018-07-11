@@ -13,7 +13,6 @@ import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
-import cm.aptoide.pt.download.view.DownloadsFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
@@ -28,7 +27,6 @@ import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
-import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.settings.NewAccountFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
@@ -78,10 +76,6 @@ public interface FragmentComponent {
   void inject(ProfileStepOneFragment profileStepOneFragment);
 
   void inject(ProfileStepTwoFragment profileStepTwoFragment);
-
-  void inject(DownloadsFragment downloadsFragment);
-
-  void inject(UpdatesFragment updatesFragment);
 
   void inject(ListStoreAppsFragment listStoreAppsFragment);
 

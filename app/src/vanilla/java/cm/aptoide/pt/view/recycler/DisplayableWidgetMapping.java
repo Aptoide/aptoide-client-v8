@@ -44,12 +44,6 @@ import cm.aptoide.pt.comments.view.RateAndReviewCommentWidget;
 import cm.aptoide.pt.comments.view.StoreAddCommentWidget;
 import cm.aptoide.pt.comments.view.StoreLatestCommentsWidget;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.download.view.active.ActiveDownloadDisplayable;
-import cm.aptoide.pt.download.view.active.ActiveDownloadWidget;
-import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderDisplayable;
-import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderWidget;
-import cm.aptoide.pt.download.view.completed.CompletedDownloadDisplayable;
-import cm.aptoide.pt.download.view.completed.CompletedDownloadWidget;
 import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterDisplayable;
@@ -240,15 +234,6 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(RateAndReviewCommentWidget.class,
         RateAndReviewCommentDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(CompletedDownloadWidget.class,
-        CompletedDownloadDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(ActiveDownloadsHeaderWidget.class,
-        ActiveDownloadsHeaderDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RowReviewWidget.class, RowReviewDisplayable.class));

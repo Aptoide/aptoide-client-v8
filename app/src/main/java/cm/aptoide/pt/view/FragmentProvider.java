@@ -54,8 +54,6 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newFragmentTopStores();
 
-  @Deprecated Fragment newUpdatesFragment();
-
   @Deprecated Fragment newLatestReviewsFragment(long storeId, StoreContext storeContext);
 
   /**
@@ -90,8 +88,6 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
       StoreContext storeName);
-
-  @Deprecated Fragment newDownloadsFragment();
 
   @Deprecated Fragment newOtherVersionsFragment(String appName, String appImgUrl,
       String appPackage);

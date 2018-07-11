@@ -128,7 +128,6 @@
   <string name="installing_msg">Installing</string>
   <string name="needs_permission_to_fs">Needs permission to use the external file system</string>
 
-  <string name="pause_all_downloads">Pause Downloads</string>
   <string name="storage_access_permission_request_message">Allow access to your phone\'s storage so we can download and install this app.</string>
   <string name="camera_access_permission_request_message">Allow access to your phone\'s camera so you can take pictures with this app.</string>
 
