@@ -17,7 +17,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
-import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
@@ -217,11 +216,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new ManageUserNavigator(fragmentNavigator, bottomNavigationNavigator);
   }
 
-  @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
-      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator);
-  }
-
   @ActivityScope @Provides LinksHandlerFactory provideLinksHandlerFactory() {
     return new LinksHandlerFactory(activity);
   }
@@ -232,10 +226,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides NewAccountNavigator provideNewAccountNavigator(
-      FragmentNavigator fragmentNavigator, MyAccountNavigator myAccountNavigator,
-      AccountNavigator accountNavigator, AppNavigator appNavigator) {
-    return new NewAccountNavigator(fragmentNavigator, myAccountNavigator, accountNavigator,
-        appNavigator);
+      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
+      AppNavigator appNavigator) {
+    return new NewAccountNavigator(fragmentNavigator, accountNavigator, appNavigator);
   }
 
   @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
