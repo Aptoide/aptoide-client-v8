@@ -15,28 +15,19 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.ErrorsMapper;
-import cm.aptoide.pt.account.view.AccountErrorMapper;
-import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import java.util.Arrays;
+import javax.inject.Inject;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class PaymentLoginFragment extends GooglePlayServicesFragment implements PaymentLoginView {
 
@@ -50,7 +41,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       "cm.aptoide.pt.billing.view.login.extra.FACEBOOK_DIALOG_VISIBLE";
   private static final String EXTRA_PROGRESS_VISIBLE =
       "cm.aptoide.pt.billing.view.login.extra.PROGRESS_VISIBLE";
-  private int requestCode;
+  @Inject PaymentLoginPresenter paymentLoginPresenter;
   private ClickHandler handler;
   private PublishRelay<Void> backButtonRelay;
   private PublishRelay<Void> upNavigationRelay;
@@ -58,13 +49,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private Button facebookButton;
   private Button googleButton;
   private ProgressDialog progressDialog;
-  private AccountNavigator accountNavigator;
-  private AptoideAccountManager accountManager;
-  private CrashReport crashReport;
   private RxAlertDialog facebookEmailRequiredDialog;
   private View rootView;
-  private AccountErrorMapper errorMapper;
-
   private View aptoideLoginSignUpSeparator;
   private View aptoideLoginSignUpButtonContainer;
   private Button aptoideJoinToggle;
@@ -83,7 +69,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private boolean passwordVisible;
   private boolean progressVisible;
   private boolean facebookEmailRequiredDialogVisible;
-  private ScreenOrientationManager orientationManager;
 
   public static Fragment newInstance() {
     return new PaymentLoginFragment();
@@ -91,16 +76,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    requestCode = getArguments().getInt(FragmentNavigator.REQUEST_CODE_EXTRA);
+    getFragmentComponent(savedInstanceState).inject(this);
     backButtonRelay = PublishRelay.create();
     upNavigationRelay = PublishRelay.create();
     passwordKeyboardGoRelay = PublishRelay.create();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    crashReport = CrashReport.getInstance();
-    errorMapper = new AccountErrorMapper(getContext(), new ErrorsMapper());
-    orientationManager = ((ActivityResultNavigator) getContext()).getScreenOrientationManager();
     setHasOptionsMenu(true);
   }
 
@@ -239,10 +218,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       togglePasswordVisibility(savedInstanceState.getBoolean(EXTRA_PASSWORD_VISIBLE));
     }
 
-    attachPresenter(
-        new PaymentLoginPresenter(this, requestCode, Arrays.asList("email", "user_friends"),
-            accountNavigator, Arrays.asList("email"), accountManager, crashReport, errorMapper,
-            AndroidSchedulers.mainThread(), orientationManager, application.getAccountAnalytics()));
+    attachPresenter(paymentLoginPresenter);
   }
 
   @Override public void onDestroyView() {

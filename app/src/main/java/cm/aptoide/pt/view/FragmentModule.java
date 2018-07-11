@@ -47,6 +47,8 @@ import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
+import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
+import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -70,6 +72,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
@@ -261,17 +264,15 @@ import rx.subjects.PublishSubject;
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
-      ABTestManager abTestManager,
-      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      Resources resources, WindowManager windowManager, SocialRepository socialRepository,
-      @Named("marketName") String marketName) {
+      ABTestManager abTestManager, AppViewConfiguration appViewConfiguration,
+      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
+      SocialRepository socialRepository, @Named("marketName") String marketName) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, abTestManager, storeUtilsProxy,
-        aptoideAccountManager,
-        appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-        notificationAnalytics, installAnalytics,
+        aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser,
+        appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
         marketName);
   }
@@ -323,5 +324,16 @@ import rx.subjects.PublishSubject;
       AccountAnalytics accountAnalytics) {
     return new WizardPresenter((WizardView) fragment, aptoideAccountManager, crashReport,
         accountAnalytics);
+  }
+
+  @FragmentScope @Provides PaymentLoginPresenter providesPaymentLoginPresenter(
+      AccountNavigator accountNavigator, AptoideAccountManager accountManager,
+      CrashReport crashReport, AccountErrorMapper accountErrorMapper,
+      ScreenOrientationManager screenOrientationManager, AccountAnalytics accountAnalytics) {
+    return new PaymentLoginPresenter((PaymentLoginView) fragment,
+        arguments.getInt(FragmentNavigator.REQUEST_CODE_EXTRA),
+        Arrays.asList("email", "user_friends"), accountNavigator, Arrays.asList("email"),
+        accountManager, crashReport, accountErrorMapper, AndroidSchedulers.mainThread(),
+        screenOrientationManager, accountAnalytics);
   }
 }

@@ -12,6 +12,7 @@ import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.download.view.DownloadsFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
@@ -100,4 +101,6 @@ public interface FragmentComponent {
   void inject(MoreBundleFragment moreBundleFragment);
 
   void inject(WizardFragment wizardFragment);
+
+  void inject(PaymentLoginFragment paymentLoginFragment);
 }
