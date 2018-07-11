@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.navigator.TabNavigatorActivity;
+import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import javax.inject.Inject;
 import rx.Observable;
@@ -17,7 +17,7 @@ import rx.subjects.PublishSubject;
  * Created by D01 on 12/03/18.
  */
 
-public abstract class BottomNavigationActivity extends TabNavigatorActivity
+public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     implements AptoideBottomNavigator {
 
   protected static final int LAYOUT = R.layout.frame_layout;

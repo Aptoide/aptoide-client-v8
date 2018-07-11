@@ -12,10 +12,7 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.install.AutoUpdate;
-import cm.aptoide.pt.updates.view.UpdateDisplayable;
 import io.realm.RealmList;
 
 /**
@@ -156,61 +153,6 @@ public class DownloadFactory {
     }
 
     return downloads;
-  }
-
-  public Download create(UpdateDisplayable updateDisplayable) {
-    validateApp(updateDisplayable.getMd5(), null, updateDisplayable.getPackageName(),
-        updateDisplayable.getLabel(), updateDisplayable.getApkPath(),
-        updateDisplayable.getAlternativeApkPath());
-    Download download = new Download();
-    download.setMd5(updateDisplayable.getMd5());
-    download.setIcon(updateDisplayable.getIcon());
-    download.setAppName(updateDisplayable.getLabel());
-    download.setAction(Download.ACTION_UPDATE);
-    download.setPackageName(updateDisplayable.getPackageName());
-    download.setVersionCode(updateDisplayable.getVersionCode());
-    download.setVersionName(updateDisplayable.getUpdateVersionName());
-    download.setFilesToDownload(
-        createFileList(updateDisplayable.getMd5(), updateDisplayable.getPackageName(),
-            updateDisplayable.getApkPath() + UPDATE_ACTION,
-            updateDisplayable.getAlternativeApkPath() + UPDATE_ACTION, updateDisplayable.getMd5(),
-            updateDisplayable.getMainObbPath(), updateDisplayable.getMainObbMd5(),
-            updateDisplayable.getPatchObbPath(), updateDisplayable.getPatchObbMd5(),
-            updateDisplayable.getVersionCode(), updateDisplayable.getUpdateVersionName(),
-            updateDisplayable.getMainObbName(), updateDisplayable.getPatchObbName()));
-    return download;
-  }
-
-  public Download create(App appToDownload, int downloadAction) {
-    final File file = appToDownload.getFile();
-    validateApp(appToDownload.getFile()
-            .getMd5sum(), appToDownload.getObb(), appToDownload.getPackageName(),
-        appToDownload.getName(), file != null ? file.getPath() : null,
-        file != null ? file.getPathAlt() : null);
-
-    String path = appToDownload.getFile()
-        .getPath();
-    String altPath = appToDownload.getFile()
-        .getPathAlt();
-    ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
-
-    Download download = new Download();
-    download.setMd5(appToDownload.getFile()
-        .getMd5sum());
-    download.setIcon(appToDownload.getIcon());
-    download.setAction(downloadAction);
-    download.setAppName(appToDownload.getName());
-    download.setPackageName(appToDownload.getPackageName());
-    download.setVersionCode(appToDownload.getFile()
-        .getVercode());
-    download.setVersionName(appToDownload.getFile()
-        .getVername());
-    download.setFilesToDownload(createFileList(appToDownload.getFile()
-        .getMd5sum(), appToDownload.getPackageName(), downloadPaths.path, appToDownload.getFile()
-        .getMd5sum(), appToDownload.getObb(), downloadPaths.altPath, appToDownload.getFile()
-        .getVercode(), appToDownload.getFile()
-        .getVername()));
-    return download;
   }
 
   public Download create(Update update) {

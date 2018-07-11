@@ -80,10 +80,6 @@ import cm.aptoide.pt.timeline.view.follow.FollowStoreWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowUserWidget;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginWidget;
-import cm.aptoide.pt.updates.view.UpdateDisplayable;
-import cm.aptoide.pt.updates.view.UpdateWidget;
-import cm.aptoide.pt.updates.view.UpdatesHeaderDisplayable;
-import cm.aptoide.pt.updates.view.UpdatesHeaderWidget;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateWidget;
 import cm.aptoide.pt.updates.view.installed.InstalledAppDisplayable;
@@ -182,11 +178,7 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(InstalledAppWidget.class, InstalledAppDisplayable.class));
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(UpdateWidget.class, UpdateDisplayable.class));
-    displayableWidgetMappings.add(
         new DisplayableWidgetMapping(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(UpdatesHeaderWidget.class, UpdatesHeaderDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AdultRowWidget.class, AdultRowDisplayable.class));

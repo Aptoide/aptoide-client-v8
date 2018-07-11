@@ -423,7 +423,6 @@
 
   <!--Update Tab-->
   <string name="updatetab_title_installed">Installed</string>
-  <string name="updatetab_button_update_all">Update all</string>
   <string name="updatetab_button_update">Update</string>
   <string name="no_updates_available_retoric">Everything is up to date!</string>
   <string name="no_new_updates_available">No new updates available</string>
