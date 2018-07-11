@@ -222,7 +222,7 @@ public class AccountAnalytics {
               USER_CANCELED, String.valueOf(facebookSignUpException.getCode()),
               facebookSignUpException.getFacebookMessage());
           break;
-        case FacebookSignUpException.ERROR:
+        default:
           sendEvents(LOGIN_EVENT_NAME, LoginMethod.FACEBOOK, SignUpLoginStatus.FAILED, SDK_ERROR,
               String.valueOf(facebookSignUpException.getCode()),
               facebookSignUpException.getFacebookMessage());
