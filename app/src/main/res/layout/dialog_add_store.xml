@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/add_store_dialog_background"
-    android:orientation="vertical"
+    android:layout_margin="20dp"
     android:paddingBottom="20dp"
-    android:paddingEnd="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingStart="10dp"
-    android:paddingTop="10dp"
+    android:paddingEnd="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="16dp"
     >
 
   <LinearLayout
@@ -20,14 +19,17 @@
       >
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
         android:gravity="center"
         android:text="@string/add_store_dialog_title"
-        android:textAppearance="@style/TextAppearance.Aptoide.Title"
-        android:textColor="@color/create_store_hint_color"
-        android:textStyle="bold"
+        style="@style/Aptoide.TextView.Medium.M.Grey_900"
         />
 
     <RelativeLayout
@@ -35,14 +37,14 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
+        android:background="@drawable/add_stores_dialog_search_box_border"
         android:orientation="horizontal"
         >
 
       <android.support.v7.widget.SearchView
           android:id="@+id/store_search_view"
           android:layout_width="wrap_content"
-          android:layout_height="match_parent"
+          android:layout_height="40dp"
           android:layout_alignParentLeft="true"
           android:layout_alignParentStart="true"
           android:layout_centerVertical="true"
@@ -51,8 +53,9 @@
           android:completionThreshold="2"
           android:imeOptions="flagNoExtractUi|actionSearch"
           android:maxLines="1"
-          android:queryHint="@string/store_name"
+          app:defaultQueryHint="@string/store_name"
           app:iconifiedByDefault="false"
+          app:queryBackground="@color/tw__transparent"
           app:searchIcon="@null"
           >
       </android.support.v7.widget.SearchView>
@@ -60,51 +63,30 @@
       <Button
           android:id="@+id/button_dialog_add_store"
           android:layout_width="wrap_content"
-          android:layout_height="match_parent"
+          android:layout_height="32dp"
           android:layout_alignParentRight="true"
-          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="4dp"
+          android:layout_marginRight="4dp"
           android:ellipsize="end"
           android:maxLines="1"
           android:text="@string/follow"
-          style="@style/Aptoide.Button"
+          style="@style/Aptoide.Button.S.Gradient.Rounded"
           />
 
     </RelativeLayout>
 
-    <LinearLayout
+    <Button
         android:id="@+id/button_top_stores"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_height"
         android:layout_marginTop="10dp"
-        android:background="@drawable/aptoide_gradient"
         android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical"
-        >
+        android:text="Discover Top Stores"
+        android:textSize="14sp"
+        style="@style/Aptoide.Button.S.Gradient.Rounded"
+        />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:clickable="false"
-          android:focusable="false"
-          android:gravity="center"
-          android:text="@string/add_store_dialog_top_stores"
-          android:textColor="@color/white"
-          android:textSize="11sp"
-          />
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:clickable="false"
-          android:focusable="false"
-          android:gravity="center"
-          android:text="@string/add_store_dialog_top_stores_small_text"
-          android:textColor="@color/white"
-          android:textSize="9sp"
-          />
-
-    </LinearLayout>
 
   </LinearLayout>
 
-</ScrollView>
+</RelativeLayout>

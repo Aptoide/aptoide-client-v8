@@ -3,17 +3,19 @@ package cm.aptoide.pt.store.view;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.SearchView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -54,6 +56,10 @@ import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
 public class AddStoreDialog extends BaseDialog {
 
   public static final int PRIVATE_STORE_INVALID_CREDENTIALS_CODE = 21;
@@ -71,7 +77,7 @@ public class AddStoreDialog extends BaseDialog {
   private Dialog loadingDialog;
   private SearchView searchView;
   private Button addStoreButton;
-  private LinearLayout topStoresButton;
+  private Button topStoresButton;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
@@ -138,6 +144,25 @@ public class AddStoreDialog extends BaseDialog {
     dismissIfFocusIsLost();
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    final Dialog dialog = getDialog();
+    Rect rect = new Rect();
+    Window window = getActivity().getWindow();
+    window.getDecorView()
+        .getWindowVisibleDisplayFrame(rect);
+    double width = rect.width() * 0.8;
+    if (dialog != null) {
+      if (getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
+        dialog.getWindow()
+            .setLayout(Math.round((float) width), WRAP_CONTENT);
+      } else {
+        dialog.getWindow()
+            .setLayout(MATCH_PARENT, WRAP_CONTENT);
+      }
+    }
+  }
+
   @Override public void onDestroyView() {
     if (subscriptions != null && !subscriptions.isUnsubscribed()) {
       subscriptions.unsubscribe();
@@ -199,6 +224,8 @@ public class AddStoreDialog extends BaseDialog {
     final Dialog dialog = getDialog();
     if (dialog != null) {
       dialog.getWindow()
+          .setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      dialog.getWindow()
           .requestFeature(Window.FEATURE_NO_TITLE);
       dialog.setCancelable(true);
     }
@@ -223,8 +250,12 @@ public class AddStoreDialog extends BaseDialog {
 
   private void bindViews(View view) {
     addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
-    topStoresButton = (LinearLayout) view.findViewById(R.id.button_top_stores);
+    topStoresButton = (Button) view.findViewById(R.id.button_top_stores);
     searchView = (SearchView) view.findViewById(R.id.store_search_view);
+    EditText searchEditText =
+        (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+    searchEditText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+    searchEditText.setHintTextColor(getResources().getColor(R.color.grey));
   }
 
   private void setupSearch() {
