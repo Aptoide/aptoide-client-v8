@@ -15,9 +15,11 @@ android {
     buildConfigField 'boolean', 'DELETE_DB', 'false'
   }
 
-  publishNonDefault true
-
   buildTypes {
+    debug {
+      minifyEnabled false
+    }
+
     release {
       minifyEnabled false
       shrinkResources false
@@ -47,23 +49,15 @@ android {
 }
 
 dependencies {
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation project(path: ':crashreports')
+  implementation project(path: ':utils')
 
-  //
-  // inter-projects dependencies
-  //
-  compile project(path: ':crashreports', configuration: 'release')
-
-  //
-  // custom libs in folders
-  //
-
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  // And ProGuard rules for RxJava!
+  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 }
