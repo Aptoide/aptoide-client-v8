@@ -82,8 +82,6 @@ import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginWidget;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateWidget;
-import cm.aptoide.pt.updates.view.installed.InstalledAppDisplayable;
-import cm.aptoide.pt.updates.view.installed.InstalledAppWidget;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.EmptyDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.FooterRowDisplayable;
@@ -175,8 +173,6 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(AppBrickListWidget.class, AppBrickListDisplayable.class));
 
     // Updates
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(InstalledAppWidget.class, InstalledAppDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class));
 

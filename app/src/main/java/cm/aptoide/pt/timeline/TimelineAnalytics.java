@@ -10,23 +10,16 @@ import java.util.Map;
  */
 public class TimelineAnalytics {
 
-  public static final String SOURCE_APTOIDE = "APTOIDE";
-
   public static final String SOCIAL_CARD_ACTION_SHARE_CONTINUE = "Continue";
   public static final String SOCIAL_CARD_ACTION_SHARE_CANCEL = "Cancel";
-  public static final String PREVIOUS_CONTEXT = "previous_context";
   public static final String STORE = "store";
-  public static final String APPS_TIMELINE_EVENT = "Apps Timeline";
   public static final String OPEN_ARTICLE = "OPEN_ARTICLE";
-  public static final String OPEN_ARTICLE_HEADER = "OPEN_ARTICLE_HEADER";
   public static final String OPEN_BLOG = "OPEN_BLOG";
   public static final String OPEN_VIDEO = "OPEN_VIDEO";
-  public static final String OPEN_VIDEO_HEADER = "OPEN_VIDEO_HEADER";
   public static final String OPEN_CHANNEL = "OPEN_CHANNEL";
   public static final String OPEN_STORE = "OPEN_STORE";
   public static final String OPEN_STORE_PROFILE = "OPEN_STORE_PROFILE";
   public static final String OPEN_APP = "OPEN_APP";
-  public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String OPEN_TIMELINE_EVENT = "OPEN_TIMELINE";
   public static final String UPDATE_APP = "UPDATE_APP";
   public static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
@@ -48,11 +41,6 @@ public class TimelineAnalytics {
   private static final String PACKAGE = "package_name";
   private static final String PUBLISHER = "publisher";
   private static final String TITLE = "title";
-  private static final String BLANK = "(blank)";
-  private static final String TIMELINE_VERSION = "timeline_version";
-  private static final String SOURCE = "source";
-  private static final String APPS_SHORTCUTS = "apps_shortcuts";
-  private static final String EXTERNAL = "EXTERNAL";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
