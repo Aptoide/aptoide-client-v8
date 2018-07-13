@@ -42,6 +42,7 @@ android {
     prod {
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
           "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_SCHEME + "\""
+
       buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
@@ -76,6 +77,7 @@ dependencies {
   //
   // inter-projects dependencies
   //
+  compile project(":aban")
 
   compile project(path: ':model', configuration: 'release')
   compile project(path: ':aptoidepreferences', configuration: 'release')
