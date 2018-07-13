@@ -62,272 +62,274 @@ import rx.functions.Action1;
 public class AppViewRateAndReviewsWidget
         extends Widget<AppViewRateAndCommentsDisplayable> {
 
-  public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
-  private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
-  private static final int MAX_COMMENTS = 3;
-  private final AptoideClientUUID aptoideClientUUID;
-  private final DialogUtils dialogUtils;
-  private View emptyReviewsLayout;
-  private View ratingLayout;
-  private View saramadLayout;
-  private View commentsLayout;
+    public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
+    private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
+    private static final int MAX_COMMENTS = 3;
+    private final AptoideClientUUID aptoideClientUUID;
+    private final DialogUtils dialogUtils;
+    private View emptyReviewsLayout;
+    private View ratingLayout;
+    private View saramadLayout;
+    private View commentsLayout;
 
-  private TextView usersVotedTextView;
-  private TextView ratingValue;
-  private RatingBar ratingBar;
-
-  private Button rateThisButton;
-  private Button rateThisButtonLarge;
-  private Button readAllButton;
-
-  private RecyclerView topReviewsList;
-  private ContentLoadingProgressBar topReviewsProgress;
-
-  private String appName;
-  private String packageName;
-  private String storeName;
-  private int usersToVote;
-  private TextView emptyReviewTextView;
-
-  public AppViewRateAndReviewsWidget(View itemView) {
-    super(itemView);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
-    dialogUtils = new DialogUtils();
-  }
-
-  @Override
-  protected void assignViews(View itemView) {
-    emptyReviewsLayout = itemView.findViewById(R.id.empty_reviews_layout);
-    ratingLayout = itemView.findViewById(R.id.rating_layout);
-    commentsLayout = itemView.findViewById(R.id.comments_layout);
-    saramadLayout = itemView.findViewById(R.id.saramad_layout);
-
-    usersVotedTextView = (TextView) itemView.findViewById(R.id.users_voted);
-    emptyReviewTextView = (TextView) itemView.findViewById(R.id.empty_review_text);
-    ratingValue = (TextView) itemView.findViewById(R.id.rating_value);
-    ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
-    rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
-    rateThisButtonLarge = (Button) itemView.findViewById(R.id.rate_this_button2);
-    readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
-
-    topReviewsList = (RecyclerView) itemView.findViewById(R.id.top_comments_list);
-    topReviewsProgress =
-            (ContentLoadingProgressBar) itemView.findViewById(R.id.top_comments_progress);
-  }
-
-  @Override
-  public void bindView(AppViewRateAndCommentsDisplayable displayable) {
-    GetApp pojo = displayable.getPojo();
-    GetAppMeta.App app = pojo.getNodes().getMeta().getData();
-    GetAppMeta.Stats stats = app.getStats();
-
-    appName = app.getName();
-    packageName = app.getPackageName();
-    storeName = app.getStore().getName();
-
-    usersToVote = stats.getRating().getTotal();
-    usersVotedTextView.setText(AptoideUtils.StringU.withSuffix(usersToVote));
-
-    float ratingAvg = stats.getRating().getAvg();
-    ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", ratingAvg));
-    ratingBar.setRating(ratingAvg);
-
-    Action1<Throwable> handleError = throwable -> CrashReport.getInstance().log(throwable);
-
-    final FragmentActivity context = getContext();
-    Action1<Void> rateOnClickHandler =
-            __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
-                    () -> loadReviews());
-    compositeSubscription.add(
-            RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
-    compositeSubscription.add(
-            RxView.clicks(rateThisButtonLarge).subscribe(rateOnClickHandler, handleError));
-    compositeSubscription.add(
-            RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
-
-    final FragmentShower fragmentShower = (FragmentShower) context;
-    Action1<Void> commentsOnClickListener = __ -> {
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
-              .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
-                      app.getPackageName(), app.getStore().getAppearance().getTheme()));
-    };
-    compositeSubscription.add(
-            RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
-    compositeSubscription.add(
-            RxView.clicks(commentsLayout).subscribe(commentsOnClickListener, handleError));
-
-
-    Action1<Void> saramadOnClickListener = __ -> {
-      Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-      getContext().startActivity(browserIntent);
-
-    };
-    compositeSubscription.add(RxView.clicks(saramadLayout).subscribe(saramadOnClickListener, handleError));
-
-    LinearLayoutManagerWithSmoothScroller layoutManager =
-            new LinearLayoutManagerWithSmoothScroller(context, LinearLayoutManager.HORIZONTAL, false);
-    topReviewsList.setLayoutManager(layoutManager);
-    // because otherwise the AppBar won't be collapsed
-    topReviewsList.setNestedScrollingEnabled(false);
-
-    loadReviews();
-  }
-
-  private void loadReviews() {
-    loadTopReviews(storeName, packageName);
-  }
-
-  private void loadTopReviews(String storeName, String packageName) {
-    Subscription subscription =
-            ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-                    AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-                    .observe(true)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map(listReviews -> {
-                      List<Review> reviews = listReviews.getDatalist().getList();
-                      if (reviews == null || reviews.isEmpty()) {
-                        loadedData(false);
-                        return new TopReviewsAdapter();
-                      }
-
-                      loadedData(true);
-                      final List<Review> list = listReviews.getDatalist().getList();
-                      return new TopReviewsAdapter(list.toArray(new Review[list.size()]));
-                    })
-                    .doOnNext(topReviewsAdapter -> topReviewsList.setAdapter(topReviewsAdapter))
-                    .flatMap(topReviewsAdapter -> scheduleAnimations(topReviewsAdapter.getItemCount()))
-                    .subscribe(topReviewsAdapter -> {
-                      // does nothing
-                    }, err -> {
-                      loadedData(false);
-                      topReviewsList.setAdapter(new TopReviewsAdapter());
-                      CrashReport.getInstance().log(err);
-                    });
-    compositeSubscription.add(subscription);
-  }
-
-  private void loadedData(boolean hasReviews) {
-
-    topReviewsProgress.setVisibility(View.GONE);
-
-    if (hasReviews) {
-      ratingLayout.setVisibility(View.VISIBLE);
-      emptyReviewsLayout.setVisibility(View.GONE);
-      commentsLayout.setVisibility(View.VISIBLE);
-      rateThisButtonLarge.setVisibility(View.GONE);
-      rateThisButton.setVisibility(View.VISIBLE);
-    } else {
-      ratingLayout.setVisibility(View.VISIBLE);
-      emptyReviewsLayout.setVisibility(View.VISIBLE);
-      commentsLayout.setVisibility(View.GONE);
-      rateThisButtonLarge.setVisibility(View.VISIBLE);
-      rateThisButton.setVisibility(View.INVISIBLE);
-
-      if (usersToVote == 0) {
-        emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
-      }
-    }
-  }
-
-  private Observable<Integer> scheduleAnimations(int topReviewsCount) {
-    if (topReviewsCount <= 1) {
-      // not enough elements for animation
-      Logger.w(TAG, "Not enough top reviews to do paging animation.");
-      return Observable.empty();
-    }
-
-    return Observable.range(0, topReviewsCount)
-            .concatMap(pos -> Observable.just(pos)
-                    .delay(TIME_BETWEEN_SCROLL, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext(pos2 -> topReviewsList.smoothScrollToPosition(pos2)));
-  }
-
-  private static final class TopReviewsAdapter
-          extends RecyclerView.Adapter<MiniTopReviewViewHolder> {
-
-    private final Review[] reviews;
-
-    public TopReviewsAdapter() {
-      this(null);
-    }
-
-    public TopReviewsAdapter(Review[] reviews) {
-      this.reviews = reviews;
-    }
-
-    @Override
-    public MiniTopReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-      LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-      return new MiniTopReviewViewHolder(
-              inflater.inflate(MiniTopReviewViewHolder.LAYOUT_ID, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(MiniTopReviewViewHolder holder, int position) {
-      holder.setup(reviews[position]);
-    }
-
-    @Override
-    public int getItemCount() {
-      return reviews == null ? 0 : reviews.length;
-    }
-
-    @Override
-    public void onViewRecycled(MiniTopReviewViewHolder holder) {
-      holder.cancelImageLoad();
-      super.onViewRecycled(holder);
-    }
-  }
-
-  private static final class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
-
-    private static final int LAYOUT_ID = R.layout.mini_top_comment;
-
-    private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
-
-    private ImageView userIconImageView;
+    private TextView usersVotedTextView;
+    private TextView ratingValue;
     private RatingBar ratingBar;
-    private TextView commentTitle;
-    private TextView userName;
-    private TextView addedDate;
-    private TextView commentText;
-    private Target<GlideDrawable> imageLoadingTarget;
 
-    private MiniTopReviewViewHolder(View itemView) {
-      super(itemView);
-      bindViews(itemView);
+    private Button rateThisButton;
+    private Button rateThisButtonLarge;
+    private Button readAllButton;
+
+    private RecyclerView topReviewsList;
+    private ContentLoadingProgressBar topReviewsProgress;
+
+    private String appName;
+    private String packageName;
+    private String shamedUrl;
+    private String storeName;
+    private int usersToVote;
+    private TextView emptyReviewTextView;
+
+    public AppViewRateAndReviewsWidget(View itemView) {
+        super(itemView);
+
+        aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext());
+        dialogUtils = new DialogUtils();
     }
 
-    private void bindViews(View view) {
-      userIconImageView = (ImageView) view.findViewById(R.id.user_icon);
-      ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-      commentTitle = (TextView) view.findViewById(R.id.comment_title);
-      userName = (TextView) view.findViewById(R.id.user_name);
-      addedDate = (TextView) view.findViewById(R.id.added_date);
-      commentText = (TextView) view.findViewById(R.id.comment);
+    @Override
+    protected void assignViews(View itemView) {
+        emptyReviewsLayout = itemView.findViewById(R.id.empty_reviews_layout);
+        ratingLayout = itemView.findViewById(R.id.rating_layout);
+        commentsLayout = itemView.findViewById(R.id.comments_layout);
+        saramadLayout = itemView.findViewById(R.id.saramad_layout);
+
+        usersVotedTextView = (TextView) itemView.findViewById(R.id.users_voted);
+        emptyReviewTextView = (TextView) itemView.findViewById(R.id.empty_review_text);
+        ratingValue = (TextView) itemView.findViewById(R.id.rating_value);
+        ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
+        rateThisButton = (Button) itemView.findViewById(R.id.rate_this_button);
+        rateThisButtonLarge = (Button) itemView.findViewById(R.id.rate_this_button2);
+        readAllButton = (Button) itemView.findViewById(R.id.read_all_button);
+
+        topReviewsList = (RecyclerView) itemView.findViewById(R.id.top_comments_list);
+        topReviewsProgress =
+                (ContentLoadingProgressBar) itemView.findViewById(R.id.top_comments_progress);
     }
 
-    public void setup(Review review) {
-      String imageUrl = review.getUser().getAvatar();
-      Context context = itemView.getContext();
-      //Context context = itemView.getContext().getApplicationContext();
-      imageLoadingTarget = ImageLoader.with(context)
-              .loadWithCircleTransformAndPlaceHolderAvatarSize(imageUrl, userIconImageView,
-                      R.drawable.layer_1);
-      userName.setText(review.getUser().getName());
-      ratingBar.setRating(review.getStats().getRating());
-      commentTitle.setText(review.getTitle());
-      commentText.setText(review.getBody());
-      addedDate.setText(DATE_TIME_U.getTimeDiffString(review.getAdded().getTime()));
+    @Override
+    public void bindView(AppViewRateAndCommentsDisplayable displayable) {
+        GetApp pojo = displayable.getPojo();
+        GetAppMeta.App app = pojo.getNodes().getMeta().getData();
+        GetAppMeta.Stats stats = app.getStats();
+
+        appName = app.getName();
+        packageName = app.getPackageName();
+        shamedUrl = app.getShamedUrl();
+        storeName = app.getStore().getName();
+
+        usersToVote = stats.getRating().getTotal();
+        usersVotedTextView.setText(AptoideUtils.StringU.withSuffix(usersToVote));
+
+        float ratingAvg = stats.getRating().getAvg();
+        ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", ratingAvg));
+        ratingBar.setRating(ratingAvg);
+
+        Action1<Throwable> handleError = throwable -> CrashReport.getInstance().log(throwable);
+
+        final FragmentActivity context = getContext();
+        Action1<Void> rateOnClickHandler =
+                __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
+                        () -> loadReviews());
+        compositeSubscription.add(
+                RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
+        compositeSubscription.add(
+                RxView.clicks(rateThisButtonLarge).subscribe(rateOnClickHandler, handleError));
+        compositeSubscription.add(
+                RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
+
+        final FragmentShower fragmentShower = (FragmentShower) context;
+        Action1<Void> commentsOnClickListener = __ -> {
+            fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+                    .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
+                            app.getPackageName(), app.getStore().getAppearance().getTheme()));
+        };
+        compositeSubscription.add(
+                RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
+        compositeSubscription.add(
+                RxView.clicks(commentsLayout).subscribe(commentsOnClickListener, handleError));
+
+
+        Action1<Void> saramadOnClickListener = __ -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://logo.saramad.ir/verify.aspx?CodeShamad=" + app.getShamedUrl()));
+            getContext().startActivity(browserIntent);
+
+        };
+        compositeSubscription.add(RxView.clicks(saramadLayout).subscribe(saramadOnClickListener, handleError));
+
+        LinearLayoutManagerWithSmoothScroller layoutManager =
+                new LinearLayoutManagerWithSmoothScroller(context, LinearLayoutManager.HORIZONTAL, false);
+        topReviewsList.setLayoutManager(layoutManager);
+        // because otherwise the AppBar won't be collapsed
+        topReviewsList.setNestedScrollingEnabled(false);
+
+        loadReviews();
     }
 
-    public void cancelImageLoad() {
-      if (imageLoadingTarget != null) {
-        ImageLoader.cancel(imageLoadingTarget);
-      }
+    private void loadReviews() {
+        loadTopReviews(storeName, packageName);
     }
-  }
+
+    private void loadTopReviews(String storeName, String packageName) {
+        Subscription subscription =
+                ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
+                        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+                        .observe(true)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(listReviews -> {
+                            List<Review> reviews = listReviews.getDatalist().getList();
+                            if (reviews == null || reviews.isEmpty()) {
+                                loadedData(false);
+                                return new TopReviewsAdapter();
+                            }
+
+                            loadedData(true);
+                            final List<Review> list = listReviews.getDatalist().getList();
+                            return new TopReviewsAdapter(list.toArray(new Review[list.size()]));
+                        })
+                        .doOnNext(topReviewsAdapter -> topReviewsList.setAdapter(topReviewsAdapter))
+                        .flatMap(topReviewsAdapter -> scheduleAnimations(topReviewsAdapter.getItemCount()))
+                        .subscribe(topReviewsAdapter -> {
+                            // does nothing
+                        }, err -> {
+                            loadedData(false);
+                            topReviewsList.setAdapter(new TopReviewsAdapter());
+                            CrashReport.getInstance().log(err);
+                        });
+        compositeSubscription.add(subscription);
+    }
+
+    private void loadedData(boolean hasReviews) {
+
+        topReviewsProgress.setVisibility(View.GONE);
+
+        if (hasReviews) {
+            ratingLayout.setVisibility(View.VISIBLE);
+            emptyReviewsLayout.setVisibility(View.GONE);
+            commentsLayout.setVisibility(View.VISIBLE);
+            rateThisButtonLarge.setVisibility(View.GONE);
+            rateThisButton.setVisibility(View.VISIBLE);
+        } else {
+            ratingLayout.setVisibility(View.VISIBLE);
+            emptyReviewsLayout.setVisibility(View.VISIBLE);
+            commentsLayout.setVisibility(View.GONE);
+            rateThisButtonLarge.setVisibility(View.VISIBLE);
+            rateThisButton.setVisibility(View.INVISIBLE);
+
+            if (usersToVote == 0) {
+                emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
+            }
+        }
+    }
+
+    private Observable<Integer> scheduleAnimations(int topReviewsCount) {
+        if (topReviewsCount <= 1) {
+            // not enough elements for animation
+            Logger.w(TAG, "Not enough top reviews to do paging animation.");
+            return Observable.empty();
+        }
+
+        return Observable.range(0, topReviewsCount)
+                .concatMap(pos -> Observable.just(pos)
+                        .delay(TIME_BETWEEN_SCROLL, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnNext(pos2 -> topReviewsList.smoothScrollToPosition(pos2)));
+    }
+
+    private static final class TopReviewsAdapter
+            extends RecyclerView.Adapter<MiniTopReviewViewHolder> {
+
+        private final Review[] reviews;
+
+        public TopReviewsAdapter() {
+            this(null);
+        }
+
+        public TopReviewsAdapter(Review[] reviews) {
+            this.reviews = reviews;
+        }
+
+        @Override
+        public MiniTopReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            return new MiniTopReviewViewHolder(
+                    inflater.inflate(MiniTopReviewViewHolder.LAYOUT_ID, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(MiniTopReviewViewHolder holder, int position) {
+            holder.setup(reviews[position]);
+        }
+
+        @Override
+        public int getItemCount() {
+            return reviews == null ? 0 : reviews.length;
+        }
+
+        @Override
+        public void onViewRecycled(MiniTopReviewViewHolder holder) {
+            holder.cancelImageLoad();
+            super.onViewRecycled(holder);
+        }
+    }
+
+    private static final class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
+
+        private static final int LAYOUT_ID = R.layout.mini_top_comment;
+
+        private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
+
+        private ImageView userIconImageView;
+        private RatingBar ratingBar;
+        private TextView commentTitle;
+        private TextView userName;
+        private TextView addedDate;
+        private TextView commentText;
+        private Target<GlideDrawable> imageLoadingTarget;
+
+        private MiniTopReviewViewHolder(View itemView) {
+            super(itemView);
+            bindViews(itemView);
+        }
+
+        private void bindViews(View view) {
+            userIconImageView = (ImageView) view.findViewById(R.id.user_icon);
+            ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+            commentTitle = (TextView) view.findViewById(R.id.comment_title);
+            userName = (TextView) view.findViewById(R.id.user_name);
+            addedDate = (TextView) view.findViewById(R.id.added_date);
+            commentText = (TextView) view.findViewById(R.id.comment);
+        }
+
+        public void setup(Review review) {
+            String imageUrl = review.getUser().getAvatar();
+            Context context = itemView.getContext();
+            //Context context = itemView.getContext().getApplicationContext();
+            imageLoadingTarget = ImageLoader.with(context)
+                    .loadWithCircleTransformAndPlaceHolderAvatarSize(imageUrl, userIconImageView,
+                            R.drawable.layer_1);
+            userName.setText(review.getUser().getName());
+            ratingBar.setRating(review.getStats().getRating());
+            commentTitle.setText(review.getTitle());
+            commentText.setText(review.getBody());
+            addedDate.setText(DATE_TIME_U.getTimeDiffString(review.getAdded().getTime()));
+        }
+
+        public void cancelImageLoad() {
+            if (imageLoadingTarget != null) {
+                ImageLoader.cancel(imageLoadingTarget);
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@
  */
 
 include ':Partners-v8',
+        ':aban',
         ':v8engine',
         ':dataprovider',
         ':model',

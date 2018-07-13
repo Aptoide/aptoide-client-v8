@@ -221,7 +221,10 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
   }
 
+
   @Override public void showError(Throwable err) {
 
   }
+
+
 }

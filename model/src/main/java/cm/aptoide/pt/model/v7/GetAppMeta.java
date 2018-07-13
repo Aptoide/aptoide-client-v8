@@ -37,6 +37,7 @@ import lombok.EqualsAndHashCode;
     private Stats stats;
     private Obb obb;
     private Pay pay;
+    private String shamedUrl;
 
     public boolean isPaid() {
       return (pay != null && pay.getPrice() != null && pay.getPrice().floatValue() > 0.0f);

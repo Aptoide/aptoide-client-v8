@@ -10,6 +10,10 @@ buildscript {
     dependencies {
       classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     }
+      maven {
+          url 'https://maven.google.com/'
+          name 'Google'
+      }
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.3'
@@ -33,6 +37,10 @@ allprojects {
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
+      maven {
+          url 'https://maven.google.com/'
+          name 'Google'
+      }
   }
 }
 
