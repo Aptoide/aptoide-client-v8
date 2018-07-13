@@ -22,7 +22,7 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   private static final String PATH_CACHE_IMAGES = PATH_CACHE + "icons/";
   private static final String PATH_CACHE_USER_AVATAR = PATH_CACHE + "user_avatar/";
   private static final String APP_ID = BuildConfig.APPLICATION_ID;
-  private static final String AUTO_UPDATE_URL = "http://imgs.aptoide.com/latest_version_v8.xml";
+  private static final String AUTO_UPDATE_URL = "http://aban.io/aptoide/latest_version_v8.xml";
   private static final String MARKETNAME = "Aptoide";
   private static final String DEFAULT_STORE = "apps";
   private static final String FEEDBACK_EMAIL = "support@aptoide.com";
