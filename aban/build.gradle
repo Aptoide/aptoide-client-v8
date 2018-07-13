@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion COMPILE_SDK_VERSION
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion
+        proguardFiles "proguard-rules.pro"
+    }
+
+
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "base_url", project.ABAN_APTOID_URL
+        }
+        release {
+            buildConfigField "String", "base_url", project.ABAN_APTOID_URL
+
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
+    compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+    compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
+    compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
+    testCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+}
