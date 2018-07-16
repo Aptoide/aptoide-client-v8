@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
@@ -33,9 +34,10 @@
         />
 
     <RelativeLayout
+        android:id="@+id/search_box_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/add_stores_dialog_search_box_border"
         android:orientation="horizontal"
@@ -64,6 +66,7 @@
           android:id="@+id/button_dialog_add_store"
           android:layout_width="wrap_content"
           android:layout_height="32dp"
+          android:layout_alignParentEnd="true"
           android:layout_alignParentRight="true"
           android:layout_centerVertical="true"
           android:layout_marginEnd="4dp"
@@ -76,12 +79,23 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:textColor="#f65448"
+        android:visibility="invisible"
+        tools:text="Testing errors"
+        style="@style/Aptoide.TextView.Regular.XXS"
+        />
+
     <Button
         android:id="@+id/button_top_stores"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal|center_vertical"
-        android:text="Discover Top Stores"
+        android:text="@string/add_store_dialog_discover_top_stores"
         android:textSize="14sp"
         style="@style/Aptoide.Button.S.Gradient.Rounded"
         />

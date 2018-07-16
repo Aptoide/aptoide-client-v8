@@ -20,12 +20,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 14-10-2016.
  */
 
 public class StoreUtils {
+  private static final String STORE_DOESNT_EXIST_ERROR_CODE = "STORE-1";
   private static final String PRIVATE_STORE_ERROR_CODE = "STORE-3";
   private static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
   private static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
@@ -105,17 +107,18 @@ public class StoreUtils {
       String storeUserName, String storePassword, StoreAccessor storeAccessor) {
 
     subscribeStore(getStoreMetaRequest, accountManager, storeUserName, storePassword,
-        storeAccessor).subscribe(getStoreMeta -> {
-      if (successRequestListener != null) {
-        successRequestListener.call(getStoreMeta);
-      }
-    }, (e) -> {
-      if (errorRequestListener != null) {
-        errorRequestListener.onError(e);
-      }
-      CrashReport.getInstance()
-          .log(e);
-    });
+        storeAccessor).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(getStoreMeta -> {
+          if (successRequestListener != null) {
+            successRequestListener.call(getStoreMeta);
+          }
+        }, (e) -> {
+          if (errorRequestListener != null) {
+            errorRequestListener.onError(e);
+          }
+          CrashReport.getInstance()
+              .log(e);
+        });
   }
 
   /**
@@ -234,6 +237,9 @@ public class StoreUtils {
         break;
       case STORE_SUSPENDED_ERROR_CODE:
         error = StoreError.STORE_SUSPENDED;
+        break;
+      case STORE_DOESNT_EXIST_ERROR_CODE:
+        error = StoreError.STORE_DOESNT_EXIST;
         break;
       default:
         error = StoreError.GENERIC_ERROR;

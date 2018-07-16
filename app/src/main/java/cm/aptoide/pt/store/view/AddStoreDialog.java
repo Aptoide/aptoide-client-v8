@@ -16,6 +16,8 @@ import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -76,6 +78,8 @@ public class AddStoreDialog extends BaseDialog {
   private String storeName;
   private Dialog loadingDialog;
   private SearchView searchView;
+  private RelativeLayout searchViewLayout;
+  private TextView errorMessage;
   private Button addStoreButton;
   private Button topStoresButton;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
@@ -185,6 +189,7 @@ public class AddStoreDialog extends BaseDialog {
   private void setupButtonHandlers() {
     subscriptions.add(RxView.clicks(addStoreButton)
         .subscribe(click -> {
+          setDefaultState();
           addStoreAction();
           storeAnalytics.sendStoreTabInteractEvent("Add Store", true);
         }));
@@ -245,6 +250,11 @@ public class AddStoreDialog extends BaseDialog {
       AddStoreDialog.this.storeName = givenStoreName;
       getStore(givenStoreName);
       showLoadingDialog();
+    } else {
+      searchViewLayout.setBackground(
+          getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
+      errorMessage.setVisibility(View.VISIBLE);
+      errorMessage.setText(R.string.add_store_dialog_no_query);
     }
   }
 
@@ -252,6 +262,8 @@ public class AddStoreDialog extends BaseDialog {
     addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
     topStoresButton = (Button) view.findViewById(R.id.button_top_stores);
     searchView = (SearchView) view.findViewById(R.id.store_search_view);
+    searchViewLayout = (RelativeLayout) view.findViewById(R.id.search_box_layout);
+    errorMessage = (TextView) view.findViewById(R.id.error_message);
     EditText searchEditText =
         (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
     searchEditText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
@@ -377,14 +389,25 @@ public class AddStoreDialog extends BaseDialog {
                 dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
                 break;
 
+              case STORE_DOESNT_EXIST:
+                searchViewLayout.setBackground(
+                    getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
+                errorMessage.setVisibility(View.VISIBLE);
+                errorMessage.setText(error.getDescription());
+                break;
+
               default:
-                Snackbar.make(searchView, error.getDescription(), Snackbar.LENGTH_SHORT)
-                    .show();
+                searchViewLayout.setBackground(
+                    getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
+                errorMessage.setVisibility(View.VISIBLE);
+                errorMessage.setText(error.getDescription());
                 break;
             }
           } else {
-            Snackbar.make(searchView, R.string.error_occured, Snackbar.LENGTH_SHORT)
-                .show();
+            searchViewLayout.setBackground(
+                getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
+            errorMessage.setVisibility(View.VISIBLE);
+            errorMessage.setText(R.string.error_occured);
           }
         }, storeName, accountManager);
   }
@@ -392,6 +415,12 @@ public class AddStoreDialog extends BaseDialog {
   void dismissLoadingDialog() {
     orientationManager.unlock();
     loadingDialog.dismiss();
+  }
+
+  private void setDefaultState() {
+    errorMessage.setVisibility(View.INVISIBLE);
+    searchViewLayout.setBackground(
+        getResources().getDrawable(R.drawable.add_stores_dialog_search_box_border));
   }
 
   private enum BundleArgs {
