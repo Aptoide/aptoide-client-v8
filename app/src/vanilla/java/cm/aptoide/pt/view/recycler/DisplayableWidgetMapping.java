@@ -44,12 +44,6 @@ import cm.aptoide.pt.comments.view.RateAndReviewCommentWidget;
 import cm.aptoide.pt.comments.view.StoreAddCommentWidget;
 import cm.aptoide.pt.comments.view.StoreLatestCommentsWidget;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.download.view.active.ActiveDownloadDisplayable;
-import cm.aptoide.pt.download.view.active.ActiveDownloadWidget;
-import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderDisplayable;
-import cm.aptoide.pt.download.view.active.ActiveDownloadsHeaderWidget;
-import cm.aptoide.pt.download.view.completed.CompletedDownloadDisplayable;
-import cm.aptoide.pt.download.view.completed.CompletedDownloadWidget;
 import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterDisplayable;
@@ -86,14 +80,8 @@ import cm.aptoide.pt.timeline.view.follow.FollowStoreWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowUserWidget;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
 import cm.aptoide.pt.timeline.view.login.TimelineLoginWidget;
-import cm.aptoide.pt.updates.view.UpdateDisplayable;
-import cm.aptoide.pt.updates.view.UpdateWidget;
-import cm.aptoide.pt.updates.view.UpdatesHeaderDisplayable;
-import cm.aptoide.pt.updates.view.UpdatesHeaderWidget;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateWidget;
-import cm.aptoide.pt.updates.view.installed.InstalledAppDisplayable;
-import cm.aptoide.pt.updates.view.installed.InstalledAppWidget;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.EmptyDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.FooterRowDisplayable;
@@ -186,13 +174,7 @@ public class DisplayableWidgetMapping {
 
     // Updates
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(InstalledAppWidget.class, InstalledAppDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(UpdateWidget.class, UpdateDisplayable.class));
-    displayableWidgetMappings.add(
         new DisplayableWidgetMapping(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(UpdatesHeaderWidget.class, UpdatesHeaderDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AdultRowWidget.class, AdultRowDisplayable.class));
@@ -240,15 +222,6 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(RateAndReviewCommentWidget.class,
         RateAndReviewCommentDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(CompletedDownloadWidget.class,
-        CompletedDownloadDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(ActiveDownloadsHeaderWidget.class,
-        ActiveDownloadsHeaderDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RowReviewWidget.class, RowReviewDisplayable.class));

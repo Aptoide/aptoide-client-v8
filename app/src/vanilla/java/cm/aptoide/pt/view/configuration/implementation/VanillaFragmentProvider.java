@@ -16,7 +16,6 @@ import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.download.view.DownloadsFragment;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
@@ -35,7 +34,6 @@ import cm.aptoide.pt.timeline.view.SocialFragment;
 import cm.aptoide.pt.timeline.view.TimeLineLikesFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
-import cm.aptoide.pt.updates.view.UpdatesFragment;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
@@ -165,10 +163,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return FragmentTopStores.newInstance();
   }
 
-  @Override public Fragment newUpdatesFragment() {
-    return UpdatesFragment.newInstance();
-  }
-
   @Override public Fragment newLatestReviewsFragment(long storeId, StoreContext storeContext) {
     return LatestReviewsFragment.newInstance(storeId, storeContext);
   }
@@ -218,10 +212,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
   @Override public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
       StoreContext storeName) {
     return MyStoresFragment.newInstance(event, storeTheme, tag, storeName);
-  }
-
-  @Override public Fragment newDownloadsFragment() {
-    return DownloadsFragment.newInstance();
   }
 
   @Override

@@ -116,7 +116,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Database database;
   private NavigationTracker navigationTracker;
   private UpdateRepository repository;
-  private String defaultThemeName;
   private AdultContentAnalytics adultContentAnalytics;
   private FragmentNavigator fragmentNavigator;
   private AuthenticationPersistence authenticationPersistence;
@@ -131,7 +130,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     adultContentAnalytics = application.getAdultContentAnalytics();
-    defaultThemeName = application.getDefaultThemeName();
     marketName = application.getMarketName();
     trackAnalytics = true;
     database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();

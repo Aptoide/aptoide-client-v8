@@ -128,7 +128,6 @@
   <string name="installing_msg">Installing</string>
   <string name="needs_permission_to_fs">Needs permission to use the external file system</string>
 
-  <string name="pause_all_downloads">Pause Downloads</string>
   <string name="storage_access_permission_request_message">Allow access to your phone\'s storage so we can download and install this app.</string>
   <string name="camera_access_permission_request_message">Allow access to your phone\'s camera so you can take pictures with this app.</string>
 
@@ -278,11 +277,8 @@
   <string name="featured_stores">Featured stores</string>
 
   <!--Download fragment-->
-  <string name="fragment_download_no_connection">No apps downloaded</string>
-  <string name="fragment_download_no_connection_subtitle">New apps will appear here as soon as you start downloading them!</string>
   <string name="newer_version_available">Newer version available</string>
 
-  <string name="add_store">Add store</string>
   <string name="downgrade_warning_dialog">If you downgrade, you may lose app related data and may be logged out of the app\'s account.</string>
 
 
@@ -341,10 +337,6 @@
 
   <!--??-->
   <string name="read_more">See more</string>
-  <string name="active">Active</string>
-  <string name="completed">Completed</string>
-  <string name="stand_by">Standby</string>
-  <string name="_downloads"> downloads</string>
   <string name="description">Description</string>
   <string name="version">Version</string>
 
@@ -390,22 +382,7 @@
   <string name="no_permissions_required">No permissions required for this app.</string>
 
   <!-- DownloadManager -->
-  <string name="timeout">Network connection timeout</string>
   <string name="connection_error">No network connection</string>
-  <string name="apk_not_found">Apk not found</string>
-  <string name="invalid_apk">Invalid apk</string>
-  <string name="remote_in_nospace">not enough space on your device.</string>
-  <string name="server_error">Server error</string>
-  <string name="paidapp_not_found">Error downloading app. Please try again or contact support.</string>
-  <string name="sd_error">Couldn\'t write to SD Card.</string>
-  <string name="sd_error_jolla">Couldn\'t download properly</string>
-  <string name="starting_download">Starting download</string>
-  <string name="installing">%s is installing…</string>
-  <string name="finished_install">%s has been installed.</string>
-  <string name="aptoide_downloading">%s is downloading</string>
-  <string name="remaining_time">remaining</string>
-  <string name="data_usage_constraint">Download is not allowed in Settings &gt; Download Options</string>
-  <string name="download_pending">Waiting</string>
 
   <!-- layouts -->
   <string name="all_message_general_error">Something went wrong. Try again.</string>
@@ -423,11 +400,6 @@
   <!-- Tab names -->
 
   <!--Update Tab-->
-  <string name="updatetab_title_installed">Installed</string>
-  <string name="updatetab_button_update_all">Update all</string>
-  <string name="updatetab_button_update">Update</string>
-  <string name="no_updates_available_retoric">Everything is up to date!</string>
-  <string name="no_new_updates_available">No new updates available</string>
   <string name="has_updates">%s has new updates available</string>
   <string name="new_updates">There are %s new updates available</string>
   <string name="one_new_update">There is %s new update available</string>
@@ -441,14 +413,12 @@
   <string name="no_excluded_updates_selected">No excluded updates selected</string>
 
 
-  <string name="at_time">at %s</string>
   <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
 
   <string name="order_popup_title3">Adult Content</string>
   <string name="more_versions">More Versions</string>
 
   <!-- Review Activity-->
-  <string name="review_get_app">Get app</string>
   <string name="review_success">Review submitted successfully!</string>
   <string name="store_username">Username</string>
 

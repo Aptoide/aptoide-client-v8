@@ -128,12 +128,6 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
 
   private Fragment caseClient(Event event, GetStoreTabs.Tab tab) {
     switch (event.getName()) {
-      case myUpdates:
-        return AptoideApplication.getFragmentProvider()
-            .newUpdatesFragment();
-      case myDownloads:
-        return AptoideApplication.getFragmentProvider()
-            .newDownloadsFragment();
       case myStores:
         return AptoideApplication.getFragmentProvider()
             .newSubscribedStoresFragment(event, storeTheme, tab.getTag(), storeContext);
@@ -152,12 +146,6 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
     }
-  }
-
-  public Event.Name getEventName(int position) {
-    return tabs.get(position)
-        .getEvent()
-        .getName();
   }
 
   /**
