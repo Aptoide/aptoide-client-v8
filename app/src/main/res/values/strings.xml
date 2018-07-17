@@ -72,6 +72,7 @@
   <string name="appview_similar_apps">Similar apps</string>
   <string name="appview_short_downloading">Downloading</string>
   <string name="appview_message_apkfy">Keep Aptoide installed in your device to keep all your apps updated! Discover new apps in our unrestricted app store.</string>
+  
 
 
   <!-- AppView developer area-->
@@ -504,6 +505,8 @@
   <string name="all_button_ok">OK</string>
   <string name="home_recommends">%s recommends</string>
   <string name="bundles_short_reward_app_appc" translatable="false">%s APPC</string>
+  <string name="all_button_got_it">GOT IT</string>
+  <string name="all_button_know_more">KNOW MORE</string>
 
 
   <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
@@ -516,9 +519,16 @@
 
 
   <!--APPC-->
-  <string name="appc_title_iab">Spend your AppCoins</string>
+  <string name="appc_title_iab">Spend Your AppCoins</string>
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
   <string name="appc_message_appview_appcoins_reward">Try this app and get %s </string>
+  <string name="appc_short_get_appc">GET APPC</string>
+  <string name="appc_short_spend_appc">SPEND APPC</string>
+  <string name="appc_title_homepage_card">You can get AppCoins now!</string>
+  <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
+  <string name="appc_title_appcoins_view">Everything yout need to know about AppCoins</string>
+  <string name="appc_message_appcoins_section_1">Everything yout need to know about AppCoins</string>
+  
 
 
 </resources>
