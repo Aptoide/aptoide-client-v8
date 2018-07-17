@@ -48,7 +48,7 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation project(path: ':crashreports')
   implementation project(path: ':aptoide-database')
-  compileOnly project(path: ':utils')
+  implementation project(path: ':utils')
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
 
