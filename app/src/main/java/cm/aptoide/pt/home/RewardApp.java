@@ -12,7 +12,7 @@ public class RewardApp extends Application {
 
   public RewardApp(String name, String icon, float rating, int downloads, String packageName,
       long appId, String tag, double rewardValue) {
-    super(name, icon, rating, downloads, packageName, appId, tag);
+    super(name, icon, rating, downloads, packageName, appId, tag, false, false, "");
     this.rewardValue = rewardValue;
   }
 

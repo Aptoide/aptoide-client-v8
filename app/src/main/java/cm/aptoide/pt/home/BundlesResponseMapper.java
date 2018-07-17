@@ -163,12 +163,23 @@ public class BundlesResponseMapper {
         applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag));
+            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
+            app.getAppc()
+                .hasIab(), app.getAppc()
+            .hasAds(), app.getAppc()
+            .hasAds() ? app.getAppc()
+            .getAds()
+            .getReward() : ""));
       } else {
         applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), tag));
+            .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppc()
+            .hasIab(), app.getAppc()
+            .hasAds(), app.getAppc()
+            .hasAds() ? app.getAppc()
+            .getAds()
+            .getReward() : ""));
       }
     }
 

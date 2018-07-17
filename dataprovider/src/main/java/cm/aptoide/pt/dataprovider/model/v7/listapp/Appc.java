@@ -7,19 +7,35 @@ public class Appc {
   public Appc() {
   }
 
+  public Ads getAds() {
+    return ads;
+  }
+
   public void setAds(Ads ads) {
     this.ads = ads;
+  }
+
+  public boolean hasIab() {
+    return iab;
   }
 
   public void setIab(boolean iab) {
     this.iab = iab;
   }
 
-  private class Ads {
+  public boolean hasAds() {
+    return ads != null;
+  }
+
+  public class Ads {
     private String reward;
 
     public Ads(String reward) {
       this.reward = reward;
+    }
+
+    public String getReward() {
+      return reward;
     }
 
     public void setReward(String reward) {
