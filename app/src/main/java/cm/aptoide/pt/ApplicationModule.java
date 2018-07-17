@@ -1001,10 +1001,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("ab-testing-base-host") String providesABTestingBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_AB_TESTING_HOST
+        + "/api/1/";
+  }
+
   @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
-      @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      @Named("ab-testing-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
-    return new Retrofit.Builder().baseUrl("https://abtesting.aptoide.com/api/v1/")
+    return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
         .addCallAdapterFactory(rxCallAdapterFactory)
         .addConverterFactory(converterFactory)
