@@ -534,7 +534,7 @@
   <string name="appc_message_appcoins_header_3">Get Rewarded!</string>
   <string name="appc_message_appcoins_section_3">This symbol %s means you will get a reward in APPC by downloading and spending a couple of minutes in it. Simple and quick!</string>
   <string name="appc_message_appcoins_header_4">Spend Your APPC!</string>
-  <string name="appc_message_appcoins_header_3">Many apps allow in-app payments with AppCoins; you\'ll identify them with the symbol %s. There are huge discounts for you to get the best of it! Do not worry if you don\’t have APPC yet; you\’ll still be able to use your card to top up and buy.</string>
+  <string name="appc_message_appcoins_section_4">Many apps allow in-app payments with AppCoins; you\'ll identify them with the symbol %s. There are huge discounts for you to get the best of it! Do not worry if you don\’t have APPC yet; you\’ll still be able to use your card to top up and buy.</string>
   <string name="appc_message_appcoins_benefit_1">Huge discounts</string>
   <string name="appc_message_appcoins_benefit_2">Earn free APPC</string>
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
