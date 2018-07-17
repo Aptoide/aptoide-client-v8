@@ -16,27 +16,27 @@ import rx.Scheduler;
  * Created by franciscocalado on 13/03/18.
  */
 
-public class NewAccountPresenter implements Presenter {
+public class MyAccountPresenter implements Presenter {
 
   private static final int EDIT_STORE_REQUEST_CODE = 1230;
 
-  private final NewAccountView view;
+  private final MyAccountView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
   private final SharedPreferences sharedPreferences;
   private final Scheduler scheduler;
-  private final NewAccountNavigator newAccountNavigator;
+  private final MyAccountNavigator myAccountNavigator;
   private final AccountAnalytics accountAnalytics;
 
-  public NewAccountPresenter(NewAccountView view, AptoideAccountManager accountManager,
+  public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, SharedPreferences sharedPreferences, Scheduler scheduler,
-      NewAccountNavigator newAccountNavigator, AccountAnalytics accountAnalytics) {
+      MyAccountNavigator myAccountNavigator, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.sharedPreferences = sharedPreferences;
     this.scheduler = scheduler;
-    this.newAccountNavigator = newAccountNavigator;
+    this.myAccountNavigator = myAccountNavigator;
     this.accountAnalytics = accountAnalytics;
   }
 
@@ -63,7 +63,7 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.loginClick())
-        .doOnNext(loginClicked -> newAccountNavigator.navigateToLoginView(
+        .doOnNext(loginClicked -> myAccountNavigator.navigateToLoginView(
             AccountAnalytics.AccountOrigins.MY_ACCOUNT))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -88,7 +88,7 @@ public class NewAccountPresenter implements Presenter {
         .flatMap(__ -> view.userClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(account -> newAccountNavigator.navigateToUserView(account.getId(),
+        .doOnNext(account -> myAccountNavigator.navigateToUserView(account.getId(),
             account.getStore()
                 .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -102,7 +102,7 @@ public class NewAccountPresenter implements Presenter {
         .flatMap(viewCreated -> view.editUserProfileClick()
             .flatMap(click -> accountManager.accountStatus()
                 .first())
-            .doOnNext(account -> newAccountNavigator.navigateToEditProfileView()))
+            .doOnNext(account -> myAccountNavigator.navigateToEditProfileView()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(account -> {
         }, throwable -> crashReport.log(throwable));
@@ -114,7 +114,7 @@ public class NewAccountPresenter implements Presenter {
         .flatMap(__ -> view.storeClick())
         .flatMap(click -> accountManager.accountStatus()
             .first())
-        .doOnNext(account -> newAccountNavigator.navigateToStoreView(account.getStore()
+        .doOnNext(account -> myAccountNavigator.navigateToStoreView(account.getStore()
             .getName(), account.getStore()
             .getTheme()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -133,7 +133,7 @@ public class NewAccountPresenter implements Presenter {
         .observeOn(scheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(
-            store -> newAccountNavigator.navigateToEditStoreView(store, EDIT_STORE_REQUEST_CODE),
+            store -> myAccountNavigator.navigateToEditStoreView(store, EDIT_STORE_REQUEST_CODE),
             throwable -> crashReport.log(throwable));
   }
 
@@ -141,7 +141,7 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .flatMap(__ -> newAccountNavigator.editStoreResult(EDIT_STORE_REQUEST_CODE))
+        .flatMap(__ -> myAccountNavigator.editStoreResult(EDIT_STORE_REQUEST_CODE))
         .flatMap(__ -> accountManager.accountStatus()
             .first())
         .observeOn(scheduler)
@@ -157,7 +157,7 @@ public class NewAccountPresenter implements Presenter {
         .flatMap(__ -> view.findFriendsClick())
         .doOnNext(__ -> {
           accountAnalytics.sendFollowFriendsClickEvent();
-          newAccountNavigator.navigateToFindFriends();
+          myAccountNavigator.navigateToFindFriends();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
@@ -168,7 +168,7 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.createStoreClick())
-        .doOnNext(__ -> newAccountNavigator.navigateToCreateStore())
+        .doOnNext(__ -> myAccountNavigator.navigateToCreateStore())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable));
@@ -206,7 +206,7 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.settingsClicked())
-        .doOnNext(__ -> newAccountNavigator.navigateToSettings())
+        .doOnNext(__ -> myAccountNavigator.navigateToSettings())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -216,7 +216,7 @@ public class NewAccountPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.notificationsClicked())
-        .doOnNext(__ -> newAccountNavigator.navigateToNotificationHistory())
+        .doOnNext(__ -> myAccountNavigator.navigateToNotificationHistory())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -253,7 +253,7 @@ public class NewAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideUploaderCardViewClick())
         .doOnNext(__ -> {
-          newAccountNavigator.navigateToUploader();
+          myAccountNavigator.navigateToUploader();
           accountAnalytics.sendPromoteAptoideUploaderEvent();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -266,7 +266,7 @@ public class NewAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideBackupCardViewClick())
         .doOnNext(__ -> {
-          newAccountNavigator.navigateToBackupApps();
+          myAccountNavigator.navigateToBackupApps();
           accountAnalytics.sendPromoteAptoideBackupAppsEvent();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

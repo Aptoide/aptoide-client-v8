@@ -20,7 +20,7 @@ import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
-import cm.aptoide.pt.view.settings.NewAccountFragment;
+import cm.aptoide.pt.view.settings.MyAccountFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -73,7 +73,7 @@ public class AccountNavigator {
 
   public void navigateToAccountView(AccountAnalytics.AccountOrigins accountOrigins) {
     if (accountManager.isLoggedIn()) {
-      fragmentNavigator.navigateTo(NewAccountFragment.newInstance(), true);
+      fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
     } else {
       accountAnalytics.enterAccountScreen(accountOrigins);
       fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false, false),
