@@ -30,6 +30,7 @@ public class App {
   private File file;
   private Stats stats;
   private Obb obb;
+  private Appc appc;
 
   public App() {
   }
@@ -182,6 +183,14 @@ public class App {
 
   protected boolean canEqual(Object other) {
     return other instanceof App;
+  }
+
+  public Appc getAppc() {
+    return appc;
+  }
+
+  public void setAppc(Appc appc) {
+    this.appc = appc;
   }
 
   public static class Stats {
