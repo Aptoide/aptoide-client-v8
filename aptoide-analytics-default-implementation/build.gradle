@@ -32,6 +32,10 @@ android {
   }
 
   buildTypes {
+    debug {
+      minifyEnabled false
+    }
+
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -44,27 +48,28 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile 'com.android.support:appcompat-v7:25.4.0'
-  testCompile 'junit:junit:4.12'
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  api project(path: ':aptoide-analytics-core')
+
+  implementation 'com.android.support:appcompat-v7:25.4.0'
+
+  testImplementation 'junit:junit:4.12'
 
   // Network
-  compile "com.squareup.okhttp3:okhttp:3.6.0"
-  compile "com.squareup.retrofit2:retrofit:2.1.0"
-  compile "com.squareup.retrofit2:adapter-rxjava:2.1.0"
+  implementation "com.squareup.okhttp3:okhttp:3.6.0"
+  implementation "com.squareup.retrofit2:retrofit:2.1.0"
+  implementation "com.squareup.retrofit2:adapter-rxjava:2.1.0"
 
-  compile "io.reactivex:rxjava:1.2.7"
+  implementation "io.reactivex:rxjava:1.2.7"
 
   // Fabric
-  compile("com.crashlytics.sdk.android:crashlytics:2.6.5@aar") {
+  implementation("com.crashlytics.sdk.android:crashlytics:2.6.5@aar") {
     transitive = true
   }
 
   // Facebook
-  compile "com.facebook.android:facebook-android-sdk:4.17.0"
+  implementation "com.facebook.android:facebook-android-sdk:4.17.0"
 
   // Flurry Android sdk
-  compile "com.flurry.android:analytics:6.4.2"
-
-  compile project(path: ':aptoide-analytics-core')
+  implementation "com.flurry.android:analytics:6.4.2"
 }

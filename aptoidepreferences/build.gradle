@@ -17,9 +17,10 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  publishNonDefault true
-
   buildTypes {
+    debug {
+      minifyEnabled false
+    }
     release {
       minifyEnabled false
       shrinkResources false
@@ -49,25 +50,10 @@ android {
 }
 
 dependencies {
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation project(path: ':utils')
 
-  //
-  // inter-projects dependencies
-  //
+  testImplementation "junit:junit:${JUNIT_VERSION}"
 
-  //
-  // custom libs in folders
-  //
-
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
-  //noinspection GradleDependency
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 }

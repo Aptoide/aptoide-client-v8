@@ -15,6 +15,9 @@ android {
   }
 
   buildTypes {
+    debug {
+      minifyEnabled false
+    }
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -23,8 +26,8 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile 'com.android.support:appcompat-v7:25.4.0'
-  testCompile "org.mockito:mockito-core:1.10.19"
-  testCompile 'junit:junit:4.12'
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation 'com.android.support:appcompat-v7:25.4.0'
+  testImplementation "org.mockito:mockito-core:1.10.19"
+  testImplementation 'junit:junit:4.12'
 }
