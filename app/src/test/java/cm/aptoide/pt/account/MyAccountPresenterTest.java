@@ -9,9 +9,9 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.model.v7.store.StoreUserAbstraction;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.view.settings.NewAccountFragment;
-import cm.aptoide.pt.view.settings.NewAccountNavigator;
-import cm.aptoide.pt.view.settings.NewAccountPresenter;
+import cm.aptoide.pt.view.settings.MyAccountFragment;
+import cm.aptoide.pt.view.settings.MyAccountNavigator;
+import cm.aptoide.pt.view.settings.MyAccountPresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
  * Created by franciscocalado on 26/04/18.
  */
 
-public class NewAccountPresenterTest {
+public class MyAccountPresenterTest {
 
   private static final int EDIT_STORE_REQUEST_CODE = 1230;
   @Mock private Account account;
@@ -44,32 +44,32 @@ public class NewAccountPresenterTest {
   @Mock private GetStoreMeta getMeta;
   @Mock private SharedPreferences.Editor editor;
   @Mock private cm.aptoide.accountmanager.Store accountManagerStore;
-  @Mock private NewAccountFragment view;
+  @Mock private MyAccountFragment view;
   @Mock private AptoideAccountManager accountManager;
   @Mock private CrashReport crashReport;
   @Mock private SharedPreferences sharedPreferences;
-  @Mock private NewAccountNavigator navigator;
+  @Mock private MyAccountNavigator navigator;
   @Mock private AccountAnalytics analytics;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
-  private NewAccountPresenter newAccountPresenter;
+  private MyAccountPresenter myAccountPresenter;
 
-  @Before public void setupNewAccountPresenter() {
+  @Before public void setupMyAccountPresenter() {
     MockitoAnnotations.initMocks(this);
     lifecycleEvent = PublishSubject.create();
-    newAccountPresenter =
-        new NewAccountPresenter(view, accountManager, crashReport, sharedPreferences,
+    myAccountPresenter =
+        new MyAccountPresenter(view, accountManager, crashReport, sharedPreferences,
             Schedulers.immediate(), navigator, analytics);
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
   }
 
   @Test public void populateAccountViewsTest() {
-    //Given an initialized MyAccountPresenter
+    //Given an initialized myAccountPresenter
     //And a user Account,
     //When an account is requested
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
 
-    newAccountPresenter.populateAccountViews();
+    myAccountPresenter.populateAccountViews();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -90,7 +90,7 @@ public class NewAccountPresenterTest {
     when(nodes.getMeta()).thenReturn(getMeta);
     when(getMeta.getData()).thenReturn(store);
 
-    newAccountPresenter.checkIfStoreIsInvalidAndRefresh();
+    myAccountPresenter.checkIfStoreIsInvalidAndRefresh();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -105,7 +105,7 @@ public class NewAccountPresenterTest {
     //When a user clicks the login button
     when(view.loginClick()).thenReturn(Observable.just(null));
 
-    newAccountPresenter.handleLoginClick();
+    myAccountPresenter.handleLoginClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then it should navigate the user to the login view
@@ -120,7 +120,7 @@ public class NewAccountPresenterTest {
     when(sharedPreferences.edit()).thenReturn(editor);
     when(editor.putBoolean(anyString(), eq(false))).thenReturn(editor);
 
-    newAccountPresenter.handleLogOutClick();
+    myAccountPresenter.handleLogOutClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then address book related shared preferences should be set to false (reset)
@@ -136,7 +136,7 @@ public class NewAccountPresenterTest {
     //When a user clicks the create store button
     when(view.createStoreClick()).thenReturn(Observable.just(null));
 
-    newAccountPresenter.handleCreateStoreClick();
+    myAccountPresenter.handleCreateStoreClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then the user should navigate to the create store view
@@ -148,7 +148,7 @@ public class NewAccountPresenterTest {
     //When a user clicks the find friends button
     when(view.findFriendsClick()).thenReturn(Observable.just(null));
 
-    newAccountPresenter.handleFindFriendsClick();
+    myAccountPresenter.handleFindFriendsClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     verify(analytics).sendFollowFriendsClickEvent();
@@ -166,7 +166,7 @@ public class NewAccountPresenterTest {
     when(nodes.getMeta()).thenReturn(getMeta);
     when(getMeta.getData()).thenReturn(store);
 
-    newAccountPresenter.handleStoreEditClick();
+    myAccountPresenter.handleStoreEditClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then the user should navigate to the edit store view
@@ -180,7 +180,7 @@ public class NewAccountPresenterTest {
     when(navigator.editStoreResult(EDIT_STORE_REQUEST_CODE)).thenReturn(Observable.just(null));
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
 
-    newAccountPresenter.handleStoreEditResult();
+    myAccountPresenter.handleStoreEditResult();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     InOrder order = Mockito.inOrder(navigator, view);
@@ -201,7 +201,7 @@ public class NewAccountPresenterTest {
     when(accountManagerStore.getName()).thenReturn("name");
     when(accountManagerStore.getTheme()).thenReturn("theme");
 
-    newAccountPresenter.handleStoreDisplayableClick();
+    myAccountPresenter.handleStoreDisplayableClick();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the user should navigate to his store view
@@ -214,7 +214,7 @@ public class NewAccountPresenterTest {
     when(view.editUserProfileClick()).thenReturn(Observable.just(null));
     when(accountManager.accountStatus()).thenReturn(Observable.just(account));
 
-    newAccountPresenter.handleProfileEditClick();
+    myAccountPresenter.handleProfileEditClick();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -231,7 +231,7 @@ public class NewAccountPresenterTest {
     when(account.getStore()).thenReturn(accountManagerStore);
     when(accountManagerStore.getTheme()).thenReturn("theme");
 
-    newAccountPresenter.handleProfileDisplayableClick();
+    myAccountPresenter.handleProfileDisplayableClick();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -244,7 +244,7 @@ public class NewAccountPresenterTest {
     //When a user clicks the settings button
     when(view.settingsClicked()).thenReturn(Observable.just(null));
 
-    newAccountPresenter.handleSettingsClicked();
+    myAccountPresenter.handleSettingsClicked();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -257,7 +257,7 @@ public class NewAccountPresenterTest {
     //When a user clicks the notifications button
     when(view.notificationsClicked()).thenReturn(Observable.just(null));
 
-    newAccountPresenter.handleNotificationHistoryClicked();
+    myAccountPresenter.handleNotificationHistoryClicked();
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

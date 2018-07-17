@@ -10,7 +10,7 @@ import rx.Observable;
  * Created by franciscocalado on 13/03/18.
  */
 
-public interface NewAccountView extends View {
+public interface MyAccountView extends View {
 
   void showAccount(Account account);
 

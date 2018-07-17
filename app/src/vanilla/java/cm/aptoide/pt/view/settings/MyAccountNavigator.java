@@ -19,7 +19,7 @@ import rx.Observable;
  * Created by franciscocalado on 13/03/18.
  */
 
-public class NewAccountNavigator {
+public class MyAccountNavigator {
 
   private final FragmentNavigator fragmentNavigator;
   private final AccountNavigator navigator;
@@ -28,7 +28,7 @@ public class NewAccountNavigator {
   private final String UPLOADER_UNAME = "aptoide-uploader";
   private final String BACKUP_APPS_UNAME = "aptoide-backup-apps";
 
-  public NewAccountNavigator(FragmentNavigator fragmentNavigator, AccountNavigator navigator,
+  public MyAccountNavigator(FragmentNavigator fragmentNavigator, AccountNavigator navigator,
       AppNavigator appNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.navigator = navigator;
