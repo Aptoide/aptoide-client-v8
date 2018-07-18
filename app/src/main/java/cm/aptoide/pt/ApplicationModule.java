@@ -1007,7 +1007,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_AB_TESTING_HOST
-        + "/api/1/";
+        + "/api/v1/";
   }
 
   @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
