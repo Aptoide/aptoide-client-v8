@@ -17,17 +17,25 @@ android {
     abortOnError false
   }
 
-  publishNonDefault true
-
-  productFlavors {
-    prod {}
-    internal {}
-  }
-
   buildTypes {
+    debug {
+      minifyEnabled false
+    }
     release {
       minifyEnabled false
       shrinkResources false
+    }
+  }
+
+  flavorDimensions "mode"
+  productFlavors {
+    prod {
+      dimension "mode"
+      matchingFallbacks = ['internal']
+    }
+    internal {
+      dimension "mode"
+      matchingFallbacks = ['prod']
     }
   }
 
@@ -64,18 +72,21 @@ android {
 }
 
 dependencies {
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  api project(path: ':dataprovider')
+  implementation project(path: ':crashreports')
+  implementation project(path: ':aptoide-analytics-default-implementation')
+  implementation project(path: ':utils')
 
-  testCompile "junit:junit:${JUNIT_VERSION}"
-  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
-  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
-
-  compile "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
-  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
-  compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   // Parceler - https://github.com/johncarl81/parceler
-  compile "org.parceler:parceler-api:${PARCELER_VERSION}"
+  implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
   annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
 }

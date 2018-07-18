@@ -6,7 +6,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.view.settings.NewAccountFragment;
+import cm.aptoide.pt.view.settings.MyAccountFragment;
 import java.util.AbstractMap;
 import rx.Observable;
 
@@ -56,7 +56,7 @@ public class HomeNavigator {
   }
 
   public void navigateToMyAccount() {
-    fragmentNavigator.navigateTo(NewAccountFragment.newInstance(), true);
+    fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
 
   public void navigateToRewardAppView(long appId, String packageName, String tag,

@@ -48,13 +48,13 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by franciscocalado on 12/03/18.
  */
 
-public class NewAccountFragment extends BackButtonFragment
-    implements SharedPreferences.OnSharedPreferenceChangeListener, NewAccountView,
+public class MyAccountFragment extends BackButtonFragment
+    implements SharedPreferences.OnSharedPreferenceChangeListener, MyAccountView,
     NotBottomNavigationView {
 
   private static final float STROKE_SIZE = 0.04f;
   protected Toolbar toolbar;
-  @Inject NewAccountNavigator newAccountNavigator;
+  @Inject MyAccountNavigator myAccountNavigator;
   @Inject AccountAnalytics accountAnalytics;
   private AptoideAccountManager accountManager;
   private Converter.Factory converterFactory;
@@ -84,7 +84,7 @@ public class NewAccountFragment extends BackButtonFragment
   private View settings;
 
   public static Fragment newInstance() {
-    return new NewAccountFragment();
+    return new MyAccountFragment();
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +95,6 @@ public class NewAccountFragment extends BackButtonFragment
         (AptoideApplication) getContext().getApplicationContext();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-
     bodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -113,9 +112,9 @@ public class NewAccountFragment extends BackButtonFragment
     setupProductCardViews();
 
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
-    attachPresenter(new NewAccountPresenter(this, accountManager, CrashReport.getInstance(),
+    attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance(),
         application.getDefaultSharedPreferences(), AndroidSchedulers.mainThread(),
-        newAccountNavigator, accountAnalytics));
+        myAccountNavigator, accountAnalytics));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

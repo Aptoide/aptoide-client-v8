@@ -17,9 +17,10 @@ android {
     abortOnError false
   }
 
-  publishNonDefault true
-
   buildTypes {
+    debug {
+      minifyEnabled false
+    }
     release {
       minifyEnabled false
       shrinkResources false
@@ -49,33 +50,20 @@ android {
 }
 
 dependencies {
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation project(path: ':aptoide-analytics-default-implementation')
 
-  //
-  // inter-projects dependencies
-  //
-
-  //
-  // custom libs in folders
-  //
-
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
-
-  testCompile "junit:junit:${JUNIT_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
 
   //noinspection GradleDependency
-  compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
-  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  compile "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  compile "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
-  compile "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 
-  compile("org.nanohttpd:nanohttpd:2.3.0")
-  compile project(path: ':aptoide-analytics-default-implementation')
+  implementation("org.nanohttpd:nanohttpd:2.3.0")
 }

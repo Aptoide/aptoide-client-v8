@@ -17,7 +17,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
-import cm.aptoide.pt.account.view.MyAccountNavigator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
@@ -66,7 +65,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
-import cm.aptoide.pt.view.settings.NewAccountNavigator;
+import cm.aptoide.pt.view.settings.MyAccountNavigator;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -217,11 +216,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new ManageUserNavigator(fragmentNavigator, bottomNavigationNavigator);
   }
 
-  @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
-      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator);
-  }
-
   @ActivityScope @Provides LinksHandlerFactory provideLinksHandlerFactory() {
     return new LinksHandlerFactory(activity);
   }
@@ -231,11 +225,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new ListStoreAppsNavigator(fragmentNavigator, appNavigator);
   }
 
-  @ActivityScope @Provides NewAccountNavigator provideNewAccountNavigator(
-      FragmentNavigator fragmentNavigator, MyAccountNavigator myAccountNavigator,
-      AccountNavigator accountNavigator, AppNavigator appNavigator) {
-    return new NewAccountNavigator(fragmentNavigator, myAccountNavigator, accountNavigator,
-        appNavigator);
+  @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
+      FragmentNavigator fragmentNavigator, AccountNavigator accountNavigator,
+      AppNavigator appNavigator) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator);
   }
 
   @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
