@@ -527,6 +527,7 @@
   <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
   <string name="appc_message_appcoins_section_1">AppCoins is the cryptocurrency for in-app transactions. You can earn AppCoins when installing your favourite apps and use them to make in-app purchases, like buying gems or upgrading your game!</string>
   <string name="appc_message_appcoins_header_2">First Things First</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
   <string name="appc_message_appcoins_section_2a">Get the %s</string>
   <!--This variable is a link to Coinbase (www.coinbase.com). The text is Coinbase. This is done using html-->
