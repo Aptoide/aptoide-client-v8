@@ -71,7 +71,15 @@ public class Application {
     return tag;
   }
 
-  public boolean isHasAppcIab() {
+  public boolean hasAppcIab() {
     return hasAppcIab;
+  }
+
+  public boolean hasAppcAds() {
+    return hasAppcAds;
+  }
+
+  public String getReward() {
+    return reward;
   }
 }

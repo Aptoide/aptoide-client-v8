@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.PackageRepository;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
@@ -59,9 +60,8 @@ public class BundlesResponseMapper {
           event.setName(Event.Name.getMoreBundle);
         }
         if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
-          appBundles.add(new AppBundle(title, applicationsToApps(
-              ((ListApps) viewObject).getDataList()
-                  .getList(), type, widgetTag), type, event, widgetTag));
+          appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
+              .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
           List<Application> applicationList = appToRewardApp(
               ((BaseV7EndlessDataListResponse<AppCoinsRewardApp>) viewObject).getDataList()
@@ -83,20 +83,22 @@ public class BundlesResponseMapper {
             if (!packageRepository.isAppInstalled(app.getPackageName())) {
               apps.add(app);
               if (card.hasUser()) {
-                appBundles.add(
-                    new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
-                        widgetTag, card.getUser()
+                appBundles.add(new SocialBundle(map(apps, type, widgetTag), type, event, widgetTag,
+                    card.getUser()
                         .getAvatar(), card.getUser()
-                        .getName(), SOCIAL_RECOMMENDATIONS));
+                    .getName(), SOCIAL_RECOMMENDATIONS));
               } else {
-                appBundles.add(
-                    new SocialBundle(applicationsToApps(apps, type, widgetTag), type, event,
-                        widgetTag, R.mipmap.ic_launcher, marketName, APTOIDE_RECOMMENDS));
+                appBundles.add(new SocialBundle(map(apps, type, widgetTag), type, event, widgetTag,
+                    R.mipmap.ic_launcher, marketName, APTOIDE_RECOMMENDS));
               }
             }
           }
         }
-      } catch (Exception ignore) {
+      } catch (Exception e) {
+        Logger.getInstance()
+            .d(this.getClass()
+                    .getName(),
+                "Something went wrong with widget to bundle mapping : " + e.getMessage());
       }
     }
 
@@ -152,34 +154,41 @@ public class BundlesResponseMapper {
     }
   }
 
-  private List<Application> applicationsToApps(List<App> apps, AppBundle.BundleType type,
-      String tag) {
+  private List<Application> map(List<App> apps, AppBundle.BundleType type, String tag) {
     if (apps == null || apps.isEmpty()) {
       return Collections.emptyList();
     }
     List<Application> applications = new ArrayList<>();
     for (App app : apps) {
-      if (type.equals(HomeBundle.BundleType.EDITORS)) {
-        applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(), app.getStats()
-            .getRating()
-            .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
-            app.getAppc()
-                .hasIab(), app.getAppc()
-            .hasAds(), app.getAppc()
-            .hasAds() ? app.getAppc()
-            .getAds()
-            .getReward() : ""));
-      } else {
-        applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
-            .getRating()
-            .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppc()
-            .hasIab(), app.getAppc()
-            .hasAds(), app.getAppc()
-            .hasAds() ? app.getAppc()
-            .getAds()
-            .getReward() : ""));
+      try {
+        if (type.equals(HomeBundle.BundleType.EDITORS)) {
+          applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(),
+              app.getStats()
+                  .getRating()
+                  .getAvg(), app.getStats()
+              .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
+              app.getAppc()
+                  .hasIab(), app.getAppc()
+              .hasAds(), app.getAppc()
+              .hasAds() ? app.getAppc()
+              .getAds()
+              .getReward() : ""));
+        } else {
+          applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
+              .getRating()
+              .getAvg(), app.getStats()
+              .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppc()
+              .hasIab(), app.getAppc()
+              .hasAds(), app.getAppc()
+              .hasAds() ? app.getAppc()
+              .getAds()
+              .getReward() : ""));
+        }
+      } catch (Exception e) {
+        Logger.getInstance()
+            .d(this.getClass()
+                    .getName(),
+                "Something went wrong while parsing apps to applications: " + e.getMessage());
       }
     }
 
