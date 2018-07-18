@@ -507,7 +507,7 @@
     <item name="android:textColorSecondary">?attr/preferenceTitleColor</item>
     <item name="android:buttonStyle">@style/AlertTextAppearanceAptoide</item>
   </style>
-  ?attr/preferenceTitleColor
+
   <style name="Widget.Aptoide.defaultColorText" parent="Base.TextAppearance.AppCompat.Small">
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
