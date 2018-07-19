@@ -60,12 +60,11 @@ public class AppViewManager {
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
       StoreManager storeManager, FlagManager flagManager, ABTestManager abTestManager,
-      StoreUtilsProxy storeUtilsProxy,
-      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
-      String marketName) {
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
+      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
+      SocialRepository socialRepository, String marketName) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -339,9 +338,16 @@ public class AppViewManager {
     return marketName;
   }
 
-  public Observable<Experiment> getABTestingExperiment(
-      ABTestManager.ExperimentType experimentType) {
-    return abTestManager.getExperiment(experimentType);
+  public Observable<Experiment> getShareDialogExperiment() {
+    return aptoideAccountManager.accountStatus()
+        .first()
+        .flatMap(account -> {
+          if (account.isLoggedIn()) {
+            return abTestManager.getExperiment(ABTestManager.ExperimentType.SHARE_DIALOG);
+          } else {
+            return Observable.just(new Experiment());
+          }
+        });
   }
 
   public Observable<Boolean> recordABTestImpression(ABTestManager.ExperimentType experimentType) {
