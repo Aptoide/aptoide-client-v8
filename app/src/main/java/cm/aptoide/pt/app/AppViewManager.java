@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideAuthenticationException;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.Experiment;
@@ -60,12 +61,11 @@ public class AppViewManager {
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
       StoreManager storeManager, FlagManager flagManager, ABTestManager abTestManager,
-      StoreUtilsProxy storeUtilsProxy,
-      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
-      String marketName) {
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
+      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
+      SocialRepository socialRepository, String marketName) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -339,9 +339,16 @@ public class AppViewManager {
     return marketName;
   }
 
-  public Observable<Experiment> getABTestingExperiment(
-      ABTestManager.ExperimentType experimentType) {
-    return abTestManager.getExperiment(experimentType);
+  public Observable<Experiment> getShareDialogExperiment() {
+    return aptoideAccountManager.accountStatus()
+        .first()
+        .flatMap(account -> {
+          if (account.isLoggedIn()) {
+            return abTestManager.getExperiment(ABTestManager.ExperimentType.SHARE_DIALOG);
+          } else {
+            return Observable.error(new AptoideAuthenticationException());
+          }
+        });
   }
 
   public Observable<Boolean> recordABTestImpression(ABTestManager.ExperimentType experimentType) {
