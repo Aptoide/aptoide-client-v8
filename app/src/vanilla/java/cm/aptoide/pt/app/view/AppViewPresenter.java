@@ -606,14 +606,7 @@ public class AppViewPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(
             experiment -> showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName(),
-                experiment))
-        .doOnError(throwable -> {
-          Logger.getInstance()
-              .w(this.getClass()
-                  .getName(), throwable.getMessage());
-          showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName(),
-              new Experiment());
-        });
+                experiment));
   }
 
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {

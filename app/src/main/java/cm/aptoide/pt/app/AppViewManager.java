@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.AptoideAuthenticationException;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.Experiment;
@@ -346,7 +345,7 @@ public class AppViewManager {
           if (account.isLoggedIn()) {
             return abTestManager.getExperiment(ABTestManager.ExperimentType.SHARE_DIALOG);
           } else {
-            return Observable.error(new AptoideAuthenticationException());
+            return Observable.just(new Experiment());
           }
         });
   }
