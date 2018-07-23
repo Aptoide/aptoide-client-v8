@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.Appc;
 import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
 import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
@@ -162,27 +163,24 @@ public class BundlesResponseMapper {
     for (App app : apps) {
       try {
         if (type.equals(HomeBundle.BundleType.EDITORS)) {
+          Appc appc = app.getAppc();
           applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(),
               app.getStats()
                   .getRating()
                   .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
-              app.getAppc()
-                  .hasIab(), app.getAppc()
-              .hasAds(), app.getAppc()
-              .hasAds() ? app.getAppc()
-              .getAds()
-              .getReward() : ""));
+              appc != null && appc.hasIab(), appc != null && appc.hasAds(),
+              appc != null && appc.hasAds() ? appc.getAds()
+                  .getReward() : ""));
         } else {
+          Appc appc = app.getAppc();
           applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
               .getRating()
               .getAvg(), app.getStats()
-              .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppc()
-              .hasIab(), app.getAppc()
-              .hasAds(), app.getAppc()
-              .hasAds() ? app.getAppc()
-              .getAds()
-              .getReward() : ""));
+              .getPdownloads(), app.getPackageName(), app.getId(), tag,
+              appc != null && appc.hasIab(), appc != null && appc.hasAds(),
+              appc != null && appc.hasAds() ? appc.getAds()
+                  .getReward() : ""));
         }
       } catch (Exception e) {
         Logger.getInstance()

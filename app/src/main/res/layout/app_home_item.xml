@@ -47,13 +47,23 @@
           style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           />
 
-      <include
-          layout="@layout/rating_label"
+      <FrameLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="1dp"
-          android:layout_marginStart="1dp"
-          />
+          >
+        <include
+            layout="@layout/rating_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginStart="1dp"
+            />
+        <include
+            layout="@layout/appc_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+      </FrameLayout>
 
     </LinearLayout>
 
