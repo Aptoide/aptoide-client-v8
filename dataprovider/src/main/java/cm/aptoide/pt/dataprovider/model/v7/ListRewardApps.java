@@ -8,7 +8,7 @@ package cm.aptoide.pt.dataprovider.model.v7;
 /**
  * Created by neuro on 27-04-2016.
  */
-public class ListRewardApps extends BaseV7EndlessDataListResponse<RewardApp> {
+public class ListRewardApps extends BaseV7EndlessDataListResponse<AppCoinsCampaign> {
 
   public ListRewardApps() {
   }

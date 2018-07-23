@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
@@ -171,22 +172,16 @@ public class BundlesResponseMapper {
     return applications;
   }
 
-  private List<Application> map(List<cm.aptoide.pt.dataprovider.model.v7.RewardApp> appsList,
-      String tag) {
+  private List<Application> map(List<AppCoinsCampaign> appsList, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
-    for (cm.aptoide.pt.dataprovider.model.v7.RewardApp app : appsList) {
-      if (!installManager.wasAppEverInstalled(app.getApp()
-          .getPackageName())) {
-        rewardAppsList.add(new RewardApp(app.getApp()
-            .getName(), app.getApp()
-            .getIcon(), app.getApp()
-            .getStats()
+    for (AppCoinsCampaign campaign : appsList) {
+      App app = campaign.getApp();
+      if (!installManager.wasAppEverInstalled(app.getPackageName())) {
+        rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
             .getRating()
-            .getAvg(), app.getApp()
-            .getStats()
-            .getPdownloads(), app.getApp()
-            .getPackageName(), app.getApp()
-            .getId(), tag, Double.valueOf(app.getReward())));
+            .getAvg(), app.getStats()
+            .getPdownloads(), app.getPackageName(), app.getId(), tag,
+            Double.valueOf(campaign.getReward())));
       }
     }
     return rewardAppsList;

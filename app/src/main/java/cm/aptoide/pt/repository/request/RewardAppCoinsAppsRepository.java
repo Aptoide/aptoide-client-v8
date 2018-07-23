@@ -2,6 +2,8 @@ package cm.aptoide.pt.repository.request;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsAdsRequest;
@@ -47,22 +49,16 @@ public class RewardAppCoinsAppsRepository {
             .getList()));
   }
 
-  private Observable<List<Application>> map(
-      List<cm.aptoide.pt.dataprovider.model.v7.RewardApp> list) {
+  private Observable<List<Application>> map(List<AppCoinsCampaign> list) {
     List<Application> rewardAppsList = new ArrayList<>();
-    for (cm.aptoide.pt.dataprovider.model.v7.RewardApp app : list) {
-      if (!installManager.wasAppEverInstalled(app.getApp()
-          .getPackageName())) {
-        rewardAppsList.add(new RewardApp(app.getApp()
-            .getName(), app.getApp()
-            .getIcon(), app.getApp()
-            .getStats()
+    for (AppCoinsCampaign campaign : list) {
+      App app = campaign.getApp();
+      if (!installManager.wasAppEverInstalled(app.getPackageName())) {
+        rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
             .getRating()
-            .getAvg(), app.getApp()
-            .getStats()
-            .getPdownloads(), app.getApp()
-            .getPackageName(), app.getApp()
-            .getId(), "", Double.valueOf(app.getReward())));
+            .getAvg(), app.getStats()
+            .getPdownloads(), app.getPackageName(), app.getId(), "",
+            Double.valueOf(campaign.getReward())));
       }
     }
     return Observable.just(rewardAppsList);

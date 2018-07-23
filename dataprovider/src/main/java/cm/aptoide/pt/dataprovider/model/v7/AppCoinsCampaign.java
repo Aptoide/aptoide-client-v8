@@ -2,12 +2,12 @@ package cm.aptoide.pt.dataprovider.model.v7;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 
-public class RewardApp {
+public class AppCoinsCampaign {
   private String id;
   private String reward;
   private App app;
 
-  public RewardApp() {
+  public AppCoinsCampaign() {
   }
 
   public String getId() {
