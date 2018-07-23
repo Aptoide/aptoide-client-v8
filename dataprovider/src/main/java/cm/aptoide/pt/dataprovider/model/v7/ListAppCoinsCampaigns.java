@@ -8,9 +8,9 @@ package cm.aptoide.pt.dataprovider.model.v7;
 /**
  * Created by neuro on 27-04-2016.
  */
-public class ListRewardApps extends BaseV7EndlessDataListResponse<AppCoinsCampaign> {
+public class ListAppCoinsCampaigns extends BaseV7EndlessDataListResponse<AppCoinsCampaign> {
 
-  public ListRewardApps() {
+  public ListAppCoinsCampaigns() {
   }
 
   public int hashCode() {
@@ -21,13 +21,13 @@ public class ListRewardApps extends BaseV7EndlessDataListResponse<AppCoinsCampai
   }
 
   protected boolean canEqual(Object other) {
-    return other instanceof ListRewardApps;
+    return other instanceof ListAppCoinsCampaigns;
   }
 
   public boolean equals(Object o) {
     if (o == this) return true;
-    if (!(o instanceof ListRewardApps)) return false;
-    final ListRewardApps other = (ListRewardApps) o;
+    if (!(o instanceof ListAppCoinsCampaigns)) return false;
+    final ListAppCoinsCampaigns other = (ListAppCoinsCampaigns) o;
     if (!other.canEqual((Object) this)) return false;
     if (!super.equals(o)) return false;
     return true;
