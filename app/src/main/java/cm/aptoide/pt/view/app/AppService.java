@@ -87,7 +87,10 @@ public class AppService {
         list.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getDownloads(), app.getPackageName(), app.getId(), "", false, false, ""));
+            .getDownloads(), app.getPackageName(), app.getId(), "",
+            app.getAppcoins() != null && app.getAppcoins()
+                .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
+            .hasAdvertising()));
       }
       return Observable.just(new AppsList(list, false, listApps.getDataList()
           .getNext()));

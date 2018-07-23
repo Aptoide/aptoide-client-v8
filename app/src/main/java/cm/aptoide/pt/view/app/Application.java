@@ -14,10 +14,9 @@ public class Application {
   private final String tag;
   private final boolean hasAppcIab;
   private final boolean hasAppcAds;
-  private final String reward;
 
   public Application(String name, String icon, float rating, int downloads, String packageName,
-      long appId, String tag, boolean hasAppcIab, boolean hasAppcAds, String reward) {
+      long appId, String tag, boolean hasBilling, boolean hasAdvertising) {
     this.name = name;
     this.icon = icon;
     this.rating = rating;
@@ -25,9 +24,8 @@ public class Application {
     this.appId = appId;
     this.packageName = packageName;
     this.tag = tag;
-    this.hasAppcIab = hasAppcIab;
-    this.hasAppcAds = hasAppcAds;
-    this.reward = reward;
+    this.hasAppcIab = hasBilling;
+    this.hasAppcAds = hasAdvertising;
   }
 
   public Application() {
@@ -40,7 +38,6 @@ public class Application {
     tag = "";
     hasAppcIab = false;
     hasAppcAds = false;
-    reward = null;
   }
 
   public long getAppId() {
@@ -77,9 +74,5 @@ public class Application {
 
   public boolean hasAppcAds() {
     return hasAppcAds;
-  }
-
-  public String getReward() {
-    return reward;
   }
 }

@@ -152,14 +152,14 @@ public class BundlesResponseMapper {
                   .getRating()
                   .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
-              appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising(), ""));
+              appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising()));
         } else {
           AppCoinsInfo appc = app.getAppcoins();
           applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
               .getRating()
               .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), tag,
-              appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising(), ""));
+              appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising()));
         }
       } catch (Exception e) {
         Logger.getInstance()
@@ -181,7 +181,9 @@ public class BundlesResponseMapper {
             .getRating()
             .getAvg(), app.getStats()
             .getPdownloads(), app.getPackageName(), app.getId(), tag,
-            Double.valueOf(campaign.getReward())));
+            Double.valueOf(campaign.getReward()), app.getAppcoins() != null && app.getAppcoins()
+            .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
+            .hasAdvertising()));
       }
     }
     return rewardAppsList;

@@ -58,7 +58,9 @@ public class RewardAppCoinsAppsRepository {
             .getRating()
             .getAvg(), app.getStats()
             .getPdownloads(), app.getPackageName(), app.getId(), "",
-            Double.valueOf(campaign.getReward())));
+            Double.valueOf(campaign.getReward()), app.getAppcoins() != null && app.getAppcoins()
+            .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
+            .hasAdvertising()));
       }
     }
     return Observable.just(rewardAppsList);
