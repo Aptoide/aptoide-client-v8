@@ -4,10 +4,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 
-class AppSecondaryInfoViewHolder {
+public class AppSecondaryInfoViewHolder {
   private final DecimalFormat oneDecimalFormatter;
   private final LinearLayout appcLayout;
   private final TextView appcText;
@@ -22,19 +21,19 @@ class AppSecondaryInfoViewHolder {
     rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
-  public void setInfo(Application app) {
-    if (app.hasAppcAds()) {
+  public void setInfo(boolean hasAppcAdvertising, boolean hasAppcBilling, float appRating,
+      boolean showRating) {
+    if (hasAppcAdvertising) {
       appcText.setText(R.string.appc_short_get_appc);
       appcLayout.setVisibility(View.VISIBLE);
-    } else if (app.hasAppcIab()) {
+    } else if (hasAppcBilling) {
       appcText.setText(R.string.appc_short_spend_appc);
       appcLayout.setVisibility(View.VISIBLE);
-    } else {
-      float rating = app.getRating();
-      if (rating == 0) {
+    } else if (showRating) {
+      if (appRating == 0) {
         this.rating.setText(R.string.appcardview_title_no_stars);
       } else {
-        this.rating.setText(oneDecimalFormatter.format(rating));
+        this.rating.setText(oneDecimalFormatter.format(appRating));
       }
       ratingLayout.setVisibility(View.VISIBLE);
     }

@@ -193,6 +193,14 @@ public class App {
     this.appcoins = appcoins;
   }
 
+  public boolean hasBilling() {
+    return getAppcoins() != null && getAppcoins().hasBilling();
+  }
+
+  public boolean hasAdvertising() {
+    return getAppcoins() != null && getAppcoins().hasAdvertising();
+  }
+
   public static class Stats {
 
     private int apps;         // used on Store items
