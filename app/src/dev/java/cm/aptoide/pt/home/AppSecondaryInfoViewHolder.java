@@ -36,6 +36,8 @@ public class AppSecondaryInfoViewHolder {
         this.rating.setText(oneDecimalFormatter.format(appRating));
       }
       ratingLayout.setVisibility(View.VISIBLE);
+    } else {
+      appcLayout.setVisibility(View.INVISIBLE);
     }
   }
 }
