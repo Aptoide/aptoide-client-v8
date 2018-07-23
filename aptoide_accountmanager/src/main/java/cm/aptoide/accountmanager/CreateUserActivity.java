@@ -86,7 +86,12 @@ public class CreateUserActivity extends PermissionsBaseActivity
   }
 
   @Override void loadImage(Uri imagePath) {
-    ImageLoader.with(this).loadWithCircleTransform(imagePath, avatarImage, false);
+    if (imagePath != null) {
+      ImageLoader.with(this).loadWithCircleTransform(imagePath, avatarImage, false);
+    }
+    else{
+      //pass
+    }
   }
 
   @Override void showIconPropertiesError(String errors) {
