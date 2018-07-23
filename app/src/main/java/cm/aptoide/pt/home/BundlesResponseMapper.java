@@ -2,15 +2,14 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
+import cm.aptoide.pt.dataprovider.model.v7.ListRewardApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.Appc;
-import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
 import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.install.InstallManager;
@@ -64,9 +63,8 @@ public class BundlesResponseMapper {
           appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
               .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
-          List<Application> applicationList = appToRewardApp(
-              ((BaseV7EndlessDataListResponse<AppCoinsRewardApp>) viewObject).getDataList()
-                  .getList(), widgetTag);
+          List<Application> applicationList = map(((ListRewardApps) viewObject).getDataList()
+              .getList(), widgetTag);
           if (!applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
@@ -104,22 +102,6 @@ public class BundlesResponseMapper {
     }
 
     return appBundles;
-  }
-
-  private List<Application> appToRewardApp(List<AppCoinsRewardApp> appsList, String tag) {
-    List<Application> rewardAppsList = new ArrayList<>();
-    for (AppCoinsRewardApp appCoinsRewardApp : appsList) {
-      if (!installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {
-        rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
-            appCoinsRewardApp.getStats()
-                .getRating()
-                .getAvg(), appCoinsRewardApp.getStats()
-            .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), tag,
-            appCoinsRewardApp.getAppcoins()
-                .getReward()));
-      }
-    }
-    return rewardAppsList;
   }
 
   private Event getEvent(GetStoreWidgets.WSWidget widget) {
@@ -163,24 +145,20 @@ public class BundlesResponseMapper {
     for (App app : apps) {
       try {
         if (type.equals(HomeBundle.BundleType.EDITORS)) {
-          Appc appc = app.getAppc();
+          AppCoinsInfo appc = app.getAppcoins();
           applications.add(new FeatureGraphicApplication(app.getName(), app.getIcon(),
               app.getStats()
                   .getRating()
                   .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
-              appc != null && appc.hasIab(), appc != null && appc.hasAds(),
-              appc != null && appc.hasAds() ? appc.getAds()
-                  .getReward() : ""));
+              appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising(), ""));
         } else {
-          Appc appc = app.getAppc();
+          AppCoinsInfo appc = app.getAppcoins();
           applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
               .getRating()
               .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), tag,
-              appc != null && appc.hasIab(), appc != null && appc.hasAds(),
-              appc != null && appc.hasAds() ? appc.getAds()
-                  .getReward() : ""));
+              appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising(), ""));
         }
       } catch (Exception e) {
         Logger.getInstance()
@@ -191,5 +169,26 @@ public class BundlesResponseMapper {
     }
 
     return applications;
+  }
+
+  private List<Application> map(List<cm.aptoide.pt.dataprovider.model.v7.RewardApp> appsList,
+      String tag) {
+    List<Application> rewardAppsList = new ArrayList<>();
+    for (cm.aptoide.pt.dataprovider.model.v7.RewardApp app : appsList) {
+      if (!installManager.wasAppEverInstalled(app.getApp()
+          .getPackageName())) {
+        rewardAppsList.add(new RewardApp(app.getApp()
+            .getName(), app.getApp()
+            .getIcon(), app.getApp()
+            .getStats()
+            .getRating()
+            .getAvg(), app.getApp()
+            .getStats()
+            .getPdownloads(), app.getApp()
+            .getPackageName(), app.getApp()
+            .getId(), tag, Double.valueOf(app.getReward())));
+      }
+    }
+    return rewardAppsList;
   }
 }

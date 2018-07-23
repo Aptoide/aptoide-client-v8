@@ -8,7 +8,6 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -20,6 +19,7 @@ import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
 import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.model.v7.ListReviews;
+import cm.aptoide.pt.dataprovider.model.v7.ListRewardApps;
 import cm.aptoide.pt.dataprovider.model.v7.SetComment;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
@@ -525,8 +525,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body GetSocialRecommendsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("appcoins/ads/get/limit={limit}")
-    Observable<BaseV7EndlessDataListResponse<AppCoinsRewardApp>> getAppCoinsAds(
+    @POST("appcoins/campaigns/get/limit={limit}") Observable<ListRewardApps> getAppCoinsAds(
         @Body GetAppCoinsAdsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Path(value = "limit") int limit);

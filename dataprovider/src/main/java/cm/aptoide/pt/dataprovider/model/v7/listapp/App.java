@@ -30,7 +30,7 @@ public class App {
   private File file;
   private Stats stats;
   private Obb obb;
-  private Appc appc;
+  private AppCoinsInfo appcoins;
 
   public App() {
   }
@@ -185,12 +185,12 @@ public class App {
     return other instanceof App;
   }
 
-  public Appc getAppc() {
-    return appc;
+  public AppCoinsInfo getAppcoins() {
+    return appcoins;
   }
 
-  public void setAppc(Appc appc) {
-    this.appc = appc;
+  public void setAppcoinsInfo(AppCoinsInfo appcoins) {
+    this.appcoins = appcoins;
   }
 
   public static class Stats {

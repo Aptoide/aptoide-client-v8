@@ -3,7 +3,6 @@ package cm.aptoide.pt.repository.request;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.AppCoinsRewardApp;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsAdsRequest;
 import cm.aptoide.pt.home.RewardApp;
@@ -44,21 +43,26 @@ public class RewardAppCoinsAppsRepository {
     return new GetAppCoinsAdsRequest(new GetAppCoinsAdsRequest.Body(0, APPCOINS_REWARD_LIMIT),
         httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(
         refresh)
-        .flatMap(response -> mapToRewardApp(response.getDataList()
+        .flatMap(response -> map(response.getDataList()
             .getList()));
   }
 
-  private Observable<List<Application>> mapToRewardApp(List<AppCoinsRewardApp> list) {
+  private Observable<List<Application>> map(
+      List<cm.aptoide.pt.dataprovider.model.v7.RewardApp> list) {
     List<Application> rewardAppsList = new ArrayList<>();
-    for (AppCoinsRewardApp appCoinsRewardApp : list) {
-      if (!installManager.wasAppEverInstalled(appCoinsRewardApp.getPackageName())) {
-        rewardAppsList.add(new RewardApp(appCoinsRewardApp.getName(), appCoinsRewardApp.getIcon(),
-            appCoinsRewardApp.getStats()
-                .getRating()
-                .getAvg(), appCoinsRewardApp.getStats()
-            .getPdownloads(), appCoinsRewardApp.getPackageName(), appCoinsRewardApp.getId(), "",
-            appCoinsRewardApp.getAppcoins()
-                .getReward()));
+    for (cm.aptoide.pt.dataprovider.model.v7.RewardApp app : list) {
+      if (!installManager.wasAppEverInstalled(app.getApp()
+          .getPackageName())) {
+        rewardAppsList.add(new RewardApp(app.getApp()
+            .getName(), app.getApp()
+            .getIcon(), app.getApp()
+            .getStats()
+            .getRating()
+            .getAvg(), app.getApp()
+            .getStats()
+            .getPdownloads(), app.getApp()
+            .getPackageName(), app.getApp()
+            .getId(), "", Double.valueOf(app.getReward())));
       }
     }
     return Observable.just(rewardAppsList);
