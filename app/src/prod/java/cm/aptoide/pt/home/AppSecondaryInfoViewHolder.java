@@ -17,13 +17,16 @@ public class AppSecondaryInfoViewHolder {
     this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
-  public void setInfo(boolean hasAdvertising, boolean hasBilling, float averageRating,
+  public void setInfo(boolean hasAppcAdvertising, boolean hasAppcBilling, float appRating,
       boolean showRating) {
-    if (averageRating == 0) {
-      this.rating.setText(R.string.appcardview_title_no_stars);
-    } else {
-      this.rating.setText(oneDecimalFormatter.format(averageRating));
+    if (showRating) {
+      if (appRating == 0) {
+        this.rating.setText(R.string.appcardview_title_no_stars);
+        ratingLayout.setVisibility(View.VISIBLE);
+      } else {
+        this.rating.setText(oneDecimalFormatter.format(appRating));
+        ratingLayout.setVisibility(View.VISIBLE);
+      }
     }
-    ratingLayout.setVisibility(View.VISIBLE);
   }
 }
