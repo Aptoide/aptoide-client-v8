@@ -9,8 +9,9 @@ public class FeatureGraphicApplication extends Application {
   private final String featureGraphic;
 
   public FeatureGraphicApplication(String name, String icon, float rating, int downloads,
-      String packageName, long appId, String featureGraphic, String tag) {
-    super(name, icon, rating, downloads, packageName, appId, tag);
+      String packageName, long appId, String featureGraphic, String tag, boolean hasBilling,
+      boolean hasAdvertising) {
+    super(name, icon, rating, downloads, packageName, appId, tag, hasBilling, hasAdvertising);
     this.featureGraphic = featureGraphic;
   }
 

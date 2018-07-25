@@ -11,8 +11,8 @@ public class RewardApp extends Application {
   private double rewardValue;
 
   public RewardApp(String name, String icon, float rating, int downloads, String packageName,
-      long appId, String tag, double rewardValue) {
-    super(name, icon, rating, downloads, packageName, appId, tag);
+      long appId, String tag, double rewardValue, boolean hasBilling, boolean hasAdvertising) {
+    super(name, icon, rating, downloads, packageName, appId, tag, hasBilling, hasAdvertising);
     this.rewardValue = rewardValue;
   }
 

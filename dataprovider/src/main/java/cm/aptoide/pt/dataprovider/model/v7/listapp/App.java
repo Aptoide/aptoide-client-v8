@@ -30,6 +30,7 @@ public class App {
   private File file;
   private Stats stats;
   private Obb obb;
+  private AppCoinsInfo appcoins;
 
   public App() {
   }
@@ -182,6 +183,14 @@ public class App {
 
   protected boolean canEqual(Object other) {
     return other instanceof App;
+  }
+
+  public AppCoinsInfo getAppcoins() {
+    return appcoins;
+  }
+
+  public void setAppcoinsInfo(AppCoinsInfo appcoins) {
+    this.appcoins = appcoins;
   }
 
   public static class Stats {
