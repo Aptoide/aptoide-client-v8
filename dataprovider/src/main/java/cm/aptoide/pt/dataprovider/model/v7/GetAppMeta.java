@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.model.v7;
 
+import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -75,6 +76,7 @@ public class GetAppMeta extends BaseV7Response {
     private Stats stats;
     private Obb obb;
     private Pay pay;
+    private AppCoinsInfo appcoins;
 
     public App() {
     }
@@ -255,6 +257,14 @@ public class GetAppMeta extends BaseV7Response {
 
     protected boolean canEqual(Object other) {
       return other instanceof App;
+    }
+
+    public boolean hasBilling() {
+      return appcoins != null && appcoins.hasBilling();
+    }
+
+    public void setAppcoins(AppCoinsInfo appcoins) {
+      this.appcoins = appcoins;
     }
 
     public boolean equals(Object o) {
