@@ -231,8 +231,8 @@ import rx.subjects.PublishSubject;
   }
 
   @FragmentScope @Provides GetRewardAppCoinsAppsNavigator providesGetRewardAppCoinsAppsNavigator(
-      FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
-    return new GetRewardAppCoinsAppsNavigator(fragmentNavigator, appNavigator);
+      AppNavigator appNavigator) {
+    return new GetRewardAppCoinsAppsNavigator(appNavigator);
   }
 
   @FragmentScope @Provides FlagManager providesFlagManager(FlagService flagService) {
