@@ -41,7 +41,7 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
-    versionName "9.0.0.4"
+    versionName "9.0.1.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true
@@ -89,7 +89,7 @@ android {
     internal {
       dimension "mode"
       applicationIdSuffix "internal"
-      versionName "9.0.0." + getDate()
+      versionName "9.0.1." + getDate()
       versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
@@ -97,7 +97,7 @@ android {
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
-      versionName "9.0.0." + getDate()
+      versionName "9.0.1." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['prod', 'internal']
     }
@@ -114,7 +114,7 @@ android {
     fairy {
       dimension "mode"
       applicationIdSuffix "testfairy"
-      versionName "9.0.0." + getDate()
+      versionName "9.0.1." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
