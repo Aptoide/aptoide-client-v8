@@ -357,10 +357,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarApps.setNestedScrollingEnabled(false);
 
     similarAppsAdapter =
-        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("#,#"),
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("0.0"),
             similarAppClick, "similar_apps");
     similarDownloadsAdapter =
-        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("#,#"),
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("0.0"),
             similarAppClick, "similar_downloads");
 
     similarDownloadApps.setAdapter(similarDownloadsAdapter);
@@ -543,8 +543,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     downloadsTop.setText(
         String.format("%s", AptoideUtils.StringU.withSuffix(model.getPackageDownloads())));
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
-    ratingInfo.setText(new DecimalFormat("#.#").format(model.getRating()
-        .getAverage()));
+    if (model.getRating()
+        .getAverage() == 0) {
+      ratingInfo.setText(R.string.appcardview_title_no_stars);
+    } else {
+      ratingInfo.setText(new DecimalFormat("0.0").format(model.getRating()
+          .getAverage()));
+    }
     if (model.getAppc() > 0) {
       appcRewardView.setVisibility(View.VISIBLE);
       appcRewardValue.setText(formatAppCoinsRewardMessage(model.getAppc()));
@@ -1127,7 +1132,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     topReviewsProgress.setVisibility(View.GONE);
 
     reviewUsers.setText(AptoideUtils.StringU.withSuffix(gRating));
-    avgReviewScore.setText(String.format(Locale.getDefault(), "%.1f", avgRating));
+    if (avgRating == 0) {
+      avgReviewScore.setText(R.string.appcardview_title_no_stars);
+    } else {
+      avgReviewScore.setText(String.format(Locale.getDefault(), "%.1f", avgRating));
+    }
     avgReviewScoreBar.setRating(avgRating);
 
     if (hasReviews) {
