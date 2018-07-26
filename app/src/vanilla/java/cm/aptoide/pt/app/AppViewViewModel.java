@@ -65,7 +65,7 @@ public class AppViewViewModel {
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
   private final String marketName;
-  private boolean billing;
+  private boolean hasBilling;
 
   public AppViewViewModel(long appId, String appName, Store store, String storeTheme,
       boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
@@ -76,7 +76,7 @@ public class AppViewViewModel {
       String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid,
       String paidAppPath, String paymentStatus, boolean isLatestTrustedVersion, String uniqueName,
       OpenType openType, double appc, SearchAdResult minimalAd, String editorsChoice,
-      String originTag, boolean isStoreFollowed, String marketName, boolean billing) {
+      String originTag, boolean isStoreFollowed, String marketName, boolean hasBilling) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -121,7 +121,7 @@ public class AppViewViewModel {
     this.originTag = originTag;
     this.isStoreFollowed = isStoreFollowed;
     this.marketName = marketName;
-    this.billing = billing;
+    this.hasBilling = hasBilling;
     this.loading = false;
     this.error = null;
   }
@@ -173,7 +173,7 @@ public class AppViewViewModel {
     this.marketName = "";
     this.isStoreFollowed = false;
     this.error = null;
-    this.billing = false;
+    this.hasBilling = false;
   }
 
   public AppViewViewModel(DetailedAppRequestResult.Error error) {
@@ -223,7 +223,7 @@ public class AppViewViewModel {
     this.marketName = "";
     this.isStoreFollowed = false;
     this.loading = false;
-    this.billing = false;
+    this.hasBilling = false;
   }
 
   public boolean isStoreFollowed() {
@@ -415,6 +415,6 @@ public class AppViewViewModel {
   }
 
   public boolean hasBilling() {
-    return billing;
+    return hasBilling;
   }
 }

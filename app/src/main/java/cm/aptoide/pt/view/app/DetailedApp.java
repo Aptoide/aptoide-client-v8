@@ -45,7 +45,7 @@ public class DetailedApp {
   private final String uniqueName;
   private String path;
   private long id;
-  private boolean billing;
+  private boolean hasBilling;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
@@ -53,7 +53,7 @@ public class DetailedApp {
       long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid, String paidAppPath,
-      String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, boolean billing) {
+      String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling) {
 
     this.id = id;
     this.name = name;
@@ -88,7 +88,7 @@ public class DetailedApp {
     this.paymentStatus = paymentStatus;
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
-    this.billing = billing;
+    this.hasBilling = hasBilling;
   }
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
@@ -97,7 +97,7 @@ public class DetailedApp {
       long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean isLatestTrustedVersion,
-      String uniqueName, boolean billing) {
+      String uniqueName, boolean hasBilling) {
 
     this.id = id;
     this.name = name;
@@ -127,7 +127,7 @@ public class DetailedApp {
     this.pay = pay;
     this.webUrls = webUrls;
     this.isPaid = isPaid;
-    this.billing = billing;
+    this.hasBilling = hasBilling;
     this.wasPaid = false;
     this.paidAppPath = "";
     this.paymentStatus = "";
@@ -276,6 +276,6 @@ public class DetailedApp {
   }
 
   public boolean hasBilling() {
-    return billing;
+    return hasBilling;
   }
 }
