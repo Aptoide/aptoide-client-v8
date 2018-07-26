@@ -338,9 +338,16 @@ public class AppViewManager {
     return marketName;
   }
 
-  public Observable<Experiment> getABTestingExperiment(
-      ABTestManager.ExperimentType experimentType) {
-    return abTestManager.getExperiment(experimentType);
+  public Observable<Experiment> getShareDialogExperiment() {
+    return aptoideAccountManager.accountStatus()
+        .first()
+        .flatMap(account -> {
+          if (account.isLoggedIn()) {
+            return abTestManager.getExperiment(ABTestManager.ExperimentType.SHARE_DIALOG);
+          } else {
+            return Observable.just(new Experiment());
+          }
+        });
   }
 
   public Observable<Boolean> recordABTestImpression(ABTestManager.ExperimentType experimentType) {
