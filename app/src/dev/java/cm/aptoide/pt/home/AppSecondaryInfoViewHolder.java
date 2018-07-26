@@ -26,11 +26,11 @@ public class AppSecondaryInfoViewHolder {
     if (hasAppcAdvertising) {
       appcText.setText(R.string.appc_short_get_appc);
       appcLayout.setVisibility(View.VISIBLE);
-      if (showRating) rating.setVisibility(View.INVISIBLE);
+      if (showRating) ratingLayout.setVisibility(View.INVISIBLE);
     } else if (hasAppcBilling) {
       appcText.setText(R.string.appc_short_spend_appc);
       appcLayout.setVisibility(View.VISIBLE);
-      if (showRating) rating.setVisibility(View.INVISIBLE);
+      if (showRating) ratingLayout.setVisibility(View.INVISIBLE);
     } else if (showRating) {
       if (appRating == 0) {
         this.rating.setText(R.string.appcardview_title_no_stars);
@@ -38,6 +38,7 @@ public class AppSecondaryInfoViewHolder {
         this.rating.setText(oneDecimalFormatter.format(appRating));
       }
       ratingLayout.setVisibility(View.VISIBLE);
+      appcLayout.setVisibility(View.INVISIBLE);
     } else {
       appcLayout.setVisibility(View.INVISIBLE);
     }
