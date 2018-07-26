@@ -226,7 +226,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Subscription errorMessageSubscription;
   private NestedScrollView scrollView;
   private int scrollViewY;
-  private AppSupportsBillingInfoViewHolder billingView;
+  private AppViewAppcInfoViewHolder appcInfoView;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -277,8 +277,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     ratingInfo = (TextView) view.findViewById(R.id.header_rating);
     appcRewardView = view.findViewById(R.id.appc_layout);
     appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
-    billingView =
-        new AppSupportsBillingInfoViewHolder((LinearLayout) view.findViewById(R.id.iap_appc_label));
+    appcInfoView =
+        new AppViewAppcInfoViewHolder((LinearLayout) view.findViewById(R.id.iap_appc_label),
+            appcRewardView, appcRewardValue);
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
     similarDownloadApps = (RecyclerView) similarDownloadView.findViewById(R.id.similar_list);
     latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
@@ -548,12 +549,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
     ratingInfo.setText(new DecimalFormat("#.#").format(model.getRating()
         .getAverage()));
-    if (model.hasAdvertising()) {
-      appcRewardView.setVisibility(View.VISIBLE);
-      appcRewardValue.setText(formatAppCoinsRewardMessage());
-    } else if (model.hasBilling()) {
-      billingView.showInfo();
-    }
+
+    appcInfoView.showInfo(model.hasAdvertising(), model.hasBilling(),
+        formatAppCoinsRewardMessage());
 
     latestVersion.setText(model.getVersionName());
     if (!model.isLatestTrustedVersion()) {
