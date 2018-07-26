@@ -9,8 +9,6 @@ import rx.Observable;
 
 public interface HomeView extends BundleView {
 
-  Observable<AppHomeEvent> rewardAppClicked();
-
   Observable<AppHomeEvent> recommendedAppClicked();
 
   void scrollToTop();

@@ -248,12 +248,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .debounce(200, TimeUnit.MILLISECONDS);
   }
 
-  @Override public Observable<AppHomeEvent> rewardAppClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.REWARD_APP))
-        .cast(AppHomeEvent.class);
-  }
-
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()

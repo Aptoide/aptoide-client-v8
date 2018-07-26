@@ -59,12 +59,6 @@ public class HomeNavigator {
     fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
 
-  public void navigateToRewardAppView(long appId, String packageName, String tag,
-      double rewardAppCoins) {
-    appNavigator.navigateWithAppcReward(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY,
-        tag, rewardAppCoins);
-  }
-
   private NewAppViewFragment.OpenType parseAction(HomeEvent.Type type) {
     if (type.equals(HomeEvent.Type.SOCIAL_CLICK)) {
       return NewAppViewFragment.OpenType.OPEN_ONLY;
