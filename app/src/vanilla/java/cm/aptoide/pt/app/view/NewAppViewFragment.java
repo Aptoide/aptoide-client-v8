@@ -548,9 +548,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
     ratingInfo.setText(new DecimalFormat("#.#").format(model.getRating()
         .getAverage()));
-    if (model.getAppc() > 0) {
+    if (model.hasAdvertising()) {
       appcRewardView.setVisibility(View.VISIBLE);
-      appcRewardValue.setText(formatAppCoinsRewardMessage(model.getAppc()));
+      appcRewardValue.setText(formatAppCoinsRewardMessage());
     } else if (model.hasBilling()) {
       billingView.showInfo();
     }
@@ -1191,10 +1191,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
   }
 
-  private SpannableString formatAppCoinsRewardMessage(double appcReward) {
-    DecimalFormat twoDecimalFormat = new DecimalFormat("#.##");
-
-    String reward = String.valueOf(twoDecimalFormat.format(appcReward)) + " APPC";
+  private SpannableString formatAppCoinsRewardMessage() {
+    String reward = "APPC";
     String tryAppMessage =
         getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
 
