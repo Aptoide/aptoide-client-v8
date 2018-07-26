@@ -103,22 +103,12 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         >
-      <TextView
+      <include
+          layout="@layout/appc_label"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="8dp"
-          android:layout_marginRight="8dp"
-          android:textColor="@color/aptoide_orange"
-          tools:text="0.56 APPC"
-          style="@style/Aptoide.TextView.Regular.XS"
-          />
-      <ImageView
-          android:id="@+id/appc_icon"
-          android:layout_width="16dp"
-          android:layout_height="16dp"
-          android:src="@drawable/ic_appc_logo"
           />
     </LinearLayout>
   </RelativeLayout>

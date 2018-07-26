@@ -4,18 +4,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.home.AppSecondaryInfoViewHolder;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.text.DecimalFormat;
 import rx.subscriptions.CompositeSubscription;
 
 public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult> {
 
   public static final int LAYOUT = R.layout.search_app_row;
   private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
+  private final AppSecondaryInfoViewHolder appInfoViewHolder;
 
   private TextView nameTextView;
   private ImageView iconImageView;
@@ -32,12 +35,15 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     super(itemView);
     subscriptions = new CompositeSubscription();
     this.onItemViewClick = onItemViewClick;
+    appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, new DecimalFormat("#.#"));
     bindViews(itemView);
   }
 
   @Override public void setup(SearchAppResult result, int position) {
     this.searchApp = result;
     this.position = position;
+    appInfoViewHolder.setInfo(result.hasAppcAdvertising(), result.hasAppcBilling(),
+        result.getAverageRating(), false);
     setAppName();
     setDownloadCount();
     setAverageValue();
