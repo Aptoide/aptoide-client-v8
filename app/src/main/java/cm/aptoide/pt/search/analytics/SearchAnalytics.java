@@ -16,6 +16,8 @@ public class SearchAnalytics {
   public static final String NO_RESULTS = "Search_No_Results";
   public static final String APP_CLICK = "Search_Results_App_View_Click";
   public static final String SEARCH_START = "Search_Start";
+  private static final String FROM_TRENDING = "trending";
+  private static final String FROM_AUTOCOMPLETE = "autocomplete";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -26,7 +28,8 @@ public class SearchAnalytics {
 
   public void searchFromSuggestion(String query, int suggestionPosition, String inputQuery) {
 
-    search(query, true, suggestionPosition, inputQuery.isEmpty() ? "trending" : "autocomplete",
+    search(query, true, suggestionPosition,
+        inputQuery.isEmpty() ? FROM_TRENDING : FROM_AUTOCOMPLETE,
         inputQuery);
   }
 
