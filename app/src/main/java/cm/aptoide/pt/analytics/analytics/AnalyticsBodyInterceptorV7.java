@@ -43,7 +43,7 @@ public class AnalyticsBodyInterceptorV7 implements AnalyticsBodyInterceptor<Anal
             body.setAccessToken(authentication.getAccessToken());
           }
 
-          body.setAptoideId(idsRepository.getUniqueIdentifier());
+          body.setAptoideUid(idsRepository.getUniqueIdentifier());
           body.setAptoideVercode(aptoideVersionCode);
           body.setLang(AptoideUtils.SystemU.getCountryCode(resources));
           body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
