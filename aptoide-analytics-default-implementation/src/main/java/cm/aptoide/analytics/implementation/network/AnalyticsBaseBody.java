@@ -1,7 +1,7 @@
 package cm.aptoide.analytics.implementation.network;
 
 public class AnalyticsBaseBody {
-  private String aptoideId;
+  private String aptoideUid;
   private String accessToken;
   private int aptoideVercode;
   private String aptoideMd5sum;
@@ -10,12 +10,15 @@ public class AnalyticsBaseBody {
   private boolean mature;
   private String q;
 
-  public String getAptoideId() {
-    return aptoideId;
+  public AnalyticsBaseBody() {
   }
 
-  public void setAptoideId(String aptoideId) {
-    this.aptoideId = aptoideId;
+  public String getAptoideUid() {
+    return aptoideUid;
+  }
+
+  public void setAptoideUid(String aptoideUid) {
+    this.aptoideUid = aptoideUid;
   }
 
   public String getAccessToken() {
