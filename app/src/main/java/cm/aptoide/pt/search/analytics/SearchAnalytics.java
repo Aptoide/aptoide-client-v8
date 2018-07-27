@@ -6,6 +6,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Created by pedroribeiro on 04/05/17.
  */
@@ -23,18 +24,22 @@ public class SearchAnalytics {
     this.navigationTracker = navigationTracker;
   }
 
-  public void searchFromSuggestion(String query, int suggestionPosition) {
-    search(query, true, suggestionPosition);
+  public void searchFromSuggestion(String query, int suggestionPosition, String inputQuery) {
+
+    search(query, true, suggestionPosition, inputQuery.isEmpty() ? "trending" : "autocomplete",
+        inputQuery);
   }
 
   public void search(String query) {
-    search(query, false, 0);
+    search(query, false, 0, "manual", query);
   }
 
-  private void search(String query, boolean isSuggestion, int suggestionPosition) {
+  private void search(String query, boolean isSuggestion, int suggestionPosition, String source,
+      String inputQuery) {
     Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
-    map.put(AttributeKey.IS_SUGGESTION, Boolean.toString(isSuggestion));
+    map.put(AttributeKey.SEARCH_SOURCE, source);
+    map.put(AttributeKey.KEYWORD_INPUT, inputQuery);
     if (isSuggestion) {
       map.put(AttributeKey.SUGGESTION_POSITION, Integer.toString(suggestionPosition));
     }
@@ -83,9 +88,10 @@ public class SearchAnalytics {
     private static final String QUERY = "search_term";
     private static final String SOURCE = "source";
     private static final String PACKAGE_NAME = "package_name";
-    private static final String IS_SUGGESTION = "is_suggestion";
+    private static final String SEARCH_SOURCE = "search_term_source";
     private static final String SUGGESTION_POSITION = "suggestion_position";
     private static final String IS_AD = "is_ad";
     private static final String POSITION = "position";
+    private static final String KEYWORD_INPUT = "inserted_keyword";
   }
 }

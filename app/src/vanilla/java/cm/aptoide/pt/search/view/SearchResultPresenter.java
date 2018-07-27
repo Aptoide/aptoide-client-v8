@@ -450,12 +450,8 @@ import rx.functions.Func2;
         .doOnNext(data -> {
           view.collapseSearchBar(false);
           view.hideSuggestionsViews();
+          analytics.search(data.getQuery());
           navigator.navigate(data.getQuery());
-          if (data.isSuggestion()) {
-            analytics.searchFromSuggestion(data.getQuery(), data.getPosition());
-          } else {
-            analytics.search(data.getQuery());
-          }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -466,12 +462,13 @@ import rx.functions.Func2;
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.listenToSuggestionClick())
-        .filter(data -> data.hasQuery() && data.isSubmitted())
-        .observeOn(viewScheduler)
+        .filter(data -> data.second.hasQuery() && data.second.isSubmitted())
         .doOnNext(data -> {
           view.collapseSearchBar(false);
           view.hideSuggestionsViews();
-          navigator.navigate(data.getQuery());
+          navigator.navigate(data.second.getQuery());
+          analytics.searchFromSuggestion(data.second.getQuery(), data.second.getPosition(),
+              data.first);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
