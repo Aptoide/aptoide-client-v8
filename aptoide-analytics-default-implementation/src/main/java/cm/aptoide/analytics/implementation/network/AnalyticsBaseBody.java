@@ -10,12 +10,15 @@ public class AnalyticsBaseBody {
   private boolean mature;
   private String q;
 
-  public String getAptoideId() {
+  public AnalyticsBaseBody() {
+  }
+
+  public String getAptoideUid() {
     return aptoideUid;
   }
 
-  public void setAptoideId(String aptoideId) {
-    this.aptoideUid = aptoideId;
+  public void setAptoideUid(String aptoideUid) {
+    this.aptoideUid = aptoideUid;
   }
 
   public String getAccessToken() {
