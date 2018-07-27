@@ -35,7 +35,7 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     super(itemView);
     subscriptions = new CompositeSubscription();
     this.onItemViewClick = onItemViewClick;
-    appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, new DecimalFormat("#.#"));
+    appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, new DecimalFormat("0.0"));
     bindViews(itemView);
   }
 
@@ -72,7 +72,7 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
       ratingBar.setText(R.string.appcardview_title_no_stars);
     } else {
       ratingBar.setVisibility(View.VISIBLE);
-      ratingBar.setText(Float.toString(avg));
+      ratingBar.setText(new DecimalFormat("0.0").format(avg));
     }
   }
 

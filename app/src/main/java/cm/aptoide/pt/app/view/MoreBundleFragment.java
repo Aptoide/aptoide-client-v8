@@ -71,7 +71,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     notifyItemsAdded = PublishSubject.create();
-    oneDecimalFormatter = new DecimalFormat("#.#");
+    oneDecimalFormatter = new DecimalFormat("0.0");
     setHasOptionsMenu(true);
   }
 

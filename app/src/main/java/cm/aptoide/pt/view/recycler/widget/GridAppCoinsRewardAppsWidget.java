@@ -39,7 +39,7 @@ public class GridAppCoinsRewardAppsWidget extends Widget<GridAppCoinsRewardAppsD
   }
 
   @Override public void bindView(GridAppCoinsRewardAppsDisplayable displayable) {
-    this.twoDecimalFormat = new DecimalFormat("#.##");
+    this.twoDecimalFormat = new DecimalFormat("0.0");
     Application app = displayable.getPojo();
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);

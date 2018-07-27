@@ -35,7 +35,7 @@ public class ApplicationViewHolder extends ListStoreAppViewHolder {
     if (rating == 0) {
       this.rating.setText(R.string.appcardview_title_no_stars);
     } else {
-      this.rating.setText(new DecimalFormat("#.#").format(rating));
+      this.rating.setText(new DecimalFormat("0.0").format(rating));
     }
     itemView.setOnClickListener(v -> appClicks.onNext(app));
   }

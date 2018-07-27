@@ -30,7 +30,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
 
   public AppBrickListWidget(View itemView) {
     super(itemView);
-    oneDecimalFormatter = new DecimalFormat("#.#");
+    oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
   @Override protected void assignViews(View itemView) {

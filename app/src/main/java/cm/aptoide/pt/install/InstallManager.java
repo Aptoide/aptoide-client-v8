@@ -111,6 +111,7 @@ public class InstallManager {
             .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
                 download.getVersionCode()).first())
             .toList())
+        .distinctUntilChanged()
         .map(installs -> sortList(installs));
   }
 

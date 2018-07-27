@@ -101,6 +101,7 @@ public class Install {
     if (versionCode != that.versionCode) return false;
     if (state != that.state) return false;
     if (!md5.equals(that.md5)) return false;
+    if (progress != that.progress) return false;
     return packageName.equals(that.packageName);
   }
 
