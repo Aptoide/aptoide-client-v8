@@ -48,7 +48,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
     name.setText(pojo.getName());
 
     try {
-      DecimalFormat oneDecimalFormatter = new DecimalFormat("#.#");
+      DecimalFormat oneDecimalFormatter = new DecimalFormat("0.0");
       rating.setText(oneDecimalFormatter.format(pojo.getStats()
           .getRating()
           .getAvg()));
