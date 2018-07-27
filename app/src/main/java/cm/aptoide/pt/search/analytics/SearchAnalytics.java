@@ -89,7 +89,7 @@ public class SearchAnalytics {
     private static final String SOURCE = "source";
     private static final String PACKAGE_NAME = "package_name";
     private static final String SEARCH_SOURCE = "search_term_source";
-    private static final String SUGGESTION_POSITION = "suggestion_position";
+    private static final String SUGGESTION_POSITION = "search_term_position";
     private static final String IS_AD = "is_ad";
     private static final String POSITION = "position";
     private static final String KEYWORD_INPUT = "inserted_keyword";
