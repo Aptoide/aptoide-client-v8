@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -383,8 +384,8 @@ public class SearchResultFragment extends BackButtonFragment
     return searchMenuItem.isActionViewExpanded();
   }
 
-  @Override public Observable<SearchQueryEvent> listenToSuggestionClick() {
-    return suggestionClickedPublishSubject;
+  @Override public Observable<Pair<String, SearchQueryEvent>> listenToSuggestionClick() {
+    return suggestionClickedPublishSubject.map(event -> new Pair<>(unsubmittedQuery, event));
   }
 
   @Override public Observable<Void> toolbarClick() {
