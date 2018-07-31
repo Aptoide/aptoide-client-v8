@@ -22,9 +22,7 @@ public interface AppViewView extends InstallAppView {
 
   void showLoading();
 
-  void showAppview();
-
-  void populateAppDetails(AppViewViewModel detailedApp);
+  void showAppView(AppViewViewModel detailedApp);
 
   void handleError(DetailedAppRequestResult.Error error);
 
