@@ -1,6 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -9,7 +10,7 @@ import rx.Observable;
 
 public interface AppDownloader {
 
-  Observable<Download> startAppDownload(Download download);
+  Completable startAppDownload(DownloadApp download);
 
   void pauseAppDownload(String md5);
 
