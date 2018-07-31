@@ -54,6 +54,13 @@
           tools:visibility="visible"
           />
 
+      <Button
+          android:id="@+id/discovery_actionbar_button"
+          android:layout_width="46dp"
+          android:layout_height="46dp"
+          android:text="DIS"
+          />
+
     </RelativeLayout>
   </android.support.v7.widget.Toolbar>
 

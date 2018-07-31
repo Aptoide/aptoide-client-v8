@@ -73,6 +73,11 @@ public class InviteFriendsFragment extends UIComponentFragment
   }
 
   @Override public void setupViews() {
+
+    allowFind.setOnClickListener(v -> {
+      mActionsListener.allowFindClicked();
+    });
+
     RxView.clicks(allowFind)
         .subscribe(click -> mActionsListener.allowFindClicked());
     RxView.clicks(done)

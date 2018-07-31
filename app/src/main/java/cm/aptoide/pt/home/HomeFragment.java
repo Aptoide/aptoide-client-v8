@@ -57,6 +57,9 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private View noNetworkRetryButton;
   private View retryButton;
   private ImageView userAvatar;
+
+  private View discoveryButton;
+
   private BottomNavigationActivity bottomNavigationActivity;
 
   @Override public void onAttach(Activity activity) {
@@ -94,6 +97,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         savedInstanceState.putParcelable(LIST_STATE_KEY, null);
       }
     }
+    discoveryButton = view.findViewById(R.id.discovery_actionbar_button);
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
     bundlesList = (RecyclerView) view.findViewById(R.id.bundles_list);
     genericErrorView = view.findViewById(R.id.generic_error);
@@ -278,6 +282,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<Void> imageClick() {
     return RxView.clicks(userAvatar);
+  }
+
+  @Override public Observable<Void> discoveryButtonClick() {
+    return RxView.clicks(discoveryButton);
   }
 
   @Override public void showAvatar() {

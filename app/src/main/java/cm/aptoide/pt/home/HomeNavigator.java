@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.discovery.VideosFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
@@ -58,6 +59,18 @@ public class HomeNavigator {
   public void navigateToMyAccount() {
     fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
+
+
+
+
+  //***** NEW *****
+  public void navigateToVideosView() {
+    //fragmentNavigator.navigateTo(VideosFragment.newInstance(), true);
+    fragmentNavigator.navigateTo(new VideosFragment(), true);
+  }
+
+
+
 
   public void navigateToRewardAppView(long appId, String packageName, String tag,
       double rewardAppCoins) {
