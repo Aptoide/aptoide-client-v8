@@ -20,12 +20,14 @@ public class VideosFragment extends NavigationTrackFragment implements VideosCon
   private RecyclerView list;
   private VideoAdapter adapter;
   private LinearLayout videosEmptyState;
+  private VideosContract.UserActionListener actionListener;
 
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     adapter = new VideoAdapter(Collections.emptyList());
+    this.actionListener = new VideosPresenter(this, new VideosRepository(/*...*/));
     return inflater.inflate(R.layout.fragment_videos, container, false);
   }
 
@@ -37,15 +39,7 @@ public class VideosFragment extends NavigationTrackFragment implements VideosCon
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
 
-    //VideosRepository as getVideos()
-    List<String> videosList = new ArrayList<>();
-    for(int i = 0; i < 10; i++){
-      String element = "Element nr.: " + i;
-      videosList.add(element);
-    }
-    adapter.add(videosList);
-
-
+    actionListener.present();
   }
 
   @Override public void onDestroyView() {
@@ -57,7 +51,7 @@ public class VideosFragment extends NavigationTrackFragment implements VideosCon
         .getSimpleName());
   }
 
-  @Override public void showVideos() {
-    // TODO: 31/07/2018  
+  @Override public void showVideos(List<String> videos) {
+    adapter.add(videos);
   }
 }
