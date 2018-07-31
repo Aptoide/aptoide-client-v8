@@ -80,7 +80,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
-    oneDecimalFormatter = new DecimalFormat("#.#");
+    oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
