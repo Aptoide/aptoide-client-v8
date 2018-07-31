@@ -11,12 +11,14 @@ import rx.Observable;
 public class AppDownloadManager implements AppDownloader {
 
   private FileDownloader fileDownloader;
+  private DownloadApp app;
 
-  public AppDownloadManager(FileDownloader fileDownloader) {
+  public AppDownloadManager(FileDownloader fileDownloader, DownloadApp app) {
     this.fileDownloader = fileDownloader;
+    this.app = app;
   }
 
-  @Override public Completable startAppDownload(DownloadApp app) {
+  @Override public Completable startAppDownload() {
     return Observable.from(app.getDownloadFiles())
         .flatMapCompletable(downloadAppFile -> fileDownloader.startFileDownload(downloadAppFile))
         .toCompletable();

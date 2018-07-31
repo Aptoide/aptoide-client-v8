@@ -27,11 +27,12 @@ public class AppDownloadManagerTest {
   private DownloadAppFile mainObb;
   private DownloadAppFile patchObb;
   private AppDownloadManager appDownloadManager;
+  private AppDownloadManager appDownloadManagerWithObbs;
+  private AppDownloadManager appDownloadManagerWithNoFiles;
   private TestSubscriber<Object> testSubscriber;
 
   @Before public void setupAppDownloaderTest() {
     MockitoAnnotations.initMocks(this);
-    appDownloadManager = new AppDownloadManager(fileDownloader);
     apk = new DownloadAppFile("http://apkdownload.com/file/app.apk", "appMd5");
     mainObb = new DownloadAppFile("http://apkdownload.com/file/mainObb.apk", "appMd5");
     patchObb = new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "appMd5");
@@ -39,13 +40,16 @@ public class AppDownloadManagerTest {
     appToDownloadWithObbs = new DownloadApp(getFilesListWithObbs());
     appToDownloadEmptyError = new DownloadApp(Collections.emptyList());
     testSubscriber = TestSubscriber.create();
+    appDownloadManager = new AppDownloadManager(fileDownloader, appToDownload);
+    appDownloadManagerWithObbs = new AppDownloadManager(fileDownloader, appToDownloadWithObbs);
+    appDownloadManagerWithNoFiles = new AppDownloadManager(fileDownloader, appToDownloadEmptyError);
   }
 
   @Test public void startAppDownloadWithOneFile() throws Exception {
 
     when(fileDownloader.startFileDownload(apk)).thenReturn(Completable.complete());
 
-    appDownloadManager.startAppDownload(appToDownload)
+    appDownloadManager.startAppDownload()
         .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
@@ -58,7 +62,7 @@ public class AppDownloadManagerTest {
     when(fileDownloader.startFileDownload(mainObb)).thenReturn(Completable.complete());
     when(fileDownloader.startFileDownload(patchObb)).thenReturn(Completable.complete());
 
-    appDownloadManager.startAppDownload(appToDownloadWithObbs)
+    appDownloadManagerWithObbs.startAppDownload()
         .subscribe(testSubscriber);
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
@@ -68,7 +72,7 @@ public class AppDownloadManagerTest {
   }
 
   @Test public void startAppDownloadWithNoFiles() throws Exception {
-    appDownloadManager.startAppDownload(appToDownloadEmptyError)
+    appDownloadManagerWithNoFiles.startAppDownload()
         .subscribe();
     verifyZeroInteractions(fileDownloader);
   }
