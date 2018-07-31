@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class VideosFragment extends NavigationTrackFragment {
+public class VideosFragment extends NavigationTrackFragment implements VideosContract.View{
 
   private RecyclerView list;
   private VideoAdapter adapter;
@@ -37,6 +37,7 @@ public class VideosFragment extends NavigationTrackFragment {
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
 
+    //VideosRepository as getVideos()
     List<String> videosList = new ArrayList<>();
     for(int i = 0; i < 10; i++){
       String element = "Element nr.: " + i;
@@ -54,5 +55,9 @@ public class VideosFragment extends NavigationTrackFragment {
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Override public void showVideos() {
+    // TODO: 31/07/2018  
   }
 }
