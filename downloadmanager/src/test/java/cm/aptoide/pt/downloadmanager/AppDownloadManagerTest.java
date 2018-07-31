@@ -20,9 +20,6 @@ import static org.mockito.Mockito.when;
 public class AppDownloadManagerTest {
 
   @Mock FileDownloader fileDownloader;
-  private DownloadApp appToDownload;
-  private DownloadApp appToDownloadWithObbs;
-  private DownloadApp appToDownloadEmptyError;
   private DownloadAppFile apk;
   private DownloadAppFile mainObb;
   private DownloadAppFile patchObb;
@@ -36,9 +33,9 @@ public class AppDownloadManagerTest {
     apk = new DownloadAppFile("http://apkdownload.com/file/app.apk", "appMd5");
     mainObb = new DownloadAppFile("http://apkdownload.com/file/mainObb.apk", "appMd5");
     patchObb = new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "appMd5");
-    appToDownload = new DownloadApp(getFilesListWithApk());
-    appToDownloadWithObbs = new DownloadApp(getFilesListWithObbs());
-    appToDownloadEmptyError = new DownloadApp(Collections.emptyList());
+    DownloadApp appToDownload = new DownloadApp(getFilesListWithApk());
+    DownloadApp appToDownloadWithObbs = new DownloadApp(getFilesListWithObbs());
+    DownloadApp appToDownloadEmptyError = new DownloadApp(Collections.emptyList());
     testSubscriber = TestSubscriber.create();
     appDownloadManager = new AppDownloadManager(fileDownloader, appToDownload);
     appDownloadManagerWithObbs = new AppDownloadManager(fileDownloader, appToDownloadWithObbs);
