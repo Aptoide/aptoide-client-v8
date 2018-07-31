@@ -73,7 +73,9 @@ public class AppDownloadManagerTest {
 
   @Test public void startAppDownloadWithNoFiles() throws Exception {
     appDownloadManagerWithNoFiles.startAppDownload()
-        .subscribe();
+        .subscribe(testSubscriber);
+    testSubscriber.assertCompleted();
+    testSubscriber.assertNoErrors();
     verifyZeroInteractions(fileDownloader);
   }
 
