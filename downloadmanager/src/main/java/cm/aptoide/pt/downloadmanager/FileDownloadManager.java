@@ -16,10 +16,6 @@ public class FileDownloadManager implements FileDownloader {
     return null;
   }
 
-  @Override public void pauseAllDownloads() {
-
-  }
-
   @Override public Completable removeDownloadFile(DownloadAppFile downloadAppFile) {
     return null;
   }
