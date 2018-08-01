@@ -1,6 +1,5 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.realm.Download;
 import rx.Completable;
 import rx.Observable;
 
@@ -28,14 +27,6 @@ public class AppDownloadManager implements AppDownloader {
     return Observable.from(app.getDownloadFiles())
         .flatMapCompletable(downloadAppFile -> fileDownloader.pauseDownload(downloadAppFile))
         .toCompletable();
-  }
-
-  @Override public Observable<Download> getAppDownload(String md5) {
-    return null;
-  }
-
-  @Override public Observable<Download> getCurrentActiveDownload() {
-    return null;
   }
 
   @Override public Completable removeAppDownload() {

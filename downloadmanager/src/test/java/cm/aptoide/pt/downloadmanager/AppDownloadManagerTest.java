@@ -113,12 +113,6 @@ public class AppDownloadManagerTest {
     verifyZeroInteractions(fileDownloader);
   }
 
-  @Test public void getAppDownload() throws Exception {
-  }
-
-  @Test public void getCurrentActiveDownload() throws Exception {
-  }
-
   @Test public void removeDownloadWithOneFile() throws Exception {
     when(fileDownloader.removeDownloadFile(apk)).thenReturn(Completable.complete());
 
