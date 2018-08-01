@@ -54,7 +54,7 @@ public class AppDownloadManagerTest {
     verify(fileDownloader).startFileDownload(apk);
   }
 
-  @Test public void startAppDownloadWithMoreThanOneFile() throws Exception {
+  @Test public void startAppDownloadWithMultipleFiles() throws Exception {
     when(fileDownloader.startFileDownload(apk)).thenReturn(Completable.complete());
     when(fileDownloader.startFileDownload(mainObb)).thenReturn(Completable.complete());
     when(fileDownloader.startFileDownload(patchObb)).thenReturn(Completable.complete());
