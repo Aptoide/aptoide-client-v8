@@ -119,7 +119,41 @@ public class AppDownloadManagerTest {
   @Test public void getCurrentActiveDownload() throws Exception {
   }
 
-  @Test public void removeDownload() throws Exception {
+  @Test public void removeDownloadWithOneFile() throws Exception {
+    when(fileDownloader.removeDownloadFile(apk)).thenReturn(Completable.complete());
+
+    appDownloadManager.removeAppDownload()
+        .subscribe(testSubscriber);
+
+    testSubscriber.assertCompleted();
+    testSubscriber.assertNoErrors();
+    verify(fileDownloader).removeDownloadFile(apk);
+  }
+
+  @Test public void removeDownloadWithMultipleFiles() throws Exception {
+    when(fileDownloader.removeDownloadFile(apk)).thenReturn(Completable.complete());
+    when(fileDownloader.removeDownloadFile(mainObb)).thenReturn(Completable.complete());
+    when(fileDownloader.removeDownloadFile(patchObb)).thenReturn(Completable.complete());
+
+    appDownloadManagerWithObbs.removeAppDownload()
+        .subscribe(testSubscriber);
+
+    testSubscriber.assertCompleted();
+    testSubscriber.assertNoErrors();
+    verify(fileDownloader).removeDownloadFile(apk);
+    verify(fileDownloader).removeDownloadFile(mainObb);
+    verify(fileDownloader).removeDownloadFile(patchObb);
+  }
+
+  @Test public void removeDownloadWithNoFiles() throws Exception {
+    when(fileDownloader.removeDownloadFile(apk)).thenReturn(Completable.complete());
+
+    appDownloadManagerWithNoFiles.removeAppDownload()
+        .subscribe(testSubscriber);
+
+    testSubscriber.assertCompleted();
+    testSubscriber.assertNoErrors();
+    verifyZeroInteractions(fileDownloader);
   }
 
   private List<DownloadAppFile> getFilesListWithApk() {
