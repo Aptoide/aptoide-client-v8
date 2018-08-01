@@ -12,7 +12,7 @@ public interface AppDownloader {
 
   Completable startAppDownload();
 
-  void pauseAppDownload(String md5);
+  Completable pauseAppDownload();
 
   Observable<Download> getAppDownload(String md5);
 

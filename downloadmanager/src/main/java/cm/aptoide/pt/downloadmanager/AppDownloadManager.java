@@ -24,8 +24,10 @@ public class AppDownloadManager implements AppDownloader {
         .toCompletable();
   }
 
-  @Override public void pauseAppDownload(String md5) {
-
+  @Override public Completable pauseAppDownload() {
+    return Observable.from(app.getDownloadFiles())
+        .flatMapCompletable(downloadAppFile -> fileDownloader.pauseDownload(downloadAppFile))
+        .toCompletable();
   }
 
   @Override public Observable<Download> getAppDownload(String md5) {

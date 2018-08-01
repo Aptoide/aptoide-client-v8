@@ -7,12 +7,13 @@ import rx.Completable;
  */
 
 public class FileDownloadManager implements FileDownloader {
+
   @Override public Completable startFileDownload(DownloadAppFile downloadAppFile) {
     return null;
   }
 
-  @Override public void pauseDownload() {
-
+  @Override public Completable pauseDownload(DownloadAppFile downloadAppFile) {
+    return null;
   }
 
   @Override public void pauseAllDownloads() {

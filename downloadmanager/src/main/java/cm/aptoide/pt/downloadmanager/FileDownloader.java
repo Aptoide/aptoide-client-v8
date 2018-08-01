@@ -9,7 +9,7 @@ import rx.Completable;
 public interface FileDownloader {
   Completable startFileDownload(DownloadAppFile downloadAppFile);
 
-  void pauseDownload();
+  Completable pauseDownload(DownloadAppFile downloadAppFile);
 
   void pauseAllDownloads();
 }
