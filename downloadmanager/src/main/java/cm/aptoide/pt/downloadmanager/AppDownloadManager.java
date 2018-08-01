@@ -37,8 +37,4 @@ public class AppDownloadManager implements AppDownloader {
   @Override public Observable<Download> getCurrentActiveDownload() {
     return null;
   }
-
-  @Override public void removeDownload(String md5) {
-
-  }
 }

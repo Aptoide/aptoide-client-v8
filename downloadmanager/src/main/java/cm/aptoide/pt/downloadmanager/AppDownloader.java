@@ -17,6 +17,4 @@ public interface AppDownloader {
   Observable<Download> getAppDownload(String md5);
 
   Observable<Download> getCurrentActiveDownload();
-
-  void removeDownload(String md5);
 }
