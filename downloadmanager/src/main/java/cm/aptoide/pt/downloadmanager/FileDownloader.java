@@ -12,4 +12,6 @@ public interface FileDownloader {
   Completable pauseDownload(DownloadAppFile downloadAppFile);
 
   void pauseAllDownloads();
+
+  Completable removeDownloadFile(DownloadAppFile downloadAppFile);
 }
