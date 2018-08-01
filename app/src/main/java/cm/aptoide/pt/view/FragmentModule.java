@@ -60,7 +60,6 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
-import cm.aptoide.pt.home.GetRewardAppCoinsAppsNavigator;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeNavigator;
@@ -228,11 +227,6 @@ import rx.subjects.PublishSubject;
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
     return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper, appNavigator);
-  }
-
-  @FragmentScope @Provides GetRewardAppCoinsAppsNavigator providesGetRewardAppCoinsAppsNavigator(
-      AppNavigator appNavigator) {
-    return new GetRewardAppCoinsAppsNavigator(appNavigator);
   }
 
   @FragmentScope @Provides FlagManager providesFlagManager(FlagService flagService) {
