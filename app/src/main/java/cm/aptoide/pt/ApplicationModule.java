@@ -69,6 +69,8 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.app.AppCoinsManager;
+import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
@@ -1201,6 +1203,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppCenter providesAppCenter(AppCenterRepository appCenterRepository) {
     return new AppCenter(appCenterRepository);
+  }
+
+  @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService) {
+    return new AppCoinsManager(appCoinsService);
+  }
+
+  @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
+    return new AppCoinsService(okHttpClient, tokenInvalidator, sharedPreferences,
+        bodyInterceptorPoolV7, converterFactory);
   }
 
   @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(

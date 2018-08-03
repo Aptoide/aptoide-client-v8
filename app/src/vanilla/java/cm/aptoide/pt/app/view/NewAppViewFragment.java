@@ -547,8 +547,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       ratingInfo.setText(new DecimalFormat("0.0").format(model.getRating()
           .getAverage()));
     }
-    appcInfoView.showInfo(model.hasAdvertising(), model.hasBilling(),
-        formatAppCoinsRewardMessage());
 
     latestVersion.setText(model.getVersionName());
     if (!model.isLatestTrustedVersion()) {
@@ -997,6 +995,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         getContext().getString(R.string.installapp_alrt, appName), R.layout.apkfy_onboard_message)
         .filter(response -> response.equals(YES))
         .map(__ -> action);
+  }
+
+  @SuppressWarnings("unused") @Override
+  public void updateAppCoinsView(AppCoinsViewModel appCoinsViewModel) {
+    appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
+        formatAppCoinsRewardMessage());
   }
 
   private void showAppViewLayout() {

@@ -64,8 +64,8 @@ public class BundlesResponseMapper {
           appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
               .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
-          List<Application> applicationList = map(((ListAppCoinsCampaigns) viewObject).getDataList()
-              .getList(), widgetTag);
+          List<Application> applicationList =
+              map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
           if (!applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag));

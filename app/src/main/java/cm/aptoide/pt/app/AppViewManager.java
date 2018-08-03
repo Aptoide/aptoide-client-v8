@@ -5,6 +5,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -56,6 +57,7 @@ public class AppViewManager {
   private SocialRepository socialRepository;
   private String marketName;
   private boolean isFirstLoad;
+  private AppCoinsManager appCoinsManager;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -64,7 +66,7 @@ public class AppViewManager {
       AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      SocialRepository socialRepository, String marketName) {
+      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -84,6 +86,7 @@ public class AppViewManager {
     this.socialRepository = socialRepository;
     this.limit = limit;
     this.marketName = marketName;
+    this.appCoinsManager = appCoinsManager;
     this.isFirstLoad = true;
   }
 
@@ -356,5 +359,20 @@ public class AppViewManager {
 
   public Observable<Boolean> recordABTestAction(ABTestManager.ExperimentType experimentType) {
     return abTestManager.recordAction(experimentType);
+  }
+
+  @SuppressWarnings("unused") public Observable<AppCoinsViewModel> loadAppCoinsInformation() {
+    return Observable.fromCallable(() -> cachedApp)
+        .flatMap(app -> {
+          if (app.hasBilling()) {
+            return Observable.just(new AppCoinsViewModel(false, true, false));
+          } else if (app.hasAdvertising()) {
+            return appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
+                .map(hasAdvertising -> new AppCoinsViewModel(false, false, hasAdvertising))
+                .toObservable();
+          } else {
+            return Observable.just(new AppCoinsViewModel(false, false, false));
+          }
+        });
   }
 }
