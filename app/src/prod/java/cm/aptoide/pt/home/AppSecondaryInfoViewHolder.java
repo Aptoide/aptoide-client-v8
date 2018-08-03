@@ -17,8 +17,7 @@ public class AppSecondaryInfoViewHolder {
     this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
-  public void setInfo(boolean hasAppcAdvertising, boolean hasAppcBilling, float appRating,
-      boolean showRating) {
+  public void setInfo(boolean hasAppcBilling, float appRating, boolean showRating) {
     if (showRating) {
       if (appRating == 0) {
         this.rating.setText(R.string.appcardview_title_no_stars);
