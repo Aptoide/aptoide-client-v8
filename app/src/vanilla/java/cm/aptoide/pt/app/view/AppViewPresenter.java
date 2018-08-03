@@ -92,6 +92,7 @@ public class AppViewPresenter implements Presenter {
     handleClickLoginSnack();
     handleClickOnSimilarApps();
     handleClickOnToolbar();
+    handleClickOnAppcInfo();
     handleDefaultShare();
     handleRecommendsShare();
     handleClickOnRetry();
@@ -442,6 +443,15 @@ public class AppViewPresenter implements Presenter {
                   }
                 })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleClickOnAppcInfo() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> Observable.merge(view.clickGetAppcInfo(), view.clickAppcSupportInfo()))
+        .doOnNext(click -> appViewNavigator.navigateToAppCoinsInfo())
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }

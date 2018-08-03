@@ -46,6 +46,10 @@ public interface AppViewView extends InstallAppView {
 
   Observable<FlagsVote.VoteType> clickVirusFlag();
 
+  Observable<Void> clickGetAppcInfo();
+
+  Observable<Void> clickAppcSupportInfo();
+
   void displayNotLoggedInSnack();
 
   void displayStoreFollowedSnack(String storeName);

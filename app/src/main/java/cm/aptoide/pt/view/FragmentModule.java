@@ -38,6 +38,7 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
@@ -335,5 +336,11 @@ import rx.subjects.PublishSubject;
         Arrays.asList("email", "user_friends"), accountNavigator, Arrays.asList("email"),
         accountManager, crashReport, accountErrorMapper, AndroidSchedulers.mainThread(),
         screenOrientationManager, accountAnalytics);
+  }
+
+  @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
+      AppCoinsInfoNavigator appCoinsInfoNavigator, CrashReport crashReport) {
+    return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
+        crashReport);
   }
 }
