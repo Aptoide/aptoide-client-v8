@@ -338,9 +338,15 @@ import rx.subjects.PublishSubject;
         screenOrientationManager, accountAnalytics);
   }
 
+  @FragmentScope @Provides AppCoinsInfoManager providesAppCoinsInfoManager(
+      InstallManager installManager, DownloadStateParser downloadStateParser) {
+    return new AppCoinsInfoManager(installManager);
+  }
+
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
-      AppCoinsInfoNavigator appCoinsInfoNavigator, CrashReport crashReport) {
+      AppCoinsInfoNavigator appCoinsInfoNavigator, AppCoinsInfoManager appCoinsInfoManager,
+      CrashReport crashReport) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
-        crashReport);
+        appCoinsInfoManager, crashReport);
   }
 }

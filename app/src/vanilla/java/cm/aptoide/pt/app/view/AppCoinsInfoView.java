@@ -16,4 +16,8 @@ public interface AppCoinsInfoView extends View {
   Observable<Void> installButtonClick();
 
   Observable<Void> appCoinsWalletClick();
+
+  void openApp(String packageName);
+
+  void setButtonText(boolean installState);
 }
