@@ -305,7 +305,6 @@ dependencies {
   implementation project(path: ':downloadmanager', configuration: 'default')
   implementation project(path: ':aptoide-database', configuration: 'default')
   implementation project(path: ':aptoidepreferences')
-  implementation project(path: ':downloadmanager', configuration: 'default')
   implementation project(path: ':aptoide-account-manager')
   implementation project(path: ':aptoide-analytics-core')
   implementation project(path: ':aptoide-analytics-default-implementation')
