@@ -75,7 +75,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false);
+            "marketName", false, false);
 
     downloadAppViewModel = new DownloadAppViewModel(DownloadAppViewModel.Action.INSTALL, 0,
         DownloadAppViewModel.DownloadState.ACTIVE, null);
@@ -189,7 +189,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
-            false);
+            false, false);
 
     //Given an initialized presenter
     presenter.handleFirstLoad();

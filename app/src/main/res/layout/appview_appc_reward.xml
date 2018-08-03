@@ -11,6 +11,7 @@
     android:layout_marginStart="9dp"
     android:layout_marginTop="5dp"
     android:background="@drawable/background_arrow_appc_reward"
+    android:gravity="center"
     android:orientation="horizontal"
     >
 

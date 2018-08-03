@@ -177,12 +177,12 @@ public class BundlesResponseMapper {
     for (AppCoinsCampaign campaign : appsList) {
       App app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
-        rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
+        rewardAppsList.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
             .getPdownloads(), app.getPackageName(), app.getId(), tag,
-            Double.valueOf(campaign.getReward()), app.getAppcoins() != null && app.getAppcoins()
-            .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
+            app.getAppcoins() != null && app.getAppcoins()
+                .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
             .hasAdvertising()));
       }
     }

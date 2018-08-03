@@ -267,6 +267,10 @@ public class GetAppMeta extends BaseV7Response {
       this.appcoins = appcoins;
     }
 
+    public boolean hasAdvertising() {
+      return appcoins != null && appcoins.hasAdvertising();
+    }
+
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof App)) return false;

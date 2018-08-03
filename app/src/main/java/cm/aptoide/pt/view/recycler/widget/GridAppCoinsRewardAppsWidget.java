@@ -7,8 +7,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;
-import cm.aptoide.pt.home.RewardApp;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.view.app.Application;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 
@@ -39,19 +39,15 @@ public class GridAppCoinsRewardAppsWidget extends Widget<GridAppCoinsRewardAppsD
   }
 
   @Override public void bindView(GridAppCoinsRewardAppsDisplayable displayable) {
-    this.twoDecimalFormat = new DecimalFormat("#.##");
-    RewardApp app = ((RewardApp) displayable.getPojo());
+    this.twoDecimalFormat = new DecimalFormat("0.0");
+    Application app = displayable.getPojo();
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
     appName.setText(app.getName());
     appReward.setText(itemView.getResources()
-        .getString(R.string.bundles_short_reward_app_appc,
-            twoDecimalFormat.format(app.getRewardValue())));
-
+        .getString(R.string.appc_short_get_appc));
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(v -> {
-          displayable.openAppView();
-        }, throwable -> CrashReport.getInstance()
+        .subscribe(v -> displayable.openAppView(), throwable -> CrashReport.getInstance()
             .log(throwable)));
   }
 }

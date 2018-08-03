@@ -14,6 +14,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.home.AppSecondaryInfoViewHolder;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -24,8 +25,8 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
 
   private TextView name;
   private ImageView icon;
-  private TextView rating;
   private String storeName;
+  private AppSecondaryInfoViewHolder appInfoViewHolder;
 
   public GridAppWidget(View itemView) {
     super(itemView);
@@ -34,7 +35,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
   @Override protected void assignViews(@NonNull View view) {
     name = (TextView) itemView.findViewById(R.id.name);
     icon = (ImageView) itemView.findViewById(R.id.icon);
-    rating = (TextView) itemView.findViewById(R.id.rating_label);
+    appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, new DecimalFormat("0.0"));
   }
 
   @Override public void bindView(T displayable) {
@@ -46,15 +47,9 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
         .load(pojo.getIcon(), icon);
 
     name.setText(pojo.getName());
-
-    try {
-      DecimalFormat oneDecimalFormatter = new DecimalFormat("0.0");
-      rating.setText(oneDecimalFormatter.format(pojo.getStats()
-          .getRating()
-          .getAvg()));
-    } catch (Exception e) {
-      rating.setText(R.string.appcardview_title_no_stars);
-    }
+    appInfoViewHolder.setInfo(pojo.hasAdvertising(), pojo.hasBilling(), pojo.getStats()
+        .getRating()
+        .getAvg(), true);
     storeName = pojo.getStore()
         .getName();
     compositeSubscription.add(RxView.clicks(itemView)
