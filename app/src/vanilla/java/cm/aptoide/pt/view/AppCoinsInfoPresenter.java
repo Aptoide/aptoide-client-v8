@@ -6,6 +6,7 @@ import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -16,18 +17,22 @@ public class AppCoinsInfoPresenter implements Presenter {
 
   private final AppCoinsInfoView view;
   private final AppCoinsInfoNavigator appCoinsInfoNavigator;
+  private final AppCoinsInfoManager appCoinsInfoManager;
   private final CrashReport crashReport;
 
   public AppCoinsInfoPresenter(AppCoinsInfoView view, AppCoinsInfoNavigator appCoinsInfoNavigator,
-      CrashReport crashReport) {
+      AppCoinsInfoManager appCoinsInfoManager, CrashReport crashReport) {
     this.view = view;
     this.appCoinsInfoNavigator = appCoinsInfoNavigator;
+    this.appCoinsInfoManager = appCoinsInfoManager;
     this.crashReport = crashReport;
   }
 
   @Override public void present() {
     handleClickOnCoinbaseLink();
+    handleClickOnAppcWalletClick();
     handleClickOnInstallButton();
+    handleButtonText();
   }
 
   @VisibleForTesting public void handleClickOnInstallButton() {
@@ -35,10 +40,28 @@ public class AppCoinsInfoPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.installButtonClick(), view.appCoinsWalletClick(),
             view.cardViewClick()))
+        .flatMap(click -> appCoinsInfoManager.loadButtonState())
+        .flatMapCompletable(isInstalled -> {
+          if (isInstalled) {
+            return openInstalledApp(AppCoinsInfoFragment.APPCWALLETPACKAGENAME);
+          } else {
+            appCoinsInfoNavigator.navigateToAppCoinsBDSWallet();
+            return Completable.complete();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }
+
+  private void handleClickOnAppcWalletClick() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.appCoinsWalletClick())
         .doOnNext(click -> appCoinsInfoNavigator.navigateToAppCoinsBDSWallet())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
   @VisibleForTesting public void handleClickOnCoinbaseLink() {
@@ -48,6 +71,20 @@ public class AppCoinsInfoPresenter implements Presenter {
         .doOnNext(click -> appCoinsInfoNavigator.navigateToCoinbaseLink())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
+  }
+
+  private void handleButtonText() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appCoinsInfoManager.loadButtonState())
+        .doOnNext(view::setButtonText)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }
+
+  private Completable openInstalledApp(String packageName) {
+    return Completable.fromAction(() -> view.openApp(packageName));
   }
 }

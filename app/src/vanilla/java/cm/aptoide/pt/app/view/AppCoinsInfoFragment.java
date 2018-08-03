@@ -19,9 +19,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -35,12 +37,13 @@ import rx.subjects.PublishSubject;
 
 public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoinsInfoView {
 
+  public static final String APPCWALLETPACKAGENAME = "com.appcoins.wallet";
+  @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   private Toolbar toolbar;
   private PublishSubject<Void> coinbaseClickSubject;
-  @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   private View bdsCardView;
   private TextView appcMessageAppcoinsSection2a;
-  private View installButton;
+  private Button installButton;
   private TextView appcMessageAppcoinsSection2b;
   private ClickableSpan coinbaseClickListener;
 
@@ -61,7 +64,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
     super.onViewCreated(view, savedInstanceState);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     bdsCardView = view.findViewById(R.id.product_bdsWallet_cardview);
-    installButton = view.findViewById(R.id.appview_install_button);
+    installButton = (Button) view.findViewById(R.id.appview_install_button);
 
     appcMessageAppcoinsSection2a =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_2a);
@@ -83,6 +86,11 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
     setHasOptionsMenu(true);
     setupToolbar();
     attachPresenter(appCoinsInfoPresenter);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   @Override public void onDestroy() {
@@ -149,16 +157,16 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
 
   @NonNull private Html.ImageGetter getImageGetter() {
     return source -> {
-      Drawable d = null;
+      Drawable drawable = null;
       try {
-        d = getResources().getDrawable(Integer.parseInt(source));
-        d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+        drawable = getResources().getDrawable(Integer.parseInt(source));
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
       } catch (Resources.NotFoundException e) {
         Log.e("log_tag", "Image not found. Check the ID.", e);
       } catch (NumberFormatException e) {
         Log.e("log_tag", "Source string not a valid resource ID.", e);
       }
-      return d;
+      return drawable;
     };
   }
 
@@ -178,14 +186,22 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
     return RxView.clicks(appcMessageAppcoinsSection2a);
   }
 
+  @Override public void openApp(String packageName) {
+    AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+  }
+
+  @Override public void setButtonText(boolean isInstalled) {
+    String installState = getResources().getString(R.string.appview_button_install);
+    if (isInstalled) {
+      installButton.setText(getResources().getString(R.string.appview_button_open));
+    } else {
+      installButton.setText(installState);
+    }
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_appcoints_info, container, false);
-  }
-
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
   }
 }

@@ -520,6 +520,10 @@ public class InstallManager {
         .toList();
   }
 
+  public Observable<Boolean> isInstalled(String packageName) {
+    return Observable.just(installedRepository.contains(packageName));
+  }
+
   public Observable<Install> filterInstalled(Install item) {
     return Observable.just(installedRepository.contains(item.getPackageName()))
         .flatMap(isInstalled -> {
