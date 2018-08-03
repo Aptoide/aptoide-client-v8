@@ -123,7 +123,7 @@ public class AppViewPresenterTest {
     //then the loading should be shown
     verify(view).showLoading();
     //and the view should populated
-    verify(view).populateAppDetails(appViewViewModel);
+    verify(view).showAppView(appViewViewModel);
   }
 
   @Test public void handleLoadAppViewWithError() {
@@ -143,7 +143,7 @@ public class AppViewPresenterTest {
     //then the loading should be shown
     verify(view).showLoading();
     //the view should not be populated with the app info
-    verify(view, never()).populateAppDetails(errorAppViewViewModel);
+    verify(view, never()).showAppView(errorAppViewViewModel);
     //and the error should be handled
     verify(view).handleError(errorAppViewViewModel.getError());
   }

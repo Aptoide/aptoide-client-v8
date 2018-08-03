@@ -527,7 +527,7 @@ public class AppViewPresenter implements Presenter {
           if (appViewModel.hasError()) {
             view.handleError(appViewModel.getError());
           } else {
-            view.populateAppDetails(appViewModel);
+            view.showAppView(appViewModel);
           }
         })
         .doOnNext(model -> {
@@ -594,8 +594,9 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
-            updateReviews(appViewModel),
-            (similarAppsViewModel, reviewsViewModel) -> Observable.just(appViewModel))
+            updateReviews(appViewModel), updateAppCoinsInformation(),
+            (similarAppsViewModel, reviewsViewModel, appCoinsViewModel) -> Observable.just(
+                appViewModel))
             .first()
             .map(__ -> appViewModel));
   }
@@ -607,6 +608,12 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(
             experiment -> showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName(),
                 experiment));
+  }
+
+  private Observable<AppCoinsViewModel> updateAppCoinsInformation() {
+    return appViewManager.loadAppCoinsInformation()
+        .observeOn(viewScheduler)
+        .doOnNext(appCoinsViewModel -> view.updateAppCoinsView(appCoinsViewModel));
   }
 
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {

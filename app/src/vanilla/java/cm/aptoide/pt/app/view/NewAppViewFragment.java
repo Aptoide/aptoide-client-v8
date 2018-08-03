@@ -531,14 +531,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     noNetworkErrorView.setVisibility(View.GONE);
   }
 
-  @Override public void showAppview() {
-    appview.setVisibility(View.VISIBLE);
-    viewProgress.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
-  }
-
-  @Override public void populateAppDetails(AppViewViewModel model) {
+  @Override public void showAppView(AppViewViewModel model) {
     collapsingToolbarLayout.setTitle(model.getAppName());
 
     appName.setText(model.getAppName());
@@ -554,8 +547,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       ratingInfo.setText(new DecimalFormat("0.0").format(model.getRating()
           .getAverage()));
     }
-    appcInfoView.showInfo(model.hasAdvertising(), model.hasBilling(),
-        formatAppCoinsRewardMessage());
 
     latestVersion.setText(model.getVersionName());
     if (!model.isLatestTrustedVersion()) {
@@ -599,7 +590,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     setAppFlags(model.isGoodApp(), model.getAppFlags());
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
     setDeveloperDetails(model.getDeveloper());
-    showAppview();
+    showAppViewLayout();
     downloadInfoLayout.setVisibility(View.GONE);
     install.setVisibility(View.VISIBLE);
   }
@@ -1004,6 +995,19 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         getContext().getString(R.string.installapp_alrt, appName), R.layout.apkfy_onboard_message)
         .filter(response -> response.equals(YES))
         .map(__ -> action);
+  }
+
+  @SuppressWarnings("unused") @Override
+  public void updateAppCoinsView(AppCoinsViewModel appCoinsViewModel) {
+    appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
+        formatAppCoinsRewardMessage());
+  }
+
+  private void showAppViewLayout() {
+    appview.setVisibility(View.VISIBLE);
+    viewProgress.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
+    noNetworkErrorView.setVisibility(View.GONE);
   }
 
   private void setTrustedBadge(Malware malware) {

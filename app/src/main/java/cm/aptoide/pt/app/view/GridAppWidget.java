@@ -47,7 +47,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
         .load(pojo.getIcon(), icon);
 
     name.setText(pojo.getName());
-    appInfoViewHolder.setInfo(pojo.hasAdvertising(), pojo.hasBilling(), pojo.getStats()
+    appInfoViewHolder.setInfo(pojo.hasBilling(), pojo.getStats()
         .getRating()
         .getAvg(), true);
     storeName = pojo.getStore()

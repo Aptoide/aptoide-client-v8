@@ -202,7 +202,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<AppHomeEvent> appClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.APP))
+        .equals(HomeEvent.Type.APP) || homeClick.getType()
+        .equals(HomeEvent.Type.REWARD_APP))
         .cast(AppHomeEvent.class);
   }
 
