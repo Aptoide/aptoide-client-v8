@@ -1,5 +1,7 @@
 package cm.aptoide.pt.view;
 
+import android.support.annotation.VisibleForTesting;
+
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -28,7 +30,7 @@ public class AppCoinsInfoPresenter implements Presenter {
     handleClickOnInstallButton();
   }
 
-  private void handleClickOnInstallButton() {
+  @VisibleForTesting public void handleClickOnInstallButton() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.installButtonClick(), view.appCoinsWalletClick(),
@@ -39,7 +41,7 @@ public class AppCoinsInfoPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private void handleClickOnCoinbaseLink() {
+  @VisibleForTesting public void handleClickOnCoinbaseLink() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.coinbaseLinkClick())

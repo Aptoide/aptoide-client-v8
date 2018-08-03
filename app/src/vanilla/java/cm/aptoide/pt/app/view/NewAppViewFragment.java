@@ -686,7 +686,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public Observable<Void> clickAppcSupportInfo() {
-    return billingView.clickAppcInfo();
+    return appcInfoView.clickAppcInfo();
   }
 
   @Override public void displayNotLoggedInSnack() {
