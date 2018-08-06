@@ -9,9 +9,15 @@ import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
 
 public class FileDownloadManagerProvider implements FileDownloaderProvider {
 
+  private String downloadsPath;
+
+  public FileDownloadManagerProvider(String downloadsPath) {
+    this.downloadsPath = downloadsPath;
+  }
+
   @Override public FileDownloader getFileDownloader() {
     return new FileDownloadManager(com.liulishuo.filedownloader.FileDownloader.getImpl(),
-        new FileDownloadTask());
+        new FileDownloadTask(), downloadsPath);
   }
 
   private FileDownloadTask createFileDownloadTask() {

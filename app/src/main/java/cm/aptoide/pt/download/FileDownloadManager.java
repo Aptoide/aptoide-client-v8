@@ -5,7 +5,6 @@ import cm.aptoide.pt.downloadmanager.DownloadAppFile;
 import cm.aptoide.pt.downloadmanager.FileDownloader;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import rx.Completable;
-import rx.Observable;
 
 /**
  * Created by filipegoncalves on 7/31/18.
@@ -13,13 +12,19 @@ import rx.Observable;
 
 public class FileDownloadManager implements FileDownloader {
 
+  public static final int RETRY_TIMES = 3;
+  private static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
+  private static final int PROGRESS_MAX_VALUE = 100;
+
   private com.liulishuo.filedownloader.FileDownloader fileDownloader;
   private FileDownloadTask fileDownloadTask;
+  private String downloadsPath;
 
   public FileDownloadManager(com.liulishuo.filedownloader.FileDownloader fileDownloader,
-      FileDownloadTask fileDownloadTask) {
+      FileDownloadTask fileDownloadTask, String downloadsPath) {
     this.fileDownloader = fileDownloader;
     this.fileDownloadTask = fileDownloadTask;
+    this.downloadsPath = downloadsPath;
   }
 
   @Override public Completable startFileDownload(DownloadAppFile downloadAppFile) {
@@ -28,6 +33,7 @@ public class FileDownloadManager implements FileDownloader {
           .isEmpty()) {
         throw new IllegalArgumentException("The url for the download can not be empty");
       } else {
+        createBaseDownloadTask(downloadAppFile);
         return fileDownloader.start(fileDownloadTask, false);
       }
     });
@@ -41,5 +47,21 @@ public class FileDownloadManager implements FileDownloader {
     return null;
   }
 
+  private void createBaseDownloadTask(DownloadAppFile downloadAppFile) {
 
+    BaseDownloadTask baseDownloadTask =
+        fileDownloader.create(downloadAppFile.getMainDownloadPath());
+    baseDownloadTask.setAutoRetryTimes(RETRY_TIMES);
+
+    baseDownloadTask.addHeader(Constants.VERSION_CODE,
+        String.valueOf(downloadAppFile.getVersionCode()));
+    baseDownloadTask.addHeader(Constants.PACKAGE, downloadAppFile.getPackageName());
+    baseDownloadTask.addHeader(Constants.FILE_TYPE, String.valueOf(downloadAppFile.getFileType()));
+    baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, fileDownloadTask);
+    baseDownloadTask.setListener(fileDownloadTask);
+    baseDownloadTask.setCallbackProgressTimes(PROGRESS_MAX_VALUE);
+    baseDownloadTask.setPath(downloadsPath + downloadAppFile.getFileName());
+    baseDownloadTask.asInQueueTask()
+        .enqueue();
+  }
 }
