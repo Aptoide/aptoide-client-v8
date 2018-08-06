@@ -41,7 +41,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     graphicsList.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
           RecyclerView.State state) {
-        int margin = AptoideUtils.ScreenU.getPixelsForDip(5, view.getResources());
+        int margin = AptoideUtils.ScreenU.getPixelsForDip(2, view.getResources());
         outRect.set(margin, margin, 0, margin);
       }
     });

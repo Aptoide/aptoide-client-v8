@@ -22,9 +22,7 @@ public interface AppViewView extends InstallAppView {
 
   void showLoading();
 
-  void showAppview();
-
-  void populateAppDetails(AppViewViewModel detailedApp);
+  void showAppView(AppViewViewModel detailedApp);
 
   void handleError(DetailedAppRequestResult.Error error);
 
@@ -141,4 +139,6 @@ public interface AppViewView extends InstallAppView {
 
   Observable<DownloadAppViewModel.Action> showOpenAndInstallApkFyDialog(String title,
       String appName);
+
+  @SuppressWarnings("unused") void updateAppCoinsView(AppCoinsViewModel appCoinsViewModel);
 }

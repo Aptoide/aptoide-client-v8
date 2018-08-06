@@ -40,15 +40,15 @@
           android:id="@+id/app_name"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="45dp"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="55dp"
           android:layout_marginLeft="55dp"
-          android:layout_marginRight="45dp"
+          android:layout_marginRight="55dp"
           android:layout_marginStart="55dp"
-          android:layout_marginTop="6dp"
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="Little Commander world world II"
-          style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+          style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
           />
 
       <ImageView

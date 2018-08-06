@@ -64,8 +64,8 @@ public class BundlesResponseMapper {
           appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
               .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
-          List<Application> applicationList = map(((ListAppCoinsCampaigns) viewObject).getDataList()
-              .getList(), widgetTag);
+          List<Application> applicationList =
+              map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
           if (!applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
@@ -177,7 +177,7 @@ public class BundlesResponseMapper {
     for (AppCoinsCampaign campaign : appsList) {
       App app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
-        rewardAppsList.add(new Application(app.getName(), app.getIcon(), app.getStats()
+        rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
             .getPdownloads(), app.getPackageName(), app.getId(), tag,

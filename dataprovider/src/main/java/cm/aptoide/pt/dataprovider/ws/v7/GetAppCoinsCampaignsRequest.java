@@ -12,9 +12,10 @@ import rx.Observable;
  * Created by filipegoncalves on 4/26/18.
  */
 
-public class GetAppCoinsAdsRequest extends V7<ListAppCoinsCampaigns, GetAppCoinsAdsRequest.Body> {
+public class GetAppCoinsCampaignsRequest
+    extends V7<ListAppCoinsCampaigns, GetAppCoinsCampaignsRequest.Body> {
 
-  public GetAppCoinsAdsRequest(Body body, OkHttpClient httpClient,
+  public GetAppCoinsCampaignsRequest(Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
@@ -29,10 +30,19 @@ public class GetAppCoinsAdsRequest extends V7<ListAppCoinsCampaigns, GetAppCoins
   public static class Body extends BaseBody implements Endless {
     private int offset;
     private int limit;
+    private String packageName;
+    private Integer vercode;
 
     public Body(int offset, int limit) {
       this.offset = offset;
       this.limit = limit;
+    }
+
+    public Body(String packageName, int vercode) {
+      this.packageName = packageName;
+      this.vercode = vercode;
+      this.limit = 5;
+      this.offset = 0;
     }
 
     public int getOffset() {
@@ -45,6 +55,14 @@ public class GetAppCoinsAdsRequest extends V7<ListAppCoinsCampaigns, GetAppCoins
 
     @Override public Integer getLimit() {
       return this.limit;
+    }
+
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public Integer getVercode() {
+      return vercode;
     }
   }
 }

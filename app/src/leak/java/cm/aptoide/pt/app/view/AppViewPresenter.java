@@ -537,7 +537,7 @@ public class AppViewPresenter implements Presenter {
           if (appViewModel.hasError()) {
             view.handleError(appViewModel.getError());
           } else {
-            view.populateAppDetails(appViewModel);
+            view.showAppView(appViewModel);
           }
         })
         .doOnNext(model -> {

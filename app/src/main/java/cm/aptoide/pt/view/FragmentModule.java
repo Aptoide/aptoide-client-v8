@@ -31,6 +31,7 @@ import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
@@ -263,13 +264,14 @@ import rx.subjects.PublishSubject;
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
-      SocialRepository socialRepository, @Named("marketName") String marketName) {
+      SocialRepository socialRepository, @Named("marketName") String marketName,
+      AppCoinsManager appCoinsManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, abTestManager, storeUtilsProxy,
         aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser,
         appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName);
+        marketName, appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
