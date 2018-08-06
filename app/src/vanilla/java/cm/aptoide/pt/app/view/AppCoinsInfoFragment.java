@@ -143,8 +143,8 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
 
   private void setupTextView(String appcString, String text, TextView appcMessageAppcoinsSection) {
     final String spendGetAppcoinsLogo =
-        String.format("<img src=\"%1$s\"/> <font color=\"#ff9800\"><small>%2$s</small></font>",
-            R.drawable.spend_get_appc_icon, appcString);
+        String.format("<img src=\"%1$s\"/> <font color=\"%2$s\"><small>%3$s</small></font>",
+            R.drawable.spend_get_appc_icon, getResources().getColor(R.color.orange), appcString);
     final String formatedText = String.format(text, spendGetAppcoinsLogo);
     appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
   }
