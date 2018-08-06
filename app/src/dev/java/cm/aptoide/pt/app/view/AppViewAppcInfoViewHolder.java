@@ -32,7 +32,6 @@ public class AppViewAppcInfoViewHolder {
   }
 
   public Observable<Void> clickAppcInfo() {
-    return RxView.clicks(appcBillingSupported);
+    return RxView.clicks(appcRewardView);
   }
-
 }
