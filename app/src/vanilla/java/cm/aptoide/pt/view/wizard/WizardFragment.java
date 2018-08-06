@@ -102,6 +102,7 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     animatedColorView = view.findViewById(R.id.animated_color_view);
     pageChangeListener = new AptoideViewPager.SimpleOnPageChangeListener() {
 
@@ -112,7 +113,6 @@ public class WizardFragment extends UIComponentFragment
         }
       }
     };
-    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override public void loadExtras(Bundle args) {
