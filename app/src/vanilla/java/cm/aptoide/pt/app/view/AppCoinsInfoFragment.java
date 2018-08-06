@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
@@ -65,7 +67,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     bdsCardView = view.findViewById(R.id.product_bdsWallet_cardview);
     installButton = (Button) view.findViewById(R.id.appview_install_button);
-
     appcMessageAppcoinsSection2a =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_2a);
     appcMessageAppcoinsSection2b =
@@ -80,6 +81,11 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
         getString(R.string.appc_message_appcoins_section_3), appcMessageAppcoinsSection3);
     setupTextView(getString(R.string.appc_short_spend_appc),
         getString(R.string.appc_message_appcoins_section_3), appcMessageAppcoinsSection4);
+
+    ((TextView) bdsCardView.findViewById(R.id.product_title_textview)).setText(
+        getString(R.string.appc_title_settings_appcoins_wallet));
+    ((ImageView) bdsCardView.findViewById(R.id.product_icon_imageview)).setImageDrawable(
+        ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
     setupCoinbaseLink();
     setupWalletLink();
