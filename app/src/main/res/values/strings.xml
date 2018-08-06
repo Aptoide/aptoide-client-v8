@@ -89,7 +89,7 @@
 
   <!-- Excluded Updates Fragment -->
   <string name="excluded_updates">Excluded updates</string>
-  <string name="no_excluded_updates_msg">Is the latest version not working? To prevent an app from updating, go to the Updates tab and long press it.</string>
+  <string name="no_excluded_updates_msg">Is the latest version not working well? You can prevent an app from updating! Go to the Apps tab in the bottom menu and long press the app of your choice.</string>
 
   <!-- Excluded Updates Fragment (menu) -->
   <string name="restore_updates">Restore updates</string>
