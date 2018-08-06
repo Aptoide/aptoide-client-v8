@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view;
 
 import android.support.annotation.VisibleForTesting;
-
+import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -30,7 +30,7 @@ public class AppCoinsInfoPresenter implements Presenter {
 
   @Override public void present() {
     handleClickOnCoinbaseLink();
-    handleClickOnAppcWalletClick();
+    handleClickOnAppcWalletLink();
     handleClickOnInstallButton();
     handleButtonText();
   }
@@ -38,8 +38,7 @@ public class AppCoinsInfoPresenter implements Presenter {
   @VisibleForTesting public void handleClickOnInstallButton() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> Observable.merge(view.installButtonClick(), view.appCoinsWalletClick(),
-            view.cardViewClick()))
+        .flatMap(__ -> Observable.merge(view.installButtonClick(), view.cardViewClick()))
         .flatMap(click -> appCoinsInfoManager.loadButtonState())
         .flatMapCompletable(isInstalled -> {
           if (isInstalled) {
@@ -54,10 +53,10 @@ public class AppCoinsInfoPresenter implements Presenter {
         }, crashReport::log);
   }
 
-  private void handleClickOnAppcWalletClick() {
+  @VisibleForTesting public void handleClickOnAppcWalletLink() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.appCoinsWalletClick())
+        .flatMap(__ -> view.appCoinsWalletLinkClick())
         .doOnNext(click -> appCoinsInfoNavigator.navigateToAppCoinsBDSWallet())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -74,7 +73,7 @@ public class AppCoinsInfoPresenter implements Presenter {
         }, crashReport::log);
   }
 
-  private void handleButtonText() {
+  @VisibleForTesting public void handleButtonText() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appCoinsInfoManager.loadButtonState())

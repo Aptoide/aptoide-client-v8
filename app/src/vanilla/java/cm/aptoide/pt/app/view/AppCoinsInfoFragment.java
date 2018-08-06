@@ -188,7 +188,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
     return RxView.clicks(installButton);
   }
 
-  @Override public Observable<Void> appCoinsWalletClick() {
+  @Override public Observable<Void> appCoinsWalletLinkClick() {
     return RxView.clicks(appcMessageAppcoinsSection2a);
   }
 
