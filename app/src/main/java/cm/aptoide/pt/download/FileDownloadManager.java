@@ -19,6 +19,7 @@ public class FileDownloadManager implements FileDownloader {
   private com.liulishuo.filedownloader.FileDownloader fileDownloader;
   private FileDownloadTask fileDownloadTask;
   private String downloadsPath;
+  private int downloadId;
 
   public FileDownloadManager(com.liulishuo.filedownloader.FileDownloader fileDownloader,
       FileDownloadTask fileDownloadTask, String downloadsPath) {
@@ -46,7 +47,8 @@ public class FileDownloadManager implements FileDownloader {
   }
 
   @Override public Completable removeDownloadFile(DownloadAppFile downloadAppFile) {
-    return null;
+    return Completable.fromAction(
+        () -> fileDownloader.clear(downloadId, downloadAppFile.getMainDownloadPath()));
   }
 
   private void createBaseDownloadTask(DownloadAppFile downloadAppFile) {
@@ -63,7 +65,7 @@ public class FileDownloadManager implements FileDownloader {
     baseDownloadTask.setListener(fileDownloadTask);
     baseDownloadTask.setCallbackProgressTimes(PROGRESS_MAX_VALUE);
     baseDownloadTask.setPath(downloadsPath + downloadAppFile.getFileName());
-    baseDownloadTask.asInQueueTask()
+    this.downloadId = baseDownloadTask.asInQueueTask()
         .enqueue();
   }
 }

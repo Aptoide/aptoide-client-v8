@@ -42,6 +42,7 @@ public class FileDownloadManagerTest {
   @Test public void startFileDownload() throws Exception {
     when(fileDownloader.create(any())).thenReturn(mockBaseDownloadTask);
     when(mockBaseDownloadTask.asInQueueTask()).thenReturn(new MockInqueueTask());
+
     fileDownloaderManager.startFileDownload(apkFile)
         .subscribe(testSubscriber);
     testSubscriber.assertNoErrors();
@@ -66,5 +67,10 @@ public class FileDownloadManagerTest {
   }
 
   @Test public void removeDownloadFile() throws Exception {
+    fileDownloaderManager.removeDownloadFile(apkFile)
+        .subscribe(testSubscriber);
+    testSubscriber.assertNoErrors();
+    testSubscriber.assertCompleted();
+    verify(fileDownloader).clear(0, apkFile.getMainDownloadPath());
   }
 }
