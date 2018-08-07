@@ -635,15 +635,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     reviewsAutoScroll.onNext(reviewsAdapter.getItemCount());
   }
 
-  @Override public void populateSimilar(SimilarAppsViewModel ads) {
-    similarAppsAdapter.update(mapToSimilar(ads, true));
-    similarDownloadsAdapter.update(mapToSimilar(ads, true));
-    if (showSimilarDownload) {
-      similarBottomView.setVisibility(View.GONE);
-      similarDownloadView.setVisibility(View.VISIBLE);
-    } else {
-      similarBottomView.setVisibility(View.VISIBLE);
-    }
+  @Override public void populateSimilar(SimilarAppsViewModel similarApps) {
+    similarAppsAdapter.update(mapToSimilar(similarApps, true));
+    similarDownloadsAdapter.update(mapToSimilar(similarApps, true));
+    manageSimilarAppsVisibility();
   }
 
   @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
@@ -961,6 +956,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void hideSimilarApps() {
     similarBottomView.setVisibility(View.GONE);
+    similarDownloadView.setVisibility(View.GONE);
   }
 
   @Override public void extractReferrer(SearchAdResult searchAdResult) {
@@ -1001,6 +997,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   public void updateAppCoinsView(AppCoinsViewModel appCoinsViewModel) {
     appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
         formatAppCoinsRewardMessage());
+  }
+
+  private void manageSimilarAppsVisibility() {
+    if (similarAppsAdapter.getItemCount() == 0 && similarDownloadsAdapter.getItemCount() == 0) {
+      similarBottomView.setVisibility(View.GONE);
+      similarDownloadView.setVisibility(View.GONE);
+    } else {
+      if (showSimilarDownload) {
+        similarBottomView.setVisibility(View.GONE);
+        similarDownloadView.setVisibility(View.VISIBLE);
+      } else {
+        similarBottomView.setVisibility(View.VISIBLE);
+      }
+    }
   }
 
   private void showAppViewLayout() {
@@ -1232,9 +1242,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (model.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
-      similarBottomView.setVisibility(View.GONE);
-      similarDownloadView.setVisibility(View.VISIBLE);
       showSimilarDownload = true;
+      manageSimilarAppsVisibility();
       setDownloadState(model.getProgress(), model.getDownloadState());
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
