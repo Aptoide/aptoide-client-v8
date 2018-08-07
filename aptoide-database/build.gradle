@@ -57,7 +57,7 @@ dependencies {
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 }
