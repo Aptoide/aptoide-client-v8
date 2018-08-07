@@ -58,6 +58,11 @@ public class FileDownloadManagerTest {
   }
 
   @Test public void pauseDownload() throws Exception {
+    fileDownloaderManager.pauseDownload(apkFile)
+        .subscribe(testSubscriber);
+    testSubscriber.assertNoErrors();
+    testSubscriber.assertCompleted();
+    verify(fileDownloader).pause(fileDownloadTask);
   }
 
   @Test public void removeDownloadFile() throws Exception {
