@@ -20,9 +20,9 @@ import static org.mockito.Mockito.when;
  */
 public class FileDownloadManagerTest {
 
-  @Mock com.liulishuo.filedownloader.FileDownloader fileDownloader;
-  @Mock FileDownloadTask fileDownloadTask;
-  @Mock BaseDownloadTask mockBaseDownloadTask;
+  @Mock private com.liulishuo.filedownloader.FileDownloader fileDownloader;
+  @Mock private FileDownloadTask fileDownloadTask;
+  @Mock private BaseDownloadTask mockBaseDownloadTask;
   private DownloadAppFile emptyLinkFile;
   private DownloadAppFile apkFile;
   private FileDownloadManager fileDownloaderManager;
