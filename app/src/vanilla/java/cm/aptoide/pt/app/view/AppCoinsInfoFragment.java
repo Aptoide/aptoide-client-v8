@@ -82,9 +82,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
     setupTextView(getString(R.string.appc_short_spend_appc),
         getString(R.string.appc_message_appcoins_section_4), appcMessageAppcoinsSection4);
 
-    ((TextView) bdsCardView.findViewById(R.id.product_title_textview)).setText(
+    ((TextView) bdsCardView.findViewById(R.id.app_title_textview)).setText(
         getString(R.string.appc_title_settings_appcoins_wallet));
-    ((ImageView) bdsCardView.findViewById(R.id.product_icon_imageview)).setImageDrawable(
+    ((ImageView) bdsCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
     setupCoinbaseLink();

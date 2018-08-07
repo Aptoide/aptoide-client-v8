@@ -15,7 +15,7 @@
       >
 
     <ImageView
-        android:id="@+id/product_icon_imageview"
+        android:id="@+id/app_icon_imageview"
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:layout_marginBottom="8dp"
@@ -31,16 +31,16 @@
 
 
     <TextView
-        android:id="@+id/product_title_textview"
+        android:id="@+id/app_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="15dp"
-        android:layout_toEndOf="@+id/product_icon_imageview"
-        android:layout_toRightOf="@+id/product_icon_imageview"
+        android:layout_toEndOf="@+id/app_icon_imageview"
+        android:layout_toRightOf="@+id/app_icon_imageview"
         tools:text="@string/appc_title_settings_appcoins_wallet"
-        app:layout_constraintStart_toEndOf="@+id/product_icon_imageview"
+        app:layout_constraintStart_toEndOf="@+id/app_icon_imageview"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/Aptoide.TextView.Medium.M"
         />
