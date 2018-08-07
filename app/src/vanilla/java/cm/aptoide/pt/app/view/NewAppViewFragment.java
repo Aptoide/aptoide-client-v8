@@ -1243,11 +1243,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
       showSimilarDownload = true;
+      appcInfoView.hideInfo();
       manageSimilarAppsVisibility();
       setDownloadState(model.getProgress(), model.getDownloadState());
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
+      appcInfoView.showInfo();
       setButtonText(model);
       if (model.hasError()) {
         handleDownloadError(model.getDownloadState());
