@@ -334,15 +334,10 @@ import rx.subjects.PublishSubject;
         screenOrientationManager, accountAnalytics);
   }
 
-  @FragmentScope @Provides AppCoinsInfoManager providesAppCoinsInfoManager(
-      InstallManager installManager, DownloadStateParser downloadStateParser) {
-    return new AppCoinsInfoManager(installManager);
-  }
-
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
-      AppCoinsInfoNavigator appCoinsInfoNavigator, AppCoinsInfoManager appCoinsInfoManager,
+      AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
       CrashReport crashReport) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
-        appCoinsInfoManager, crashReport);
+        installManager, crashReport, AndroidSchedulers.mainThread());
   }
 }

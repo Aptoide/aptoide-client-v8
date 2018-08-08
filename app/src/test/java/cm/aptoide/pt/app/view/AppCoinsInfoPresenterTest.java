@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app.view;
 
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.view.AppCoinsInfoManager;
 import cm.aptoide.pt.view.AppCoinsInfoNavigator;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import org.junit.Before;
@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Mockito.verify;
@@ -24,7 +25,7 @@ public class AppCoinsInfoPresenterTest {
   @Mock private AppCoinsInfoFragment view;
   @Mock private AppCoinsInfoNavigator navigator;
   @Mock private CrashReport crashReporter;
-  @Mock private AppCoinsInfoManager appCoinsInfoManager;
+  @Mock private InstallManager installManager;
 
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private AppCoinsInfoPresenter presenter;
@@ -40,7 +41,8 @@ public class AppCoinsInfoPresenterTest {
     installClickEvent = PublishSubject.create();
     walletClickEvent = PublishSubject.create();
 
-    presenter = new AppCoinsInfoPresenter(view, navigator, appCoinsInfoManager, crashReporter);
+    presenter = new AppCoinsInfoPresenter(view, navigator, installManager, crashReporter,
+        Schedulers.immediate());
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.installButtonClick()).thenReturn(installClickEvent);
@@ -53,7 +55,8 @@ public class AppCoinsInfoPresenterTest {
     //Given an initialized AppcoinsInfoPresenter
     presenter.handleClickOnInstallButton();
     //And the wallet is not installed
-    when(appCoinsInfoManager.loadButtonState()).thenReturn(Observable.just(false));
+    when(installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME)).thenReturn(
+        Observable.just(false));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     installClickEvent.onNext(null);
     //Then it should navigate to the wallet AppView
@@ -64,7 +67,8 @@ public class AppCoinsInfoPresenterTest {
     //Given an initialized AppCoinsInfoPresenter
     presenter.handleClickOnInstallButton();
     //And the wallet is installed
-    when(appCoinsInfoManager.loadButtonState()).thenReturn(Observable.just(true));
+    when(installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME)).thenReturn(
+        Observable.just(true));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     installClickEvent.onNext(null);
     //Then it should open the wallet
@@ -95,7 +99,8 @@ public class AppCoinsInfoPresenterTest {
     //Given an initialized AppCoinsInfoPresenter
     presenter.handleButtonText();
     //And the app is installed
-    when(appCoinsInfoManager.loadButtonState()).thenReturn(Observable.just(true));
+    when(installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME)).thenReturn(
+        Observable.just(true));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the button should show that the app is installed
     verify(view).setButtonText(true);
