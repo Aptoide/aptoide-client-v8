@@ -27,6 +27,7 @@ public class AppCoinsInfoPresenterTest {
   @Mock private CrashReport crashReporter;
   @Mock private InstallManager installManager;
 
+  private String packageName = "packageName";
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private AppCoinsInfoPresenter presenter;
   private PublishSubject<Void> coinbaseClickEvent;
@@ -41,8 +42,9 @@ public class AppCoinsInfoPresenterTest {
     installClickEvent = PublishSubject.create();
     walletClickEvent = PublishSubject.create();
 
-    presenter = new AppCoinsInfoPresenter(view, navigator, installManager, crashReporter,
-        Schedulers.immediate());
+    presenter =
+        new AppCoinsInfoPresenter(view, navigator, installManager, crashReporter, packageName,
+            Schedulers.immediate());
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.installButtonClick()).thenReturn(installClickEvent);
@@ -55,8 +57,7 @@ public class AppCoinsInfoPresenterTest {
     //Given an initialized AppcoinsInfoPresenter
     presenter.handleClickOnInstallButton();
     //And the wallet is not installed
-    when(installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME)).thenReturn(
-        Observable.just(false));
+    when(installManager.isInstalled(packageName)).thenReturn(Observable.just(false));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     installClickEvent.onNext(null);
     //Then it should navigate to the wallet AppView
@@ -67,12 +68,11 @@ public class AppCoinsInfoPresenterTest {
     //Given an initialized AppCoinsInfoPresenter
     presenter.handleClickOnInstallButton();
     //And the wallet is installed
-    when(installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME)).thenReturn(
-        Observable.just(true));
+    when(installManager.isInstalled(packageName)).thenReturn(Observable.just(true));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     installClickEvent.onNext(null);
     //Then it should open the wallet
-    verify(view).openApp(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME);
+    verify(view).openApp(packageName);
   }
 
   @Test public void handleClickOnCoinbaseLinkTest() {
@@ -99,8 +99,7 @@ public class AppCoinsInfoPresenterTest {
     //Given an initialized AppCoinsInfoPresenter
     presenter.handleButtonText();
     //And the app is installed
-    when(installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME)).thenReturn(
-        Observable.just(true));
+    when(installManager.isInstalled(packageName)).thenReturn(Observable.just(true));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the button should show that the app is installed
     verify(view).setButtonText(true);

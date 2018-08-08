@@ -1,7 +1,6 @@
 package cm.aptoide.pt.view;
 
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
@@ -20,14 +19,17 @@ public class AppCoinsInfoPresenter implements Presenter {
   private final AppCoinsInfoNavigator appCoinsInfoNavigator;
   private final InstallManager installManager;
   private final CrashReport crashReport;
+  private final String appcWalletPackageName;
   private final Scheduler viewScheduler;
 
   public AppCoinsInfoPresenter(AppCoinsInfoView view, AppCoinsInfoNavigator appCoinsInfoNavigator,
-      InstallManager installManager, CrashReport crashReport, Scheduler viewScheduler) {
+      InstallManager installManager, CrashReport crashReport, String appcWalletPackageName,
+      Scheduler viewScheduler) {
     this.view = view;
     this.appCoinsInfoNavigator = appCoinsInfoNavigator;
     this.installManager = installManager;
     this.crashReport = crashReport;
+    this.appcWalletPackageName = appcWalletPackageName;
     this.viewScheduler = viewScheduler;
   }
 
@@ -42,11 +44,11 @@ public class AppCoinsInfoPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.installButtonClick(), view.cardViewClick()))
-        .flatMap(click -> installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME))
+        .flatMap(click -> installManager.isInstalled(appcWalletPackageName))
         .observeOn(viewScheduler)
         .doOnNext(isInstalled -> {
           if (isInstalled) {
-            view.openApp(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME);
+            view.openApp(appcWalletPackageName);
           } else {
             appCoinsInfoNavigator.navigateToAppCoinsWallet();
           }
@@ -79,7 +81,7 @@ public class AppCoinsInfoPresenter implements Presenter {
   @VisibleForTesting public void handleButtonText() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME))
+        .flatMap(__ -> installManager.isInstalled(appcWalletPackageName))
         .doOnNext(view::setButtonText)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

@@ -7,14 +7,13 @@ import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 
-import static cm.aptoide.pt.app.view.AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME;
-
 /**
  * Created by D01 on 02/08/2018.
  */
 
 public class AppCoinsInfoNavigator {
 
+  static final String APPC_WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
 

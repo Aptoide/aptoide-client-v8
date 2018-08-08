@@ -338,6 +338,7 @@ import rx.subjects.PublishSubject;
       AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
       CrashReport crashReport) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
-        installManager, crashReport, AndroidSchedulers.mainThread());
+        installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
+        AndroidSchedulers.mainThread());
   }
 }
