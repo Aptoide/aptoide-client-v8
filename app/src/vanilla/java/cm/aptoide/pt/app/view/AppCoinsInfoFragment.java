@@ -43,7 +43,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   private Toolbar toolbar;
   private PublishSubject<Void> coinbaseClickSubject;
-  private View bdsCardView;
+  private View appCardView;
   private TextView appcMessageAppcoinsSection2a;
   private Button installButton;
   private TextView appcMessageAppcoinsSection2b;
@@ -65,7 +65,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    bdsCardView = view.findViewById(R.id.product_bdsWallet_cardview);
+    appCardView = view.findViewById(R.id.app_cardview);
     installButton = (Button) view.findViewById(R.id.appview_install_button);
     appcMessageAppcoinsSection2a =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_2a);
@@ -82,9 +82,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
     setupTextView(getString(R.string.appc_short_spend_appc),
         getString(R.string.appc_message_appcoins_section_4), appcMessageAppcoinsSection4);
 
-    ((TextView) bdsCardView.findViewById(R.id.app_title_textview)).setText(
+    ((TextView) appCardView.findViewById(R.id.app_title_textview)).setText(
         getString(R.string.appc_title_settings_appcoins_wallet));
-    ((ImageView) bdsCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
+    ((ImageView) appCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
     setupCoinbaseLink();
@@ -107,7 +107,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
 
   @Override public void onDestroyView() {
     toolbar = null;
-    bdsCardView = null;
+    appCardView = null;
     installButton = null;
     appcMessageAppcoinsSection2a = null;
     appcMessageAppcoinsSection2b = null;
@@ -181,7 +181,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoins
   }
 
   @Override public Observable<Void> cardViewClick() {
-    return RxView.clicks(bdsCardView);
+    return RxView.clicks(appCardView);
   }
 
   @Override public Observable<Void> installButtonClick() {

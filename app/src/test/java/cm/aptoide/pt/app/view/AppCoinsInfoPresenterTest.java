@@ -57,7 +57,7 @@ public class AppCoinsInfoPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     installClickEvent.onNext(null);
     //Then it should navigate to the wallet AppView
-    verify(navigator).navigateToAppCoinsBDSWallet();
+    verify(navigator).navigateToAppCoinsWallet();
   }
 
   @Test public void handleClickOnInstallButtonOpenAppTest() {
@@ -88,7 +88,7 @@ public class AppCoinsInfoPresenterTest {
     //And the user clicks on the link
     walletClickEvent.onNext(null);
     //Then it should navigate to the wallet AppView
-    verify(navigator).navigateToAppCoinsBDSWallet();
+    verify(navigator).navigateToAppCoinsWallet();
   }
 
   @Test public void handleClickOnButtonTextTest() {

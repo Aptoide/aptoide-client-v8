@@ -31,7 +31,7 @@ public class AppCoinsInfoNavigator {
             .getString(R.string.coinbase_url), activityNavigator.getActivity());
   }
 
-  public void navigateToAppCoinsBDSWallet() {
+  public void navigateToAppCoinsWallet() {
     NewAppViewFragment appViewFragment = new NewAppViewFragment();
     Bundle bundle = new Bundle();
     bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), APPC_WALLET_PACKAGE_NAME);

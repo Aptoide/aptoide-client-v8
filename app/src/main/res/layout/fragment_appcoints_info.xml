@@ -25,7 +25,7 @@
       android:id="@+id/about_appcoins_scroll"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_above="@id/product_bdsWallet_cardview"
+      android:layout_above="@id/app_cardview"
       android:layout_below="@id/app_bar_layout"
       android:layout_marginBottom="28dp"
       android:scrollbars="none"
@@ -330,7 +330,7 @@
 
   <include
       layout="@layout/app_install_cardview"
-      android:id="@+id/product_bdsWallet_cardview"
+      android:id="@+id/app_cardview"
       android:layout_width="match_parent"
       android:layout_height="96dp"
       android:layout_alignParentBottom="true"

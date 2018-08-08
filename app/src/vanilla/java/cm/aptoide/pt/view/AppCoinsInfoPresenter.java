@@ -44,7 +44,7 @@ public class AppCoinsInfoPresenter implements Presenter {
           if (isInstalled) {
             return openInstalledApp(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME);
           } else {
-            appCoinsInfoNavigator.navigateToAppCoinsBDSWallet();
+            appCoinsInfoNavigator.navigateToAppCoinsWallet();
             return Completable.complete();
           }
         })
@@ -57,7 +57,7 @@ public class AppCoinsInfoPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.appCoinsWalletLinkClick())
-        .doOnNext(click -> appCoinsInfoNavigator.navigateToAppCoinsBDSWallet())
+        .doOnNext(click -> appCoinsInfoNavigator.navigateToAppCoinsWallet())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
