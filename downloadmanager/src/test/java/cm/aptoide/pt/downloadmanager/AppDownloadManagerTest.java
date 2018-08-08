@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
  */
 public class AppDownloadManagerTest {
 
-  @Mock FileDownloader fileDownloader;
+  @Mock private FileDownloader fileDownloader;
   private DownloadAppFile apk;
   private DownloadAppFile mainObb;
   private DownloadAppFile patchObb;
@@ -48,28 +48,40 @@ public class AppDownloadManagerTest {
 
   @Test public void startAppDownloadWithOneFile() throws Exception {
 
-    when(fileDownloader.startFileDownload(apk)).thenReturn(Completable.complete());
+    when(fileDownloader.startFileDownload(apk.getMainDownloadPath(), apk.getFileType(),
+        apk.getPackageName(), apk.getVersionCode(), apk.getFileName())).thenReturn(
+        Completable.complete());
 
     appDownloadManager.startAppDownload()
         .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
-    verify(fileDownloader).startFileDownload(apk);
+    verify(fileDownloader).startFileDownload(apk.getMainDownloadPath(), apk.getFileType(),
+        apk.getPackageName(), apk.getVersionCode(), apk.getFileName());
   }
 
   @Test public void startAppDownloadWithMultipleFiles() throws Exception {
-    when(fileDownloader.startFileDownload(apk)).thenReturn(Completable.complete());
-    when(fileDownloader.startFileDownload(mainObb)).thenReturn(Completable.complete());
-    when(fileDownloader.startFileDownload(patchObb)).thenReturn(Completable.complete());
+    when(fileDownloader.startFileDownload(apk.getMainDownloadPath(), apk.getFileType(),
+        apk.getPackageName(), apk.getVersionCode(), apk.getFileName())).thenReturn(
+        Completable.complete());
+    when(fileDownloader.startFileDownload(mainObb.getMainDownloadPath(), mainObb.getFileType(),
+        mainObb.getPackageName(), mainObb.getVersionCode(), mainObb.getFileName())).thenReturn(
+        Completable.complete());
+    when(fileDownloader.startFileDownload(patchObb.getMainDownloadPath(), patchObb.getFileType(),
+        patchObb.getPackageName(), patchObb.getVersionCode(), patchObb.getFileName())).thenReturn(
+        Completable.complete());
 
     appDownloadManagerWithObbs.startAppDownload()
         .subscribe(testSubscriber);
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
-    verify(fileDownloader).startFileDownload(apk);
-    verify(fileDownloader).startFileDownload(mainObb);
-    verify(fileDownloader).startFileDownload(patchObb);
+    verify(fileDownloader).startFileDownload(apk.getMainDownloadPath(), apk.getFileType(),
+        apk.getPackageName(), apk.getVersionCode(), apk.getFileName());
+    verify(fileDownloader).startFileDownload(mainObb.getMainDownloadPath(), mainObb.getFileType(),
+        mainObb.getPackageName(), mainObb.getVersionCode(), mainObb.getFileName());
+    verify(fileDownloader).startFileDownload(patchObb.getMainDownloadPath(), patchObb.getFileType(),
+        patchObb.getPackageName(), patchObb.getVersionCode(), patchObb.getFileName());
   }
 
   @Test public void startAppDownloadWithNoFiles() throws Exception {

@@ -19,7 +19,10 @@ public class AppDownloadManager implements AppDownloader {
 
   @Override public Completable startAppDownload() {
     return Observable.from(app.getDownloadFiles())
-        .flatMapCompletable(downloadAppFile -> fileDownloader.startFileDownload(downloadAppFile))
+        .flatMapCompletable(downloadAppFile -> fileDownloader.startFileDownload(
+            downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
+            downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
+            downloadAppFile.getFileName()))
         .toCompletable();
   }
 

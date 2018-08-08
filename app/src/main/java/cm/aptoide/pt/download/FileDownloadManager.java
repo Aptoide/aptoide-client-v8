@@ -28,13 +28,14 @@ public class FileDownloadManager implements FileDownloader {
     this.downloadsPath = downloadsPath;
   }
 
-  @Override public Completable startFileDownload(DownloadAppFile downloadAppFile) {
+  @Override
+  public Completable startFileDownload(String mainDownloadPath, int fileType, String packageName,
+      int versionCode, String fileName) {
     return Completable.fromCallable(() -> {
-      if (downloadAppFile.getMainDownloadPath() == null || downloadAppFile.getMainDownloadPath()
-          .isEmpty()) {
+      if (mainDownloadPath == null || mainDownloadPath.isEmpty()) {
         throw new IllegalArgumentException("The url for the download can not be empty");
       } else {
-        createBaseDownloadTask(downloadAppFile);
+        createBaseDownloadTask(mainDownloadPath, versionCode, packageName, fileType, fileName);
         return fileDownloader.start(fileDownloadTask, false);
       }
     });
@@ -51,20 +52,19 @@ public class FileDownloadManager implements FileDownloader {
         () -> fileDownloader.clear(downloadId, downloadAppFile.getMainDownloadPath()));
   }
 
-  private void createBaseDownloadTask(DownloadAppFile downloadAppFile) {
+  private void createBaseDownloadTask(String mainDownloadPath, int versionCode, String packageName,
+      int fileType, String fileName) {
 
-    BaseDownloadTask baseDownloadTask =
-        fileDownloader.create(downloadAppFile.getMainDownloadPath());
+    BaseDownloadTask baseDownloadTask = fileDownloader.create(mainDownloadPath);
     baseDownloadTask.setAutoRetryTimes(RETRY_TIMES);
 
-    baseDownloadTask.addHeader(Constants.VERSION_CODE,
-        String.valueOf(downloadAppFile.getVersionCode()));
-    baseDownloadTask.addHeader(Constants.PACKAGE, downloadAppFile.getPackageName());
-    baseDownloadTask.addHeader(Constants.FILE_TYPE, String.valueOf(downloadAppFile.getFileType()));
+    baseDownloadTask.addHeader(Constants.VERSION_CODE, String.valueOf(versionCode));
+    baseDownloadTask.addHeader(Constants.PACKAGE, packageName);
+    baseDownloadTask.addHeader(Constants.FILE_TYPE, String.valueOf(fileType));
     baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, fileDownloadTask);
     baseDownloadTask.setListener(fileDownloadTask);
     baseDownloadTask.setCallbackProgressTimes(PROGRESS_MAX_VALUE);
-    baseDownloadTask.setPath(downloadsPath + downloadAppFile.getFileName());
+    baseDownloadTask.setPath(downloadsPath + fileName);
     this.downloadId = baseDownloadTask.asInQueueTask()
         .enqueue();
   }

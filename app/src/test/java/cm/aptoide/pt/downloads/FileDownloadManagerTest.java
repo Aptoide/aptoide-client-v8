@@ -43,7 +43,8 @@ public class FileDownloadManagerTest {
     when(fileDownloader.create(any())).thenReturn(mockBaseDownloadTask);
     when(mockBaseDownloadTask.asInQueueTask()).thenReturn(new MockInqueueTask());
 
-    fileDownloaderManager.startFileDownload(apkFile)
+    fileDownloaderManager.startFileDownload("http://apkdownload.com/file/mainObb.apk", 0,
+        "cm.aptoide.pt", 0, "fileName")
         .subscribe(testSubscriber);
     testSubscriber.assertNoErrors();
     testSubscriber.assertCompleted();
@@ -52,7 +53,7 @@ public class FileDownloadManagerTest {
 
   @Test public void startFileDownloadEmptyLink() throws Exception {
 
-    fileDownloaderManager.startFileDownload(emptyLinkFile)
+    fileDownloaderManager.startFileDownload("", 0, "", 0, "")
         .subscribe(testSubscriber);
     testSubscriber.assertError(IllegalArgumentException.class);
     verifyZeroInteractions(fileDownloader);
