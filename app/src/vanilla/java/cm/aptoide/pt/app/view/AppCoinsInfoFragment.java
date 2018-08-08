@@ -39,7 +39,7 @@ import rx.subjects.PublishSubject;
 
 public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoinsInfoView {
 
-  public static final String APPCWALLETPACKAGENAME = "com.appcoins.wallet";
+  public static final String APPC_WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   private Toolbar toolbar;
   private PublishSubject<Void> coinbaseClickSubject;

@@ -18,6 +18,6 @@ public class AppCoinsInfoManager {
   }
 
   public Observable<Boolean> loadButtonState() {
-    return installManager.isInstalled(AppCoinsInfoFragment.APPCWALLETPACKAGENAME);
+    return installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME);
   }
 }

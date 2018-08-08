@@ -42,7 +42,7 @@ public class AppCoinsInfoPresenter implements Presenter {
         .flatMap(click -> appCoinsInfoManager.loadButtonState())
         .flatMapCompletable(isInstalled -> {
           if (isInstalled) {
-            return openInstalledApp(AppCoinsInfoFragment.APPCWALLETPACKAGENAME);
+            return openInstalledApp(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME);
           } else {
             appCoinsInfoNavigator.navigateToAppCoinsBDSWallet();
             return Completable.complete();

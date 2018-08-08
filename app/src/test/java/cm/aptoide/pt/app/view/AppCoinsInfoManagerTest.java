@@ -29,9 +29,9 @@ public class AppCoinsInfoManagerTest {
     //Given an initialized AppCoinsInfoManager
     manager.loadButtonState();
     //It should ask the install manager if the app is installed
-    when(installManager.isInstalled(AppCoinsInfoFragment.APPCWALLETPACKAGENAME)).thenReturn(
+    when(installManager.isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME)).thenReturn(
         Observable.just(false));
-    verify(installManager).isInstalled(AppCoinsInfoFragment.APPCWALLETPACKAGENAME);
+    verify(installManager).isInstalled(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME);
     manager.loadButtonState()
         .map(isInstalled -> isInstalled)
         .test()

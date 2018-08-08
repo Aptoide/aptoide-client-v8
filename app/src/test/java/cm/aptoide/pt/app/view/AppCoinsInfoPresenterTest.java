@@ -68,7 +68,7 @@ public class AppCoinsInfoPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     installClickEvent.onNext(null);
     //Then it should open the wallet
-    verify(view).openApp(AppCoinsInfoFragment.APPCWALLETPACKAGENAME);
+    verify(view).openApp(AppCoinsInfoFragment.APPC_WALLET_PACKAGE_NAME);
   }
 
   @Test public void handleClickOnCoinbaseLinkTest() {
