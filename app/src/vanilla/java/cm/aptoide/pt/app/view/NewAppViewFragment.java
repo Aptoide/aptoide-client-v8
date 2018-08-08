@@ -676,10 +676,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return RxView.clicks(appcRewardView);
   }
 
-  @Override public Observable<Void> clickAppcSupportInfo() {
-    return appcInfoView.clickAppcInfo();
-  }
-
   @Override public void displayNotLoggedInSnack() {
     Snackbar.make(getView(), R.string.you_need_to_be_logged_in, Snackbar.LENGTH_SHORT)
         .setAction(R.string.login, snackView -> loginSnackClick.onNext(null))

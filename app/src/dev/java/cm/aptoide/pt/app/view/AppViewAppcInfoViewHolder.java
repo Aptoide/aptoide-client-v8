@@ -4,8 +4,6 @@ import android.text.SpannableString;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.jakewharton.rxbinding.view.RxView;
-import rx.Observable;
 
 public class AppViewAppcInfoViewHolder {
   private LinearLayout appcBillingSupported;
@@ -29,9 +27,5 @@ public class AppViewAppcInfoViewHolder {
       this.appcRewardValue.setText(formattedMessage);
       this.appcBillingSupported.setVisibility(View.GONE);
     }
-  }
-
-  public Observable<Void> clickAppcInfo() {
-    return RxView.clicks(appcRewardView);
   }
 }

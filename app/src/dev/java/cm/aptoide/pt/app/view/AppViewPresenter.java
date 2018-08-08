@@ -210,7 +210,7 @@ public class AppViewPresenter implements Presenter {
   private void handleClickOnAppcInfo() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> Observable.merge(view.clickGetAppcInfo(), view.clickAppcSupportInfo()))
+        .flatMap(__ -> view.clickGetAppcInfo())
         .doOnNext(click -> appViewNavigator.navigateToAppCoinsInfo())
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

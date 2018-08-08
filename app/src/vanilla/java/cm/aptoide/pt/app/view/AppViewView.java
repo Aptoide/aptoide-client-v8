@@ -46,8 +46,6 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickGetAppcInfo();
 
-  Observable<Void> clickAppcSupportInfo();
-
   void displayNotLoggedInSnack();
 
   void displayStoreFollowedSnack(String storeName);
