@@ -41,10 +41,8 @@ public class FileDownloadManager implements FileDownloader {
     });
   }
 
-  @Override public Completable pauseDownload(DownloadAppFile downloadAppFile) {
-    return Completable.fromAction(() -> {
-      fileDownloader.pause(fileDownloadTask);
-    });
+  @Override public Completable pauseDownload() {
+    return Completable.fromAction(() -> fileDownloader.pause(fileDownloadTask));
   }
 
   @Override public Completable removeDownloadFile(DownloadAppFile downloadAppFile) {

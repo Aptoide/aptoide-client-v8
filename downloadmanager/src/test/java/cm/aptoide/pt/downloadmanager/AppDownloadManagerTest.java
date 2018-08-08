@@ -94,30 +94,30 @@ public class AppDownloadManagerTest {
 
   @Test public void pauseAppDownloadWithOneFile() throws Exception {
 
-    when(fileDownloader.pauseDownload(apk)).thenReturn(Completable.complete());
+    when(fileDownloader.pauseDownload()).thenReturn(Completable.complete());
 
     appDownloadManager.pauseAppDownload()
         .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
-    verify(fileDownloader).pauseDownload(apk);
+    verify(fileDownloader).pauseDownload();
   }
 
   @Test public void pauseAppDownloadWithMultipleFiles() throws Exception {
 
-    when(fileDownloader.pauseDownload(apk)).thenReturn(Completable.complete());
-    when(fileDownloader.pauseDownload(mainObb)).thenReturn(Completable.complete());
-    when(fileDownloader.pauseDownload(patchObb)).thenReturn(Completable.complete());
+    when(fileDownloader.pauseDownload()).thenReturn(Completable.complete());
+    when(fileDownloader.pauseDownload()).thenReturn(Completable.complete());
+    when(fileDownloader.pauseDownload()).thenReturn(Completable.complete());
 
     appDownloadManagerWithObbs.pauseAppDownload()
         .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
-    verify(fileDownloader).pauseDownload(apk);
-    verify(fileDownloader).pauseDownload(mainObb);
-    verify(fileDownloader).pauseDownload(patchObb);
+    verify(fileDownloader).pauseDownload();
+    verify(fileDownloader).pauseDownload();
+    verify(fileDownloader).pauseDownload();
   }
 
   @Test public void pauseAppDownloadWithNoFiles() throws Exception {

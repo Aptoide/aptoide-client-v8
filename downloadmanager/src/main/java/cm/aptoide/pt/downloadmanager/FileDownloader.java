@@ -10,7 +10,7 @@ public interface FileDownloader {
   Completable startFileDownload(String mainDownloadPath, int fileType, String packageName,
       int versionCode, String fileName);
 
-  Completable pauseDownload(DownloadAppFile downloadAppFile);
+  Completable pauseDownload();
 
   Completable removeDownloadFile(DownloadAppFile downloadAppFile);
 }
