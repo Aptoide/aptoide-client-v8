@@ -6,5 +6,5 @@ package cm.aptoide.pt.downloadmanager;
 
 public interface FileDownloaderProvider {
 
-  FileDownloader getFileDownloader();
+  FileDownloader createFileDownloader();
 }
