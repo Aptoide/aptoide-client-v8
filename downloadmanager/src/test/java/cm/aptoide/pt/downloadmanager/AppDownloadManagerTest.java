@@ -130,33 +130,38 @@ public class AppDownloadManagerTest {
   }
 
   @Test public void removeDownloadWithOneFile() throws Exception {
-    when(fileDownloader.removeDownloadFile(apk)).thenReturn(Completable.complete());
+    when(fileDownloader.removeDownloadFile(apk.getMainDownloadPath())).thenReturn(
+        Completable.complete());
 
     appDownloadManager.removeAppDownload()
         .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
-    verify(fileDownloader).removeDownloadFile(apk);
+    verify(fileDownloader).removeDownloadFile(apk.getMainDownloadPath());
   }
 
   @Test public void removeDownloadWithMultipleFiles() throws Exception {
-    when(fileDownloader.removeDownloadFile(apk)).thenReturn(Completable.complete());
-    when(fileDownloader.removeDownloadFile(mainObb)).thenReturn(Completable.complete());
-    when(fileDownloader.removeDownloadFile(patchObb)).thenReturn(Completable.complete());
+    when(fileDownloader.removeDownloadFile(apk.getMainDownloadPath())).thenReturn(
+        Completable.complete());
+    when(fileDownloader.removeDownloadFile(mainObb.getMainDownloadPath())).thenReturn(
+        Completable.complete());
+    when(fileDownloader.removeDownloadFile(patchObb.getMainDownloadPath())).thenReturn(
+        Completable.complete());
 
     appDownloadManagerWithObbs.removeAppDownload()
         .subscribe(testSubscriber);
 
     testSubscriber.assertCompleted();
     testSubscriber.assertNoErrors();
-    verify(fileDownloader).removeDownloadFile(apk);
-    verify(fileDownloader).removeDownloadFile(mainObb);
-    verify(fileDownloader).removeDownloadFile(patchObb);
+    verify(fileDownloader).removeDownloadFile(apk.getMainDownloadPath());
+    verify(fileDownloader).removeDownloadFile(mainObb.getMainDownloadPath());
+    verify(fileDownloader).removeDownloadFile(patchObb.getMainDownloadPath());
   }
 
   @Test public void removeDownloadWithNoFiles() throws Exception {
-    when(fileDownloader.removeDownloadFile(apk)).thenReturn(Completable.complete());
+    when(fileDownloader.removeDownloadFile(apk.getMainDownloadPath())).thenReturn(
+        Completable.complete());
 
     appDownloadManagerWithNoFiles.removeAppDownload()
         .subscribe(testSubscriber);

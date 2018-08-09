@@ -2,7 +2,6 @@ package cm.aptoide.pt.downloads;
 
 import cm.aptoide.pt.download.FileDownloadManager;
 import cm.aptoide.pt.download.FileDownloadTask;
-import cm.aptoide.pt.downloadmanager.DownloadAppFile;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,19 +22,13 @@ public class FileDownloadManagerTest {
   @Mock private com.liulishuo.filedownloader.FileDownloader fileDownloader;
   @Mock private FileDownloadTask fileDownloadTask;
   @Mock private BaseDownloadTask mockBaseDownloadTask;
-  private DownloadAppFile emptyLinkFile;
-  private DownloadAppFile apkFile;
   private FileDownloadManager fileDownloaderManager;
   private TestSubscriber<Object> testSubscriber;
 
   @Before public void setupAppDownloaderTest() {
     MockitoAnnotations.initMocks(this);
-    emptyLinkFile =
-        new DownloadAppFile("", "", "", 0, "", "noFileName", DownloadAppFile.FileType.APK);
     fileDownloaderManager =
         new FileDownloadManager(fileDownloader, fileDownloadTask, "randomDownloadsPath");
-    apkFile = new DownloadAppFile("http://apkdownload.com/file/mainObb.apk", "", "appMd5", 0, "",
-        "fileName", DownloadAppFile.FileType.APK);
     testSubscriber = TestSubscriber.create();
   }
 
@@ -68,10 +61,10 @@ public class FileDownloadManagerTest {
   }
 
   @Test public void removeDownloadFile() throws Exception {
-    fileDownloaderManager.removeDownloadFile(apkFile)
+    fileDownloaderManager.removeDownloadFile("randomDownloadsPath")
         .subscribe(testSubscriber);
     testSubscriber.assertNoErrors();
     testSubscriber.assertCompleted();
-    verify(fileDownloader).clear(0, apkFile.getMainDownloadPath());
+    verify(fileDownloader).clear(0, "randomDownloadsPath");
   }
 }

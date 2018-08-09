@@ -12,5 +12,5 @@ public interface FileDownloader {
 
   Completable pauseDownload();
 
-  Completable removeDownloadFile(DownloadAppFile downloadAppFile);
+  Completable removeDownloadFile(String mainDownloadPath);
 }

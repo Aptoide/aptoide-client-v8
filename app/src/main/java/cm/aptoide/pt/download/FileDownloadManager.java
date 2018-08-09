@@ -1,7 +1,6 @@
 package cm.aptoide.pt.download;
 
 import cm.aptoide.pt.downloadmanager.Constants;
-import cm.aptoide.pt.downloadmanager.DownloadAppFile;
 import cm.aptoide.pt.downloadmanager.FileDownloader;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import rx.Completable;
@@ -45,9 +44,8 @@ public class FileDownloadManager implements FileDownloader {
     return Completable.fromAction(() -> fileDownloader.pause(fileDownloadTask));
   }
 
-  @Override public Completable removeDownloadFile(DownloadAppFile downloadAppFile) {
-    return Completable.fromAction(
-        () -> fileDownloader.clear(downloadId, downloadAppFile.getMainDownloadPath()));
+  @Override public Completable removeDownloadFile(String mainDownloadPath) {
+    return Completable.fromAction(() -> fileDownloader.clear(downloadId, mainDownloadPath));
   }
 
   private void createBaseDownloadTask(String mainDownloadPath, int versionCode, String packageName,
