@@ -46,14 +46,13 @@ dependencies {
   implementation project(path: ':utils')
   api project(path: ':aptoide-analytics-default-implementation')
   androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2", {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
+    exclude group: 'com.android.support', module: 'support-annotations' })
   testImplementation "junit:junit:4.12"
-  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  // implementation "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
-  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
   implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
+  // implementation "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  // implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
+  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 }
