@@ -622,7 +622,9 @@ public class AppViewPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
-          if (adsViewModel.hasError()) {
+          if (!adsViewModel.hasSimilarApps()) {
+            view.hideSimilarApps();
+          } else if (adsViewModel.hasError()) {
             if (adsViewModel.hasRecommendedAppsError()) view.hideSimilarApps();
             if (adsViewModel.hasAdError()) view.populateSimilarWithoutAds(adsViewModel);
           } else {

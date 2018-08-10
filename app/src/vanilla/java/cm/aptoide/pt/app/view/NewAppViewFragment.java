@@ -638,7 +638,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void populateSimilar(SimilarAppsViewModel similarApps) {
     similarAppsAdapter.update(mapToSimilar(similarApps, true));
     similarDownloadsAdapter.update(mapToSimilar(similarApps, true));
-    manageSimilarAppsVisibility();
   }
 
   @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
@@ -999,12 +998,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         formatAppCoinsRewardMessage());
   }
 
-  private void manageSimilarAppsVisibility() {
-    if (similarAppsAdapter.getItemCount() == 0 && similarDownloadsAdapter.getItemCount() == 0) {
+  private void manageSimilarAppsVisibility(boolean isDownloading) {
+    if (similarAppsAdapter.getItemCount() == 0) {
       similarBottomView.setVisibility(View.GONE);
       similarDownloadView.setVisibility(View.GONE);
     } else {
-      if (showSimilarDownload) {
+      if (isDownloading) {
         similarBottomView.setVisibility(View.GONE);
         similarDownloadView.setVisibility(View.VISIBLE);
       } else {
@@ -1242,14 +1241,14 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (model.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
-      showSimilarDownload = true;
       appcInfoView.hideInfo();
-      manageSimilarAppsVisibility();
+      manageSimilarAppsVisibility(true);
       setDownloadState(model.getProgress(), model.getDownloadState());
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
       appcInfoView.showInfo();
+      manageSimilarAppsVisibility(false);
       setButtonText(model);
       if (model.hasError()) {
         handleDownloadError(model.getDownloadState());

@@ -42,6 +42,10 @@ public class SimilarAppsViewModel {
     return recommendedAppsError;
   }
 
+  public boolean hasSimilarApps() {
+    return !recommendedApps.isEmpty() || ad != null;
+  }
+
   public boolean hasError() {
     return (recommendedAppsError != null || adError != null);
   }
