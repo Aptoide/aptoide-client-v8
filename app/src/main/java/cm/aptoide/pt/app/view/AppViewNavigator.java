@@ -107,6 +107,10 @@ public class AppViewNavigator {
         NOT_LOGGED_IN_SHARE_REQUEST_CODE, false);
   }
 
+  public void navigateToAppCoinsInfo() {
+    fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
+  }
+
   public Observable<Boolean> notLoggedInViewResults() {
     return fragmentNavigator.results(NOT_LOGGED_IN_SHARE_REQUEST_CODE)
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
