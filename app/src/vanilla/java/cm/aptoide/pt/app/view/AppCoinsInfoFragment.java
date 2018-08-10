@@ -28,6 +28,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
+import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import rx.Observable;
@@ -37,7 +38,8 @@ import rx.subjects.PublishSubject;
  * Created by D01 on 30/07/2018.
  */
 
-public class AppCoinsInfoFragment extends BackButtonFragment implements AppCoinsInfoView {
+public class AppCoinsInfoFragment extends BackButtonFragment
+    implements AppCoinsInfoView, NotBottomNavigationView {
 
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   private Toolbar toolbar;
