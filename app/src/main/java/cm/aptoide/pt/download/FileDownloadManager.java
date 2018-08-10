@@ -14,22 +14,30 @@ public class FileDownloadManager implements FileDownloader {
   public static final int RETRY_TIMES = 3;
   private static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
   private static final int PROGRESS_MAX_VALUE = 100;
-
+  private final String mainDownloadPath;
+  private final int fileType;
+  private final String packageName;
+  private final int versionCode;
+  private final String fileName;
   private com.liulishuo.filedownloader.FileDownloader fileDownloader;
   private FileDownloadTask fileDownloadTask;
   private String downloadsPath;
   private int downloadId;
 
   public FileDownloadManager(com.liulishuo.filedownloader.FileDownloader fileDownloader,
-      FileDownloadTask fileDownloadTask, String downloadsPath) {
+      FileDownloadTask fileDownloadTask, String downloadsPath, String mainDownloadPath,
+      int fileType, String packageName, int versionCode, String fileName) {
     this.fileDownloader = fileDownloader;
     this.fileDownloadTask = fileDownloadTask;
     this.downloadsPath = downloadsPath;
+    this.mainDownloadPath = mainDownloadPath;
+    this.fileType = fileType;
+    this.packageName = packageName;
+    this.versionCode = versionCode;
+    this.fileName = fileName;
   }
 
-  @Override
-  public Completable startFileDownload(String mainDownloadPath, int fileType, String packageName,
-      int versionCode, String fileName) {
+  @Override public Completable startFileDownload() {
     return Completable.fromCallable(() -> {
       if (mainDownloadPath == null || mainDownloadPath.isEmpty()) {
         throw new IllegalArgumentException("The url for the download can not be empty");
@@ -44,7 +52,7 @@ public class FileDownloadManager implements FileDownloader {
     return Completable.fromAction(() -> fileDownloader.pause(fileDownloadTask));
   }
 
-  @Override public Completable removeDownloadFile(String mainDownloadPath) {
+  @Override public Completable removeDownloadFile() {
     return Completable.fromAction(() -> fileDownloader.clear(downloadId, mainDownloadPath));
   }
 

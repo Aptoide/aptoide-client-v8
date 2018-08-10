@@ -28,7 +28,8 @@ public class FileDownloadManagerTest {
   @Before public void setupAppDownloaderTest() {
     MockitoAnnotations.initMocks(this);
     fileDownloaderManager =
-        new FileDownloadManager(fileDownloader, fileDownloadTask, "randomDownloadsPath");
+        new FileDownloadManager(fileDownloader, fileDownloadTask, "randomDownloadsPath",
+            mainDownloadPath, fileType, packageName, versionCode, fileName);
     testSubscriber = TestSubscriber.create();
   }
 

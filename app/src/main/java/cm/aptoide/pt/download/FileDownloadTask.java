@@ -9,7 +9,6 @@ import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 
 public class FileDownloadTask extends FileDownloadLargeFileListener {
   @Override protected void pending(BaseDownloadTask baseDownloadTask, long l, long l1) {
-
   }
 
   @Override protected void progress(BaseDownloadTask baseDownloadTask, long l, long l1) {

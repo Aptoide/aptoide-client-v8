@@ -18,6 +18,7 @@ public interface DownloadManager {
 
   Observable<List<Download>> getDownloadsList();
 
+  //NOTIFICACOES
   Observable<Download> getCurrentActiveDownload();
 
   Observable<List<Download>> getCurrentActiveDownloads();

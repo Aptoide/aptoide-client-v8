@@ -6,5 +6,6 @@ package cm.aptoide.pt.downloadmanager;
 
 public interface FileDownloaderProvider {
 
-  FileDownloader createFileDownloader();
+  FileDownloader createFileDownloader(String mainDownloadPath, int fileType, String packageName,
+      int versionCode, String fileName);
 }

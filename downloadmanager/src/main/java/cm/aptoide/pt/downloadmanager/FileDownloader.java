@@ -7,10 +7,9 @@ import rx.Completable;
  */
 
 public interface FileDownloader {
-  Completable startFileDownload(String mainDownloadPath, int fileType, String packageName,
-      int versionCode, String fileName);
+  Completable startFileDownload();
 
   Completable pauseDownload();
 
-  Completable removeDownloadFile(String mainDownloadPath);
+  Completable removeDownloadFile();
 }

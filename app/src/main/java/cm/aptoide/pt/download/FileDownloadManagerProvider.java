@@ -15,13 +15,16 @@ public class FileDownloadManagerProvider implements FileDownloaderProvider {
     this.downloadsPath = downloadsPath;
   }
 
-  @Override public FileDownloader getFileDownloader() {
-    return new FileDownloadManager(com.liulishuo.filedownloader.FileDownloader.getImpl(),
-        new FileDownloadTask(), downloadsPath);
-  }
-
   private FileDownloadTask createFileDownloadTask() {
     FileDownloadTask fileDownloadTask = new FileDownloadTask();
     return fileDownloadTask;
   }
+
+  @Override public FileDownloader createFileDownloader(String mainDownloadPath, int fileType,
+      String packageName, int versionCode, String fileName) {
+    return new FileDownloadManager(com.liulishuo.filedownloader.FileDownloader.getImpl(),
+        new FileDownloadTask(), downloadsPath, mainDownloadPath, fileType, packageName, versionCode,
+        fileName);
+  }
 }
+

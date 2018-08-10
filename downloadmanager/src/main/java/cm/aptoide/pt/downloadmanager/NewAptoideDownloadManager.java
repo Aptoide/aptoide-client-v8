@@ -10,6 +10,28 @@ import rx.Observable;
 
 public class NewAptoideDownloadManager implements DownloadManager {
 
+  private AppDownloader appDownloader;
+  //private DownloadsPersistence downloadsPersistence;
+
+  /**
+   * public NewAptoideDownloadManager(AppDownloader appDownloader,
+   * DownloadsPersistence downloadsPersistence) {
+   * this.appDownloader = appDownloader;
+   * this.downloadsPersistence = downloadsPersistence;
+   * }
+   **/
+  public NewAptoideDownloadManager(AppDownloader appDownloader) {
+    this.appDownloader = appDownloader;
+  }
+
+  public void start() {
+    dispatchDownloads();
+  }
+
+  private void dispatchDownloads() {
+
+  }
+
   @Override public Observable<Download> startDownload(Download download) {
     return null;
   }
