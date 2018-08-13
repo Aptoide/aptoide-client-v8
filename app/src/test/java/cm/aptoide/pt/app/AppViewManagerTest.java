@@ -612,7 +612,7 @@ public class AppViewManagerTest {
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));
 
     DownloadModel downloadModel =
-        appViewManager.loadDownloadAppViewModel("md5", "packageName", 1, false, null)
+        appViewManager.loadDownloadModel("md5", "packageName", 1, false, null)
             .toBlocking()
             .first();
 
@@ -622,8 +622,7 @@ public class AppViewManagerTest {
     //And it should return a DownloadViewModel with the correct progress, action and download state
     Assert.assertEquals(2, downloadModel.getProgress());
     Assert.assertEquals(DownloadModel.Action.INSTALL, downloadModel.getAction());
-    Assert.assertEquals(DownloadModel.DownloadState.ACTIVE,
-        downloadModel.getDownloadState());
+    Assert.assertEquals(DownloadModel.DownloadState.ACTIVE, downloadModel.getDownloadState());
   }
 
   @Test public void pauseDownloadTest() {

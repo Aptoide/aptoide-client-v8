@@ -77,8 +77,9 @@ public class AppViewPresenterTest {
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
             "marketName", false, false);
 
-    downloadModel = new DownloadModel(DownloadModel.Action.INSTALL, 0,
-        DownloadModel.DownloadState.ACTIVE, null);
+    downloadModel =
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
+            null);
 
     errorAppViewViewModel = new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC);
 
@@ -91,7 +92,7 @@ public class AppViewPresenterTest {
     //When the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
         appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
         Observable.just(downloadModel));
@@ -113,7 +114,7 @@ public class AppViewPresenterTest {
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
         appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
         Observable.just(downloadModel));
@@ -133,7 +134,7 @@ public class AppViewPresenterTest {
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(errorAppViewViewModel));
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(errorAppViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadModel(errorAppViewViewModel.getMd5(),
         errorAppViewViewModel.getPackageName(), errorAppViewViewModel.getVersionCode(),
         errorAppViewViewModel.isPaid(), errorAppViewViewModel.getPay())).thenReturn(
         Observable.just(downloadModel));
@@ -155,7 +156,7 @@ public class AppViewPresenterTest {
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
         appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
         Observable.just(downloadModel));
@@ -198,12 +199,11 @@ public class AppViewPresenterTest {
         Single.just(emptyEditorsChoiceAppViewViewModel));
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadModel(emptyEditorsChoiceAppViewViewModel.getMd5(),
         emptyEditorsChoiceAppViewViewModel.getPackageName(),
         emptyEditorsChoiceAppViewViewModel.getVersionCode(),
         emptyEditorsChoiceAppViewViewModel.isPaid(),
-        emptyEditorsChoiceAppViewViewModel.getPay())).thenReturn(
-        Observable.just(downloadModel));
+        emptyEditorsChoiceAppViewViewModel.getPay())).thenReturn(Observable.just(downloadModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent

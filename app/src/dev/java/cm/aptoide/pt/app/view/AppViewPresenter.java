@@ -511,16 +511,15 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<AppViewViewModel> loadApp() {
     return appViewManager.loadAppViewViewModel()
-        .flatMap(
-            appViewViewModel -> appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
-                appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-                appViewViewModel.isPaid(), appViewViewModel.getPay())
-                .first()
-                .observeOn(viewScheduler)
-                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
-                .doOnNext(downloadAppViewModel -> view.readyToDownload())
-                .toSingle()
-                .map(downloadAppViewModel -> appViewViewModel))
+        .flatMap(appViewViewModel -> appViewManager.loadDownloadModel(appViewViewModel.getMd5(),
+            appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
+            appViewViewModel.isPaid(), appViewViewModel.getPay())
+            .first()
+            .observeOn(viewScheduler)
+            .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
+            .doOnNext(downloadAppViewModel -> view.readyToDownload())
+            .toSingle()
+            .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
         .observeOn(viewScheduler)
         .doOnNext(appViewModel -> {
@@ -617,8 +616,9 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {
-    return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(), appViewModel.getMedia()
-        .getKeywords())
+    return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
+        appViewModel.getMedia()
+            .getKeywords())
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
@@ -782,8 +782,7 @@ public class AppViewPresenter implements Presenter {
     });
   }
 
-  private Completable downgradeApp(DownloadModel.Action action, String packageName,
-      long appId) {
+  private Completable downgradeApp(DownloadModel.Action action, String packageName, long appId) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
@@ -795,8 +794,7 @@ public class AppViewPresenter implements Presenter {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private Completable downloadApp(DownloadModel.Action action, String packageName,
-      long appId) {
+  private Completable downloadApp(DownloadModel.Action action, String packageName, long appId) {
     return Observable.defer(() -> {
       if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -821,7 +819,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(create -> appViewManager.loadAppViewViewModel()
             .toObservable())
         .filter(app -> !app.isLoading())
-        .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
+        .flatMap(app -> appViewManager.loadDownloadModel(app.getMd5(), app.getPackageName(),
             app.getVersionCode(), app.isPaid(), app.getPay()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))

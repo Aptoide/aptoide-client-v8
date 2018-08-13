@@ -111,7 +111,8 @@ public class AppViewManager {
             result.getError()));
   }
 
-  public Single<SimilarAppsViewModel> loadSimilarAppsViewModel(String packageName, List<String> keyWords) {
+  public Single<SimilarAppsViewModel> loadSimilarAppsViewModel(String packageName,
+      List<String> keyWords) {
     return loadAdForSimilarApps(packageName, keyWords).flatMap(
         adResult -> loadRecommended(limit, packageName).map(
             recommendedAppsRequestResult -> new SimilarAppsViewModel(adResult.getMinimalAd(),
@@ -257,7 +258,7 @@ public class AppViewManager {
         abTestGroup);
   }
 
-  public Observable<DownloadModel> loadDownloadAppViewModel(String md5, String packageName,
+  public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
       int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new DownloadModel(
