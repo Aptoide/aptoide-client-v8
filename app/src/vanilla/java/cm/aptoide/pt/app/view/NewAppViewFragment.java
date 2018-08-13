@@ -54,7 +54,7 @@ import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
-import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
@@ -216,7 +216,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ImageView cancelDownload;
   private ImageView pauseDownload;
   private ImageView resumeDownload;
-  private DownloadAppViewModel.Action action;
+  private DownloadModel.Action action;
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private AdsRepository adsRepository;
   private OkHttpClient httpClient;
@@ -975,7 +975,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     });
   }
 
-  @Override public Observable<DownloadAppViewModel.Action> showOpenAndInstallDialog(String title,
+  @Override public Observable<DownloadModel.Action> showOpenAndInstallDialog(String title,
       String appName) {
     return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
         getContext().getString(R.string.installapp_alrt, appName))
@@ -984,7 +984,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override
-  public Observable<DownloadAppViewModel.Action> showOpenAndInstallApkFyDialog(String title,
+  public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
       String appName) {
     return GenericDialogs.createGenericOkCancelMessageWithCustomView(getContext(), title,
         getContext().getString(R.string.installapp_alrt, appName), R.layout.apkfy_onboard_message)
@@ -1222,7 +1222,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return spannable;
   }
 
-  @Override public Observable<DownloadAppViewModel.Action> installAppClick() {
+  @Override public Observable<DownloadModel.Action> installAppClick() {
     return RxView.clicks(install)
         .map(__ -> action);
   }
@@ -1233,9 +1233,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .map(response -> (response.equals(YES)));
   }
 
-  @Override public void showDownloadAppModel(DownloadAppViewModel model) {
+  @Override public void showDownloadAppModel(DownloadModel model) {
     this.action = model.getAction();
-    if (model.getAction() == DownloadAppViewModel.Action.PAY) {
+    if (model.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();
     }
     if (model.isDownloading()) {
@@ -1362,7 +1362,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return appBought;
   }
 
-  private void handleDownloadError(DownloadAppViewModel.DownloadState downloadState) {
+  private void handleDownloadError(DownloadModel.DownloadState downloadState) {
     switch (downloadState) {
       case ERROR:
         showErrorDialog("", getContext().getString(R.string.error_occured));
@@ -1386,7 +1386,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
   }
 
-  private void setDownloadState(int progress, DownloadAppViewModel.DownloadState downloadState) {
+  private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
 
     LinearLayout.LayoutParams pauseShowing =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -1444,8 +1444,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         }, error -> new OnErrorNotImplementedException(error));
   }
 
-  private void setButtonText(DownloadAppViewModel model) {
-    DownloadAppViewModel.Action action = model.getAction();
+  private void setButtonText(DownloadModel model) {
+    DownloadModel.Action action = model.getAction();
     switch (action) {
       case UPDATE:
         install.setText(getResources().getString(R.string.appview_button_update));

@@ -6,14 +6,14 @@ import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
  * Created by filipegoncalves on 5/9/18.
  */
 
-public class DownloadAppViewModel {
+public class DownloadModel {
 
   private final Action action;
   private final int progress;
   private final DownloadState downloadState;
   private final GetAppMeta.Pay pay;
 
-  public DownloadAppViewModel(Action action, int progress, DownloadState downloadState,
+  public DownloadModel(Action action, int progress, DownloadState downloadState,
       GetAppMeta.Pay pay) {
     this.action = action;
     this.progress = progress;

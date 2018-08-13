@@ -111,7 +111,7 @@ public class AppViewManager {
             result.getError()));
   }
 
-  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
+  public Single<SimilarAppsViewModel> loadSimilarAppsViewModel(String packageName, List<String> keyWords) {
     return loadAdForSimilarApps(packageName, keyWords).flatMap(
         adResult -> loadRecommended(limit, packageName).map(
             recommendedAppsRequestResult -> new SimilarAppsViewModel(adResult.getMinimalAd(),
@@ -233,7 +233,7 @@ public class AppViewManager {
     installManager.rootInstallAllowed(answer);
   }
 
-  public Completable downloadApp(DownloadAppViewModel.Action downloadAction, String packageName,
+  public Completable downloadApp(DownloadModel.Action downloadAction, String packageName,
       long appId) {
     increaseInstallClick();
     return Observable.just(
@@ -257,10 +257,10 @@ public class AppViewManager {
         abTestGroup);
   }
 
-  public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
+  public Observable<DownloadModel> loadDownloadAppViewModel(String md5, String packageName,
       int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
     return installManager.getInstall(md5, packageName, versionCode)
-        .map(install -> new DownloadAppViewModel(
+        .map(install -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), paidApp,
                 pay != null && pay.isPaid()), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState()), pay));
