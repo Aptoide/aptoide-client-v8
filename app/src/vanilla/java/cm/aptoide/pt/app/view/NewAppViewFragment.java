@@ -121,7 +121,6 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class NewAppViewFragment extends NavigationTrackFragment implements AppViewView {
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
-  private static final String SHOW_SIMILAR_DOWNLOAD = "show_similar_download";
   private static final int PAY_APP_REQUEST_CODE = 12;
 
   @Inject AppViewPresenter presenter;
@@ -146,8 +145,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> skipRecommendsDialogClick;
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
-
-  private boolean showSimilarDownload;
 
   //Views
   private View noNetworkErrorView;
@@ -992,12 +989,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .map(__ -> action);
   }
 
-  @SuppressWarnings("unused") @Override
-  public void updateAppCoinsView(AppCoinsViewModel appCoinsViewModel) {
-    appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
-        formatAppCoinsRewardMessage());
-  }
-
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
     if (!hasSimilarApps) {
       hideSimilarApps();
@@ -1510,7 +1501,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putBoolean(SHOW_SIMILAR_DOWNLOAD, showSimilarDownload);
     if (scrollView != null) {
       outState.putInt(KEY_SCROLL_Y, scrollView.getScrollY());
     }

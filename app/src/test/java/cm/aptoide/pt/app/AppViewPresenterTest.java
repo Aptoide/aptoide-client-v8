@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -50,7 +51,6 @@ public class AppViewPresenterTest {
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private AppViewViewModel appViewViewModel;
   private AppViewViewModel errorAppViewViewModel;
-  private DownloadModel downloadModel;
   private DownloadAppViewModel downloadAppViewModel;
 
   @Before public void setupAppViewPresenter() {
@@ -79,7 +79,7 @@ public class AppViewPresenterTest {
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
             "marketName", false, false);
 
-    downloadModel =
+    DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
             null);
 
@@ -96,6 +96,10 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //When the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
+
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -118,6 +122,9 @@ public class AppViewPresenterTest {
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
 
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
+
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -137,6 +144,9 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(errorAppViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(errorAppViewViewModel.getMd5(),
@@ -159,6 +169,9 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
@@ -202,6 +215,9 @@ public class AppViewPresenterTest {
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(
         Single.just(emptyEditorsChoiceAppViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppViewViewModel.getMd5(),

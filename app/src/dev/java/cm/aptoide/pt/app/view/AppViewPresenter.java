@@ -510,6 +510,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<AppViewViewModel> loadApp() {
     return appViewManager.loadAppViewViewModel()
+        .doOnSuccess(appViewViewModel -> loadAppCoinsInformation())
         .flatMap(
             appViewViewModel -> appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
                 appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -593,9 +594,8 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
-            updateReviews(appViewModel), updateAppCoinsInformation(),
-            (similarAppsViewModel, reviewsViewModel, appCoinsViewModel) -> Observable.just(
-                appViewModel))
+            updateReviews(appViewModel),
+            (similarAppsViewModel, reviewsViewModel) -> Observable.just(appViewModel))
             .first()
             .map(__ -> appViewModel));
   }
@@ -609,10 +609,9 @@ public class AppViewPresenter implements Presenter {
                 experiment));
   }
 
-  private Observable<AppCoinsViewModel> updateAppCoinsInformation() {
-    return appViewManager.loadAppCoinsInformation()
-        .observeOn(viewScheduler)
-        .doOnNext(appCoinsViewModel -> view.updateAppCoinsView(appCoinsViewModel));
+  private void loadAppCoinsInformation() {
+    appViewManager.loadAppCoinsInformation()
+        .subscribe();
   }
 
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {

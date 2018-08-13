@@ -377,26 +377,24 @@ public class AppViewManager {
     return abTestManager.recordAction(experimentType);
   }
 
-  @SuppressWarnings("unused") public Observable<AppCoinsViewModel> loadAppCoinsInformation() {
-    if (cachedAppCoinsViewModel != null) {
-      return Observable.just(cachedAppCoinsViewModel);
-    } else {
-      return Observable.fromCallable(() -> cachedApp)
-          .flatMap(app -> {
+  @SuppressWarnings("unused") public Completable loadAppCoinsInformation() {
+    if (cachedAppCoinsViewModel == null) {
+      return Completable.fromObservable(Observable.fromCallable(() -> cachedApp)
+          .flatMapCompletable(app -> {
             if (app.hasBilling()) {
               cachedAppCoinsViewModel = new AppCoinsViewModel(false, true, false);
             } else if (app.hasAdvertising()) {
-              return appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
+              appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
                   .map(hasAdvertising -> {
                     cachedAppCoinsViewModel = new AppCoinsViewModel(false, false, hasAdvertising);
-                    return cachedAppCoinsViewModel;
-                  })
-                  .toObservable();
+                    return Completable.complete();
+                  });
             } else {
               cachedAppCoinsViewModel = new AppCoinsViewModel(false, false, false);
             }
-            return Observable.just(cachedAppCoinsViewModel);
-          });
+            return Completable.complete();
+          }));
     }
+    return Completable.complete();
   }
 }

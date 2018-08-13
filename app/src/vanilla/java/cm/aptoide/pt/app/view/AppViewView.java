@@ -133,8 +133,5 @@ public interface AppViewView extends InstallAppView {
 
   Observable<DownloadModel.Action> showOpenAndInstallDialog(String title, String appName);
 
-  Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
-      String appName);
-
-  @SuppressWarnings("unused") void updateAppCoinsView(AppCoinsViewModel appCoinsViewModel);
+  Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title, String appName);
 }
