@@ -54,6 +54,7 @@ import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
+import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
@@ -975,16 +976,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     });
   }
 
-  @Override public Observable<DownloadModel.Action> showOpenAndInstallDialog(String title,
-      String appName) {
+  @Override
+  public Observable<DownloadModel.Action> showOpenAndInstallDialog(String title, String appName) {
     return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
         getContext().getString(R.string.installapp_alrt, appName))
         .filter(response -> response.equals(YES))
         .map(__ -> action);
   }
 
-  @Override
-  public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
+  @Override public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
       String appName) {
     return GenericDialogs.createGenericOkCancelMessageWithCustomView(getContext(), title,
         getContext().getString(R.string.installapp_alrt, appName), R.layout.apkfy_onboard_message)
@@ -998,10 +998,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         formatAppCoinsRewardMessage());
   }
 
-  private void manageSimilarAppsVisibility(boolean isDownloading) {
-    if (similarAppsAdapter.getItemCount() == 0) {
-      similarBottomView.setVisibility(View.GONE);
-      similarDownloadView.setVisibility(View.GONE);
+  private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
+    if (!hasSimilarApps) {
+      hideSimilarApps();
     } else {
       if (isDownloading) {
         similarBottomView.setVisibility(View.GONE);
@@ -1233,25 +1232,29 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .map(response -> (response.equals(YES)));
   }
 
-  @Override public void showDownloadAppModel(DownloadModel model) {
-    this.action = model.getAction();
-    if (model.getAction() == DownloadModel.Action.PAY) {
+  @Override public void showDownloadAppModel(DownloadAppViewModel model) {
+    DownloadModel downloadModel = model.getDownloadModel();
+    SimilarAppsViewModel similarAppsViewModel = model.getSimilarAppsViewModel();
+    AppCoinsViewModel appCoinsViewModel = model.getAppCoinsViewModel();
+    this.action = downloadModel.getAction();
+    if (downloadModel.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();
     }
-    if (model.isDownloading()) {
+    if (downloadModel.isDownloading()) {
+      appcInfoView.hideInfo();
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
-      appcInfoView.hideInfo();
-      manageSimilarAppsVisibility(true);
-      setDownloadState(model.getProgress(), model.getDownloadState());
+      manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), true);
+      setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
+      appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
+          formatAppCoinsRewardMessage());
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
-      appcInfoView.showInfo();
-      manageSimilarAppsVisibility(false);
-      setButtonText(model);
-      if (model.hasError()) {
-        handleDownloadError(model.getDownloadState());
+      manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), false);
+      setButtonText(downloadModel);
+      if (downloadModel.hasError()) {
+        handleDownloadError(downloadModel.getDownloadState());
       }
     }
   }

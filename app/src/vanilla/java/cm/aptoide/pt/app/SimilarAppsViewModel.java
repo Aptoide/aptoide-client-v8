@@ -3,6 +3,7 @@ package cm.aptoide.pt.app;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.AppsList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,6 +25,14 @@ public class SimilarAppsViewModel {
     this.loading = loading;
     this.recommendedAppsError = recommendedAppsError;
     this.adError = adResultError;
+  }
+
+  public SimilarAppsViewModel() {
+    this.ad = null;
+    this.recommendedApps = Collections.emptyList();
+    this.loading = false;
+    this.recommendedAppsError = null;
+    this.adError = null;
   }
 
   public MinimalAd getAd() {

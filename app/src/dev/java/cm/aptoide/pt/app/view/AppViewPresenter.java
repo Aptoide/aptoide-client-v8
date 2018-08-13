@@ -106,7 +106,6 @@ public class AppViewPresenter implements Presenter {
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
     handleAppBought();
-
     handleDialogImpressions();
   }
 
@@ -511,15 +510,16 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<AppViewViewModel> loadApp() {
     return appViewManager.loadAppViewViewModel()
-        .flatMap(appViewViewModel -> appViewManager.loadDownloadModel(appViewViewModel.getMd5(),
-            appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-            appViewViewModel.isPaid(), appViewViewModel.getPay())
-            .first()
-            .observeOn(viewScheduler)
-            .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
-            .doOnNext(downloadAppViewModel -> view.readyToDownload())
-            .toSingle()
-            .map(downloadAppViewModel -> appViewViewModel))
+        .flatMap(
+            appViewViewModel -> appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
+                appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
+                appViewViewModel.isPaid(), appViewViewModel.getPay())
+                .first()
+                .observeOn(viewScheduler)
+                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
+                .doOnNext(downloadAppViewModel -> view.readyToDownload())
+                .toSingle()
+                .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
         .observeOn(viewScheduler)
         .doOnNext(appViewModel -> {
@@ -819,7 +819,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(create -> appViewManager.loadAppViewViewModel()
             .toObservable())
         .filter(app -> !app.isLoading())
-        .flatMap(app -> appViewManager.loadDownloadModel(app.getMd5(), app.getPackageName(),
+        .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
             app.getVersionCode(), app.isPaid(), app.getPay()))
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model))

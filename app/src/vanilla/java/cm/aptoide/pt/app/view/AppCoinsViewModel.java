@@ -11,6 +11,12 @@ public class AppCoinsViewModel {
     this.hasAdvertising = hasAdvertising;
   }
 
+  public AppCoinsViewModel() {
+    this.loading = false;
+    this.hasBilling = false;
+    this.hasAdvertising = false;
+  }
+
   public boolean isLoading() {
     return loading;
   }

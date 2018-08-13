@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
@@ -50,6 +51,7 @@ public class AppViewPresenterTest {
   private AppViewViewModel appViewViewModel;
   private AppViewViewModel errorAppViewViewModel;
   private DownloadModel downloadModel;
+  private DownloadAppViewModel downloadAppViewModel;
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
@@ -81,6 +83,9 @@ public class AppViewPresenterTest {
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
             null);
 
+    downloadAppViewModel = new DownloadAppViewModel(downloadModel, new SimilarAppsViewModel(),
+        new AppCoinsViewModel());
+
     errorAppViewViewModel = new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC);
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
@@ -92,17 +97,17 @@ public class AppViewPresenterTest {
     //When the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
     //when the download model is requested
-    when(appViewManager.loadDownloadModel(appViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
         appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
-        Observable.just(downloadModel));
+        Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then the loading should be shown
     verify(view).showLoading();
     //Then should set the download information
-    verify(view).showDownloadAppModel(downloadModel);
+    verify(view).showDownloadAppModel(downloadAppViewModel);
     //Then should set the download ready to download
     verify(view).readyToDownload();
   }
@@ -114,10 +119,10 @@ public class AppViewPresenterTest {
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
 
     //when the download model is requested
-    when(appViewManager.loadDownloadModel(appViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
         appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
-        Observable.just(downloadModel));
+        Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -134,10 +139,10 @@ public class AppViewPresenterTest {
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(errorAppViewViewModel));
 
     //when the download model is requested
-    when(appViewManager.loadDownloadModel(errorAppViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadAppViewModel(errorAppViewViewModel.getMd5(),
         errorAppViewViewModel.getPackageName(), errorAppViewViewModel.getVersionCode(),
         errorAppViewViewModel.isPaid(), errorAppViewViewModel.getPay())).thenReturn(
-        Observable.just(downloadModel));
+        Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -156,10 +161,10 @@ public class AppViewPresenterTest {
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
 
     //when the download model is requested
-    when(appViewManager.loadDownloadModel(appViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
         appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
-        Observable.just(downloadModel));
+        Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent
@@ -199,11 +204,12 @@ public class AppViewPresenterTest {
         Single.just(emptyEditorsChoiceAppViewViewModel));
 
     //when the download model is requested
-    when(appViewManager.loadDownloadModel(emptyEditorsChoiceAppViewViewModel.getMd5(),
+    when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppViewViewModel.getMd5(),
         emptyEditorsChoiceAppViewViewModel.getPackageName(),
         emptyEditorsChoiceAppViewViewModel.getVersionCode(),
         emptyEditorsChoiceAppViewViewModel.isPaid(),
-        emptyEditorsChoiceAppViewViewModel.getPay())).thenReturn(Observable.just(downloadModel));
+        emptyEditorsChoiceAppViewViewModel.getPay())).thenReturn(
+        Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent

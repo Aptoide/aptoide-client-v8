@@ -9,7 +9,6 @@ public class AppViewAppcInfoViewHolder {
   private LinearLayout appcBillingSupported;
   private View appcRewardView;
   private TextView appcRewardValue;
-  private MessageType infoType = MessageType.NONE;
 
   public AppViewAppcInfoViewHolder(LinearLayout appcBillingSupported, View appcRewardView,
       TextView appcRewardValue) {
@@ -23,33 +22,15 @@ public class AppViewAppcInfoViewHolder {
     if (hasBilling) {
       this.appcBillingSupported.setVisibility(View.VISIBLE);
       this.appcRewardView.setVisibility(View.GONE);
-      infoType = MessageType.BILLING;
     } else if (hasAdvertising) {
       this.appcRewardView.setVisibility(View.VISIBLE);
       this.appcRewardValue.setText(formattedMessage);
       this.appcBillingSupported.setVisibility(View.GONE);
-      infoType = MessageType.ADVERTISING;
-    }
-  }
-
-  public void showInfo() {
-    if (infoType != MessageType.NONE) {
-      if (infoType == MessageType.BILLING) {
-        this.appcBillingSupported.setVisibility(View.VISIBLE);
-        this.appcRewardView.setVisibility(View.GONE);
-      } else {
-        this.appcRewardView.setVisibility(View.VISIBLE);
-        this.appcBillingSupported.setVisibility(View.GONE);
-      }
     }
   }
 
   public void hideInfo() {
     this.appcBillingSupported.setVisibility(View.GONE);
     this.appcRewardView.setVisibility(View.GONE);
-  }
-
-  public enum MessageType {
-    NONE, BILLING, ADVERTISING
   }
 }

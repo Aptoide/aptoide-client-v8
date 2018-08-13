@@ -1,6 +1,7 @@
 package cm.aptoide.pt.appview;
 
 import cm.aptoide.pt.abtesting.Experiment;
+import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.view.AppBoughClickEvent;
 import cm.aptoide.pt.presenter.View;
@@ -16,7 +17,7 @@ public interface InstallAppView extends View {
 
   Observable<Boolean> showRootInstallWarningPopup();
 
-  void showDownloadAppModel(DownloadModel model);
+  void showDownloadAppModel(DownloadAppViewModel model);
 
   void openApp(String packageName);
 
