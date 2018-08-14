@@ -549,7 +549,7 @@ public class AppViewPresenter implements Presenter {
           appViewManager.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
               .getName(), model.getMalware()
               .getRank()
-              .name(), model.getAppc());
+              .name(), model.hasBilling(), model.hasAdvertising());
         })
         .flatMap(appViewModel -> {
           if (appViewModel.getOpenType() == NewAppViewFragment.OpenType.OPEN_AND_INSTALL) {

@@ -169,7 +169,7 @@ public class AppViewPresenterTest {
         appViewViewModel.getDeveloper()
             .getName(), appViewViewModel.getMalware()
             .getRank()
-            .name(), appViewViewModel.getAppc());
+            .name(), appViewViewModel.hasBilling(), appViewViewModel.hasAdvertising());
   }
 
   @Test public void handleOpenAppViewEventsWithEmptyEditorsChoice() {
@@ -216,6 +216,7 @@ public class AppViewPresenterTest {
         emptyEditorsChoiceAppViewViewModel.getDeveloper()
             .getName(), emptyEditorsChoiceAppViewViewModel.getMalware()
             .getRank()
-            .name(), emptyEditorsChoiceAppViewViewModel.getAppc());
+            .name(), emptyEditorsChoiceAppViewViewModel.hasBilling(),
+        emptyEditorsChoiceAppViewViewModel.hasAdvertising());
   }
 }
