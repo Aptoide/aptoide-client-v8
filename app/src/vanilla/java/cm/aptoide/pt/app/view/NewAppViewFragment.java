@@ -1001,7 +1001,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         similarBottomView.setVisibility(View.GONE);
         similarDownloadView.setVisibility(View.VISIBLE);
       } else {
-        similarBottomView.setVisibility(View.VISIBLE);
+        if (similarDownloadView.getVisibility() != View.VISIBLE) {
+          similarBottomView.setVisibility(View.VISIBLE);
+        }
       }
     }
   }
