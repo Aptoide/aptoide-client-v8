@@ -672,6 +672,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .flatMap(__ -> Observable.just(FlagsVote.VoteType.VIRUS));
   }
 
+  @Override public Observable<Void> clickGetAppcInfo() {
+    return RxView.clicks(appcRewardView);
+  }
+
   @Override public void displayNotLoggedInSnack() {
     Snackbar.make(getView(), R.string.you_need_to_be_logged_in, Snackbar.LENGTH_SHORT)
         .setAction(R.string.login, snackView -> loginSnackClick.onNext(null))

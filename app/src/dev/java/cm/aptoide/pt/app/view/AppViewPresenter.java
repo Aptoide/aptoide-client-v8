@@ -90,6 +90,7 @@ public class AppViewPresenter implements Presenter {
     handleClickReadReviews();
     handleClickFlags();
     handleClickLoginSnack();
+    handleClickOnAppcInfo();
     handleClickOnSimilarApps();
     handleClickOnToolbar();
     handleDefaultShare();
@@ -204,6 +205,15 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
+  }
+
+  private void handleClickOnAppcInfo() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickGetAppcInfo())
+        .doOnNext(click -> appViewNavigator.navigateToAppCoinsInfo())
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
   }
 
   private void handleClickOnDeveloperEmail() {

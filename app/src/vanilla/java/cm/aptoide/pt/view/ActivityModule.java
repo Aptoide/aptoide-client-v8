@@ -268,4 +268,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AppNavigator providesAppNavigator(FragmentNavigator fragmentNavigator) {
     return new AppNavigator(fragmentNavigator);
   }
+
+  @ActivityScope @Provides AppCoinsInfoNavigator providesAppCoinsInfoNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new AppCoinsInfoNavigator(((ActivityNavigator) activity), fragmentNavigator);
+  }
 }
