@@ -71,7 +71,8 @@ public class RefreshTokenInvalidator implements TokenInvalidator {
                       return Completable.complete();
                     }
                   }
-                  throw new RuntimeException(throwable);
+                  logoutSubject.onNext(null);
+                  return Completable.error(throwable);
                 }));
   }
 }
