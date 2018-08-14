@@ -102,17 +102,8 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    animatedColorView = view.findViewById(R.id.animated_color_view);
-    pageChangeListener = new AptoideViewPager.SimpleOnPageChangeListener() {
-
-      @Override public void onPageSelected(int position) {
-        if (position == 0) {
-          navigationTracker.registerScreen(
-              ScreenTagHistory.Builder.build(WizardPageOneFragment.class.getSimpleName(), "0"));
-        }
-      }
-    };
     super.onViewCreated(view, savedInstanceState);
+    attachPresenter(wizardPresenter);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -135,7 +126,15 @@ public class WizardFragment extends UIComponentFragment
             skipOrNextLayout.setVisibility(View.VISIBLE);
           }
         });
-    attachPresenter(wizardPresenter);
+    pageChangeListener = new AptoideViewPager.SimpleOnPageChangeListener() {
+
+      @Override public void onPageSelected(int position) {
+        if (position == 0) {
+          navigationTracker.registerScreen(
+              ScreenTagHistory.Builder.build(WizardPageOneFragment.class.getSimpleName(), "0"));
+        }
+      }
+    };
     viewPager.addOnPageChangeListener(wizardPresenter);
     viewPager.addOnPageChangeListener(pageChangeListener);
     registerViewpagerCurrentItem =
@@ -245,5 +244,6 @@ public class WizardFragment extends UIComponentFragment
     skipText = view.findViewById(R.id.skip_text);
     isInPortraitMode = getActivity().getResources()
         .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    animatedColorView = view.findViewById(R.id.animated_color_view);
   }
 }
