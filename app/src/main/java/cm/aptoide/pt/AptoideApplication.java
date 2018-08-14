@@ -35,7 +35,6 @@ import cm.aptoide.pt.billing.payment.Adyen;
 import cm.aptoide.pt.billing.purchase.PurchaseFactory;
 import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
 import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
-import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -237,8 +236,7 @@ public abstract class AptoideApplication extends Application {
     getApplicationComponent().inject(this);
 
     CrashReport.getInstance()
-        .addLogger(new CrashlyticsCrashLogger(crashlytics))
-        .addLogger(new ConsoleLogger());
+        .addLogger(new CrashlyticsCrashLogger(crashlytics));
     Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
 
     try {
