@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
@@ -520,7 +521,8 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<AppViewViewModel> loadApp() {
     return appViewManager.loadAppViewViewModel()
-        .doOnSuccess(appViewViewModel -> loadAppCoinsInformation())
+        .flatMap(appViewViewModel -> appViewManager.loadAppCoinsInformation()
+            .andThen(Single.just(appViewViewModel)))
         .flatMap(
             appViewViewModel -> appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
                 appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -617,11 +619,6 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(
             experiment -> showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName(),
                 experiment));
-  }
-
-  private void loadAppCoinsInformation() {
-    appViewManager.loadAppCoinsInformation()
-        .subscribe();
   }
 
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {
