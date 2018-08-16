@@ -9,7 +9,7 @@
   <string name="edit_store_social_link_channel_error">This channel doesn\'t exist</string>
   <string name="add_store_dialog_no_query">Type the name of the store</string>
   <string name="createuser_message_profile_no_dob">You need to provide a date of birth</string>
-  <string name="signup_message_no_tandc_error">You need to accept Aptoide's Terms and Conditions and Privacy Policy to create an account</string>
+  <string name="signup_message_no_tandc_error">You need to accept Aptoide\'s Terms and Conditions and Privacy Policy to create an account</string>
 
 
   <!--ws errors-->
