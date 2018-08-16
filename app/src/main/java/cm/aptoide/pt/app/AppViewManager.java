@@ -323,9 +323,10 @@ public class AppViewManager {
   }
 
   public void sendAppViewOpenedFromEvent(String packageName, String publisher, String badge,
-      double appc) {
+      boolean hasBilling, boolean hasAdvertising) {
     if (isFirstLoad) {
-      appViewAnalytics.sendAppViewOpenedFromEvent(packageName, publisher, badge, appc);
+      appViewAnalytics.sendAppViewOpenedFromEvent(packageName, publisher, badge, hasBilling,
+          hasAdvertising);
       isFirstLoad = false;
     }
   }

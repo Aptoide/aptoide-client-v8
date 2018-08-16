@@ -86,17 +86,18 @@ public class AppViewAnalytics {
   }
 
   public void sendAppViewOpenedFromEvent(String packageName, String appPublisher, String badge,
-      double appc) {
+      boolean hasBilling, boolean hasAdvertising) {
     analyticsManager.logEvent(createAppViewedFromMap(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), packageName, appPublisher, badge, appc),
-        APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
+        navigationTracker.getCurrentScreen(), packageName, appPublisher, badge, hasBilling,
+        hasAdvertising), APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
     analyticsManager.logEvent(createAppViewDataMap(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), packageName, appc), OPEN_APP_VIEW,
-        AnalyticsManager.Action.CLICK, getViewName(false));
+        navigationTracker.getCurrentScreen(), packageName, hasBilling, hasAdvertising),
+        OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
   private Map<String, Object> createAppViewDataMap(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, double appc) {
+      ScreenTagHistory currentScreen, String packageName, boolean hasBilling,
+      boolean hasAdvertising) {
     Map<String, String> packageMap = new HashMap<>();
     packageMap.put("package", packageName);
     Map<String, Object> data = new HashMap<>();
@@ -111,14 +112,26 @@ public class AppViewAnalytics {
     } else {
       data.put("previous_tag", APP_SHORTCUT);
     }
-    if (appc > 0) data.put("appcoins_type", "appcoins ads");
+
+    data.put("appcoins_type", mapAppCoinsInfo(hasBilling, hasAdvertising));
 
     return data;
   }
 
+  private String mapAppCoinsInfo(boolean hasBilling, boolean hasAdvertising) {
+    if (hasBilling && hasAdvertising) {
+      return "AppCoins Ads IAB";
+    } else if (hasBilling) {
+      return "AppCoins IAB";
+    } else if (hasAdvertising) {
+      return "AppCoins Ads";
+    }
+    return "None";
+  }
+
   private HashMap<String, Object> createAppViewedFromMap(ScreenTagHistory previousScreen,
       ScreenTagHistory currentScreen, String packageName, String appPublisher, String badge,
-      double appc) throws NullPointerException {
+      boolean hasBilling, boolean hasAdvertising) throws NullPointerException {
     HashMap<String, Object> map = new HashMap<>();
     if (previousScreen != null) {
       if (previousScreen.getFragment() != null) {
@@ -133,7 +146,8 @@ public class AppViewAnalytics {
         map.put("tag", currentScreen.getTag());
       }
     }
-    if (appc > 0) map.put("appcoins_type", "appcoins ads");
+
+    map.put("appcoins_type", mapAppCoinsInfo(hasBilling, hasAdvertising));
 
     map.put("package_name", packageName);
     map.put("application_publisher", appPublisher);

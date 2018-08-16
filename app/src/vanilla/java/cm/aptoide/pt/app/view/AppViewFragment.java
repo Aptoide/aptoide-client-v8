@@ -1266,7 +1266,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
           .getName(), app.getFile()
           .getMalware()
           .getRank()
-          .name(), appRewardAppcoins);
+          .name(), app.hasBilling(), app.hasAdvertising());
       final Malware malware = app.getFile()
           .getMalware();
       badge.setOnClickListener(v -> {
