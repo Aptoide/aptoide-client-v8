@@ -9,6 +9,8 @@
   <string name="edit_store_social_link_channel_error">This channel doesn\'t exist</string>
   <string name="add_store_dialog_no_query">Type the name of the store</string>
   <string name="create_user_profile_no_dob">You need to provide a date of birth</string>
+  <string name="no_tandc_error_message">You need to accept Aptoide's Terms and Conditions and Privacy Policy to create an account</string>
+
 
   <!--ws errors-->
   <string name="ws_error_MARG_1">Missing store</string>
