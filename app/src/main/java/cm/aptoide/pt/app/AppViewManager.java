@@ -58,6 +58,8 @@ public class AppViewManager {
   private String marketName;
   private boolean isFirstLoad;
   private AppCoinsManager appCoinsManager;
+  private AppCoinsViewModel cachedAppCoinsViewModel;
+  private SimilarAppsViewModel cachedSimilarAppsViewModel;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -111,18 +113,32 @@ public class AppViewManager {
             result.getError()));
   }
 
-  public Single<SimilarAppsViewModel> loadSimilarApps(String packageName, List<String> keyWords) {
-    return loadAdForSimilarApps(packageName, keyWords).flatMap(
-        adResult -> loadRecommended(limit, packageName).map(
-            recommendedAppsRequestResult -> new SimilarAppsViewModel(adResult.getMinimalAd(),
+  public Single<SimilarAppsViewModel> loadSimilarAppsViewModel(String packageName,
+      List<String> keyWords) {
+    if (cachedSimilarAppsViewModel != null) {
+      return Single.just(cachedSimilarAppsViewModel);
+    } else {
+      return loadAdForSimilarApps(packageName, keyWords).flatMap(
+          adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
+            cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getMinimalAd(),
                 recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError(), adResult.getError())));
+                recommendedAppsRequestResult.getError(), adResult.getError());
+            return cachedSimilarAppsViewModel;
+          }));
+    }
   }
 
   public Single<SearchAdResult> loadAdsFromAppView() {
     return adsManager.loadAds(cachedApp.getPackageName(), cachedApp.getStore()
         .getName())
         .map(SearchAdResult::new);
+  }
+
+  public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
+    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay).map(
+        downloadModel -> new DownloadAppViewModel(downloadModel, cachedSimilarAppsViewModel,
+            cachedAppCoinsViewModel));
   }
 
   public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
@@ -233,7 +249,7 @@ public class AppViewManager {
     installManager.rootInstallAllowed(answer);
   }
 
-  public Completable downloadApp(DownloadAppViewModel.Action downloadAction, String packageName,
+  public Completable downloadApp(DownloadModel.Action downloadAction, String packageName,
       long appId) {
     increaseInstallClick();
     return Observable.just(
@@ -257,10 +273,10 @@ public class AppViewManager {
         abTestGroup);
   }
 
-  public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
+  public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
       int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
     return installManager.getInstall(md5, packageName, versionCode)
-        .map(install -> new DownloadAppViewModel(
+        .map(install -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), paidApp,
                 pay != null && pay.isPaid()), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState()), pay));
@@ -362,18 +378,24 @@ public class AppViewManager {
     return abTestManager.recordAction(experimentType);
   }
 
-  @SuppressWarnings("unused") public Observable<AppCoinsViewModel> loadAppCoinsInformation() {
-    return Observable.fromCallable(() -> cachedApp)
-        .flatMap(app -> {
-          if (app.hasBilling()) {
-            return Observable.just(new AppCoinsViewModel(false, true, false));
-          } else if (app.hasAdvertising()) {
-            return appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
-                .map(hasAdvertising -> new AppCoinsViewModel(false, false, hasAdvertising))
-                .toObservable();
-          } else {
-            return Observable.just(new AppCoinsViewModel(false, false, false));
-          }
-        });
+  @SuppressWarnings("unused") public Completable loadAppCoinsInformation() {
+    if (cachedAppCoinsViewModel == null) {
+      return Completable.fromObservable(Observable.fromCallable(() -> cachedApp)
+          .flatMapCompletable(app -> {
+            if (app.hasBilling()) {
+              cachedAppCoinsViewModel = new AppCoinsViewModel(false, true, false);
+            } else if (app.hasAdvertising()) {
+              appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
+                  .map(hasAdvertising -> {
+                    cachedAppCoinsViewModel = new AppCoinsViewModel(false, false, hasAdvertising);
+                    return Completable.complete();
+                  });
+            } else {
+              cachedAppCoinsViewModel = new AppCoinsViewModel(false, false, false);
+            }
+            return Completable.complete();
+          }));
+    }
+    return Completable.complete();
   }
 }

@@ -2,6 +2,7 @@ package cm.aptoide.pt.appview;
 
 import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.view.AppBoughClickEvent;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -12,7 +13,7 @@ import rx.Observable;
 
 public interface InstallAppView extends View {
 
-  Observable<DownloadAppViewModel.Action> installAppClick();
+  Observable<DownloadModel.Action> installAppClick();
 
   Observable<Boolean> showRootInstallWarningPopup();
 

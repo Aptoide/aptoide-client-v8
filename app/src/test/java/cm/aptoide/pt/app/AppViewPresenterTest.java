@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
@@ -20,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -77,8 +79,12 @@ public class AppViewPresenterTest {
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
             "marketName", false, false);
 
-    downloadAppViewModel = new DownloadAppViewModel(DownloadAppViewModel.Action.INSTALL, 0,
-        DownloadAppViewModel.DownloadState.ACTIVE, null);
+    DownloadModel downloadModel =
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
+            null);
+
+    downloadAppViewModel = new DownloadAppViewModel(downloadModel, new SimilarAppsViewModel(),
+        new AppCoinsViewModel());
 
     errorAppViewViewModel = new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC);
 
@@ -90,6 +96,10 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //When the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
+
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -112,6 +122,9 @@ public class AppViewPresenterTest {
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
 
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
+
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -131,6 +144,9 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(errorAppViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(errorAppViewViewModel.getMd5(),
@@ -153,6 +169,9 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
@@ -196,6 +215,9 @@ public class AppViewPresenterTest {
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(
         Single.just(emptyEditorsChoiceAppViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppViewViewModel.getMd5(),

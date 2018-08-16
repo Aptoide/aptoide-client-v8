@@ -2,7 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.view.MenuItem;
 import cm.aptoide.pt.app.AppViewViewModel;
-import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
@@ -133,10 +133,7 @@ public interface AppViewView extends InstallAppView {
 
   void recoverScrollViewState();
 
-  Observable<DownloadAppViewModel.Action> showOpenAndInstallDialog(String title, String appName);
+  Observable<DownloadModel.Action> showOpenAndInstallDialog(String title, String appName);
 
-  Observable<DownloadAppViewModel.Action> showOpenAndInstallApkFyDialog(String title,
-      String appName);
-
-  @SuppressWarnings("unused") void updateAppCoinsView(AppCoinsViewModel appCoinsViewModel);
+  Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title, String appName);
 }

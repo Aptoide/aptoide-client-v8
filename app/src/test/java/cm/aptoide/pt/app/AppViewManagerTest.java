@@ -390,7 +390,7 @@ public class AppViewManagerTest {
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarApps("anyString", keywords)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 
@@ -419,7 +419,7 @@ public class AppViewManagerTest {
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
 
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarApps("anyString", keywords)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 
@@ -574,7 +574,7 @@ public class AppViewManagerTest {
     //DownloadApp Test
 
     //When the presenter asks to download an App
-    int action = downloadStateParser.parseDownloadAction(DownloadAppViewModel.Action.INSTALL);
+    int action = downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL);
     when(downloadFactory.create(action, detailedApp.getName(), detailedApp.getPackageName(),
         detailedApp.getMd5(), detailedApp.getIcon(), detailedApp.getVersionName(),
         detailedApp.getVersionCode(), detailedApp.getPath(), detailedApp.getPathAlt(),
@@ -587,7 +587,7 @@ public class AppViewManagerTest {
     when(download.getAction()).thenReturn(3);
 
     //Then the AppViewManager should return a Complete when the download starts
-    appViewManager.downloadApp(DownloadAppViewModel.Action.INSTALL, "packageName", 1)
+    appViewManager.downloadApp(DownloadModel.Action.INSTALL, "packageName", 1)
         .test()
         .assertCompleted();
 
@@ -608,11 +608,11 @@ public class AppViewManagerTest {
         new Install(2, Install.InstallationStatus.INSTALLING, Install.InstallationType.INSTALL,
             false, 1, "md5", "packageName", 1, "", "", "");
 
-    //When the presenter asks for the downloadAppViewModel
+    //When the presenter asks for the downloadModel
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));
 
-    DownloadAppViewModel downloadAppViewModel =
-        appViewManager.loadDownloadAppViewModel("md5", "packageName", 1, false, null)
+    DownloadModel downloadModel =
+        appViewManager.loadDownloadModel("md5", "packageName", 1, false, null)
             .toBlocking()
             .first();
 
@@ -620,10 +620,9 @@ public class AppViewManagerTest {
     verify(installManager).getInstall("md5", "packageName", 1);
 
     //And it should return a DownloadViewModel with the correct progress, action and download state
-    Assert.assertEquals(2, downloadAppViewModel.getProgress());
-    Assert.assertEquals(DownloadAppViewModel.Action.INSTALL, downloadAppViewModel.getAction());
-    Assert.assertEquals(DownloadAppViewModel.DownloadState.ACTIVE,
-        downloadAppViewModel.getDownloadState());
+    Assert.assertEquals(2, downloadModel.getProgress());
+    Assert.assertEquals(DownloadModel.Action.INSTALL, downloadModel.getAction());
+    Assert.assertEquals(DownloadModel.DownloadState.ACTIVE, downloadModel.getDownloadState());
   }
 
   @Test public void pauseDownloadTest() {

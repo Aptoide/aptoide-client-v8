@@ -16,7 +16,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewViewModel;
-import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
@@ -107,7 +108,6 @@ public class AppViewPresenter implements Presenter {
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
     handleAppBought();
-
     handleDialogImpressions();
   }
 
@@ -521,6 +521,8 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<AppViewViewModel> loadApp() {
     return appViewManager.loadAppViewViewModel()
+        .flatMap(appViewViewModel -> appViewManager.loadAppCoinsInformation()
+            .andThen(Single.just(appViewViewModel)))
         .flatMap(
             appViewViewModel -> appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
                 appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -557,11 +559,11 @@ public class AppViewPresenter implements Presenter {
             return accountManager.accountStatus()
                 .first()
                 .observeOn(viewScheduler)
-                .flatMapCompletable(account -> downloadApp(DownloadAppViewModel.Action.INSTALL,
+                .flatMapCompletable(account -> downloadApp(DownloadModel.Action.INSTALL,
                     appViewModel.getPackageName(), appViewModel.getAppId()).doOnCompleted(
                     () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                         appViewModel.getDeveloper()
-                            .getName(), DownloadAppViewModel.Action.INSTALL.toString()))
+                            .getName(), DownloadModel.Action.INSTALL.toString()))
                     .andThen(handleRecommendsExperiment(appViewModel, account))
                     .toCompletable()
                     .observeOn(viewScheduler))
@@ -604,9 +606,8 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
-            updateReviews(appViewModel), updateAppCoinsInformation(),
-            (similarAppsViewModel, reviewsViewModel, appCoinsViewModel) -> Observable.just(
-                appViewModel))
+            updateReviews(appViewModel),
+            (similarAppsViewModel, reviewsViewModel) -> Observable.just(appViewModel))
             .first()
             .map(__ -> appViewModel));
   }
@@ -620,19 +621,16 @@ public class AppViewPresenter implements Presenter {
                 experiment));
   }
 
-  private Observable<AppCoinsViewModel> updateAppCoinsInformation() {
-    return appViewManager.loadAppCoinsInformation()
-        .observeOn(viewScheduler)
-        .doOnNext(appCoinsViewModel -> view.updateAppCoinsView(appCoinsViewModel));
-  }
-
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {
-    return appViewManager.loadSimilarApps(appViewModel.getPackageName(), appViewModel.getMedia()
-        .getKeywords())
+    return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
+        appViewModel.getMedia()
+            .getKeywords())
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
-          if (adsViewModel.hasError()) {
+          if (!adsViewModel.hasSimilarApps()) {
+            view.hideSimilarApps();
+          } else if (adsViewModel.hasError()) {
             if (adsViewModel.hasRecommendedAppsError()) view.hideSimilarApps();
             if (adsViewModel.hasAdError()) view.populateSimilarWithoutAds(adsViewModel);
           } else {
@@ -790,8 +788,7 @@ public class AppViewPresenter implements Presenter {
     });
   }
 
-  private Completable downgradeApp(DownloadAppViewModel.Action action, String packageName,
-      long appId) {
+  private Completable downgradeApp(DownloadModel.Action action, String packageName, long appId) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
@@ -803,8 +800,7 @@ public class AppViewPresenter implements Presenter {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private Completable downloadApp(DownloadAppViewModel.Action action, String packageName,
-      long appId) {
+  private Completable downloadApp(DownloadModel.Action action, String packageName, long appId) {
     return Observable.defer(() -> {
       if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -932,7 +928,7 @@ public class AppViewPresenter implements Presenter {
             .flatMap(appBoughClickEvent -> appViewManager.loadAppViewViewModel()
                 .flatMapCompletable(
                     appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
-                        .andThen(downloadApp(DownloadAppViewModel.Action.INSTALL,
+                        .andThen(downloadApp(DownloadModel.Action.INSTALL,
                             appViewViewModel.getPackageName(), appViewViewModel.getAppId())))
                 .toObservable())
             .retry())
