@@ -160,7 +160,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public Observable<Boolean> facebookSignUpWithRequiredPermissionsInEvent() {
     return facebookEmailRequiredDialog.positiveClicks()
-        .map(dialog -> termsConditionCheckBox.isChecked());
+        .map(dialog -> null);
   }
 
   @Override public Observable<Boolean> facebookSignUpEvent() {

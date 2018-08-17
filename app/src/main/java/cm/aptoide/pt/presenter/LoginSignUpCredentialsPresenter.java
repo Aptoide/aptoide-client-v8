@@ -294,8 +294,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.facebookSignUpWithRequiredPermissionsInEvent())
-        .doOnNext(this::showNotCheckedMessage)
-        .filter(event -> event)
         .doOnNext(event -> {
           view.showLoading();
           accountNavigator.navigateToFacebookSignUpForResult(requiredPermissions);
