@@ -46,7 +46,9 @@
   <string name="create_user_create_button">Create profile</string>
   <string name="nothing_inserted_user">Insert a username and a photo (optional) to create your profile</string>
   <string name="no_username_inserted">Add a username to create your profile</string>
-
+  <string name="createuser_short_subscribe_newsletter">Yes, I want to subscribe to Aptoide\'s newsletter</string>
+  <string name="createuser_title_date_of_birth">Date of Birth</string>
+  
   <!--User interests fragment -->
 
   <!--Create Store fragment-->
@@ -60,6 +62,7 @@
   <string name="save_edit_store">Save</string>
   <string name="edit_store_title_social_networks">Social Networks</string>
   <string name="edit_store_short_enter_username">Enter username</string>
+
 
 
   <string name="upload_dialog_title">Upload photo</string>

@@ -28,4 +28,9 @@ public class AppViewAppcInfoViewHolder {
       this.appcBillingSupported.setVisibility(View.GONE);
     }
   }
+
+  public void hideInfo() {
+    this.appcBillingSupported.setVisibility(View.GONE);
+    this.appcRewardView.setVisibility(View.GONE);
+  }
 }

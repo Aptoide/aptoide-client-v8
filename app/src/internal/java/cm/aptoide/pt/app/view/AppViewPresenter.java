@@ -16,7 +16,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewViewModel;
-import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -539,7 +539,7 @@ public class AppViewPresenter implements Presenter {
           appViewManager.sendAppViewOpenedFromEvent(model.getPackageName(), model.getDeveloper()
               .getName(), model.getMalware()
               .getRank()
-              .name(), model.getAppc());
+              .name(), model.hasBilling(), model.hasAdvertising());
         })
         .flatMap(appViewModel -> {
           if (appViewModel.getOpenType() == NewAppViewFragment.OpenType.OPEN_AND_INSTALL) {
@@ -547,11 +547,11 @@ public class AppViewPresenter implements Presenter {
             return accountManager.accountStatus()
                 .first()
                 .observeOn(viewScheduler)
-                .flatMapCompletable(account -> downloadApp(DownloadAppViewModel.Action.INSTALL,
+                .flatMapCompletable(account -> downloadApp(DownloadModel.Action.INSTALL,
                     appViewModel.getPackageName(), appViewModel.getAppId()).doOnCompleted(
                     () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                         appViewModel.getDeveloper()
-                            .getName(), DownloadAppViewModel.Action.INSTALL.toString()))
+                            .getName(), DownloadModel.Action.INSTALL.toString()))
                     .andThen(handleRecommendsExperiment(appViewModel, account))
                     .toCompletable()
                     .observeOn(viewScheduler))
@@ -610,12 +610,15 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {
-    return appViewManager.loadSimilarApps(appViewModel.getPackageName(), appViewModel.getMedia()
-        .getKeywords())
+    return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
+        appViewModel.getMedia()
+            .getKeywords())
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
-          if (adsViewModel.hasError()) {
+          if (!adsViewModel.hasSimilarApps()) {
+            view.hideSimilarApps();
+          } else if (adsViewModel.hasError()) {
             if (adsViewModel.hasRecommendedAppsError()) view.hideSimilarApps();
             if (adsViewModel.hasAdError()) view.populateSimilarWithoutAds(adsViewModel);
           } else {
@@ -773,8 +776,7 @@ public class AppViewPresenter implements Presenter {
     });
   }
 
-  private Completable downgradeApp(DownloadAppViewModel.Action action, String packageName,
-      long appId) {
+  private Completable downgradeApp(DownloadModel.Action action, String packageName, long appId) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
@@ -786,8 +788,7 @@ public class AppViewPresenter implements Presenter {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private Completable downloadApp(DownloadAppViewModel.Action action, String packageName,
-      long appId) {
+  private Completable downloadApp(DownloadModel.Action action, String packageName, long appId) {
     return Observable.defer(() -> {
       if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -915,7 +916,7 @@ public class AppViewPresenter implements Presenter {
             .flatMap(appBoughClickEvent -> appViewManager.loadAppViewViewModel()
                 .flatMapCompletable(
                     appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
-                        .andThen(downloadApp(DownloadAppViewModel.Action.INSTALL,
+                        .andThen(downloadApp(DownloadModel.Action.INSTALL,
                             appViewViewModel.getPackageName(), appViewViewModel.getAppId())))
                 .toObservable())
             .retry())
