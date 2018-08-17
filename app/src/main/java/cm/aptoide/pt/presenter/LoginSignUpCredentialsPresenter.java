@@ -414,7 +414,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private void showNotCheckedMessage(boolean checked) {
     if (!checked) {
-      view.showError("a message");
+      view.showTermsConditionError();
     }
   }
 }

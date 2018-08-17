@@ -275,7 +275,7 @@ public class PaymentLoginPresenter implements Presenter {
 
   private void showNotCheckedMessage(boolean checked) {
     if (!checked) {
-      view.showError("a message");
+      view.showTermsConditionError();
     }
   }
 }

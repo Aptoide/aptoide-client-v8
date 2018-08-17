@@ -223,6 +223,12 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .show();
   }
 
+  @Override public void showTermsConditionError() {
+    Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+        Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
   @Override public void showFacebookLogin() {
     facebookLoginButton.setVisibility(View.VISIBLE);
   }

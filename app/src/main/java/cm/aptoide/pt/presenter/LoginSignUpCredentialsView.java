@@ -44,6 +44,8 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   void showError(String message);
 
+  void showTermsConditionError();
+
   void showFacebookLogin();
 
   void showFacebookPermissionsRequiredError(Throwable throwable);

@@ -218,7 +218,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
           if (termsConditionCheckBox.isChecked()) {
             showUsernamePasswordContainer(false);
           } else {
-            showError("a message");
+            showTermsConditionError();
           }
         })
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -379,7 +379,13 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   }
 
   @Override public void showError(String message) {
-    Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
+    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showTermsConditionError() {
+    Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+        Snackbar.LENGTH_SHORT)
         .show();
   }
 
