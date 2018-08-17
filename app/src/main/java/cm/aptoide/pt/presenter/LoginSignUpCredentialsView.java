@@ -14,17 +14,17 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   Observable<Void> showAptoideLoginAreaClick();
 
-  Observable<Void> showAptoideSignUpAreaClick();
+  Observable<Boolean> showAptoideSignUpAreaClick();
 
-  Observable<Void> googleSignUpEvent();
+  Observable<Boolean> googleSignUpEvent();
 
   Observable<Void> showHidePasswordClick();
 
   Observable<Void> forgotPasswordClick();
 
-  Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
+  Observable<Boolean> facebookSignUpWithRequiredPermissionsInEvent();
 
-  Observable<Void> facebookSignUpEvent();
+  Observable<Boolean> facebookSignUpEvent();
 
   Observable<AptoideCredentials> aptoideLoginEvent();
 

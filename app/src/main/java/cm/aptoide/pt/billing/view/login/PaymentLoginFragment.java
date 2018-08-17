@@ -278,7 +278,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .doOnNext(__ -> hideKeyboard())
         .map(__ -> new AptoideCredentials(usernameEditText.getText()
             .toString(), passwordEditText.getText()
-            .toString()));
+            .toString(), true));
   }
 
   @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
@@ -287,7 +287,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .doOnNext(__ -> hideKeyboard())
         .map(__ -> new AptoideCredentials(usernameEditText.getText()
             .toString(), passwordEditText.getText()
-            .toString()));
+            .toString(), true));
   }
 
   @Override public Observable<Void> grantFacebookRequiredPermissionsEvent() {

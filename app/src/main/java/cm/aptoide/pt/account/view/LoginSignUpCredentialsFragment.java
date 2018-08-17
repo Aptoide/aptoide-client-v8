@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideCredentials;
@@ -70,6 +71,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   private PublishSubject<Void> privacyPolicySubject;
   private PublishSubject<Void> termsAndConditionsSubject;
+  private CheckBox termsConditionCheckBox;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -136,14 +138,16 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return RxView.clicks(loginSelectionButton);
   }
 
-  @Override public Observable<Void> showAptoideSignUpAreaClick() {
-    return RxView.clicks(signUpSelectionButton);
+  @Override public Observable<Boolean> showAptoideSignUpAreaClick() {
+    return RxView.clicks(signUpSelectionButton)
+        .map(event -> termsConditionCheckBox.isChecked());
   }
 
-  @Override public Observable<Void> googleSignUpEvent() {
+  @Override public Observable<Boolean> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_GOOGLE,
-            getStartupClickOrigin()));
+            getStartupClickOrigin()))
+        .map(event -> termsConditionCheckBox.isChecked());
   }
 
   @Override public Observable<Void> showHidePasswordClick() {
@@ -154,15 +158,16 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return RxView.clicks(forgotPasswordButton);
   }
 
-  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
+  @Override public Observable<Boolean> facebookSignUpWithRequiredPermissionsInEvent() {
     return facebookEmailRequiredDialog.positiveClicks()
-        .map(dialog -> null);
+        .map(dialog -> termsConditionCheckBox.isChecked());
   }
 
-  @Override public Observable<Void> facebookSignUpEvent() {
+  @Override public Observable<Boolean> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
-            getStartupClickOrigin()));
+            getStartupClickOrigin()))
+        .map(event -> termsConditionCheckBox.isChecked());
   }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
@@ -192,6 +197,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     loginArea.setVisibility(View.GONE);
     signUpArea.setVisibility(View.VISIBLE);
     separator.setVisibility(View.GONE);
+    termsConditionCheckBox.setVisibility(View.VISIBLE);
     termsAndConditions.setVisibility(View.VISIBLE);
   }
 
@@ -200,6 +206,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     loginArea.setVisibility(View.VISIBLE);
     signUpArea.setVisibility(View.GONE);
     separator.setVisibility(View.GONE);
+    termsConditionCheckBox.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.GONE);
   }
 
@@ -261,6 +268,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       loginArea.setVisibility(View.GONE);
       signUpArea.setVisibility(View.GONE);
       separator.setVisibility(View.VISIBLE);
+      termsConditionCheckBox.setVisibility(View.VISIBLE);
       termsAndConditions.setVisibility(View.VISIBLE);
       return true;
     }
@@ -286,7 +294,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private AptoideCredentials getCredentials() {
     return new AptoideCredentials(aptoideEmailEditText.getText()
         .toString(), aptoidePasswordEditText.getText()
-        .toString());
+        .toString(), termsConditionCheckBox.isChecked());
   }
 
   private AccountAnalytics.StartupClickOrigin getStartupClickOrigin() {
@@ -333,6 +341,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
+    termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
     if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
       buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
     } else {
