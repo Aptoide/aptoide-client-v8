@@ -87,6 +87,7 @@
             android:layout_alignParentRight="true"
             >
           <FrameLayout
+              android:id="@+id/know_more_button"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:padding="16dp"

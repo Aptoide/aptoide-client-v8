@@ -275,6 +275,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return RxView.clicks(userAvatar);
   }
 
+  @Override public Observable<HomeEvent> appCoinsKnowMoreClicked() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.KNOW_MORE));
+  }
+
   @Override public void showAvatar() {
     userAvatar.setVisibility(View.VISIBLE);
   }

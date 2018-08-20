@@ -17,6 +17,8 @@ public interface HomeView extends BundleView {
 
   Observable<Void> imageClick();
 
+  Observable<HomeEvent> appCoinsKnowMoreClicked();
+
   void showAvatar();
 
   void setDefaultUserImage();

@@ -68,6 +68,7 @@ public class HomePresenterTest {
   private PublishSubject<Void> imageClickEvent;
   private PublishSubject<Account> accountStatusEvent;
   private PublishSubject<HomeEvent> bundleScrolledEvent;
+  private PublishSubject<HomeEvent> knowMoreEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -82,6 +83,7 @@ public class HomePresenterTest {
     imageClickEvent = PublishSubject.create();
     bundleScrolledEvent = PublishSubject.create();
     accountStatusEvent = PublishSubject.create();
+    knowMoreEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper(), aptoideAccountManager, homeAnalytics);
@@ -104,6 +106,7 @@ public class HomePresenterTest {
     when(view.imageClick()).thenReturn(imageClickEvent);
     when(view.bundleScrolled()).thenReturn(bundleScrolledEvent);
     when(aptoideAccountManager.accountStatus()).thenReturn(accountStatusEvent);
+    when(view.appCoinsKnowMoreClicked()).thenReturn(knowMoreEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -309,6 +312,16 @@ public class HomePresenterTest {
     verify(homeAnalytics).sendScrollRightInteractEvent(2, localTopAppsBundle.getTag(),
         localTopAppsBundle.getContent()
             .size());
+  }
+
+  @Test public void onAppCoinsKnowMoreClick_NavigateToAppCoinsInformationFragment() {
+    //Given an initialised HomePresenter
+    presenter.handleAppCoinsKnowMoreClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an user clicks on the KNOW MORE button in the AppCoins onboarding card
+    knowMoreEvent.onNext(new HomeEvent(null, 4, HomeEvent.Type.KNOW_MORE));
+    //Then it should navigate to the AppCoins wallet information view.
+    verify(homeNavigator).navigateToAppCoinsInformationView();
   }
 
   private AdHomeEvent createAdHomeEvent() {
