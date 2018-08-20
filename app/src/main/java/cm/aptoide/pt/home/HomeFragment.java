@@ -202,7 +202,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<AppHomeEvent> appClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.APP))
+        .equals(HomeEvent.Type.APP) || homeClick.getType()
+        .equals(HomeEvent.Type.REWARD_APP))
         .cast(AppHomeEvent.class);
   }
 
@@ -246,12 +247,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return uiEventsListener.filter(click -> click.getType()
         .equals(HomeEvent.Type.SCROLL_RIGHT))
         .debounce(200, TimeUnit.MILLISECONDS);
-  }
-
-  @Override public Observable<AppHomeEvent> rewardAppClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.REWARD_APP))
-        .cast(AppHomeEvent.class);
   }
 
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {

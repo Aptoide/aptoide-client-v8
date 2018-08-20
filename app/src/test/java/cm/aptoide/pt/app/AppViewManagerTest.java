@@ -69,6 +69,7 @@ public class AppViewManagerTest {
   @Mock private Download download;
   @Mock private DownloadFactory downloadFactory;
   @Mock private ABTestManager abTestManager;
+  @Mock private AppCoinsManager appCoinsManager;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
   private AppStats appStats;
@@ -85,14 +86,15 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false);
+            appStats, null, null, null, true, true, null, false, false);
 
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
@@ -103,7 +105,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -140,7 +143,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, "md5", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false);
+            appStats, null, null, null, true, true, null, false, false);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "md5", "",
@@ -150,7 +153,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -187,7 +191,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, "any", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "uniqueName", false);
+            appStats, null, null, null, true, true, "uniqueName", false, false);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "",
@@ -197,7 +201,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -234,7 +239,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "", (long) 1, "any", "any", "any", "any", true, null, null,
             null, null, null, (long) 1, "any", null, null, 1, null, null, store, null, appStats,
-            null, null, null, true, true, "uniqueName", false);
+            null, null, null, true, true, "uniqueName", false, false);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "", "", "", null, null, "", "", 0.0, "", "");
@@ -243,7 +248,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -285,7 +291,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -311,7 +318,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -337,7 +345,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -381,7 +390,7 @@ public class AppViewManagerTest {
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarApps("anyString", keywords)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 
@@ -410,7 +419,7 @@ public class AppViewManagerTest {
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
 
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarApps("anyString", keywords)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 
@@ -432,7 +441,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "anyString", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false);
+            appStats, null, null, null, true, true, null, false, false);
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
             (long) 1);
@@ -446,7 +455,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "marketName");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "marketName",
+            appCoinsManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -538,7 +548,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "packageName", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, "", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "", false);
+            appStats, null, null, null, true, true, "", false, false);
 
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
 
@@ -550,7 +560,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString");
+            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
+            appCoinsManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -563,7 +574,7 @@ public class AppViewManagerTest {
     //DownloadApp Test
 
     //When the presenter asks to download an App
-    int action = downloadStateParser.parseDownloadAction(DownloadAppViewModel.Action.INSTALL);
+    int action = downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL);
     when(downloadFactory.create(action, detailedApp.getName(), detailedApp.getPackageName(),
         detailedApp.getMd5(), detailedApp.getIcon(), detailedApp.getVersionName(),
         detailedApp.getVersionCode(), detailedApp.getPath(), detailedApp.getPathAlt(),
@@ -576,7 +587,7 @@ public class AppViewManagerTest {
     when(download.getAction()).thenReturn(3);
 
     //Then the AppViewManager should return a Complete when the download starts
-    appViewManager.downloadApp(DownloadAppViewModel.Action.INSTALL, "packageName", 1)
+    appViewManager.downloadApp(DownloadModel.Action.INSTALL, "packageName", 1)
         .test()
         .assertCompleted();
 
@@ -597,11 +608,11 @@ public class AppViewManagerTest {
         new Install(2, Install.InstallationStatus.INSTALLING, Install.InstallationType.INSTALL,
             false, 1, "md5", "packageName", 1, "", "", "");
 
-    //When the presenter asks for the downloadAppViewModel
+    //When the presenter asks for the downloadModel
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));
 
-    DownloadAppViewModel downloadAppViewModel =
-        appViewManager.loadDownloadAppViewModel("md5", "packageName", 1, false, null)
+    DownloadModel downloadModel =
+        appViewManager.loadDownloadModel("md5", "packageName", 1, false, null)
             .toBlocking()
             .first();
 
@@ -609,10 +620,9 @@ public class AppViewManagerTest {
     verify(installManager).getInstall("md5", "packageName", 1);
 
     //And it should return a DownloadViewModel with the correct progress, action and download state
-    Assert.assertEquals(2, downloadAppViewModel.getProgress());
-    Assert.assertEquals(DownloadAppViewModel.Action.INSTALL, downloadAppViewModel.getAction());
-    Assert.assertEquals(DownloadAppViewModel.DownloadState.ACTIVE,
-        downloadAppViewModel.getDownloadState());
+    Assert.assertEquals(2, downloadModel.getProgress());
+    Assert.assertEquals(DownloadModel.Action.INSTALL, downloadModel.getAction());
+    Assert.assertEquals(DownloadModel.DownloadState.ACTIVE, downloadModel.getDownloadState());
   }
 
   @Test public void pauseDownloadTest() {

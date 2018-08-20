@@ -6,8 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsAdsRequest;
-import cm.aptoide.pt.home.RewardApp;
+import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsCampaignsRequest;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.app.Application;
 import java.util.ArrayList;
@@ -42,11 +41,10 @@ public class RewardAppCoinsAppsRepository {
   }
 
   public Observable<List<Application>> getAppCoinsRewardAppsFromHomeMore(boolean refresh) {
-    return new GetAppCoinsAdsRequest(new GetAppCoinsAdsRequest.Body(0, APPCOINS_REWARD_LIMIT),
-        httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(
-        refresh)
-        .flatMap(response -> map(response.getDataList()
-            .getList()));
+    return new GetAppCoinsCampaignsRequest(
+        new GetAppCoinsCampaignsRequest.Body(0, APPCOINS_REWARD_LIMIT), httpClient,
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(refresh)
+        .flatMap(response -> map(response.getList()));
   }
 
   private Observable<List<Application>> map(List<AppCoinsCampaign> list) {
@@ -54,12 +52,12 @@ public class RewardAppCoinsAppsRepository {
     for (AppCoinsCampaign campaign : list) {
       App app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
-        rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
+        rewardAppsList.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
             .getPdownloads(), app.getPackageName(), app.getId(), "",
-            Double.valueOf(campaign.getReward()), app.getAppcoins() != null && app.getAppcoins()
-            .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
+            app.getAppcoins() != null && app.getAppcoins()
+                .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
             .hasAdvertising()));
       }
     }

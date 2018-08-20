@@ -205,33 +205,30 @@
           <include
               layout="@layout/install_app_view"/>
 
-          <include
-              layout="@layout/appview_similar_layout"
-              android:id="@+id/similar_download_apps"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="9dp"
-              android:visibility="gone"
-              />
-
           <FrameLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               >
-            <include
-                layout="@layout/appview_appc_reward"
-                android:id="@+id/appc_layout"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="11dp"
-                android:visibility="gone"
-                tools:visibility="visible"
-                />
+                android:animateLayoutChanges="true"
+                >
+              <include
+                  layout="@layout/appview_appc_reward"
+                  android:id="@+id/appc_layout"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_horizontal"
+                  android:layout_marginEnd="8dp"
+                  android:layout_marginLeft="8dp"
+                  android:layout_marginRight="8dp"
+                  android:layout_marginStart="8dp"
+                  android:layout_marginTop="11dp"
+                  android:visibility="gone"
+                  tools:visibility="visible"
+                  />
+            </FrameLayout>
             <include
                 layout="@layout/iap_appc_label"
                 android:layout_width="wrap_content"
@@ -242,6 +239,16 @@
                 tools:visibility="visible"
                 />
           </FrameLayout>
+
+          <include
+              layout="@layout/appview_similar_layout"
+              android:id="@+id/similar_download_apps"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="9dp"
+              android:visibility="gone"
+              />
+
         </LinearLayout>
         <include
             layout="@layout/separator_horizontal"

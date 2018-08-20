@@ -31,6 +31,7 @@ import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
@@ -38,6 +39,7 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
@@ -60,7 +62,6 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
-import cm.aptoide.pt.home.GetRewardAppCoinsAppsNavigator;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeNavigator;
@@ -230,11 +231,6 @@ import rx.subjects.PublishSubject;
         bottomNavigationMapper, appNavigator);
   }
 
-  @FragmentScope @Provides GetRewardAppCoinsAppsNavigator providesGetRewardAppCoinsAppsNavigator(
-      FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
-    return new GetRewardAppCoinsAppsNavigator(fragmentNavigator, appNavigator);
-  }
-
   @FragmentScope @Provides FlagManager providesFlagManager(FlagService flagService) {
     return new FlagManager(flagService);
   }
@@ -268,13 +264,14 @@ import rx.subjects.PublishSubject;
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
-      SocialRepository socialRepository, @Named("marketName") String marketName) {
+      SocialRepository socialRepository, @Named("marketName") String marketName,
+      AppCoinsManager appCoinsManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, abTestManager, storeUtilsProxy,
         aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser,
         appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName);
+        marketName, appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -335,5 +332,13 @@ import rx.subjects.PublishSubject;
         Arrays.asList("email", "user_friends"), accountNavigator, Arrays.asList("email"),
         accountManager, crashReport, accountErrorMapper, AndroidSchedulers.mainThread(),
         screenOrientationManager, accountAnalytics);
+  }
+
+  @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
+      AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
+      CrashReport crashReport) {
+    return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
+        installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
+        AndroidSchedulers.mainThread());
   }
 }

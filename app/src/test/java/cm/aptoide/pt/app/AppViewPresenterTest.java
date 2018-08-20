@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
@@ -20,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -75,10 +77,14 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false);
+            "marketName", false, false);
 
-    downloadAppViewModel = new DownloadAppViewModel(DownloadAppViewModel.Action.INSTALL, 0,
-        DownloadAppViewModel.DownloadState.ACTIVE, null);
+    DownloadModel downloadModel =
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
+            null);
+
+    downloadAppViewModel = new DownloadAppViewModel(downloadModel, new SimilarAppsViewModel(),
+        new AppCoinsViewModel());
 
     errorAppViewViewModel = new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC);
 
@@ -90,6 +96,10 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //When the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
+
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -112,6 +122,9 @@ public class AppViewPresenterTest {
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
 
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
+
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
@@ -123,7 +136,7 @@ public class AppViewPresenterTest {
     //then the loading should be shown
     verify(view).showLoading();
     //and the view should populated
-    verify(view).populateAppDetails(appViewViewModel);
+    verify(view).showAppView(appViewViewModel);
   }
 
   @Test public void handleLoadAppViewWithError() {
@@ -131,6 +144,9 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(errorAppViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(errorAppViewViewModel.getMd5(),
@@ -143,7 +159,7 @@ public class AppViewPresenterTest {
     //then the loading should be shown
     verify(view).showLoading();
     //the view should not be populated with the app info
-    verify(view, never()).populateAppDetails(errorAppViewViewModel);
+    verify(view, never()).showAppView(errorAppViewViewModel);
     //and the error should be handled
     verify(view).handleError(errorAppViewViewModel.getError());
   }
@@ -153,6 +169,9 @@ public class AppViewPresenterTest {
     presenter.handleFirstLoad();
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
@@ -169,7 +188,7 @@ public class AppViewPresenterTest {
         appViewViewModel.getDeveloper()
             .getName(), appViewViewModel.getMalware()
             .getRank()
-            .name(), appViewViewModel.getAppc());
+            .name(), appViewViewModel.hasBilling(), appViewViewModel.hasAdvertising());
   }
 
   @Test public void handleOpenAppViewEventsWithEmptyEditorsChoice() {
@@ -189,13 +208,16 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
-            false);
+            false, false);
 
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
     when(appViewManager.loadAppViewViewModel()).thenReturn(
         Single.just(emptyEditorsChoiceAppViewViewModel));
+
+    //When the appCoinsInformation is requested
+    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppViewViewModel.getMd5(),
@@ -216,6 +238,7 @@ public class AppViewPresenterTest {
         emptyEditorsChoiceAppViewViewModel.getDeveloper()
             .getName(), emptyEditorsChoiceAppViewViewModel.getMalware()
             .getRank()
-            .name(), emptyEditorsChoiceAppViewViewModel.getAppc());
+            .name(), emptyEditorsChoiceAppViewViewModel.hasBilling(),
+        emptyEditorsChoiceAppViewViewModel.hasAdvertising());
   }
 }
