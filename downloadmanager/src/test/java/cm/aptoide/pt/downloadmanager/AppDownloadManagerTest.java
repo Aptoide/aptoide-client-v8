@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Completable;
-import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static org.mockito.Mockito.verify;
@@ -115,7 +114,6 @@ public class AppDownloadManagerTest {
 
   @Test public void pauseAppDownloadWithOneFile() throws Exception {
 
-
     when(fileDownloaderProvider.createFileDownloader(apk.getMainDownloadPath(), apk.getFileType(),
         apk.getPackageName(), apk.getVersionCode(), apk.getFileName())).thenReturn(
         fileDownloaderApk);
@@ -178,11 +176,11 @@ public class AppDownloadManagerTest {
     appDownloadManagerWithObbs.removeAppDownload()
         .subscribe(testSubscriber);
 
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
     verify(fileDownloaderApk).removeDownloadFile();
     verify(fileDownloaderMainObb).removeDownloadFile();
     verify(fileDownloaderPatchObb).removeDownloadFile();
+    testSubscriber.assertCompleted();
+    testSubscriber.assertNoErrors();
   }
 
   @Test public void removeDownloadWithNoFiles() throws Exception {
@@ -213,8 +211,8 @@ public class AppDownloadManagerTest {
   private HashMap<String, FileDownloader> createFileDownloaderPersistence() {
     HashMap<String, FileDownloader> persistence = new HashMap<>();
     persistence.put("http://apkdownload.com/file/app.apk", fileDownloaderApk);
-    persistence.put("http://apkdownload.com/file/app.apk", fileDownloaderMainObb);
-    persistence.put("http://apkdownload.com/file/app.apk", fileDownloaderPatchObb);
+    persistence.put("http://apkdownload.com/file/mainObb.apk", fileDownloaderMainObb);
+    persistence.put("http://apkdownload.com/file/patchObb.apk", fileDownloaderPatchObb);
 
     return persistence;
   }

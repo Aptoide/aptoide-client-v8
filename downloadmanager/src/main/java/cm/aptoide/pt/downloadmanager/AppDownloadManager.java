@@ -55,9 +55,8 @@ public class AppDownloadManager implements AppDownloader {
 
   @Override public Completable removeAppDownload() {
     return Observable.from(app.getDownloadFiles())
-        .flatMap(downloadAppFile -> getFileDownloader(
-            downloadAppFile.getMainDownloadPath()).flatMapCompletable(
-            fileDownloader -> fileDownloader.removeDownloadFile()))
+        .flatMap(downloadAppFile -> getFileDownloader(downloadAppFile.getMainDownloadPath()))
+        .flatMapCompletable(fileDownloader -> fileDownloader.removeDownloadFile())
         .toCompletable();
   }
 
