@@ -102,7 +102,6 @@ import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
 
 @Module public class FragmentModule {
 
@@ -267,9 +266,9 @@ import rx.subjects.PublishSubject;
       SocialRepository socialRepository, @Named("marketName") String marketName,
       AppCoinsManager appCoinsManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
-        adsManager, storeManager, flagManager, abTestManager, storeUtilsProxy,
-        aptoideAccountManager, appViewConfiguration, preferencesManager, downloadStateParser,
-        appViewAnalytics, notificationAnalytics, installAnalytics,
+        adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
+        appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
+        notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
         marketName, appCoinsManager);
   }
@@ -280,8 +279,7 @@ import rx.subjects.PublishSubject;
       AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()),
-        PublishSubject.create());
+        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()));
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {

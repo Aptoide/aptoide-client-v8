@@ -47,7 +47,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -423,7 +422,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build("AppViewFragment", getArguments().getString(BundleKeys.ORIGIN_TAG.name(), ""), StoreContext.meta.name());
+    return ScreenTagHistory.Builder.build("AppViewFragment",
+        getArguments().getString(BundleKeys.ORIGIN_TAG.name(), ""), StoreContext.meta.name());
   }
 
   @Override public void onDestroy() {
@@ -1292,34 +1292,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     ready.onNext(null);
   }
 
-  @Override public void showRecommendsDialog(Experiment experiment) {
+  @Override public void showRecommendsDialog() {
     LayoutInflater inflater = LayoutInflater.from(getActivity());
     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     View dialogView = inflater.inflate(R.layout.logged_in_share, null);
     alertDialog.setView(dialogView);
-
-    String experimentAssignment;
-
-    if (experiment.isExperimentOver() || !experiment.isPartOfExperiment()) {
-      experimentAssignment = "default";
-    } else {
-      experimentAssignment = experiment.getAssignment();
-    }
-
-    switch (experimentAssignment) {
-      case "default":
-        ((Button) dialogView.findViewById(R.id.continue_button)).setText(
-            R.string.appview_button_continue);
-        break;
-      case "continue":
-        ((Button) dialogView.findViewById(R.id.continue_button)).setText(
-            R.string.appview_button_continue);
-        break;
-      case "recommend":
-        ((Button) dialogView.findViewById(R.id.continue_button)).setText(
-            R.string.appview_button_share);
-        break;
-    }
 
     dialogView.findViewById(R.id.continue_button)
         .setOnClickListener(__ -> {

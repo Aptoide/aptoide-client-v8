@@ -73,7 +73,7 @@
         android:id="@+id/continue_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/appview_button_continue"
+        android:text="@string/appview_button_share"
         android:textColor="@color/aptoide_orange"
         style="@style/Widget.Aptoide.Button.Borderless"
         />
