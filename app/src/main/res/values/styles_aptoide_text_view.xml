@@ -134,6 +134,9 @@
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.S.Grey_900">
+    <item name="android:textColor">@color/grey_900</item>
+  </style>
 
   <style name="Aptoide.TextView.Medium.XS.Black">
     <item name="android:textColor">@color/black</item>

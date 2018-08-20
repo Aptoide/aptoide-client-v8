@@ -19,6 +19,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int STORE = R.layout.store_bundle_item;
   private static final int ADS = R.layout.ads_bundle_item;
   private static final int LOADING = R.layout.progress_item;
+  private static final int APPC_KNOW_MORE = R.layout.appc_know_more_item;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -52,6 +53,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case ADS:
         return new AdsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, adClickedEvents);
+      case APPC_KNOW_MORE:
+        return new AppCoinsKnowMoreViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(APPC_KNOW_MORE, parent, false), uiEventsListener);
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(LOADING, parent, false));
@@ -78,6 +82,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return STORE;
       case ADS:
         return ADS;
+      case ACTION_ITEM:
+        return APPC_KNOW_MORE;
       case LOADING:
         return LOADING;
       default:

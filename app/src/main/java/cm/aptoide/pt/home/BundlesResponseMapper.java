@@ -93,6 +93,8 @@ public class BundlesResponseMapper {
               }
             }
           }
+        } else if (type.equals(HomeBundle.BundleType.ACTION_ITEM)) {
+          appBundles.add(new ActionBundle(title, type, event, widgetTag));
         }
       } catch (Exception e) {
         Logger.getInstance()
@@ -133,6 +135,8 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.ADS;
       case TIMELINE_CARD:
         return HomeBundle.BundleType.SOCIAL;
+      case ACTION_ITEM:
+        return HomeBundle.BundleType.ACTION_ITEM;
       default:
         return HomeBundle.BundleType.APPS;
     }

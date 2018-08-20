@@ -221,8 +221,12 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private List<HomeBundle> removeEmptyBundles(List<HomeBundle> homeBundles) {
     List<HomeBundle> newHomeBundleList = new ArrayList<>();
     for (HomeBundle homeBundle : homeBundles) {
-      if (!homeBundle.getContent()
+      if (homeBundle.getType()
+          .isApp() && !homeBundle.getContent()
           .isEmpty()) {
+        newHomeBundleList.add(homeBundle);
+      } else if (!homeBundle.getType()
+          .isApp()) {
         newHomeBundleList.add(homeBundle);
       }
     }
