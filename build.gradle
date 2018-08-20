@@ -5,11 +5,11 @@ buildscript {
     google()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.1.3'
+    classpath 'com.android.tools.build:gradle:3.1.4'
     classpath 'me.tatarka:gradle-retrolambda:3.7.0'
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
-    classpath 'io.realm:realm-gradle-plugin:3.5.0'
-    //classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.3'
+    classpath 'io.realm:realm-gradle-plugin:3.7.2'
+    // classpath 'com.novoda:gradle-android-command-plugin:1.7.1'
   }
 }
 
@@ -31,7 +31,7 @@ task clean(type: Delete) {
 // from controlling version.
 // This will override gradle-wrapper.properties
 task wrapper(type: Wrapper) {
-  gradleVersion = '4.4'
+  gradleVersion = '4.4' // 4.9
   distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
@@ -41,81 +41,81 @@ ext {
   // gradle build script vars
   //
   USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
-  BUILD_TOOLS_VERSION = '27.0.3'
+  BUILD_TOOLS_VERSION = '28.0.2'
 
   //
   // gradle build script dependencies versions
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '25.4.0'
+  SUPPORT_LIB_VERSION = '25.4.0' // 27.1.1 or 28.0.0-beta01
 
   // Google Play Services
-  PLAY_SERVICES_VERSION = '9.8.0'
+  PLAY_SERVICES_VERSION = '15.0.1'
 
   JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
 
-  MULTIDEX_VERSION = '1.0.1'
+  MULTIDEX_VERSION = '1.0.3'
 
   // Rx
-  RXJAVA_VERSION = '1.2.7'
-  RXANDROID_VERSION = '1.2.1'
-  JW_RX_BINDING_VERSION = '1.0.0'
-  RXJAVA_PROGUARD_RULES_VERSION = '1.2.7.0'
+  RXJAVA_VERSION = '1.3.8' // RXJAVA2_VERSION = '2.2.0' "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
+  RXANDROID_VERSION = '1.2.1' // "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}" 2.0.2
+  JW_RX_BINDING_VERSION = '1.0.1'
+  RXJAVA_PROGUARD_RULES_VERSION = '1.3.3.0'
   TRELLO_RX_LIFECYCLE_VERSION = '1.0'
   RX_RELAY = '1.2.0'
-  Rx_lint_version = '1.2'
+  RX_LINT_VERSION = '1.2'
 
   // Retrofit
-  RETROFIT_VERSION = '2.1.0'
+  RETROFIT_VERSION = '2.4.0'
 
   // Test
-  MOCK_WEB_SERVER_VERSION = '3.4.1'
+  MOCK_WEB_SERVER_VERSION = '3.11.0'
   JUNIT_VERSION = '4.12'
-  MOCKITO_CORE_VERSION = '1.10.19'
-  MOCKITO_CORE_ANDROID_VERSION = '2.7.15'
-  ESPRESSO_VERSION = '3.0.1'
-  RUNNER_VERSION = '1.0.1'
-  RULES_VERSION = '1.0.1'
+  MOCKITO_CORE_VERSION = '1.10.19' // 2.21.0
+  MOCKITO_CORE_ANDROID_VERSION = '2.21.0'
+  ESPRESSO_VERSION = '3.0.2'
+  RUNNER_VERSION = '1.0.2'
+  RULES_VERSION = '1.0.2'
 
-  JACKSON_VERSION = '2.8.5'
+  JACKSON_VERSION = '2.9.6'
 
   // Material tab strip
-  MATERIAL_TAB_STRIP_VERSION = '1.1.0'
+  MATERIAL_TAB_STRIP_VERSION = '1.1.1'
 
   // Glide
   GLIDE_VERSION = '4.7.1'
 
   // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '4.28.0'
+  FACEBOOK_ANDROID_SDK_VERSION = '4.35.0'
 
   // File Downloader lib
-  FILE_DOWNLOADER_VERSION = '1.4.1'
-  FILE_DOWNLOADER_OKHTTP_IMP_VERSION = '1.0.0'
+  FILE_DOWNLOADER_VERSION = '1.7.5'
+  FILE_DOWNLOADER_OKHTTP_IMP_VERSION = '1.1.0'
 
-  PAYPAL_SDK = '2.15.0'
+  PAYPAL_SDK = '2.16.0'
 
   SUPER_USER_LIB_VERSION = '1.0.0.+'
 
   // Flurry Android SDK
-  FLURRY_VERSION = '6.4.2'
+  FLURRY_VERSION = '10.1.0' // 11.1.1
 
-  CRASHLYTICS_VERSION = '2.6.5'
+  CRASHLYTICS_VERSION = '2.9.4'
 
   // https://github.com/googlei18n/libphonenumber
-  LIB_PHONE_NUMBER_VERSION = '8.3.0'
-  OKHTTP_VERSION = '3.6.0'
+  LIB_PHONE_NUMBER_VERSION = '8.9.10'
+  OKHTTP_VERSION = '3.11.0'
 
-  CONSTRAINT_LAYOUT_VERSION = '1.0.2'
+  CONSTRAINT_LAYOUT_VERSION = '1.1.2'
 
-  LEAK_CANARY_VERSION = '1.5'
-  PARCELER_VERSION = '1.1.6'
+  LEAK_CANARY_VERSION = '1.6.1'
+  PARCELER_VERSION = '1.1.11'
 
-  ADYEN_VERSION = '1.10.0'
-  CARD_FORM_VERSION = '3.0.6'
+  ADYEN_VERSION = '1.11.1'
+  CARD_FORM_VERSION = '3.3.0'
 
-  TEST_FAIRY_VERSION = '1.5.5'
-  DAGGER_VERSION = '2.12'
+  TEST_FAIRY_VERSION = '1.7.6'
+  DAGGER_VERSION = '2.16'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

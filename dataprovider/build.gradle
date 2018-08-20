@@ -119,8 +119,10 @@ dependencies {
   implementation "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
 
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  // implementation "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  // implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
@@ -128,7 +130,7 @@ dependencies {
   implementation "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
-  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+  implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 
   // Parceler - https://github.com/johncarl81/parceler
   compileOnly "org.parceler:parceler-api:${PARCELER_VERSION}"

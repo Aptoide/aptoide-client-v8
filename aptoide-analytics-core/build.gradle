@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion 25
-  buildToolsVersion "27.0.3"
+  buildToolsVersion "28.0.2"
 
 
   defaultConfig {
@@ -28,6 +28,6 @@ android {
 dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation 'com.android.support:appcompat-v7:25.4.0'
-  testImplementation "org.mockito:mockito-core:1.10.19"
+  testImplementation 'org.mockito:mockito-core:1.10.19'
   testImplementation 'junit:junit:4.12'
 }
