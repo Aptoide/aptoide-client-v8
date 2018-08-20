@@ -9,12 +9,14 @@ class ActionBundle implements HomeBundle {
   private final BundleType type;
   private final Event event;
   private final String tag;
+  private final ActionItem actionItem;
 
-  ActionBundle(String title, BundleType type, Event event, String tag) {
+  ActionBundle(String title, BundleType type, Event event, String tag, ActionItem actionItem) {
     this.title = title;
     this.type = type;
     this.event = event;
     this.tag = tag;
+    this.actionItem = actionItem;
   }
 
   @Override public String getTitle() {
@@ -35,5 +37,9 @@ class ActionBundle implements HomeBundle {
 
   @Override public String getTag() {
     return this.tag;
+  }
+
+  public ActionItem getActionItem() {
+    return actionItem;
   }
 }

@@ -11,6 +11,8 @@ import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
+import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
+import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.install.InstallManager;
@@ -46,13 +48,19 @@ public class BundlesResponseMapper {
     List<HomeBundle> appBundles = new ArrayList<>();
 
     for (GetStoreWidgets.WSWidget widget : widgetBundles) {
-      AppBundle.BundleType type = bundleTypeMapper(widget.getType(), widget.getData());
-
-      if (type.equals(HomeBundle.BundleType.ERROR)) continue;
-
-      Event event = getEvent(widget);
-
+      AppBundle.BundleType type;
       try {
+        if (widget.getType()
+            .equals(Type.ACTION_ITEM)) {
+          type = actionItemTypeMapper(widget.getViewObject());
+        } else {
+          type = bundleTypeMapper(widget.getType(), widget.getData());
+        }
+
+        if (type.equals(HomeBundle.BundleType.UNKNOWN)) continue;
+
+        Event event = getEvent(widget);
+
         String widgetTag = widget.getTag();
         Object viewObject = widget.getViewObject();
         String title = widget.getTitle();
@@ -93,8 +101,9 @@ public class BundlesResponseMapper {
               }
             }
           }
-        } else if (type.equals(HomeBundle.BundleType.ACTION_ITEM)) {
-          appBundles.add(new ActionBundle(title, type, event, widgetTag));
+        } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE)) {
+          appBundles.add(new ActionBundle(title, type, event, widgetTag,
+              map((ActionItemResponse) viewObject)));
         }
       } catch (Exception e) {
         Logger.getInstance()
@@ -107,6 +116,33 @@ public class BundlesResponseMapper {
     return appBundles;
   }
 
+  private ActionItem map(ActionItemResponse viewObject) {
+    ActionItemData item = viewObject.getDataList()
+        .getList()
+        .get(0);
+    return new ActionItem(item.getCardId(), item.getLayout(), item.getTitle(), item.getMessage(),
+        item.getIcon(), item.getUrl());
+  }
+
+  private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {
+    if (!(actionItemData instanceof ActionItemResponse)
+        || ((ActionItemResponse) actionItemData).getDataList()
+        .getList()
+        .isEmpty()) {
+      return HomeBundle.BundleType.UNKNOWN;
+    }
+    String layout = ((ActionItemResponse) actionItemData).getDataList()
+        .getList()
+        .get(0)
+        .getLayout();
+    switch (layout) {
+      case "card_info":
+        return HomeBundle.BundleType.INFO_BUNDLE;
+      default:
+        return HomeBundle.BundleType.UNKNOWN;
+    }
+  }
+
   private Event getEvent(GetStoreWidgets.WSWidget widget) {
     return widget.getActions()
         .size() > 0 ? widget.getActions()
@@ -116,12 +152,12 @@ public class BundlesResponseMapper {
 
   private HomeBundle.BundleType bundleTypeMapper(Type type, GetStoreWidgets.WSWidget.Data data) {
     if (type == null) {
-      return HomeBundle.BundleType.ERROR;
+      return HomeBundle.BundleType.UNKNOWN;
     }
     switch (type) {
       case APPS_GROUP:
         if (data == null) {
-          return HomeBundle.BundleType.ERROR;
+          return HomeBundle.BundleType.UNKNOWN;
         }
         if (data.getLayout()
             .equals(Layout.BRICK)) {
@@ -135,8 +171,6 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.ADS;
       case TIMELINE_CARD:
         return HomeBundle.BundleType.SOCIAL;
-      case ACTION_ITEM:
-        return HomeBundle.BundleType.ACTION_ITEM;
       default:
         return HomeBundle.BundleType.APPS;
     }
