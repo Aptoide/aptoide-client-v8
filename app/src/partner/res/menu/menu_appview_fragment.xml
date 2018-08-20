@@ -12,7 +12,7 @@
       android:orderInCategory="1"
       app:actionLayout="@layout/search_input_text"
       app:actionViewClass="android.support.v7.widget.SearchView"
-      app:showAsAction="always|collapseActionView"/>
+      app:showAsAction="always"/>
 
   <item
       android:id="@+id/menu_share"
