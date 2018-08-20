@@ -23,13 +23,19 @@ public class FileDownloadManagerTest {
   @Mock private FileDownloadTask fileDownloadTask;
   @Mock private BaseDownloadTask mockBaseDownloadTask;
   private FileDownloadManager fileDownloaderManager;
+  private FileDownloadManager fileDownloaderManagerEmptyDownloadLink;
   private TestSubscriber<Object> testSubscriber;
 
   @Before public void setupAppDownloaderTest() {
     MockitoAnnotations.initMocks(this);
     fileDownloaderManager =
         new FileDownloadManager(fileDownloader, fileDownloadTask, "randomDownloadsPath",
-            mainDownloadPath, fileType, packageName, versionCode, fileName);
+            "http://apkdownload.com/file/mainObb.apk", 0, "cm.aptoide.pt", 0, "filename");
+
+    fileDownloaderManagerEmptyDownloadLink =
+        new FileDownloadManager(fileDownloader, fileDownloadTask, "randomDownloadsPath", "", 0, "",
+            0, "");
+
     testSubscriber = TestSubscriber.create();
   }
 
@@ -37,8 +43,7 @@ public class FileDownloadManagerTest {
     when(fileDownloader.create(any())).thenReturn(mockBaseDownloadTask);
     when(mockBaseDownloadTask.asInQueueTask()).thenReturn(new MockInqueueTask());
 
-    fileDownloaderManager.startFileDownload("http://apkdownload.com/file/mainObb.apk", 0,
-        "cm.aptoide.pt", 0, "fileName")
+    fileDownloaderManager.startFileDownload()
         .subscribe(testSubscriber);
     testSubscriber.assertNoErrors();
     testSubscriber.assertCompleted();
@@ -47,7 +52,7 @@ public class FileDownloadManagerTest {
 
   @Test public void startFileDownloadEmptyLink() throws Exception {
 
-    fileDownloaderManager.startFileDownload("", 0, "", 0, "")
+    fileDownloaderManagerEmptyDownloadLink.startFileDownload()
         .subscribe(testSubscriber);
     testSubscriber.assertError(IllegalArgumentException.class);
     verifyZeroInteractions(fileDownloader);
@@ -62,10 +67,10 @@ public class FileDownloadManagerTest {
   }
 
   @Test public void removeDownloadFile() throws Exception {
-    fileDownloaderManager.removeDownloadFile("randomDownloadsPath")
+    fileDownloaderManager.removeDownloadFile()
         .subscribe(testSubscriber);
     testSubscriber.assertNoErrors();
     testSubscriber.assertCompleted();
-    verify(fileDownloader).clear(0, "randomDownloadsPath");
+    verify(fileDownloader).clear(0, "http://apkdownload.com/file/mainObb.apk");
   }
 }
