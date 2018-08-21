@@ -1,6 +1,5 @@
 package cm.aptoide.pt.appview;
 
-import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.view.AppBoughClickEvent;
@@ -35,9 +34,9 @@ public interface InstallAppView extends View {
 
   void readyToDownload();
 
-  void showRecommendsDialog(Experiment experiment);
+  void showRecommendsDialog();
 
-  Observable<Void> continueLoggedInRecommendsDialogClick();
+  Observable<Void> shareLoggedInRecommendsDialogClick();
 
   void showRecommendsThanksMessage();
 

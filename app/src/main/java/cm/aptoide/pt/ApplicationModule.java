@@ -79,6 +79,7 @@ import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -1095,13 +1096,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("aptoide") AptoideBiEventLogger providesAptoideBILogger(
-      EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport,
+      EventsPersistence persistence, AptoideBiEventService service, Crashlytics crashlytics,
       @Named("default") SharedPreferences preferences, AnalyticsLogger debugLogger) {
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, new SharedPreferencesSessionPersistence(preferences),
             service, new CompositeSubscription(), Schedulers.computation(),
             BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport, debugLogger),
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS,
+            new CrashlyticsCrashLogger(crashlytics), debugLogger),
         BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
   }
 
@@ -1124,8 +1126,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         TimelineAnalytics.COMMENT, TimelineAnalytics.SHARE, TimelineAnalytics.SHARE_SEND,
         TimelineAnalytics.COMMENT_SEND, TimelineAnalytics.FAB, TimelineAnalytics.SCROLLING_EVENT,
         TimelineAnalytics.OPEN_TIMELINE_EVENT, AccountAnalytics.APTOIDE_EVENT_NAME,
-        DownloadAnalytics.DOWNLOAD_EVENT, DownloadAnalytics.DOWNLOAD_EVENT_NAME,
-        InstallAnalytics.INSTALL_EVENT_NAME);
+        DownloadAnalytics.DOWNLOAD_EVENT_NAME, InstallAnalytics.INSTALL_EVENT_NAME);
   }
 
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
