@@ -101,6 +101,12 @@ public class ManageUserPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveUserDataButtonClick()
+            .doOnNext(viewModel -> {
+              if (!viewModel.hasDate()) {
+                view.showEmptyBirthdayMessage();
+              }
+            })
+            .filter(ManageUserFragment.ViewModel::hasDate)
             .doOnNext(__2 -> view.showProgressDialog())
             .flatMapCompletable(userData -> saveUserData(userData))
             .retry())

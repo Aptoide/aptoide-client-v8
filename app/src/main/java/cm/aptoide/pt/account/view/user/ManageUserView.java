@@ -23,4 +23,6 @@ public interface ManageUserView extends ImagePickerView {
   Observable<Void> calendarLayoutClick();
 
   void showCalendar();
+
+  void showEmptyBirthdayMessage();
 }

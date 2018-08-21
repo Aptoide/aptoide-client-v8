@@ -137,8 +137,10 @@ public class ManageUserFragment extends BackButtonFragment
       currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
       loadImageStateless(currentModel.getPictureUri());
       setUserName(currentModel.getName());
-      setupCalendar(calendar, currentModel.getYear(), currentModel.getMonth(),
-          currentModel.getDay());
+      if (currentModel.hasDate()) {
+        setupCalendar(calendar, currentModel.getYear(), currentModel.getMonth(),
+            currentModel.getDay());
+      }
       calendarDateView.setText(currentModel.getDate());
     } else {
       currentModel = new ViewModel();
@@ -290,6 +292,12 @@ public class ManageUserFragment extends BackButtonFragment
 
   @Override public void showCalendar() {
     datePickerDialog.show();
+  }
+
+  @Override public void showEmptyBirthdayMessage() {
+    Snackbar.make(createUserButton, getString(R.string.createuser_message_profile_no_dob),
+        Snackbar.LENGTH_SHORT)
+        .show();
   }
 
   /**
