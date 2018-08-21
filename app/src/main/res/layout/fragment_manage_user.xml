@@ -228,7 +228,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@id/calendar"
                 android:layout_toRightOf="@id/calendar"
-                android:text="Choose date"
+                android:text="@string/createuser_title_choose_date"
                 android:textColor="@color/default_orange_gradient_end"
                 style="@style/Aptoide.TextView.Medium.S"
                 />
