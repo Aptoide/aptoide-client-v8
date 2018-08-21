@@ -189,6 +189,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/birthday_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/padding_small"
@@ -197,6 +198,8 @@
             android:layout_marginStart="@dimen/padding_small"
             android:layout_marginTop="22dp"
             android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
             >
           <TextView
               android:layout_width="wrap_content"
@@ -234,11 +237,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/newsletter_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="9dp"
             android:layout_marginStart="9dp"
             android:layout_marginTop="30dp"
+            android:visibility="gone"
+            tools:visibility="visible"
             >
           <CheckBox
               android:id="@+id/newsletter_checkbox"

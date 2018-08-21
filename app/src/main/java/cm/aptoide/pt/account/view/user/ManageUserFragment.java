@@ -73,6 +73,8 @@ public class ManageUserFragment extends BackButtonFragment
   private DatePickerDialog datePickerDialog;
   private TextView calendarDateView;
   private CheckBox newsletterCheckBox;
+  private View birthdayLayout;
+  private View newsLetterLayout;
 
   public static ManageUserFragment newInstanceToEdit() {
     return newInstance(true);
@@ -121,20 +123,27 @@ public class ManageUserFragment extends BackButtonFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    Calendar calendar = Calendar.getInstance();
     bindViews(view);
     setupToolbar();
-    setupDatePickerDialog();
     if (isEditProfile) {
       createUserButton.setText(getString(R.string.edit_profile_save_button));
       cancelUserProfile.setVisibility(View.VISIBLE);
+    } else {
+      birthdayLayout.setVisibility(View.VISIBLE);
+      newsLetterLayout.setVisibility(View.VISIBLE);
     }
     if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
       currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
       loadImageStateless(currentModel.getPictureUri());
       setUserName(currentModel.getName());
+      setupCalendar(calendar, currentModel.getYear(), currentModel.getMonth(),
+          currentModel.getDay());
+      calendarDateView.setText(currentModel.getDate());
     } else {
       currentModel = new ViewModel();
     }
+    setupDatePickerDialog(calendar);
     attachPresenters();
   }
 
@@ -143,14 +152,11 @@ public class ManageUserFragment extends BackButtonFragment
         .getSimpleName());
   }
 
-  private void setupDatePickerDialog() {
-    Calendar calendar = Calendar.getInstance();
+  private void setupDatePickerDialog(Calendar calendar) {
     DatePickerDialog.OnDateSetListener datePickerDialogListener =
         new DatePickerDialog.OnDateSetListener() {
           @Override public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, day);
+            setupCalendar(calendar, year, month, day);
             setupCalendarDate(year, month, day);
           }
         };
@@ -173,6 +179,14 @@ public class ManageUserFragment extends BackButtonFragment
           .format(date);
     }
     calendarDateView.setText(calendarDate);
+    currentModel.setDate(calendarDate);
+    currentModel.setDate(year, month, day);
+  }
+
+  private void setupCalendar(Calendar calendar, int year, int month, int day) {
+    calendar.set(Calendar.YEAR, year);
+    calendar.set(Calendar.MONTH, month);
+    calendar.set(Calendar.DAY_OF_MONTH, day);
   }
 
   @Nullable @Override
@@ -193,6 +207,8 @@ public class ManageUserFragment extends BackButtonFragment
     createUserButton = (Button) view.findViewById(R.id.create_user_create_profile);
     cancelUserProfile = (Button) view.findViewById(R.id.create_user_cancel_button);
     userPicture = (ImageView) view.findViewById(R.id.create_user_image);
+    birthdayLayout = view.findViewById(R.id.birthday_layout);
+    newsLetterLayout = view.findViewById(R.id.newsletter_layout);
     calendarLayout = view.findViewById(R.id.calendar_layout);
     calendarDateView = (TextView) view.findViewById(R.id.calendar_date);
     newsletterCheckBox = (CheckBox) view.findViewById(R.id.newsletter_checkbox);
@@ -220,6 +236,10 @@ public class ManageUserFragment extends BackButtonFragment
     if (uploadWaitDialog != null && uploadWaitDialog.isShowing()) {
       uploadWaitDialog.dismiss();
     }
+    birthdayLayout = null;
+    newsLetterLayout = null;
+    calendarLayout = null;
+    calendarDateView = null;
     newsletterCheckBox = null;
     super.onDestroyView();
   }
@@ -320,24 +340,25 @@ public class ManageUserFragment extends BackButtonFragment
     String date;
     boolean hasNewsletterSubscribe;
     boolean hasNewPicture;
-    private boolean hasNewsLetterSubscribeChanged;
-    private boolean hasDateChanged;
+    private int year;
+    private int month;
+    private int day;
 
     public ViewModel() {
       name = "";
       pictureUri = "";
       date = "";
+      year = -1;
+      month = -1;
+      day = -1;
       hasNewPicture = false;
       hasNewsletterSubscribe = false;
-      hasNewsLetterSubscribeChanged = false;
     }
 
     public ViewModel(String name, String pictureUri) {
       this.name = name;
       this.pictureUri = pictureUri;
       this.hasNewPicture = false;
-      this.hasNewsLetterSubscribeChanged = false;
-      //TODO: date and subscribe
     }
 
     public static ViewModel from(ViewModel otherModel, String otherName, String date,
@@ -377,10 +398,7 @@ public class ManageUserFragment extends BackButtonFragment
     }
 
     public void setDate(String date) {
-      if (this.date.equals(date)) {
-        this.date = date;
-        hasDateChanged = true;
-      }
+      this.date = date;
     }
 
     public boolean getNewsletterSubscribe() {
@@ -388,18 +406,29 @@ public class ManageUserFragment extends BackButtonFragment
     }
 
     void setNewsLetterSubscribe(boolean hasNewsLetterSubscribe) {
-      if (this.hasNewsletterSubscribe != hasNewsLetterSubscribe) {
-        this.hasNewsletterSubscribe = hasNewsLetterSubscribe;
-        hasNewsLetterSubscribeChanged = true;
-      }
+      this.hasNewsletterSubscribe = hasNewsLetterSubscribe;
     }
 
-    public boolean isHasNewsLetterSubscribeChanged() {
-      return hasNewsLetterSubscribeChanged;
+    void setDate(int year, int month, int day) {
+      this.year = year;
+      this.month = month;
+      this.day = day;
     }
 
-    public boolean isHasDateChanged() {
-      return hasDateChanged;
+    public int getYear() {
+      return year;
+    }
+
+    public int getMonth() {
+      return month;
+    }
+
+    public int getDay() {
+      return day;
+    }
+
+    public boolean hasDate() {
+      return year != -1 && month != -1 && day != -1;
     }
   }
 }
