@@ -89,6 +89,8 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.dismissBundleClicked())
+        .flatMap(homeEvent -> home.remove(homeEvent.getBundle())
+            .andThen(Observable.just(homeEvent)))
         .observeOn(viewScheduler)
         .doOnNext(homeEvent -> view.hideBundle(homeEvent.getBundlePosition()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

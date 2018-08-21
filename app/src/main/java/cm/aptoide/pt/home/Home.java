@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -28,5 +29,9 @@ public class Home {
 
   public boolean hasMore() {
     return bundlesRepository.hasMore();
+  }
+
+  public Completable remove(HomeBundle bundle) {
+    return bundlesRepository.remove(bundle);
   }
 }
