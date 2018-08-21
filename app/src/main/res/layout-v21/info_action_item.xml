@@ -87,36 +87,22 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             >
-          <FrameLayout
+          <Button
               android:id="@+id/know_more_button"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:padding="16dp"
-              >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:text="@string/all_button_know_more"
-                style="@style/Aptoide.TextView.Regular.S.GreyMedium"
-                />
-          </FrameLayout>
-          <FrameLayout
+              android:text="@string/all_button_know_more"
+              style="@style/Aptoide.Button.Flat.GreyMedium"
+              />
+          <Button
               android:id="@+id/dismiss_button"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginEnd="30dp"
               android:layout_marginRight="30dp"
-              android:padding="16dp"
-              >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:text="@string/all_button_got_it"
-                style="@style/Aptoide.TextView.Regular.S.GreyMedium"
-                />
-          </FrameLayout>
+              android:text="@string/all_button_got_it"
+              style="@style/Aptoide.Button.Flat.GreyMedium"
+              />
         </LinearLayout>
       </RelativeLayout>
     </LinearLayout>

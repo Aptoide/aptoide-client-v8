@@ -1,7 +1,6 @@
 package cm.aptoide.pt.home;
 
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
@@ -10,8 +9,8 @@ import rx.subjects.PublishSubject;
 
 class InfoBundleViewHolder extends AppBundleViewHolder {
   private final PublishSubject<HomeEvent> uiEventsListener;
-  private final FrameLayout knowMoreButton;
-  private final FrameLayout dismissButton;
+  private final View knowMoreButton;
+  private final View dismissButton;
   private final ImageView icon;
   private final TextView title;
   private final TextView message;
@@ -19,8 +18,8 @@ class InfoBundleViewHolder extends AppBundleViewHolder {
   public InfoBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener) {
     super(view);
     this.uiEventsListener = uiEventsListener;
-    this.knowMoreButton = (FrameLayout) view.findViewById(R.id.know_more_button);
-    this.dismissButton = (FrameLayout) view.findViewById(R.id.dismiss_button);
+    this.knowMoreButton = view.findViewById(R.id.know_more_button);
+    this.dismissButton = view.findViewById(R.id.dismiss_button);
     this.icon = (ImageView) view.findViewById(R.id.icon);
     this.title = (TextView) view.findViewById(R.id.title);
     this.message = (TextView) view.findViewById(R.id.message);
