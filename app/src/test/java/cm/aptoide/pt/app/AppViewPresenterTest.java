@@ -57,7 +57,7 @@ public class AppViewPresenterTest {
     MockitoAnnotations.initMocks(this);
     presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, appViewNavigator,
         appViewManager, accountManager, Schedulers.immediate(), crashReporter, permissionManager,
-        permissionService, PublishSubject.create());
+        permissionService);
 
     lifecycleEvent = PublishSubject.create();
 

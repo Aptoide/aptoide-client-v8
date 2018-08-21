@@ -84,7 +84,7 @@ public class AppViewManagerTest {
     appStats = new AppStats(appRating, appRating, 1, 1);
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);
@@ -103,7 +103,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);
@@ -151,7 +151,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);
@@ -199,7 +199,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);
@@ -246,7 +246,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);
@@ -289,7 +289,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);
@@ -316,7 +316,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);
@@ -343,7 +343,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);
@@ -453,7 +453,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "marketName",
             appCoinsManager);
@@ -558,7 +558,7 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, abTestManager, storeUtilsProxy, aptoideAccountManager,
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
             appCoinsManager);

@@ -567,7 +567,7 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
         .getData()
         .getPackageName();
 
-    alertDialogView.findViewById(R.id.continue_button)
+    alertDialogView.findViewById(R.id.recommend_button)
         .setOnClickListener(view -> {
           socialRepository.share(packageName, displayable.getPojo()
               .getNodes()
