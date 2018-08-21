@@ -96,7 +96,7 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
-    loggedInRecommendsDialogClick();
+    shareLoggedInRecommendsDialogClick();
     skipLoggedInRecommendsDialogClick();
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
@@ -805,10 +805,10 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void loggedInRecommendsDialogClick() {
+  private void shareLoggedInRecommendsDialogClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.loggedInRecommendsDialogClick()
+        .flatMap(created -> view.shareLoggedInRecommendsDialogClick()
             .observeOn(Schedulers.io())
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .observeOn(viewScheduler)

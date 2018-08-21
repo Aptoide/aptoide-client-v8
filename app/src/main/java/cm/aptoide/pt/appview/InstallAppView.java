@@ -36,7 +36,7 @@ public interface InstallAppView extends View {
 
   void showRecommendsDialog();
 
-  Observable<Void> loggedInRecommendsDialogClick();
+  Observable<Void> shareLoggedInRecommendsDialogClick();
 
   void showRecommendsThanksMessage();
 

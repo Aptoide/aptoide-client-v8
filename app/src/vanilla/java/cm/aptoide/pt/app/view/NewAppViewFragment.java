@@ -140,7 +140,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> noNetworkRetryClick;
   private PublishSubject<Void> genericRetryClick;
   private PublishSubject<Void> ready;
-  private PublishSubject<Void> continueRecommendsDialogClick;
+  private PublishSubject<Void> shareRecommendsDialogClick;
   private PublishSubject<Void> skipRecommendsDialogClick;
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
@@ -238,7 +238,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
 
-    continueRecommendsDialogClick = PublishSubject.create();
+    shareRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
@@ -1300,7 +1300,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
     dialogView.findViewById(R.id.recommend_button)
         .setOnClickListener(__ -> {
-          continueRecommendsDialogClick.onNext(null);
+          shareRecommendsDialogClick.onNext(null);
           alertDialog.dismiss();
         });
 
@@ -1318,8 +1318,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     alertDialog.show();
   }
 
-  @Override public Observable<Void> loggedInRecommendsDialogClick() {
-    return continueRecommendsDialogClick;
+  @Override public Observable<Void> shareLoggedInRecommendsDialogClick() {
+    return shareRecommendsDialogClick;
   }
 
   @Override public void showRecommendsThanksMessage() {
