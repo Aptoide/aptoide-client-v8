@@ -132,4 +132,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     }
     return -1;
   }
+
+  public void remove(int bundlePosition) {
+    bundles.remove(bundlePosition);
+    notifyItemRemoved(bundlePosition);
+  }
 }

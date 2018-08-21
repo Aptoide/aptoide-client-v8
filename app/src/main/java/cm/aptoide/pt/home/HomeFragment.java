@@ -275,9 +275,14 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return RxView.clicks(userAvatar);
   }
 
-  @Override public Observable<HomeEvent> appCoinsKnowMoreClicked() {
+  @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.KNOW_MORE));
+  }
+
+  @Override public Observable<HomeEvent> dismissBundleClicked() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.DISMISS_BUNDLE));
   }
 
   @Override public void showAvatar() {
@@ -287,6 +292,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void setDefaultUserImage() {
     ImageLoader.with(getContext())
         .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
+  }
+
+  @Override public void hideBundle(int bundlePosition) {
+    adapter.remove(bundlePosition);
   }
 
   private boolean isEndReached() {

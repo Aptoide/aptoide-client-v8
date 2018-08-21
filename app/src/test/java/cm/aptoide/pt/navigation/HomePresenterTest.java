@@ -69,6 +69,7 @@ public class HomePresenterTest {
   private PublishSubject<Account> accountStatusEvent;
   private PublishSubject<HomeEvent> bundleScrolledEvent;
   private PublishSubject<HomeEvent> knowMoreEvent;
+  private PublishSubject<HomeEvent> dismissEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -84,6 +85,7 @@ public class HomePresenterTest {
     bundleScrolledEvent = PublishSubject.create();
     accountStatusEvent = PublishSubject.create();
     knowMoreEvent = PublishSubject.create();
+    dismissEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper(), aptoideAccountManager, homeAnalytics);
@@ -106,7 +108,8 @@ public class HomePresenterTest {
     when(view.imageClick()).thenReturn(imageClickEvent);
     when(view.bundleScrolled()).thenReturn(bundleScrolledEvent);
     when(aptoideAccountManager.accountStatus()).thenReturn(accountStatusEvent);
-    when(view.appCoinsKnowMoreClicked()).thenReturn(knowMoreEvent);
+    when(view.infoBundleKnowMoreClicked()).thenReturn(knowMoreEvent);
+    when(view.dismissBundleClicked()).thenReturn(dismissEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -316,12 +319,24 @@ public class HomePresenterTest {
 
   @Test public void onAppCoinsKnowMoreClick_NavigateToAppCoinsInformationFragment() {
     //Given an initialised HomePresenter
-    presenter.handleAppCoinsKnowMoreClick();
+    presenter.handleKnowMoreClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an user clicks on the KNOW MORE button in the AppCoins onboarding card
     knowMoreEvent.onNext(new HomeEvent(null, 4, HomeEvent.Type.KNOW_MORE));
     //Then it should navigate to the AppCoins wallet information view.
     verify(homeNavigator).navigateToAppCoinsInformationView();
+  }
+
+  @Test public void onDismissBundleClick_RemoveBundleFromCacheAndView() {
+    //Given an initialised HomePresenter
+    presenter.handleDismissClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And a bundle position to be dismissed
+    int bundlePositionToBeRemoved = 4;
+    //When an user clicks on the dismiss button in the information bundle
+    dismissEvent.onNext(new HomeEvent(null, bundlePositionToBeRemoved, HomeEvent.Type.KNOW_MORE));
+    //Then it should remove the bundle from the cache and view.
+    verify(view).hideBundle(bundlePositionToBeRemoved);
   }
 
   private AdHomeEvent createAdHomeEvent() {
