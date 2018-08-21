@@ -48,6 +48,7 @@
   <string name="no_username_inserted">Add a username to create your profile</string>
   <string name="createuser_short_subscribe_newsletter">Yes, I want to subscribe to Aptoide\'s newsletter</string>
   <string name="createuser_title_date_of_birth">Date of Birth</string>
+  <string name="createuser_title_choose_date">Choose date</string>
   
   <!--User interests fragment -->
 
