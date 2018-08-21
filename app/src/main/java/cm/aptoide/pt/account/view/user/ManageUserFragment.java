@@ -169,20 +169,27 @@ public class ManageUserFragment extends BackButtonFragment
   }
 
   private void setupCalendarDate(int year, int month, int day) {
-    String calendarDate = day + "/" + month + "/" + year;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    String calendarDate = year + "/" + month + "/" + day;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
     Date date = null;
     try {
       date = dateFormat.parse(calendarDate);
-    } catch (ParseException ignored) {
+    } catch (ParseException parseException) {
+      Snackbar.make(createUserButton, getString(R.string.unknown_error), Snackbar.LENGTH_SHORT)
+          .show();
+      currentModel.setDateError(true);
     }
     if (date != null) {
+      //Sets the date depending on the region of the user
       calendarDate = DateFormat.getDateInstance(DateFormat.SHORT)
           .format(date);
+      //Sets the date on the format needed for the request
+      calendarDateView.setText(calendarDate);
+
+      currentModel.setDateInRequestFormat(dateFormat.format(date));
+      currentModel.setDate(calendarDate);
+      currentModel.setDate(year, month, day);
     }
-    calendarDateView.setText(calendarDate);
-    currentModel.setDate(calendarDate);
-    currentModel.setDate(year, month, day);
   }
 
   private void setupCalendar(Calendar calendar, int year, int month, int day) {
@@ -346,8 +353,10 @@ public class ManageUserFragment extends BackButtonFragment
     String name;
     String pictureUri;
     String date;
+    String requestDate;
     boolean hasNewsletterSubscribe;
     boolean hasNewPicture;
+    boolean hasDateError;
     private int year;
     private int month;
     private int day;
@@ -356,17 +365,27 @@ public class ManageUserFragment extends BackButtonFragment
       name = "";
       pictureUri = "";
       date = "";
+      requestDate = "";
       year = -1;
       month = -1;
       day = -1;
       hasNewPicture = false;
       hasNewsletterSubscribe = false;
+      hasDateError = false;
     }
 
     public ViewModel(String name, String pictureUri) {
       this.name = name;
       this.pictureUri = pictureUri;
       this.hasNewPicture = false;
+      date = "";
+      requestDate = "";
+      year = -1;
+      month = -1;
+      day = -1;
+      hasNewPicture = false;
+      hasNewsletterSubscribe = false;
+      hasDateError = false;
     }
 
     public static ViewModel from(ViewModel otherModel, String otherName, String date,
@@ -409,6 +428,10 @@ public class ManageUserFragment extends BackButtonFragment
       this.date = date;
     }
 
+    public String getRequestDate() {
+      return requestDate;
+    }
+
     public boolean getNewsletterSubscribe() {
       return hasNewsletterSubscribe;
     }
@@ -437,6 +460,18 @@ public class ManageUserFragment extends BackButtonFragment
 
     public boolean hasDate() {
       return year != -1 && month != -1 && day != -1;
+    }
+
+    public void setDateInRequestFormat(String requestDate) {
+      this.requestDate = requestDate;
+    }
+
+    public boolean getDateError() {
+      return hasDateError;
+    }
+
+    public void setDateError(boolean hasError) {
+      this.hasDateError = hasError;
     }
   }
 }
