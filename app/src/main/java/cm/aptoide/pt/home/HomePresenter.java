@@ -66,6 +66,36 @@ public class HomePresenter implements Presenter {
     handleUserImageClick();
 
     handleBundleScrolledRight();
+
+    handleKnowMoreClick();
+
+    handleDismissClick();
+  }
+
+  @VisibleForTesting public void handleKnowMoreClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.infoBundleKnowMoreClicked())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> homeNavigator.navigateToAppCoinsInformationView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleDismissClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.dismissBundleClicked())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> view.hideBundle(homeEvent.getBundlePosition()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void onCreateLoadBundles() {
