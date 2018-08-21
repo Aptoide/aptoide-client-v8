@@ -96,7 +96,7 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
-    continueLoggedInRecommendsDialogClick();
+    loggedInRecommendsDialogClick();
     skipLoggedInRecommendsDialogClick();
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
@@ -805,18 +805,17 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void continueLoggedInRecommendsDialogClick() {
+  private void loggedInRecommendsDialogClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.continueLoggedInRecommendsDialogClick()
+        .flatMap(created -> view.loggedInRecommendsDialogClick()
             .observeOn(Schedulers.io())
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .observeOn(viewScheduler)
             .flatMapCompletable(app -> appViewManager.shareOnTimeline(app.getPackageName(),
                 app.getStore()
                     .getId(), "install")
-                .doOnCompleted(
-                    () -> appViewAnalytics.sendTimelineLoggedInInstallRecommendContinueEvents(
+                .doOnCompleted(() -> appViewAnalytics.sendTimelineLoggedInInstallRecommendEvents(
                         app.getPackageName()))
                 .doOnCompleted(() -> view.showRecommendsThanksMessage()))
             .retry())

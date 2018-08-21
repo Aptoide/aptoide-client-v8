@@ -273,7 +273,7 @@ public class AppViewAnalytics {
         DownloadAnalytics.AppContext.APPVIEW, action);
   }
 
-  public void sendTimelineLoggedInInstallRecommendContinueEvents(String packageName) {
+  public void sendTimelineLoggedInInstallRecommendEvents(String packageName) {
     timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
   }
 

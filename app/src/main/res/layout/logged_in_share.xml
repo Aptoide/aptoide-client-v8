@@ -70,7 +70,7 @@
         />
 
     <Button
-        android:id="@+id/continue_button"
+        android:id="@+id/recommend_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/appview_button_share"

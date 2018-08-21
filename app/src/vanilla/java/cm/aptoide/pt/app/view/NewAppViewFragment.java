@@ -920,7 +920,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       View alertDialogView = inflater.inflate(R.layout.logged_in_share, null);
       alertDialog.setView(alertDialogView);
 
-      alertDialogView.findViewById(R.id.continue_button)
+      alertDialogView.findViewById(R.id.recommend_button)
           .setOnClickListener(view -> {
             socialRepository.share(packageName, storeId, "app");
             Snackbar.make(getView(), R.string.social_timeline_share_dialog_title,
@@ -1298,7 +1298,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     View dialogView = inflater.inflate(R.layout.logged_in_share, null);
     alertDialog.setView(dialogView);
 
-    dialogView.findViewById(R.id.continue_button)
+    dialogView.findViewById(R.id.recommend_button)
         .setOnClickListener(__ -> {
           continueRecommendsDialogClick.onNext(null);
           alertDialog.dismiss();
@@ -1318,7 +1318,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     alertDialog.show();
   }
 
-  @Override public Observable<Void> continueLoggedInRecommendsDialogClick() {
+  @Override public Observable<Void> loggedInRecommendsDialogClick() {
     return continueRecommendsDialogClick;
   }
 
