@@ -1,14 +1,10 @@
 package cm.aptoide.pt.app.view;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -32,7 +28,6 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by franciscocalado on 08/05/18.
@@ -52,13 +47,12 @@ public class AppViewPresenter implements Presenter {
   private AptoideAccountManager accountManager;
   private Scheduler viewScheduler;
   private CrashReport crashReport;
-  private PublishSubject<Boolean> dialogImpression;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
       CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService, PublishSubject<Boolean> dialogImpression) {
+      PermissionService permissionService) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -69,7 +63,6 @@ public class AppViewPresenter implements Presenter {
     this.crashReport = crashReport;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
-    this.dialogImpression = dialogImpression;
   }
 
   @Override public void present() {
@@ -101,13 +94,12 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
-    continueLoggedInRecommendsDialogClick();
+    shareLoggedInRecommendsDialogClick();
     skipLoggedInRecommendsDialogClick();
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
     handleAppBought();
 
-    handleDialogImpressions();
   }
 
   @VisibleForTesting public void handleFirstLoad() {
@@ -552,8 +544,8 @@ public class AppViewPresenter implements Presenter {
                     () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                         appViewModel.getDeveloper()
                             .getName(), DownloadModel.Action.INSTALL.toString()))
-                    .andThen(handleRecommendsExperiment(appViewModel, account))
-                    .toCompletable()
+                    .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
+                        appViewModel.getPackageName()))
                     .observeOn(viewScheduler))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
@@ -568,8 +560,8 @@ public class AppViewPresenter implements Presenter {
                         () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                             appViewModel.getDeveloper()
                                 .getName(), action.toString()))
-                        .andThen(handleRecommendsExperiment(appViewModel, account))
-                        .toCompletable()
+                        .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
+                            appViewModel.getPackageName()))
                         .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
@@ -584,8 +576,8 @@ public class AppViewPresenter implements Presenter {
                         .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
                             appViewModel.getPackageName(), appViewModel.getDeveloper()
                                 .getName(), action.toString()))
-                        .andThen(handleRecommendsExperiment(appViewModel, account))
-                        .toCompletable()
+                        .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
+                            appViewModel.getPackageName()))
                         .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
           }
@@ -600,14 +592,6 @@ public class AppViewPresenter implements Presenter {
             .map(__ -> appViewModel));
   }
 
-  @NonNull private Observable<Experiment> handleRecommendsExperiment(AppViewViewModel appViewModel,
-      Account account) {
-    return appViewManager.getShareDialogExperiment()
-        .observeOn(viewScheduler)
-        .doOnNext(
-            experiment -> showRecommendsDialog(account.isLoggedIn(), appViewModel.getPackageName(),
-                experiment));
-  }
 
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {
     return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
@@ -710,8 +694,8 @@ public class AppViewPresenter implements Presenter {
                               .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
                                   appViewModel.getPackageName(), appViewModel.getDeveloper()
                                       .getName(), action.toString()))
-                              .andThen(handleRecommendsExperiment(appViewModel, account))
-                              .toCompletable());
+                              .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
+                                  appViewModel.getPackageName())));
                   break;
                 case OPEN:
                   completable = appViewManager.loadAppViewViewModel()
@@ -745,27 +729,13 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void handleDialogImpressions() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> dialogImpression)
-        .filter(dialogImpression -> dialogImpression)
-        .observeOn(Schedulers.io())
-        .flatMap(
-            __ -> appViewManager.recordABTestImpression(ABTestManager.ExperimentType.SHARE_DIALOG))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void showRecommendsDialog(boolean isLoggedIn, String packageName, Experiment experiment) {
+  private void showRecommendsDialog(boolean isLoggedIn, String packageName) {
     if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
-      view.showRecommendsDialog(experiment);
+      view.showRecommendsDialog();
       appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
-      dialogImpression.onNext(true);
     } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
       appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
       appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
-      dialogImpression.onNext(false);
     }
   }
 
@@ -824,21 +794,19 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void continueLoggedInRecommendsDialogClick() {
+  private void shareLoggedInRecommendsDialogClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.continueLoggedInRecommendsDialogClick()
+        .flatMap(created -> view.shareLoggedInRecommendsDialogClick()
             .observeOn(Schedulers.io())
-            .flatMap(
-                __ -> appViewManager.recordABTestAction(ABTestManager.ExperimentType.SHARE_DIALOG))
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
             .observeOn(viewScheduler)
             .flatMapCompletable(app -> appViewManager.shareOnTimeline(app.getPackageName(),
                 app.getStore()
-                    .getId(), "install"))
-            .doOnNext(app -> appViewAnalytics.sendTimelineLoggedInInstallRecommendContinueEvents(
-                app.getPackageName()))
-            .doOnNext(__ -> view.showRecommendsThanksMessage())
+                    .getId(), "install")
+                .doOnCompleted(() -> appViewAnalytics.sendTimelineLoggedInInstallRecommendEvents(
+                    app.getPackageName()))
+                .doOnCompleted(() -> view.showRecommendsThanksMessage()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -846,7 +814,6 @@ public class AppViewPresenter implements Presenter {
           throw new OnErrorNotImplementedException(error);
         });
   }
-
   private void skipLoggedInRecommendsDialogClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
