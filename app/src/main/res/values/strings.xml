@@ -328,7 +328,7 @@
   <string name="facebook_login_cancelled">Facebook login canceled</string>
   <string name="google_login_cancelled">Google login failed</string>
   <string name="login_separator_text">Or connect using your email</string>
-
+  <string name="calendar_header_short">Start Date</string>
   <!-- Add stores dialog -->
   <string name="add_store_dialog_title">Find exclusive and tailored content in different stores</string>
 

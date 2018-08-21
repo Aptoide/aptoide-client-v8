@@ -46,7 +46,18 @@ public class ManageUserPresenter implements Presenter {
   @Override public void present() {
     handleSaveDataClick();
     handleCancelClick();
+    handleCalendarClickLayout();
     onViewCreatedLoadUserData();
+  }
+
+  private void handleCalendarClickLayout() {
+    view.getLifecycle()
+        .filter(event -> event == View.LifecycleEvent.CREATE)
+        .flatMap(event -> view.calendarLayoutClick())
+        .doOnNext(click -> view.showCalendar())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private void onViewCreatedLoadUserData() {

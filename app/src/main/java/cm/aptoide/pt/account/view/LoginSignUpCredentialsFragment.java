@@ -416,28 +416,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Override public void onDestroyView() {
     unregisterClickHandler(presenter);
     unlockScreenRotation();
-    progressDialog.dismiss();
-    progressDialog = null;
-    facebookEmailRequiredDialog.dismiss();
-    facebookEmailRequiredDialog = null;
-    googleLoginButton = null;
-    facebookLoginButton = null;
-    hideShowAptoidePasswordButton = null;
-    loginArea = null;
-    signUpArea = null;
-    aptoideEmailEditText = null;
-    aptoidePasswordEditText = null;
-    forgotPasswordButton = null;
-    buttonLogin = null;
-    buttonSignUp = null;
-    loginSignupSelectionArea = null;
-    loginSelectionButton = null;
-    signUpSelectionButton = null;
     termsAndConditions = null;
-    separator = null;
     credentialsEditTextsArea = null;
-    bottomSheetBehavior = null;
-    rootView = null;
     termsConditionCheckBox = null;
     super.onDestroyView();
   }
