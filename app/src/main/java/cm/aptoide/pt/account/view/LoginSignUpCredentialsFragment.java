@@ -158,7 +158,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return RxView.clicks(forgotPasswordButton);
   }
 
-  @Override public Observable<Boolean> facebookSignUpWithRequiredPermissionsInEvent() {
+  @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
     return facebookEmailRequiredDialog.positiveClicks()
         .map(dialog -> null);
   }

@@ -22,7 +22,7 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   Observable<Void> forgotPasswordClick();
 
-  Observable<Boolean> facebookSignUpWithRequiredPermissionsInEvent();
+  Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
 
   Observable<Boolean> facebookSignUpEvent();
 
