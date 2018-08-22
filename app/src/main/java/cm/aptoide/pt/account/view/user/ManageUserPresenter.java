@@ -107,7 +107,7 @@ public class ManageUserPresenter implements Presenter {
               }
             })
             .filter(
-                viewModel -> (isEditProfile || viewModel.hasDate() && !viewModel.getDateError()))
+                viewModel -> (isEditProfile || viewModel.hasDate() && !viewModel.hasDateError()))
             .doOnNext(__2 -> view.showProgressDialog())
             .flatMapCompletable(userData -> saveUserData(userData))
             .retry())

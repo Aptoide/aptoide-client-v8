@@ -177,7 +177,7 @@ public class ManageUserFragment extends BackButtonFragment
     } catch (ParseException parseException) {
       Snackbar.make(createUserButton, getString(R.string.unknown_error), Snackbar.LENGTH_SHORT)
           .show();
-      currentModel.setDateError(true);
+      currentModel.setDateError();
     }
     if (date != null) {
       //Sets the date depending on the region of the user
@@ -466,12 +466,12 @@ public class ManageUserFragment extends BackButtonFragment
       this.requestDate = requestDate;
     }
 
-    public boolean getDateError() {
+    public boolean hasDateError() {
       return hasDateError;
     }
 
-    public void setDateError(boolean hasError) {
-      this.hasDateError = hasError;
+    public void setDateError() {
+      this.hasDateError = true;
     }
   }
 }
