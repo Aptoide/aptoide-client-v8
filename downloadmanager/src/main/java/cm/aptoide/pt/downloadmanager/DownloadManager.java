@@ -2,6 +2,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -10,7 +11,11 @@ import rx.Observable;
 
 public interface DownloadManager {
 
-  Observable<Download> startDownload(Download download);
+  void start();
+
+  void stop();
+
+  Completable startDownload(Download download);
 
   Observable<Download> getDownload(String md5);
 

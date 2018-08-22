@@ -1,7 +1,9 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
+import java.util.HashMap;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -10,30 +12,23 @@ import rx.Observable;
 
 public class NewAptoideDownloadManager implements DownloadManager {
 
-  private AppDownloader appDownloader;
-  //private DownloadsPersistence downloadsPersistence;
+  private DownloadsRepository downloadsRepository;
+  private HashMap<String, AppDownloader> appDownloaderMap;
 
-  /**
-   * public NewAptoideDownloadManager(AppDownloader appDownloader,
-   * DownloadsPersistence downloadsPersistence) {
-   * this.appDownloader = appDownloader;
-   * this.downloadsPersistence = downloadsPersistence;
-   * }
-   **/
-  public NewAptoideDownloadManager(AppDownloader appDownloader) {
-    this.appDownloader = appDownloader;
+  public NewAptoideDownloadManager(DownloadsRepository downloadsRepository) {
+    this.downloadsRepository = downloadsRepository;
+    appDownloaderMap = new HashMap<>();
   }
 
   public void start() {
     dispatchDownloads();
   }
 
-  private void dispatchDownloads() {
-
+  @Override public void stop() {
   }
 
-  @Override public Observable<Download> startDownload(Download download) {
-    return null;
+  @Override public Completable startDownload(Download download) {
+    return downloadsRepository.save(download);
   }
 
   @Override public Observable<Download> getDownload(String md5) {
@@ -70,5 +65,8 @@ public class NewAptoideDownloadManager implements DownloadManager {
 
   @Override public void removeDownload(String md5) {
 
+  }
+
+  private void dispatchDownloads() {
   }
 }
