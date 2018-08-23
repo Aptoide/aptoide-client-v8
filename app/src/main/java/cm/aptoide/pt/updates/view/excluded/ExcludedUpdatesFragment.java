@@ -41,7 +41,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_with_toolbar;
+    return R.layout.fragment_with_toolbar_no_theme;
   }
 
   @Override public void bindViews(View view) {

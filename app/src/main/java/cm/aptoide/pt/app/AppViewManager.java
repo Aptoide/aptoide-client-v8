@@ -2,8 +2,6 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.appview.PreferencesManager;
@@ -44,7 +42,6 @@ public class AppViewManager {
   private final FlagManager flagManager;
   private final StoreUtilsProxy storeUtilsProxy;
   private final AptoideAccountManager aptoideAccountManager;
-  private final ABTestManager abTestManager;
   private final AppViewConfiguration appViewConfiguration;
   private final int limit;
   private final InstallAnalytics installAnalytics;
@@ -63,12 +60,12 @@ public class AppViewManager {
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
-      StoreManager storeManager, FlagManager flagManager, ABTestManager abTestManager,
-      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
-      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager) {
+      StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
+      AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
+      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
+      String marketName, AppCoinsManager appCoinsManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -76,7 +73,6 @@ public class AppViewManager {
     this.adsManager = adsManager;
     this.storeManager = storeManager;
     this.flagManager = flagManager;
-    this.abTestManager = abTestManager;
     this.storeUtilsProxy = storeUtilsProxy;
     this.aptoideAccountManager = aptoideAccountManager;
     this.appViewConfiguration = appViewConfiguration;
@@ -356,26 +352,6 @@ public class AppViewManager {
 
   public String getMarketName() {
     return marketName;
-  }
-
-  public Observable<Experiment> getShareDialogExperiment() {
-    return aptoideAccountManager.accountStatus()
-        .first()
-        .flatMap(account -> {
-          if (account.isLoggedIn()) {
-            return abTestManager.getExperiment(ABTestManager.ExperimentType.SHARE_DIALOG);
-          } else {
-            return Observable.just(new Experiment());
-          }
-        });
-  }
-
-  public Observable<Boolean> recordABTestImpression(ABTestManager.ExperimentType experimentType) {
-    return abTestManager.recordImpression(experimentType);
-  }
-
-  public Observable<Boolean> recordABTestAction(ABTestManager.ExperimentType experimentType) {
-    return abTestManager.recordAction(experimentType);
   }
 
   @SuppressWarnings("unused") public Completable loadAppCoinsInformation() {
