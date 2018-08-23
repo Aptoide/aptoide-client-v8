@@ -4,14 +4,14 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import java.util.Collections;
 import java.util.List;
 
-class ActionBundle implements HomeBundle {
+public class ActionBundle implements HomeBundle {
   private final String title;
   private final BundleType type;
   private final Event event;
   private final String tag;
   private final ActionItem actionItem;
 
-  ActionBundle(String title, BundleType type, Event event, String tag, ActionItem actionItem) {
+  public ActionBundle(String title, BundleType type, Event event, String tag, ActionItem actionItem) {
     this.title = title;
     this.type = type;
     this.event = event;

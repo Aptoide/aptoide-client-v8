@@ -117,6 +117,8 @@ import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.impressions.ImpressionManager;
+import cm.aptoide.pt.impressions.ImpressionService;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
@@ -1339,5 +1341,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides ABTestManager providesABTestManager(
       ABTestCenterRepository abTestCenterRepository) {
     return new ABTestManager(abTestCenterRepository);
+  }
+
+  @Singleton @Provides ImpressionManager providesImpressionManager(
+      ImpressionService impressionService) {
+    return new ImpressionManager(impressionService);
+  }
+
+  @Singleton @Provides ImpressionService providesImpressionService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
+    return new ImpressionService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        sharedPreferences, converterFactory);
   }
 }
