@@ -525,8 +525,6 @@
   <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
   <string name="appc_short_get_appc">GET APPC</string>
   <string name="appc_short_spend_appc">SPEND APPC</string>
-  <string name="appc_title_homepage_card">You can get AppCoins now!</string>
-  <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
   <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
   <string name="appc_message_appcoins_section_1">AppCoins is the cryptocurrency for in-app transactions. You can earn AppCoins when installing your favourite apps and use them to make in-app purchases, like buying gems or upgrading your game!</string>
   <string name="appc_message_appcoins_header_2">First Things First</string>
