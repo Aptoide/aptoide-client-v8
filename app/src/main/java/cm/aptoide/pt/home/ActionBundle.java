@@ -11,7 +11,8 @@ public class ActionBundle implements HomeBundle {
   private final String tag;
   private final ActionItem actionItem;
 
-  public ActionBundle(String title, BundleType type, Event event, String tag, ActionItem actionItem) {
+  public ActionBundle(String title, BundleType type, Event event, String tag,
+      ActionItem actionItem) {
     this.title = title;
     this.type = type;
     this.event = event;

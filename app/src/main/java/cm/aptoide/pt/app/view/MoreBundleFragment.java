@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -259,6 +260,15 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     return uiEventsListener.filter(click -> click.getType()
         .equals(HomeEvent.Type.SCROLL_RIGHT))
         .debounce(200, TimeUnit.MILLISECONDS);
+  }
+
+  @Override public Observable<HomeBundle> visibleBundles() {
+    return RxRecyclerView.scrollEvents(bundlesList)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
+        .filter(position -> position != RecyclerView.NO_POSITION)
+        .distinctUntilChanged()
+        .map(visibleItem -> adapter.getBundle(visibleItem));
   }
 
   @Override public void setToolbarInfo(String title) {

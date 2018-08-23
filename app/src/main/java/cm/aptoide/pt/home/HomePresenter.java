@@ -70,6 +70,22 @@ public class HomePresenter implements Presenter {
     handleKnowMoreClick();
 
     handleDismissClick();
+
+    handleActionBundlesImpression();
+  }
+
+  @VisibleForTesting public void handleActionBundlesImpression() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.visibleBundles())
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .flatMapCompletable(home::actionBundleImpression)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(actionBundle -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void handleKnowMoreClick() {

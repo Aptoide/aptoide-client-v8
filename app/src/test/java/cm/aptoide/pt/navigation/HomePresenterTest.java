@@ -74,6 +74,7 @@ public class HomePresenterTest {
   private PublishSubject<HomeEvent> bundleScrolledEvent;
   private PublishSubject<HomeEvent> knowMoreEvent;
   private PublishSubject<HomeEvent> dismissEvent;
+  private PublishSubject<HomeBundle> visibleBundleEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -90,6 +91,7 @@ public class HomePresenterTest {
     accountStatusEvent = PublishSubject.create();
     knowMoreEvent = PublishSubject.create();
     dismissEvent = PublishSubject.create();
+    visibleBundleEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper(), aptoideAccountManager, homeAnalytics);
@@ -114,6 +116,7 @@ public class HomePresenterTest {
     when(aptoideAccountManager.accountStatus()).thenReturn(accountStatusEvent);
     when(view.infoBundleKnowMoreClicked()).thenReturn(knowMoreEvent);
     when(view.dismissBundleClicked()).thenReturn(dismissEvent);
+    when(view.visibleBundles()).thenReturn(visibleBundleEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -344,6 +347,19 @@ public class HomePresenterTest {
     //Then it should remove the bundle from the cache and view.
     verify(home).remove(bundle);
     verify(view).hideBundle(bundlePositionToBeRemoved);
+  }
+
+  @Test public void onActionBundleSeen_SendImpression() {
+    //Given an initialised HomePresenter
+    presenter.handleActionBundlesImpression();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And an action bundle
+    ActionBundle bundle = getFakeActionBundle();
+    when(home.actionBundleImpression(bundle)).thenReturn(Completable.complete());
+    //When the bundle is visible to the user
+    visibleBundleEvent.onNext(bundle);
+    //Then bundle should be marked as read (impression)
+    verify(home).actionBundleImpression(bundle);
   }
 
   @NonNull private ActionBundle getFakeActionBundle() {
