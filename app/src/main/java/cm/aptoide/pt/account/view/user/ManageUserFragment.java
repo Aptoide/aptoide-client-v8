@@ -126,26 +126,28 @@ public class ManageUserFragment extends BackButtonFragment
     Calendar calendar = Calendar.getInstance();
     bindViews(view);
     setupToolbar();
+    if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
+      currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
+      loadImageStateless(currentModel.getPictureUri());
+      setUserName(currentModel.getName());
+      if (!isEditProfile) {
+        if (currentModel.hasDate()) {
+          setupCalendar(calendar, currentModel.getYear(), currentModel.getMonth(),
+              currentModel.getDay());
+          calendarDateView.setText(currentModel.getDate());
+        }
+      }
+    } else {
+      currentModel = new ViewModel();
+    }
     if (isEditProfile) {
       createUserButton.setText(getString(R.string.edit_profile_save_button));
       cancelUserProfile.setVisibility(View.VISIBLE);
     } else {
       birthdayLayout.setVisibility(View.VISIBLE);
       newsLetterLayout.setVisibility(View.VISIBLE);
+      setupDatePickerDialog(calendar);
     }
-    if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
-      currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
-      loadImageStateless(currentModel.getPictureUri());
-      setUserName(currentModel.getName());
-      if (currentModel.hasDate()) {
-        setupCalendar(calendar, currentModel.getYear(), currentModel.getMonth(),
-            currentModel.getDay());
-      }
-      calendarDateView.setText(currentModel.getDate());
-    } else {
-      currentModel = new ViewModel();
-    }
-    setupDatePickerDialog(calendar);
     attachPresenters();
   }
 
@@ -159,7 +161,7 @@ public class ManageUserFragment extends BackButtonFragment
         new DatePickerDialog.OnDateSetListener() {
           @Override public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             setupCalendar(calendar, year, month, day);
-            setupCalendarDate(year, month, day);
+            setupCalendarDateString(year, month, day);
           }
         };
     datePickerDialog =
@@ -168,7 +170,7 @@ public class ManageUserFragment extends BackButtonFragment
             calendar.get(Calendar.DAY_OF_MONTH));
   }
 
-  private void setupCalendarDate(int year, int month, int day) {
+  private void setupCalendarDateString(int year, int month, int day) {
     String calendarDate = year + "/" + month + "/" + day;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
     Date date = null;
