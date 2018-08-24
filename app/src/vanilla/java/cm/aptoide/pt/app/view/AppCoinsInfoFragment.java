@@ -15,7 +15,6 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,8 +119,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
         String.format(getString(R.string.appc_message_appcoins_section_2a),
             getString(R.string.appc_title_settings_appcoins_wallet));
     SpannableString spannableString = new SpannableString(formattedString);
-    spannableString.setSpan(new UnderlineSpan(), 0, formattedString.length(),
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     appcMessageAppcoinsSection2a.setText(spannableString);
     appcMessageAppcoinsSection2a.setMovementMethod(LinkMovementMethod.getInstance());
   }
@@ -209,6 +206,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_appcoints_info, container, false);
+    return inflater.inflate(R.layout.fragment_appcoins_info, container, false);
   }
 }

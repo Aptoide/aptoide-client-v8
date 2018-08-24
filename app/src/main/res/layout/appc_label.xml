@@ -24,8 +24,9 @@
       android:id="@+id/appc_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textColor="@color/default_orange_gradient_end"
       tools:text="GET APPC"
-      style="@style/Aptoide.TextView.Medium.XXS.Orange"
+      style="@style/Aptoide.TextView.Medium.XXS.OrangeGradientEnd"
       />
 
 </LinearLayout>

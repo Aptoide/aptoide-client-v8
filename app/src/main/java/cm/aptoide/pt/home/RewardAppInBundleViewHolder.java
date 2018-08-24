@@ -20,7 +20,7 @@ public class RewardAppInBundleViewHolder extends AppViewHolder {
     super(itemView);
     appIcon = (ImageView) itemView.findViewById(R.id.icon);
     appName = (TextView) itemView.findViewById(R.id.name);
-    appReward = (TextView) itemView.findViewById(R.id.reward_appc);
+    appReward = (TextView) itemView.findViewById(R.id.appc_text);
     this.appClicks = appClicks;
   }
 

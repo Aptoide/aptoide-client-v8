@@ -25,7 +25,7 @@
       android:id="@+id/about_appcoins_scroll"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_above="@id/app_cardview"
+      android:layout_above="@id/app_cardview_layout"
       android:layout_below="@id/app_bar_layout"
       android:scrollbars="none"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -98,7 +98,7 @@
           android:layout_toEndOf="@id/appc_section_2a_number"
           android:layout_toRightOf="@id/appc_section_2a_number"
           android:text="@string/appc_message_appcoins_section_2a"
-          android:textColor="@color/orange"
+          android:textColor="@color/grey"
           />
 
       <TextView
@@ -327,13 +327,22 @@
     </RelativeLayout>
   </android.support.v4.widget.NestedScrollView>
 
-  <include
-      layout="@layout/app_install_cardview"
-      android:id="@+id/app_cardview"
+
+  <LinearLayout
+      android:id="@+id/app_cardview_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
-      />
+      android:background="@drawable/background_with_shadow"
+      >
+    <include
+        layout="@layout/app_install_cardview"
+        android:id="@+id/app_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+
+        />
+  </LinearLayout>
 
 
 </RelativeLayout>

@@ -3,53 +3,60 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="57dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     >
 
-    <ImageView
-        android:id="@+id/app_icon_imageview"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/ad_icon"
-        />
+  <ImageView
+      android:id="@+id/app_icon_imageview"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_centerVertical="true"
+      android:layout_marginTop="1dp"
+      android:adjustViewBounds="true"
+      android:padding="4dp"
+      tools:src="@drawable/orange_gradient"
+      />
 
 
-    <TextView
-        android:id="@+id/app_title_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@id/app_icon_imageview"
-        android:layout_toRightOf="@id/app_icon_imageview"
-        tools:text="@string/appc_title_settings_appcoins_wallet"
-        style="@style/Aptoide.TextView.Medium.M"
-        />
+  <TextView
+      android:id="@+id/app_title_textview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="1dp"
+      android:layout_toEndOf="@id/app_icon_imageview"
+      android:layout_toLeftOf="@id/appview_install_button"
+      android:layout_toRightOf="@id/app_icon_imageview"
+      android:layout_toStartOf="@id/appview_install_button"
+      android:lines="1"
+      tools:text="@string/appc_title_settings_appcoins_wallet"
+      style="@style/Aptoide.TextView.Medium.S.Black"
+      />
 
-    <Button
-        android:id="@+id/appview_install_button"
-        android:layout_width="83dp"
-        android:layout_height="32dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/install"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textSize="12sp"
-        android:visibility="visible"
-        style="@style/Aptoide.Button.S.Gradient"
-        />
+  <Button
+      android:id="@+id/appview_install_button"
+      android:layout_width="83dp"
+      android:layout_height="32dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginTop="1dp"
+      android:background="@drawable/aptoide_gradient_rounded"
+      android:text="@string/install"
+      android:textAlignment="center"
+      android:textAllCaps="true"
+      android:textSize="12sp"
+      android:visibility="visible"
+      style="@style/Aptoide.Button.S.Gradient"
+      />
 
 </RelativeLayout>
