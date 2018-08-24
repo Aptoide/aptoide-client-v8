@@ -1,6 +1,7 @@
 package cm.aptoide.pt.billing.view.login;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
@@ -52,6 +53,10 @@ public class PaymentLoginPresenter implements Presenter {
 
     onViewCreatedCheckLoginStatus();
 
+    handleClickOnTermsAndConditions();
+
+    handleClickOnPrivacyPolicy();
+
     handleBackButtonAndUpNavigationEvent();
 
     handleFacebookSignUpResult();
@@ -69,6 +74,26 @@ public class PaymentLoginPresenter implements Presenter {
     handleAptoideLoginEvent();
 
     handleAptoideSignUpEvent();
+  }
+
+  private void handleClickOnTermsAndConditions() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsClickEvent())
+        .doOnNext(__ -> accountNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickOnPrivacyPolicy() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.privacyPolicyClickEvent())
+        .doOnNext(__ -> accountNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private void handleGrantFacebookRequiredPermissionsEvent() {
@@ -97,6 +122,8 @@ public class PaymentLoginPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(event -> view.aptoideSignUpEvent()
+            .doOnNext(credentials -> showNotCheckedMessage(credentials.isChecked()))
+            .filter(AptoideCredentials::isChecked)
             .doOnNext(__ -> {
               view.showLoading();
               orientationManager.lock();
@@ -175,6 +202,8 @@ public class PaymentLoginPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.facebookSignUpEvent())
+        .doOnNext(this::showNotCheckedMessage)
+        .filter(event -> event)
         .doOnNext(__ -> view.showLoading())
         .doOnNext(click -> accountAnalytics.sendFacebookLoginButtonPressed())
         .doOnNext(__ -> accountNavigator.navigateToFacebookSignUpForResult(permissions))
@@ -186,6 +215,8 @@ public class PaymentLoginPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.googleSignUpEvent())
+        .doOnNext(this::showNotCheckedMessage)
+        .filter(event -> event)
         .doOnNext(event -> view.showLoading())
         .doOnNext(event -> accountAnalytics.sendGoogleLoginButtonPressed())
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
@@ -240,5 +271,11 @@ public class PaymentLoginPresenter implements Presenter {
         .doOnNext(__ -> accountNavigator.navigateToRecoverPasswordView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+  }
+
+  private void showNotCheckedMessage(boolean checked) {
+    if (!checked) {
+      view.showTermsConditionError();
+    }
   }
 }

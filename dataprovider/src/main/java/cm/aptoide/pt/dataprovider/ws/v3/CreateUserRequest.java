@@ -65,6 +65,8 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     if (!TextUtils.isEmpty(extraId)) {
       parameters.put("oem_id", extraId);
     }
+
+    parameters.put("accepts", "tos,privacy");
   }
 
   public static CreateUserRequest of(String email, String name, String password,

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.presenter;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
@@ -143,6 +144,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideSignUpEvent()
+            .doOnNext(credentials -> showNotCheckedMessage(credentials.isChecked()))
+            .filter(AptoideCredentials::isChecked)
             .doOnNext(click -> {
               view.hideKeyboard();
               view.showLoading();
@@ -220,6 +223,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideGoogleSignUp())
         .flatMap(__ -> view.googleSignUpEvent())
+        .doOnNext(this::showNotCheckedMessage)
+        .filter(event -> event)
         .doOnNext(event -> {
           view.showLoading();
           accountAnalytics.sendGoogleLoginButtonPressed();
@@ -269,6 +274,8 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideFacebookSignUp())
         .flatMap(__ -> view.facebookSignUpEvent())
+        .doOnNext(this::showNotCheckedMessage)
+        .filter(event -> event)
         .doOnNext(event -> {
           view.showLoading();
           accountAnalytics.sendFacebookLoginButtonPressed();
@@ -332,8 +339,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .doOnNext(__ -> view.showAptoideLoginArea());
   }
 
-  private Observable<Void> showAptoideSignUpEvent() {
+  private Observable<Boolean> showAptoideSignUpEvent() {
     return view.showAptoideSignUpAreaClick()
+        .doOnNext(this::showNotCheckedMessage)
+        .filter(event -> event)
         .doOnNext(__ -> view.showAptoideSignUpArea());
   }
 
@@ -401,5 +410,11 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
 
   private void navigateBack() {
     accountNavigator.popView();
+  }
+
+  private void showNotCheckedMessage(boolean checked) {
+    if (!checked) {
+      view.showTermsConditionError();
+    }
   }
 }
