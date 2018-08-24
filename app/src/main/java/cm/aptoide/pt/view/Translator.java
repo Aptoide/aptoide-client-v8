@@ -290,6 +290,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
       case "Get rewarded with AppCoins":
         translated = context.getString(R.string.appc_title_ads);
         break;
+      case "You can get AppCoins now!":
+        translated = context.getString(R.string.appc_title_homepage_card);
+        break;
+      case "The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.":
+        translated = context.getString(R.string.appc_message_homepage_card);
+        break;
       default:
         translated = string;
         break;
