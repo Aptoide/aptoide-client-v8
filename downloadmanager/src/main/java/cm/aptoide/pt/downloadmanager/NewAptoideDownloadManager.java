@@ -62,8 +62,17 @@ public class NewAptoideDownloadManager implements DownloadManager {
 
   }
 
-  @Override public void pauseDownload(String md5) {
-
+  @Override public Completable pauseDownload(String md5) {
+    return downloadsRepository.getDownload(md5)
+        .first()
+        .map(download -> {
+          download.setOverallDownloadStatus(Download.PAUSED);
+          downloadsRepository.save(download);
+          return download;
+        })
+        .flatMap(download -> getAppDownloader(download.getMd5()))
+        .flatMapCompletable(appDownloader -> appDownloader.pauseAppDownload())
+        .toCompletable();
   }
 
   @Override public Observable<Integer> getDownloadStatus(String md5) {

@@ -30,7 +30,7 @@ public interface DownloadManager {
 
   void pauseAllDownloads();
 
-  void pauseDownload(String md5);
+  Completable pauseDownload(String md5);
 
   Observable<Integer> getDownloadStatus(String md5);
 
