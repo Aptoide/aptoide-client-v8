@@ -535,6 +535,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("{url}") Observable<ActionItemResponse> getActionItem(
         @Path(value = "url", encoded = true) String path, @Body GetActionItemRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/action/item/card/markAsRead/") Observable<BaseV7Response> setRead(
+        @Body MarkAsReadRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }
 

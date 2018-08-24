@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -249,6 +250,15 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .debounce(200, TimeUnit.MILLISECONDS);
   }
 
+  @Override public Observable<HomeBundle> visibleBundles() {
+    return RxRecyclerView.scrollEvents(bundlesList)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
+        .filter(position -> position != RecyclerView.NO_POSITION)
+        .distinctUntilChanged()
+        .map(visibleItem -> adapter.getBundle(visibleItem));
+  }
+
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
@@ -285,6 +295,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .equals(HomeEvent.Type.DISMISS_BUNDLE));
   }
 
+  @Override public void hideBundle(int bundlePosition) {
+    adapter.remove(bundlePosition);
+  }
+
   @Override public void showAvatar() {
     userAvatar.setVisibility(View.VISIBLE);
   }
@@ -292,10 +306,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void setDefaultUserImage() {
     ImageLoader.with(getContext())
         .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
-  }
-
-  @Override public void hideBundle(int bundlePosition) {
-    adapter.remove(bundlePosition);
   }
 
   private boolean isEndReached() {

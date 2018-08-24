@@ -1,5 +1,7 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.impressions.ImpressionManager;
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -9,9 +11,11 @@ import rx.Single;
 public class Home {
 
   private final BundlesRepository bundlesRepository;
+  private final ImpressionManager impressionManager;
 
-  public Home(BundlesRepository bundlesRepository) {
+  public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager) {
     this.bundlesRepository = bundlesRepository;
+    this.impressionManager = impressionManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -28,5 +32,16 @@ public class Home {
 
   public boolean hasMore() {
     return bundlesRepository.hasMore();
+  }
+
+  public Completable remove(ActionBundle bundle) {
+    return impressionManager.markAsRead(bundle.getActionItem()
+        .getCardId(), true)
+        .andThen(bundlesRepository.remove(bundle));
+  }
+
+  public Completable actionBundleImpression(ActionBundle bundle) {
+    return impressionManager.markAsRead(bundle.getActionItem()
+        .getCardId(), false);
   }
 }
