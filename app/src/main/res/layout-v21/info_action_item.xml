@@ -8,15 +8,26 @@
     >
   <ImageView
       android:id="@+id/icon"
-      android:layout_width="63dp"
-      android:layout_height="63dp"
+      android:layout_width="85dp"
+      android:layout_height="85dp"
       android:layout_marginBottom="8dp"
+      android:adjustViewBounds="true"
       android:elevation="4dp"
-      app:layout_constraintBottom_toTopOf="@+id/card_layout"
-      app:layout_constraintLeft_toLeftOf="@+id/card_layout"
-      app:layout_constraintRight_toRightOf="@+id/card_layout"
-      app:layout_constraintTop_toTopOf="@+id/card_layout"
+      app:layout_constraintBottom_toTopOf="@+id/anchor"
+      app:layout_constraintLeft_toLeftOf="@+id/anchor"
+      app:layout_constraintRight_toRightOf="@+id/anchor"
+      app:layout_constraintTop_toTopOf="@+id/anchor"
       tools:src="@drawable/ic_appcoins"
+      />
+
+  <View
+      android:id="@+id/anchor"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="60dp"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
       />
 
   <android.support.v7.widget.CardView
@@ -40,7 +51,7 @@
           android:id="@+id/info_card_description_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="38dp"
+          android:layout_marginTop="68dp"
           android:padding="8dp"
           tools:background="@drawable/my_store_background"
           >
@@ -80,6 +91,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="8dp"
+          android:layout_marginTop="8dp"
           >
         <LinearLayout
             android:layout_width="wrap_content"
@@ -98,8 +110,8 @@
               android:id="@+id/dismiss_button"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginEnd="30dp"
-              android:layout_marginRight="30dp"
+              android:layout_marginEnd="18dp"
+              android:layout_marginRight="18dp"
               android:text="@string/all_button_got_it"
               style="@style/Aptoide.Button.Flat.GreyMedium"
               />
