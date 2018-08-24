@@ -574,4 +574,7 @@
     <item name="android:textColor">@color/grey_fog_dark</item>
   </style>
 
+  <style name="DatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/default_orange_gradient_end</item>
+  </style>
 </resources>

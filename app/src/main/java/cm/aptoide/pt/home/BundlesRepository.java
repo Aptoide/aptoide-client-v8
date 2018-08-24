@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -104,5 +105,13 @@ public class BundlesRepository {
     } else {
       return offset.get(bundleKey);
     }
+  }
+
+  public Completable remove(HomeBundle bundle) {
+    return Completable.defer(() -> {
+      cachedBundles.get(HOME_BUNDLE_KEY)
+          .remove(bundle);
+      return Completable.complete();
+    });
   }
 }

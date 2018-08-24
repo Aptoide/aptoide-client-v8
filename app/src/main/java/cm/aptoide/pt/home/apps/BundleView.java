@@ -45,4 +45,6 @@ public interface BundleView extends View {
   Observable<Void> retryClicked();
 
   Observable<HomeEvent> bundleScrolled();
+
+  Observable<HomeBundle> visibleBundles();
 }

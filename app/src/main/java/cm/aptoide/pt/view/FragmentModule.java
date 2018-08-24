@@ -68,6 +68,7 @@ import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
 import cm.aptoide.pt.home.apps.AppsNavigator;
+import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -203,8 +204,9 @@ import rx.schedulers.Schedulers;
         bottomNavigationMapper, appNavigator);
   }
 
-  @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository) {
-    return new Home(bundlesRepository);
+  @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
+      ImpressionManager impressionManager) {
+    return new Home(bundlesRepository, impressionManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(

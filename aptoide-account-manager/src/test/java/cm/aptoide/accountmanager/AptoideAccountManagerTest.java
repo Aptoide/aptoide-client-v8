@@ -46,7 +46,7 @@ public class AptoideAccountManagerTest {
     final Account accountMock = mock(Account.class);
 
     final AptoideCredentials credentials =
-        new AptoideCredentials("marcelo.benites@aptoide.com", "1234");
+        new AptoideCredentials("marcelo.benites@aptoide.com", "1234", true);
 
     when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
         Completable.complete());
@@ -73,7 +73,7 @@ public class AptoideAccountManagerTest {
     final Account accountMock = mock(Account.class);
 
     final AptoideCredentials credentials =
-        new AptoideCredentials("john.lennon@aptoide.com", "imagine");
+        new AptoideCredentials("john.lennon@aptoide.com", "imagine", true);
 
     when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
         Completable.complete());
@@ -97,7 +97,7 @@ public class AptoideAccountManagerTest {
   @Test public void shouldLoginOnSignUpTimeout() throws Exception {
 
     final AptoideCredentials credentials =
-        new AptoideCredentials("john.lennon@aptoide.com", "imagine");
+        new AptoideCredentials("john.lennon@aptoide.com", "imagine", true);
 
     when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
         Completable.complete());

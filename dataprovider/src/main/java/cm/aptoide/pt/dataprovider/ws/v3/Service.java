@@ -53,4 +53,11 @@ public interface Service {
   @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
       @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+  @POST("changeUserBirthdate") @FormUrlEncoded Observable<BaseV3Response> changeUserBirthdate(
+      @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+  @POST("changeUserNewsletterSubscription") @FormUrlEncoded
+  Observable<BaseV3Response> changeUserNewsletterSubscription(@FieldMap BaseBody arg,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 }
