@@ -94,21 +94,12 @@ public class NewAptoideDownloadManager implements DownloadManager {
   }
 
   private void dispatchDownloads() {
-    /*
-     downloadsRepository.getDownloads()
-     .flatMapIterable(downloadsList -> downloadsList)
-     .filter(download -> download.getOverallDownloadStatus() == PENDING)
-     .toList()
-     .filter(downloads -> !downloads.isEmpty())
-     .map(downloads -> downloads.get(0))
-     .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
-     appDownloader -> downloadService.download(download, appDownloader)))
-     .flatMapCompletable(download -> downloadsRepository.save(download))
-     .subscribe(__ -> {
-     }, throwable -> {
-     throw new OnErrorNotImplementedException();
-     });
-     **/
+    downloadsRepository.getInQueueDownloads()
+        .first()
+        .filter(downloads -> !downloads.isEmpty())
+        .map(downloads -> downloads.get(0))
+        .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
+            appDownloader -> downloadService.download(download, appDownloader)));
   }
 
   private Observable<AppDownloader> getAppDownloader(String md5) {

@@ -28,4 +28,8 @@ public class DownloadsRepository {
   public Observable<List<Download>> getDownloadsInProgress() {
     return downloadAccessor.getRunningDownloads();
   }
+
+  public Observable<List<Download>> getInQueueDownloads() {
+    return downloadAccessor.getInQueueSortedDownloads();
+  }
 }
