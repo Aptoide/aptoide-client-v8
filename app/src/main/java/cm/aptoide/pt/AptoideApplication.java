@@ -635,8 +635,9 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable sendAppStartToAnalytics() {
-    return firstLaunchAnalytics.sendAppStart(this, defaultSharedPreferences,
-        WebService.getDefaultConverter(), getDefaultClient(),
+    return firstLaunchAnalytics.sendAppStart(this,
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences()), WebService.getDefaultConverter(), getDefaultClient(),
         getAccountSettingsBodyInterceptorPoolV7(), getTokenInvalidator());
   }
 
