@@ -17,8 +17,11 @@ import cm.aptoide.pt.dataprovider.model.v7.GetUserSettings;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserBirthdateRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserNewsletterSubscription;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserInfoRequest;
@@ -51,6 +54,7 @@ public class AccountServiceV3 implements AccountService {
   private final TokenInvalidator tokenInvalidator;
   private final AuthenticationPersistence authenticationPersistence;
   private final BodyInterceptor<BaseBody> v3NoAuthorizationBodyInterceptor;
+  private final BodyInterceptor<BaseBody> defaultBodyInterceptorV3;
   private final BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptorV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7;
@@ -60,6 +64,7 @@ public class AccountServiceV3 implements AccountService {
       ObjectMapper serializer, SharedPreferences sharedPreferences, String extraId,
       TokenInvalidator refreshTokenInvalidator, AuthenticationPersistence authenticationPersistence,
       BodyInterceptor<BaseBody> v3NoAuthorizationBodyInterceptor,
+      BodyInterceptor<BaseBody> defaultBodyInterceptorV3,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7) {
@@ -73,6 +78,7 @@ public class AccountServiceV3 implements AccountService {
     this.tokenInvalidator = refreshTokenInvalidator;
     this.authenticationPersistence = authenticationPersistence;
     this.v3NoAuthorizationBodyInterceptor = v3NoAuthorizationBodyInterceptor;
+    this.defaultBodyInterceptorV3 = defaultBodyInterceptorV3;
     this.multipartBodyInterceptorV7 = multipartBodyInterceptorV7;
     this.bodyInterceptorWebV7 = bodyInterceptorWebV7;
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
@@ -125,6 +131,34 @@ public class AccountServiceV3 implements AccountService {
             return Single.error(new AccountException(exception));
           }
           return Single.error(throwable);
+        });
+  }
+
+  @Override public Completable changeBirthdate(String birthdate) {
+    return ChangeUserBirthdateRequest.of(birthdate, defaultBodyInterceptorV3, converterFactory,
+        httpClient, tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V3.getErrorMessage(response)));
+          }
+        });
+  }
+
+  @Override public Completable changeSubscribeNewsletter(String isSubscribed) {
+    return ChangeUserNewsletterSubscription.of(isSubscribed, defaultBodyInterceptorV3,
+        converterFactory, httpClient, tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V3.getErrorMessage(response)));
+          }
         });
   }
 

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.home;
 
-class ActionItem {
+public class ActionItem {
   private final String cardId;
   private final String layout;
   private final String title;

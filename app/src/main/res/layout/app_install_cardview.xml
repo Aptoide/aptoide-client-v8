@@ -1,70 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="96dp"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="57dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     >
-  <android.support.constraint.ConstraintLayout
-      android:layout_width="match_parent"
+
+  <ImageView
+      android:id="@+id/app_icon_imageview"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_centerVertical="true"
+      android:layout_marginTop="1dp"
+      android:adjustViewBounds="true"
+      android:padding="4dp"
+      tools:src="@drawable/orange_gradient"
+      />
+
+
+  <TextView
+      android:id="@+id/app_title_textview"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      >
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="1dp"
+      android:layout_toEndOf="@id/app_icon_imageview"
+      android:layout_toLeftOf="@id/appview_install_button"
+      android:layout_toRightOf="@id/app_icon_imageview"
+      android:layout_toStartOf="@id/appview_install_button"
+      android:lines="1"
+      tools:text="@string/appc_title_settings_appcoins_wallet"
+      style="@style/Aptoide.TextView.Medium.S.Black"
+      />
 
-    <ImageView
-        android:id="@+id/app_icon_imageview"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="7dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/ad_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+  <Button
+      android:id="@+id/appview_install_button"
+      android:layout_width="83dp"
+      android:layout_height="32dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginTop="1dp"
+      android:background="@drawable/aptoide_gradient_rounded"
+      android:text="@string/install"
+      android:textAlignment="center"
+      android:textAllCaps="true"
+      android:textSize="12sp"
+      android:visibility="visible"
+      style="@style/Aptoide.Button.S.Gradient"
+      />
 
-
-    <TextView
-        android:id="@+id/app_title_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:layout_toEndOf="@+id/app_icon_imageview"
-        android:layout_toRightOf="@+id/app_icon_imageview"
-        tools:text="@string/appc_title_settings_appcoins_wallet"
-        app:layout_constraintStart_toEndOf="@+id/app_icon_imageview"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Aptoide.TextView.Medium.M"
-        />
-
-    <Button
-        android:id="@+id/appview_install_button"
-        android:layout_width="83dp"
-        android:layout_height="32dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="48dp"
-        android:text="@string/install"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textSize="12sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        style="@style/Aptoide.Button"
-        />
-
-
-  </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.CardView>
+</RelativeLayout>

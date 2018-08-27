@@ -19,4 +19,10 @@ public interface ManageUserView extends ImagePickerView {
   Completable showErrorMessage(String error);
 
   void loadImageStateless(String pictureUri);
+
+  Observable<Void> calendarLayoutClick();
+
+  void showCalendar();
+
+  void showEmptyBirthdayMessage();
 }

@@ -184,6 +184,10 @@
     <item name="android:textColor">@color/orange</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XXS.OrangeGradientEnd">
+    <item name="android:textColor">@color/default_orange_gradient_end</item>
+  </style>
+
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
     <item name="android:textAllCaps">true</item>
