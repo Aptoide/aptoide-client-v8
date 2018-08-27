@@ -28,7 +28,7 @@ public interface DownloadManager {
 
   Observable<List<Download>> getCurrentActiveDownloads();
 
-  void pauseAllDownloads();
+  Completable pauseAllDownloads();
 
   Completable pauseDownload(String md5);
 
