@@ -85,8 +85,12 @@ public class NewAptoideDownloadManager implements DownloadManager {
     return null;
   }
 
-  @Override public void removeDownload(String md5) {
-
+  @Override public Completable removeDownload(String md5) {
+    return downloadsRepository.getDownload(md5)
+        .first()
+        .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
+            appDownloader -> appDownloader.removeAppDownload()))
+        .toCompletable();
   }
 
   private void dispatchDownloads() {
