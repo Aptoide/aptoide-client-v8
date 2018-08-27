@@ -59,7 +59,12 @@ public class NewAptoideDownloadManager implements DownloadManager {
   }
 
   @Override public void pauseAllDownloads() {
-
+    downloadsRepository.getDownloadsInProgress()
+        .filter(downloads -> !downloads.isEmpty())
+        .flatMapIterable(downloads -> downloads)
+        .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
+            appDownloader -> appDownloader.pauseAppDownload())
+            .map(appDownloader -> download));
   }
 
   @Override public Completable pauseDownload(String md5) {

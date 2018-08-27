@@ -2,6 +2,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -22,5 +23,9 @@ public class DownloadsRepository {
 
   public Observable<Download> getDownload(String md5) {
     return downloadAccessor.get(md5);
+  }
+
+  public Observable<List<Download>> getDownloadsInProgress() {
+    return downloadAccessor.getRunningDownloads();
   }
 }
