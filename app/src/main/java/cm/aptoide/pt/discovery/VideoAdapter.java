@@ -8,9 +8,9 @@ import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
-  private List<String> videosList;
+  private List<Video> videosList;
 
-  public VideoAdapter(List<String> videosList) {
+  public VideoAdapter(List<Video> videosList) {
     this.videosList = videosList;
   }
 
@@ -21,13 +21,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
   @Override public void onBindViewHolder(VideoViewHolder holder, int position) {
     holder.setContent(videosList.get(position));
+    holder.setText(videosList.get(position));
   }
 
   @Override public int getItemCount() {
     return videosList.size();
   }
 
-  public void add(List<String> videosList) {
+  public void add(List<Video> videosList) {
     this.videosList = videosList;
     notifyDataSetChanged();
   }

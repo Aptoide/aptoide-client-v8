@@ -51,7 +51,7 @@ public class VideosFragment extends NavigationTrackFragment implements VideosCon
         .getSimpleName());
   }
 
-  @Override public void showVideos(List<String> videos) {
+  @Override public void showVideos(List<Video> videos) {
     adapter.add(videos);
   }
 }

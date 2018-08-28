@@ -7,7 +7,9 @@ interface VideosContract {
 
   interface View {
 
-    void showVideos(List<String> videos);
+    void showVideos(List<Video> videos);
+
+    //void playVideos();
 
   }
 

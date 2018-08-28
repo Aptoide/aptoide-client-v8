@@ -171,7 +171,7 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
       return token;
     }
 
-    public void setToken(String token) {
+    public void  setToken(String token) {
       this.token = token;
     }
 
