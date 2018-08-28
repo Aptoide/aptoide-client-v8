@@ -70,6 +70,7 @@
               android:id="@+id/title"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:textAlignment="center"
               android:textStyle="normal"
               tools:text="title"
               style="@style/Aptoide.TextView.Medium.M.Grey_900"
