@@ -15,7 +15,6 @@ public class NewAptoideDownloadManager implements DownloadManager {
 
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
-  private DownloadService downloadService;
 
   public NewAptoideDownloadManager(DownloadsRepository downloadsRepository) {
     this.downloadsRepository = downloadsRepository;
@@ -98,8 +97,9 @@ public class NewAptoideDownloadManager implements DownloadManager {
         .first()
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
-        .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
-            appDownloader -> downloadService.download(download, appDownloader)));
+        .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
+            appDownloader -> appDownloader.startAppDownload()));
+    // TODO: 8/27/18 dont forget to add the download to the db
   }
 
   private Observable<AppDownloader> getAppDownloader(String md5) {
