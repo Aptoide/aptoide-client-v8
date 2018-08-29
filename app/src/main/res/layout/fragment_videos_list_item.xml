@@ -10,7 +10,7 @@
 
 
   <VideoView
-      android:id="@+id/video_viewholder"
+      android:id="@+id/app_video"
       android:layout_width="match_parent"
       android:layout_height="200dp"
       android:orientation="vertical"
@@ -31,7 +31,7 @@
         />
 
       <TextView
-          android:id="@+id/video_desc"
+          android:id="@+id/app_title"
           android:text="Game #1 - Verrry noice"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"

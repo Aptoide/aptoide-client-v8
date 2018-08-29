@@ -22,8 +22,8 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
   public VideoViewHolder(View itemView) {
     super(itemView);
-    videoContent = (VideoView) itemView.findViewById(R.id.video_viewholder);
-    appTitle = (TextView) itemView.findViewById(R.id.video_desc);
+    videoContent = (VideoView) itemView.findViewById(R.id.app_video);
+    appTitle = (TextView) itemView.findViewById(R.id.app_title);
     appScore = (TextView) itemView.findViewById(R.id.app_score);
     appIcon = (ImageView) itemView.findViewById(R.id.app_icon_discovery);
   }
