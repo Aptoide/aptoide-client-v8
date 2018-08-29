@@ -313,11 +313,11 @@ public class DeepLinkManager {
         .subscribe(navigation -> {
           if (navigation != null) {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE);
-            storeAnalytics.sendStoreOpenEvent(APP_SHORTCUT, navigation.getStore()
-                .getName(), false);
             if(!navigation.hasStore()){
               fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(new ManageStoreViewModel(), true), true);
             } else {
+              storeAnalytics.sendStoreOpenEvent(APP_SHORTCUT, navigation.getStore()
+                  .getName(), false);
               fragmentNavigator.navigateTo(StoreFragment.newInstance(navigation.getStore()
                   .getName(), navigation.getStore()
                   .getTheme(), StoreFragment.OpenType.GetHome), true);
