@@ -1,9 +1,11 @@
 package cm.aptoide.pt.download;
 
 import cm.aptoide.pt.downloadmanager.Constants;
+import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
 import cm.aptoide.pt.downloadmanager.FileDownloader;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import rx.Completable;
+import rx.Observable;
 
 /**
  * Created by filipegoncalves on 7/31/18.
@@ -54,6 +56,10 @@ public class FileDownloadManager implements FileDownloader {
 
   @Override public Completable removeDownloadFile() {
     return Completable.fromAction(() -> fileDownloader.clear(downloadId, mainDownloadPath));
+  }
+
+  @Override public Observable<FileDownloadCallback> observeFileDownloadProgress() {
+    return fileDownloadTask.onDownloadStateChanged();
   }
 
   private void createBaseDownloadTask(String mainDownloadPath, int versionCode, String packageName,

@@ -4,6 +4,7 @@ import android.support.annotation.VisibleForTesting;
 import java.util.HashMap;
 import rx.Completable;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by filipegoncalves on 7/27/18.
@@ -27,23 +28,13 @@ public class AppDownloadManager implements AppDownloader {
         .flatMap(downloadAppFile -> Observable.just(
             fileDownloaderProvider.createFileDownloader(downloadAppFile.getMainDownloadPath(),
                 downloadAppFile.getFileType(), downloadAppFile.getPackageName(),
-                downloadAppFile.getVersionCode(), downloadAppFile.getFileName()))
+                downloadAppFile.getVersionCode(), downloadAppFile.getFileName(),
+                PublishSubject.create()))
             .doOnNext(fileDownloader -> fileDownloaderPersistence.put(
                 downloadAppFile.getAlternativeDownloadPath(), fileDownloader)))
         .flatMapCompletable(fileDownloader -> fileDownloader.startFileDownload())
+        .flatMap(fileDownloader -> handleFileDownloadProgress(fileDownloader))
         .toCompletable();
-
-    /**
-     return Observable.just(
-     fileDownloaderProvider.createFileDownloader(downloadAppFile.getMainDownloadPath(),
-     downloadAppFile.getFileType(), downloadAppFile.getPackageName(),
-     downloadAppFile.getVersionCode(), downloadAppFile.getFileName()))
-     .flatMap(fileDownloader -> Observable.from(app.getDownloadFiles())
-     .doOnNext(downloadAppFile -> fileDownloaderPersistence.put(
-     downloadAppFile.getAlternativeDownloadPath(), fileDownloader))
-     .flatMapCompletable(downloadAppFile -> fileDownloader.startFileDownload()))
-     .toCompletable();
-     **/
   }
 
   @Override public Completable pauseAppDownload() {
@@ -58,6 +49,15 @@ public class AppDownloadManager implements AppDownloader {
         .flatMap(downloadAppFile -> getFileDownloader(downloadAppFile.getMainDownloadPath()))
         .flatMapCompletable(fileDownloader -> fileDownloader.removeDownloadFile())
         .toCompletable();
+  }
+
+  @Override public Observable<AppDownloadStatus> observeDownloadProgress() {
+    return null;
+  }
+
+  private Observable<FileDownloadCallback> handleFileDownloadProgress(
+      FileDownloader fileDownloader) {
+    return fileDownloader.observeFileDownloadProgress();
   }
 
   @VisibleForTesting public Observable<FileDownloader> getFileDownloader(String mainDownloadPath) {
