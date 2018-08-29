@@ -58,6 +58,7 @@
           android:id="@+id/discovery_actionbar_button"
           android:layout_width="46dp"
           android:layout_height="46dp"
+          android:layout_marginTop="6dp"
           android:text="DIS"
           />
 

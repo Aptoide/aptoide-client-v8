@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -15,12 +16,16 @@ import cm.aptoide.pt.view.MainActivity;
 public class VideoViewHolder extends RecyclerView.ViewHolder {
 
   private VideoView videoContent;
-  private TextView textView;
+  private TextView appTitle;
+  private TextView appScore;
+  private ImageView appIcon;
 
   public VideoViewHolder(View itemView) {
     super(itemView);
     videoContent = (VideoView) itemView.findViewById(R.id.video_viewholder);
-    textView = (TextView) itemView.findViewById(R.id.video_desc);
+    appTitle = (TextView) itemView.findViewById(R.id.video_desc);
+    appScore = (TextView) itemView.findViewById(R.id.app_score);
+    appIcon = (ImageView) itemView.findViewById(R.id.app_icon_discovery);
   }
 
   public void setContent(Video video) {
@@ -30,11 +35,15 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     Log.d("Holder", "setContent: started");
   }
 
-  public void setText(Video video){
-    textView.setText(video.getVideoDescription());
+  public void setAppName(Video video){
+    appTitle.setText(video.getVideoDescription());
   }
 
-  /*public void playVideo() {
-    videoContent.play();
+  public void setAppScore(Video video){
+    appScore.setText(Double.toString(video.getScore()));
+  }
+
+  /*public void setAppIcon(Video video){
+    appIcon.setImageBitmap();
   }*/
 }

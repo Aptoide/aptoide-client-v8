@@ -21,7 +21,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
   @Override public void onBindViewHolder(VideoViewHolder holder, int position) {
     holder.setContent(videosList.get(position));
-    holder.setText(videosList.get(position));
+    holder.setAppName(videosList.get(position));
+    holder.setAppScore(videosList.get(position));
   }
 
   @Override public int getItemCount() {
