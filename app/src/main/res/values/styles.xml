@@ -30,7 +30,7 @@
   </style>
 
   <style name="Ripple">
-    <item name="colorControlHighlight">@color/aptoide_orange</item>
+    <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
   </style>
 
   <style name="customRowStyleHomeLayout">
