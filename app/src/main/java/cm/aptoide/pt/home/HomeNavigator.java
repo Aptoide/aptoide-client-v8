@@ -1,7 +1,9 @@
 package cm.aptoide.pt.home;
 
+import android.os.Bundle;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
+import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -71,5 +73,15 @@ public class HomeNavigator {
 
   public void navigateToAppCoinsInformationView() {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
+  }
+
+  public void navigateToAppOfTheWeek() {
+    Bundle bundle = new Bundle();
+    //TODO change for the real values when merging
+    bundle.putString("cardId", "72635teguyegr");
+    bundle.putString("appName", "App Title");
+    EditorialFragment fragment = new EditorialFragment();
+    fragment.setArguments(bundle);
+    fragmentNavigator.navigateTo(fragment, true);
   }
 }

@@ -66,6 +66,7 @@
   <dimen name="fab_margin">20dp</dimen>
   <dimen format="float" name="appstimeline_card_icon" type="dimen">17.7dp</dimen>
   <dimen name="bottom_skip_bar_height">48dp</dimen>
+  <dimen name="status_bar_height">24dp</dimen>
   <dimen name="padding_smaller">12dp</dimen>
   <dimen name="padding_small">16dp</dimen>
   <dimen name="padding_medium">32dp</dimen>
