@@ -142,6 +142,9 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void showLoading() {
     //Set everything else to false
+    appCardView.setVisibility(View.GONE);
+    itemName.setVisibility(View.GONE);
+    editorialItems.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
@@ -149,6 +152,8 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void hideLoading() {
     //Set everything else to false
+    appCardView.setVisibility(View.GONE);
+    editorialItems.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
@@ -168,6 +173,7 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void populateView(EditorialViewModel editorialViewModel) {
     populateAppContent(editorialViewModel);
+    populateCardContent(editorialViewModel);
   }
 
   @Override public void showError(EditorialViewModel.Error error) {
@@ -190,5 +196,10 @@ public class EditorialFragment extends NavigationTrackFragment
     appCardTitle.setText(editorialViewModel.getAppName());
     ImageLoader.with(getContext())
         .load(editorialViewModel.getIcon(), appCardImage);
+    appCardTitle.setVisibility(View.VISIBLE);
+  }
+
+  private void populateCardContent(EditorialViewModel editorialViewModel) {
+    adapter.add(editorialViewModel.getContentList());
   }
 }

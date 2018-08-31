@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
  */
 
 class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
+  private TextView description;
   private View itemText;
   private TextView title;
   private TextView firstTitle;
@@ -38,6 +40,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
     video = (VideoView) view.findViewById(R.id.editorial_video);
+    description = (TextView) view.findViewById(R.id.description);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCard = view.findViewById(R.id.app_cardview);
     mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
@@ -54,7 +57,65 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     mediaList.setAdapter(mediaBundleAdapter);
   }
 
-  public void setVisibility(EditorialItem editorialItem, int position) {
+  public void setVisibility(EditorialContent editorialItem, int position) {
+    if (editorialItem.isNormalType()) {
+      if (editorialItem.hasTitle() || editorialItem.hasMessage()) {
+        itemText.setVisibility(View.VISIBLE);
+        manageTitleVisibility(editorialItem, position);
+        manageMessageVisibility(editorialItem);
+      }
+      manageMediaVisibility(editorialItem);
+    } else {
+      appCard.setVisibility(View.VISIBLE);
+    }
+  }
 
+  private void manageTitleVisibility(EditorialContent editorialItem, int position) {
+    if (editorialItem.hasTitle()) {
+      title.setVisibility(View.VISIBLE);
+      if (position == 0) {
+        firstTitle.setText(editorialItem.getTitle());
+        firstTitle.setVisibility(View.VISIBLE);
+      } else {
+        secondaryTitle.setText(editorialItem.getTitle());
+        secondaryTitle.setVisibility(View.VISIBLE);
+      }
+    }
+  }
+
+  private void manageMessageVisibility(EditorialContent editorialItem) {
+    if (editorialItem.hasMessage()) {
+      message.setText(editorialItem.getMessage());
+      message.setVisibility(View.VISIBLE);
+    }
+  }
+
+  private void manageMediaVisibility(EditorialContent editorialItem) {
+    if (editorialItem.hasMedia()) {
+      media.setVisibility(View.VISIBLE);
+      if (editorialItem.hasListOfMedia()) {
+        mediaBundleAdapter.add(editorialItem.getMedia());
+        mediaList.setVisibility(View.VISIBLE);
+      } else {
+        EditorialMedia editorialMedia = editorialItem.getMedia()
+            .get(0);
+        if (editorialMedia.isImage()) {
+          ImageLoader.with(itemView.getContext())
+              .load(editorialMedia.getUrl(), image);
+          image.setVisibility(View.VISIBLE);
+        }
+        if (editorialMedia.isVideo()) {
+          //TODO add video
+          video.setVisibility(View.VISIBLE);
+        }
+      }
+      EditorialMedia editorialMedia = editorialItem.getMedia()
+          .get(0);
+      if (editorialMedia.hasDescription()) {
+        description.setText(editorialMedia.getDescription());
+        description.setVisibility(View.VISIBLE);
+        //TODO add description here in the future
+      }
+    }
   }
 }

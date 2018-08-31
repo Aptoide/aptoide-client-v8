@@ -375,7 +375,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.imageClick()
             .observeOn(viewScheduler)
-            .doOnNext(account -> homeNavigator.navigateToMyAccount())
+            .doOnNext(account -> homeNavigator.navigateToAppOfTheWeek())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
