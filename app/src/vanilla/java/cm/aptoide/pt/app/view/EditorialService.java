@@ -71,17 +71,19 @@ public class EditorialService {
   private Observable<EditorialViewModel> mapEditorial(EditorialCard editorialCard) {
     if (editorialCard.isOk()) {
       Data card = editorialCard.getData();
-      List<Content> contentList = card.getContent();
-      List<EditorialContent> editorialContentList = new ArrayList<>();
-      editorialContentList = mapEditorialContent(contentList, editorialContentList);
       String cardType = card.getType();
 
       App app = card.getApp();
       long appId = app.getId();
       String appName = app.getName();
+      String icon = app.getIcon();
+
+      List<Content> contentList = card.getContent();
+      List<EditorialContent> editorialContentList = new ArrayList<>();
+      editorialContentList = mapEditorialContent(contentList, editorialContentList, appName, icon);
+
       String packageName = app.getPackageName();
       long size = app.getSize();
-      String icon = app.getIcon();
       String graphic = app.getGraphic();
       String uptype = app.getUptype();
       Store store = app.getStore();
@@ -109,7 +111,7 @@ public class EditorialService {
   }
 
   private List<EditorialContent> mapEditorialContent(List<Content> contentList,
-      List<EditorialContent> editorialContentList) {
+      List<EditorialContent> editorialContentList, String appName, String icon) {
     if (contentList != null) {
       for (Content content : contentList) {
         List<Media> mediaList = content.getMedia();
@@ -123,7 +125,7 @@ public class EditorialService {
         }
         EditorialContent editorialContent =
             new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-                content.getType());
+                content.getType(), appName, icon);
         editorialContentList.add(editorialContent);
       }
     }
