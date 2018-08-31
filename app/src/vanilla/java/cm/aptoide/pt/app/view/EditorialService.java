@@ -6,12 +6,14 @@ import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard.Data;
+import cm.aptoide.pt.dataprovider.model.v7.EditorialCard.Media;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -72,7 +74,10 @@ public class EditorialService {
     if (editorialCard.isOk()) {
       Data card = editorialCard.getData();
       List<Content> contentList = card.getContent();
+      List<EditorialContent> editorialContentList = new ArrayList<>();
+      editorialContentList = mapEditorialContent(contentList, editorialContentList);
       String cardType = card.getType();
+
       App app = card.getApp();
       long appId = app.getId();
       String appName = app.getName();
@@ -93,13 +98,37 @@ public class EditorialService {
       int vercode = file.getVercode();
       long fileSize = file.getFilesize();
       String path = file.getPath();
+      String pathAlt = file.getPathAlt();
+      String md5 = file.getMd5sum();
       String backgroundImage = card.getBackground_image();
       return Observable.just(
-          new EditorialViewModel(contentList, cardType, appId, appName, packageName, size, icon,
-              graphic, uptype, obb, storeId, storeName, storeAvatar, storeTheme, vername, vercode,
-              fileSize, path, backgroundImage));
+          new EditorialViewModel(editorialContentList, cardType, appId, appName, packageName, size,
+              icon, graphic, uptype, obb, storeId, storeName, storeAvatar, storeTheme, vername,
+              vercode, fileSize, path, backgroundImage, pathAlt, md5));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
+  }
+
+  private List<EditorialContent> mapEditorialContent(List<Content> contentList,
+      List<EditorialContent> editorialContentList) {
+    if (contentList != null) {
+      for (Content content : contentList) {
+        List<Media> mediaList = content.getMedia();
+        List<EditorialMedia> editorialMediaList = new ArrayList<>();
+        if (mediaList != null) {
+          for (Media media : mediaList) {
+            EditorialMedia editorialMedia =
+                new EditorialMedia(media.getType(), media.getDescription(), media.getUrl());
+            editorialMediaList.add(editorialMedia);
+          }
+        }
+        EditorialContent editorialContent =
+            new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
+                content.getType());
+        editorialContentList.add(editorialContent);
+      }
+    }
+    return editorialContentList;
   }
 }

@@ -12,9 +12,9 @@ import java.util.List;
 
 class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolder> {
 
-  private List<EditorialItem> editorialItemList;
+  private List<EditorialContent> editorialItemList;
 
-  public EditorialItemsAdapter(List<EditorialItem> editorialItemList) {
+  public EditorialItemsAdapter(List<EditorialContent> editorialItemList) {
     this.editorialItemList = editorialItemList;
   }
 
@@ -32,12 +32,12 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
     return editorialItemList.size();
   }
 
-  public void update(List<EditorialItem> editorialItemList) {
+  public void update(List<EditorialContent> editorialItemList) {
     this.editorialItemList = editorialItemList;
     notifyDataSetChanged();
   }
 
-  public void add(List<EditorialItem> editorialItemList) {
+  public void add(List<EditorialContent> editorialItemList) {
     this.editorialItemList.addAll(editorialItemList);
     notifyDataSetChanged();
   }
