@@ -43,6 +43,12 @@ import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
+import cm.aptoide.pt.app.view.EditorialManager;
+import cm.aptoide.pt.app.view.EditorialNavigator;
+import cm.aptoide.pt.app.view.EditorialPresenter;
+import cm.aptoide.pt.app.view.EditorialRepository;
+import cm.aptoide.pt.app.view.EditorialService;
+import cm.aptoide.pt.app.view.EditorialView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
@@ -340,5 +346,23 @@ import rx.schedulers.Schedulers;
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
         AndroidSchedulers.mainThread());
+  }
+
+  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
+      EditorialService editorialService) {
+    return new EditorialRepository(editorialService);
+  }
+
+  @FragmentScope @Provides EditorialManager providesAppOfTheWeekManager(
+      EditorialRepository editorialRepository) {
+    return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
+        arguments.getString("appTitle", ""));
+  }
+
+  @FragmentScope @Provides EditorialPresenter providesAppOfTheWeekPresenter(
+      EditorialManager editorialManager, CrashReport crashReport,
+      EditorialNavigator editorialNavigator) {
+    return new EditorialPresenter((EditorialView) fragment, editorialManager,
+        AndroidSchedulers.mainThread(), crashReport, editorialNavigator);
   }
 }
