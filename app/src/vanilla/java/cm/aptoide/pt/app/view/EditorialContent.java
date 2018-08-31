@@ -32,7 +32,7 @@ class EditorialContent {
     return type;
   }
 
-  public boolean isNormalType() {
+  public boolean isPlaceHolderType() {
     return type != null && type.equals("app_placeholder");
   }
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private TextView description;
   private View itemText;
-  private TextView title;
+  private View title;
   private TextView firstTitle;
   private TextView secondaryTitle;
   private TextView message;
@@ -33,14 +33,14 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   public EditorialItemsViewHolder(View view) {
     super(view);
     itemText = view.findViewById(R.id.editorial_item_text);
-    title = (TextView) view.findViewById(R.id.editorial_item_title);
+    title = view.findViewById(R.id.editorial_item_title);
     firstTitle = (TextView) view.findViewById(R.id.editorial_item_first_title);
     secondaryTitle = (TextView) view.findViewById(R.id.editorial_item_secondary_title);
     message = (TextView) view.findViewById(R.id.editorial_item_message);
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
     video = (VideoView) view.findViewById(R.id.editorial_video);
-    description = (TextView) view.findViewById(R.id.description);
+    description = (TextView) view.findViewById(R.id.editorial_image_description);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCard = view.findViewById(R.id.app_cardview);
     mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
@@ -58,14 +58,13 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setVisibility(EditorialContent editorialItem, int position) {
-    if (editorialItem.isNormalType()) {
-      if (editorialItem.hasTitle() || editorialItem.hasMessage()) {
-        itemText.setVisibility(View.VISIBLE);
-        manageTitleVisibility(editorialItem, position);
-        manageMessageVisibility(editorialItem);
-      }
-      manageMediaVisibility(editorialItem);
-    } else {
+    if (editorialItem.hasTitle() || editorialItem.hasMessage()) {
+      itemText.setVisibility(View.VISIBLE);
+      manageTitleVisibility(editorialItem, position);
+      manageMessageVisibility(editorialItem);
+    }
+    manageMediaVisibility(editorialItem);
+    if (editorialItem.isPlaceHolderType()) {
       appCard.setVisibility(View.VISIBLE);
     }
   }

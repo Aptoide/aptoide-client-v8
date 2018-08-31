@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     >
   <RelativeLayout
       android:id="@+id/editorial_item_text"
@@ -58,6 +58,7 @@
         android:visibility="gone"
         tools:text="Plenty of stuff about the thing we want to talk about, now repeat. Plenty of stuff about the thing we want to talk about, now repeat. Plenty of stuff about the thing we want to talk about, now repeat. Plenty of stuff about the thing we want to talk about, now repeat. Plenty of stuff about the thing we want to talk about, now repeat. "
         tools:visibility="visible"
+        style="@style/Aptoide.TextView.Regular.M"
         />
   </RelativeLayout>
 
@@ -101,10 +102,13 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@id/editorial_item_media"
+      android:layout_marginLeft="8dp"
+      android:layout_marginStart="8dp"
       android:layout_marginTop="11dp"
       android:visibility="gone"
       tools:text="Description"
       tools:visibility="visible"
+      style="@style/Aptoide.TextView.Regular.XS"
       />
 
   <include

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app.view;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
@@ -62,7 +61,6 @@ public class EditorialService {
   }
 
   private EditorialViewModel createErrorEditorialModel(Throwable throwable) {
-    Log.d("TAG123", throwable.toString());
     if (throwable instanceof NoNetworkConnectionException) {
       return new EditorialViewModel(EditorialViewModel.Error.NETWORK);
     } else {
