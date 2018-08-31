@@ -356,7 +356,7 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides EditorialManager providesAppOfTheWeekManager(
       EditorialRepository editorialRepository) {
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
-        arguments.getString("appTitle", ""));
+        arguments.getString("appName", ""));
   }
 
   @FragmentScope @Provides EditorialPresenter providesAppOfTheWeekPresenter(

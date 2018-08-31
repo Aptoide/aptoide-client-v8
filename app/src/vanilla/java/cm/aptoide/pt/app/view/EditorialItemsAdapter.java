@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
@@ -29,6 +30,7 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
   }
 
   @Override public int getItemCount() {
+    Log.d("TAG123", "size: " + editorialItemList.size());
     return editorialItemList.size();
   }
 

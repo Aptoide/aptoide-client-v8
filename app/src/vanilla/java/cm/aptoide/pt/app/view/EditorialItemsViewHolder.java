@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -17,9 +18,12 @@ import java.util.ArrayList;
  */
 
 class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
+  private final ImageView appCardImage;
+  private final TextView appCardName;
+  private final Button appCardButton;
   private TextView description;
   private View itemText;
-  private TextView title;
+  private View title;
   private TextView firstTitle;
   private TextView secondaryTitle;
   private TextView message;
@@ -33,16 +37,19 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   public EditorialItemsViewHolder(View view) {
     super(view);
     itemText = view.findViewById(R.id.editorial_item_text);
-    title = (TextView) view.findViewById(R.id.editorial_item_title);
+    title = view.findViewById(R.id.editorial_item_title);
     firstTitle = (TextView) view.findViewById(R.id.editorial_item_first_title);
     secondaryTitle = (TextView) view.findViewById(R.id.editorial_item_secondary_title);
     message = (TextView) view.findViewById(R.id.editorial_item_message);
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
     video = (VideoView) view.findViewById(R.id.editorial_video);
-    description = (TextView) view.findViewById(R.id.description);
+    description = (TextView) view.findViewById(R.id.editorial_image_description);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCard = view.findViewById(R.id.app_cardview);
+    appCardImage = (ImageView) appCard.findViewById(R.id.app_icon_imageview);
+    appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
+    appCardButton = (Button) appCard.findViewById(R.id.appview_install_button);
     mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -58,14 +65,18 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setVisibility(EditorialContent editorialItem, int position) {
-    if (editorialItem.isNormalType()) {
-      if (editorialItem.hasTitle() || editorialItem.hasMessage()) {
-        itemText.setVisibility(View.VISIBLE);
-        manageTitleVisibility(editorialItem, position);
-        manageMessageVisibility(editorialItem);
-      }
-      manageMediaVisibility(editorialItem);
-    } else {
+    if (editorialItem.hasTitle() || editorialItem.hasMessage()) {
+      itemText.setVisibility(View.VISIBLE);
+      manageTitleVisibility(editorialItem, position);
+      manageMessageVisibility(editorialItem);
+    }
+    manageMediaVisibility(editorialItem);
+    if (editorialItem.isPlaceHolderType()) {
+      ImageLoader.with(itemView.getContext())
+          .load(editorialItem.getIcon(), appCardImage);
+      appCardImage.setVisibility(View.VISIBLE);
+      appCardName.setText(editorialItem.getAppName());
+      appCardName.setVisibility(View.VISIBLE);
       appCard.setVisibility(View.VISIBLE);
     }
   }

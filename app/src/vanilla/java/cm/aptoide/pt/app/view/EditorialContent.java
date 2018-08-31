@@ -11,13 +11,18 @@ class EditorialContent {
   private final List<EditorialMedia> media;
   private final String message;
   private final String type;
+  private final String appName;
+  private final String icon;
 
-  public EditorialContent(String title, List<EditorialMedia> media, String message, String type) {
+  public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
+      String appName, String icon) {
 
     this.title = title;
     this.media = media;
     this.message = message;
     this.type = type;
+    this.appName = appName;
+    this.icon = icon;
   }
 
   public String getMessage() {
@@ -32,7 +37,7 @@ class EditorialContent {
     return type;
   }
 
-  public boolean isNormalType() {
+  public boolean isPlaceHolderType() {
     return type != null && type.equals("app_placeholder");
   }
 
@@ -54,5 +59,13 @@ class EditorialContent {
 
   public boolean hasTitle() {
     return title != null && !title.equals("");
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public String getIcon() {
+    return icon;
   }
 }

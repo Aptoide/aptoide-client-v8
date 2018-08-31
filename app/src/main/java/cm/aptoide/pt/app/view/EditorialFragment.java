@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -79,7 +80,10 @@ public class EditorialFragment extends NavigationTrackFragment
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     adapter = new EditorialItemsAdapter(new ArrayList<>());
+    editorialItems.setLayoutManager(linearLayoutManager);
     editorialItems.setAdapter(adapter);
 
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
@@ -129,8 +133,8 @@ public class EditorialFragment extends NavigationTrackFragment
     progressBar = null;
     genericRetryButton = null;
     noNetworkRetryButton = null;
-    toolbar = null;
     adapter = null;
+
     super.onDestroyView();
   }
 
@@ -144,7 +148,6 @@ public class EditorialFragment extends NavigationTrackFragment
     //Set everything else to false
     appCardView.setVisibility(View.GONE);
     itemName.setVisibility(View.GONE);
-    editorialItems.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
@@ -153,7 +156,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void hideLoading() {
     //Set everything else to false
     appCardView.setVisibility(View.GONE);
-    editorialItems.setVisibility(View.GONE);
+    itemName.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
@@ -196,7 +199,7 @@ public class EditorialFragment extends NavigationTrackFragment
     appCardTitle.setText(editorialViewModel.getAppName());
     ImageLoader.with(getContext())
         .load(editorialViewModel.getIcon(), appCardImage);
-    appCardTitle.setVisibility(View.VISIBLE);
+    appCardView.setVisibility(View.VISIBLE);
   }
 
   private void populateCardContent(EditorialViewModel editorialViewModel) {
