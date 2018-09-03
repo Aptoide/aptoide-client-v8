@@ -43,6 +43,7 @@ import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
+import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialManager;
 import cm.aptoide.pt.app.view.EditorialNavigator;
 import cm.aptoide.pt.app.view.EditorialPresenter;
@@ -354,15 +355,20 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides EditorialManager providesAppOfTheWeekManager(
-      EditorialRepository editorialRepository) {
+      EditorialRepository editorialRepository, InstallManager installManager,
+      PreferencesManager preferencesManager, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
-        arguments.getString("appName", ""));
+        arguments.getString("appName", ""), installManager, preferencesManager, downloadFactory,
+        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics);
   }
 
   @FragmentScope @Provides EditorialPresenter providesAppOfTheWeekPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
-      EditorialNavigator editorialNavigator) {
+      EditorialNavigator editorialNavigator, EditorialAnalytics editorialAnalytics) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
-        AndroidSchedulers.mainThread(), crashReport, editorialNavigator);
+        AndroidSchedulers.mainThread(), crashReport, editorialNavigator, new PermissionManager(),
+        ((PermissionService) fragment.getContext()), editorialAnalytics);
   }
 }

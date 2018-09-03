@@ -1,5 +1,7 @@
 package cm.aptoide.pt.app.view;
 
+import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 
@@ -8,6 +10,7 @@ import rx.Observable;
  */
 
 public interface EditorialView extends View {
+
   void showLoading();
 
   void hideLoading();
@@ -16,9 +19,26 @@ public interface EditorialView extends View {
 
   void setToolbarInfo(String title);
 
-  Observable<Void> installButtonClick();
+  Observable<DownloadModel.Action> installButtonClick();
 
   void populateView(EditorialViewModel editorialViewModel);
 
   void showError(EditorialViewModel.Error error);
+
+  void showDownloadAppModel(DownloadAppViewModel model);
+
+  Observable<Boolean> showRootInstallWarningPopup();
+
+  void openApp(String packageName);
+
+  Observable<Void> pauseDownload();
+
+  Observable<Void> resumeDownload();
+
+  Observable<Void> cancelDownload();
+
+  Observable<Void> isAppViewReadyToDownload();
+
+  void readyToDownload();
+
 }

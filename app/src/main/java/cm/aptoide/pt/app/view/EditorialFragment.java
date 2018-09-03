@@ -14,21 +14,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.DownloadAppViewModel;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.OnErrorNotImplementedException;
+import rx.subjects.PublishSubject;
+
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
  * Created by D01 on 27/08/2018.
@@ -53,12 +64,25 @@ public class EditorialFragment extends NavigationTrackFragment
   private ImageView appCardImage;
   private TextView appCardTitle;
   private Button appCardButton;
+  private LinearLayout downloadInfoLayout;
+  private ProgressBar downloadProgressBar;
+  private TextView downloadProgressValue;
+  private ImageView cancelDownload;
+  private ImageView pauseDownload;
+  private ImageView resumeDownload;
+  private View downloadControlsLayout;
+  private RelativeLayout cardInfoLayout;
+
+  private DownloadModel.Action action;
+  private Subscription errorMessageSubscription;
+  private PublishSubject<Void> ready;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     window = getActivity().getWindow();
-    window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    ready = PublishSubject.create();
+    //window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+    //  WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     setHasOptionsMenu(true);
   }
 
@@ -86,6 +110,15 @@ public class EditorialFragment extends NavigationTrackFragment
     editorialItems.setLayoutManager(linearLayoutManager);
     editorialItems.setAdapter(adapter);
 
+    cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
+    downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
+    downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
+    downloadProgressBar = ((ProgressBar) view.findViewById(R.id.appview_download_progress_bar));
+    downloadProgressValue = (TextView) view.findViewById(R.id.appview_download_progress_number);
+    cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
+    resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
+    pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
     appCompatActivity.setSupportActionBar(toolbar);
     ActionBar actionBar = appCompatActivity.getSupportActionBar();
@@ -101,8 +134,12 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroy() {
-    window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    //window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     super.onDestroy();
+    if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
+      errorMessageSubscription.unsubscribe();
+    }
+    ready = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -170,8 +207,9 @@ public class EditorialFragment extends NavigationTrackFragment
     toolbar.setTitle(title);
   }
 
-  @Override public Observable<Void> installButtonClick() {
-    return RxView.clicks(appCardButton);
+  @Override public Observable<DownloadModel.Action> installButtonClick() {
+    return RxView.clicks(appCardButton)
+        .map(__ -> action);
   }
 
   @Override public void populateView(EditorialViewModel editorialViewModel) {
@@ -190,6 +228,53 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
+  @Override public void showDownloadAppModel(DownloadAppViewModel model) {
+    DownloadModel downloadModel = model.getDownloadModel();
+    this.action = downloadModel.getAction();
+    if (downloadModel.isDownloading()) {
+      downloadInfoLayout.setVisibility(View.VISIBLE);
+      cardInfoLayout.setVisibility(View.GONE);
+      setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
+    } else {
+      downloadInfoLayout.setVisibility(View.GONE);
+      cardInfoLayout.setVisibility(View.VISIBLE);
+      setButtonText(downloadModel);
+      if (downloadModel.hasError()) {
+        handleDownloadError(downloadModel.getDownloadState());
+      }
+    }
+  }
+
+  @Override public Observable<Boolean> showRootInstallWarningPopup() {
+    return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
+        getResources().getString(R.string.root_access_dialog))
+        .map(response -> (response.equals(YES)));
+  }
+
+  @Override public void openApp(String packageName) {
+    AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+  }
+
+  @Override public Observable<Void> pauseDownload() {
+    return RxView.clicks(pauseDownload);
+  }
+
+  @Override public Observable<Void> resumeDownload() {
+    return RxView.clicks(resumeDownload);
+  }
+
+  @Override public Observable<Void> cancelDownload() {
+    return RxView.clicks(cancelDownload);
+  }
+
+  @Override public Observable<Void> isAppViewReadyToDownload() {
+    return ready;
+  }
+
+  @Override public void readyToDownload() {
+    ready.onNext(null);
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     ImageLoader.with(getContext())
         .load(editorialViewModel.getBackgroundImage(), appImage);
@@ -204,5 +289,92 @@ public class EditorialFragment extends NavigationTrackFragment
 
   private void populateCardContent(EditorialViewModel editorialViewModel) {
     adapter.add(editorialViewModel.getContentList());
+  }
+
+  private void setButtonText(DownloadModel model) {
+    DownloadModel.Action action = model.getAction();
+    switch (action) {
+      case UPDATE:
+        appCardButton.setText(getResources().getString(R.string.appview_button_update));
+        break;
+      case INSTALL:
+        appCardButton.setText(getResources().getString(R.string.appview_button_install));
+        break;
+      case OPEN:
+        appCardButton.setText(getResources().getString(R.string.appview_button_open));
+        break;
+    }
+  }
+
+  private void handleDownloadError(DownloadModel.DownloadState downloadState) {
+    switch (downloadState) {
+      case ERROR:
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_STORAGE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
+        break;
+      default:
+        throw new IllegalStateException("Invalid Download State " + downloadState);
+    }
+  }
+
+  private void showErrorDialog(String title, String message) {
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(eResponse -> {
+        }, error -> new OnErrorNotImplementedException(error));
+  }
+
+  private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
+
+    LinearLayout.LayoutParams pauseShowing =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
+    LinearLayout.LayoutParams pauseHidden =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 2f);
+    switch (downloadState) {
+      case ACTIVE:
+        downloadProgressBar.setIndeterminate(false);
+        downloadProgressBar.setProgress(progress);
+        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case INDETERMINATE:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case PAUSE:
+        downloadProgressBar.setIndeterminate(false);
+        downloadProgressBar.setProgress(progress);
+        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        pauseDownload.setVisibility(View.GONE);
+        cancelDownload.setVisibility(View.VISIBLE);
+        resumeDownload.setVisibility(View.VISIBLE);
+        downloadControlsLayout.setLayoutParams(pauseHidden);
+        break;
+      case COMPLETE:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case ERROR:
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_STORAGE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
+        break;
+    }
   }
 }
