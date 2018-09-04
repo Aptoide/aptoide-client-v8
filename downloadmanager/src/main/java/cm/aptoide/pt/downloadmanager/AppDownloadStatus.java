@@ -69,7 +69,7 @@ public class AppDownloadStatus {
     this.appDownloadState = appDownloadState;
   }
 
-  enum AppDownloadState {
-    INVALID_STATUS, COMPLETED, PENDING, PAUSED, WARN, ERROR
+  public enum AppDownloadState {
+    INVALID_STATUS, COMPLETED, PENDING, PAUSED, WARN, ERROR, PROGRESS
   }
 }

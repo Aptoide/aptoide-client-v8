@@ -1,5 +1,6 @@
 package cm.aptoide.pt.download;
 
+import cm.aptoide.pt.downloadmanager.AppDownloadStatus.AppDownloadState;
 import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
 
 /**
@@ -8,13 +9,29 @@ import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
 
 public class DownloadTaskStatus implements FileDownloadCallback {
 
-  private final DownloadState state;
+  private AppDownloadState appDownloadState;
+  private int downloadProgress;
+  private int fileType;
 
-  public DownloadTaskStatus(DownloadState state) {
-    this.state = state;
+  public DownloadTaskStatus(AppDownloadState state, int downloadProgress, int fileType) {
+    this.appDownloadState = state;
+    this.downloadProgress = downloadProgress;
+    this.fileType = fileType;
   }
 
-  enum DownloadState {
-    PENDING, PROGRESS, PAUSED, COMPLETED, ERROR, WARN
+  public DownloadTaskStatus(AppDownloadState appDownloadState) {
+    this.appDownloadState = appDownloadState;
+  }
+
+  @Override public int getDownloadProgress() {
+    return downloadProgress;
+  }
+
+  @Override public int getType() {
+    return fileType;
+  }
+
+  @Override public AppDownloadState getDownloadState() {
+    return appDownloadState;
   }
 }
