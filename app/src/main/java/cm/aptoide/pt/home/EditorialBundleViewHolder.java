@@ -38,7 +38,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     editorialSubtitle.setText(
         Translator.translate(actionItem.getMessage(), itemView.getContext(), ""));
     editorialCard.setOnClickListener(view -> {
-      uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.EDITORIAL));
+      uiEventsListener.onNext(new EditorialHomeEvent(actionItem.getCardId(), homeBundle, position,
+          HomeEvent.Type.EDITORIAL));
     });
   }
 }
