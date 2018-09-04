@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -81,7 +80,7 @@ public class EditorialPresenter implements Presenter {
         .map(editorialViewModel -> editorialViewModel);
   }
 
-  @VisibleForTesting public void onCreateSetupToolbar() {
+  private void onCreateSetupToolbar() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
@@ -90,7 +89,7 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  @VisibleForTesting public void handleRetryClick() {
+  private void handleRetryClick() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
