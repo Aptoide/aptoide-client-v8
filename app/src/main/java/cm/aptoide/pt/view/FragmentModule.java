@@ -359,12 +359,13 @@ import rx.schedulers.Schedulers;
       DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
-        arguments.getString("appName", ""), installManager, preferencesManager, downloadFactory,
-        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics);
+        installManager, preferencesManager, downloadFactory, downloadStateParser,
+        notificationAnalytics, installAnalytics, editorialAnalytics);
   }
 
   @FragmentScope @Provides EditorialPresenter providesAppOfTheWeekPresenter(
-      EditorialManager editorialManager, CrashReport crashReport, EditorialAnalytics editorialAnalytics) {
+      EditorialManager editorialManager, CrashReport crashReport,
+      EditorialAnalytics editorialAnalytics) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics);

@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/app_of_the_week_black_gradient"
+        android:background="@drawable/editorial_bottom_up_black_gradient"
         />
 
     <TextView

@@ -17,8 +17,6 @@ public interface EditorialView extends View {
 
   Observable<Void> retryClicked();
 
-  void setToolbarInfo(String title);
-
   Observable<DownloadModel.Action> installButtonClick();
 
   void populateView(EditorialViewModel editorialViewModel);
@@ -40,5 +38,4 @@ public interface EditorialView extends View {
   Observable<Void> isAppViewReadyToDownload();
 
   void readyToDownload();
-
 }

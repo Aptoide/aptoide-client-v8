@@ -40,7 +40,6 @@ public class EditorialPresenter implements Presenter {
   }
 
   @Override public void present() {
-    onCreateSetupToolbar();
     onCreateLoadAppOfTheWeek();
     handleRetryClick();
 
@@ -75,15 +74,6 @@ public class EditorialPresenter implements Presenter {
           }
         })
         .map(editorialViewModel -> editorialViewModel);
-  }
-
-  private void onCreateSetupToolbar() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .doOnNext(created -> view.setToolbarInfo(editorialManager.getEditorialName()))
-        .subscribe(__ -> {
-        }, crashReporter::log);
   }
 
   private void handleRetryClick() {

@@ -24,7 +24,6 @@ public class EditorialManager {
 
   private final EditorialRepository editorialRepository;
   private final String cardId;
-  private final String editorialName;
   private final InstallManager installManager;
   private final PreferencesManager preferencesManager;
   private final DownloadFactory downloadFactory;
@@ -34,14 +33,13 @@ public class EditorialManager {
   private DownloadStateParser downloadStateParser;
 
   public EditorialManager(EditorialRepository editorialRepository, String cardId,
-      String editorialName, InstallManager installManager, PreferencesManager preferencesManager,
+      InstallManager installManager, PreferencesManager preferencesManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics) {
 
     this.editorialRepository = editorialRepository;
     this.cardId = cardId;
-    this.editorialName = editorialName;
     this.installManager = installManager;
     this.preferencesManager = preferencesManager;
     this.downloadFactory = downloadFactory;
@@ -53,10 +51,6 @@ public class EditorialManager {
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
     return editorialRepository.loadEditorialViewModel(cardId);
-  }
-
-  public String getEditorialName() {
-    return editorialName;
   }
 
   public boolean shouldShowRootInstallWarningPopup() {
@@ -125,5 +119,4 @@ public class EditorialManager {
     return Completable.fromAction(
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
   }
-
 }

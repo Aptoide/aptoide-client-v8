@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,9 +27,11 @@ import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
+import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
@@ -79,7 +83,10 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ready = PublishSubject.create();
+    Window window = getActivity().getWindow();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
+    }
     setHasOptionsMenu(true);
   }
 
@@ -87,6 +94,13 @@ public class EditorialFragment extends NavigationTrackFragment
     super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
 
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
+    appCompatActivity.setSupportActionBar(toolbar);
+    ActionBar actionBar = appCompatActivity.getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    }
     appImage = (ImageView) view.findViewById(R.id.app_graphic);
     itemName = (TextView) view.findViewById(R.id.action_item_name);
     appCardView = view.findViewById(R.id.app_cardview);
@@ -101,7 +115,6 @@ public class EditorialFragment extends NavigationTrackFragment
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     adapter = new EditorialItemsAdapter(new ArrayList<>());
@@ -118,12 +131,6 @@ public class EditorialFragment extends NavigationTrackFragment
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
 
     editorialItems.setNestedScrollingEnabled(false);
-    AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
-    appCompatActivity.setSupportActionBar(toolbar);
-    ActionBar actionBar = appCompatActivity.getSupportActionBar();
-    if (actionBar != null) {
-      actionBar.setDisplayHomeAsUpEnabled(true);
-    }
     attachPresenter(presenter);
   }
 
@@ -133,6 +140,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroy() {
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
     super.onDestroy();
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
       errorMessageSubscription.unsubscribe();
@@ -182,6 +190,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void showLoading() {
+    toolbar.setTitle("");
     actionItemCard.setVisibility(View.GONE);
     editorialItemsCard.setVisibility(View.GONE);
     appCardView.setVisibility(View.GONE);
@@ -203,10 +212,6 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public Observable<Void> retryClicked() {
     return Observable.merge(RxView.clicks(genericRetryButton), RxView.clicks(noNetworkRetryButton));
-  }
-
-  @Override public void setToolbarInfo(String title) {
-    toolbar.setTitle(title);
   }
 
   @Override public Observable<DownloadModel.Action> installButtonClick() {
@@ -278,6 +283,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
+    toolbar.setTitle(editorialViewModel.getAppName());
     actionItemCard.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
         .load(editorialViewModel.getBackgroundImage(), appImage);
