@@ -21,9 +21,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.NotBottomNavigationView;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
@@ -100,7 +98,6 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroy() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
     super.onDestroy();
   }
 
