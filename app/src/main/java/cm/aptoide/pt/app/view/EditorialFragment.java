@@ -25,11 +25,9 @@ import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
@@ -135,7 +133,6 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroy() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
     super.onDestroy();
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
       errorMessageSubscription.unsubscribe();
