@@ -75,6 +75,7 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
@@ -1365,5 +1366,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
     return new EditorialService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
         converterFactory, sharedPreferences);
+  }
+
+  @Singleton @Provides EditorialAnalytics providesEditorialAnalytics(
+      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
   }
 }
