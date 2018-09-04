@@ -105,7 +105,7 @@
         layout="@layout/app_install_cardview"
         android:id="@+id/app_cardview"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
         />
   </LinearLayout>
 </RelativeLayout>

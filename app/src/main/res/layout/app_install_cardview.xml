@@ -25,7 +25,7 @@
       android:id="@+id/card_info_install_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:visibility="visible"
+      android:visibility="gone"
       >
 
     <TextView
@@ -66,19 +66,19 @@
   <LinearLayout
       android:id="@+id/appview_transfer_info"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:orientation="horizontal"
-      android:visibility="gone"
+      android:visibility="visible"
       >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="19dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="19dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:orientation="vertical"
         >
@@ -134,11 +134,8 @@
         android:id="@+id/install_controls_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:layout_toEndOf="@+id/appview_download_progress_number"
-        android:layout_toRightOf="@+id/appview_download_progress_number"
         android:layout_weight="4"
         android:gravity="end"
         android:orientation="horizontal"
