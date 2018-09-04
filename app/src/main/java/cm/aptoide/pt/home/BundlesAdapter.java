@@ -19,6 +19,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int STORE = R.layout.store_bundle_item;
   private static final int ADS = R.layout.ads_bundle_item;
   private static final int LOADING = R.layout.progress_item;
+  private static final int EDITORIAL = R.layout.editorial_action_item;
   private static final int INFO = R.layout.info_action_item;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
@@ -56,6 +57,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case INFO:
         return new InfoBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(INFO, parent, false), uiEventsListener);
+      case EDITORIAL:
+        return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(EDITORIAL, parent, false), uiEventsListener);
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(LOADING, parent, false));
@@ -86,6 +90,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return INFO;
       case LOADING:
         return LOADING;
+      case EDITORIAL:
+        return EDITORIAL;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)

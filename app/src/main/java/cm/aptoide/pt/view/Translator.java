@@ -296,6 +296,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
       case "The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.":
         translated = context.getString(R.string.appc_message_homepage_card);
         break;
+      case "Game of the Week":
+        translated = context.getString(R.string.home_game_of_the_week);
+        break;
       default:
         translated = string;
         break;
