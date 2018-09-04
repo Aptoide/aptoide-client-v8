@@ -13,18 +13,25 @@ public class DownloadStatusMapper {
     switch (appDownloadState) {
       case INVALID_STATUS:
         downloadState = Download.INVALID_STATUS;
+        break;
       case COMPLETED:
         downloadState = Download.COMPLETED;
+        break;
       case PENDING:
         downloadState = Download.PENDING;
+        break;
       case PAUSED:
         downloadState = Download.PAUSED;
+        break;
       case WARN:
         downloadState = Download.WARN;
+        break;
       case ERROR:
         downloadState = Download.ERROR;
+        break;
       default:
         throw new IllegalArgumentException("Invalid app download state");
     }
+    return downloadState;
   }
 }
