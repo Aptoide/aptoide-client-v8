@@ -25,7 +25,7 @@
       android:id="@+id/card_info_install_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:visibility="gone"
+      android:visibility="visible"
       >
 
     <TextView
@@ -68,7 +68,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="horizontal"
-      android:visibility="visible"
+      android:visibility="gone"
       >
 
     <LinearLayout
