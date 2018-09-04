@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -14,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -51,17 +49,14 @@ public class EditorialFragment extends NavigationTrackFragment
   private View noNetworkRetryButton;
   private RecyclerView editorialItems;
   private EditorialItemsAdapter adapter;
-  private Window window;
   private ImageView appCardImage;
   private TextView appCardTitle;
   private Button appCardButton;
+  private View editorialItemsCard;
+  private View actionItemCard;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    window = getActivity().getWindow();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      window.setStatusBarColor(getResources().getColor(R.color.tw__transparent));
-    }
     setHasOptionsMenu(true);
   }
 
@@ -75,7 +70,8 @@ public class EditorialFragment extends NavigationTrackFragment
     appCardImage = (ImageView) appCardView.findViewById(R.id.app_icon_imageview);
     appCardTitle = (TextView) appCardView.findViewById(R.id.app_title_textview);
     appCardButton = (Button) appCardView.findViewById(R.id.appview_install_button);
-
+    actionItemCard = view.findViewById(R.id.action_item_card);
+    editorialItemsCard = view.findViewById(R.id.card_layout);
     editorialItems = (RecyclerView) view.findViewById(R.id.editorial_items);
     genericErrorView = view.findViewById(R.id.generic_error);
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
@@ -125,11 +121,13 @@ public class EditorialFragment extends NavigationTrackFragment
     toolbar = null;
     appImage = null;
     itemName = null;
+    actionItemCard = null;
     appCardView = null;
     appCardImage = null;
     appCardTitle = null;
     appCardButton = null;
 
+    editorialItemsCard = null;
     editorialItems = null;
     genericErrorView = null;
     noNetworkErrorView = null;
@@ -148,7 +146,8 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void showLoading() {
-    //Set everything else to false
+    actionItemCard.setVisibility(View.GONE);
+    editorialItemsCard.setVisibility(View.GONE);
     appCardView.setVisibility(View.GONE);
     itemName.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
@@ -157,7 +156,8 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void hideLoading() {
-    //Set everything else to false
+    actionItemCard.setVisibility(View.GONE);
+    editorialItemsCard.setVisibility(View.GONE);
     appCardView.setVisibility(View.GONE);
     itemName.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
@@ -194,6 +194,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
+    actionItemCard.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
         .load(editorialViewModel.getBackgroundImage(), appImage);
     appImage.setVisibility(View.VISIBLE);
@@ -206,6 +207,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void populateCardContent(EditorialViewModel editorialViewModel) {
+    editorialItemsCard.setVisibility(View.VISIBLE);
     adapter.add(editorialViewModel.getContentList());
   }
 }

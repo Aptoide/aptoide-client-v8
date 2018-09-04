@@ -4,7 +4,6 @@ import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private final ImageView appCardImage;
   private final TextView appCardName;
-  private final Button appCardButton;
   private TextView description;
   private View itemText;
   private View title;
@@ -49,7 +47,6 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCard = view.findViewById(R.id.app_cardview);
     appCardImage = (ImageView) appCard.findViewById(R.id.app_icon_imageview);
     appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
-    appCardButton = (Button) appCard.findViewById(R.id.appview_install_button);
     mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);

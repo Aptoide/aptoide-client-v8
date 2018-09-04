@@ -26,15 +26,15 @@
           android:id="@+id/toolbar"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
-          android:layout_marginTop="@dimen/status_bar_height"
           android:clipChildren="false"
           android:gravity="center"
           android:minHeight="112dp"
-          app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+          app:theme="@style/ThemeOverlay.AppCompat.Light"
           >
       </android.support.v7.widget.Toolbar>
 
       <android.support.v7.widget.CardView
+          android:id="@+id/action_item_card"
           android:layout_width="121dp"
           android:layout_height="24dp"
           android:layout_marginTop="210dp"
@@ -62,12 +62,6 @@
           android:layout_marginTop="238dp"
           app:cardUseCompatPadding="true"
           >
-        <!-- <TextView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             />
-          android:text="Plenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty textPlenty text"
-          -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/editorial_items"
             android:layout_width="match_parent"
@@ -78,28 +72,28 @@
         </android.support.v7.widget.RecyclerView>
       </android.support.v7.widget.CardView>
 
-      <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_below="@id/toolbar"
-          >
-        <include
-            layout="@layout/partial_view_incl_no_network"
-            tools:visibility="gone"
-            />
-
-        <include
-            layout="@layout/partial_view_error"
-            tools:visibility="gone"
-            />
-
-        <include
-            layout="@layout/partial_view_progress_bar"
-            tools:visibility="gone"
-            />
-      </FrameLayout>
     </RelativeLayout>
   </android.support.v4.widget.NestedScrollView>
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      >
+    <include
+        layout="@layout/partial_view_incl_no_network"
+        tools:visibility="gone"
+        />
+
+    <include
+        layout="@layout/partial_view_error"
+        tools:visibility="gone"
+        />
+
+    <include
+        layout="@layout/partial_view_progress_bar"
+        tools:visibility="gone"
+        />
+  </FrameLayout>
   <LinearLayout
       android:id="@+id/app_cardview_layout"
       android:layout_width="match_parent"

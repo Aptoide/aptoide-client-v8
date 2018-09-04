@@ -75,7 +75,7 @@ public class HomeNavigator {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
   }
 
-  public void navigateToAppOfTheWeek() {
+  public void navigateToEditorial() {
     Bundle bundle = new Bundle();
     //TODO change for the real values when merging
     bundle.putString("cardId", "72635teguyegr");
