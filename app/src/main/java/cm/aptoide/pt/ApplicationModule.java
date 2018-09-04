@@ -75,6 +75,7 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.view.EditorialService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -1356,5 +1357,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
     return new ImpressionService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
         sharedPreferences, converterFactory);
+  }
+
+  @Singleton @Provides EditorialService providesEditorialService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new EditorialService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        converterFactory, sharedPreferences);
   }
 }
