@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -16,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/main_orange_gradient"
-        android:theme="?attr/toolbarTheme"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         />
 
   </android.support.design.widget.AppBarLayout>
@@ -26,22 +27,22 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
-      android:layout_gravity="top|center_horizontal"
+      android:layout_marginEnd="@dimen/padding_small"
+      android:layout_marginLeft="@dimen/padding_small"
+      android:layout_marginRight="@dimen/padding_small"
+      android:layout_marginStart="@dimen/padding_small"
       android:layout_marginBottom="@dimen/padding_medium_small"
-      android:gravity="top|center_horizontal"
+      android:gravity="center|bottom"
       android:orientation="horizontal"
-      android:paddingBottom="@dimen/padding_medium_small"
       android:weightSum="2"
       >
 
     <Button
         android:id="@+id/logged_in_more_info_button"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginEnd="@dimen/padding_very_small"
-        android:layout_marginLeft="@dimen/padding_small"
-        android:layout_marginRight="@dimen/padding_very_small"
-        android:layout_marginStart="@dimen/padding_small"
+        android:layout_width="8dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="@dimen/padding_smaller"
+        android:layout_marginRight="@dimen/padding_smaller"
         android:layout_weight="1"
         android:text="@string/more_info"
         style="@style/Aptoide.Button.Ghost"
@@ -50,15 +51,14 @@
     <Button
         android:id="@+id/logged_in_continue"
         android:layout_width="0dp"
-        android:layout_height="@dimen/button_height"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_marginLeft="@dimen/padding_very_small"
-        android:layout_marginRight="@dimen/padding_small"
-        android:layout_marginStart="@dimen/padding_very_small"
+        android:layout_marginEnd="@dimen/padding_tiny"
+        android:layout_marginRight="@dimen/padding_tiny"
+        android:layout_marginLeft="@dimen/padding_smaller"
+        android:layout_marginStart="@dimen/padding_smaller"
         android:layout_weight="1"
+        android:gravity="center"
         android:text="@string/continue_option"
-        android:theme="@style/Aptoide.Button"
-        style="@style/Widget.AppCompat.Button"
+        style="@style/Aptoide.Button"
         />
 
   </LinearLayout>
