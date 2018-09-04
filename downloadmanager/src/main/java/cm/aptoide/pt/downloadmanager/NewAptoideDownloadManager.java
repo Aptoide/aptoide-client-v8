@@ -1,6 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.FileToDownload;
 import java.util.HashMap;
 import java.util.List;
 import rx.Completable;
@@ -15,6 +16,8 @@ public class NewAptoideDownloadManager implements DownloadManager {
 
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
+  private int PROGRESS_MAX_VALUE = 100;
+  private DownloadStatusMapper downloadStatusMapper;
 
   public NewAptoideDownloadManager(DownloadsRepository downloadsRepository) {
     this.downloadsRepository = downloadsRepository;
@@ -98,8 +101,29 @@ public class NewAptoideDownloadManager implements DownloadManager {
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
         .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
-            appDownloader -> appDownloader.startAppDownload()));
-    // TODO: 8/27/18 dont forget to add the download to the db
+            appDownloader -> appDownloader.startAppDownload()))
+        .flatMap(appDownloader -> handleDownloadProgress(appDownloader));
+  }
+
+  private Observable<Download> handleDownloadProgress(AppDownloader appDownloader) {
+    return appDownloader.observeDownloadProgress()
+        .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
+            .first()
+            .flatMap(download -> updateDownload(download, appDownloadStatus)))
+        .doOnNext(download -> downloadsRepository.save(download));
+  }
+
+  private Observable<Download> updateDownload(Download download,
+      AppDownloadStatus appDownloadStatus) {
+    download.setOverallDownloadStatus(
+        downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+      fileToDownload.setStatus(
+          downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
+      fileToDownload.setProgress(appDownloadStatus.getOverallProgress());
+    }
+    download.setDownloadSpeed(appDownloadStatus.getDownloadSpeed());
+    return Observable.just(download);
   }
 
   private Observable<AppDownloader> getAppDownloader(String md5) {
