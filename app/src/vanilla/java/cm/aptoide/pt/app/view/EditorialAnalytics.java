@@ -13,9 +13,6 @@ import java.util.HashMap;
 public class EditorialAnalytics {
   private static final String CLICK_INSTALL = "Clicked on install button";
   private static final String APPLICATION_NAME = "Application Name";
-  private static final String APPLICATION_PUBLISHER = "Application Publisher";
-  private static final String ACTION = "Action";
-  private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TYPE = "type";
 
   private final DownloadAnalytics downloadAnalytics;
