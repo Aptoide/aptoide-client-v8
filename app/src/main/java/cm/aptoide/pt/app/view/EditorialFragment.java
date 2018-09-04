@@ -95,6 +95,7 @@ public class EditorialFragment extends NavigationTrackFragment
     getFragmentComponent(savedInstanceState).inject(this);
 
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar.setTitle("");
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
     appCompatActivity.setSupportActionBar(toolbar);
     ActionBar actionBar = appCompatActivity.getSupportActionBar();
