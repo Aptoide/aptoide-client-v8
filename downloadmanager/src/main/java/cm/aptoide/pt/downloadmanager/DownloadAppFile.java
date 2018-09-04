@@ -13,9 +13,11 @@ public class DownloadAppFile {
   private String packageName;
   private String fileName;
   private FileType fileType;
+  private int fileSize;
 
   public DownloadAppFile(String mainDownloadPath, String alternativeDownloadPath,
-      String downloadMd5, int versionCode, String packageName, String fileName, FileType fileType) {
+      String downloadMd5, int versionCode, String packageName, String fileName, FileType fileType,
+      int fileSize) {
     this.mainDownloadPath = mainDownloadPath;
     this.alternativeDownloadPath = alternativeDownloadPath;
     this.downloadMd5 = downloadMd5;
@@ -23,6 +25,7 @@ public class DownloadAppFile {
     this.packageName = packageName;
     this.fileName = fileName;
     this.fileType = fileType;
+    this.fileSize = fileSize;
   }
 
   public String getMainDownloadPath() {
@@ -53,8 +56,12 @@ public class DownloadAppFile {
     return fileName;
   }
 
+  public int getFileSize() {
+    return fileSize;
+  }
+
   public enum FileType {
-    APK(0), OBB(1), GENERIC(2);
+    APK(0), OBB_MAIN(1), OBB_PATCH(2), GENERIC(3);
 
     private final int type;
 

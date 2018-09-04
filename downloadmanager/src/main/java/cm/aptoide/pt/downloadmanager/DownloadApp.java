@@ -9,12 +9,18 @@ import java.util.List;
 public class DownloadApp {
 
   private List<DownloadAppFile> downloadFiles;
+  private String md5;
 
-  public DownloadApp(List<DownloadAppFile> downloadFiles) {
+  public DownloadApp(List<DownloadAppFile> downloadFiles, String md5) {
     this.downloadFiles = downloadFiles;
+    this.md5 = md5;
   }
 
   public List<DownloadAppFile> getDownloadFiles() {
     return downloadFiles;
+  }
+
+  public String getMd5() {
+    return md5;
   }
 }

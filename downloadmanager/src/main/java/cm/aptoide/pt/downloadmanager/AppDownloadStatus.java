@@ -9,18 +9,36 @@ public class AppDownloadStatus {
   private String md5;
   private FileDownloadCallback apk;
   private FileDownloadCallback obbMain;
-  private FileDownloadCallback obbPath;
+  private FileDownloadCallback obbPatch;
   private int downloadSpeed;
   private AppDownloadState appDownloadState;
+
+  public AppDownloadStatus(String md5, FileDownloadCallback apk, FileDownloadCallback obbMain,
+      FileDownloadCallback obbPatch, int downloadSpeed, AppDownloadState appDownloadState) {
+    this.md5 = md5;
+    this.apk = apk;
+    this.obbMain = obbMain;
+    this.obbPatch = obbPatch;
+    this.downloadSpeed = downloadSpeed;
+    this.appDownloadState = appDownloadState;
+  }
 
   public String getMd5() {
     return md5;
   }
 
   public int getOverallProgress() {
-    return apk.getDownloadProgress()
-        + obbMain.getDownloadProgress()
-        + obbPath.getDownloadProgress();
+    int overallProgress = 0;
+    if (apk != null) {
+      overallProgress += apk.getDownloadProgress();
+    }
+    if (obbMain != null) {
+      overallProgress += obbMain.getDownloadProgress();
+    }
+    if (obbPatch != null) {
+      overallProgress += obbPatch.getDownloadProgress();
+    }
+    return overallProgress;
   }
 
   public AppDownloadState getDownloadStatus() {
@@ -29,6 +47,26 @@ public class AppDownloadStatus {
 
   public int getDownloadSpeed() {
     return downloadSpeed;
+  }
+
+  public void setDownloadSpeed(int downloadSpeed) {
+    this.downloadSpeed = downloadSpeed;
+  }
+
+  public void setApk(FileDownloadCallback apk) {
+    this.apk = apk;
+  }
+
+  public void setObbMain(FileDownloadCallback obbMain) {
+    this.obbMain = obbMain;
+  }
+
+  public void setObbPatch(FileDownloadCallback obbPatch) {
+    this.obbPatch = obbPatch;
+  }
+
+  public void setAppDownloadState(AppDownloadState appDownloadState) {
+    this.appDownloadState = appDownloadState;
   }
 
   enum AppDownloadState {

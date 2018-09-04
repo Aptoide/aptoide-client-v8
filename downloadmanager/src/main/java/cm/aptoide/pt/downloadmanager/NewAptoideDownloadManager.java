@@ -19,8 +19,10 @@ public class NewAptoideDownloadManager implements DownloadManager {
   private int PROGRESS_MAX_VALUE = 100;
   private DownloadStatusMapper downloadStatusMapper;
 
-  public NewAptoideDownloadManager(DownloadsRepository downloadsRepository) {
+  public NewAptoideDownloadManager(DownloadsRepository downloadsRepository,
+      DownloadStatusMapper downloadStatusMapper) {
     this.downloadsRepository = downloadsRepository;
+    this.downloadStatusMapper = downloadStatusMapper;
     appDownloaderMap = new HashMap<>();
   }
 

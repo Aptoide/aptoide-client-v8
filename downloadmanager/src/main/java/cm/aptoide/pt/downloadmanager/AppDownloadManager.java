@@ -12,15 +12,20 @@ import rx.subjects.PublishSubject;
 
 public class AppDownloadManager implements AppDownloader {
 
+  private final DownloadApp app;
   private FileDownloaderProvider fileDownloaderProvider;
-  private DownloadApp app;
   private HashMap<String, FileDownloader> fileDownloaderPersistence;
+  private PublishSubject<FileDownloadCallback> fileDownloadSubject;
+  private AppDownloadStatus appDownloadStatus;
 
   public AppDownloadManager(FileDownloaderProvider fileDownloaderProvider, DownloadApp app,
       HashMap<String, FileDownloader> fileDownloaderPersistence) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
+    fileDownloadSubject = PublishSubject.create();
+    appDownloadStatus = new AppDownloadStatus(app.getMd5(), null, null, null, 0,
+        AppDownloadStatus.AppDownloadState.PENDING);
   }
 
   @Override public Completable startAppDownload() {
@@ -52,12 +57,28 @@ public class AppDownloadManager implements AppDownloader {
   }
 
   @Override public Observable<AppDownloadStatus> observeDownloadProgress() {
-    return null;
+    return fileDownloadSubject.flatMapCompletable(fileDownloadCallback -> {
+      setAppDownloadStatus(fileDownloadCallback);
+      return Completable.complete();
+    })
+        .map(__ -> appDownloadStatus);
+  }
+
+  private void setAppDownloadStatus(FileDownloadCallback fileDownloadCallback) {
+    if (fileDownloadCallback.getType() == DownloadAppFile.FileType.APK) {
+      appDownloadStatus.setApk(fileDownloadCallback);
+    } else if (fileDownloadCallback.getType() == DownloadAppFile.FileType.OBB_MAIN) {
+      appDownloadStatus.setObbMain(fileDownloadCallback);
+    } else if (fileDownloadCallback.getType() == DownloadAppFile.FileType.OBB_PATCH) {
+      appDownloadStatus.setObbPatch(fileDownloadCallback);
+    }
+    appDownloadStatus.setAppDownloadState(fileDownloadCallback.getDownloadState());
   }
 
   private Observable<FileDownloadCallback> handleFileDownloadProgress(
       FileDownloader fileDownloader) {
-    return fileDownloader.observeFileDownloadProgress();
+    return fileDownloader.observeFileDownloadProgress()
+        .doOnNext(fileDownloadCallback -> fileDownloadSubject.onNext(fileDownloadCallback));
   }
 
   @VisibleForTesting public Observable<FileDownloader> getFileDownloader(String mainDownloadPath) {
