@@ -537,7 +537,7 @@
   <string name="appc_message_appcoins_section_2b">Buy some Ether in any exchange, like %s or get a friend to send Ether to you! You\'ll need these to pay for little fees (gas)</string>
   <string name="appc_message_appcoins_header_3">Get Rewarded!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
-  <string name="appc_message_appcoins_section_3">This symbol %s means you will get a reward in APPC by downloading and spending a couple of minutes in it. Simple and quick!</string>
+  <string name="appc_message_appcoins_section_3">This symbol %s means you will get a reward in APPC by downloading an app and spending a couple of minutes in it. Simple and quick!</string>
   <string name="appc_message_appcoins_header_4">Spend Your APPC!</string>
   <string name="appc_message_appcoins_header_5">Benefits</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->

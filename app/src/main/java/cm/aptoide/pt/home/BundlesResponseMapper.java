@@ -136,7 +136,7 @@ public class BundlesResponseMapper {
         .get(0)
         .getLayout();
     switch (layout) {
-      case "card_info":
+      case "appc_card_info":
         return HomeBundle.BundleType.INFO_BUNDLE;
       default:
         return HomeBundle.BundleType.UNKNOWN;
