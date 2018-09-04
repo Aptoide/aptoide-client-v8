@@ -69,12 +69,12 @@ public class EditorialPresenter implements Presenter {
         .doOnSuccess(editorialViewModel -> {
           if (!editorialViewModel.isLoading()) {
             view.hideLoading();
-            view.readyToDownload();
           }
           if (editorialViewModel.hasError()) {
             view.showError(editorialViewModel.getError());
           } else {
             view.populateView(editorialViewModel);
+            view.readyToDownload();
           }
         })
         .map(editorialViewModel -> editorialViewModel);
