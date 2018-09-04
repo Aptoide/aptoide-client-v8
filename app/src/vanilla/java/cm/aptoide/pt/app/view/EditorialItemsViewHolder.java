@@ -122,7 +122,6 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       if (editorialMedia.hasDescription()) {
         description.setText(editorialMedia.getDescription());
         description.setVisibility(View.VISIBLE);
-        //TODO add description here in the future
       }
     }
   }

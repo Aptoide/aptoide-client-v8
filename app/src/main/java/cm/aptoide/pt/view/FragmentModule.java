@@ -45,7 +45,6 @@ import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialManager;
-import cm.aptoide.pt.app.view.EditorialNavigator;
 import cm.aptoide.pt.app.view.EditorialPresenter;
 import cm.aptoide.pt.app.view.EditorialRepository;
 import cm.aptoide.pt.app.view.EditorialService;
@@ -365,10 +364,9 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides EditorialPresenter providesAppOfTheWeekPresenter(
-      EditorialManager editorialManager, CrashReport crashReport,
-      EditorialNavigator editorialNavigator, EditorialAnalytics editorialAnalytics) {
+      EditorialManager editorialManager, CrashReport crashReport, EditorialAnalytics editorialAnalytics) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
-        AndroidSchedulers.mainThread(), crashReport, editorialNavigator, new PermissionManager(),
+        AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics);
   }
 }

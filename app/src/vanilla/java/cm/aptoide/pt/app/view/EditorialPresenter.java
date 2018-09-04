@@ -25,18 +25,15 @@ public class EditorialPresenter implements Presenter {
   private final EditorialManager editorialManager;
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
-  private final EditorialNavigator appOftheWeekNavigator;
   private final EditorialAnalytics editorialAnalytics;
 
   public EditorialPresenter(EditorialView view, EditorialManager editorialManager,
-      Scheduler viewScheduler, CrashReport crashReporter, EditorialNavigator appOftheWeekNavigator,
-      PermissionManager permissionManager, PermissionService permissionService,
-      EditorialAnalytics editorialAnalytics) {
+      Scheduler viewScheduler, CrashReport crashReporter, PermissionManager permissionManager,
+      PermissionService permissionService, EditorialAnalytics editorialAnalytics) {
     this.view = view;
     this.editorialManager = editorialManager;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
-    this.appOftheWeekNavigator = appOftheWeekNavigator;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.editorialAnalytics = editorialAnalytics;

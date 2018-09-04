@@ -100,7 +100,7 @@ public class EditorialService {
       String path = file.getPath();
       String pathAlt = file.getPathAlt();
       String md5 = file.getMd5sum();
-      String backgroundImage = card.getBackground_image();
+      String backgroundImage = card.getBackgroundImage();
       return Observable.just(
           new EditorialViewModel(editorialContentList, cardType, appId, appName, packageName, size,
               icon, graphic, uptype, obb, storeId, storeName, storeAvatar, storeTheme, vername,

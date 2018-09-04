@@ -30,7 +30,7 @@ public class EditorialCard extends BaseV7Response {
     private List<Content> content;
     private String type;
     private App app;
-    private String background_image;
+    private String backgroundImage;
 
     public Data() {
 
@@ -60,12 +60,12 @@ public class EditorialCard extends BaseV7Response {
       this.app = app;
     }
 
-    public String getBackground_image() {
-      return background_image;
+    public String getBackgroundImage() {
+      return backgroundImage;
     }
 
-    public void setBackground_image(String background_image) {
-      this.background_image = background_image;
+    public void setBackgroundImage(String background_image) {
+      this.backgroundImage = background_image;
     }
 
     //3rd level

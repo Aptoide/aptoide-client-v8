@@ -77,9 +77,7 @@ public class HomeNavigator {
 
   public void navigateToEditorial(String cardId) {
     Bundle bundle = new Bundle();
-    //TODO change for the real values when merging
-    bundle.putString("cardId", "72635teguyegr");
-    bundle.putString("appName", "App Title");
+    bundle.putString("cardId", cardId);
     EditorialFragment fragment = new EditorialFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);

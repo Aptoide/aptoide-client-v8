@@ -64,32 +64,6 @@ class EditorialViewModel {
     this.error = null;
   }
 
-  public EditorialViewModel() {
-    contentList = Collections.emptyList();
-    cardType = null;
-    this.loading = false;
-    error = null;
-    this.appId = -1;
-    this.appName = null;
-    this.packageName = null;
-    this.size = -1;
-    this.icon = null;
-    this.graphic = null;
-    this.uptype = null;
-    this.obb = null;
-    this.storeId = -1;
-    this.storeName = null;
-    this.storeAvatar = null;
-    this.storeTheme = null;
-    this.vername = null;
-    this.vercode = -1;
-    this.fileSize = -1;
-    this.path = null;
-    this.backgroundImage = null;
-    this.pathAlt = null;
-    this.md5 = null;
-  }
-
   public EditorialViewModel(boolean loading) {
     contentList = Collections.emptyList();
     cardType = null;
