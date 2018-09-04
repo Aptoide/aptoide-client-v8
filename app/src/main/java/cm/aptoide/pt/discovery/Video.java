@@ -8,10 +8,11 @@ public class Video {
   private String imageUrl;
 
 
-  public Video(String videoUrl, String videoDescription, double score) {
+  public Video(String videoUrl, String videoDescription, double score, String imageUrl) {
     this.videoUrl = videoUrl;
     this.videoDescription = videoDescription;
     this.score = score;
+    this.imageUrl = imageUrl;
   }
 
   public String getVideoUrl() {
@@ -24,5 +25,9 @@ public class Video {
 
   public double getScore() {
     return score;
+  }
+
+  public String getImageUrl(){
+    return imageUrl;
   }
 }
