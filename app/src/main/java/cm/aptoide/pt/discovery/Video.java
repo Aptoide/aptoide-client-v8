@@ -4,14 +4,14 @@ public class Video {
 
   private String videoUrl;
   private String videoDescription;
-  private double score = 0.0;
+  private double rating = 0.0;
   private String imageUrl;
 
 
   public Video(String videoUrl, String videoDescription, double score, String imageUrl) {
     this.videoUrl = videoUrl;
     this.videoDescription = videoDescription;
-    this.score = score;
+    this.rating = score;
     this.imageUrl = imageUrl;
   }
 
@@ -23,8 +23,8 @@ public class Video {
     return videoDescription;
   }
 
-  public double getScore() {
-    return score;
+  public double getRating() {
+    return rating;
   }
 
   public String getImageUrl(){

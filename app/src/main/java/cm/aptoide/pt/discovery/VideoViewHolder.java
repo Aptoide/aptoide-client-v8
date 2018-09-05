@@ -69,7 +69,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setAppScore(Video video){
-    appScore.setText(Double.toString(video.getScore()));
+    appScore.setText(Double.toString(video.getRating()));
   }
 
   public void setAppIcon(Video video){
@@ -86,7 +86,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setAppInfoBackgroundColour(Video video){
-    // TODO: 04/09/2018  
+
   }
 
   public View getAppBackground() {
