@@ -3,6 +3,8 @@ package cm.aptoide.pt.app.view;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +30,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -80,10 +83,14 @@ public class EditorialFragment extends NavigationTrackFragment
   private DownloadModel.Action action;
   private Subscription errorMessageSubscription;
   private PublishSubject<Void> ready;
+  private CollapsingToolbarLayout collapsingToolbarLayout;
+  private AppBarLayout appBarLayout;
+  private TextView toolbarTitle;
+  private Window window;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Window window = getActivity().getWindow();
+    window = getActivity().getWindow();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
     }
@@ -102,6 +109,7 @@ public class EditorialFragment extends NavigationTrackFragment
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
+    appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar_layout);
     appImage = (ImageView) view.findViewById(R.id.app_graphic);
     itemName = (TextView) view.findViewById(R.id.action_item_name);
     appCardView = view.findViewById(R.id.app_cardview);
@@ -130,6 +138,50 @@ public class EditorialFragment extends NavigationTrackFragment
     cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+    toolbarTitle = ((TextView) view.findViewById(R.id.toolbar_title));
+    collapsingToolbarLayout =
+        ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
+    collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.tw__transparent));
+    collapsingToolbarLayout.setCollapsedTitleTextColor(
+        getResources().getColor(R.color.tw__transparent));
+
+    appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+
+      private void setExpandedState() {
+        toolbar.setBackgroundDrawable(
+            getResources().getDrawable(R.drawable.editorial_up_bottom_black_gradient));
+        collapsingToolbarLayout.setCollapsedTitleTextColor(
+            getResources().getColor(R.color.tw__transparent));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
+        }
+        toolbarTitle.setVisibility(View.VISIBLE);
+      }
+
+      private void setCollapsedState() {
+        toolbar.setBackgroundColor(getResources().getColor(R.color.tw__transparent));
+        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.black));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          window.setStatusBarColor(getResources().getColor(R.color.white));
+        }
+        toolbarTitle.setVisibility(View.GONE);
+      }
+
+      @Override public void onStateChanged(AppBarLayout appBarLayout, State state) {
+        switch (state) {
+          case EXPANDED:
+            setExpandedState();
+            break;
+          default:
+          case IDLE:
+          case COLLAPSED:
+            setExpandedState();
+            break;
+          case COLLAPSED_COMPLETELY:
+            setCollapsedState();
+        }
+      }
+    });
 
     editorialItems.setNestedScrollingEnabled(false);
     attachPresenter(presenter);
@@ -179,6 +231,8 @@ public class EditorialFragment extends NavigationTrackFragment
     progressBar = null;
     genericRetryButton = null;
     noNetworkRetryButton = null;
+    collapsingToolbarLayout = null;
+    appBarLayout = null;
     adapter = null;
 
     super.onDestroyView();
@@ -191,7 +245,6 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void showLoading() {
-    toolbar.setTitle("");
     actionItemCard.setVisibility(View.GONE);
     editorialItemsCard.setVisibility(View.GONE);
     appCardView.setVisibility(View.GONE);
@@ -284,7 +337,10 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
-    toolbar.setTitle(editorialViewModel.getAppName());
+    String title = editorialViewModel.getContent(0)
+        .getTitle();
+    toolbar.setTitle(title);
+    toolbarTitle.setText(title);
     actionItemCard.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
         .load(editorialViewModel.getBackgroundImage(), appImage);
