@@ -7,19 +7,19 @@ import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
  * Created by filipegoncalves on 8/29/18.
  */
 
-public class DownloadTaskStatus implements FileDownloadCallback {
+public class FileDownloadTaskStatus implements FileDownloadCallback {
 
   private AppDownloadState appDownloadState;
   private int downloadProgress;
   private int fileType;
 
-  public DownloadTaskStatus(AppDownloadState state, int downloadProgress, int fileType) {
+  public FileDownloadTaskStatus(AppDownloadState state, int downloadProgress, int fileType) {
     this.appDownloadState = state;
     this.downloadProgress = downloadProgress;
     this.fileType = fileType;
   }
 
-  public DownloadTaskStatus(AppDownloadState appDownloadState) {
+  public FileDownloadTaskStatus(AppDownloadState appDownloadState) {
     this.appDownloadState = appDownloadState;
   }
 

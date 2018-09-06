@@ -24,34 +24,34 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
 
   @Override
   protected void pending(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
-    downloadStatus.onNext(new DownloadTaskStatus(AppDownloadStatus.AppDownloadState.PENDING,
+    downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PENDING,
         calculateProgress(soFarBytes, totalBytes), fileType));
   }
 
   @Override
   protected void progress(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
-    downloadStatus.onNext(new DownloadTaskStatus(AppDownloadStatus.AppDownloadState.PROGRESS,
+    downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PROGRESS,
         calculateProgress(soFarBytes, totalBytes), fileType));
   }
 
   @Override
   protected void paused(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
-    downloadStatus.onNext(new DownloadTaskStatus(AppDownloadStatus.AppDownloadState.PAUSED,
+    downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PAUSED,
         calculateProgress(soFarBytes, totalBytes), fileType));
   }
 
   @Override protected void completed(BaseDownloadTask baseDownloadTask) {
-    downloadStatus.onNext(new DownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
+    downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
         NewAptoideDownloadManager.PROGRESS_MAX_VALUE, fileType));
   }
 
   @Override protected void error(BaseDownloadTask baseDownloadTask, Throwable error) {
     downloadStatus.onNext(
-        new DownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, fileType));
+        new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, fileType));
   }
 
   @Override protected void warn(BaseDownloadTask baseDownloadTask) {
-    downloadStatus.onNext(new DownloadTaskStatus(AppDownloadStatus.AppDownloadState.WARN));
+    downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.WARN));
   }
 
   public Observable<FileDownloadCallback> onDownloadStateChanged() {
