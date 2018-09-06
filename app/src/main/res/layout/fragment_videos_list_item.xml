@@ -42,6 +42,7 @@
           android:layout_gravity="center|right"
           android:layout_marginLeft="70dp"
           android:layout_marginTop="15dp"
+          android:textColor="@color/white"
           />
 
       <ImageView
@@ -64,15 +65,17 @@
           android:layout_gravity="right"
           android:layout_marginTop="36dp"
           android:layout_marginLeft="83dp"
+          android:textColor="@color/white"
           />
 
     <Button
         android:id="@+id/install_button"
         android:layout_width="83dp"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:text="INSTALL"
         android:layout_gravity="right|center"
         android:layout_marginRight="16dp"
+        android:background="@drawable/rounded_corners_white"
         />
 
   </android.support.design.widget.CoordinatorLayout>
