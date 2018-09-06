@@ -361,11 +361,10 @@ public class AppViewManager {
             if (app.hasBilling()) {
               cachedAppCoinsViewModel = new AppCoinsViewModel(false, true, false);
             } else if (app.hasAdvertising()) {
-              appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
-                  .map(hasAdvertising -> {
-                    cachedAppCoinsViewModel = new AppCoinsViewModel(false, false, hasAdvertising);
-                    return Completable.complete();
-                  });
+              return appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
+                  .map(hasAdvertising -> cachedAppCoinsViewModel =
+                      new AppCoinsViewModel(false, false, hasAdvertising))
+                  .toCompletable();
             } else {
               cachedAppCoinsViewModel = new AppCoinsViewModel(false, false, false);
             }
