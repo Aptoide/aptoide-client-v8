@@ -196,6 +196,10 @@ class EditorialViewModel {
     return backgroundImage;
   }
 
+  public boolean hasBackgroundImage() {
+    return backgroundImage != null && !backgroundImage.equals("");
+  }
+
   public boolean isLoading() {
     return loading;
   }

@@ -170,7 +170,6 @@ public class EditorialFragment extends NavigationTrackFragment
       @Override public void onStateChanged(AppBarLayout appBarLayout, State state) {
         switch (state) {
           case EXPANDED:
-            setExpandedState();
             break;
           default:
           case IDLE:
@@ -342,8 +341,12 @@ public class EditorialFragment extends NavigationTrackFragment
     toolbar.setTitle(title);
     toolbarTitle.setText(title);
     actionItemCard.setVisibility(View.VISIBLE);
-    ImageLoader.with(getContext())
-        .load(editorialViewModel.getBackgroundImage(), appImage);
+    if (editorialViewModel.hasBackgroundImage()) {
+      ImageLoader.with(getContext())
+          .load(editorialViewModel.getBackgroundImage(), appImage);
+    } else {
+      appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
+    }
     appImage.setVisibility(View.VISIBLE);
     itemName.setText(editorialViewModel.getCardType());
     itemName.setVisibility(View.VISIBLE);
