@@ -13,8 +13,9 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
   private int downloadProgress;
   private int fileType;
 
-  public FileDownloadTaskStatus(AppDownloadState state, int downloadProgress, int fileType) {
-    this.appDownloadState = state;
+  public FileDownloadTaskStatus(AppDownloadState appDownloadState, int downloadProgress,
+      int fileType) {
+    this.appDownloadState = appDownloadState;
     this.downloadProgress = downloadProgress;
     this.fileType = fileType;
   }

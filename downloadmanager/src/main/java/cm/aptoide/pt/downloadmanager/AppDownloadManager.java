@@ -65,11 +65,11 @@ public class AppDownloadManager implements AppDownloader {
   }
 
   private void setAppDownloadStatus(FileDownloadCallback fileDownloadCallback) {
-    if (fileDownloadCallback.getType() == DownloadAppFile.FileType.APK.getType()) {
+    if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.APK.getType()) {
       appDownloadStatus.setApk(fileDownloadCallback);
-    } else if (fileDownloadCallback.getType() == DownloadAppFile.FileType.OBB_MAIN.getType()) {
+    } else if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.OBB_MAIN.getType()) {
       appDownloadStatus.setObbMain(fileDownloadCallback);
-    } else if (fileDownloadCallback.getType() == DownloadAppFile.FileType.OBB_PATCH.getType()) {
+    } else if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.OBB_PATCH.getType()) {
       appDownloadStatus.setObbPatch(fileDownloadCallback);
     }
     appDownloadStatus.setAppDownloadState(fileDownloadCallback.getDownloadState());
