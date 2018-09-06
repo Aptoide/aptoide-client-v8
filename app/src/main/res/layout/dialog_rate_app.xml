@@ -3,151 +3,158 @@
   ~ Copyright (c) 2016.
   ~ Modified on 29/08/2016.
   -->
-
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:padding="24dp"
+    android:scrollbars="none"
     >
-
-  <TextView
-      android:id="@+id/title"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:gravity="center"
-      android:textColor="@color/grey_900"
-      android:textSize="@dimen/text_size_large"
-      tools:text="Rate Boom Beach"
-      />
-
-  <include
-      layout="@layout/separator_horizontal"
-      />
-
-  <RatingBar
-      android:id="@+id/rating_bar"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:layout_marginTop="8dp"
-      android:isIndicator="false"
-      android:nextFocusForward="@+id/input_title"
-      android:numStars="5"
-      android:rating="3.0"
-      android:stepSize="1.0"
-      style="@style/RatingBarReviewDialog"
-      />
-
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:text="@string/tap_a_star"
-      android:textColor="@color/grey_fog_dark"
-      android:textSize="@dimen/text_size_medium_small"
-      />
-
-  <android.support.design.widget.TextInputLayout
-      android:id="@+id/input_layout_review"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="18dp"
-      >
-
-    <EditText
-        android:id="@+id/input_review"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="top|left|start"
-        android:hint="@string/review_optional"
-        android:inputType="textMultiLine"
-        android:maxLines="6"
-        android:nextFocusForward="@id/input_review"
-        android:textAlignment="textStart"
-        android:textColorHint="@color/black"
-        android:textSize="@dimen/text_size_medium"
-        />
-
-  </android.support.design.widget.TextInputLayout>
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="12dp"
-      android:layout_marginTop="12dp"
+      android:background="@color/white"
       android:orientation="vertical"
+      android:padding="24dp"
       >
 
     <TextView
-        android:id="@+id/highlighted_reviews_explanation_1"
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textColor="@color/grey_900"
+        android:textSize="@dimen/text_size_large"
+        tools:text="Rate Boom Beach"
         />
+
+    <include
+        layout="@layout/separator_horizontal"
+        />
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:isIndicator="false"
+        android:nextFocusForward="@+id/input_title"
+        android:numStars="5"
+        android:rating="0.0"
+        android:stepSize="1.0"
+        style="@style/RatingBarReviewDialog"
+        />
+
     <TextView
-        android:id="@+id/highlighted_reviews_explanation_2"
+        android:id="@+id/tap_to_rate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8sp"
-        android:layout_marginStart="8sp"
-        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="@string/tap_a_star"
+        android:textColor="@color/grey_fog_dark"
+        android:textSize="@dimen/text_size_medium_small"
         />
-    <TextView
-        android:id="@+id/highlighted_reviews_explanation_3"
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_review"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        />
-    <TextView
-        android:id="@+id/highlighted_reviews_explanation_4"
+        android:layout_marginTop="18dp"
+        >
+
+      <EditText
+          android:id="@+id/input_review"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:gravity="top|left|start"
+          android:hint="@string/review_optional"
+          android:inputType="textMultiLine"
+          android:maxLines="6"
+          android:nextFocusForward="@id/input_review"
+          android:textAlignment="textStart"
+          android:textColorHint="@color/black"
+          android:textSize="@dimen/text_size_medium"
+          />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        />
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:id="@+id/highlighted_reviews_explanation_1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+      <TextView
+          android:id="@+id/highlighted_reviews_explanation_2"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="8sp"
+          android:layout_marginStart="8sp"
+          android:layout_marginTop="4dp"
+          />
+      <TextView
+          android:id="@+id/highlighted_reviews_explanation_3"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="8dp"
+          android:layout_marginStart="8dp"
+          />
+      <TextView
+          android:id="@+id/highlighted_reviews_explanation_4"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="8dp"
+          android:layout_marginStart="8dp"
+          />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+      <Button
+          android:id="@+id/rate_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:background="@null"
+          android:padding="6dp"
+          android:text="@string/rate"
+          android:textAllCaps="true"
+          android:textColor="@color/default_orange_gradient_end"
+          android:textSize="@dimen/text_size_medium"
+          />
+
+      <Button
+          android:id="@+id/cancel_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="24dp"
+          android:layout_marginRight="24dp"
+          android:layout_toLeftOf="@id/rate_button"
+          android:layout_toStartOf="@id/rate_button"
+          android:background="@null"
+          android:padding="6dp"
+          android:text="@string/cancel"
+          android:textAllCaps="true"
+          android:textColor="@color/silver_dark"
+          android:textSize="@dimen/text_size_medium"
+          />
+    </RelativeLayout>
 
   </LinearLayout>
-
-  <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      >
-
-    <Button
-        android:id="@+id/rate_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@null"
-        android:padding="6dp"
-        android:text="@string/rate"
-        android:textAllCaps="true"
-        android:textColor="@color/default_orange_gradient_end"
-        android:textSize="@dimen/text_size_medium"
-        />
-
-    <Button
-        android:id="@+id/cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_toLeftOf="@id/rate_button"
-        android:layout_toStartOf="@id/rate_button"
-        android:background="@null"
-        android:padding="6dp"
-        android:text="@string/cancel"
-        android:textAllCaps="true"
-        android:textColor="@color/silver_dark"
-        android:textSize="@dimen/text_size_medium"
-        />
-  </RelativeLayout>
-
-</LinearLayout>
+</ScrollView>

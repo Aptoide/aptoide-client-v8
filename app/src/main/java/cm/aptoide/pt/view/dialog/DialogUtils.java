@@ -131,6 +131,10 @@ import rx.subscriptions.Subscriptions;
         subscriber.onCompleted();
       });
 
+      reviewRatingBar.setOnRatingBarChangeListener(
+          (ratingBar, v, b) -> ((TextView) view.findViewById(R.id.tap_to_rate)).setTextColor(
+              activity.getResources()
+                  .getColor(R.color.grey_fog_dark)));
       rateBtn.setOnClickListener(v -> {
 
         AptoideUtils.SystemU.hideKeyboard(activity);
@@ -139,7 +143,12 @@ import rx.subscriptions.Subscriptions;
             .getText()
             .toString();
         final int reviewRating = Math.round(reviewRatingBar.getRating());
-
+        if (reviewRating == 0) {
+          ((TextView) view.findViewById(R.id.tap_to_rate)).setTextColor(activity.getResources()
+              .getColor(R.color.red));
+          ShowMessage.asSnack(activity, "Please choose a rating");
+          return;
+        }
         dialog.dismiss();
 
         // WS success listener
