@@ -1,5 +1,7 @@
 package cm.aptoide.pt.app.view;
 
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -87,6 +89,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private AppBarLayout appBarLayout;
   private TextView toolbarTitle;
   private Window window;
+  private Drawable backArrow;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -109,6 +112,7 @@ public class EditorialFragment extends NavigationTrackFragment
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
+    backArrow = toolbar.getNavigationIcon();
     appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar_layout);
     appImage = (ImageView) view.findViewById(R.id.app_graphic);
     itemName = (TextView) view.findViewById(R.id.action_item_name);
@@ -150,21 +154,25 @@ public class EditorialFragment extends NavigationTrackFragment
       private void setExpandedState() {
         toolbar.setBackgroundDrawable(
             getResources().getDrawable(R.drawable.editorial_up_bottom_black_gradient));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(
-            getResources().getColor(R.color.tw__transparent));
+        toolbarTitle.setTextColor(getResources().getColor(R.color.tw__solid_white));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
         }
-        toolbarTitle.setVisibility(View.VISIBLE);
+        if (backArrow != null) {
+          backArrow.setColorFilter(getResources().getColor(R.color.tw__solid_white),
+              PorterDuff.Mode.SRC_IN);
+        }
       }
 
       private void setCollapsedState() {
         toolbar.setBackgroundColor(getResources().getColor(R.color.tw__transparent));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.black));
+        toolbarTitle.setTextColor(getResources().getColor(R.color.black));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           window.setStatusBarColor(getResources().getColor(R.color.white));
         }
-        toolbarTitle.setVisibility(View.GONE);
+        if (backArrow != null) {
+          backArrow.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+        }
       }
 
       @Override public void onStateChanged(AppBarLayout appBarLayout, State state) {
@@ -198,6 +206,7 @@ public class EditorialFragment extends NavigationTrackFragment
       errorMessageSubscription.unsubscribe();
     }
     ready = null;
+    window = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -233,6 +242,7 @@ public class EditorialFragment extends NavigationTrackFragment
     collapsingToolbarLayout = null;
     appBarLayout = null;
     adapter = null;
+    backArrow = null;
 
     super.onDestroyView();
   }
