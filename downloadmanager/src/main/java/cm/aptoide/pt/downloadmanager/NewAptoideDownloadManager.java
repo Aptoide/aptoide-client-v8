@@ -14,7 +14,6 @@ import rx.schedulers.Schedulers;
 
 public class NewAptoideDownloadManager implements DownloadManager {
 
-  public static final int PROGRESS_MAX_VALUE = 100;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
@@ -124,7 +123,6 @@ public class NewAptoideDownloadManager implements DownloadManager {
           downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
       fileToDownload.setProgress(appDownloadStatus.getOverallProgress());
     }
-    download.setDownloadSpeed(appDownloadStatus.getDownloadSpeed());
     return Observable.just(download);
   }
 

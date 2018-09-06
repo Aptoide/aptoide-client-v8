@@ -10,16 +10,14 @@ public class AppDownloadStatus {
   private FileDownloadCallback apk;
   private FileDownloadCallback obbMain;
   private FileDownloadCallback obbPatch;
-  private int downloadSpeed;
   private AppDownloadState appDownloadState;
 
   public AppDownloadStatus(String md5, FileDownloadCallback apk, FileDownloadCallback obbMain,
-      FileDownloadCallback obbPatch, int downloadSpeed, AppDownloadState appDownloadState) {
+      FileDownloadCallback obbPatch, AppDownloadState appDownloadState) {
     this.md5 = md5;
     this.apk = apk;
     this.obbMain = obbMain;
     this.obbPatch = obbPatch;
-    this.downloadSpeed = downloadSpeed;
     this.appDownloadState = appDownloadState;
   }
 
@@ -43,14 +41,6 @@ public class AppDownloadStatus {
 
   public AppDownloadState getDownloadStatus() {
     return appDownloadState;
-  }
-
-  public int getDownloadSpeed() {
-    return downloadSpeed;
-  }
-
-  public void setDownloadSpeed(int downloadSpeed) {
-    this.downloadSpeed = downloadSpeed;
   }
 
   public void setApk(FileDownloadCallback apk) {
