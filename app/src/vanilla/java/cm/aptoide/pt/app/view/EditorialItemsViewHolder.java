@@ -19,6 +19,8 @@ import java.util.ArrayList;
 class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private final ImageView appCardImage;
   private final TextView appCardName;
+  private final TextView appCardRating;
+  private final View appCardRatingLayout;
   private TextView description;
   private View itemText;
   private View title;
@@ -47,14 +49,16 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCard = view.findViewById(R.id.app_cardview);
     appCardImage = (ImageView) appCard.findViewById(R.id.app_icon_imageview);
     appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
+    appCardRating = (TextView) appCard.findViewById(R.id.rating_label);
+    appCardRatingLayout = appCard.findViewById(R.id.rating_layout);
     mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     mediaList.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
           RecyclerView.State state) {
-        int margin = AptoideUtils.ScreenU.getPixelsForDip(8, view.getResources());
-        outRect.set(margin, margin, 0, margin);
+        int margin = AptoideUtils.ScreenU.getPixelsForDip(6, view.getResources());
+        outRect.set(0, margin, margin, margin);
       }
     });
     mediaList.setLayoutManager(layoutManager);
@@ -74,6 +78,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       appCardImage.setVisibility(View.VISIBLE);
       appCardName.setText(editorialItem.getAppName());
       appCardName.setVisibility(View.VISIBLE);
+      appCardRating.setText(editorialItem.getRating());
+      appCardRatingLayout.setVisibility(View.VISIBLE);
       appCard.setVisibility(View.VISIBLE);
     }
   }

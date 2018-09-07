@@ -77,10 +77,13 @@ public class EditorialService {
       long appId = app.getId();
       String appName = app.getName();
       String icon = app.getIcon();
-
+      String rating = Float.toString(app.getStats()
+          .getRating()
+          .getAvg());
       List<Content> contentList = card.getContent();
       List<EditorialContent> editorialContentList = new ArrayList<>();
-      editorialContentList = mapEditorialContent(contentList, editorialContentList, appName, icon);
+      editorialContentList =
+          mapEditorialContent(contentList, editorialContentList, appName, icon, rating);
 
       String packageName = app.getPackageName();
       long size = app.getSize();
@@ -108,7 +111,7 @@ public class EditorialService {
   }
 
   private List<EditorialContent> mapEditorialContent(List<Content> contentList,
-      List<EditorialContent> editorialContentList, String appName, String icon) {
+      List<EditorialContent> editorialContentList, String appName, String icon, String rating) {
     if (contentList != null) {
       for (Content content : contentList) {
         List<Media> mediaList = content.getMedia();
@@ -122,7 +125,7 @@ public class EditorialService {
         }
         EditorialContent editorialContent =
             new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-                content.getType(), appName, icon);
+                content.getType(), appName, icon, rating);
         editorialContentList.add(editorialContent);
       }
     }

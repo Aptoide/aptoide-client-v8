@@ -13,9 +13,10 @@ class EditorialContent {
   private final String type;
   private final String appName;
   private final String icon;
+  private final String rating;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      String appName, String icon) {
+      String appName, String icon, String rating) {
 
     this.title = title;
     this.media = media;
@@ -23,6 +24,7 @@ class EditorialContent {
     this.type = type;
     this.appName = appName;
     this.icon = icon;
+    this.rating = rating;
   }
 
   public String getMessage() {
@@ -67,5 +69,9 @@ class EditorialContent {
 
   public String getIcon() {
     return icon;
+  }
+
+  public String getRating() {
+    return rating;
   }
 }
