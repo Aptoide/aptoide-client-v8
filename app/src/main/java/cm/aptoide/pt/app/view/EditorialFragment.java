@@ -39,6 +39,7 @@ import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import rx.Observable;
@@ -90,9 +91,11 @@ public class EditorialFragment extends NavigationTrackFragment
   private TextView toolbarTitle;
   private Window window;
   private Drawable backArrow;
+  private DecimalFormat oneDecimalFormatter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
@@ -130,7 +133,7 @@ public class EditorialFragment extends NavigationTrackFragment
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    adapter = new EditorialItemsAdapter(new ArrayList<>());
+    adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter);
     editorialItems.setLayoutManager(linearLayoutManager);
     editorialItems.setAdapter(adapter);
 
@@ -208,6 +211,7 @@ public class EditorialFragment extends NavigationTrackFragment
     }
     ready = null;
     window = null;
+    oneDecimalFormatter = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

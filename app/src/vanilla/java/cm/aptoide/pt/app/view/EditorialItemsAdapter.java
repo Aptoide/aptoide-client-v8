@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -12,15 +13,18 @@ import java.util.List;
 
 class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolder> {
 
+  private final DecimalFormat oneDecimalFormat;
   private List<EditorialContent> editorialItemList;
 
-  public EditorialItemsAdapter(List<EditorialContent> editorialItemList) {
+  public EditorialItemsAdapter(List<EditorialContent> editorialItemList,
+      DecimalFormat oneDecimalFormat) {
     this.editorialItemList = editorialItemList;
+    this.oneDecimalFormat = oneDecimalFormat;
   }
 
   @Override public EditorialItemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new EditorialItemsViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.editorial_item_layout, parent, false));
+        .inflate(R.layout.editorial_item_layout, parent, false), oneDecimalFormat);
   }
 
   @Override

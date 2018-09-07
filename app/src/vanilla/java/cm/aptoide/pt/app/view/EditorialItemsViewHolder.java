@@ -22,6 +22,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private final TextView appCardName;
   private final TextView appCardRating;
   private final View appCardRatingLayout;
+  private final DecimalFormat oneDecimalFormat;
   private TextView description;
   private View itemText;
   private View title;
@@ -35,7 +36,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private View appCard;
   private MediaBundleAdapter mediaBundleAdapter;
 
-  public EditorialItemsViewHolder(View view) {
+  public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat) {
     super(view);
     itemText = view.findViewById(R.id.editorial_item_text);
     title = view.findViewById(R.id.editorial_item_title);
@@ -48,6 +49,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     description = (TextView) view.findViewById(R.id.editorial_image_description);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCard = view.findViewById(R.id.app_cardview);
+    this.oneDecimalFormat = oneDecimalFormat;
     appCardImage = (ImageView) appCard.findViewById(R.id.app_icon_imageview);
     appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
     appCardRating = (TextView) appCard.findViewById(R.id.rating_label);
@@ -82,7 +84,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       if (editorialItem.getRating() == 0) {
         appCardRating.setText(R.string.appcardview_title_no_stars);
       } else {
-        appCardRating.setText(new DecimalFormat("0.0").format(editorialItem.getRating()));
+        appCardRating.setText(oneDecimalFormat.format(editorialItem.getRating()));
       }
       appCardRatingLayout.setVisibility(View.VISIBLE);
       appCard.setVisibility(View.VISIBLE);
