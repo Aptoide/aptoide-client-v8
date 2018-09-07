@@ -346,6 +346,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
+    //TODO should use the title that will be added to the response
     String title = editorialViewModel.getContent(0)
         .getTitle();
     toolbar.setTitle(title);
@@ -367,8 +368,10 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void populateCardContent(EditorialViewModel editorialViewModel) {
-    editorialItemsCard.setVisibility(View.VISIBLE);
-    adapter.add(editorialViewModel.getContentList());
+    if (editorialViewModel.hasContent()) {
+      editorialItemsCard.setVisibility(View.VISIBLE);
+      adapter.add(editorialViewModel.getContentList());
+    }
   }
 
   private void setButtonText(DownloadModel model) {
