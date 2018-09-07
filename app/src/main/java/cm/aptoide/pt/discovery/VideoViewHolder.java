@@ -107,7 +107,7 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
           public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
 
             if (resource != null) {
-              Palette.Swatch p = Palette.from(resource).generate().getDarkVibrantSwatch();
+              Palette.Swatch p = Palette.from(resource).generate().getVibrantSwatch();
               appInfoBackground.setBackgroundColor(p.getRgb());
               installButton.setTextColor(p.getRgb());
 
