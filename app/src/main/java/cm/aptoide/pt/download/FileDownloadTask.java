@@ -2,7 +2,6 @@ package cm.aptoide.pt.download;
 
 import cm.aptoide.pt.downloadmanager.AppDownloadStatus;
 import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
-import cm.aptoide.pt.downloadmanager.NewAptoideDownloadManager;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import rx.Observable;
@@ -42,7 +41,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
 
   @Override protected void completed(BaseDownloadTask baseDownloadTask) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
-        NewAptoideDownloadManager.PROGRESS_MAX_VALUE, fileType));
+        FileDownloadManager.PROGRESS_MAX_VALUE, fileType));
   }
 
   @Override protected void error(BaseDownloadTask baseDownloadTask, Throwable error) {
@@ -60,6 +59,6 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
 
   private int calculateProgress(long soFarBytes, long totalBytes) {
     return (int) Math.floor(
-        (float) soFarBytes / totalBytes * NewAptoideDownloadManager.PROGRESS_MAX_VALUE);
+        (float) soFarBytes / totalBytes * FileDownloadManager.PROGRESS_MAX_VALUE);
   }
 }

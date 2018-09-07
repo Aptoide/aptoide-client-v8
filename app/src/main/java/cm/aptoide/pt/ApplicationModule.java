@@ -109,7 +109,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BundleDataSource;
@@ -299,7 +299,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.APPLICATION_ID;
   }
 
-  @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
+  @Singleton @Provides OldAptoideDownloadManager provideAptoideDownloadManager(
       DownloadAccessor downloadAccessor, @Named("user-agent") Interceptor userAgentInterceptor,
       CacheHelper cacheHelper, DownloadAnalytics downloadAnalytics,
       AuthenticationPersistence authenticationPersistence, @Named("cachePath") String cachePath,
@@ -320,7 +320,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
-    return new AptoideDownloadManager(downloadAccessor, cacheHelper,
+    return new OldAptoideDownloadManager(downloadAccessor, cacheHelper,
         new FileUtils(downloadAnalytics::moveFile), downloadAnalytics, FileDownloader.getImpl(),
         cachePath, apkPath, obbPath);
   }
@@ -337,7 +337,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
-      AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
+      OldAptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
       InstalledRepository installedRepository, Database database) {
     return new DownloadInstallationProvider(downloadManager, downloadAccessor, installedRepository,
         new MinimalAdMapper(), AccessorFactory.getAccessorFor(database, StoredMinimalAd.class));

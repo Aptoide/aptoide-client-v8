@@ -54,7 +54,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -144,7 +144,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   private static boolean autoUpdateWasCalled = false;
   @Inject Database database;
-  @Inject AptoideDownloadManager downloadManager;
+  @Inject OldAptoideDownloadManager downloadManager;
   @Inject CacheHelper cacheHelper;
   @Inject AptoideAccountManager accountManager;
   @Inject Preferences preferences;
@@ -487,7 +487,7 @@ public abstract class AptoideApplication extends Application {
     return httpClientCache;
   }
 
-  public AptoideDownloadManager getDownloadManager() {
+  public OldAptoideDownloadManager getDownloadManager() {
     return downloadManager;
   }
 

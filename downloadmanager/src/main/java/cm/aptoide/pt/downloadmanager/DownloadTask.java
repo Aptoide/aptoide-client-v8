@@ -41,7 +41,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private final String md5;
   private final DownloadAccessor downloadAccessor;
   private final FileUtils fileUtils;
-  private final AptoideDownloadManager downloadManager;
+  private final OldAptoideDownloadManager downloadManager;
   /**
    * this boolean is used to change between serial and parallel download (in this downloadTask) the
    * default value is
@@ -56,7 +56,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private FileDownloader fileDownloader;
 
   DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils,
-      Analytics analytics, AptoideDownloadManager downloadManager, String apkPath, String obbPath,
+      Analytics analytics, OldAptoideDownloadManager downloadManager, String apkPath, String obbPath,
       String genericPath, FileDownloader fileDownloader) {
     this.analytics = analytics;
     this.download = download;
@@ -77,9 +77,9 @@ class DownloadTask extends FileDownloadLargeFileListener {
             || download.getOverallDownloadStatus() == Download.COMPLETED)
         .map(aLong -> updateProgress())
         .filter(updatedDownload -> {
-          if (updatedDownload.getOverallProgress() <= AptoideDownloadManager.PROGRESS_MAX_VALUE
+          if (updatedDownload.getOverallProgress() <= OldAptoideDownloadManager.PROGRESS_MAX_VALUE
               && download.getOverallDownloadStatus() == Download.PROGRESS) {
-            if (updatedDownload.getOverallProgress() == AptoideDownloadManager.PROGRESS_MAX_VALUE
+            if (updatedDownload.getOverallProgress() == OldAptoideDownloadManager.PROGRESS_MAX_VALUE
                 && download.getOverallDownloadStatus() != Download.COMPLETED) {
               setDownloadStatus(Download.COMPLETED, download);
               analytics.onDownloadComplete(download);
@@ -99,7 +99,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
    * @return new current progress
    */
   @NonNull private Download updateProgress() {
-    if (download.getOverallProgress() >= AptoideDownloadManager.PROGRESS_MAX_VALUE
+    if (download.getOverallProgress() >= OldAptoideDownloadManager.PROGRESS_MAX_VALUE
         || download.getOverallDownloadStatus() != Download.PROGRESS) {
       return download;
     }
@@ -165,7 +165,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
         //sometimes to totalBytes = 0, i believe that's when a 301(Moved Permanently) http error occurs
         if (totalBytes > 0) {
           fileToDownload.setProgress((int) Math.floor(
-              (float) soFarBytes / totalBytes * AptoideDownloadManager.PROGRESS_MAX_VALUE));
+              (float) soFarBytes / totalBytes * OldAptoideDownloadManager.PROGRESS_MAX_VALUE));
         } else {
           fileToDownload.setProgress(0);
         }
@@ -201,7 +201,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
           file.setStatus(Download.COMPLETED);
           for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
             if (fileToDownload.getStatus() != Download.COMPLETED) {
-              file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+              file.setProgress(OldAptoideDownloadManager.PROGRESS_MAX_VALUE);
               return Observable.just(null);
             }
           }
@@ -209,7 +209,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
             if (fileMoved) {
               Logger.getInstance()
                   .d(TAG, "Download md5 match");
-              file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+              file.setProgress(OldAptoideDownloadManager.PROGRESS_MAX_VALUE);
             } else {
               Logger.getInstance()
                   .e(TAG, "Download md5 is not correct");
@@ -326,7 +326,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
               .replace(".temp", ""));
         }
         fileToDownload.setDownloadId(baseDownloadTask.setListener(this)
-            .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
+            .setCallbackProgressTimes(OldAptoideDownloadManager.PROGRESS_MAX_VALUE)
             .setPath(genericPath + fileToDownload.getFileName())
             .asInQueueTask()
             .enqueue());

@@ -22,7 +22,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import java.util.Locale;
@@ -49,7 +49,7 @@ public class InstallService extends BaseService {
 
   private static final int NOTIFICATION_ID = 8;
 
-  @Inject AptoideDownloadManager downloadManager;
+  @Inject OldAptoideDownloadManager downloadManager;
   @Inject @Named("default") Installer defaultInstaller;
   @Inject InstalledRepository installedRepository;
   @Inject DownloadAnalytics downloadAnalytics;
@@ -230,7 +230,7 @@ public class InstallService extends BaseService {
 
   @NonNull private NotificationCompat.Action getPauseAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
+    appIdExtras.putString(OldAptoideDownloadManager.FILE_MD5_EXTRA, md5);
     return getAction(cm.aptoide.pt.downloadmanager.R.drawable.media_pause,
         getString(cm.aptoide.pt.downloadmanager.R.string.pause_download), requestCode,
         ACTION_STOP_INSTALL, md5);
@@ -238,7 +238,7 @@ public class InstallService extends BaseService {
 
   @NonNull private NotificationCompat.Action getDownloadManagerAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
+    appIdExtras.putString(OldAptoideDownloadManager.FILE_MD5_EXTRA, md5);
     return getAction(R.drawable.ic_manager, getString(R.string.open_apps_manager), requestCode,
         ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
@@ -255,7 +255,7 @@ public class InstallService extends BaseService {
             .append(" - ")
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
         .setContentIntent(contentIntent)
-        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, installation.getProgress(),
+        .setProgress(OldAptoideDownloadManager.PROGRESS_MAX_VALUE, installation.getProgress(),
             installation.isIndeterminate())
         .addAction(pauseAction)
         .addAction(openDownloadManager);

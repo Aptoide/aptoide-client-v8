@@ -28,7 +28,7 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
     return downloadProgress;
   }
 
-  @Override public int getType() {
+  @Override public int getFileType() {
     return fileType;
   }
 

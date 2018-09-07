@@ -1,7 +1,7 @@
 package cm.aptoide.pt.file;
 
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.utils.FileUtils;
 import rx.Observable;
 
@@ -14,11 +14,11 @@ public class FileManager {
   private final CacheHelper cacheHelper;
   private final FileUtils fileUtils;
   private final String[] cacheFolders;
-  private final AptoideDownloadManager downloadManager;
+  private final OldAptoideDownloadManager downloadManager;
   private final L2Cache httpClientCache;
 
   public FileManager(CacheHelper cacheHelper, FileUtils fileUtils, String[] cacheFolders,
-      AptoideDownloadManager downloadManager, L2Cache httpClientCache) {
+      OldAptoideDownloadManager downloadManager, L2Cache httpClientCache) {
     this.cacheHelper = cacheHelper;
     this.fileUtils = fileUtils;
     this.cacheFolders = cacheFolders;

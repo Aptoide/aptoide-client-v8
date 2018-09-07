@@ -17,12 +17,12 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 5/13/16.
  */
-public class AptoideDownloadManager {
+public class OldAptoideDownloadManager {
 
   public static final String FILE_MD5_EXTRA = "APTOIDE_APPID_EXTRA";
 
   static public final int PROGRESS_MAX_VALUE = 100;
-  private static final String TAG = AptoideDownloadManager.class.getSimpleName();
+  private static final String TAG = OldAptoideDownloadManager.class.getSimpleName();
 
   private final String downloadsStoragePath;
   private final String apkPath;
@@ -35,7 +35,7 @@ public class AptoideDownloadManager {
   private Analytics analytics;
   private FileDownloader fileDownloader;
 
-  public AptoideDownloadManager(DownloadAccessor downloadAccessor, CacheManager cacheHelper,
+  public OldAptoideDownloadManager(DownloadAccessor downloadAccessor, CacheManager cacheHelper,
       FileUtils fileUtils, Analytics analytics, FileDownloader fileDownloader,
       String downloadsStoragePath, String apkPath, String obbPath) {
     this.fileDownloader = fileDownloader;
