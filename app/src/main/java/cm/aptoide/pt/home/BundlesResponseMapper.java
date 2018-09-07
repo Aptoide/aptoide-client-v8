@@ -147,7 +147,8 @@ public class BundlesResponseMapper {
   }
 
   private Event getEvent(GetStoreWidgets.WSWidget widget) {
-    return widget.getActions() != null && widget.getActions()
+    return widget.getActions() != null
+        && widget.getActions()
         .size() > 0 ? widget.getActions()
         .get(0)
         .getEvent() : null;
