@@ -276,7 +276,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
     appcInfoView =
         new AppViewAppcInfoViewHolder((LinearLayout) view.findViewById(R.id.iap_appc_label),
-            appcRewardView, appcRewardValue);
+            appcRewardView, appcRewardValue,
+            (TextView) appcRewardView.findViewById(R.id.appc_billing_text_secondary));
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
     similarDownloadApps = (RecyclerView) similarDownloadView.findViewById(R.id.similar_list);
     latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
