@@ -186,6 +186,7 @@ public class EditorialFragment extends NavigationTrackFragment
             break;
           case COLLAPSED:
             setCollapsedState();
+            break;
         }
       }
     });
