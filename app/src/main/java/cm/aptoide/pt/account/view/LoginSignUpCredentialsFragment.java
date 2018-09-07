@@ -2,10 +2,13 @@ package cm.aptoide.pt.account.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.CompoundButtonCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -68,6 +71,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private View rootView;
   private CheckBox termsConditionCheckBox;
+  private Drawable checkboxDrawable;
 
   private String marketName;
   private PublishSubject<Void> privacyPolicySubject;
@@ -227,6 +231,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
         Snackbar.LENGTH_SHORT)
         .show();
+    Drawable replacementDrawable = checkboxDrawable.getConstantState()
+        .newDrawable()
+        .mutate();
+    replacementDrawable.setColorFilter(getResources().getColor(R.color.red),
+        PorterDuff.Mode.SRC_ATOP);
+    termsConditionCheckBox.setButtonDrawable(replacementDrawable);
+    termsConditionCheckBox.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> termsConditionCheckBox.setButtonDrawable(checkboxDrawable));
   }
 
   @Override public void showFacebookLogin() {
@@ -348,6 +360,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
     termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
+    checkboxDrawable = CompoundButtonCompat.getButtonDrawable(termsConditionCheckBox);
+
     if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
       buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
     } else {
