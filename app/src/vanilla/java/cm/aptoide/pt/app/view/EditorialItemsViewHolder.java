@@ -10,6 +10,7 @@ import android.widget.VideoView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -78,7 +79,11 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       appCardImage.setVisibility(View.VISIBLE);
       appCardName.setText(editorialItem.getAppName());
       appCardName.setVisibility(View.VISIBLE);
-      appCardRating.setText(editorialItem.getRating());
+      if (editorialItem.getRating() == 0) {
+        appCardRating.setText(R.string.appcardview_title_no_stars);
+      } else {
+        appCardRating.setText(new DecimalFormat("0.0").format(editorialItem.getRating()));
+      }
       appCardRatingLayout.setVisibility(View.VISIBLE);
       appCard.setVisibility(View.VISIBLE);
     }

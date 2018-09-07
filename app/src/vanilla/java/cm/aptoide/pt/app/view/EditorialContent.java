@@ -13,10 +13,10 @@ class EditorialContent {
   private final String type;
   private final String appName;
   private final String icon;
-  private final String rating;
+  private final float rating;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      String appName, String icon, String rating) {
+      String appName, String icon, float rating) {
 
     this.title = title;
     this.media = media;
@@ -71,7 +71,7 @@ class EditorialContent {
     return icon;
   }
 
-  public String getRating() {
+  public float getRating() {
     return rating;
   }
 }

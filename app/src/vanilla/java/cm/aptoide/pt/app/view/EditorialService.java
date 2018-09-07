@@ -77,9 +77,9 @@ public class EditorialService {
       long appId = app.getId();
       String appName = app.getName();
       String icon = app.getIcon();
-      String rating = Float.toString(app.getStats()
+      float rating = app.getStats()
           .getRating()
-          .getAvg());
+          .getAvg();
       List<Content> contentList = card.getContent();
       List<EditorialContent> editorialContentList = new ArrayList<>();
       editorialContentList =
@@ -111,7 +111,7 @@ public class EditorialService {
   }
 
   private List<EditorialContent> mapEditorialContent(List<Content> contentList,
-      List<EditorialContent> editorialContentList, String appName, String icon, String rating) {
+      List<EditorialContent> editorialContentList, String appName, String icon, float rating) {
     if (contentList != null) {
       for (Content content : contentList) {
         List<Media> mediaList = content.getMedia();
