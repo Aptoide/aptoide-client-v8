@@ -85,26 +85,23 @@ public class EditorialService {
       String packageName = app.getPackageName();
       long size = app.getSize();
       String graphic = app.getGraphic();
-      String uptype = app.getUptype();
       Store store = app.getStore();
       Obb obb = app.getObb();
       long storeId = store.getId();
       String storeName = store.getName();
-      String storeAvatar = store.getAvatar();
       String storeTheme = store.getAppearance()
           .getTheme();
       File file = app.getFile();
       String vername = file.getVername();
       int vercode = file.getVercode();
-      long fileSize = file.getFilesize();
       String path = file.getPath();
       String pathAlt = file.getPathAlt();
       String md5 = file.getMd5sum();
       String backgroundImage = card.getBackgroundImage();
       return Observable.just(
           new EditorialViewModel(editorialContentList, cardType, appId, appName, packageName, size,
-              icon, graphic, uptype, obb, storeId, storeName, storeAvatar, storeTheme, vername,
-              vercode, fileSize, path, backgroundImage, pathAlt, md5));
+              icon, graphic, obb, storeId, storeName, storeTheme, vername, vercode, path,
+              backgroundImage, pathAlt, md5));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }

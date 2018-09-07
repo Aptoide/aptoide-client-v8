@@ -22,13 +22,15 @@ class MediaViewHolder extends RecyclerView.ViewHolder {
     video = (VideoView) view.findViewById(R.id.video_item);
   }
 
-  public void setVisibility(EditorialMedia editorialMedia, int position) {
-    if (editorialMedia.isVideo()) {
-      video.setVisibility(View.VISIBLE);
-    } else {
-      ImageLoader.with(itemView.getContext())
-          .load(editorialMedia.getUrl(), image);
-      image.setVisibility(View.VISIBLE);
+  public void setVisibility(EditorialMedia editorialMedia) {
+    if (editorialMedia.hasUrl()) {
+      if (editorialMedia.isVideo()) {
+        video.setVisibility(View.VISIBLE);
+      } else {
+        ImageLoader.with(itemView.getContext())
+            .load(editorialMedia.getUrl(), image);
+        image.setVisibility(View.VISIBLE);
+      }
     }
   }
 }

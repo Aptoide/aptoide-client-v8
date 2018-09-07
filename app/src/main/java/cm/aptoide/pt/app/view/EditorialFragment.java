@@ -181,10 +181,10 @@ public class EditorialFragment extends NavigationTrackFragment
             break;
           default:
           case IDLE:
-          case COLLAPSED:
+          case MOVING:
             setExpandedState();
             break;
-          case COLLAPSED_COMPLETELY:
+          case COLLAPSED:
             setCollapsedState();
         }
       }

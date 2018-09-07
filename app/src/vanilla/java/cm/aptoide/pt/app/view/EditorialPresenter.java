@@ -98,11 +98,9 @@ public class EditorialPresenter implements Presenter {
                 case INSTALL:
                 case UPDATE:
                   completable = editorialManager.loadEditorialViewModel()
-                      .flatMapCompletable(
-                          viewModel -> downloadApp(action, viewModel.getPackageName(),
-                              viewModel.getAppId()).observeOn(viewScheduler)
-                              .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
-                                  viewModel.getPackageName(), action.toString())));
+                      .flatMapCompletable(viewModel -> downloadApp(action).observeOn(viewScheduler)
+                          .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
+                              viewModel.getPackageName(), action.toString())));
                   break;
                 case OPEN:
                   completable = editorialManager.loadEditorialViewModel()
@@ -170,7 +168,7 @@ public class EditorialPresenter implements Presenter {
         });
   }
 
-  private Completable downloadApp(DownloadModel.Action action, String packageName, long appId) {
+  private Completable downloadApp(DownloadModel.Action action) {
     return Observable.defer(() -> {
       if (editorialManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()

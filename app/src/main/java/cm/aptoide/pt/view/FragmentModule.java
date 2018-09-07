@@ -353,7 +353,7 @@ import rx.schedulers.Schedulers;
     return new EditorialRepository(editorialService);
   }
 
-  @FragmentScope @Provides EditorialManager providesAppOfTheWeekManager(
+  @FragmentScope @Provides EditorialManager providesEditorialManager(
       EditorialRepository editorialRepository, InstallManager installManager,
       PreferencesManager preferencesManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
@@ -363,7 +363,7 @@ import rx.schedulers.Schedulers;
         notificationAnalytics, installAnalytics, editorialAnalytics);
   }
 
-  @FragmentScope @Provides EditorialPresenter providesAppOfTheWeekPresenter(
+  @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
       EditorialAnalytics editorialAnalytics) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,

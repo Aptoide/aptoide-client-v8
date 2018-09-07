@@ -23,7 +23,7 @@ class MediaBundleAdapter extends RecyclerView.Adapter<MediaViewHolder> {
   }
 
   @Override public void onBindViewHolder(MediaViewHolder mediaViewHolder, int position) {
-    mediaViewHolder.setVisibility(media.get(position), position);
+    mediaViewHolder.setVisibility(media.get(position));
   }
 
   @Override public int getItemCount() {

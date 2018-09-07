@@ -21,15 +21,15 @@ public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffset
       }
       mCurrentState = State.EXPANDED;
     } else if (Math.abs(i) - appBarLayout.getTotalScrollRange() == 0) {
-      if (mCurrentState != State.COLLAPSED_COMPLETELY) {
-        onStateChanged(appBarLayout, State.COLLAPSED_COMPLETELY);
-      }
-      mCurrentState = State.COLLAPSED_COMPLETELY;
-    } else if (Math.abs(i) >= appBarLayout.getTotalScrollRange()) {
       if (mCurrentState != State.COLLAPSED) {
         onStateChanged(appBarLayout, State.COLLAPSED);
       }
       mCurrentState = State.COLLAPSED;
+    } else if (Math.abs(i) >= appBarLayout.getTotalScrollRange()) {
+      if (mCurrentState != State.MOVING) {
+        onStateChanged(appBarLayout, State.MOVING);
+      }
+      mCurrentState = State.MOVING;
     } else {
       if (mCurrentState != State.IDLE) {
         onStateChanged(appBarLayout, State.IDLE);
@@ -41,6 +41,6 @@ public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffset
   public abstract void onStateChanged(AppBarLayout appBarLayout, State state);
 
   public enum State {
-    EXPANDED, COLLAPSED, IDLE, COLLAPSED_COMPLETELY
+    EXPANDED, MOVING, IDLE, COLLAPSED
   }
 }

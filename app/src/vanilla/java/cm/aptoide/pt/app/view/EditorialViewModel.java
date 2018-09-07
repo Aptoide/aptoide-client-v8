@@ -18,15 +18,12 @@ class EditorialViewModel {
   private final long size;
   private final String icon;
   private final String graphic;
-  private final String uptype;
   private final Obb obb;
   private final long storeId;
   private final String storeName;
-  private final String storeAvatar;
   private final String storeTheme;
   private final String vername;
   private final int vercode;
-  private final long fileSize;
   private final String path;
   private final String backgroundImage;
   private final String pathAlt;
@@ -35,10 +32,9 @@ class EditorialViewModel {
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
-      String appName, String packageName, long size, String icon, String graphic, String uptype,
-      Obb obb, long storeId, String storeName, String storeAvatar, String storeTheme,
-      String vername, int vercode, long fileSize, String path, String backgroundImage,
-      String pathAlt, String md5) {
+      String appName, String packageName, long size, String icon, String graphic, Obb obb,
+      long storeId, String storeName, String storeTheme, String vername, int vercode, String path,
+      String backgroundImage, String pathAlt, String md5) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
@@ -47,15 +43,12 @@ class EditorialViewModel {
     this.size = size;
     this.icon = icon;
     this.graphic = graphic;
-    this.uptype = uptype;
     this.obb = obb;
     this.storeId = storeId;
     this.storeName = storeName;
-    this.storeAvatar = storeAvatar;
     this.storeTheme = storeTheme;
     this.vername = vername;
     this.vercode = vercode;
-    this.fileSize = fileSize;
     this.path = path;
     this.backgroundImage = backgroundImage;
     this.pathAlt = pathAlt;
@@ -75,15 +68,12 @@ class EditorialViewModel {
     this.size = -1;
     this.icon = null;
     this.graphic = null;
-    this.uptype = null;
     this.obb = null;
     this.storeId = -1;
     this.storeName = null;
-    this.storeAvatar = null;
     this.storeTheme = null;
     this.vername = null;
     this.vercode = -1;
-    this.fileSize = -1;
     this.path = null;
     this.backgroundImage = null;
     this.pathAlt = null;
@@ -101,15 +91,12 @@ class EditorialViewModel {
     this.size = -1;
     this.icon = null;
     this.graphic = null;
-    this.uptype = null;
     this.obb = null;
     this.storeId = -1;
     this.storeName = null;
-    this.storeAvatar = null;
     this.storeTheme = null;
     this.vername = null;
     this.vercode = -1;
-    this.fileSize = -1;
     this.path = null;
     this.backgroundImage = null;
     this.pathAlt = null;
@@ -156,20 +143,12 @@ class EditorialViewModel {
     return graphic;
   }
 
-  public String getUptype() {
-    return uptype;
-  }
-
   public long getStoreId() {
     return storeId;
   }
 
   public String getStoreName() {
     return storeName;
-  }
-
-  public String getStoreAvatar() {
-    return storeAvatar;
   }
 
   public String getStoreTheme() {
@@ -182,10 +161,6 @@ class EditorialViewModel {
 
   public int getVercode() {
     return vercode;
-  }
-
-  public long getFileSize() {
-    return fileSize;
   }
 
   public String getPath() {
