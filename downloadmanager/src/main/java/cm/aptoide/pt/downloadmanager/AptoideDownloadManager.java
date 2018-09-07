@@ -12,13 +12,13 @@ import rx.schedulers.Schedulers;
  * Created by filipegoncalves on 7/27/18.
  */
 
-public class NewAptoideDownloadManager implements DownloadManager {
+public class AptoideDownloadManager implements DownloadManager {
 
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
 
-  public NewAptoideDownloadManager(DownloadsRepository downloadsRepository,
+  public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
