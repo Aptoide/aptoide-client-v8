@@ -6,13 +6,21 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -60,6 +68,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private ImageView userAvatar;
   private BottomNavigationActivity bottomNavigationActivity;
 
+  private PublishSubject<Void> termsAndConditionsAccept;
+  private PublishSubject<Void> termsAndConditionsLogOut;
+  private PublishSubject<Void> termsAndConditionsSubject;
+  private PublishSubject<Void> privacyPolicySubject;
+
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
     if (activity instanceof BottomNavigationActivity) {
@@ -70,6 +83,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void onDestroy() {
     uiEventsListener = null;
     oneDecimalFormatter = null;
+    termsAndConditionsAccept = null;
+    termsAndConditionsLogOut = null;
+    termsAndConditionsSubject = null;
+    privacyPolicySubject = null;
     adClickedEvents = null;
     userAvatar = null;
     super.onDestroy();
@@ -81,6 +98,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
+    termsAndConditionsAccept = PublishSubject.create();
+    termsAndConditionsLogOut = PublishSubject.create();
+    termsAndConditionsSubject = PublishSubject.create();
+    privacyPolicySubject = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
@@ -295,6 +316,22 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .equals(HomeEvent.Type.DISMISS_BUNDLE));
   }
 
+  @Override public Observable<Void> termsAndConditionsContinueClicked() {
+    return termsAndConditionsAccept;
+  }
+
+  @Override public Observable<Void> termsAndConditionsLogOutClicked() {
+    return termsAndConditionsLogOut;
+  }
+
+  @Override public Observable<Void> privacyPolicyClicked() {
+    return privacyPolicySubject;
+  }
+
+  @Override public Observable<Void> termsAndConditionsClicked() {
+    return termsAndConditionsSubject;
+  }
+
   @Override public void hideBundle(int bundlePosition) {
     adapter.remove(bundlePosition);
   }
@@ -308,8 +345,85 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
   }
 
+  @Override public void showTermsAndConditionsDialog() {
+    LayoutInflater inflater = LayoutInflater.from(getActivity());
+    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    View dialogView = inflater.inflate(R.layout.dialog_logged_in_accept_tos, null);
+    alertDialog.setView(dialogView);
+    Button continueButton = (Button) dialogView.findViewById(R.id.accept_continue);
+
+    setPrivacyPolicyLinks(dialogView);
+    alertDialog.setCancelable(false);
+    alertDialog.setCanceledOnTouchOutside(false);
+
+    ((CheckBox) dialogView.findViewById(R.id.logged_in_terms_checkbox)).setOnCheckedChangeListener(
+        (compoundButton, isChecked) -> {
+          if (isChecked) {
+            continueButton.setEnabled(true);
+            continueButton.setClickable(true);
+            continueButton.setTextColor(
+                getResources().getColor(R.color.default_orange_gradient_end));
+          } else {
+            continueButton.setEnabled(false);
+            continueButton.setClickable(false);
+            continueButton.setTextColor(getResources().getColor(R.color.grey_medium));
+          }
+        });
+
+    continueButton.setOnClickListener(__ -> {
+      termsAndConditionsAccept.onNext(null);
+      alertDialog.dismiss();
+    });
+
+    dialogView.findViewById(R.id.log_out)
+        .setOnClickListener(__ -> {
+          termsAndConditionsLogOut.onNext(null);
+          alertDialog.dismiss();
+        });
+    alertDialog.show();
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;
+  }
+
+  private void setPrivacyPolicyLinks(View dialogView) {
+
+    ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (termsAndConditionsSubject != null) {
+          termsAndConditionsSubject.onNext(null);
+        }
+      }
+    };
+
+    ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (privacyPolicySubject != null) {
+          privacyPolicySubject.onNext(null);
+        }
+      }
+    };
+
+    String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
+    String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
+    String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
+    String privacyAndTerms =
+        String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
+
+    SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
+    privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder),
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder)
+            + termsAndConditionsPlaceHolder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    privacyAndTermsSpan.setSpan(privacyPolicyClickListener,
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder),
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    TextView termsAndConditions = (TextView) dialogView.findViewById(R.id.privacy_and_tos);
+    termsAndConditions.setText(privacyAndTermsSpan);
+    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
   }
 }

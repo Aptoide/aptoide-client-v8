@@ -72,6 +72,16 @@ public class HomePresenter implements Presenter {
     handleDismissClick();
 
     handleActionBundlesImpression();
+
+    handleLoggedInAcceptTermsAndConditions();
+
+    handleTermsAndConditionsContinueClicked();
+
+    handleTermsAndConditionsLogOutClicked();
+
+    handleClickOnTermsAndConditions();
+
+    handleClickOnPrivacyPolicy();
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -381,6 +391,73 @@ public class HomePresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleLoggedInAcceptTermsAndConditions() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> accountManager.accountStatus())
+        .filter(Account::isLoggedIn)
+        .filter(
+            account -> !(account.acceptedPrivacyPolicy() && account.acceptedTermsAndConditions()))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showTermsAndConditionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleTermsAndConditionsContinueClicked() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsContinueClicked())
+        .observeOn(viewScheduler)
+        .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleTermsAndConditionsLogOutClicked() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsLogOutClicked())
+        .observeOn(viewScheduler)
+        .flatMapCompletable(__ -> accountManager.logout())
+        .doOnCompleted(view::setDefaultUserImage)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleClickOnTermsAndConditions() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsClicked())
+        .doOnNext(__ -> homeNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void handleClickOnPrivacyPolicy() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.privacyPolicyClicked())
+        .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
         });
   }
 

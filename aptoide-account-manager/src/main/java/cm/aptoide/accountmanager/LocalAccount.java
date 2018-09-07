@@ -63,4 +63,16 @@ public class LocalAccount implements Account {
   @Override public boolean isPublicStore() {
     return store != null && store.hasPublicAccess();
   }
+
+  @Override public boolean acceptedTermsAndConditions() {
+    return false;
+  }
+
+  @Override public boolean acceptedPrivacyPolicy() {
+    return false;
+  }
+
+  @Override public String getBirthDate() {
+    return "";
+  }
 }

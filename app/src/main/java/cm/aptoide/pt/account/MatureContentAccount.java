@@ -70,4 +70,16 @@ public class MatureContentAccount implements Account {
   @Override public boolean isPublicStore() {
     return wrappedAccount.isPublicStore();
   }
+
+  @Override public boolean acceptedTermsAndConditions() {
+    return wrappedAccount.acceptedTermsAndConditions();
+  }
+
+  @Override public boolean acceptedPrivacyPolicy() {
+    return wrappedAccount.acceptedPrivacyPolicy();
+  }
+
+  @Override public String getBirthDate() {
+    return wrappedAccount.getBirthDate();
+  }
 }

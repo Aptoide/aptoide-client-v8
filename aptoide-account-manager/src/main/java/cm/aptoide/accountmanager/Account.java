@@ -92,6 +92,27 @@ public interface Account {
   boolean isPublicStore();
 
   /**
+   * True if the account has accept the terms and conditions
+   *
+   * @return True if the account has accepted the terms and conditions. False otherwise.
+   */
+  boolean acceptedTermsAndConditions();
+
+  /**
+   * True if the account has accept the privacy policy
+   *
+   * @return True if the account has accepted the privacy policy. False otherwise.
+   */
+  boolean acceptedPrivacyPolicy();
+
+  /**
+   * Returns the date of birth associated with the account
+   *
+   * @return Date of birth associated with the account.
+   */
+  String getBirthDate();
+
+  /**
    * Account information access level.
    */
   enum Access {
