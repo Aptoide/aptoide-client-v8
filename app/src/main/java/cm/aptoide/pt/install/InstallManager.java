@@ -13,8 +13,8 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
-import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationState;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
 
 public class InstallManager {
 
-  private final OldAptoideDownloadManager aptoideDownloadManager;
+  private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
   private final DownloadRepository downloadRepository;
   private final InstalledRepository installedRepository;
@@ -44,7 +44,7 @@ public class InstallManager {
   private final Context context;
   private RootAvailabilityManager rootAvailabilityManager;
 
-  public InstallManager(Context context, OldAptoideDownloadManager aptoideDownloadManager,
+  public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadRepository downloadRepository, InstalledRepository installedRepository) {
@@ -104,7 +104,7 @@ public class InstallManager {
   }
 
   public Observable<List<Install>> getInstallations() {
-    return Observable.combineLatest(aptoideDownloadManager.getDownloads(),
+    return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
         installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
@@ -172,7 +172,7 @@ public class InstallManager {
   }
 
   public Observable<Install> getInstall(String md5, String packageName, int versioncode) {
-    return Observable.combineLatest(aptoideDownloadManager.getAsListDownload(md5),
+    return Observable.combineLatest(aptoideDownloadManager.getDownloadsByMd5(md5),
         installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
         (download, installationState, installationType) -> createInstall(download,
             installationState, md5, packageName, versioncode, installationType));

@@ -22,6 +22,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -49,7 +50,7 @@ public class InstallService extends BaseService {
 
   private static final int NOTIFICATION_ID = 8;
 
-  @Inject OldAptoideDownloadManager downloadManager;
+  @Inject AptoideDownloadManager downloadManager;
   @Inject @Named("default") Installer defaultInstaller;
   @Inject InstalledRepository installedRepository;
   @Inject DownloadAnalytics downloadAnalytics;
@@ -106,7 +107,7 @@ public class InstallService extends BaseService {
   }
 
   private Observable<Boolean> stopDownload(String md5) {
-    return downloadManager.pauseDownloadSync(md5)
+    return downloadManager.pauseDownload(md5)
         .andThen(hasNextDownload());
   }
 
@@ -123,7 +124,7 @@ public class InstallService extends BaseService {
 
   private Observable<Boolean> downloadAndInstallCurrentDownload(Context context,
       boolean forceDefaultInstall) {
-    return downloadManager.getCurrentDownload()
+    return downloadManager.getCurrentActiveDownload()
         .first()
         .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5(),
             forceDefaultInstall));
@@ -134,9 +135,8 @@ public class InstallService extends BaseService {
     return downloadManager.getDownload(md5)
         .first()
         .doOnNext(download -> initInstallationProgress(download))
-        .flatMap(download -> downloadManager.startDownload(download)
-            .first())
-        .flatMap(download -> downloadManager.getDownload(download.getMd5()))
+        .flatMapCompletable(download -> downloadManager.startDownload(download))
+        .flatMap(download -> downloadManager.getDownload(md5))
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
           if (download.getOverallDownloadStatus() == Download.PROGRESS) {
@@ -161,7 +161,7 @@ public class InstallService extends BaseService {
   }
 
   private Observable<Boolean> hasNextDownload() {
-    return downloadManager.getCurrentDownloads()
+    return downloadManager.getCurrentActiveDownloads()
         .first()
         .map(downloads -> downloads != null && !downloads.isEmpty());
   }

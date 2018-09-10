@@ -14,7 +14,7 @@ import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
-import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -52,7 +52,7 @@ public class InstallerFactory {
   }
 
   @NonNull private DownloadInstallationProvider getInstallationProvider(
-      OldAptoideDownloadManager downloadManager, Context context) {
+      AptoideDownloadManager downloadManager, Context context) {
     return new DownloadInstallationProvider(downloadManager, AccessorFactory.getAccessorFor(
         ((AptoideApplication) context.getApplicationContext()).getDatabase(), Download.class),
         RepositoryFactory.getInstalledRepository(context), adMapper, AccessorFactory.getAccessorFor(

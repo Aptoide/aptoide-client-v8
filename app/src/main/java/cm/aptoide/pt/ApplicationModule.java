@@ -109,7 +109,9 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
-import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadStatusMapper;
+import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BundleDataSource;
@@ -299,11 +301,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.APPLICATION_ID;
   }
 
-  @Singleton @Provides OldAptoideDownloadManager provideAptoideDownloadManager(
-      DownloadAccessor downloadAccessor, @Named("user-agent") Interceptor userAgentInterceptor,
-      CacheHelper cacheHelper, DownloadAnalytics downloadAnalytics,
-      AuthenticationPersistence authenticationPersistence, @Named("cachePath") String cachePath,
-      InstallAnalytics installAnalytics) {
+  @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
+      DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
+      @Named("user-agent") Interceptor userAgentInterceptor, CacheHelper cacheHelper,
+      DownloadAnalytics downloadAnalytics, AuthenticationPersistence authenticationPersistence,
+      @Named("cachePath") String cachePath, InstallAnalytics installAnalytics) {
     final String apkPath = cachePath + "apks/";
     final String obbPath = cachePath + "obb/";
     final OkHttpClient.Builder httpClientBuilder =
@@ -320,9 +322,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
-    return new OldAptoideDownloadManager(downloadAccessor, cacheHelper,
-        new FileUtils(downloadAnalytics::moveFile), downloadAnalytics, FileDownloader.getImpl(),
-        cachePath, apkPath, obbPath);
+    return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath, apkPath,
+        obbPath);
+  }
+
+  @Singleton @Provides DownloadsRepository provideDownloadsRepository(
+      DownloadAccessor downloadAccessor) {
+    return new DownloadsRepository(downloadAccessor);
+  }
+
+  @Singleton @Provides DownloadStatusMapper downloadStatusMapper() {
+    return new DownloadStatusMapper();
   }
 
   @Singleton @Provides @Named("default") Installer provideDefaultInstaller(
@@ -337,7 +347,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
-      OldAptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
+      AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
       InstalledRepository installedRepository, Database database) {
     return new DownloadInstallationProvider(downloadManager, downloadAccessor, installedRepository,
         new MinimalAdMapper(), AccessorFactory.getAccessorFor(database, StoredMinimalAd.class));

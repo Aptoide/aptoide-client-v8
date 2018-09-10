@@ -13,7 +13,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
-import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.install.installer.DownloadInstallationAdapter;
@@ -28,13 +28,13 @@ import rx.schedulers.Schedulers;
  */
 public class DownloadInstallationProvider implements InstallationProvider {
 
-  private final OldAptoideDownloadManager downloadManager;
+  private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
   private final MinimalAdMapper adMapper;
   private final InstalledRepository installedRepository;
   private final StoredMinimalAdAccessor storedMinimalAdAccessor;
 
-  public DownloadInstallationProvider(OldAptoideDownloadManager downloadManager,
+  public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
       DownloadAccessor downloadAccessor, InstalledRepository installedRepository,
       MinimalAdMapper adMapper, StoredMinimalAdAccessor storeMinimalAdAccessor) {
     this.downloadManager = downloadManager;

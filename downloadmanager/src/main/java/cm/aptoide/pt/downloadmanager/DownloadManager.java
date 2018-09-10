@@ -35,4 +35,6 @@ public interface DownloadManager {
   Observable<Integer> getDownloadStatus(String md5);
 
   Completable removeDownload(String md5);
+
+  Completable invalidateDatabase();
 }

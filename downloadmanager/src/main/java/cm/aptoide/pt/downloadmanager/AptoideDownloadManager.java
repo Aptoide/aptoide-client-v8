@@ -14,14 +14,20 @@ import rx.schedulers.Schedulers;
 
 public class AptoideDownloadManager implements DownloadManager {
 
+  private final String cachePath;
+  private final String apkPath;
+  private final String obbPath;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
-      DownloadStatusMapper downloadStatusMapper) {
+      DownloadStatusMapper downloadStatusMapper, String cachePath, String apkPath, String obbPath) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
+    this.cachePath = cachePath;
+    this.apkPath = apkPath;
+    this.obbPath = obbPath;
     appDownloaderMap = new HashMap<>();
   }
 
@@ -94,6 +100,10 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
             appDownloader -> appDownloader.removeAppDownload()))
         .toCompletable();
+  }
+
+  @Override public Completable invalidateDatabase() {
+    return null;
   }
 
   private void dispatchDownloads() {
