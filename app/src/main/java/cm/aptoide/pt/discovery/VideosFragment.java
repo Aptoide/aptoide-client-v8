@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class VideosFragment extends NavigationTrackFragment implements VideosCon
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     adapter = new VideoAdapter(Collections.emptyList());
-    this.actionListener = new VideosPresenter(this, new VideosRepository(/*...*/));
+    this.actionListener = new VideosPresenter(this, new VideosRepository(new FakeVideoDataSource()));
     return inflater.inflate(R.layout.fragment_videos, container, false);
   }
 

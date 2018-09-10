@@ -78,15 +78,6 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
   public void setAppIcon(Video video){
     Glide.with(this.context).asBitmap().load(video.getImageUrl()).into(appIcon);
   }
-  public void setRatingStar(){
-
-    Glide.with(this.context)
-        .load("https://png2.kisspng.com/sh/0458cb3c5d15b3ca97372bd4a7c771b1/L0KzQYm3VMA0N6Zpj5H0aYP"
-            + "2gLBuTgVvcaVqfJ98dHH3dcS0hf1icZ0ygdDvb4LwccXwjB4ua5DyiNN3eT36eLr7hb10fJJ3RadqY0O0Q7a"
-            + "6U8FjOGg9Rqs9NEC7QoiAUcUzOmg4TKIAMUKzQ4e1kP5o/kisspng-united-states-email-informatio"
-            + "n-company-white-star-5ac313e331b078.9440827715227340512036.png")
-        .into(ratingStar);
-  }
 
   public void setAppInfoBackgroundColour(Video video) {
 

@@ -9,8 +9,6 @@ interface VideosContract {
 
     void showVideos(List<Video> videos);
 
-    //void playVideos();
-
   }
 
   interface UserActionListener {

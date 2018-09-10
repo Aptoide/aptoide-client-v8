@@ -12,7 +12,7 @@ public class VideosPresenter implements VideosContract.UserActionListener {
   }
 
   @Override public void present() {
-    view.showVideos(videosRepository.getVideos());
+    view.showVideos(videosRepository.loadVideos());
   }
 
   public VideosRepository getVideosRepository() {

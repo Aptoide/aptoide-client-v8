@@ -53,6 +53,7 @@
           app:layout_anchorGravity="bottom|right"
           android:layout_marginLeft="70dp"
           android:layout_marginBottom="30dp"
+          android:src="@drawable/ic_star_white"
           />
 
       <TextView
