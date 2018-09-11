@@ -215,6 +215,7 @@ import rx.schedulers.Schedulers;
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(actionItemResponse -> wsWidget);
+
         default:
           // In case a known enum is not implemented
           //countDownLatch.countDown();

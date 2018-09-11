@@ -266,6 +266,17 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(AppHomeEvent.class);
   }
 
+  @Override public Observable<EditorialHomeEvent> editorialCardClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.EDITORIAL))
+        .cast(EditorialHomeEvent.class);
+  }
+
+  @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.KNOW_MORE));
+  }
+
   @UiThread @Override public void scrollToTop() {
     LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
@@ -283,11 +294,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<Void> imageClick() {
     return RxView.clicks(userAvatar);
-  }
-
-  @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
-    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.KNOW_MORE));
   }
 
   @Override public Observable<HomeEvent> dismissBundleClicked() {

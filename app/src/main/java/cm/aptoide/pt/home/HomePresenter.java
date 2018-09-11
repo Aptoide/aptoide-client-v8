@@ -72,6 +72,8 @@ public class HomePresenter implements Presenter {
     handleDismissClick();
 
     handleActionBundlesImpression();
+
+    handleEditorialCardClick();
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -189,6 +191,20 @@ public class HomePresenter implements Presenter {
                 .getRating(), click.getApp()
                 .getPackageName(), click.getBundlePosition(), click.getBundle()
                 .getTag(), ((SocialBundle) click.getBundle()).getCardType(), click.getType()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleEditorialCardClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.editorialCardClicked()
+            .observeOn(viewScheduler)
+            .doOnNext(click -> homeNavigator.navigateToEditorial(click.getCardId()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

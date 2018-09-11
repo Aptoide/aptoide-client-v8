@@ -101,7 +101,8 @@ public class BundlesResponseMapper {
               }
             }
           }
-        } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE)) {
+        } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE) || type.equals(
+            HomeBundle.BundleType.EDITORIAL)) {
           appBundles.add(new ActionBundle(title, type, event, widgetTag,
               map((ActionItemResponse) viewObject)));
         }
@@ -138,13 +139,16 @@ public class BundlesResponseMapper {
     switch (layout) {
       case "appc_card_info":
         return HomeBundle.BundleType.INFO_BUNDLE;
+      case "curation_1_card":
+        return HomeBundle.BundleType.EDITORIAL;
       default:
         return HomeBundle.BundleType.UNKNOWN;
     }
   }
 
   private Event getEvent(GetStoreWidgets.WSWidget widget) {
-    return widget.getActions()
+    return widget.getActions() != null
+        && widget.getActions()
         .size() > 0 ? widget.getActions()
         .get(0)
         .getEvent() : null;

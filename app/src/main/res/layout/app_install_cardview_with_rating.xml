@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="56dp"
+    android:background="@drawable/card_border_fog_grey_normal"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -12,12 +13,14 @@
 
   <ImageView
       android:id="@+id/app_icon_imageview"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
       android:layout_gravity="center"
-      android:layout_marginTop="1dp"
+      android:layout_marginBottom="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginTop="8dp"
       android:adjustViewBounds="true"
-      android:padding="4dp"
       tools:src="@drawable/orange_gradient"
       />
 
@@ -25,6 +28,7 @@
       android:id="@+id/card_info_install_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:padding="4dp"
       android:visibility="visible"
       >
 
@@ -32,16 +36,47 @@
         android:id="@+id/app_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="1dp"
         android:lines="1"
         tools:text="@string/appc_title_settings_appcoins_wallet"
         style="@style/Aptoide.TextView.Medium.S.Black"
         />
+
+    <LinearLayout
+        android:id="@+id/rating_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_title_textview"
+        android:layout_marginEnd="1dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+      <ImageView
+          android:layout_width="10dp"
+          android:layout_height="10dp"
+          android:src="@drawable/ic_star_black"
+          />
+      <TextView
+          android:id="@+id/rating_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="5dp"
+          android:layout_marginStart="5dp"
+          tools:ignore="SmallSp"
+          tools:text="2.3"
+          style="@style/Aptoide.TextView.Medium.XXS"
+          />
+    </LinearLayout>
 
     <Button
         android:id="@+id/appview_install_button"
