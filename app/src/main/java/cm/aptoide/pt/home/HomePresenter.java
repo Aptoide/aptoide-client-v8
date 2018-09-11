@@ -78,7 +78,10 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.visibleBundles())
-        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .doOnNext(homeEvent -> homeAnalytics.sendAppcImpressionEvent(homeEvent.getBundle()
+            .getTag(), homeEvent.getBundlePosition()))
+        .map(HomeEvent::getBundle)
         .cast(ActionBundle.class)
         .flatMapCompletable(home::actionBundleImpression)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -93,7 +96,11 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.infoBundleKnowMoreClicked())
         .observeOn(viewScheduler)
-        .doOnNext(homeEvent -> homeNavigator.navigateToAppCoinsInformationView())
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendAppcKnowMoreInteractEvent(homeEvent.getBundle()
+              .getTag(), homeEvent.getBundlePosition(), homeEvent.getType());
+          homeNavigator.navigateToAppCoinsInformationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
@@ -106,6 +113,8 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.dismissBundleClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .doOnNext(homeEvent -> homeAnalytics.sendAppcDismissInteractEvent(homeEvent.getBundle()
+            .getTag(), homeEvent.getBundlePosition(), homeEvent.getType()))
         .flatMap(homeEvent -> home.remove((ActionBundle) homeEvent.getBundle())
             .andThen(Observable.just(homeEvent)))
         .observeOn(viewScheduler)

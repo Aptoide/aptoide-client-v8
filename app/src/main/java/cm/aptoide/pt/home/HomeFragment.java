@@ -250,13 +250,13 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .debounce(200, TimeUnit.MILLISECONDS);
   }
 
-  @Override public Observable<HomeBundle> visibleBundles() {
+  @Override public Observable<HomeEvent> visibleBundles() {
     return RxRecyclerView.scrollEvents(bundlesList)
         .subscribeOn(AndroidSchedulers.mainThread())
         .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
         .filter(position -> position != RecyclerView.NO_POSITION)
         .distinctUntilChanged()
-        .map(visibleItem -> adapter.getBundle(visibleItem));
+        .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
 
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {

@@ -5,6 +5,9 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cm.aptoide.analytics.AnalyticsManager.Action.DISMISS;
+import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
+
 /**
  * Created by jdandrade on 28/03/2018.
  */
@@ -17,6 +20,9 @@ public class HomeAnalytics {
   static final String PULL_REFRESH = "pull refresh";
   static final String PUSH_LOAD_MORE = "push load more";
   static final String TAP_ON_MORE = "tap on more";
+  static final String TAP_ON_CARD = "tap on card";
+  static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
+  static final String VIEW_CARD = "view card";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -103,9 +109,39 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
+  public void sendAppcKnowMoreInteractEvent(String bundleTag, int bundlePosition,
+      HomeEvent.Type type) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP_ON_CARD);
+    data.put("bundle_tag", bundleTag);
+    data.put("bundle_position", bundlePosition);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
+  }
+
+  public void sendAppcDismissInteractEvent(String bundleTag, int bundlePosition,
+      HomeEvent.Type type) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP_ON_CARD_DISMISS);
+    data.put("bundle_tag", bundleTag);
+    data.put("bundle_position", bundlePosition);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, DISMISS, navigationTracker.getViewName(true));
+  }
+
+  public void sendAppcImpressionEvent(String bundleTag, int bundlePosition) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", VIEW_CARD);
+    data.put("bundle_tag", bundleTag);
+    data.put("bundle_position", bundlePosition);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
   private AnalyticsManager.Action parseAction(HomeEvent.Type type) {
     if (type.equals(HomeEvent.Type.SOCIAL_CLICK) || type.equals(HomeEvent.Type.AD)) {
-      return AnalyticsManager.Action.OPEN;
+      return OPEN;
     } else if (type.equals(HomeEvent.Type.SOCIAL_INSTALL)) {
       return AnalyticsManager.Action.INSTALL;
     }
