@@ -60,17 +60,9 @@ public class HomeNavigator {
     fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
 
-
-
-
-  //***** NEW *****
   public void navigateToVideosView() {
-    //fragmentNavigator.navigateTo(VideosFragment.newInstance(), true);
     fragmentNavigator.navigateTo(new VideosFragment(), true);
   }
-
-
-
 
   public void navigateToRewardAppView(long appId, String packageName, String tag,
       double rewardAppCoins) {
