@@ -3,6 +3,7 @@ package cm.aptoide.pt.downloadmanager;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -31,5 +32,13 @@ public class DownloadsRepository {
 
   public Observable<List<Download>> getInQueueDownloads() {
     return downloadAccessor.getInQueueSortedDownloads();
+  }
+
+  public Observable<List<Download>> getAllDownloads() {
+    return downloadAccessor.getAll();
+  }
+
+  public Completable remove(String md5) {
+    return Completable.fromAction(() -> downloadAccessor.delete(md5));
   }
 }

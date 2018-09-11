@@ -2,6 +2,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.utils.FileUtils;
 import java.util.HashMap;
 import java.util.List;
 import rx.Completable;
@@ -56,7 +57,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Observable<List<Download>> getDownloadsList() {
-    return null;
+    return downloadsRepository.getAllDownloads();
   }
 
   @Override public Observable<Download> getCurrentActiveDownload() {
@@ -103,7 +104,27 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Completable invalidateDatabase() {
-    return null;
+    return getDownloadsList().first()
+        .flatMapIterable(downloads -> downloads)
+        .filter(download -> getStateIfFileExists(download) == Download.FILE_MISSING)
+        .flatMapCompletable(download -> downloadsRepository.remove(download.getMd5()))
+        .toList()
+        .toCompletable();
+  }
+
+  private int getStateIfFileExists(Download download) {
+    int downloadState = Download.COMPLETED;
+    if (download.getOverallDownloadStatus() == Download.PROGRESS) {
+      downloadState = Download.PROGRESS;
+    } else {
+      for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+        if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
+          downloadState = Download.FILE_MISSING;
+          break;
+        }
+      }
+    }
+    return downloadState;
   }
 
   private void dispatchDownloads() {
