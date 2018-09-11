@@ -24,7 +24,8 @@ public class AppDownloadManager implements AppDownloader {
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
     fileDownloadSubject = PublishSubject.create();
-    appDownloadStatus = new AppDownloadStatus(app.getMd5(), null, null, null, AppDownloadStatus.AppDownloadState.PENDING);
+    appDownloadStatus = new AppDownloadStatus(app.getMd5(), null, null, null,
+        AppDownloadStatus.AppDownloadState.PENDING);
   }
 
   @Override public Completable startAppDownload() {

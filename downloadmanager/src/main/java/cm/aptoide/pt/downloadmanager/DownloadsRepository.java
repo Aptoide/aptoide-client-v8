@@ -41,4 +41,8 @@ public class DownloadsRepository {
   public Completable remove(String md5) {
     return Completable.fromAction(() -> downloadAccessor.delete(md5));
   }
+
+  public Observable<List<Download>> getDownloadListByMd5(String md5) {
+    return downloadAccessor.getAsList(md5);
+  }
 }

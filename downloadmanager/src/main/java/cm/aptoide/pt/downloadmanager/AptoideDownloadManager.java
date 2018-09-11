@@ -49,11 +49,30 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Observable<Download> getDownload(String md5) {
-    return downloadsRepository.getDownload(md5);
+    return downloadsRepository.getDownload(md5)
+        .flatMap(download -> {
+          if (download == null || isFileMissingFromCompletedDownload(download)) {
+            return Observable.error(new DownloadNotFoundException());
+          } else {
+            return Observable.just(download);
+          }
+        })
+        .takeUntil(
+            storedDownload -> storedDownload.getOverallDownloadStatus() == Download.COMPLETED);
   }
 
   @Override public Observable<Download> getDownloadsByMd5(String md5) {
-    return null;
+    return downloadsRepository.getDownloadListByMd5(md5)
+        .flatMap(downloads -> Observable.from(downloads)
+            .filter(download -> download != null || isFileMissingFromCompletedDownload(download))
+            .toList())
+        .map(downloads -> {
+          if (downloads.isEmpty()) {
+            return null;
+          } else {
+            return downloads.get(0);
+          }
+        });
   }
 
   @Override public Observable<List<Download>> getDownloadsList() {
@@ -110,6 +129,11 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMapCompletable(download -> downloadsRepository.remove(download.getMd5()))
         .toList()
         .toCompletable();
+  }
+
+  private boolean isFileMissingFromCompletedDownload(Download download) {
+    return download.getOverallDownloadStatus() == Download.COMPLETED
+        && getStateIfFileExists(download) == Download.FILE_MISSING;
   }
 
   private int getStateIfFileExists(Download download) {
