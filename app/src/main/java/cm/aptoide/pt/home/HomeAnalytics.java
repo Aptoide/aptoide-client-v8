@@ -109,8 +109,7 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendAppcKnowMoreInteractEvent(String bundleTag, int bundlePosition,
-      HomeEvent.Type type) {
+  public void sendAppcKnowMoreInteractEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_CARD);
     data.put("bundle_tag", bundleTag);
@@ -119,8 +118,7 @@ public class HomeAnalytics {
     analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
   }
 
-  public void sendAppcDismissInteractEvent(String bundleTag, int bundlePosition,
-      HomeEvent.Type type) {
+  public void sendAppcDismissInteractEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_CARD_DISMISS);
     data.put("bundle_tag", bundleTag);

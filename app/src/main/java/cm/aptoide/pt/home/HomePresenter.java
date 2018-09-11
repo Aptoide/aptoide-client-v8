@@ -98,7 +98,7 @@ public class HomePresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(homeEvent -> {
           homeAnalytics.sendAppcKnowMoreInteractEvent(homeEvent.getBundle()
-              .getTag(), homeEvent.getBundlePosition(), homeEvent.getType());
+              .getTag(), homeEvent.getBundlePosition());
           homeNavigator.navigateToAppCoinsInformationView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -114,7 +114,7 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.dismissBundleClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
         .doOnNext(homeEvent -> homeAnalytics.sendAppcDismissInteractEvent(homeEvent.getBundle()
-            .getTag(), homeEvent.getBundlePosition(), homeEvent.getType()))
+            .getTag(), homeEvent.getBundlePosition()))
         .flatMap(homeEvent -> home.remove((ActionBundle) homeEvent.getBundle())
             .andThen(Observable.just(homeEvent)))
         .observeOn(viewScheduler)
