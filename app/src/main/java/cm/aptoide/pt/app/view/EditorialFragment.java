@@ -97,6 +97,7 @@ public class EditorialFragment extends NavigationTrackFragment
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
+    ready = PublishSubject.create();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
     }
