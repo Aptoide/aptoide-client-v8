@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import java.util.HashMap;
@@ -11,7 +12,6 @@ import java.util.HashMap;
  */
 
 public class EditorialAnalytics {
-  private static final String CLICK_INSTALL = "Clicked on install button";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String TYPE = "type";
 
@@ -29,7 +29,7 @@ public class EditorialAnalytics {
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.APPVIEW, action);
+        DownloadAnalytics.AppContext.EDITORIAL, action);
   }
 
   public void sendDownloadPauseEvent(String packageName) {
@@ -44,7 +44,8 @@ public class EditorialAnalytics {
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
     map.put(APPLICATION_NAME, packageName);
-    analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
+        getViewName(true));
   }
 
   private String getViewName(boolean isCurrent) {
