@@ -1,15 +1,20 @@
 package cm.aptoide.pt.app.view;
 
-import cm.aptoide.pt.navigator.FragmentNavigator;
+import android.net.Uri;
+import cm.aptoide.pt.navigator.ActivityNavigator;
 
 /**
  * Created by D01 on 27/08/2018.
  */
 
 public class EditorialNavigator {
-  private final FragmentNavigator fragmentNavigator;
+  private final ActivityNavigator activityNavigator;
 
-  public EditorialNavigator(FragmentNavigator fragmentNavigator) {
-    this.fragmentNavigator = fragmentNavigator;
+  public EditorialNavigator(ActivityNavigator activityNavigator) {
+    this.activityNavigator = activityNavigator;
+  }
+
+  public void navigateToUri(String uri) {
+    activityNavigator.navigateTo(Uri.parse(uri));
   }
 }

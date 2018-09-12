@@ -13,6 +13,7 @@ class EditorialViewModel {
   private final List<EditorialContent> contentList;
   private final String cardType;
   private final long appId;
+  private final String title;
   private final String appName;
   private final String packageName;
   private final long size;
@@ -32,12 +33,14 @@ class EditorialViewModel {
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
+      String title,
       String appName, String packageName, long size, String icon, String graphic, Obb obb,
       long storeId, String storeName, String storeTheme, String vername, int vercode, String path,
       String backgroundImage, String pathAlt, String md5) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
+    this.title = title;
     this.appName = appName;
     this.packageName = packageName;
     this.size = size;
@@ -63,6 +66,7 @@ class EditorialViewModel {
     this.loading = loading;
     error = null;
     this.appId = -1;
+    this.title = null;
     this.appName = null;
     this.packageName = null;
     this.size = -1;
@@ -86,6 +90,7 @@ class EditorialViewModel {
     this.loading = false;
     this.error = error;
     this.appId = -1;
+    this.title = null;
     this.appName = null;
     this.packageName = null;
     this.size = -1;
@@ -197,6 +202,10 @@ class EditorialViewModel {
 
   public String getMd5() {
     return md5;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   public enum Error {

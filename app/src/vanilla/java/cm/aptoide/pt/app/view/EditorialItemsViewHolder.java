@@ -4,14 +4,15 @@ import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.VideoView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 28/08/2018.
@@ -31,12 +32,15 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private TextView message;
   private View media;
   private ImageView image;
-  private VideoView video;
+  private ImageView videoThumbnail;
+  private FrameLayout videoThumbnailContainer;
   private RecyclerView mediaList;
   private View appCard;
   private MediaBundleAdapter mediaBundleAdapter;
+  private PublishSubject<String> editorialMediaClicked;
 
-  public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat) {
+  public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
+      PublishSubject<String> editorialMediaClicked) {
     super(view);
     itemText = view.findViewById(R.id.editorial_item_text);
     title = view.findViewById(R.id.editorial_item_title);
@@ -45,11 +49,13 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     message = (TextView) view.findViewById(R.id.editorial_item_message);
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
-    video = (VideoView) view.findViewById(R.id.editorial_video);
+    videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
+    videoThumbnailContainer = view.findViewById(R.id.editorial_video_thumbnail_container);
     description = (TextView) view.findViewById(R.id.editorial_image_description);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCard = view.findViewById(R.id.app_cardview);
     this.oneDecimalFormat = oneDecimalFormat;
+    this.editorialMediaClicked = editorialMediaClicked;
     appCardImage = (ImageView) appCard.findViewById(R.id.app_icon_imageview);
     appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
     appCardRating = (TextView) appCard.findViewById(R.id.rating_label);
@@ -127,9 +133,16 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         }
         if (editorialMedia.isVideo()) {
           //TODO add video
-          video.setVisibility(View.VISIBLE);
+          if (editorialMedia.getThumbnail() != null) {
+            ImageLoader.with(itemView.getContext())
+                .load(editorialMedia.getThumbnail(), videoThumbnail);
+          }
+          videoThumbnailContainer.setVisibility(View.VISIBLE);
+          videoThumbnailContainer.setOnClickListener(
+              v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
         }
       }
+
       EditorialMedia editorialMedia = editorialItem.getMedia()
           .get(0);
       if (editorialMedia.hasDescription()) {

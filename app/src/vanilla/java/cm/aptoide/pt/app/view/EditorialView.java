@@ -38,4 +38,6 @@ public interface EditorialView extends View {
   Observable<Void> isAppViewReadyToDownload();
 
   void readyToDownload();
+
+  Observable<String> mediaContentClicked();
 }

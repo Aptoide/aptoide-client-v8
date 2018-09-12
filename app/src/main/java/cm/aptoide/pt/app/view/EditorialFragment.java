@@ -93,11 +93,14 @@ public class EditorialFragment extends NavigationTrackFragment
   private Drawable backArrow;
   private DecimalFormat oneDecimalFormatter;
 
+  private PublishSubject<String> editorialMediaClicked;
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     ready = PublishSubject.create();
+    editorialMediaClicked = PublishSubject.create();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
     }
@@ -134,7 +137,8 @@ public class EditorialFragment extends NavigationTrackFragment
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter);
+    adapter =
+        new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter, editorialMediaClicked);
     editorialItems.setLayoutManager(linearLayoutManager);
     editorialItems.setAdapter(adapter);
 
@@ -351,10 +355,12 @@ public class EditorialFragment extends NavigationTrackFragment
     ready.onNext(null);
   }
 
+  @Override public Observable<String> mediaContentClicked() {
+    return editorialMediaClicked;
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
-    //TODO should use the title that will be added to the response
-    String title = editorialViewModel.getContent(0)
-        .getTitle();
+    String title = editorialViewModel.getTitle();
     toolbar.setTitle(title);
     toolbarTitle.setText(title);
     actionItemCard.setVisibility(View.VISIBLE);
