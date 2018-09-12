@@ -18,6 +18,7 @@
   <string name="accept_terms_message_loggedin">Please accept our Terms and Conditions and Privacy Policy to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
   <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
   <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
+   <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide's Terms and Conditions and Privacy Policy</string>
 
   <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
 
