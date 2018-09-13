@@ -35,20 +35,20 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
         + "/api/7/";
   }
 
-  public static PostReviewRequest of(String storeName, String packageName, String title,
-      String textBody, Integer rating, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory, boolean appInstalled,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    final Body body = new Body(storeName, packageName, title, textBody, rating, appInstalled);
+  public static PostReviewRequest of(String storeName, String packageName, String textBody,
+      Integer rating, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, boolean appInstalled, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    final Body body = new Body(storeName, packageName, textBody, rating, appInstalled);
     return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
-  public static PostReviewRequest of(String packageName, String title, String textBody,
-      Integer rating, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public static PostReviewRequest of(String packageName, String textBody, Integer rating,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, boolean appInstalled, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    final Body body = new Body(packageName, title, textBody, rating, appInstalled);
+    final Body body = new Body(packageName, textBody, rating, appInstalled);
     return new PostReviewRequest(body, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
@@ -63,24 +63,20 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     private final boolean appInstalled;
     private String storeName;
     private String packageName;
-    private String title;
     private String body;
     private Integer rating;
 
-    public Body(String packageName, String title, String body, Integer rating,
-        boolean appInstalled) {
+    public Body(String packageName, String body, Integer rating, boolean appInstalled) {
       this.packageName = packageName;
-      this.title = title;
       this.body = body;
       this.rating = rating;
       this.appInstalled = appInstalled;
     }
 
-    public Body(String storeName, String packageName, String title, String body, Integer rating,
+    public Body(String storeName, String packageName, String body, Integer rating,
         boolean appInstalled) {
       this.storeName = storeName;
       this.packageName = packageName;
-      this.title = title;
       this.body = body;
       this.rating = rating;
       this.appInstalled = appInstalled;
@@ -100,14 +96,6 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
 
     public void setPackageName(String packageName) {
       this.packageName = packageName;
-    }
-
-    public String getTitle() {
-      return title;
-    }
-
-    public void setTitle(String title) {
-      this.title = title;
     }
 
     public String getBody() {
