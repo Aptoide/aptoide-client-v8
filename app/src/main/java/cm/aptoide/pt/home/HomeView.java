@@ -19,10 +19,7 @@ public interface HomeView extends BundleView {
 
   Observable<Void> imageClick();
 
-
-  //***** NEW *****
   Observable<Void> discoveryButtonClick();
-
 
   void showAvatar();
 

@@ -5,7 +5,6 @@ public class VideosPresenter implements VideosContract.UserActionListener {
   private VideosRepository videosRepository;
   private VideosContract.View view;
 
-
   public VideosPresenter(VideosContract.View view, VideosRepository videosRepository) {
     this.videosRepository = videosRepository;
     this.view = view;

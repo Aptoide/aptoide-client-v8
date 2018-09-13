@@ -2,14 +2,11 @@ package cm.aptoide.pt.discovery;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,15 +14,11 @@ import android.widget.TextView;
 import android.widget.VideoView;
 import cm.aptoide.pt.R;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import java.util.concurrent.ExecutionException;
 
 public class VideoViewHolder extends RecyclerView.ViewHolder {
 
@@ -46,8 +39,6 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
   private Bitmap bitmap;
 
-
-
   public VideoViewHolder(View itemView) {
     super(itemView);
     videoContent = (VideoView) itemView.findViewById(R.id.app_video);
@@ -67,16 +58,19 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     videoContent.start();
   }
 
-  public void setAppName(Video video){
+  public void setAppName(Video video) {
     appTitle.setText(video.getVideoDescription());
   }
 
-  public void setAppScore(Video video){
+  public void setAppScore(Video video) {
     appScore.setText(Double.toString(video.getRating()));
   }
 
-  public void setAppIcon(Video video){
-    Glide.with(this.context).asBitmap().load(video.getImageUrl()).into(appIcon);
+  public void setAppIcon(Video video) {
+    Glide.with(this.context)
+        .asBitmap()
+        .load(video.getImageUrl())
+        .into(appIcon);
   }
 
   public void setAppInfoBackgroundColour(Video video) {
@@ -89,19 +83,21 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
         .placeholder(R.mipmap.ic_launcher)
         .listener(new RequestListener<Bitmap>() {
 
-          @Override
-          public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+          @Override public boolean onLoadFailed(@Nullable GlideException e, Object model,
+              Target<Bitmap> target, boolean isFirstResource) {
             return false;
           }
 
           @Override
-          public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+          public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target,
+              DataSource dataSource, boolean isFirstResource) {
 
             if (resource != null) {
-              Palette.Swatch p = Palette.from(resource).generate().getVibrantSwatch();
+              Palette.Swatch p = Palette.from(resource)
+                  .generate()
+                  .getVibrantSwatch();
               appInfoBackground.setBackgroundColor(p.getRgb());
               installButton.setTextColor(p.getRgb());
-
             }
             return false;
           }

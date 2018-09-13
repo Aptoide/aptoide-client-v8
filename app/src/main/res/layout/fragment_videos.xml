@@ -16,24 +16,13 @@
       app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
       >
 
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textSize="20sp"
-        android:layout_gravity="center_vertical"
-      android:fontFamily="sans-serif-medium"
-      android:textStyle="normal"
-      android:textColor="@color/white"
-      android:lineSpacingExtra="8sp"
-      tools:text="Discovery"
-      />
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleMarginStart="30dp"
+        app:title="Discovery"
+        app:titleTextColor="@color/white"
         />
   </android.support.design.widget.AppBarLayout>
 
@@ -61,6 +50,5 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       />
-
 
 </LinearLayout>

@@ -7,7 +7,6 @@ public class Video {
   private double rating = 0.0;
   private String imageUrl;
 
-
   public Video(String videoUrl, String videoDescription, double score, String imageUrl) {
     this.videoUrl = videoUrl;
     this.videoDescription = videoDescription;
@@ -27,7 +26,7 @@ public class Video {
     return rating;
   }
 
-  public String getImageUrl(){
+  public String getImageUrl() {
     return imageUrl;
   }
 }
