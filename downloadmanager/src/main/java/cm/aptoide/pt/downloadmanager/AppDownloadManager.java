@@ -1,6 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.VisibleForTesting;
+import java.util.Collections;
 import java.util.HashMap;
 import rx.Completable;
 import rx.Observable;
@@ -18,23 +19,22 @@ public class AppDownloadManager implements AppDownloader {
   private PublishSubject<FileDownloadCallback> fileDownloadSubject;
   private AppDownloadStatus appDownloadStatus;
 
-  public AppDownloadManager(FileDownloaderProvider fileDownloaderProvider, DownloadApp app,
-      HashMap<String, FileDownloader> fileDownloaderPersistence) {
+  public AppDownloadManager(FileDownloaderProvider fileDownloaderProvider, DownloadApp app) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
-    this.fileDownloaderPersistence = fileDownloaderPersistence;
+    this.fileDownloaderPersistence = new HashMap<>();
     fileDownloadSubject = PublishSubject.create();
-    appDownloadStatus = new AppDownloadStatus(app.getMd5(), null, null, null,
+    appDownloadStatus = new AppDownloadStatus(app.getMd5(), Collections.emptyList(),
         AppDownloadStatus.AppDownloadState.PENDING);
   }
 
   @Override public Completable startAppDownload() {
     return Observable.from(app.getDownloadFiles())
         .flatMap(downloadAppFile -> Observable.just(
-            fileDownloaderProvider.createFileDownloader(downloadAppFile.getMainDownloadPath(),
-                downloadAppFile.getFileType(), downloadAppFile.getPackageName(),
-                downloadAppFile.getVersionCode(), downloadAppFile.getFileName(),
-                PublishSubject.create()))
+            fileDownloaderProvider.createFileDownloader(downloadAppFile.getDownloadMd5(),
+                downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
+                downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
+                downloadAppFile.getFileName(), PublishSubject.create()))
             .doOnNext(fileDownloader -> fileDownloaderPersistence.put(
                 downloadAppFile.getAlternativeDownloadPath(), fileDownloader)))
         .flatMapCompletable(fileDownloader -> fileDownloader.startFileDownload())
@@ -65,13 +65,7 @@ public class AppDownloadManager implements AppDownloader {
   }
 
   private void setAppDownloadStatus(FileDownloadCallback fileDownloadCallback) {
-    if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.APK.getType()) {
-      appDownloadStatus.setApk(fileDownloadCallback);
-    } else if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.OBB_MAIN.getType()) {
-      appDownloadStatus.setObbMain(fileDownloadCallback);
-    } else if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.OBB_PATCH.getType()) {
-      appDownloadStatus.setObbPatch(fileDownloadCallback);
-    }
+    appDownloadStatus.setFileDownloadCallback(fileDownloadCallback);
     appDownloadStatus.setAppDownloadState(fileDownloadCallback.getDownloadState());
   }
 
