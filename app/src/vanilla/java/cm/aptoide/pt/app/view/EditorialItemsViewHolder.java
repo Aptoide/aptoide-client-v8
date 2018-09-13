@@ -132,14 +132,15 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
           image.setVisibility(View.VISIBLE);
         }
         if (editorialMedia.isVideo()) {
-          //TODO add video
           if (editorialMedia.getThumbnail() != null) {
             ImageLoader.with(itemView.getContext())
                 .load(editorialMedia.getThumbnail(), videoThumbnail);
           }
-          videoThumbnailContainer.setVisibility(View.VISIBLE);
-          videoThumbnailContainer.setOnClickListener(
-              v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
+          if (editorialMedia.hasUrl()) {
+            videoThumbnailContainer.setVisibility(View.VISIBLE);
+            videoThumbnailContainer.setOnClickListener(
+                v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
+          }
         }
       }
 
