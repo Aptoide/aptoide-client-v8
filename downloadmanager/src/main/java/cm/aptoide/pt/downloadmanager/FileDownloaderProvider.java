@@ -8,6 +8,7 @@ import rx.subjects.PublishSubject;
 
 public interface FileDownloaderProvider {
 
-  FileDownloader createFileDownloader(String mainDownloadPath, int fileType, String packageName,
-      int versionCode, String fileName, PublishSubject<FileDownloadCallback> fileDownloadCallback);
+  FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
+      String packageName, int versionCode, String fileName,
+      PublishSubject<FileDownloadCallback> fileDownloadCallback);
 }
