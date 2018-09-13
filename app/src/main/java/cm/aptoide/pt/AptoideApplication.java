@@ -144,7 +144,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   private static boolean autoUpdateWasCalled = false;
   @Inject Database database;
-  @Inject AptoideDownloadManager newAptoideDownloadManager;
+  @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject CacheHelper cacheHelper;
   @Inject AptoideAccountManager accountManager;
   @Inject Preferences preferences;
@@ -343,6 +343,9 @@ public abstract class AptoideApplication extends Application {
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
+    aptoideDownloadManager.start()
+        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
+            .log(error));
   }
 
   public ApplicationComponent getApplicationComponent() {
@@ -488,7 +491,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   public AptoideDownloadManager getDownloadManager() {
-    return newAptoideDownloadManager;
+    return aptoideDownloadManager;
   }
 
   public InstallManager getInstallManager() {
