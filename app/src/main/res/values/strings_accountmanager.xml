@@ -15,7 +15,7 @@
   <string name="user_cancelled">Cancelled by user</string>
   <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
   <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our T%1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
+  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
   <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
   <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
   <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide's %1$s and %2$s</string>
