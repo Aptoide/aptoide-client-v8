@@ -29,6 +29,7 @@ public class EditorialCard extends BaseV7Response {
   public static class Data {
     private List<Content> content;
     private String type;
+    private String title;
     private App app;
     private String backgroundImage;
 
@@ -64,8 +65,16 @@ public class EditorialCard extends BaseV7Response {
       return backgroundImage;
     }
 
-    public void setBackgroundImage(String background_image) {
-      this.backgroundImage = background_image;
+    public void setBackgroundImage(String backgroundImage) {
+      this.backgroundImage = backgroundImage;
+    }
+
+    public String getTitle() {
+      return title;
+    }
+
+    public void setTitle(String title) {
+      this.title = title;
     }
 
     //3rd level
@@ -118,6 +127,7 @@ public class EditorialCard extends BaseV7Response {
   public static class Media {
     private String type;
     private String description;
+    private String thumbnail;
     private String url;
 
     public String getType() {
@@ -142,6 +152,14 @@ public class EditorialCard extends BaseV7Response {
 
     public void setUrl(String url) {
       this.url = url;
+    }
+
+    public String getThumbnail() {
+      return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+      this.thumbnail = thumbnail;
     }
   }
 }

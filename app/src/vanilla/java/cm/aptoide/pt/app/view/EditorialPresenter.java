@@ -26,10 +26,12 @@ public class EditorialPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
   private final EditorialAnalytics editorialAnalytics;
+  private final EditorialNavigator editorialNavigator;
 
   public EditorialPresenter(EditorialView view, EditorialManager editorialManager,
       Scheduler viewScheduler, CrashReport crashReporter, PermissionManager permissionManager,
-      PermissionService permissionService, EditorialAnalytics editorialAnalytics) {
+      PermissionService permissionService, EditorialAnalytics editorialAnalytics,
+      EditorialNavigator editorialNavigator) {
     this.view = view;
     this.editorialManager = editorialManager;
     this.viewScheduler = viewScheduler;
@@ -37,11 +39,13 @@ public class EditorialPresenter implements Presenter {
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.editorialAnalytics = editorialAnalytics;
+    this.editorialNavigator = editorialNavigator;
   }
 
   @Override public void present() {
     onCreateLoadAppOfTheWeek();
     handleRetryClick();
+    handleClickOnMedia();
 
     handleInstallClick();
     pauseDownload();
@@ -83,6 +87,16 @@ public class EditorialPresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
             .flatMapSingle(__ -> loadEditorialViewModel()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(notificationUrl -> {
+        }, crashReporter::log);
+  }
+
+  private void handleClickOnMedia() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.mediaContentClicked())
+        .doOnNext(editorialNavigator::navigateToUri)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);

@@ -8,11 +8,13 @@ class EditorialMedia {
 
   private final String type;
   private final String description;
+  private final String thumbnail;
   private final String url;
 
-  public EditorialMedia(String type, String description, String url) {
+  public EditorialMedia(String type, String description, String thumbnail, String url) {
     this.type = type;
     this.description = description;
+    this.thumbnail = thumbnail;
     this.url = url;
   }
 
@@ -46,5 +48,9 @@ class EditorialMedia {
 
   public boolean hasUrl() {
     return url != null && !url.equals("");
+  }
+
+  public String getThumbnail() {
+    return thumbnail;
   }
 }
