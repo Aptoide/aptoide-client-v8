@@ -12,17 +12,21 @@ import rx.subjects.PublishSubject;
 public class FileDownloadManagerProvider implements FileDownloaderProvider {
 
   private String downloadsPath;
+  private com.liulishuo.filedownloader.FileDownloader fileDownloader;
 
-  public FileDownloadManagerProvider(String downloadsPath) {
+  public FileDownloadManagerProvider(String downloadsPath,
+      com.liulishuo.filedownloader.FileDownloader fileDownloader) {
     this.downloadsPath = downloadsPath;
+    this.fileDownloader = fileDownloader;
   }
 
-  @Override public FileDownloader createFileDownloader(String mainDownloadPath, int fileType,
+  @Override
+  public FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
       String packageName, int versionCode, String fileName,
       PublishSubject<FileDownloadCallback> downloadStatusCallback) {
-    return new FileDownloadManager(com.liulishuo.filedownloader.FileDownloader.getImpl(),
-        new FileDownloadTask(downloadStatusCallback, fileType), downloadsPath, mainDownloadPath, fileType,
-        packageName, versionCode, fileName);
+    return new FileDownloadManager(fileDownloader,
+        new FileDownloadTask(downloadStatusCallback, fileType, md5), downloadsPath,
+        mainDownloadPath, fileType, packageName, versionCode, fileName);
   }
 }
 
