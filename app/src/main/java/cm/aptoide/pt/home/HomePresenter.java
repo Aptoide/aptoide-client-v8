@@ -14,6 +14,8 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
+import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
+
 /**
  * Created by jdandrade on 07/03/2018.
  */
@@ -48,6 +50,8 @@ public class HomePresenter implements Presenter {
     loadUserImage();
 
     handleAppClick();
+
+    handleEditorsChoiceClick();
 
     handleRecommendedAppClick();
 
@@ -181,6 +185,9 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
+            .filter(click -> !click.getBundle()
+                .getType()
+                .equals(EDITORS))
             .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
                     .getRating(), click.getApp()
                     .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
@@ -194,6 +201,32 @@ public class HomePresenter implements Presenter {
               homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
             })
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleEditorsChoiceClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.appClicked()
+            .filter(click -> click.getBundle()
+                .getType()
+                .equals(EDITORS))
+            .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
+                    .getRating(), click.getApp()
+                    .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
+                click.getBundle()
+                    .getTag(), click.getBundle()
+                    .getContent()
+                    .size()))
+            .observeOn(viewScheduler)
+            .doOnNext(click -> homeNavigator.navigateWithEditorsPosition(click.getApp()
+                .getAppId(), click.getApp()
+                .getPackageName(), "", "", click.getApp()
+                .getTag(), String.valueOf(click.getAppPosition()))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
         }, throwable -> {
