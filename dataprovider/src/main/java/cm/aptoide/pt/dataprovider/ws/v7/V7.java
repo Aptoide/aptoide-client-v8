@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
@@ -347,6 +348,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(
         @Body SetReviewRatingRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/action/item/card/get/card_id={cardId}") Observable<EditorialCard> getEditorial(
+        @Path(value = "cardId") String cardId, @Body BaseBody body);
 
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,

@@ -38,10 +38,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.logger.Logger;
@@ -229,12 +226,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(database, Update.class);
-      updateAccessor.removeAll();
       repository.sync(true, false)
-          .andThen(repository.getAll(false))
-          .first()
-          .subscribe(updates -> Logger.getInstance()
+          .subscribe(() -> Logger.getInstance()
               .d(TAG, "updates refreshed"), throwable -> CrashReport.getInstance()
               .log(throwable));
     }

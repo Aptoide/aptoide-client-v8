@@ -203,7 +203,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickGetAppcInfo())
-        .doOnNext(click -> appViewNavigator.navigateToAppCoinsInfo())
+        .doOnNext(click -> {
+          appViewAnalytics.sendAppcInfoInteractEvent();
+          appViewNavigator.navigateToAppCoinsInfo();
+        })
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -816,7 +819,7 @@ public class AppViewPresenter implements Presenter {
                 app.getStore()
                     .getId(), "install")
                 .doOnCompleted(() -> appViewAnalytics.sendTimelineLoggedInInstallRecommendEvents(
-                        app.getPackageName()))
+                    app.getPackageName()))
                 .doOnCompleted(() -> view.showRecommendsThanksMessage()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

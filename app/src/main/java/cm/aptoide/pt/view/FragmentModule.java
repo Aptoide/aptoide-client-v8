@@ -43,6 +43,13 @@ import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
+import cm.aptoide.pt.app.view.EditorialAnalytics;
+import cm.aptoide.pt.app.view.EditorialManager;
+import cm.aptoide.pt.app.view.EditorialNavigator;
+import cm.aptoide.pt.app.view.EditorialPresenter;
+import cm.aptoide.pt.app.view.EditorialRepository;
+import cm.aptoide.pt.app.view.EditorialService;
+import cm.aptoide.pt.app.view.EditorialView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
@@ -341,5 +348,28 @@ import rx.schedulers.Schedulers;
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
         AndroidSchedulers.mainThread());
+  }
+
+  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
+      EditorialService editorialService) {
+    return new EditorialRepository(editorialService);
+  }
+
+  @FragmentScope @Provides EditorialManager providesEditorialManager(
+      EditorialRepository editorialRepository, InstallManager installManager,
+      PreferencesManager preferencesManager, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
+    return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
+        installManager, preferencesManager, downloadFactory, downloadStateParser,
+        notificationAnalytics, installAnalytics, editorialAnalytics);
+  }
+
+  @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
+      EditorialManager editorialManager, CrashReport crashReport,
+      EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator) {
+    return new EditorialPresenter((EditorialView) fragment, editorialManager,
+        AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
+        ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator);
   }
 }

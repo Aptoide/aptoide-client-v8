@@ -270,13 +270,13 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .debounce(200, TimeUnit.MILLISECONDS);
   }
 
-  @Override public Observable<HomeBundle> visibleBundles() {
+  @Override public Observable<HomeEvent> visibleBundles() {
     return RxRecyclerView.scrollEvents(bundlesList)
         .subscribeOn(AndroidSchedulers.mainThread())
         .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
         .filter(position -> position != RecyclerView.NO_POSITION)
         .distinctUntilChanged()
-        .map(visibleItem -> adapter.getBundle(visibleItem));
+        .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
 
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {
@@ -284,6 +284,17 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
         .equals(HomeEvent.Type.SOCIAL_INSTALL))
         .cast(AppHomeEvent.class);
+  }
+
+  @Override public Observable<EditorialHomeEvent> editorialCardClicked() {
+    return uiEventsListener.filter(homeClick -> homeClick.getType()
+        .equals(HomeEvent.Type.EDITORIAL))
+        .cast(EditorialHomeEvent.class);
+  }
+
+  @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.KNOW_MORE));
   }
 
   @UiThread @Override public void scrollToTop() {
@@ -303,11 +314,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<Void> imageClick() {
     return RxView.clicks(userAvatar);
-  }
-
-  @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
-    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.KNOW_MORE));
   }
 
   @Override public Observable<HomeEvent> dismissBundleClicked() {

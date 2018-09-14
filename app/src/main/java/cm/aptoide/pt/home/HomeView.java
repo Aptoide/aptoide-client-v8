@@ -11,13 +11,15 @@ public interface HomeView extends BundleView {
 
   Observable<AppHomeEvent> recommendedAppClicked();
 
+  Observable<EditorialHomeEvent> editorialCardClicked();
+
+  Observable<HomeEvent> infoBundleKnowMoreClicked();
+
   void scrollToTop();
 
   void setUserImage(String userAvatarUrl);
 
   Observable<Void> imageClick();
-
-  Observable<HomeEvent> infoBundleKnowMoreClicked();
 
   Observable<HomeEvent> dismissBundleClicked();
 

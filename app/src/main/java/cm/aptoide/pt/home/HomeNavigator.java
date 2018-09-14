@@ -1,8 +1,10 @@
 package cm.aptoide.pt.home;
 
+import android.os.Bundle;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
+import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
@@ -76,6 +78,14 @@ public class HomeNavigator {
 
   public void navigateToAppCoinsInformationView() {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
+  }
+
+  public void navigateToEditorial(String cardId) {
+    Bundle bundle = new Bundle();
+    bundle.putString("cardId", cardId);
+    EditorialFragment fragment = new EditorialFragment();
+    fragment.setArguments(bundle);
+    fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateToTermsAndConditions() {
