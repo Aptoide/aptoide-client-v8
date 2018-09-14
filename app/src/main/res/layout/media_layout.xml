@@ -19,7 +19,7 @@
   <FrameLayout
       android:id="@+id/editorial_video_thumbnail_container"
       android:layout_width="match_parent"
-      android:layout_height="200dp"
+      android:layout_height="match_parent"
       android:foreground="@color/overlay_black"
       android:visibility="gone"
       >
