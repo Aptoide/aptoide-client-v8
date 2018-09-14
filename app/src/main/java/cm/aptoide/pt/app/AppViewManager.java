@@ -358,16 +358,13 @@ public class AppViewManager {
     if (cachedAppCoinsViewModel == null) {
       return Completable.fromObservable(Observable.fromCallable(() -> cachedApp)
           .flatMapCompletable(app -> {
-            if (app.hasBilling()) {
-              cachedAppCoinsViewModel = new AppCoinsViewModel(false, true, false);
-            } else if (app.hasAdvertising()) {
-              appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
-                  .map(hasAdvertising -> {
-                    cachedAppCoinsViewModel = new AppCoinsViewModel(false, false, hasAdvertising);
-                    return Completable.complete();
-                  });
+            if (app.hasAdvertising()) {
+              return appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
+                  .map(hasAdvertising -> cachedAppCoinsViewModel =
+                      new AppCoinsViewModel(false, app.hasBilling(), hasAdvertising))
+                  .toCompletable();
             } else {
-              cachedAppCoinsViewModel = new AppCoinsViewModel(false, false, false);
+              cachedAppCoinsViewModel = new AppCoinsViewModel(false, app.hasBilling(), false);
             }
             return Completable.complete();
           }));

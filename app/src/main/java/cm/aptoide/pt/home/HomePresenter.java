@@ -72,13 +72,32 @@ public class HomePresenter implements Presenter {
     handleDismissClick();
 
     handleActionBundlesImpression();
+
+    handleEditorialCardClick();
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.visibleBundles())
-        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .doOnNext(homeEvent -> {
+          if (homeEvent.getBundle()
+              .getType()
+              .equals(HomeBundle.BundleType.INFO_BUNDLE)) {
+            homeAnalytics.sendAppcImpressionEvent(homeEvent.getBundle()
+                .getTag(), homeEvent.getBundlePosition());
+          } else {
+            ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();
+            homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
+                homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                    .getCardId());
+          }
+        })
+        .filter(homeEvent -> homeEvent.getBundle()
+            .getType()
+            .equals(HomeBundle.BundleType.INFO_BUNDLE))
+        .map(HomeEvent::getBundle)
         .cast(ActionBundle.class)
         .flatMapCompletable(home::actionBundleImpression)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -93,7 +112,11 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.infoBundleKnowMoreClicked())
         .observeOn(viewScheduler)
-        .doOnNext(homeEvent -> homeNavigator.navigateToAppCoinsInformationView())
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendAppcKnowMoreInteractEvent(homeEvent.getBundle()
+              .getTag(), homeEvent.getBundlePosition());
+          homeNavigator.navigateToAppCoinsInformationView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
@@ -106,6 +129,8 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.dismissBundleClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .doOnNext(homeEvent -> homeAnalytics.sendAppcDismissInteractEvent(homeEvent.getBundle()
+            .getTag(), homeEvent.getBundlePosition()))
         .flatMap(homeEvent -> home.remove((ActionBundle) homeEvent.getBundle())
             .andThen(Observable.just(homeEvent)))
         .observeOn(viewScheduler)
@@ -189,6 +214,24 @@ public class HomePresenter implements Presenter {
                 .getRating(), click.getApp()
                 .getPackageName(), click.getBundlePosition(), click.getBundle()
                 .getTag(), ((SocialBundle) click.getBundle()).getCardType(), click.getType()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleEditorialCardClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.editorialCardClicked()
+            .observeOn(viewScheduler)
+            .doOnNext(click -> {
+              homeAnalytics.sendEditorialInteractEvent(click.getBundle()
+                  .getTag(), click.getBundlePosition(), click.getCardId());
+              homeNavigator.navigateToEditorial(click.getCardId());
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

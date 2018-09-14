@@ -205,6 +205,11 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
+  public void sendAppcInfoInteractEvent() {
+    analyticsManager.logEvent(createMapData(ACTION, "AppCoins Info View"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
   private Map<String, Object> createFlagAppEventData(String action, String flagDetail) {
     Map<String, Object> map = new HashMap<>();
     map.put(ACTION, action);

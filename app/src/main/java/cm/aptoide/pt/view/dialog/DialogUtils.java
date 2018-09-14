@@ -16,7 +16,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.BulletSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,8 +101,6 @@ import rx.subscriptions.Subscriptions;
       final TextView titleTextView = (TextView) view.findViewById(R.id.title);
       final AppCompatRatingBar reviewRatingBar =
           (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
-      final TextInputLayout titleTextInputLayout =
-          (TextInputLayout) view.findViewById(R.id.input_layout_title);
       final TextInputLayout reviewTextInputLayout =
           (TextInputLayout) view.findViewById(R.id.input_layout_review);
       final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
@@ -134,25 +131,24 @@ import rx.subscriptions.Subscriptions;
         subscriber.onCompleted();
       });
 
+      reviewRatingBar.setOnRatingBarChangeListener(
+          (ratingBar, v, b) -> ((TextView) view.findViewById(R.id.tap_to_rate)).setTextColor(
+              activity.getResources()
+                  .getColor(R.color.grey_fog_dark)));
       rateBtn.setOnClickListener(v -> {
 
         AptoideUtils.SystemU.hideKeyboard(activity);
 
-        final String reviewTitle = titleTextInputLayout.getEditText()
-            .getText()
-            .toString();
         final String reviewText = reviewTextInputLayout.getEditText()
             .getText()
             .toString();
         final int reviewRating = Math.round(reviewRatingBar.getRating());
-
-        if (TextUtils.isEmpty(reviewTitle)) {
-          titleTextInputLayout.setError(
-              AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, resources));
+        if (reviewRating == 0) {
+          ((TextView) view.findViewById(R.id.tap_to_rate)).setTextColor(activity.getResources()
+              .getColor(R.color.red));
+          ShowMessage.asSnack(activity, "Please choose a rating");
           return;
         }
-
-        titleTextInputLayout.setErrorEnabled(false);
         dialog.dismiss();
 
         // WS success listener
@@ -183,14 +179,13 @@ import rx.subscriptions.Subscriptions;
         // WS call
         if (storeName != null) {
 
-          PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
-              tokenInvalidator, sharedPreferences)
-              .execute(successRequestListener, errorRequestListener);
-        } else {
-          PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
+          PostReviewRequest.of(storeName, packageName, reviewText, reviewRating, bodyInterceptor,
               httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator,
               sharedPreferences)
+              .execute(successRequestListener, errorRequestListener);
+        } else {
+          PostReviewRequest.of(packageName, reviewText, reviewRating, bodyInterceptor, httpClient,
+              converterFactory, isAppInstalled(packageName), tokenInvalidator, sharedPreferences)
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -241,8 +236,6 @@ import rx.subscriptions.Subscriptions;
     final TextView titleTextView = (TextView) view.findViewById(R.id.title);
     final AppCompatRatingBar reviewRatingBar =
         (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
-    final TextInputLayout titleTextInputLayout =
-        (TextInputLayout) view.findViewById(R.id.input_layout_title);
     final TextInputLayout reviewTextInputLayout =
         (TextInputLayout) view.findViewById(R.id.input_layout_review);
     final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
@@ -258,21 +251,11 @@ import rx.subscriptions.Subscriptions;
 
       AptoideUtils.SystemU.hideKeyboard(activity);
 
-      final String reviewTitle = titleTextInputLayout.getEditText()
-          .getText()
-          .toString();
       final String reviewText = reviewTextInputLayout.getEditText()
           .getText()
           .toString();
       final int reviewRating = Math.round(reviewRatingBar.getRating());
 
-      if (TextUtils.isEmpty(reviewTitle)) {
-        titleTextInputLayout.setError(
-            AptoideUtils.StringU.getResString(R.string.ws_error_MARG_107, resources));
-        return;
-      }
-
-      titleTextInputLayout.setErrorEnabled(false);
       dialog.dismiss();
 
       final SuccessRequestListener<BaseV7Response> successRequestListener = response -> {
@@ -296,14 +279,13 @@ import rx.subscriptions.Subscriptions;
       };
 
       if (storeName != null) {
-        PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            bodyInterceptor, httpClient, converterFactory, isAppInstalled(packageName),
-            tokenInvalidator, sharedPreferences)
-            .execute(successRequestListener, errorRequestListener);
-      } else {
-        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyInterceptor,
+        PostReviewRequest.of(storeName, packageName, reviewText, reviewRating, bodyInterceptor,
             httpClient, converterFactory, isAppInstalled(packageName), tokenInvalidator,
             sharedPreferences)
+            .execute(successRequestListener, errorRequestListener);
+      } else {
+        PostReviewRequest.of(packageName, reviewText, reviewRating, bodyInterceptor, httpClient,
+            converterFactory, isAppInstalled(packageName), tokenInvalidator, sharedPreferences)
             .execute(successRequestListener, errorRequestListener);
       }
     });

@@ -193,17 +193,20 @@ public class WizardFragment extends UIComponentFragment
 
   @Override
   public void handleColorTransitions(int position, float positionOffset, int positionOffsetPixels) {
-    if (position < (viewPagerAdapter.getCount() - 1) && position < (transitionColors.length - 1)) {
-      ArgbEvaluator argbEvaluator = new ArgbEvaluator();
-      int argbEvaluation =
-          (Integer) argbEvaluator.evaluate(positionOffset, transitionColors[position],
-              transitionColors[position + 1]);
-      animatedColorView.setBackgroundColor(argbEvaluation);
-    } else {
-      if (viewPagerAdapter.getCount() == 2) {
-        animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 2]);
+    if (animatedColorView != null) {
+      if (position < (viewPagerAdapter.getCount() - 1) && position < (transitionColors.length
+          - 1)) {
+        ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+        int argbEvaluation =
+            (Integer) argbEvaluator.evaluate(positionOffset, transitionColors[position],
+                transitionColors[position + 1]);
+        animatedColorView.setBackgroundColor(argbEvaluation);
       } else {
-        animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 1]);
+        if (viewPagerAdapter.getCount() == 2) {
+          animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 2]);
+        } else {
+          animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 1]);
+        }
       }
     }
   }
