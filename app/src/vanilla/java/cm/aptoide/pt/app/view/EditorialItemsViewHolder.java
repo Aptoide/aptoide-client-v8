@@ -60,7 +60,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
     appCardRating = (TextView) appCard.findViewById(R.id.rating_label);
     appCardRatingLayout = appCard.findViewById(R.id.rating_layout);
-    mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
+    mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>(), editorialMediaClicked);
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     mediaList.addItemDecoration(new RecyclerView.ItemDecoration() {
