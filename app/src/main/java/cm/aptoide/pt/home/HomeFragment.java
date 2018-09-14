@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -350,25 +349,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     View dialogView = inflater.inflate(R.layout.dialog_logged_in_accept_tos, null);
     alertDialog.setView(dialogView);
-    Button continueButton = (Button) dialogView.findViewById(R.id.accept_continue);
+    Button continueButton = dialogView.findViewById(R.id.accept_continue);
 
     setPrivacyPolicyLinks(dialogView);
     alertDialog.setCancelable(false);
     alertDialog.setCanceledOnTouchOutside(false);
-
-    ((CheckBox) dialogView.findViewById(R.id.logged_in_terms_checkbox)).setOnCheckedChangeListener(
-        (compoundButton, isChecked) -> {
-          if (isChecked) {
-            continueButton.setEnabled(true);
-            continueButton.setClickable(true);
-            continueButton.setTextColor(
-                getResources().getColor(R.color.default_orange_gradient_end));
-          } else {
-            continueButton.setEnabled(false);
-            continueButton.setClickable(false);
-            continueButton.setTextColor(getResources().getColor(R.color.grey_medium));
-          }
-        });
 
     continueButton.setOnClickListener(__ -> {
       termsAndConditionsAccept.onNext(null);
@@ -406,11 +391,16 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
       }
     };
 
-    String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
+    String baseString = getString(R.string.accept_terms_message_loggedin);
+    String buttonString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
     String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
     String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
     String privacyAndTerms =
         String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
+    String buttonAccept =
+        String.format(buttonString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
+    Button continueButton = dialogView.findViewById(R.id.accept_continue);
+    continueButton.setText(buttonAccept);
 
     SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
     privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
@@ -422,8 +412,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-    TextView termsAndConditions = (TextView) dialogView.findViewById(R.id.privacy_and_tos);
-    termsAndConditions.setText(privacyAndTermsSpan);
-    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
+    TextView info = dialogView.findViewById(R.id.tos_info);
+    info.setText(privacyAndTermsSpan);
+    info.setMovementMethod(LinkMovementMethod.getInstance());
   }
 }
