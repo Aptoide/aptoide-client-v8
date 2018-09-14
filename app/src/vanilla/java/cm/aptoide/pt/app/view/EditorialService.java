@@ -103,9 +103,8 @@ public class EditorialService {
       String backgroundImage = card.getBackgroundImage();
       return Observable.just(
           new EditorialViewModel(editorialContentList, cardType, appId, card.getTitle(), appName,
-              packageName, size,
-              icon, graphic, obb, storeId, storeName, storeTheme, vername, vercode, path,
-              backgroundImage, pathAlt, md5));
+              packageName, size, icon, graphic, obb, storeId, storeName, storeTheme, vername,
+              vercode, path, backgroundImage, pathAlt, md5));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }

@@ -551,9 +551,5 @@
   <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
 
-  <!--Strings related to the accept ToS dialog for logged in users-->
-  <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our Terms and Conditions and Privacy Policy to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-
 </resources>
 
