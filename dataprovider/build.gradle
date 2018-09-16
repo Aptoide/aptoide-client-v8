@@ -1,8 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-  jvmArgs '-noverify'
-}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -108,10 +104,10 @@ dependencies {
   implementation project(path: ':crashreports')
   compileOnly project(path: ':utils')
 
-  testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
+  testImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP_VERSION}"
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-  testImplementation "com.android.support.test:testing-support-lib:0.1"
+  testImplementation "com.android.support.test:testing-support-lib:${TESTING_SUPPORT_LIB_VERSION}"
 
   //noinspection GradleDependency
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
@@ -119,8 +115,10 @@ dependencies {
   implementation "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
 
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  //implementation "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  //implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID2_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
@@ -128,7 +126,7 @@ dependencies {
   implementation "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
-  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+  implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
 
   // Parceler - https://github.com/johncarl81/parceler
   compileOnly "org.parceler:parceler-api:${PARCELER_VERSION}"

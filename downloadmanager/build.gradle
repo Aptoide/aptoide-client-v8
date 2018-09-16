@@ -1,8 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-  jvmArgs '-noverify'
-}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -59,7 +55,8 @@ dependencies {
   implementation "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
 
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  //implementation "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"

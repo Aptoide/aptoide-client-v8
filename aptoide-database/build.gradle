@@ -1,9 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-  jvmArgs '-noverify'
-}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -56,8 +52,10 @@ dependencies {
   testImplementation "junit:junit:${JUNIT_VERSION}"
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  //implementation "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  //implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID2_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 }

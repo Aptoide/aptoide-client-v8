@@ -1,27 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
-
-retrolambda {
-  jvmArgs '-noverify'
-}
-
-buildscript {
-
-  repositories {
-    maven { url 'https://maven.fabric.io/public' }
-  }
-
-  dependencies {
-    classpath 'io.fabric.tools:gradle:1.22.0'
-  }
-}
 
 android {
   compileSdkVersion 25
-  buildToolsVersion "27.0.3"
-
-
+  buildToolsVersion BUILD_TOOLS_VERSION
   defaultConfig {
     minSdkVersion 15
     targetSdkVersion 25
@@ -51,25 +33,26 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   api project(path: ':aptoide-analytics-core')
 
-  implementation 'com.android.support:appcompat-v7:25.4.0'
+  implementation "com.android.support:appcompat-v7:25.4.0"
 
-  testImplementation 'junit:junit:4.12'
+  testImplementation "junit:junit:${JUNIT_VERSION}"
 
   // Network
-  implementation "com.squareup.okhttp3:okhttp:3.6.0"
-  implementation "com.squareup.retrofit2:retrofit:2.1.0"
-  api "com.squareup.retrofit2:adapter-rxjava:2.1.0"
+  implementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+  implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+  api "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
 
-  implementation "io.reactivex:rxjava:1.2.7"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  //implementation "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
 
   // Fabric
-  implementation("com.crashlytics.sdk.android:crashlytics:2.6.5@aar") {
+  implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar", {
     transitive = true
-  }
+  })
 
   // Facebook
-  implementation 'com.facebook.android:facebook-android-sdk:4.28.0'
+  implementation "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
 
   // Flurry Android sdk
-  implementation "com.flurry.android:analytics:6.4.2"
+  implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
 }

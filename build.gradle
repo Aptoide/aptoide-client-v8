@@ -1,25 +1,27 @@
 buildscript {
   repositories {
     jcenter()
+	google()
     mavenLocal()
-    google()
+    maven { url "https://maven.fabric.io/public" }
   }
+
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.1.3'
-    classpath 'me.tatarka:gradle-retrolambda:3.7.0'
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
-    classpath 'io.realm:realm-gradle-plugin:3.5.0'
-    //classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
+    classpath 'com.android.tools.build:gradle:3.1.4'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4' //0.8.3
+    classpath 'io.realm:realm-gradle-plugin:3.5.0' //5.5.0
+    //classpath 'com.novoda:gradle-android-command-plugin:1.7.1' //2.0.1
+    classpath 'io.fabric.tools:gradle:1.25.4'
   }
 }
 
 allprojects {
   repositories {
     jcenter()
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url "https://jitpack.io" }
-    google()
+	google()
+    maven { url "https://maven.fabric.io/public" }
+	maven { url "https://jitpack.io" }
+	maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
 }
 
@@ -31,7 +33,7 @@ task clean(type: Delete) {
 // from controlling version.
 // This will override gradle-wrapper.properties
 task wrapper(type: Wrapper) {
-  gradleVersion = '4.4'
+  gradleVersion = '4.10.1'
   distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
@@ -40,82 +42,94 @@ ext {
   //
   // gradle build script vars
   //
+
   USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
-  BUILD_TOOLS_VERSION = '27.0.3'
+  BUILD_TOOLS_VERSION = '28.0.2'
 
   //
   // gradle build script dependencies versions
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '26.0.1'
+  SUPPORT_LIB_VERSION = '26.0.1' //28.0.0-rc02
 
   // Google Play Services
-  PLAY_SERVICES_VERSION = '9.8.0'
+  PLAY_SERVICES_VERSION = '9.8.0' //15.0.1
 
   JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
 
-  MULTIDEX_VERSION = '1.0.1'
+  MULTIDEX_VERSION = '1.0.3'
 
   // Rx
-  RXJAVA_VERSION = '1.2.7'
+  RXJAVA_VERSION = '1.3.8'
+  //RXJAVA2_VERSION = '2.2.2'
   RXANDROID_VERSION = '1.2.1'
-  JW_RX_BINDING_VERSION = '1.0.0'
-  RXJAVA_PROGUARD_RULES_VERSION = '1.2.7.0'
+  //RXANDROID2_VERSION = '2.1.0'
+  JW_RX_BINDING_VERSION = '1.0.1'
+  RXJAVA_PROGUARD_RULES_VERSION = '1.2.10.0' //1.3.3.0
   TRELLO_RX_LIFECYCLE_VERSION = '1.0'
-  RX_RELAY = '1.2.0'
-  Rx_lint_version = '1.2'
+  RX_RELAY_VERSION = '1.2.0'
+  RX_LINT_VERSION = '1.6.1'
 
   // Retrofit
-  RETROFIT_VERSION = '2.1.0'
+  RETROFIT_VERSION = '2.4.0'
 
   // Test
-  MOCK_WEB_SERVER_VERSION = '3.4.1'
   JUNIT_VERSION = '4.12'
-  MOCKITO_CORE_VERSION = '1.10.19'
+  MOCKITO_CORE_VERSION = '1.10.19' //2.22.0
   MOCKITO_CORE_ANDROID_VERSION = '2.7.15'
-  ESPRESSO_VERSION = '3.0.1'
-  RUNNER_VERSION = '1.0.1'
-  RULES_VERSION = '1.0.1'
-
-  JACKSON_VERSION = '2.8.5'
+  ESPRESSO_VERSION = '3.0.2'
+  RUNNER_VERSION = '1.0.2'
+  RULES_VERSION = '1.0.2'
+  TESTING_SUPPORT_LIB_VERSION = '0.1'
+  JACKSON_VERSION = '2.8.11.2' //2.9.6
 
   // Material tab strip
-  MATERIAL_TAB_STRIP_VERSION = '1.1.0'
+  MATERIAL_TAB_STRIP_VERSION = '1.1.1'
 
   // Glide
-  GLIDE_VERSION = '4.7.1'
+  GLIDE_VERSION = '4.8.0'
 
   // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '4.28.0'
+  FACEBOOK_ANDROID_SDK_VERSION = '4.36.0'
 
   // File Downloader lib
-  FILE_DOWNLOADER_VERSION = '1.4.1'
-  FILE_DOWNLOADER_OKHTTP_IMP_VERSION = '1.0.0'
+  FILE_DOWNLOADER_VERSION = '1.4.1' //1.7.5
+  FILE_DOWNLOADER_OKHTTP_IMP_VERSION = '1.1.0'
 
-  PAYPAL_SDK = '2.15.0'
+  PAYPAL_SDK_VERSION = '2.16.0'
 
   SUPER_USER_LIB_VERSION = '1.0.0.+'
 
   // Flurry Android SDK
-  FLURRY_VERSION = '6.4.2'
+  FLURRY_VERSION = '6.4.2' //11.3.0
 
-  CRASHLYTICS_VERSION = '2.6.5'
+  CRASHLYTICS_VERSION = '2.9.5'
 
   // https://github.com/googlei18n/libphonenumber
-  LIB_PHONE_NUMBER_VERSION = '8.3.0'
-  OKHTTP_VERSION = '3.6.0'
+  LIB_PHONE_NUMBER_VERSION = '8.3.0' //8.9.13
+  OKHTTP_VERSION = '3.11.0'
 
-  CONSTRAINT_LAYOUT_VERSION = '1.0.2'
+  CONSTRAINT_LAYOUT_VERSION = '1.1.3' //2.0.0-alpha2
 
   LEAK_CANARY_VERSION = '1.5'
-  PARCELER_VERSION = '1.1.6'
+  PARCELER_VERSION = '1.1.11'
 
-  ADYEN_VERSION = '1.10.0'
-  CARD_FORM_VERSION = '3.0.6'
+  ADYEN_VERSION = '1.14.2' //2.0.2
+  CARD_FORM_VERSION = '3.0.6' //3.4.1
 
-  TEST_FAIRY_VERSION = '1.5.5'
-  DAGGER_VERSION = '2.12'
+  TEST_FAIRY_VERSION = '1.5.15' //1.8.1
+  DAGGER_VERSION = '2.17'
+
+  NANOHTTPD_VERSION = '2.3.0'
+
+  TWITTER_ANDROID_SDK_VERSION = '2.3.0' //3.3.0
+
+  SIXPACK_JAVA_VERSION = '0.4-SNAPSHOT'
+
+  SLF4J_VERSION = '1.7.25' //1.8.0-beta2
+
+  JMDNS_VERSION = '3.5.4'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

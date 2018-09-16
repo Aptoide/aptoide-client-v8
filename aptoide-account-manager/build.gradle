@@ -1,9 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-
-retrolambda {
-  jvmArgs '-noverify'
-}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -82,9 +77,10 @@ dependencies {
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
+  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  //implementation "io.reactivex.rxjava2:rxjava:${RXJAVA2_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   // Parceler - https://github.com/johncarl81/parceler
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
