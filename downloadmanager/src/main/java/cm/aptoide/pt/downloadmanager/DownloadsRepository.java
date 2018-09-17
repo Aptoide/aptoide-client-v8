@@ -45,4 +45,8 @@ public class DownloadsRepository {
   public Observable<List<Download>> getDownloadListByMd5(String md5) {
     return downloadAccessor.getAsList(md5);
   }
+
+  public Observable<List<Download>> getCurrentActiveDownloads() {
+    return downloadAccessor.getRunningDownloads();
+  }
 }

@@ -98,7 +98,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Observable<List<Download>> getCurrentActiveDownloads() {
-    return null;
+    return downloadsRepository.getCurrentActiveDownloads();
   }
 
   @Override public Completable pauseAllDownloads() {
