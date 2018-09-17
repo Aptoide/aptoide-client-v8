@@ -101,7 +101,7 @@ public class HomePresenterTest {
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
     bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
     localTopAppsBundle = bundlesModel.getList()
-        .get(0);
+        .get(1);
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);

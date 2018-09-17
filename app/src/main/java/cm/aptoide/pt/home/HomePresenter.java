@@ -51,8 +51,6 @@ public class HomePresenter implements Presenter {
 
     handleAppClick();
 
-    handleEditorsChoiceClick();
-
     handleRecommendedAppClick();
 
     handleAdClick();
@@ -185,9 +183,6 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
-            .filter(click -> !click.getBundle()
-                .getType()
-                .equals(EDITORS))
             .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
                     .getRating(), click.getApp()
                     .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
@@ -198,35 +193,18 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(click -> {
               Application app = click.getApp();
-              homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+              if (click.getBundle()
+                  .getType()
+                  .equals(EDITORS)) {
+                homeNavigator.navigateWithEditorsPosition(click.getApp()
+                    .getAppId(), click.getApp()
+                    .getPackageName(), "", "", click.getApp()
+                    .getTag(), String.valueOf(click.getAppPosition()));
+              } else {
+                homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+              }
             })
             .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  @VisibleForTesting public void handleEditorsChoiceClick() {
-    view.getLifecycle()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.appClicked()
-            .filter(click -> click.getBundle()
-                .getType()
-                .equals(EDITORS))
-            .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
-                    .getRating(), click.getApp()
-                    .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
-                click.getBundle()
-                    .getTag(), click.getBundle()
-                    .getContent()
-                    .size()))
-            .observeOn(viewScheduler)
-            .doOnNext(click -> homeNavigator.navigateWithEditorsPosition(click.getApp()
-                .getAppId(), click.getApp()
-                .getPackageName(), "", "", click.getApp()
-                .getTag(), String.valueOf(click.getAppPosition()))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
         }, throwable -> {
