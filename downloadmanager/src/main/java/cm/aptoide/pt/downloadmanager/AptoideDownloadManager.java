@@ -84,7 +84,8 @@ public class AptoideDownloadManager implements DownloadManager {
           } else {
             return downloads.get(0);
           }
-        });
+        })
+        .distinctUntilChanged();
   }
 
   @Override public Observable<List<Download>> getDownloadsList() {
@@ -173,11 +174,13 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
             .first()
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
-        .doOnNext(download -> downloadsRepository.save(download));
+        .doOnNext(download -> downloadsRepository.save(download))
+        .subscribeOn(Schedulers.io());
   }
 
   private Observable<Download> updateDownload(Download download,
       AppDownloadStatus appDownloadStatus) {
+    download.setOverallProgress(appDownloadStatus.getOverallProgress());
     download.setOverallDownloadStatus(
         downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
