@@ -51,14 +51,14 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   private String marketName;
 
   public static Fragment newInstance(Event event, String storeTheme, String tag,
-      StoreContext storeContext, boolean addAdultFilter) {
-    return newInstance(event, null, storeTheme, tag, storeContext, addAdultFilter);
+      StoreContext storeContext) {
+    return newInstance(event, null, storeTheme, tag, storeContext);
   }
 
   public static Fragment newInstance(Event event, String title, String storeTheme, String tag,
-      StoreContext storeContext, boolean addAdultFilter) {
+      StoreContext storeContext) {
     Bundle args = buildBundle(event, title, storeTheme, tag, storeContext);
-    Fragment fragment = StoreTabFragmentChooser.choose(event.getName(), addAdultFilter);
+    Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
       args.putAll(arguments);
