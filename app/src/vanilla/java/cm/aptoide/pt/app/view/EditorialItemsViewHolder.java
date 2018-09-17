@@ -81,7 +81,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       manageMessageVisibility(editorialItem);
     }
     manageMediaVisibility(editorialItem);
-    if (editorialItem.isPlaceHolderType()) {
+    /*TODO: Add this code back once the transition is completed
+      if (editorialItem.isPlaceHolderType()) {
       ImageLoader.with(itemView.getContext())
           .load(editorialItem.getIcon(), appCardImage);
       appCardImage.setVisibility(View.VISIBLE);
@@ -94,7 +95,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       }
       appCardRatingLayout.setVisibility(View.VISIBLE);
       appCard.setVisibility(View.VISIBLE);
-    }
+    }*/
   }
 
   private void manageTitleVisibility(EditorialContent editorialItem, int position) {

@@ -34,9 +34,9 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
 
     ImageLoader.with(itemView.getContext())
         .load(actionItem.getIcon(), backgroundImage);
-    editorialTitle.setText(Translator.translate(actionItem.getTitle(), itemView.getContext(), ""));
+    editorialTitle.setText(Translator.translate(actionItem.getType(), itemView.getContext(), ""));
     editorialSubtitle.setText(
-        Translator.translate(actionItem.getMessage(), itemView.getContext(), ""));
+        Translator.translate(actionItem.getTitle(), itemView.getContext(), ""));
     editorialCard.setOnClickListener(view -> {
       uiEventsListener.onNext(new EditorialHomeEvent(actionItem.getCardId(), homeBundle, position,
           HomeEvent.Type.EDITORIAL));
