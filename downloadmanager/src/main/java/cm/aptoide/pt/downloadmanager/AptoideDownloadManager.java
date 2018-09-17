@@ -92,7 +92,7 @@ public class AptoideDownloadManager implements DownloadManager {
     return downloadsRepository.getAllDownloads();
   }
 
-  @Override public Observable<Download> getCurrentActiveDownload() {
+  @Override public Observable<Download> getCurrentInProgressDownload() {
     return getDownloadsList().flatMapIterable(downloads -> downloads)
         .filter(download -> download.getOverallDownloadStatus() == Download.PROGRESS);
   }
