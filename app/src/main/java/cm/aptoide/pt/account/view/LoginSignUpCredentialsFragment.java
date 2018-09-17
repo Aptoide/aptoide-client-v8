@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
@@ -72,6 +73,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View rootView;
   private CheckBox termsConditionCheckBox;
   private Drawable checkboxDrawable;
+  private int originalHeight;
 
   private String marketName;
   private PublishSubject<Void> privacyPolicySubject;
@@ -197,16 +199,16 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void showAptoideSignUpArea() {
-    setAptoideSignUpLoginAreaVisible();
+    setAptoideSignUpAreaVisible();
     loginArea.setVisibility(View.GONE);
     signUpArea.setVisibility(View.VISIBLE);
     separator.setVisibility(View.GONE);
-    termsConditionCheckBox.setVisibility(View.VISIBLE);
-    termsAndConditions.setVisibility(View.VISIBLE);
+    termsConditionCheckBox.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
   }
 
   @Override public void showAptoideLoginArea() {
-    setAptoideSignUpLoginAreaVisible();
+    setAptoideLoginAreaVisible();
     loginArea.setVisibility(View.VISIBLE);
     signUpArea.setVisibility(View.GONE);
     separator.setVisibility(View.GONE);
@@ -228,14 +230,23 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void showTermsConditionError() {
+    //Shifts the bottomsheet up and then down again to create space for the error snack
+    float newHeight = 360 * getResources().getDisplayMetrics().density;
+    bottomSheetBehavior.setPeekHeight((int) newHeight);
+
+    final Handler handler = new Handler();
+    handler.postDelayed(() -> bottomSheetBehavior.setPeekHeight(originalHeight), 1950);
     Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
         Snackbar.LENGTH_SHORT)
         .show();
+
     Drawable replacementDrawable = checkboxDrawable.getConstantState()
         .newDrawable()
         .mutate();
+
     replacementDrawable.setColorFilter(getResources().getColor(R.color.red),
         PorterDuff.Mode.SRC_ATOP);
+
     termsConditionCheckBox.setButtonDrawable(replacementDrawable);
     termsConditionCheckBox.setOnCheckedChangeListener(
         (buttonView, isChecked) -> termsConditionCheckBox.setButtonDrawable(checkboxDrawable));
@@ -281,6 +292,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public boolean tryCloseLoginBottomSheet() {
     if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      bottomSheetBehavior.setPeekHeight(originalHeight);
       credentialsEditTextsArea.setVisibility(View.GONE);
       loginSignupSelectionArea.setVisibility(View.VISIBLE);
       loginArea.setVisibility(View.GONE);
@@ -325,11 +337,21 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
   }
 
-  private void setAptoideSignUpLoginAreaVisible() {
+  private void setAptoideLoginAreaVisible() {
     credentialsEditTextsArea.setVisibility(View.VISIBLE);
     loginSignupSelectionArea.setVisibility(View.GONE);
     if (bottomSheetBehavior != null) {
-      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+      float newHeight = 320 * getResources().getDisplayMetrics().density;
+      bottomSheetBehavior.setPeekHeight((int) newHeight);
+    }
+  }
+
+  private void setAptoideSignUpAreaVisible() {
+    credentialsEditTextsArea.setVisibility(View.VISIBLE);
+    loginSignupSelectionArea.setVisibility(View.GONE);
+    if (bottomSheetBehavior != null) {
+      float newHeight = 280 * getResources().getDisplayMetrics().density;
+      bottomSheetBehavior.setPeekHeight((int) newHeight);
     }
   }
 
@@ -423,6 +445,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       // a child of CoordinatorLayout
     }
 
+    originalHeight = bottomSheetBehavior.getPeekHeight();
     attachPresenter(presenter);
     registerClickHandler(presenter);
   }
