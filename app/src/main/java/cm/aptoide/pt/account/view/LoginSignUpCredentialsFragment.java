@@ -2,6 +2,7 @@ package cm.aptoide.pt.account.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -231,11 +232,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void showTermsConditionError() {
     //Shifts the bottomsheet up and then down again to create space for the error snack
-    float newHeight = 360 * getResources().getDisplayMetrics().density;
-    bottomSheetBehavior.setPeekHeight((int) newHeight);
+    if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+      float newHeight = 360 * getResources().getDisplayMetrics().density;
+      bottomSheetBehavior.setPeekHeight((int) newHeight);
 
-    final Handler handler = new Handler();
-    handler.postDelayed(() -> bottomSheetBehavior.setPeekHeight(originalHeight), 1950);
+      final Handler handler = new Handler();
+      handler.postDelayed(() -> bottomSheetBehavior.setPeekHeight(originalHeight), 1950);
+    }
+
     Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
         Snackbar.LENGTH_SHORT)
         .show();
