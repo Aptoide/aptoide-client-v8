@@ -72,7 +72,9 @@
   <string name="appview_similar_apps">Similar apps</string>
   <string name="appview_short_downloading">Downloading</string>
   <string name="appview_message_apkfy">Keep Aptoide installed in your device to keep all your apps updated! Discover new apps in our unrestricted app store.</string>
-
+  <string name="appview_title_apkfy_">Keep Aptoide installed to get</string>
+  <string name="appview_message_apkfy_1">100% safe updates of %s</string>
+  <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -272,6 +274,7 @@
   <string name="summer_apps">Summer Apps</string>
   <string name="title_play_it">Play-It!</string>
   <string name="home_title_editors_choice">Editors\' Choice</string>
+  <string name="home_game_of_the_week">Game of the Week</string>
 
 
   <!--home Fragment-->

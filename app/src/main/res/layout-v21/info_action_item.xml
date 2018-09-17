@@ -31,7 +31,7 @@
       />
 
   <android.support.v7.widget.CardView
-      android:id="@+id/card_layout"
+      android:id="@+id/card_info_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="39.5dp"
@@ -70,6 +70,7 @@
               android:id="@+id/title"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:textAlignment="center"
               android:textStyle="normal"
               tools:text="title"
               style="@style/Aptoide.TextView.Medium.M.Grey_900"

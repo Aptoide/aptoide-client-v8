@@ -48,7 +48,7 @@ ext {
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '25.4.0'
+  SUPPORT_LIB_VERSION = '26.0.1'
 
   // Google Play Services
   PLAY_SERVICES_VERSION = '9.8.0'

@@ -46,5 +46,5 @@ public interface BundleView extends View {
 
   Observable<HomeEvent> bundleScrolled();
 
-  Observable<HomeBundle> visibleBundles();
+  Observable<HomeEvent> visibleBundles();
 }
