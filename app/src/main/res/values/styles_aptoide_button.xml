@@ -13,7 +13,6 @@
   </style>
 
   <style name="Aptoide.Button.Install" parent="Aptoide.Button">
-    <item name="android:layout_height">@dimen/button_height</item>
     <item name="android:background">?attr/installButtonBackground</item>
   </style>
 

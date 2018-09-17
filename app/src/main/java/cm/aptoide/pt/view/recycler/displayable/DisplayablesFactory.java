@@ -155,7 +155,7 @@ public class DisplayablesFactory {
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
           String message = dataObj.getMessage();
           return Observable.just(
-              new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject())));
+              new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject()), StoreTheme.get(storeTheme)));
       }
     }
     return Observable.empty();
@@ -419,7 +419,7 @@ public class DisplayablesFactory {
                   .getList()));
     } else {
       displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-          StoreTheme.DEFAULT));
+          StoreTheme.get(storeTheme)));
     }
 
     return displayables;
