@@ -110,10 +110,15 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
+import cm.aptoide.pt.download.FileDownloadManagerProvider;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
+import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadAppFileMapper;
+import cm.aptoide.pt.downloadmanager.DownloadAppMapper;
 import cm.aptoide.pt.downloadmanager.DownloadStatusMapper;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
+import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BundleDataSource;
@@ -305,11 +310,32 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
       DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
-      @Named("user-agent") Interceptor userAgentInterceptor, CacheHelper cacheHelper,
-      DownloadAnalytics downloadAnalytics, AuthenticationPersistence authenticationPersistence,
-      @Named("cachePath") String cachePath, InstallAnalytics installAnalytics) {
+      CacheHelper cacheHelper, @Named("cachePath") String cachePath,
+      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider) {
     final String apkPath = cachePath + "apks/";
     final String obbPath = cachePath + "obb/";
+
+    FileUtils.createDir(apkPath);
+    FileUtils.createDir(obbPath);
+
+    return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath, apkPath,
+        obbPath, downloadAppMapper, appDownloaderProvider);
+  }
+
+  @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {
+    return new DownloadAppFileMapper();
+  }
+
+  @Singleton @Provides DownloadAppMapper providesDownloadAppMapper(
+      DownloadAppFileMapper downloadAppFileMapper) {
+    return new DownloadAppMapper(downloadAppFileMapper);
+  }
+
+  @Provides @Singleton FileDownloaderProvider providesFileDownloaderProvider(
+      @Named("cachePath") String cachePath, @Named("user-agent") Interceptor userAgentInterceptor,
+      AuthenticationPersistence authenticationPersistence, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics) {
+
     final OkHttpClient.Builder httpClientBuilder =
         new OkHttpClient.Builder().addInterceptor(userAgentInterceptor)
             .addInterceptor(new PaidAppsDownloadInterceptor(authenticationPersistence))
@@ -317,15 +343,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             .connectTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS);
-
-    FileUtils.createDir(apkPath);
-    FileUtils.createDir(obbPath);
     FileDownloader.init(application,
         new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
-    return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath, apkPath,
-        obbPath);
+    return new FileDownloadManagerProvider(cachePath, FileDownloader.getImpl());
+  }
+
+  @Singleton @Provides AppDownloaderProvider providesAppDownloaderProvider(
+      FileDownloaderProvider fileDownloaderProvider) {
+    return new AppDownloaderProvider(fileDownloaderProvider);
   }
 
   @Singleton @Provides DownloadsRepository provideDownloadsRepository(

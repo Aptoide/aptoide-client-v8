@@ -40,12 +40,12 @@ public class FileDownloadManager implements FileDownloader {
   }
 
   @Override public Completable startFileDownload() {
-    return Completable.fromCallable(() -> {
+    return Completable.fromAction(() -> {
       if (mainDownloadPath == null || mainDownloadPath.isEmpty()) {
         throw new IllegalArgumentException("The url for the download can not be empty");
       } else {
         createBaseDownloadTask(mainDownloadPath, versionCode, packageName, fileType, fileName);
-        return fileDownloader.start(fileDownloadTask, false);
+        boolean downloadStart = fileDownloader.start(fileDownloadTask, false);
       }
     });
   }

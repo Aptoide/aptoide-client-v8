@@ -36,11 +36,11 @@ public class AppDownloadManagerTest {
   @Before public void setupAppDownloaderTest() {
     MockitoAnnotations.initMocks(this);
     apk = new DownloadAppFile("http://apkdownload.com/file/app.apk", "", "appMd5", 123,
-        "cm.aptoide.pt", "app.apk", DownloadAppFile.FileType.APK, 123);
+        "cm.aptoide.pt", "app.apk", DownloadAppFile.FileType.APK);
     mainObb = new DownloadAppFile("http://apkdownload.com/file/mainObb.apk", "", "appMd5", 123,
-        "cm.aptoide.pt", "mainObb", DownloadAppFile.FileType.OBB_MAIN, 123);
+        "cm.aptoide.pt", "mainObb", DownloadAppFile.FileType.OBB);
     patchObb = new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "", "appMd5", 123,
-        "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB_PATCH, 123);
+        "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB);
 
     DownloadApp appToDownload = new DownloadApp(getFilesListWithApk(), "md5Apk");
     DownloadApp appToDownloadWithObbs = new DownloadApp(getFilesListWithObbs(), "md5WithObb");

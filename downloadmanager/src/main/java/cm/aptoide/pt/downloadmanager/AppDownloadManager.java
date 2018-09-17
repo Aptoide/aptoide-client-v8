@@ -1,6 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 import java.util.Collections;
 import java.util.HashMap;
 import rx.Completable;
@@ -37,8 +38,11 @@ public class AppDownloadManager implements AppDownloader {
                 downloadAppFile.getFileName(), PublishSubject.create()))
             .doOnNext(fileDownloader -> fileDownloaderPersistence.put(
                 downloadAppFile.getAlternativeDownloadPath(), fileDownloader)))
-        .flatMapCompletable(fileDownloader -> fileDownloader.startFileDownload())
-        .flatMap(fileDownloader -> handleFileDownloadProgress(fileDownloader))
+        .flatMap(fileDownloader -> fileDownloader.startFileDownload()
+            .andThen(handleFileDownloadProgress(fileDownloader)))
+        .doOnError(throwable -> {
+          throw new IllegalStateException(throwable);
+        })
         .toCompletable();
   }
 
@@ -57,11 +61,17 @@ public class AppDownloadManager implements AppDownloader {
   }
 
   @Override public Observable<AppDownloadStatus> observeDownloadProgress() {
-    return fileDownloadSubject.flatMapCompletable(fileDownloadCallback -> {
+    return observeFileDownload().flatMap(fileDownloadCallback -> {
       setAppDownloadStatus(fileDownloadCallback);
-      return Completable.complete();
+      return Observable.just(appDownloadStatus);
     })
+        .doOnError(throwable -> throwable.printStackTrace())
+        .doOnSubscribe(() -> Log.d("FileDownloader", "observeDownloadProgress: just subscribe"))
         .map(__ -> appDownloadStatus);
+  }
+
+  private Observable<FileDownloadCallback> observeFileDownload() {
+    return fileDownloadSubject;
   }
 
   private void setAppDownloadStatus(FileDownloadCallback fileDownloadCallback) {

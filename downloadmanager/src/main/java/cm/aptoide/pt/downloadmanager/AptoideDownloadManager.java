@@ -18,22 +18,33 @@ public class AptoideDownloadManager implements DownloadManager {
   private final String cachePath;
   private final String apkPath;
   private final String obbPath;
+  private final DownloadAppMapper downloadAppMapper;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
+  private AppDownloaderProvider appDownloaderProvider;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
-      DownloadStatusMapper downloadStatusMapper, String cachePath, String apkPath, String obbPath) {
+      DownloadStatusMapper downloadStatusMapper, String cachePath, String apkPath, String obbPath,
+      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
     this.apkPath = apkPath;
     this.obbPath = obbPath;
+    this.downloadAppMapper = downloadAppMapper;
+    this.appDownloaderProvider = appDownloaderProvider;
     appDownloaderMap = new HashMap<>();
   }
 
-  public void start() {
-    dispatchDownloads();
+  public Completable start() {
+    return downloadsRepository.getInQueueDownloads()
+        .filter(downloads -> !downloads.isEmpty())
+        .map(downloads -> downloads.get(0))
+        .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
+            appDownloader -> appDownloader.startAppDownload()
+                .andThen(handleDownloadProgress(appDownloader))))
+        .toCompletable();
   }
 
   @Override public void stop() {
@@ -44,6 +55,7 @@ public class AptoideDownloadManager implements DownloadManager {
       download.setOverallDownloadStatus(Download.IN_QUEUE);
       download.setTimeStamp(System.currentTimeMillis());
       downloadsRepository.save(download);
+      appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download));
     })
         .subscribeOn(Schedulers.computation());
   }
@@ -131,6 +143,11 @@ public class AptoideDownloadManager implements DownloadManager {
         .toCompletable();
   }
 
+  private AppDownloader createAppDownloadManager(Download download) {
+    DownloadApp downloadApp = downloadAppMapper.mapDownload(download);
+    return appDownloaderProvider.getAppDownloader(downloadApp);
+  }
+
   private boolean isFileMissingFromCompletedDownload(Download download) {
     return download.getOverallDownloadStatus() == Download.COMPLETED
         && getStateIfFileExists(download) == Download.FILE_MISSING;
@@ -149,16 +166,6 @@ public class AptoideDownloadManager implements DownloadManager {
       }
     }
     return downloadState;
-  }
-
-  private void dispatchDownloads() {
-    downloadsRepository.getInQueueDownloads()
-        .first()
-        .filter(downloads -> !downloads.isEmpty())
-        .map(downloads -> downloads.get(0))
-        .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
-            appDownloader -> appDownloader.startAppDownload()))
-        .flatMap(appDownloader -> handleDownloadProgress(appDownloader));
   }
 
   private Observable<Download> handleDownloadProgress(AppDownloader appDownloader) {
