@@ -42,4 +42,12 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
   @Override public AppDownloadState getDownloadState() {
     return appDownloadState;
   }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final FileDownloadTaskStatus that = (FileDownloadTaskStatus) o;
+
+    return md5.equals(that.getMd5());
+  }
 }
