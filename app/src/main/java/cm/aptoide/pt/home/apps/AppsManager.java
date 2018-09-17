@@ -161,8 +161,8 @@ public class AppsManager {
     }
   }
 
-  public void pauseDownload(App app) {
-    installManager.stopInstallation(((DownloadApp) app).getMd5());
+  public Completable pauseDownload(App app) {
+    return installManager.stopInstallation(((DownloadApp) app).getMd5());
   }
 
   public Completable resumeUpdate(App app) {
@@ -175,8 +175,8 @@ public class AppsManager {
         ((UpdateApp) app).getPackageName(), ((UpdateApp) app).getVersionCode());
   }
 
-  public void pauseUpdate(App app) {
-    installManager.stopInstallation(((UpdateApp) app).getMd5());
+  public Completable pauseUpdate(App app) {
+    return installManager.stopInstallation(((UpdateApp) app).getMd5());
   }
 
   public Completable updateApp(App app) {

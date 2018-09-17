@@ -220,7 +220,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseUpdate())
         .doOnNext(app -> view.setStandbyState(app))
-        .doOnNext(app -> appsManager.pauseUpdate(app))
+        .flatMapCompletable(app -> appsManager.pauseUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -321,7 +321,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseDownload())
-        .doOnNext(app -> appsManager.pauseDownload(app))
+        .flatMapCompletable(app -> appsManager.pauseDownload(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));

@@ -73,11 +73,13 @@ public class InstallManager {
             .log(throwable));
   }
 
-  public void stopInstallation(String md5) {
-    Intent intent = new Intent(context, InstallService.class);
-    intent.setAction(InstallService.ACTION_STOP_INSTALL);
-    intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
-    context.startService(intent);
+  public Completable stopInstallation(String md5) {
+    return aptoideDownloadManager.pauseDownload(md5);
+    //
+    // Intent intent = new Intent(context, InstallService.class);
+    // intent.setAction(InstallService.ACTION_STOP_INSTALL);
+    // intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
+    // context.startService(intent);
   }
 
   public Observable<List<Install>> getTimedOutInstallations() {

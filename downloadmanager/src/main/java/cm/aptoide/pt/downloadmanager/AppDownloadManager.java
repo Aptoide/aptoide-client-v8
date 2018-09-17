@@ -39,7 +39,7 @@ public class AppDownloadManager implements AppDownloader {
                 downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
                 downloadAppFile.getFileName(), PublishSubject.create()))
             .doOnNext(fileDownloader -> fileDownloaderPersistence.put(
-                downloadAppFile.getAlternativeDownloadPath(), fileDownloader)))
+                downloadAppFile.getMainDownloadPath(), fileDownloader)))
         .flatMap(fileDownloader -> fileDownloader.startFileDownload()
             .andThen(handleFileDownloadProgress(fileDownloader)))
         .doOnError(throwable -> {
