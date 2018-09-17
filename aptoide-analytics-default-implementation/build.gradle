@@ -23,7 +23,7 @@ android {
 
 
   defaultConfig {
-    minSdkVersion 15
+    minSdkVersion project.LIB_MINIMUM_SDK_VERSION
     targetSdkVersion 25
     versionCode 1
     versionName "1.0"

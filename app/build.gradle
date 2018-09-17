@@ -454,6 +454,9 @@ dependencies {
   annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   fairyImplementation "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
+
+  //careful updating this because of support library conflicts
+  implementation "com.airbnb.android:lottie:${LOTTIE_VERSION}"
 }
 
 String getDate() {
