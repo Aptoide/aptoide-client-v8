@@ -2,10 +2,11 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import rx.Completable;
 import rx.Observable;
+import rx.Subscription;
 import rx.subjects.PublishSubject;
 
 /**
@@ -19,18 +20,19 @@ public class AppDownloadManager implements AppDownloader {
   private HashMap<String, FileDownloader> fileDownloaderPersistence;
   private PublishSubject<FileDownloadCallback> fileDownloadSubject;
   private AppDownloadStatus appDownloadStatus;
+  private Subscription subscribe;
 
   public AppDownloadManager(FileDownloaderProvider fileDownloaderProvider, DownloadApp app) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
     this.fileDownloaderPersistence = new HashMap<>();
     fileDownloadSubject = PublishSubject.create();
-    appDownloadStatus = new AppDownloadStatus(app.getMd5(), Collections.emptyList(),
+    appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
         AppDownloadStatus.AppDownloadState.PENDING);
   }
 
-  @Override public Completable startAppDownload() {
-    return Observable.from(app.getDownloadFiles())
+  @Override public void startAppDownload() {
+    subscribe = Observable.from(app.getDownloadFiles())
         .flatMap(downloadAppFile -> Observable.just(
             fileDownloaderProvider.createFileDownloader(downloadAppFile.getDownloadMd5(),
                 downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
@@ -43,7 +45,9 @@ public class AppDownloadManager implements AppDownloader {
         .doOnError(throwable -> {
           throw new IllegalStateException(throwable);
         })
-        .toCompletable();
+        .toCompletable()
+        .subscribe(() -> {
+        }, Throwable::printStackTrace);
   }
 
   @Override public Completable pauseAppDownload() {
@@ -68,6 +72,12 @@ public class AppDownloadManager implements AppDownloader {
         .doOnError(throwable -> throwable.printStackTrace())
         .doOnSubscribe(() -> Log.d("FileDownloader", "observeDownloadProgress: just subscribe"))
         .map(__ -> appDownloadStatus);
+  }
+
+  public void stop() {
+    if (!subscribe.isUnsubscribed()) {
+      subscribe.unsubscribe();
+    }
   }
 
   private Observable<FileDownloadCallback> observeFileDownload() {

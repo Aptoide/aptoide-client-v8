@@ -41,9 +41,9 @@ public class AptoideDownloadManager implements DownloadManager {
     return downloadsRepository.getInQueueDownloads()
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
-        .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
-            appDownloader -> appDownloader.startAppDownload()
-                .andThen(handleDownloadProgress(appDownloader))))
+        .flatMap(download -> getAppDownloader(download.getMd5()).doOnNext(
+            AppDownloader::startAppDownload)
+            .flatMap(this::handleDownloadProgress))
         .toCompletable();
   }
 
