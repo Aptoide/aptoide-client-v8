@@ -1,7 +1,6 @@
 package cm.aptoide.pt.reactions.ui;
 
 import android.content.Context;
-import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.reactions.data.ReactionType;
 import com.airbnb.lottie.LottieAnimationView;
@@ -37,11 +36,9 @@ public class Reaction {
   }
 
   public void setCallback(final ReactionsView.Callback callback) {
-    view.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (callback != null) {
-          callback.onReactionItemClicked(reactionType);
-        }
+    view.setOnClickListener(view -> {
+      if (callback != null) {
+        callback.onReactionItemClicked(reactionType);
       }
     });
   }

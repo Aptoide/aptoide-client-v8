@@ -41,19 +41,15 @@ public class ReactionsPopup {
     popup.setOutsideTouchable(true);
     popup.setClippingEnabled(true);
 
-    reactionsView.setCallback(new ReactionsView.Callback() {
-      @Override public void onReactionItemClicked(ReactionType reactionType) {
-        if (reactionClickListener != null) {
-          reactionClickListener.onReactionItemClick(reactionType);
-        }
+    reactionsView.setCallback(reactionType -> {
+      if (reactionClickListener != null) {
+        reactionClickListener.onReactionItemClick(reactionType);
       }
     });
 
-    popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-      @Override public void onDismiss() {
-        if (onDismissListener != null) {
-          onDismissListener.onDismiss(reactionsView);
-        }
+    popup.setOnDismissListener(() -> {
+      if (onDismissListener != null) {
+        onDismissListener.onDismiss(reactionsView);
       }
     });
   }

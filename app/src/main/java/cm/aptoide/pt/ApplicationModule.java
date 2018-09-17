@@ -155,6 +155,9 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import cm.aptoide.pt.reactions.Reactions;
+import cm.aptoide.pt.reactions.mock.ReactionsFakeService;
+import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
@@ -1372,5 +1375,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides Reactions providesReactionsInteractor(ReactionsService reactionsService) {
+    return new Reactions(reactionsService);
+  }
+
+  @Singleton @Provides ReactionsService providesReactionsService() {
+    return new ReactionsFakeService();
   }
 }
