@@ -36,6 +36,12 @@ public class HomeNavigator {
     appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
+  public void navigateWithEditorsPosition(long appId, String packageName, String storeTheme,
+      String storeName, String tag, String editorsPosition) {
+    appNavigator.navigatewithEditorsPosition(appId, packageName, storeTheme, storeName, tag,
+        editorsPosition);
+  }
+
   public void navigateToRecommendsAppView(long appId, String packageName, String tag,
       HomeEvent.Type type) {
     appNavigator.navigateWithAppId(appId, packageName, parseAction(type), tag);

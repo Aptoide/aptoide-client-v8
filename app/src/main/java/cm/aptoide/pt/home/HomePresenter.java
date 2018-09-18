@@ -14,6 +14,8 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
+import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
+
 /**
  * Created by jdandrade on 07/03/2018.
  */
@@ -191,7 +193,16 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(click -> {
               Application app = click.getApp();
-              homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+              if (click.getBundle()
+                  .getType()
+                  .equals(EDITORS)) {
+                homeNavigator.navigateWithEditorsPosition(click.getApp()
+                    .getAppId(), click.getApp()
+                    .getPackageName(), "", "", click.getApp()
+                    .getTag(), String.valueOf(click.getAppPosition()));
+              } else {
+                homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+              }
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
