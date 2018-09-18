@@ -50,7 +50,7 @@ public enum StoreTheme {
   RED(R.style.AptoideThemeDefaultRed, R.color.red, R.color.red_gradient_end,
       R.drawable.button_border_red, R.drawable.create_store_theme_shape_red,
       R.drawable.red_gradient, R.color.red_text, R.drawable.red_search_button_background,
-      R.drawable.indigo_gradient_rounded, 8),
+      R.drawable.red_gradient_rounded, 8),
 
   INDIGO(R.style.AptoideThemeDefaultIndigo, R.color.indigo, R.color.indigo_gradient_end,
       R.drawable.button_border_indigo, R.drawable.create_store_theme_shape_indigo,
@@ -65,7 +65,7 @@ public enum StoreTheme {
   ORANGE(R.style.AptoideThemeDefaultOrange, R.color.orange, R.color.orange_gradient_end,
       R.drawable.button_border_orange, R.drawable.create_store_theme_shape_orange,
       R.drawable.orange_gradient, R.color.orange_text, R.drawable.orange_search_button_background,
-      R.drawable.pink_gradient_rounded, 8),
+      R.drawable.orange_gradient_rounded, 8),
 
   BROWN(R.style.AptoideThemeDefaultBrown, R.color.brown, R.color.brown_gradient_end,
       R.drawable.button_border_brown, R.drawable.create_store_theme_shape_brown,
