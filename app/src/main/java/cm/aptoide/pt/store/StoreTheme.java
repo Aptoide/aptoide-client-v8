@@ -182,7 +182,7 @@ public enum StoreTheme {
 
   //SPRINGGREEN TO LIGHTGREEN
   SPRING_GREEN(R.style.AptoideThemeDefaultLightgreen, R.color.light_green,
-      R.color.light_blue_gradient_end, R.drawable.button_border_lightgreen,
+      R.color.light_green_gradient_end, R.drawable.button_border_lightgreen,
       R.drawable.create_store_theme_shape_light_green, R.drawable.light_green_gradient,
       R.color.light_green_text, R.drawable.light_green_search_button_background,
       R.drawable.light_green_gradient_rounded, 7),
