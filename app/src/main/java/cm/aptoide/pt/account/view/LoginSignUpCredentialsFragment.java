@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
@@ -231,18 +230,28 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void showTermsConditionError() {
-    //Shifts the bottomsheet up and then down again to create space for the error snack
-    if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-      float newHeight = 360 * getResources().getDisplayMetrics().density;
-      bottomSheetBehavior.setPeekHeight((int) newHeight);
+    //Shifts the bottomsheet up and then down again to create space for the error snack when in portrait
+    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+      Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+          Snackbar.LENGTH_SHORT)
+          .addCallback(new Snackbar.Callback() {
 
-      final Handler handler = new Handler();
-      handler.postDelayed(() -> bottomSheetBehavior.setPeekHeight(originalHeight), 1950);
+            @Override public void onShown(Snackbar snackbar) {
+              float newHeight = 360 * getResources().getDisplayMetrics().density;
+              bottomSheetBehavior.setPeekHeight((int) newHeight);
+            }
+
+            @Override public void onDismissed(Snackbar snackbar, int event) {
+              bottomSheetBehavior.setPeekHeight(originalHeight);
+            }
+          })
+          .show();
+    } else {
+      //We are in portrait mode, and as such the view should not be shifted.
+      Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+          Snackbar.LENGTH_SHORT)
+          .show();
     }
-
-    Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
-        Snackbar.LENGTH_SHORT)
-        .show();
 
     Drawable replacementDrawable = checkboxDrawable.getConstantState()
         .newDrawable()
