@@ -231,27 +231,23 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void showTermsConditionError() {
     //Shifts the bottomsheet up and then down again to create space for the error snack when in portrait
+    Snackbar snackbar = Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+        Snackbar.LENGTH_SHORT);
+
     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-      Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
-          Snackbar.LENGTH_SHORT)
-          .addCallback(new Snackbar.Callback() {
+      snackbar.addCallback(new Snackbar.Callback() {
 
-            @Override public void onShown(Snackbar snackbar) {
-              float newHeight = 360 * getResources().getDisplayMetrics().density;
-              bottomSheetBehavior.setPeekHeight((int) newHeight);
-            }
+        @Override public void onShown(Snackbar snackbar) {
+            float newHeight = 360 * getResources().getDisplayMetrics().density;
+            bottomSheetBehavior.setPeekHeight((int) newHeight);
+        }
 
-            @Override public void onDismissed(Snackbar snackbar, int event) {
-              bottomSheetBehavior.setPeekHeight(originalHeight);
-            }
-          })
-          .show();
-    } else {
-      //We are in landscape mode, and as such the view should not be shifted.
-      Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
-          Snackbar.LENGTH_SHORT)
-          .show();
+        @Override public void onDismissed(Snackbar snackbar, int event) {
+            bottomSheetBehavior.setPeekHeight(originalHeight);
+        }
+      });
     }
+    snackbar.show();
 
     Drawable replacementDrawable = checkboxDrawable.getConstantState()
         .newDrawable()
