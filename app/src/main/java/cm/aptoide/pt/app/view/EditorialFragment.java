@@ -177,7 +177,6 @@ public class EditorialFragment extends NavigationTrackFragment
         toolbarTitle.setTextColor(getResources().getColor(R.color.black));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           handleStatusBar(true);
-          //window.setStatusBarColor(getResources().getColor(R.color.white));
         }
         if (backArrow != null) {
           backArrow.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
