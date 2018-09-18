@@ -247,7 +247,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
           })
           .show();
     } else {
-      //We are in portrait mode, and as such the view should not be shifted.
+      //We are in landscape mode, and as such the view should not be shifted.
       Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
           Snackbar.LENGTH_SHORT)
           .show();
