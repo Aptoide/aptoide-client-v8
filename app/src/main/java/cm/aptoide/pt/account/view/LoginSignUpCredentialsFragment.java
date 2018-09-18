@@ -238,12 +238,12 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       snackbar.addCallback(new Snackbar.Callback() {
 
         @Override public void onShown(Snackbar snackbar) {
-            float newHeight = 360 * getResources().getDisplayMetrics().density;
-            bottomSheetBehavior.setPeekHeight((int) newHeight);
+          float newHeight = 360 * getResources().getDisplayMetrics().density;
+          bottomSheetBehavior.setPeekHeight((int) newHeight);
         }
 
         @Override public void onDismissed(Snackbar snackbar, int event) {
-            bottomSheetBehavior.setPeekHeight(originalHeight);
+          bottomSheetBehavior.setPeekHeight(originalHeight);
         }
       });
     }
