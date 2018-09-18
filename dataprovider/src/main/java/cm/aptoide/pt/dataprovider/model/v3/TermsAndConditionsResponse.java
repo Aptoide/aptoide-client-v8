@@ -1,6 +1,8 @@
 package cm.aptoide.pt.dataprovider.model.v3;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 
 /**
  * Created by franciscocalado on 06/09/2018.
@@ -8,18 +10,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TermsAndConditionsResponse extends BaseV3Response {
 
-  @JsonProperty("birthdate") private String birthDate;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date birthDate;
   @JsonProperty("tos") private boolean tos;
   @JsonProperty("privacy") private boolean privacy;
 
   public TermsAndConditionsResponse() {
   }
 
-  public String getBirthDate() {
+  public Date getBirthDate() {
     return birthDate;
   }
 
-  public void setBirthDate(String birthDate) {
+  public void setBirthDate(Date birthDate) {
     this.birthDate = birthDate;
   }
 

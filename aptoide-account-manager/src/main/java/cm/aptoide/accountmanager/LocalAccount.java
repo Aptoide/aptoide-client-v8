@@ -2,6 +2,7 @@ package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class LocalAccount implements Account {
@@ -72,7 +73,7 @@ public class LocalAccount implements Account {
     return false;
   }
 
-  @Override public String getBirthDate() {
-    return "";
+  @Override public Date getBirthDate() {
+    return new Date(1970, 1, 1);
   }
 }

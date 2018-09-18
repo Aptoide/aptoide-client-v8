@@ -36,6 +36,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -294,7 +295,7 @@ public class AccountServiceV3 implements AccountService {
             .getEmail(), userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
         userSettings.isMature(), userSettings.getAccess()
             .isConfirmed(), terms.isOk() && terms.isPrivacy(), terms.isOk() && terms.isTos(),
-        terms.isOk() ? terms.getBirthDate() : null);
+        terms.isOk() ? terms.getBirthDate() : new Date(1970, 1, 1));
   }
 
   private Completable changeSubscription(String storeName, String storeUserName,

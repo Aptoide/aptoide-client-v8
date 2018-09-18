@@ -440,7 +440,8 @@ public class HomePresenter implements Presenter {
   private void handleLoggedInAcceptTermsAndConditions() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> accountManager.accountStatus())
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
         .filter(Account::isLoggedIn)
         .filter(
             account -> !(account.acceptedPrivacyPolicy() && account.acceptedTermsAndConditions()))
@@ -457,7 +458,6 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.termsAndConditionsContinueClicked())
-        .observeOn(viewScheduler)
         .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -470,9 +470,7 @@ public class HomePresenter implements Presenter {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.termsAndConditionsLogOutClicked())
-        .observeOn(viewScheduler)
         .flatMapCompletable(__ -> accountManager.logout())
-        .doOnCompleted(view::setDefaultUserImage)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {

@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -110,7 +111,7 @@ public interface Account {
    *
    * @return Date of birth associated with the account.
    */
-  String getBirthDate();
+  Date getBirthDate();
 
   /**
    * Account information access level.

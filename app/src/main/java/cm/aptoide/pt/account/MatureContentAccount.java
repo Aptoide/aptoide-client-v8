@@ -3,6 +3,7 @@ package cm.aptoide.pt.account;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.Store;
+import java.util.Date;
 import java.util.List;
 
 public class MatureContentAccount implements Account {
@@ -79,7 +80,7 @@ public class MatureContentAccount implements Account {
     return wrappedAccount.acceptedPrivacyPolicy();
   }
 
-  @Override public String getBirthDate() {
+  @Override public Date getBirthDate() {
     return wrappedAccount.getBirthDate();
   }
 }
