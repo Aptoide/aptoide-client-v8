@@ -16,7 +16,7 @@ import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 
 public class StoreTabFragmentChooser {
 
-  public static Fragment choose(Event.Name name, boolean addAdultFilter) {
+  public static Fragment choose(Event.Name name) {
     switch (name) {
       case listApps:
         return ListAppsFragment.newInstance();
@@ -30,7 +30,7 @@ public class StoreTabFragmentChooser {
       case myStores:
         return MyStoresFragment.newInstance();
       case getStoreWidgets:
-        return GetStoreWidgetsFragment.newInstance(addAdultFilter);
+        return GetStoreWidgetsFragment.newInstance();
       case getMoreBundle:
         return new MoreBundleFragment();
       case getAds:

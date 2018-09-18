@@ -22,8 +22,7 @@ public class StoreTabNavigator {
   public void navigateToStoreTabGridRecyclerView(Event event, String title, String storeTheme,
       String tag, StoreContext storeContext) {
     fragmentNavigator.navigateTo(
-        StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext,
-            false), true);
+        StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext), true);
   }
 
   public void navigateToCommentGridRecyclerView(CommentType commentType, String url,

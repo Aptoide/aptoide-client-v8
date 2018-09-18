@@ -223,7 +223,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
             isOwner -> new GridStoreMetaWidget.HomeMeta(getMainIcon(), getSecondaryIcon(),
                 getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing,
                 getSocialLinks(), getAppsCount(), getFollowersCount(), getFollowingsCount(),
-                getDescription(), getColorOrDefault(getStoreTheme(), context), getStoreId(),
+                getDescription(), getStoreTheme(), getColorOrDefault(getStoreTheme(), context), getStoreId(),
                 hasStore(), getBadge())));
   }
 
