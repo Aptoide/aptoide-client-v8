@@ -46,6 +46,7 @@ public class EditorialPresenter implements Presenter {
     onCreateLoadAppOfTheWeek();
     handleRetryClick();
     handleClickOnMedia();
+    handleClickOnAppCard();
 
     handleInstallClick();
     pauseDownload();
@@ -97,6 +98,19 @@ public class EditorialPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.mediaContentClicked())
         .doOnNext(editorialNavigator::navigateToUri)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(notificationUrl -> {
+        }, crashReporter::log);
+  }
+
+  private void handleClickOnAppCard() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.appCardClicked())
+        .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
+        .doOnNext(model -> {
+          editorialNavigator.navigateToAppView(model.getAppId(), model.getPackageName());
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);

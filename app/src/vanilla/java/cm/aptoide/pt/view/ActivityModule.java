@@ -275,7 +275,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new AppCoinsInfoNavigator(((ActivityNavigator) activity), fragmentNavigator);
   }
 
-  @ActivityScope @Provides EditorialNavigator providesEditorialNavigator() {
-    return new EditorialNavigator((ActivityNavigator) activity);
+  @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(
+      AppNavigator appNavigator) {
+    return new EditorialNavigator((ActivityNavigator) activity, appNavigator);
   }
 }
