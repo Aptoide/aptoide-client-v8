@@ -10,19 +10,19 @@ import java.util.Date;
 
 public class TermsAndConditionsResponse extends BaseV3Response {
 
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC") private Date birthDate;
+  @JsonFormat(pattern = "yyyy-MM-dd") private Date birthdate;
   @JsonProperty("tos") private boolean tos;
   @JsonProperty("privacy") private boolean privacy;
 
   public TermsAndConditionsResponse() {
   }
 
-  public Date getBirthDate() {
-    return birthDate;
+  public Date getBirthdate() {
+    return birthdate;
   }
 
-  public void setBirthDate(Date birthDate) {
-    this.birthDate = birthDate;
+  public void setBirthdate(Date birthDate) {
+    this.birthdate = birthDate;
   }
 
   public boolean isTos() {

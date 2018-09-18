@@ -295,7 +295,7 @@ public class AccountServiceV3 implements AccountService {
             .getEmail(), userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
         userSettings.isMature(), userSettings.getAccess()
             .isConfirmed(), terms.isOk() && terms.isPrivacy(), terms.isOk() && terms.isTos(),
-        terms.isOk() ? terms.getBirthDate() : new Date(1970, 1, 1));
+        terms.isOk() ? terms.getBirthdate() : new Date(1970, 1, 1));
   }
 
   private Completable changeSubscription(String storeName, String storeUserName,
