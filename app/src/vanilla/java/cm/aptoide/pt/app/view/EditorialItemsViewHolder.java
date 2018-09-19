@@ -6,9 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
@@ -38,6 +42,15 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private RecyclerView mediaList;
   private MediaBundleAdapter mediaBundleAdapter;
 
+  private LinearLayout downloadInfoLayout;
+  private ProgressBar downloadProgressBar;
+  private TextView downloadProgressValue;
+  private ImageView cancelDownload;
+  private ImageView pauseDownload;
+  private ImageView resumeDownload;
+  private View downloadControlsLayout;
+  private RelativeLayout cardInfoLayout;
+
   public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat) {
     super(view);
     itemText = view.findViewById(R.id.editorial_item_text);
@@ -58,6 +71,16 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCardImage = (ImageView) appCardLayout.findViewById(R.id.app_icon_imageview);
     appCardRating = (TextView) appCardLayout.findViewById(R.id.rating_label);
     appCardRatingLayout = appCardLayout.findViewById(R.id.rating_layout);
+
+    cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
+    downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
+    downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
+    downloadProgressBar = ((ProgressBar) view.findViewById(R.id.appview_download_progress_bar));
+    downloadProgressValue = (TextView) view.findViewById(R.id.appview_download_progress_number);
+    cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
+    resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
+    pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+
     mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -160,5 +183,82 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCardNameWithRating.setVisibility(View.VISIBLE);
     appCardButton.setText(buttonText);
     appCardLayout.setVisibility(View.VISIBLE);
+  }
+
+  public void setPlaceHolderDownloadInfo(DownloadModel downloadModel, String update, String install,
+      String open) {
+    if (downloadModel.isDownloading()) {
+      downloadInfoLayout.setVisibility(View.VISIBLE);
+      cardInfoLayout.setVisibility(View.GONE);
+      setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
+    } else {
+      downloadInfoLayout.setVisibility(View.GONE);
+      cardInfoLayout.setVisibility(View.VISIBLE);
+      setButtonText(downloadModel, update, install, open);
+    }
+  }
+
+  private void setButtonText(DownloadModel model, String update, String install, String open) {
+    DownloadModel.Action action = model.getAction();
+    switch (action) {
+      case UPDATE:
+        appCardButton.setText(update);
+        break;
+      case INSTALL:
+        appCardButton.setText(install);
+        break;
+      case OPEN:
+        appCardButton.setText(open);
+        break;
+    }
+  }
+
+  private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
+    LinearLayout.LayoutParams pauseShowing =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
+    LinearLayout.LayoutParams pauseHidden =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 2f);
+    switch (downloadState) {
+      case ACTIVE:
+        downloadProgressBar.setIndeterminate(false);
+        downloadProgressBar.setProgress(progress);
+        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case INDETERMINATE:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case PAUSE:
+        downloadProgressBar.setIndeterminate(false);
+        downloadProgressBar.setProgress(progress);
+        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        pauseDownload.setVisibility(View.GONE);
+        cancelDownload.setVisibility(View.VISIBLE);
+        resumeDownload.setVisibility(View.VISIBLE);
+        downloadControlsLayout.setLayoutParams(pauseHidden);
+        break;
+      case COMPLETE:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      default:
+        //eventListener
+        break;
+      case NOT_ENOUGH_STORAGE_ERROR:
+        //eventListener
+        break;
+    }
   }
 }

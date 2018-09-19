@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.DownloadModel;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -47,7 +48,10 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
   }
 
   public View getPlaceHolder() {
-    return appCardPlaceholderEditorialViewHolder.getPlaceHolder();
+    if (appCardPlaceholderEditorialViewHolder != null) {
+      return appCardPlaceholderEditorialViewHolder.getPlaceHolder();
+    }
+    return null;
   }
 
   public void add(List<EditorialContent> editorialItemList) {
@@ -56,6 +60,16 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
   }
 
   public void setPlaceHolderInfo(String appName, String icon, String buttonText, float rating) {
-    appCardPlaceholderEditorialViewHolder.setPlaceHolderInfo(appName, icon, buttonText, rating);
+    if (appCardPlaceholderEditorialViewHolder != null) {
+      appCardPlaceholderEditorialViewHolder.setPlaceHolderInfo(appName, icon, buttonText, rating);
+    }
+  }
+
+  public void setPlaceHolderDownloadInfo(DownloadModel downloadModel, String update, String install,
+      String open) {
+    if (appCardPlaceholderEditorialViewHolder != null) {
+      appCardPlaceholderEditorialViewHolder.setPlaceHolderDownloadInfo(downloadModel, update,
+          install, open);
+    }
   }
 }

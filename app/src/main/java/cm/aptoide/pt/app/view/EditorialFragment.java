@@ -100,6 +100,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private NestedScrollView scrollView;
   private View appCardLayout;
   private boolean bottomCardHidden = false;
+  private View appCardPlaceHolder;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -323,20 +324,22 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void showDownloadModel(DownloadModel downloadModel) {
     this.action = downloadModel.getAction();
-    if (!bottomCardHidden) {
-      if (downloadModel.isDownloading()) {
-        downloadInfoLayout.setVisibility(View.VISIBLE);
-        cardInfoLayout.setVisibility(View.GONE);
-        setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
-      } else {
-        downloadInfoLayout.setVisibility(View.GONE);
-        cardInfoLayout.setVisibility(View.VISIBLE);
-        setButtonText(downloadModel);
-        if (downloadModel.hasError()) {
-          handleDownloadError(downloadModel.getDownloadState());
-        }
+    if (downloadModel.isDownloading()) {
+      downloadInfoLayout.setVisibility(View.VISIBLE);
+      cardInfoLayout.setVisibility(View.GONE);
+      setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
+    } else {
+      downloadInfoLayout.setVisibility(View.GONE);
+      cardInfoLayout.setVisibility(View.VISIBLE);
+      setButtonText(downloadModel);
+      if (downloadModel.hasError()) {
+        handleDownloadError(downloadModel.getDownloadState());
       }
     }
+    adapter.setPlaceHolderDownloadInfo(downloadModel,
+        getResources().getString(R.string.appview_button_update),
+        getResources().getString(R.string.appview_button_install),
+        getResources().getString(R.string.appview_button_open));
   }
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
@@ -380,7 +383,8 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void removeBottomCardAnimation(EditorialViewModel editorialViewModel) {
-    if (!bottomCardHidden) {
+    View view = getPlaceHolder();
+    if (!bottomCardHidden && view != null) {
       appCardLayout.animate()
           .scaleY(0f)
           .scaleX(0f)
@@ -435,8 +439,8 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void addBottomCardAnimation(EditorialViewModel editorialViewModel) {
-    if (bottomCardHidden) {
-      View view = adapter.getPlaceHolder();
+    View view = getPlaceHolder();
+    if (bottomCardHidden && view != null) {
       view.animate()
           .scaleY(0.1f)
           .scaleX(0.1f)
@@ -609,5 +613,12 @@ public class EditorialFragment extends NavigationTrackFragment
 
   private boolean isItemShown() {
     return adapter.isItemShown(screenHeight, screenWidth);
+  }
+
+  private View getPlaceHolder() {
+    if (appCardPlaceHolder == null) {
+      return adapter.getPlaceHolder();
+    }
+    return appCardPlaceHolder;
   }
 }
