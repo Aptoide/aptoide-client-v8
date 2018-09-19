@@ -23,9 +23,19 @@ public interface HomeView extends BundleView {
 
   Observable<HomeEvent> dismissBundleClicked();
 
+  Observable<Void> termsAndConditionsContinueClicked();
+
+  Observable<Void> termsAndConditionsLogOutClicked();
+
+  Observable<Void> privacyPolicyClicked();
+
+  Observable<Void> termsAndConditionsClicked();
+
   void hideBundle(int bundlePosition);
 
   void showAvatar();
 
   void setDefaultUserImage();
+
+  void showTermsAndConditionsDialog();
 }

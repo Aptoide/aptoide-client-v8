@@ -178,7 +178,19 @@ public class AptoideAccountManager {
   }
 
   public Completable changeBirthdayDate(String birthdate) {
-    return accountService.changeBirthdate(birthdate);
+    return accountService.changeBirthdate(birthdate)
+        .andThen(syncAccount());
+  }
+
+  public Completable updateTermsAndConditions() {
+    return accountService.updateTermsAndConditions()
+        .andThen(accountStatus())
+        .flatMapCompletable(account -> accountPersistence.saveAccount(
+            new AptoideAccount(account.getId(), account.getEmail(), account.getNickname(),
+                account.getAvatar(), account.getStore(), account.isAdultContentEnabled(),
+                account.getAccess(), account.isAccessConfirmed(), account.getSubscribedStores(),
+                true, true, account.getBirthDate())))
+        .toCompletable();
   }
 
   public Completable changeSubscribeNewsletter(boolean isSubscribed) {

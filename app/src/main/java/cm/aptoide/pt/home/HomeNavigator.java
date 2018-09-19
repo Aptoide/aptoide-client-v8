@@ -1,11 +1,14 @@
 package cm.aptoide.pt.home;
 
 import android.os.Bundle;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.link.CustomTabsHelper;
+import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
@@ -22,14 +25,16 @@ public class HomeNavigator {
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final BottomNavigationMapper bottomNavigationMapper;
   private final AppNavigator appNavigator;
+  private final ActivityNavigator activityNavigator;
 
   public HomeNavigator(FragmentNavigator fragmentNavigator,
       AptoideBottomNavigator aptoideBottomNavigator, BottomNavigationMapper bottomNavigationMapper,
-      AppNavigator appNavigator) {
+      AppNavigator appNavigator, ActivityNavigator activityNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.bottomNavigationMapper = bottomNavigationMapper;
     this.appNavigator = appNavigator;
+    this.activityNavigator = activityNavigator;
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
@@ -87,5 +92,17 @@ public class HomeNavigator {
     EditorialFragment fragment = new EditorialFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
+  }
+
+  public void navigateToTermsAndConditions() {
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab(activityNavigator.getActivity()
+            .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity());
+  }
+
+  public void navigateToPrivacyPolicy() {
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab(activityNavigator.getActivity()
+            .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity());
   }
 }
