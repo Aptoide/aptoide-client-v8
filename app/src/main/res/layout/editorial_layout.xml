@@ -78,6 +78,7 @@
   </android.support.design.widget.AppBarLayout>
 
   <android.support.v4.widget.NestedScrollView
+      android:id="@+id/nested_scroll_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -140,7 +141,7 @@
         android:background="@drawable/background_with_shadow"
         >
       <include
-          layout="@layout/app_install_cardview"
+          layout="@layout/app_install_cardview_with_rating"
           android:id="@+id/app_cardview"
           android:layout_width="match_parent"
           android:layout_height="48dp"

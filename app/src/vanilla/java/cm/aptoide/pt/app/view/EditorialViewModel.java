@@ -14,6 +14,7 @@ class EditorialViewModel {
   private final String cardType;
   private final long appId;
   private final String appName;
+  private final float rating;
   private final String packageName;
   private final long size;
   private final String icon;
@@ -32,13 +33,14 @@ class EditorialViewModel {
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
-      String appName, String packageName, long size, String icon, String graphic, Obb obb,
-      long storeId, String storeName, String storeTheme, String vername, int vercode, String path,
-      String backgroundImage, String pathAlt, String md5) {
+      String appName, float rating, String packageName, long size, String icon, String graphic,
+      Obb obb, long storeId, String storeName, String storeTheme, String vername, int vercode,
+      String path, String backgroundImage, String pathAlt, String md5) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
     this.appName = appName;
+    this.rating = rating;
     this.packageName = packageName;
     this.size = size;
     this.icon = icon;
@@ -64,6 +66,7 @@ class EditorialViewModel {
     error = null;
     this.appId = -1;
     this.appName = null;
+    this.rating = -1;
     this.packageName = null;
     this.size = -1;
     this.icon = null;
@@ -87,6 +90,7 @@ class EditorialViewModel {
     this.error = error;
     this.appId = -1;
     this.appName = null;
+    this.rating = -1;
     this.packageName = null;
     this.size = -1;
     this.icon = null;
@@ -197,6 +201,10 @@ class EditorialViewModel {
 
   public String getMd5() {
     return md5;
+  }
+
+  public float getRating() {
+    return rating;
   }
 
   public enum Error {

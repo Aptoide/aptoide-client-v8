@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -23,7 +22,7 @@ public interface EditorialView extends View {
 
   void showError(EditorialViewModel.Error error);
 
-  void showDownloadAppModel(DownloadAppViewModel model);
+  void showDownloadModel(DownloadModel model);
 
   Observable<Boolean> showRootInstallWarningPopup();
 
@@ -38,4 +37,10 @@ public interface EditorialView extends View {
   Observable<Void> isAppViewReadyToDownload();
 
   void readyToDownload();
+
+  Observable<ScrollEvent> placeHolderVisibilityChange();
+
+  void removeBottomCardAnimation(EditorialViewModel editorialViewModel);
+
+  void addBottomCardAnimation(EditorialViewModel editorialViewModel);
 }

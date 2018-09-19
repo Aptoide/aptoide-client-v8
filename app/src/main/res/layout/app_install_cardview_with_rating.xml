@@ -28,12 +28,12 @@
       android:id="@+id/card_info_install_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:padding="4dp"
+      android:padding="9dp"
       android:visibility="visible"
       >
 
     <TextView
-        android:id="@+id/app_title_textview"
+        android:id="@+id/app_title_textview_with_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -41,6 +41,23 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:lines="1"
+        android:visibility="gone"
+        tools:text="@string/appc_title_settings_appcoins_wallet"
+        tools:visibility="visible"
+        style="@style/Aptoide.TextView.Medium.S.Black"
+        />
+
+    <TextView
+        android:id="@+id/app_title_textview_without_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:lines="1"
+        android:visibility="gone"
         tools:text="@string/appc_title_settings_appcoins_wallet"
         style="@style/Aptoide.TextView.Medium.S.Black"
         />
@@ -49,7 +66,7 @@
         android:id="@+id/rating_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_title_textview"
+        android:layout_below="@id/app_title_textview_with_rating"
         android:layout_marginEnd="1dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="1dp"

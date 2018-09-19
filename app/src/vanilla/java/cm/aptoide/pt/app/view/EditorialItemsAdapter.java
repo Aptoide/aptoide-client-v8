@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import java.text.DecimalFormat;
@@ -15,6 +16,7 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
 
   private final DecimalFormat oneDecimalFormat;
   private List<EditorialContent> editorialItemList;
+  private EditorialItemsViewHolder appCardPlaceholderEditorialViewHolder;
 
   public EditorialItemsAdapter(List<EditorialContent> editorialItemList,
       DecimalFormat oneDecimalFormat) {
@@ -29,6 +31,10 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
 
   @Override
   public void onBindViewHolder(EditorialItemsViewHolder editorialItemsViewHolder, int position) {
+    if (editorialItemList.get(position)
+        .isPlaceHolderType()) {
+      this.appCardPlaceholderEditorialViewHolder = editorialItemsViewHolder;
+    }
     editorialItemsViewHolder.setVisibility(editorialItemList.get(position), position);
   }
 
@@ -36,9 +42,12 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
     return editorialItemList.size();
   }
 
-  public void update(List<EditorialContent> editorialItemList) {
-    this.editorialItemList = editorialItemList;
-    notifyDataSetChanged();
+  public boolean isItemShown(float screenHeight, float screenWidth) {
+    return appCardPlaceholderEditorialViewHolder.isVisible(screenHeight, screenWidth);
+  }
+
+  public View getPlaceHolder() {
+    return appCardPlaceholderEditorialViewHolder.getPlaceHolder();
   }
 
   public void add(List<EditorialContent> editorialItemList) {
@@ -46,8 +55,7 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
     notifyDataSetChanged();
   }
 
-  public void remove(int itemPosition) {
-    editorialItemList.remove(itemPosition);
-    notifyItemRemoved(itemPosition);
+  public void setPlaceHolderInfo(String appName, String icon, String buttonText, float rating) {
+    appCardPlaceholderEditorialViewHolder.setPlaceHolderInfo(appName, icon, buttonText, rating);
   }
 }

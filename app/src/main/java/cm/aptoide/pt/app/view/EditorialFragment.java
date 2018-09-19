@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.animation.Animator;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -38,10 +39,12 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -58,6 +61,8 @@ public class EditorialFragment extends NavigationTrackFragment
     implements EditorialView, NotBottomNavigationView {
 
   @Inject EditorialPresenter presenter;
+  @Inject @Named("screenWidth") float screenWidth;
+  @Inject @Named("screenHeight") float screenHeight;
   private Toolbar toolbar;
   private ImageView appImage;
   private TextView itemName;
@@ -92,6 +97,9 @@ public class EditorialFragment extends NavigationTrackFragment
   private Window window;
   private Drawable backArrow;
   private DecimalFormat oneDecimalFormatter;
+  private NestedScrollView scrollView;
+  private View appCardLayout;
+  private boolean bottomCardHidden = false;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -117,12 +125,14 @@ public class EditorialFragment extends NavigationTrackFragment
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
     backArrow = toolbar.getNavigationIcon();
+    scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroll_view);
     appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar_layout);
     appImage = (ImageView) view.findViewById(R.id.app_graphic);
     itemName = (TextView) view.findViewById(R.id.action_item_name);
+    appCardLayout = view.findViewById(R.id.app_cardview_layout);
     appCardView = view.findViewById(R.id.app_cardview);
     appCardImage = (ImageView) appCardView.findViewById(R.id.app_icon_imageview);
-    appCardTitle = (TextView) appCardView.findViewById(R.id.app_title_textview);
+    appCardTitle = (TextView) appCardView.findViewById(R.id.app_title_textview_without_rating);
     appCardButton = (Button) appCardView.findViewById(R.id.appview_install_button);
     actionItemCard = view.findViewById(R.id.action_item_card);
     editorialItemsCard = view.findViewById(R.id.card_info_layout);
@@ -132,10 +142,10 @@ public class EditorialFragment extends NavigationTrackFragment
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
-    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter);
-    editorialItems.setLayoutManager(linearLayoutManager);
+    editorialItems.setLayoutManager(layoutManager);
     editorialItems.setAdapter(adapter);
 
     cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
@@ -194,7 +204,6 @@ public class EditorialFragment extends NavigationTrackFragment
         }
       }
     });
-
     editorialItems.setNestedScrollingEnabled(false);
     attachPresenter(presenter);
   }
@@ -250,6 +259,14 @@ public class EditorialFragment extends NavigationTrackFragment
     adapter = null;
     backArrow = null;
 
+    cardInfoLayout = null;
+    downloadControlsLayout = null;
+    downloadInfoLayout = null;
+    downloadProgressBar = null;
+    downloadProgressValue = null;
+    cancelDownload = null;
+    resumeDownload = null;
+    pauseDownload = null;
     super.onDestroyView();
   }
 
@@ -304,19 +321,20 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  @Override public void showDownloadAppModel(DownloadAppViewModel model) {
-    DownloadModel downloadModel = model.getDownloadModel();
+  @Override public void showDownloadModel(DownloadModel downloadModel) {
     this.action = downloadModel.getAction();
-    if (downloadModel.isDownloading()) {
-      downloadInfoLayout.setVisibility(View.VISIBLE);
-      cardInfoLayout.setVisibility(View.GONE);
-      setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
-    } else {
-      downloadInfoLayout.setVisibility(View.GONE);
-      cardInfoLayout.setVisibility(View.VISIBLE);
-      setButtonText(downloadModel);
-      if (downloadModel.hasError()) {
-        handleDownloadError(downloadModel.getDownloadState());
+    if (!bottomCardHidden) {
+      if (downloadModel.isDownloading()) {
+        downloadInfoLayout.setVisibility(View.VISIBLE);
+        cardInfoLayout.setVisibility(View.GONE);
+        setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
+      } else {
+        downloadInfoLayout.setVisibility(View.GONE);
+        cardInfoLayout.setVisibility(View.VISIBLE);
+        setButtonText(downloadModel);
+        if (downloadModel.hasError()) {
+          handleDownloadError(downloadModel.getDownloadState());
+        }
       }
     }
   }
@@ -351,6 +369,124 @@ public class EditorialFragment extends NavigationTrackFragment
     ready.onNext(null);
   }
 
+  @Override public Observable<ScrollEvent> placeHolderVisibilityChange() {
+    return RxNestedScrollView.scrollChangeEvents(scrollView)
+        .flatMap(viewScrollChangeEvent -> Observable.just(viewScrollChangeEvent)
+            .map(scrollDown -> isItemShown())
+            .distinctUntilChanged()
+            .map(isItemShown -> new ScrollEvent(
+                isScrollDown(viewScrollChangeEvent.oldScrollY(), viewScrollChangeEvent.scrollY()),
+                isItemShown)));
+  }
+
+  @Override public void removeBottomCardAnimation(EditorialViewModel editorialViewModel) {
+    if (!bottomCardHidden) {
+      appCardLayout.animate()
+          .scaleY(0f)
+          .scaleX(0f)
+          .alpha(0)
+          .setDuration(300)
+          .setListener(new Animator.AnimatorListener() {
+            @Override public void onAnimationStart(Animator animator) {
+              View view = adapter.getPlaceHolder();
+              adapter.setPlaceHolderInfo(editorialViewModel.getAppName(),
+                  editorialViewModel.getIcon(), appCardButton.getText()
+                      .toString(), editorialViewModel.getRating());
+              view.animate()
+                  .scaleX(1f)
+                  .scaleY(1f)
+                  .alpha(1)
+                  .setDuration(300)
+                  .setListener(new Animator.AnimatorListener() {
+                    @Override public void onAnimationStart(Animator animator) {
+                      view.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override public void onAnimationEnd(Animator animator) {
+                      animator.end();
+                    }
+
+                    @Override public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override public void onAnimationRepeat(Animator animator) {
+
+                    }
+                  })
+                  .start();
+            }
+
+            @Override public void onAnimationEnd(Animator animator) {
+              bottomCardHidden = true;
+              animator.end();
+            }
+
+            @Override public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override public void onAnimationRepeat(Animator animator) {
+
+            }
+          })
+          .start();
+    }
+  }
+
+  @Override public void addBottomCardAnimation(EditorialViewModel editorialViewModel) {
+    if (bottomCardHidden) {
+      View view = adapter.getPlaceHolder();
+      view.animate()
+          .scaleY(0.1f)
+          .scaleX(0.1f)
+          .alpha(0)
+          .setDuration(300)
+          .setListener(new Animator.AnimatorListener() {
+            @Override public void onAnimationStart(Animator animator) {
+              appCardLayout.animate()
+                  .scaleX(1f)
+                  .scaleY(1f)
+                  .alpha(1)
+                  .setDuration(300)
+                  .setListener(new Animator.AnimatorListener() {
+                    @Override public void onAnimationStart(Animator animator) {
+                      appCardLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override public void onAnimationEnd(Animator animator) {
+                      animator.end();
+                    }
+
+                    @Override public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override public void onAnimationRepeat(Animator animator) {
+
+                    }
+                  })
+                  .start();
+            }
+
+            @Override public void onAnimationEnd(Animator animator) {
+              view.setVisibility(View.INVISIBLE);
+              bottomCardHidden = false;
+              animator.end();
+            }
+
+            @Override public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override public void onAnimationRepeat(Animator animator) {
+
+            }
+          })
+          .start();
+    }
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     //TODO should use the title that will be added to the response
     String title = editorialViewModel.getContent(0)
@@ -368,6 +504,7 @@ public class EditorialFragment extends NavigationTrackFragment
     itemName.setText(editorialViewModel.getCardType());
     itemName.setVisibility(View.VISIBLE);
     appCardTitle.setText(editorialViewModel.getAppName());
+    appCardTitle.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
         .load(editorialViewModel.getIcon(), appCardImage);
     appCardView.setVisibility(View.VISIBLE);
@@ -417,7 +554,6 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
-
     LinearLayout.LayoutParams pauseShowing =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT, 4f);
@@ -465,5 +601,13 @@ public class EditorialFragment extends NavigationTrackFragment
             getContext().getString(R.string.out_of_space_dialog_message));
         break;
     }
+  }
+
+  private boolean isScrollDown(int oldY, int newY) {
+    return newY > oldY;
+  }
+
+  private boolean isItemShown() {
+    return adapter.isItemShown(screenHeight, screenWidth);
   }
 }

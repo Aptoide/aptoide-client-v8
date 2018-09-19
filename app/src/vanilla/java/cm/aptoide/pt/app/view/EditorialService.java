@@ -82,8 +82,7 @@ public class EditorialService {
           .getAvg();
       List<Content> contentList = card.getContent();
       List<EditorialContent> editorialContentList = new ArrayList<>();
-      editorialContentList =
-          mapEditorialContent(contentList, editorialContentList, appName, icon, rating);
+      editorialContentList = mapEditorialContent(contentList, editorialContentList);
 
       String packageName = app.getPackageName();
       long size = app.getSize();
@@ -102,16 +101,16 @@ public class EditorialService {
       String md5 = file.getMd5sum();
       String backgroundImage = card.getBackgroundImage();
       return Observable.just(
-          new EditorialViewModel(editorialContentList, cardType, appId, appName, packageName, size,
-              icon, graphic, obb, storeId, storeName, storeTheme, vername, vercode, path,
-              backgroundImage, pathAlt, md5));
+          new EditorialViewModel(editorialContentList, cardType, appId, appName, rating,
+              packageName, size, icon, graphic, obb, storeId, storeName, storeTheme, vername,
+              vercode, path, backgroundImage, pathAlt, md5));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
   }
 
   private List<EditorialContent> mapEditorialContent(List<Content> contentList,
-      List<EditorialContent> editorialContentList, String appName, String icon, float rating) {
+      List<EditorialContent> editorialContentList) {
     if (contentList != null) {
       for (Content content : contentList) {
         List<Media> mediaList = content.getMedia();
@@ -125,7 +124,7 @@ public class EditorialService {
         }
         EditorialContent editorialContent =
             new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-                content.getType(), appName, icon, rating);
+                content.getType());
         editorialContentList.add(editorialContent);
       }
     }

@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -19,10 +20,12 @@ import java.util.ArrayList;
 
 class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private final ImageView appCardImage;
-  private final TextView appCardName;
   private final TextView appCardRating;
   private final View appCardRatingLayout;
+  private final TextView appCardNameWithRating;
+  private final View appCardLayout;
   private final DecimalFormat oneDecimalFormat;
+  private final Button appCardButton;
   private TextView description;
   private View itemText;
   private View title;
@@ -33,7 +36,6 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private ImageView image;
   private VideoView video;
   private RecyclerView mediaList;
-  private View appCard;
   private MediaBundleAdapter mediaBundleAdapter;
 
   public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat) {
@@ -48,12 +50,14 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     video = (VideoView) view.findViewById(R.id.editorial_video);
     description = (TextView) view.findViewById(R.id.editorial_image_description);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
-    appCard = view.findViewById(R.id.app_cardview);
+    appCardLayout = view.findViewById(R.id.app_cardview);
     this.oneDecimalFormat = oneDecimalFormat;
-    appCardImage = (ImageView) appCard.findViewById(R.id.app_icon_imageview);
-    appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
-    appCardRating = (TextView) appCard.findViewById(R.id.rating_label);
-    appCardRatingLayout = appCard.findViewById(R.id.rating_layout);
+    appCardButton = (Button) appCardLayout.findViewById(R.id.appview_install_button);
+    appCardNameWithRating =
+        (TextView) appCardLayout.findViewById(R.id.app_title_textview_with_rating);
+    appCardImage = (ImageView) appCardLayout.findViewById(R.id.app_icon_imageview);
+    appCardRating = (TextView) appCardLayout.findViewById(R.id.rating_label);
+    appCardRatingLayout = appCardLayout.findViewById(R.id.rating_layout);
     mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -76,18 +80,9 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
     manageMediaVisibility(editorialItem);
     if (editorialItem.isPlaceHolderType()) {
-      ImageLoader.with(itemView.getContext())
-          .load(editorialItem.getIcon(), appCardImage);
-      appCardImage.setVisibility(View.VISIBLE);
-      appCardName.setText(editorialItem.getAppName());
-      appCardName.setVisibility(View.VISIBLE);
-      if (editorialItem.getRating() == 0) {
-        appCardRating.setText(R.string.appcardview_title_no_stars);
-      } else {
-        appCardRating.setText(oneDecimalFormat.format(editorialItem.getRating()));
-      }
-      appCardRatingLayout.setVisibility(View.VISIBLE);
-      appCard.setVisibility(View.VISIBLE);
+      appCardLayout.setVisibility(View.INVISIBLE);
+      appCardLayout.setScaleX(0.1f);
+      appCardLayout.setScaleY(0.1f);
     }
   }
 
@@ -137,5 +132,33 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         description.setVisibility(View.VISIBLE);
       }
     }
+  }
+
+  public boolean isVisible(float screenHeight, float screenWidth) {
+    final Rect actualPosition = new Rect();
+    appCardLayout.getLocalVisibleRect(actualPosition);
+    final Rect screen =
+        new Rect(0, 0, (int) screenWidth, (int) screenHeight - appCardLayout.getHeight() * 2);
+    return actualPosition.intersect(screen);
+  }
+
+  public View getPlaceHolder() {
+    return appCardLayout;
+  }
+
+  public void setPlaceHolderInfo(String appName, String image, String buttonText, float rating) {
+    ImageLoader.with(itemView.getContext())
+        .load(image, appCardImage);
+    appCardImage.setVisibility(View.VISIBLE);
+    if (rating == 0) {
+      appCardRating.setText(R.string.appcardview_title_no_stars);
+    } else {
+      appCardRating.setText(oneDecimalFormat.format(rating));
+    }
+    appCardRatingLayout.setVisibility(View.VISIBLE);
+    appCardNameWithRating.setText(appName);
+    appCardNameWithRating.setVisibility(View.VISIBLE);
+    appCardButton.setText(buttonText);
+    appCardLayout.setVisibility(View.VISIBLE);
   }
 }

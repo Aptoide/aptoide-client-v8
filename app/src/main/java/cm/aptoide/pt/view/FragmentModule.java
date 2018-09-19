@@ -370,4 +370,12 @@ import rx.schedulers.Schedulers;
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics);
   }
+
+  @FragmentScope @Provides @Named("screenHeight") float providesScreenHeight(Resources resources) {
+    return resources.getDisplayMetrics().heightPixels;
+  }
+
+  @FragmentScope @Provides @Named("screenWidth") float providesScreenWidth(Resources resources) {
+    return resources.getDisplayMetrics().widthPixels;
+  }
 }

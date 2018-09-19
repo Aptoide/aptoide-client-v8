@@ -11,20 +11,13 @@ class EditorialContent {
   private final List<EditorialMedia> media;
   private final String message;
   private final String type;
-  private final String appName;
-  private final String icon;
-  private final float rating;
 
-  public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      String appName, String icon, float rating) {
+  public EditorialContent(String title, List<EditorialMedia> media, String message, String type) {
 
     this.title = title;
     this.media = media;
     this.message = message;
     this.type = type;
-    this.appName = appName;
-    this.icon = icon;
-    this.rating = rating;
   }
 
   public String getMessage() {
@@ -61,17 +54,5 @@ class EditorialContent {
 
   public boolean hasTitle() {
     return title != null && !title.equals("");
-  }
-
-  public String getAppName() {
-    return appName;
-  }
-
-  public String getIcon() {
-    return icon;
-  }
-
-  public float getRating() {
-    return rating;
   }
 }
