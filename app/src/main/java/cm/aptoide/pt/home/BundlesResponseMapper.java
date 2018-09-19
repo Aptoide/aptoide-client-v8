@@ -122,7 +122,7 @@ public class BundlesResponseMapper {
         .getList()
         .get(0);
     return new ActionItem(item.getCardId(), item.getLayout(), item.getTitle(), item.getMessage(),
-        item.getIcon(), item.getUrl());
+        item.getIcon(), item.getUrl(), item.getType() != null ? item.getType() : "");
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {
@@ -147,8 +147,7 @@ public class BundlesResponseMapper {
   }
 
   private Event getEvent(GetStoreWidgets.WSWidget widget) {
-    return widget.getActions() != null
-        && widget.getActions()
+    return widget.getActions() != null && widget.getActions()
         .size() > 0 ? widget.getActions()
         .get(0)
         .getEvent() : null;

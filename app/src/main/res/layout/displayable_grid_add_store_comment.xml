@@ -32,6 +32,7 @@
       android:layout_weight="2"
       android:text="@string/comment_store"
       android:textAllCaps="true"
+      style="@style/Aptoide.Button.S"
       android:textSize="@dimen/text_size_small"
       />
 

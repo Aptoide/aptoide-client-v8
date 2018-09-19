@@ -137,6 +137,27 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
+  public void sendEditorialInteractEvent(String bundleTag, int bundlePosition, String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP_ON_CARD);
+    data.put("bundle_tag", bundleTag);
+    data.put("bundle_position", bundlePosition);
+    data.put("card_id", cardId);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
+  }
+
+  public void sendEditorialImpressionEvent(String bundleTag, int bundlePosition, String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", VIEW_CARD);
+    data.put("bundle_tag", bundleTag);
+    data.put("bundle_position", bundlePosition);
+    data.put("card_id", cardId);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
   private AnalyticsManager.Action parseAction(HomeEvent.Type type) {
     if (type.equals(HomeEvent.Type.SOCIAL_CLICK) || type.equals(HomeEvent.Type.AD)) {
       return OPEN;

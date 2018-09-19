@@ -18,6 +18,8 @@ public interface EditorialView extends View {
 
   Observable<DownloadModel.Action> installButtonClick();
 
+  Observable<Void> appCardClicked();
+
   void populateView(EditorialViewModel editorialViewModel);
 
   void showError(EditorialViewModel.Error error);
@@ -43,4 +45,6 @@ public interface EditorialView extends View {
   void removeBottomCardAnimation(EditorialViewModel editorialViewModel);
 
   void addBottomCardAnimation(EditorialViewModel editorialViewModel);
+
+  Observable<String> mediaContentClicked();
 }

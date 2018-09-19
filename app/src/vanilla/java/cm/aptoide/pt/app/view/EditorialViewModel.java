@@ -13,6 +13,7 @@ class EditorialViewModel {
   private final List<EditorialContent> contentList;
   private final String cardType;
   private final long appId;
+  private final String title;
   private final String appName;
   private final float rating;
   private final String packageName;
@@ -33,12 +34,13 @@ class EditorialViewModel {
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
-      String appName, float rating, String packageName, long size, String icon, String graphic,
+      String title, String appName, float rating, String packageName, long size, String icon, String graphic,
       Obb obb, long storeId, String storeName, String storeTheme, String vername, int vercode,
       String path, String backgroundImage, String pathAlt, String md5) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
+    this.title = title;
     this.appName = appName;
     this.rating = rating;
     this.packageName = packageName;
@@ -65,6 +67,7 @@ class EditorialViewModel {
     this.loading = loading;
     error = null;
     this.appId = -1;
+    this.title = null;
     this.appName = null;
     this.rating = -1;
     this.packageName = null;
@@ -89,6 +92,7 @@ class EditorialViewModel {
     this.loading = false;
     this.error = error;
     this.appId = -1;
+    this.title = null;
     this.appName = null;
     this.rating = -1;
     this.packageName = null;
@@ -205,6 +209,10 @@ class EditorialViewModel {
 
   public float getRating() {
     return rating;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   public enum Error {

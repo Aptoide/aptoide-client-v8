@@ -170,15 +170,13 @@ public class VanillaFragmentProvider implements FragmentProvider {
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
       StoreContext storeContext, boolean addAdultFilter) {
-    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag, storeContext,
-        addAdultFilter);
+    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag, storeContext);
   }
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag, StoreContext storeContext, boolean addAdultFilter) {
-    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext,
-        addAdultFilter);
+    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext);
   }
 
   @Override public Fragment newListAppsFragment() {
@@ -198,7 +196,7 @@ public class VanillaFragmentProvider implements FragmentProvider {
   }
 
   @Override public Fragment newGetStoreWidgetsFragment(boolean addAdultFilter) {
-    return GetStoreWidgetsFragment.newInstance(addAdultFilter);
+    return GetStoreWidgetsFragment.newInstance();
   }
 
   @Override public Fragment newGetAdsFragment() {

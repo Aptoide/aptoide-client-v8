@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,6 +91,27 @@ public interface Account {
    * @return True if the store is public. False if store is private.
    */
   boolean isPublicStore();
+
+  /**
+   * True if the account has accept the terms and conditions
+   *
+   * @return True if the account has accepted the terms and conditions. False otherwise.
+   */
+  boolean acceptedTermsAndConditions();
+
+  /**
+   * True if the account has accept the privacy policy
+   *
+   * @return True if the account has accepted the privacy policy. False otherwise.
+   */
+  boolean acceptedPrivacyPolicy();
+
+  /**
+   * Returns the date of birth associated with the account
+   *
+   * @return Date of birth associated with the account.
+   */
+  Date getBirthDate();
 
   /**
    * Account information access level.

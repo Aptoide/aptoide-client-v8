@@ -13,6 +13,8 @@ public interface AccountService {
 
   Completable changeBirthdate(String birthdate);
 
+  Completable updateTermsAndConditions();
+
   Completable changeSubscribeNewsletter(String isSubscribed);
 
   Single<Account> getAccount();

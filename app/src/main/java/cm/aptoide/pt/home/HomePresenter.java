@@ -14,6 +14,8 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
+import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
+
 /**
  * Created by jdandrade on 07/03/2018.
  */
@@ -73,6 +75,16 @@ public class HomePresenter implements Presenter {
 
     handleActionBundlesImpression();
 
+    handleLoggedInAcceptTermsAndConditions();
+
+    handleTermsAndConditionsContinueClicked();
+
+    handleTermsAndConditionsLogOutClicked();
+
+    handleClickOnTermsAndConditions();
+
+    handleClickOnPrivacyPolicy();
+
     handleEditorialCardClick();
   }
 
@@ -81,8 +93,22 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.visibleBundles())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
-        .doOnNext(homeEvent -> homeAnalytics.sendAppcImpressionEvent(homeEvent.getBundle()
-            .getTag(), homeEvent.getBundlePosition()))
+        .doOnNext(homeEvent -> {
+          if (homeEvent.getBundle()
+              .getType()
+              .equals(HomeBundle.BundleType.INFO_BUNDLE)) {
+            homeAnalytics.sendAppcImpressionEvent(homeEvent.getBundle()
+                .getTag(), homeEvent.getBundlePosition());
+          } else {
+            ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();
+            homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
+                homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                    .getCardId());
+          }
+        })
+        .filter(homeEvent -> homeEvent.getBundle()
+            .getType()
+            .equals(HomeBundle.BundleType.INFO_BUNDLE))
         .map(HomeEvent::getBundle)
         .cast(ActionBundle.class)
         .flatMapCompletable(home::actionBundleImpression)
@@ -177,7 +203,16 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(click -> {
               Application app = click.getApp();
-              homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+              if (click.getBundle()
+                  .getType()
+                  .equals(EDITORS)) {
+                homeNavigator.navigateWithEditorsPosition(click.getApp()
+                    .getAppId(), click.getApp()
+                    .getPackageName(), "", "", click.getApp()
+                    .getTag(), String.valueOf(click.getAppPosition()));
+              } else {
+                homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+              }
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -213,7 +248,11 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.editorialCardClicked()
             .observeOn(viewScheduler)
-            .doOnNext(click -> homeNavigator.navigateToEditorial(click.getCardId()))
+            .doOnNext(click -> {
+              homeAnalytics.sendEditorialInteractEvent(click.getBundle()
+                  .getTag(), click.getBundlePosition(), click.getCardId());
+              homeNavigator.navigateToEditorial(click.getCardId());
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -406,6 +445,71 @@ public class HomePresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleLoggedInAcceptTermsAndConditions() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
+        .filter(Account::isLoggedIn)
+        .filter(
+            account -> !(account.acceptedPrivacyPolicy() && account.acceptedTermsAndConditions()))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showTermsAndConditionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleTermsAndConditionsContinueClicked() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsContinueClicked())
+        .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleTermsAndConditionsLogOutClicked() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsLogOutClicked())
+        .flatMapCompletable(__ -> accountManager.logout())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleClickOnTermsAndConditions() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsClicked())
+        .doOnNext(__ -> homeNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void handleClickOnPrivacyPolicy() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.privacyPolicyClicked())
+        .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
         });
   }
 

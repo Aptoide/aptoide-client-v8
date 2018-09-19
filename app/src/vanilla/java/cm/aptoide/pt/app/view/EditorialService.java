@@ -101,7 +101,7 @@ public class EditorialService {
       String md5 = file.getMd5sum();
       String backgroundImage = card.getBackgroundImage();
       return Observable.just(
-          new EditorialViewModel(editorialContentList, cardType, appId, appName, rating,
+          new EditorialViewModel(editorialContentList, cardType, appId, card.getTitle(), appName, rating
               packageName, size, icon, graphic, obb, storeId, storeName, storeTheme, vername,
               vercode, path, backgroundImage, pathAlt, md5));
     } else {
@@ -118,7 +118,8 @@ public class EditorialService {
         if (mediaList != null) {
           for (Media media : mediaList) {
             EditorialMedia editorialMedia =
-                new EditorialMedia(media.getType(), media.getDescription(), media.getUrl());
+                new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
+                    media.getUrl());
             editorialMediaList.add(editorialMedia);
           }
         }

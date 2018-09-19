@@ -2,10 +2,11 @@ package cm.aptoide.pt.app.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.VideoView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 29/08/2018.
@@ -14,18 +15,29 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 class MediaViewHolder extends RecyclerView.ViewHolder {
 
   private ImageView image;
-  private VideoView video;
+  private ImageView videoThumbnail;
+  private FrameLayout videoThumbnailContainer;
+  private PublishSubject<String> editorialMediaClicked;
 
-  public MediaViewHolder(View view) {
+  public MediaViewHolder(View view, PublishSubject<String> editorialMediaClicked) {
     super(view);
-    image = (ImageView) view.findViewById(R.id.image_item);
-    video = (VideoView) view.findViewById(R.id.video_item);
+    this.editorialMediaClicked = editorialMediaClicked;
+
+    image = view.findViewById(R.id.image_item);
+    videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
+    videoThumbnailContainer = view.findViewById(R.id.editorial_video_thumbnail_container);
   }
 
   public void setVisibility(EditorialMedia editorialMedia) {
     if (editorialMedia.hasUrl()) {
       if (editorialMedia.isVideo()) {
-        video.setVisibility(View.VISIBLE);
+        if (editorialMedia.getThumbnail() != null) {
+          ImageLoader.with(itemView.getContext())
+              .load(editorialMedia.getThumbnail(), videoThumbnail);
+        }
+        videoThumbnailContainer.setVisibility(View.VISIBLE);
+        videoThumbnailContainer.setOnClickListener(
+            v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
       } else {
         ImageLoader.with(itemView.getContext())
             .load(editorialMedia.getUrl(), image);

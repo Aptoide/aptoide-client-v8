@@ -48,17 +48,8 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    @ColorInt int color = getColorOrDefault(displayable.getStoreTheme(), context);
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      commentStore.setBackground(d);
-    } else {
-      Drawable d = context.getResources()
-          .getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      commentStore.setBackgroundDrawable(d);
-    }
+    commentStore.setBackgroundDrawable(getContext().getResources()
+        .getDrawable(displayable.getStoreTheme().getRaisedButtonDrawable()));
 
     compositeSubscription.add(RxView.clicks(commentStore)
         .flatMap(a -> showStoreCommentFragment(displayable.getStoreId(), displayable.getStoreName(),
@@ -69,16 +60,6 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
           CrashReport.getInstance()
               .log(err);
         }));
-  }
-
-  private int getColorOrDefault(StoreTheme theme, Context context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources()
-          .getColor(theme.getPrimaryColor(), context.getTheme());
-    } else {
-      return context.getResources()
-          .getColor(theme.getPrimaryColor());
-    }
   }
 
   private Observable<Void> showStoreCommentFragment(final long storeId,

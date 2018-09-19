@@ -45,6 +45,7 @@ import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialManager;
+import cm.aptoide.pt.app.view.EditorialNavigator;
 import cm.aptoide.pt.app.view.EditorialPresenter;
 import cm.aptoide.pt.app.view.EditorialRepository;
 import cm.aptoide.pt.app.view.EditorialService;
@@ -77,6 +78,7 @@ import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -207,7 +209,7 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator);
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()));
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
@@ -365,10 +367,10 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
-      EditorialAnalytics editorialAnalytics) {
+      EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), editorialAnalytics);
+        ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator);
   }
 
   @FragmentScope @Provides @Named("screenHeight") float providesScreenHeight(Resources resources) {

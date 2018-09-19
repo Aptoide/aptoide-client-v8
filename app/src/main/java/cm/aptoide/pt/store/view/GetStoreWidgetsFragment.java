@@ -17,16 +17,8 @@ import rx.functions.Action1;
 
 public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWidgets> {
 
-  public static Fragment newInstance(boolean addAdultFilter) {
-    Bundle args = new Bundle();
-    args.putBoolean(BundleKeys.ADD_ADULT_FILTER, addAdultFilter);
-    Fragment fragment = new GetStoreWidgetsFragment();
-    Bundle arguments = fragment.getArguments();
-    if (arguments != null) {
-      args.putAll(arguments);
-    }
-    fragment.setArguments(args);
-    return fragment;
+  public static Fragment newInstance() {
+    return new GetStoreWidgetsFragment();
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,16 +27,6 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-
-    if (getArguments().getBoolean(BundleKeys.ADD_ADULT_FILTER, false)) {
-      endlessRecyclerOnScrollListener.addOnEndlessFinishListener(__ -> {
-        final AdultRowDisplayable displayable =
-            new AdultRowDisplayable(GetStoreWidgetsFragment.this);
-        if (!GetStoreWidgetsFragment.this.contains(displayable)) {
-          GetStoreWidgetsFragment.this.addDisplayable(displayable, true);
-        }
-      });
-    }
   }
 
   @Override
@@ -64,7 +46,4 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
     super.onResume();
   }
 
-  private static class BundleKeys {
-    private static final String ADD_ADULT_FILTER = "addAdultFilter";
-  }
 }
