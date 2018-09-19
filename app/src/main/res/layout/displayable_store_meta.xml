@@ -86,7 +86,7 @@
         style="@style/Aptoide.Button.S"
         />
 
-        <!--android:visibility="gone"-->
+    <!--android:visibility="gone"-->
 
   </FrameLayout>
   <ImageView

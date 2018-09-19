@@ -1,10 +1,6 @@
 package cm.aptoide.pt.comments.view;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -16,7 +12,6 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -49,7 +44,8 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     commentStore.setBackgroundDrawable(getContext().getResources()
-        .getDrawable(displayable.getStoreTheme().getRaisedButtonDrawable()));
+        .getDrawable(displayable.getStoreTheme()
+            .getRaisedButtonDrawable()));
 
     compositeSubscription.add(RxView.clicks(commentStore)
         .flatMap(a -> showStoreCommentFragment(displayable.getStoreId(), displayable.getStoreName(),

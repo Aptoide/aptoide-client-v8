@@ -11,7 +11,6 @@ public class OfficialAppDisplayable extends Displayable {
   private final Pair<String, GetAppMeta> messageGetApp;
   private final StoreTheme storeTheme;
 
-
   public OfficialAppDisplayable() {
     messageGetApp = null;
     storeTheme = StoreTheme.DEFAULT;

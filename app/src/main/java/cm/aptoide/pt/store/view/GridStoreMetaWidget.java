@@ -1,7 +1,6 @@
 package cm.aptoide.pt.store.view;
 
 import android.content.res.Resources;
-import android.graphics.drawable.GradientDrawable;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.text.ParcelableSpan;
@@ -124,9 +123,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           showMainName(homeMeta.getMainName());
           showSecondaryName(homeMeta.getSecondaryName());
           setupActionButton(homeMeta.isShowButton(), homeMeta.isOwner(), homeMeta.getStoreId(),
-              homeMeta.getStoreTheme(), homeMeta.getMainName(),
-              homeMeta.getDescription(), homeMeta.getMainIcon(), homeMeta.isFollowingStore(),
-              homeMeta.getSocialChannels(), displayable.getRequestCode());
+              homeMeta.getStoreTheme(), homeMeta.getMainName(), homeMeta.getDescription(),
+              homeMeta.getMainIcon(), homeMeta.isFollowingStore(), homeMeta.getSocialChannels(),
+              displayable.getRequestCode());
           showSocialChannels(homeMeta.getSocialChannels());
           showAppsCount(homeMeta.getAppsCount(), textStyle, homeMeta.isShowApps(),
               homeMeta.getStoreId());
@@ -279,7 +278,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private void setupFollowButton(String storeName, boolean isFollowed, StoreTheme theme) {
     editStoreButton.setVisibility(View.GONE);
     followStoreButton.setVisibility(View.VISIBLE);
-    followStoreButton.setBackgroundDrawable(getContext().getResources().getDrawable(theme.getRaisedButtonDrawable()));
+    followStoreButton.setBackgroundDrawable(getContext().getResources()
+        .getDrawable(theme.getRaisedButtonDrawable()));
     if (isFollowed) {
       setupUnfollowButton(storeName);
     } else {
@@ -335,8 +335,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels,
       int requestCode) {
     ManageStoreViewModel viewModel =
-        new ManageStoreViewModel(storeId, storeTheme, storeName,
-            storeDescription, storeImagePath, socialChannels);
+        new ManageStoreViewModel(storeId, storeTheme, storeName, storeDescription, storeImagePath,
+            socialChannels);
     getFragmentNavigator().navigateForResult(ManageStoreFragment.newInstance(viewModel, false),
         requestCode, true);
   }
@@ -405,7 +405,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       this.followersCount = followersCount;
       this.followingCount = followingCount;
       this.description = description;
-      this.storeTheme= storeTheme;
+      this.storeTheme = storeTheme;
       this.themeColor = themeColor;
       this.storeId = storeId;
       this.showApps = showApps;
