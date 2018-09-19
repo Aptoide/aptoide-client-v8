@@ -148,7 +148,8 @@ public class EditorialFragment extends NavigationTrackFragment
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter);
+    adapter =
+        new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter, editorialMediaClicked);
     editorialItems.setLayoutManager(layoutManager);
     editorialItems.setAdapter(adapter);
 
@@ -381,10 +382,6 @@ public class EditorialFragment extends NavigationTrackFragment
     ready.onNext(null);
   }
 
-  @Override public Observable<String> mediaContentClicked() {
-    return editorialMediaClicked;
-  }
-
   @Override public Observable<ScrollEvent> placeHolderVisibilityChange() {
     return RxNestedScrollView.scrollChangeEvents(scrollView)
         .flatMap(viewScrollChangeEvent -> Observable.just(viewScrollChangeEvent)
@@ -502,6 +499,10 @@ public class EditorialFragment extends NavigationTrackFragment
           })
           .start();
     }
+  }
+
+  @Override public Observable<String> mediaContentClicked() {
+    return editorialMediaClicked;
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {

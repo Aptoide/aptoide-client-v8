@@ -18,7 +18,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import rx.subjects.PublishSubject;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 28/08/2018.
@@ -55,7 +54,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
 
-  public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat, PublishSubject<String> editorialMediaClicked) {
+  public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
+      PublishSubject<String> editorialMediaClicked) {
     super(view);
     itemText = view.findViewById(R.id.editorial_item_text);
     title = view.findViewById(R.id.editorial_item_title);

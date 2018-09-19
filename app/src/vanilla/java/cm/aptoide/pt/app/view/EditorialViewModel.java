@@ -34,9 +34,9 @@ class EditorialViewModel {
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
-      String title, String appName, float rating, String packageName, long size, String icon, String graphic,
-      Obb obb, long storeId, String storeName, String storeTheme, String vername, int vercode,
-      String path, String backgroundImage, String pathAlt, String md5) {
+      String title, String appName, float rating, String packageName, long size, String icon,
+      String graphic, Obb obb, long storeId, String storeName, String storeTheme, String vername,
+      int vercode, String path, String backgroundImage, String pathAlt, String md5) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
