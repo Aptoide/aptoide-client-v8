@@ -550,5 +550,6 @@
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
   <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
+
 </resources>
 

@@ -313,8 +313,9 @@ public class DeepLinkManager {
         .subscribe(navigation -> {
           if (navigation != null) {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE);
-            if(!navigation.hasStore()){
-              fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(new ManageStoreViewModel(), true), true);
+            if (!navigation.hasStore()) {
+              fragmentNavigator.navigateTo(
+                  ManageStoreFragment.newInstance(new ManageStoreViewModel(), true), true);
             } else {
               storeAnalytics.sendStoreOpenEvent(APP_SHORTCUT, navigation.getStore()
                   .getName(), false);

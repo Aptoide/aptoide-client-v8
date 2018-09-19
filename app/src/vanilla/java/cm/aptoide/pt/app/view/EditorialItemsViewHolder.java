@@ -60,7 +60,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
     appCardRating = (TextView) appCard.findViewById(R.id.rating_label);
     appCardRatingLayout = appCard.findViewById(R.id.rating_layout);
-    mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>());
+    mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>(), editorialMediaClicked);
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
     mediaList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -81,7 +81,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       manageMessageVisibility(editorialItem);
     }
     manageMediaVisibility(editorialItem);
-    if (editorialItem.isPlaceHolderType()) {
+    /*TODO: Add this code back once the transition is completed
+      if (editorialItem.isPlaceHolderType()) {
       ImageLoader.with(itemView.getContext())
           .load(editorialItem.getIcon(), appCardImage);
       appCardImage.setVisibility(View.VISIBLE);
@@ -94,7 +95,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       }
       appCardRatingLayout.setVisibility(View.VISIBLE);
       appCard.setVisibility(View.VISIBLE);
-    }
+    }*/
   }
 
   private void manageTitleVisibility(EditorialContent editorialItem, int position) {

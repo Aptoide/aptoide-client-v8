@@ -150,6 +150,7 @@
           android:textAllCaps="true"
           android:textSize="@dimen/text_size_medium_small"
           tools:text="Install"
+          style="@style/Aptoide.Button.S"
           />
     </FrameLayout>
 

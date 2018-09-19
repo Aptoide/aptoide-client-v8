@@ -101,7 +101,7 @@ public class HomePresenterTest {
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
     bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
     localTopAppsBundle = bundlesModel.getList()
-        .get(0);
+        .get(1);
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
@@ -365,7 +365,7 @@ public class HomePresenterTest {
 
   @NonNull private ActionBundle getFakeActionBundle() {
     return new ActionBundle("title", HomeBundle.BundleType.INFO_BUNDLE, null, "tag",
-        new ActionItem("1", "layout", "title", "message", "icon", "url"));
+        new ActionItem("1", "layout", "title", "message", "icon", "url", ""));
   }
 
   private AdHomeEvent createAdHomeEvent() {

@@ -21,16 +21,16 @@ public class AppViewAppcInfoViewHolder {
 
   public void showInfo(boolean hasAdvertising, boolean hasBilling,
       SpannableString formattedMessage) {
-    if(hasAdvertising){
+    if (hasAdvertising) {
       this.appcRewardView.setVisibility(View.VISIBLE);
       this.appcRewardValue.setText(formattedMessage);
       this.appcBillingSupported.setVisibility(View.GONE);
-      if(hasBilling){
+      if (hasBilling) {
         this.appcRewardBilling.setVisibility(View.VISIBLE);
       } else {
         this.appcRewardBilling.setVisibility(View.GONE);
       }
-    } else if (hasBilling){
+    } else if (hasBilling) {
       this.appcBillingSupported.setVisibility(View.VISIBLE);
       this.appcRewardView.setVisibility(View.GONE);
     }

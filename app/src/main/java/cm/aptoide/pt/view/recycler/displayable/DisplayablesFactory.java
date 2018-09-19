@@ -149,13 +149,16 @@ public class DisplayablesFactory {
                   navigationTracker));
 
         case COMMENTS_GROUP:
-          return Observable.from(createCommentsGroup(widget, storeTabNavigator, navigationTracker));
+          return Observable.from(
+              createCommentsGroup(widget, storeTheme, widget.getTag(), storeContext,
+                  storeTabNavigator, navigationTracker));
 
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
           String message = dataObj.getMessage();
           return Observable.just(
-              new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject())));
+              new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject()),
+                  StoreTheme.get(storeTheme)));
       }
     }
     return Observable.empty();
@@ -399,14 +402,16 @@ public class DisplayablesFactory {
   }
 
   private static List<Displayable> createCommentsGroup(GetStoreWidgets.WSWidget wsWidget,
-      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker) {
+      String storeTheme, String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker) {
     List<Displayable> displayables = new LinkedList<>();
 
     Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
         (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
     ListComments comments = data.first;
     displayables.add(
-        new StoreGridHeaderDisplayable(wsWidget, storeTabNavigator, navigationTracker));
+        new StoreGridHeaderDisplayable(wsWidget, storeTheme, tag, storeContext, storeTabNavigator,
+            navigationTracker));
     if (comments != null
         && comments.getDataList() != null
         && comments.getDataList()
@@ -418,7 +423,7 @@ public class DisplayablesFactory {
                   .getList()));
     } else {
       displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-          StoreTheme.DEFAULT));
+          StoreTheme.get(storeTheme)));
     }
 
     return displayables;

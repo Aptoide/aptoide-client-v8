@@ -33,6 +33,7 @@
       android:text="@string/comment_store"
       android:textAllCaps="true"
       android:textSize="@dimen/text_size_small"
+      style="@style/Aptoide.Button.S"
       />
 
 </LinearLayout>
