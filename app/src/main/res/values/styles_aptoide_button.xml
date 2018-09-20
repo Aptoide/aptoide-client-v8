@@ -61,10 +61,6 @@
   </style>
 
   <style name="Aptoide.Button.S.Gradient">
-    <item name="android:background">@drawable/aptoide_gradient</item>
-  </style>
-
-  <style name="Aptoide.Button.S.Gradient.Rounded">
     <item name="android:background">@drawable/aptoide_gradient_rounded</item>
   </style>
 
