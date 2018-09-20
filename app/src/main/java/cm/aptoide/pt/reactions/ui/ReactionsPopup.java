@@ -1,6 +1,8 @@
 package cm.aptoide.pt.reactions.ui;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -38,8 +40,8 @@ public class ReactionsPopup {
     reactionsView.setVisibility(View.VISIBLE);
     popup.setContentView(reactionsView);
     popup.setFocusable(true);
-    popup.setOutsideTouchable(true);
-    popup.setClippingEnabled(true);
+    popup.setClippingEnabled(false);
+    popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     reactionsView.setCallback(reactionType -> {
       if (reactionClickListener != null) {

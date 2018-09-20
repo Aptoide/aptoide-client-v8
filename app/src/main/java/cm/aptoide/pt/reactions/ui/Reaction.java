@@ -10,13 +10,13 @@ public class Reaction {
   private final LottieAnimationView view;
   private final ReactionType reactionType;
 
-  public Reaction(final ReactionType reactionType, Context context) {
+  public Reaction(final ReactionType reactionType, int padding, Context context) {
     this.reactionType = reactionType;
     view = new LottieAnimationView(context);
     view.setAnimation(this.reactionType.name()
         .toLowerCase() + ".json");
     view.loop(true);
-    view.setPadding(8, 8, 8, 8);
+    view.setPadding(padding, padding, padding, padding);
   }
 
   public void setReactionParams(ViewGroup.LayoutParams params) {
