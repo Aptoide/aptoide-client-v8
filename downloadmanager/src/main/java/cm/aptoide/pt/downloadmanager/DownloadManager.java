@@ -11,7 +11,7 @@ import rx.Observable;
 
 public interface DownloadManager {
 
-  Completable start();
+  void start();
 
   void stop();
 

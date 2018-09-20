@@ -343,9 +343,7 @@ public abstract class AptoideApplication extends Application {
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
-    aptoideDownloadManager.start()
-        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
-            .log(error));
+    aptoideDownloadManager.start();
   }
 
   public ApplicationComponent getApplicationComponent() {

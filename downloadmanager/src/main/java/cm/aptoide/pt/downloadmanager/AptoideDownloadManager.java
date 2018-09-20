@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 /**
@@ -23,6 +24,7 @@ public class AptoideDownloadManager implements DownloadManager {
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
   private AppDownloaderProvider appDownloaderProvider;
+  private Subscription dispatchDownloadsSubscription;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath, String apkPath, String obbPath,
@@ -37,17 +39,21 @@ public class AptoideDownloadManager implements DownloadManager {
     appDownloaderMap = new HashMap<>();
   }
 
-  public Completable start() {
-    return downloadsRepository.getInQueueDownloads()
+  public void start() {
+    dispatchDownloadsSubscription = downloadsRepository.getInQueueDownloads()
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
         .flatMap(download -> getAppDownloader(download.getMd5()).doOnNext(
             AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
-        .toCompletable();
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
   }
 
   @Override public void stop() {
+    if (!dispatchDownloadsSubscription.isUnsubscribed()) {
+      dispatchDownloadsSubscription.unsubscribe();
+    }
   }
 
   @Override public Completable startDownload(Download download) {
