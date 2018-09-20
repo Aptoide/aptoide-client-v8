@@ -135,8 +135,8 @@ public class InstallService extends BaseService {
     return downloadManager.getDownload(md5)
         .first()
         .doOnNext(download -> initInstallationProgress(download))
-        .flatMapCompletable(download -> downloadManager.startDownload(download))
-        .flatMap(download -> downloadManager.getDownload(md5))
+        .flatMap(download -> downloadManager.startDownload(download)
+            .andThen(downloadManager.getDownload(md5)))
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
           if (download.getOverallDownloadStatus() == Download.PROGRESS) {
