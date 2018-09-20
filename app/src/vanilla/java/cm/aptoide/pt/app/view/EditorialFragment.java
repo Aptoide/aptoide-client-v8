@@ -102,14 +102,14 @@ public class EditorialFragment extends NavigationTrackFragment
   private boolean bottomCardHidden = false;
   private View appCardPlaceHolder;
 
-  private PublishSubject<String> editorialMediaClicked;
+  private PublishSubject<EditorialEvent> uiEventsListener;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     ready = PublishSubject.create();
-    editorialMediaClicked = PublishSubject.create();
+    uiEventsListener = PublishSubject.create();
     setHasOptionsMenu(true);
   }
 
@@ -119,7 +119,7 @@ public class EditorialFragment extends NavigationTrackFragment
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
     }
-
+    bottomCardHidden = false;
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setTitle("");
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
@@ -136,7 +136,7 @@ public class EditorialFragment extends NavigationTrackFragment
     appCardLayout = view.findViewById(R.id.app_cardview_layout);
     appCardView = view.findViewById(R.id.app_cardview);
     appCardImage = (ImageView) appCardView.findViewById(R.id.app_icon_imageview);
-    appCardTitle = (TextView) appCardView.findViewById(R.id.app_title_textview_without_rating);
+    appCardTitle = (TextView) appCardView.findViewById(R.id.app_title_textview);
     appCardButton = (Button) appCardView.findViewById(R.id.appview_install_button);
     actionItemCard = view.findViewById(R.id.action_item_card);
     editorialItemsCard = view.findViewById(R.id.card_info_layout);
@@ -148,8 +148,7 @@ public class EditorialFragment extends NavigationTrackFragment
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    adapter =
-        new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter, editorialMediaClicked);
+    adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
     editorialItems.setLayoutManager(layoutManager);
     editorialItems.setAdapter(adapter);
 
@@ -219,6 +218,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroy() {
+    uiEventsListener = null;
     super.onDestroy();
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
       errorMessageSubscription.unsubscribe();
@@ -274,6 +274,8 @@ public class EditorialFragment extends NavigationTrackFragment
     cancelDownload = null;
     resumeDownload = null;
     pauseDownload = null;
+    scrollView = null;
+    appCardLayout = null;
     super.onDestroyView();
   }
 
@@ -309,11 +311,17 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public Observable<DownloadModel.Action> installButtonClick() {
     return RxView.clicks(appCardButton)
-        .map(__ -> action);
+        .map(__ -> action)
+        .mergeWith(uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+            .equals(EditorialEvent.Type.BUTTON))
+            .map(__ -> action));
   }
 
-  @Override public Observable<Void> appCardClicked() {
-    return RxView.clicks(appCardView);
+  @Override public Observable<EditorialEvent> appCardClicked() {
+    return RxView.clicks(appCardView)
+        .map(click -> new EditorialEvent(EditorialEvent.Type.APPCARD))
+        .mergeWith(uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+            .equals(EditorialEvent.Type.APPCARD)));
   }
 
   @Override public void populateView(EditorialViewModel editorialViewModel) {
@@ -338,18 +346,19 @@ public class EditorialFragment extends NavigationTrackFragment
       downloadInfoLayout.setVisibility(View.VISIBLE);
       cardInfoLayout.setVisibility(View.GONE);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
+      adapter.setPlaceHolderDownloadingInfo(downloadModel);
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       cardInfoLayout.setVisibility(View.VISIBLE);
       setButtonText(downloadModel);
+      adapter.setPlaceHolderDefaultInfo(downloadModel,
+          getResources().getString(R.string.appview_button_update),
+          getResources().getString(R.string.appview_button_install),
+          getResources().getString(R.string.appview_button_open));
       if (downloadModel.hasError()) {
         handleDownloadError(downloadModel.getDownloadState());
       }
     }
-    adapter.setPlaceHolderDownloadInfo(downloadModel,
-        getResources().getString(R.string.appview_button_update),
-        getResources().getString(R.string.appview_button_install),
-        getResources().getString(R.string.appview_button_open));
   }
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
@@ -362,16 +371,25 @@ public class EditorialFragment extends NavigationTrackFragment
     AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
   }
 
-  @Override public Observable<Void> pauseDownload() {
-    return RxView.clicks(pauseDownload);
+  @Override public Observable<EditorialEvent> pauseDownload() {
+    return RxView.clicks(pauseDownload)
+        .map(click -> new EditorialEvent(EditorialEvent.Type.PAUSE))
+        .mergeWith(uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+            .equals(EditorialEvent.Type.PAUSE)));
   }
 
-  @Override public Observable<Void> resumeDownload() {
-    return RxView.clicks(resumeDownload);
+  @Override public Observable<EditorialEvent> resumeDownload() {
+    return RxView.clicks(resumeDownload)
+        .map(click -> new EditorialEvent(EditorialEvent.Type.RESUME))
+        .mergeWith(uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+            .equals(EditorialEvent.Type.RESUME)));
   }
 
-  @Override public Observable<Void> cancelDownload() {
-    return RxView.clicks(cancelDownload);
+  @Override public Observable<EditorialEvent> cancelDownload() {
+    return RxView.clicks(cancelDownload)
+        .map(click -> new EditorialEvent(EditorialEvent.Type.CANCEL))
+        .mergeWith(uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+            .equals(EditorialEvent.Type.CANCEL)));
   }
 
   @Override public Observable<Void> isAppViewReadyToDownload() {
@@ -501,8 +519,9 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  @Override public Observable<String> mediaContentClicked() {
-    return editorialMediaClicked;
+  @Override public Observable<EditorialEvent> mediaContentClicked() {
+    return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+        .equals(EditorialEvent.Type.MEDIA));
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {

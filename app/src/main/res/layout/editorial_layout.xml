@@ -141,7 +141,7 @@
         android:background="@drawable/background_with_shadow"
         >
       <include
-          layout="@layout/app_install_cardview_with_rating"
+          layout="@layout/app_install_cardview"
           android:id="@+id/app_cardview"
           android:layout_width="match_parent"
           android:layout_height="48dp"

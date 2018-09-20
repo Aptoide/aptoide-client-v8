@@ -19,10 +19,10 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
   private final DecimalFormat oneDecimalFormat;
   private List<EditorialContent> editorialItemList;
   private EditorialItemsViewHolder appCardPlaceholderEditorialViewHolder;
-  private PublishSubject<String> editorialMediaClicked;
+  private PublishSubject<EditorialEvent> editorialMediaClicked;
 
   public EditorialItemsAdapter(List<EditorialContent> editorialItemList,
-      DecimalFormat oneDecimalFormat, PublishSubject<String> editorialMediaClicked) {
+      DecimalFormat oneDecimalFormat, PublishSubject<EditorialEvent> editorialMediaClicked) {
     this.editorialItemList = editorialItemList;
     this.oneDecimalFormat = oneDecimalFormat;
     this.editorialMediaClicked = editorialMediaClicked;
@@ -69,10 +69,16 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
     }
   }
 
-  public void setPlaceHolderDownloadInfo(DownloadModel downloadModel, String update, String install,
+  public void setPlaceHolderDownloadingInfo(DownloadModel downloadModel) {
+    if (appCardPlaceholderEditorialViewHolder != null) {
+      appCardPlaceholderEditorialViewHolder.setPlaceHolderDownloadingInfo(downloadModel);
+    }
+  }
+
+  public void setPlaceHolderDefaultInfo(DownloadModel downloadModel, String update, String install,
       String open) {
     if (appCardPlaceholderEditorialViewHolder != null) {
-      appCardPlaceholderEditorialViewHolder.setPlaceHolderDownloadInfo(downloadModel, update,
+      appCardPlaceholderEditorialViewHolder.setPlaceHolderDefaultStateInfo(downloadModel, update,
           install, open);
     }
   }

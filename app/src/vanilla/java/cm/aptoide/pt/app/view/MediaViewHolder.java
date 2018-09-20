@@ -17,11 +17,11 @@ class MediaViewHolder extends RecyclerView.ViewHolder {
   private ImageView image;
   private ImageView videoThumbnail;
   private FrameLayout videoThumbnailContainer;
-  private PublishSubject<String> editorialMediaClicked;
+  private PublishSubject<EditorialEvent> uiEventListener;
 
-  public MediaViewHolder(View view, PublishSubject<String> editorialMediaClicked) {
+  public MediaViewHolder(View view, PublishSubject<EditorialEvent> uiEventListener) {
     super(view);
-    this.editorialMediaClicked = editorialMediaClicked;
+    this.uiEventListener = uiEventListener;
 
     image = view.findViewById(R.id.image_item);
     videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
@@ -36,8 +36,8 @@ class MediaViewHolder extends RecyclerView.ViewHolder {
               .load(editorialMedia.getThumbnail(), videoThumbnail);
         }
         videoThumbnailContainer.setVisibility(View.VISIBLE);
-        videoThumbnailContainer.setOnClickListener(
-            v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
+        videoThumbnailContainer.setOnClickListener(v -> uiEventListener.onNext(
+            new EditorialEvent(EditorialEvent.Type.MEDIA, editorialMedia.getUrl())));
       } else {
         ImageLoader.with(itemView.getContext())
             .load(editorialMedia.getUrl(), image);

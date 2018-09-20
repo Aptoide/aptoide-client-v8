@@ -18,7 +18,7 @@ public interface EditorialView extends View {
 
   Observable<DownloadModel.Action> installButtonClick();
 
-  Observable<Void> appCardClicked();
+  Observable<EditorialEvent> appCardClicked();
 
   void populateView(EditorialViewModel editorialViewModel);
 
@@ -30,11 +30,11 @@ public interface EditorialView extends View {
 
   void openApp(String packageName);
 
-  Observable<Void> pauseDownload();
+  Observable<EditorialEvent> pauseDownload();
 
-  Observable<Void> resumeDownload();
+  Observable<EditorialEvent> resumeDownload();
 
-  Observable<Void> cancelDownload();
+  Observable<EditorialEvent> cancelDownload();
 
   Observable<Void> isAppViewReadyToDownload();
 
@@ -46,5 +46,5 @@ public interface EditorialView extends View {
 
   void addBottomCardAnimation(EditorialViewModel editorialViewModel);
 
-  Observable<String> mediaContentClicked();
+  Observable<EditorialEvent> mediaContentClicked();
 }
