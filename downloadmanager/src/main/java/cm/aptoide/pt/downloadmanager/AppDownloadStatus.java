@@ -28,7 +28,11 @@ public class AppDownloadStatus {
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
       overallProgress += fileDownloadCallback.getDownloadProgress();
     }
-    return overallProgress;
+    if (fileDownloadCallbackList.size() > 0) {
+      return overallProgress / fileDownloadCallbackList.size();
+    } else {
+      return overallProgress;
+    }
   }
 
   public AppDownloadState getDownloadStatus() {
