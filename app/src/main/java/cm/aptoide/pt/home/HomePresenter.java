@@ -468,7 +468,8 @@ public class HomePresenter implements Presenter {
   private void handleTermsAndConditionsContinueClicked() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.termsAndConditionsContinueClicked())
+        .flatMap(__ -> view.gdprDialogClicked())
+        .filter(action -> action.equals("continue"))
         .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -480,7 +481,8 @@ public class HomePresenter implements Presenter {
   private void handleTermsAndConditionsLogOutClicked() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.termsAndConditionsLogOutClicked())
+        .flatMap(__ -> view.gdprDialogClicked())
+        .filter(action -> action.equals("logout"))
         .flatMapCompletable(__ -> accountManager.logout())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -492,7 +494,8 @@ public class HomePresenter implements Presenter {
   private void handleClickOnTermsAndConditions() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.termsAndConditionsClicked())
+        .flatMap(__ -> view.gdprDialogClicked())
+        .filter(action -> action.equals("terms"))
         .doOnNext(__ -> homeNavigator.navigateToTermsAndConditions())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -504,7 +507,8 @@ public class HomePresenter implements Presenter {
   private void handleClickOnPrivacyPolicy() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.privacyPolicyClicked())
+        .flatMap(__ -> view.gdprDialogClicked())
+        .filter(action -> action.equals("privacy"))
         .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
