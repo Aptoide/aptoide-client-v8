@@ -34,12 +34,12 @@
           android:paddingBottom="16dp"
           app:layout_collapseMode="pin"
           >
-        <android.support.v7.widget.CardView
+        <FrameLayout
             android:id="@+id/action_item_card"
             android:layout_width="121dp"
             android:layout_height="24dp"
             android:layout_marginTop="210dp"
-            app:cardBackgroundColor="@color/grey_gradient_end"
+            android:background="@drawable/round_right_corners_grey"
             >
           <TextView
               android:id="@+id/action_item_name"
@@ -51,7 +51,7 @@
               tools:text="Game of the Week"
               style="@style/Aptoide.TextView.Regular.XS"
               />
-        </android.support.v7.widget.CardView>
+        </FrameLayout>
       </RelativeLayout>
       <android.support.v7.widget.Toolbar
           android:id="@+id/toolbar"
