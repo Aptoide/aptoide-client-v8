@@ -124,7 +124,7 @@ public class InstallService extends BaseService {
 
   private Observable<Boolean> downloadAndInstallCurrentDownload(Context context,
       boolean forceDefaultInstall) {
-    return downloadManager.getCurrentActiveDownload()
+    return downloadManager.getCurrentInProgressDownload()
         .first()
         .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5(),
             forceDefaultInstall));
