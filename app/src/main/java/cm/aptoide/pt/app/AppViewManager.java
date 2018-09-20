@@ -278,8 +278,8 @@ public class AppViewManager {
             downloadStateParser.parseDownloadState(install.getState()), pay));
   }
 
-  public void pauseDownload(String md5) {
-    installManager.stopInstallation(md5);
+  public Completable pauseDownload(String md5) {
+    return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
 
   public Completable resumeDownload(String md5, String packageName, long appId) {
