@@ -13,8 +13,6 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static com.google.android.gms.internal.zzs.TAG;
-
 /**
  * Created by neuro on 30-12-2016.
  */
@@ -68,7 +66,7 @@ public class ApkFy {
             .log("APKFY_APP_ID", appId);
       }
       Logger.getInstance()
-          .d(TAG, e.getMessage());
+          .d("APKFY", e.getMessage());
       CrashReport.getInstance()
           .log(e);
     }

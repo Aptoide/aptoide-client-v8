@@ -58,7 +58,7 @@ import rx.Single;
   }
 
   private void handleQueryTextSubmitted() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(
             __ -> getDebouncedQueryChanges().filter(data -> data.hasQuery() && data.isSubmitted()))
@@ -83,7 +83,7 @@ import rx.Single;
   }
 
   private void handleQueryTextCleaned() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges().filter(data -> !data.hasQuery())
             .flatMapSingle(data -> trendingManager.getTrendingCursorSuggestions()
@@ -96,7 +96,7 @@ import rx.Single;
   }
 
   private void handleQueryTextChanged() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(
             __ -> getDebouncedQueryChanges().filter(data -> data.hasQuery() && !data.isSubmitted())
@@ -120,7 +120,7 @@ import rx.Single;
   }
 
   private void showSuggestionsIfCurrentQueryIsEmpty() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> view.onQueryTextChanged()
             .first()
