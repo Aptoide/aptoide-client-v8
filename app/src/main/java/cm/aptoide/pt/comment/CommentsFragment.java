@@ -2,20 +2,26 @@ package cm.aptoide.pt.comment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.data.Comment;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 
 public class CommentsFragment extends NavigationTrackFragment implements CommentsView {
 
   @Inject CommentsPresenter commentsPresenter;
+  @Inject AptoideUtils.DateTimeU dateUtils;
+  private RecyclerView commentsList;
+  private CommentsAdapter commentsAdapter;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -30,8 +36,12 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    Logger.getInstance()
-        .d(this.getTag(), "comments fragment");
+
+    commentsList = view.findViewById(R.id.comments_list);
+    commentsList.setLayoutManager(
+        new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
+    commentsAdapter = new CommentsAdapter(dateUtils, Collections.emptyList());
+    commentsList.setAdapter(commentsAdapter);
 
     attachPresenter(commentsPresenter);
   }
@@ -42,7 +52,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   }
 
   @Override public void showComments(List<Comment> comments) {
-    // TODO: 21/09/2018 actual comments shown
+    commentsAdapter.addComments(comments);
   }
 
   @Override public void showLoading() {

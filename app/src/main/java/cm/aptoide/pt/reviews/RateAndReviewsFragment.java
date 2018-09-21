@@ -17,10 +17,10 @@ import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.comments.view.CommentDisplayable;
-import cm.aptoide.pt.comments.view.CommentsAdapter;
 import cm.aptoide.pt.comments.view.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.comments.view.ItemCommentAdderView;
 import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.comments.view.ReviewsAdapter;
 import cm.aptoide.pt.comments.view.SimpleReviewCommentAdder;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -57,8 +57,8 @@ import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
-    implements ItemCommentAdderView<Review, CommentsAdapter> {
+public class RateAndReviewsFragment extends AptoideBaseFragment<ReviewsAdapter>
+    implements ItemCommentAdderView<Review, ReviewsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   @Inject AppNavigator appNavigator;
@@ -317,8 +317,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         .getNext(), new SimpleReviewCommentAdder(itemPosition, this));
   }
 
-  @Override protected CommentsAdapter createAdapter() {
-    return new CommentsAdapter<>(RateAndReviewCommentDisplayable.class);
+  @Override protected ReviewsAdapter createAdapter() {
+    return new ReviewsAdapter<>(RateAndReviewCommentDisplayable.class);
   }
 
   @Override
