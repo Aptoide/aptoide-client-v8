@@ -312,6 +312,7 @@
   <string name="comment_store_title">Comments on this store</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
   <string name="reviews_expand_button">%d replies</string>
+  <string name="comment_replies_number_short">%d replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Free up some space to continue.</string>
   <string name="create_store_displayable_explore_long_term_button">View store</string>

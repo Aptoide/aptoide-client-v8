@@ -62,7 +62,16 @@ public class StoreCommentWidget extends Widget<StoreCommentDisplayable> {
 
     this.date.setVisibility(View.VISIBLE);
 
-    this.replies.setText("7 replies");
+    Comment.Stats stats = comment.getStats();
+    if (stats != null && stats.getComments() > 0) {
+      String repliesText =
+          String.format(getContext().getString(R.string.comment_replies_number_short),
+              stats.getComments());
+      this.replies.setText(repliesText);
+      this.replies.setVisibility(View.VISIBLE);
+    } else {
+      this.replies.setVisibility(View.INVISIBLE);
+    }
 
     compositeSubscription.add(RxView.clicks(itemView)
         .doOnNext(click -> displayable.itemClicked(itemView))

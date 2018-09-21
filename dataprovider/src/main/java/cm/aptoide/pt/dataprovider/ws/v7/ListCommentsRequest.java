@@ -165,8 +165,10 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.storePassSha1 = password;
     }
 
-    public Body(boolean refresh, Order desc, int subLimit) {
+    public Body(boolean refresh, Order order, int subLimit) {
+      this.refresh = refresh;
       this.subLimit = subLimit;
+      this.order = order;
     }
 
     @Override public int getOffset() {
