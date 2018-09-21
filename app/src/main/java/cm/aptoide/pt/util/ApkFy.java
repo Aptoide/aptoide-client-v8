@@ -18,6 +18,8 @@ import java.util.zip.ZipFile;
  */
 
 public class ApkFy {
+  
+  private static final String TAG = "ApkFy";
 
   private final Context context;
   private final Intent intent;
@@ -66,7 +68,7 @@ public class ApkFy {
             .log("APKFY_APP_ID", appId);
       }
       Logger.getInstance()
-          .d("APKFY", e.getMessage());
+          .d(TAG, e.getMessage());
       CrashReport.getInstance()
           .log(e);
     }
