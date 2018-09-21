@@ -99,7 +99,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private DecimalFormat oneDecimalFormatter;
   private NestedScrollView scrollView;
   private View appCardLayout;
-  private boolean bottomCardHidden = false;
+  private boolean bottomCardHidden;
   private View appCardPlaceHolder;
 
   private PublishSubject<EditorialEvent> uiEventsListener;
