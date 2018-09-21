@@ -7,15 +7,17 @@ public class ActionItem {
   private final String message;
   private final String icon;
   private final String url;
+  private final String type;
 
   public ActionItem(String cardId, String layout, String title, String message, String icon,
-      String url) {
+      String url, String type) {
     this.cardId = cardId;
     this.layout = layout;
     this.title = title;
     this.message = message;
     this.icon = icon;
     this.url = url;
+    this.type = type;
   }
 
   public String getCardId() {
@@ -40,5 +42,9 @@ public class ActionItem {
 
   public String getUrl() {
     return url;
+  }
+
+  public String getType() {
+    return type;
   }
 }

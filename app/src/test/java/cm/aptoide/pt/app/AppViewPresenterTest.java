@@ -88,7 +88,7 @@ public class AppViewPresenterTest {
 
     errorAppViewViewModel = new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC);
 
-    when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
 
   @Test public void handleLoadDownloadAppViewModel() {

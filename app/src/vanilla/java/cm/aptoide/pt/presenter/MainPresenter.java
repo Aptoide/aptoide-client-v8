@@ -80,7 +80,7 @@ public class MainPresenter implements Presenter {
   }
 
   @Override public void present() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .doOnNext(created -> apkFy.run())
         .filter(created -> firstCreated)
@@ -91,7 +91,7 @@ public class MainPresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
 
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(created -> aptoideBottomNavigator.navigationEvent()
             .observeOn(viewScheduler)
@@ -109,7 +109,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void setupUpdatesNumber() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> updatesManager.getUpdatesNumber())
         .observeOn(viewScheduler)
@@ -128,7 +128,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void setupInstallErrorsDisplay() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> View.LifecycleEvent.RESUME.equals(event))
         .flatMap(lifecycleEvent -> rootInstallationRetryHandler.retries()
             .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
@@ -141,7 +141,7 @@ public class MainPresenter implements Presenter {
           view.showInstallationError(installationProgresses.size());
         }, throwable -> crashReport.log(throwable));
 
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(lifecycleEvent -> installManager.getTimedOutInstallations())
         .filter(installationProgresses -> !installationProgresses.isEmpty())
@@ -150,13 +150,13 @@ public class MainPresenter implements Presenter {
         .subscribe(noInstallErrors -> view.dismissInstallationError(),
             throwable -> crashReport.log(throwable));
 
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(event -> installCompletedNotifier.getWatcher())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(allInstallsCompleted -> view.showInstallationSuccessMessage());
 
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .flatMap(lifecycleEvent -> view.getInstallErrorsDismiss())
         .flatMapCompletable(click -> installManager.cleanTimedOutInstalls())
@@ -166,7 +166,7 @@ public class MainPresenter implements Presenter {
   }
 
   private void shortcutManagement() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.DESTROY))
         .first()
         .subscribe(__ -> deepLinkManager.freeSubscriptions(),

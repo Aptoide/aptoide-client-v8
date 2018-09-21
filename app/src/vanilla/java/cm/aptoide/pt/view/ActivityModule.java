@@ -25,6 +25,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
+import cm.aptoide.pt.app.view.EditorialNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -272,5 +273,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AppCoinsInfoNavigator providesAppCoinsInfoNavigator(
       FragmentNavigator fragmentNavigator) {
     return new AppCoinsInfoNavigator(((ActivityNavigator) activity), fragmentNavigator);
+  }
+
+  @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(
+      AppNavigator appNavigator) {
+    return new EditorialNavigator((ActivityNavigator) activity, appNavigator);
   }
 }

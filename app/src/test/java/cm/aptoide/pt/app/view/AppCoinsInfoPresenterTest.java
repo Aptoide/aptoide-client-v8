@@ -46,7 +46,7 @@ public class AppCoinsInfoPresenterTest {
         new AppCoinsInfoPresenter(view, navigator, installManager, crashReporter, packageName,
             Schedulers.immediate());
 
-    when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.installButtonClick()).thenReturn(installClickEvent);
     when(view.coinbaseLinkClick()).thenReturn(coinbaseClickEvent);
     when(view.appCoinsWalletLinkClick()).thenReturn(walletClickEvent);

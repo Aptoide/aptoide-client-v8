@@ -1,7 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -68,10 +66,12 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     int color;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       color = context.getResources()
-          .getColor(R.color.default_color, context.getTheme());
+          .getColor(displayable.getStoreTheme()
+              .getPrimaryColor(), context.getTheme());
     } else {
       color = context.getResources()
-          .getColor(R.color.default_color);
+          .getColor(displayable.getStoreTheme()
+              .getPrimaryColor());
     }
 
     final GetAppMeta.App appData = appMeta.second.getData();
@@ -122,16 +122,9 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     // check if app is installed. if it is, show open button
 
     // apply button background
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      installButton.setBackground(d);
-    } else {
-      Drawable d = context.getResources()
-          .getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      installButton.setBackgroundDrawable(d);
-    }
+    installButton.setBackgroundDrawable(getContext().getResources()
+        .getDrawable(displayable.getStoreTheme()
+            .getRaisedButtonDrawable()));
 
     installButton.setText(context.getString(isAppInstalled ? R.string.open : R.string.install));
 

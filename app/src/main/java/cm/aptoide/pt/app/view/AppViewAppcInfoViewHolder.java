@@ -9,23 +9,30 @@ public class AppViewAppcInfoViewHolder {
   private LinearLayout appcBillingSupported;
   private View appcRewardView;
   private TextView appcRewardValue;
+  private TextView appcRewardBilling;
 
   public AppViewAppcInfoViewHolder(LinearLayout appcBillingSupported, View appcRewardView,
-      TextView appcRewardValue) {
+      TextView appcRewardValue, TextView appcRewardBilling) {
     this.appcBillingSupported = appcBillingSupported;
     this.appcRewardView = appcRewardView;
     this.appcRewardValue = appcRewardValue;
+    this.appcRewardBilling = appcRewardBilling;
   }
 
   public void showInfo(boolean hasAdvertising, boolean hasBilling,
       SpannableString formattedMessage) {
-    if (hasBilling) {
-      this.appcBillingSupported.setVisibility(View.VISIBLE);
-      this.appcRewardView.setVisibility(View.GONE);
-    } else if (hasAdvertising) {
+    if (hasAdvertising) {
       this.appcRewardView.setVisibility(View.VISIBLE);
       this.appcRewardValue.setText(formattedMessage);
       this.appcBillingSupported.setVisibility(View.GONE);
+      if (hasBilling) {
+        this.appcRewardBilling.setVisibility(View.VISIBLE);
+      } else {
+        this.appcRewardBilling.setVisibility(View.GONE);
+      }
+    } else if (hasBilling) {
+      this.appcBillingSupported.setVisibility(View.VISIBLE);
+      this.appcRewardView.setVisibility(View.GONE);
     }
   }
 

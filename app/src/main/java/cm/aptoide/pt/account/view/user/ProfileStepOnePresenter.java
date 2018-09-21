@@ -32,7 +32,7 @@ public class ProfileStepOnePresenter implements Presenter {
 
   @Override public void present() {
 
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.moreInfoButtonClick()
             .doOnNext(__1 -> accountAnalytics.accountProfileAction(1,
@@ -42,7 +42,7 @@ public class ProfileStepOnePresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
 
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.continueButtonClick()
             .doOnNext(__11 -> view.showWaitDialog())

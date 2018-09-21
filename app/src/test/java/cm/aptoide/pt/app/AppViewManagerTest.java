@@ -84,10 +84,9 @@ public class AppViewManagerTest {
     appStats = new AppStats(appRating, appRating, 1, 1);
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
@@ -103,10 +102,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -151,10 +149,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -199,10 +196,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -246,10 +242,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -289,10 +284,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -316,10 +310,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -343,10 +336,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -453,10 +445,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "marketName",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "marketName", appCoinsManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -558,10 +549,9 @@ public class AppViewManagerTest {
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-            appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, socialRepository, "anyString",
-            appCoinsManager);
+            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+            preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));

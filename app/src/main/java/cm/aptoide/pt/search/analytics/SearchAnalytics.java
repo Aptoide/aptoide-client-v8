@@ -6,7 +6,6 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Created by pedroribeiro on 04/05/17.
  */
@@ -30,8 +29,7 @@ public class SearchAnalytics {
   public void searchFromSuggestion(String query, int suggestionPosition, String inputQuery) {
 
     search(query, true, suggestionPosition,
-        inputQuery.isEmpty() ? FROM_TRENDING : FROM_AUTOCOMPLETE,
-        inputQuery);
+        inputQuery.isEmpty() ? FROM_TRENDING : FROM_AUTOCOMPLETE, inputQuery);
   }
 
   public void search(String query) {

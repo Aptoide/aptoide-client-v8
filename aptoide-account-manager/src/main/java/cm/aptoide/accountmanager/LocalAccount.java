@@ -2,6 +2,7 @@ package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class LocalAccount implements Account {
@@ -62,5 +63,17 @@ public class LocalAccount implements Account {
 
   @Override public boolean isPublicStore() {
     return store != null && store.hasPublicAccess();
+  }
+
+  @Override public boolean acceptedTermsAndConditions() {
+    return false;
+  }
+
+  @Override public boolean acceptedPrivacyPolicy() {
+    return false;
+  }
+
+  @Override public Date getBirthDate() {
+    return new Date(1970, 1, 1);
   }
 }

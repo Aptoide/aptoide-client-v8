@@ -193,6 +193,7 @@ public class PullingContentService extends Service {
       final NotificationManager managerNotification =
           (NotificationManager) getApplicationContext().getSystemService(
               Context.NOTIFICATION_SERVICE);
+      notificationAnalytics.sendUpdatesNotificationImpressionEvent();
       managerNotification.notify(UPDATE_NOTIFICATION_ID, notification);
       ManagerPreferences.setLastUpdates(numberUpdates, sharedPreferences);
     }

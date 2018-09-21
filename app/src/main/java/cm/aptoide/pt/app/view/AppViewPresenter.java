@@ -104,7 +104,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleFirstLoad() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> loadApp().flatMap(
@@ -135,7 +135,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleReviewAutoScroll() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.scrollReviewsResponse())
         .flatMap(reviews -> scheduleAnimations(reviews))
@@ -144,7 +144,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnScreenshot() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.getScreenshotClickEvent())
         .filter(event -> !event.isVideo())
@@ -159,7 +159,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnVideo() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.getScreenshotClickEvent())
         .filter(event -> event.isVideo())
@@ -173,7 +173,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnDescriptionReadMore() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickedReadMore())
         .doOnNext(readMoreClickEvent -> {
@@ -187,7 +187,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnDeveloperWebsite() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperWebsite())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -200,16 +200,19 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnAppcInfo() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickGetAppcInfo())
-        .doOnNext(click -> appViewNavigator.navigateToAppCoinsInfo())
+        .doOnNext(click -> {
+          appViewAnalytics.sendAppcInfoInteractEvent();
+          appViewNavigator.navigateToAppCoinsInfo();
+        })
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
 
   private void handleClickOnDeveloperEmail() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperEmail())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -222,7 +225,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnDeveloperPrivacy() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPrivacy())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -235,7 +238,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnDeveloperPermissions() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickDeveloperPermissions())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -246,7 +249,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnStoreLayout() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickStoreLayout())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -261,7 +264,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnFollowStore() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickFollowStore())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -289,7 +292,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnOtherVersions() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickOtherVersions())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -304,7 +307,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnTrustedBadge() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickTrustedBadge())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -318,7 +321,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnRateApp() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickRateApp(), view.clickRateAppLarge(),
             view.clickRateAppLayout()))
@@ -334,7 +337,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickReadReviews() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickReviewsLayout(), view.clickReadAllReviews()))
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -352,7 +355,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickFlags() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickVirusFlag(), view.clickLicenseFlag(),
             view.clickWorkingFlag(), view.clickFakeFlag()))
@@ -388,7 +391,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickLoginSnack() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickLoginSnack())
         .doOnNext(__ -> accountNavigator.navigateToAccountView(
@@ -399,7 +402,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnSimilarApps() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickSimilarApp())
         .doOnNext(similarAppClickEvent -> {
@@ -423,7 +426,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnToolbar() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickToolbar()
             .flatMap(menuItem -> appViewManager.loadAppViewViewModel()
@@ -449,7 +452,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleDefaultShare() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.shareDialogResponse())
         .filter(response -> response == ShareDialogs.ShareResponse.SHARE_EXTERNAL)
@@ -461,7 +464,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleRecommendsShare() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.shareDialogResponse())
         .filter(response -> response == ShareDialogs.ShareResponse.SHARE_TIMELINE)
@@ -486,7 +489,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnRetry() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.clickNoNetworkRetry(), view.clickGenericRetry())
             .doOnNext(__1 -> view.showLoading())
@@ -639,7 +642,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void cancelDownload() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelDownload()
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -655,7 +658,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void resumeDownload() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
             .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
@@ -673,7 +676,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void pauseDownload() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.pauseDownload()
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -687,7 +690,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleInstallButtonClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> accountManager.accountStatus())
         .first()
@@ -788,7 +791,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void loadDownloadApp() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.isAppViewReadyToDownload())
         .flatMap(create -> appViewManager.loadAppViewViewModel()
@@ -806,7 +809,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void shareLoggedInRecommendsDialogClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.shareLoggedInRecommendsDialogClick()
             .observeOn(Schedulers.io())
@@ -816,7 +819,7 @@ public class AppViewPresenter implements Presenter {
                 app.getStore()
                     .getId(), "install")
                 .doOnCompleted(() -> appViewAnalytics.sendTimelineLoggedInInstallRecommendEvents(
-                        app.getPackageName()))
+                    app.getPackageName()))
                 .doOnCompleted(() -> view.showRecommendsThanksMessage()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -827,7 +830,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void skipLoggedInRecommendsDialogClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.skipLoggedInRecommendsDialogClick()
             .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
@@ -842,7 +845,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void dontShowAgainLoggedInRecommendsDialogClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.dontShowAgainLoggedInRecommendsDialogClick()
             .flatMapCompletable(
@@ -860,7 +863,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleNotLoggedinShareResults() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> appViewNavigator.notLoggedInViewResults()
             .filter(success -> success)
@@ -882,7 +885,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleAppBought() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.appBought()
             .flatMap(appBoughClickEvent -> appViewManager.loadAppViewViewModel()
