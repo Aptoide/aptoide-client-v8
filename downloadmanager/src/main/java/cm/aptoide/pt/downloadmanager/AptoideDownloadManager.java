@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.utils.FileUtils;
@@ -25,10 +26,12 @@ public class AptoideDownloadManager implements DownloadManager {
   private DownloadStatusMapper downloadStatusMapper;
   private AppDownloaderProvider appDownloaderProvider;
   private Subscription dispatchDownloadsSubscription;
+  private FileUtils fileUtils;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath, String apkPath, String obbPath,
-      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider) {
+      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
+      FileUtils fileUtils) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
@@ -36,6 +39,7 @@ public class AptoideDownloadManager implements DownloadManager {
     this.obbPath = obbPath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
+    this.fileUtils = fileUtils;
     appDownloaderMap = new HashMap<>();
   }
 
@@ -191,7 +195,34 @@ public class AptoideDownloadManager implements DownloadManager {
             .first()
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
         .doOnNext(download -> downloadsRepository.save(download))
+        .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .doOnNext(download -> moveCompletedDownloadFiles(download))
         .subscribeOn(Schedulers.io());
+  }
+
+  private void moveCompletedDownloadFiles(Download download) {
+    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      String newFilePath = getFilePathFromFileType(fileToDownload);
+      fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
+      fileToDownload.setPath(newFilePath);
+    }
+  }
+
+  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
+    String path;
+    switch (fileToDownload.getFileType()) {
+      case FileToDownload.APK:
+        path = apkPath;
+        break;
+      case FileToDownload.OBB:
+        path = obbPath + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.GENERIC:
+      default:
+        path = cachePath;
+        break;
+    }
+    return path;
   }
 
   private Observable<Download> updateDownload(Download download,

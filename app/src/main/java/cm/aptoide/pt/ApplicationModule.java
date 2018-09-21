@@ -312,7 +312,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
       DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
       CacheHelper cacheHelper, @Named("cachePath") String cachePath,
-      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider) {
+      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
+      DownloadAnalytics downloadAnalytics) {
     final String apkPath = cachePath + "apks/";
     final String obbPath = cachePath + "obb/";
 
@@ -320,7 +321,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     FileUtils.createDir(obbPath);
 
     return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath, apkPath,
-        obbPath, downloadAppMapper, appDownloaderProvider);
+        obbPath, downloadAppMapper, appDownloaderProvider,
+        new FileUtils(downloadAnalytics::moveFile));
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {
