@@ -61,6 +61,7 @@ import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
+import cm.aptoide.pt.comment.CommentsPresenter;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -380,5 +381,9 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides ApkFyExperiment providesApkfyExperiment(ABTestManager abTestManager) {
     return new ApkFyExperiment(abTestManager);
+  }
+
+  @FragmentScope @Provides CommentsPresenter providesCommentsPresenter() {
+    return new CommentsPresenter();
   }
 }

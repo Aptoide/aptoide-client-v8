@@ -10,8 +10,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.List;
+import javax.inject.Inject;
 
 public class CommentsFragment extends NavigationTrackFragment implements CommentsView {
+
+  @Inject CommentsPresenter commentsPresenter;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -21,12 +24,15 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     Logger.getInstance()
         .d(this.getTag(), "comments fragment");
+
+    attachPresenter(commentsPresenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
