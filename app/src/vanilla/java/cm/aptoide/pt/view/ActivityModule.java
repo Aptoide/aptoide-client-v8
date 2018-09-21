@@ -279,4 +279,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       AppNavigator appNavigator) {
     return new EditorialNavigator((ActivityNavigator) activity, appNavigator);
   }
+
+  @ActivityScope @Provides @Named("screenHeight") float providesScreenHeight(Resources resources) {
+    return resources.getDisplayMetrics().heightPixels;
+  }
+
+  @ActivityScope @Provides @Named("screenWidth") float providesScreenWidth(Resources resources) {
+    return resources.getDisplayMetrics().widthPixels;
+  }
 }
