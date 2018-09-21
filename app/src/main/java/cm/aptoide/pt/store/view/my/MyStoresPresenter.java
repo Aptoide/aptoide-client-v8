@@ -34,7 +34,7 @@ public class MyStoresPresenter implements Presenter {
   }
 
   private void handleUserImageClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.imageClick()
             .observeOn(viewScheduler)
@@ -48,7 +48,7 @@ public class MyStoresPresenter implements Presenter {
   }
 
   private void loadUserImage() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> accountManager.accountStatus())
         .flatMap(account -> getUserAvatar(account))
@@ -69,7 +69,7 @@ public class MyStoresPresenter implements Presenter {
   }
 
   private void handleBottomNavigationEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> myStoresNavigator.bottomNavigationEvent()
             .observeOn(viewScheduler)

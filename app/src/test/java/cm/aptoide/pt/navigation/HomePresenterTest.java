@@ -103,7 +103,7 @@ public class HomePresenterTest {
     localTopAppsBundle = bundlesModel.getList()
         .get(1);
 
-    when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
     when(view.recommendedAppClicked()).thenReturn(appClickEvent);
     when(view.adClicked()).thenReturn(adClickEvent);

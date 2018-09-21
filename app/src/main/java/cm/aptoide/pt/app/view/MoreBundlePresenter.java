@@ -64,7 +64,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void onCreateSetupToolbar() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .doOnNext(created -> view.setToolbarInfo(bundleEvent.getTitle()))
@@ -73,7 +73,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void onCreateLoadBundles() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .doOnNext(created -> view.showLoading())
@@ -108,7 +108,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleAppClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
             .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
@@ -132,7 +132,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleAdClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
             .map(homeEvent -> homeEvent.getAdClick())
@@ -148,7 +148,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleMoreClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
             .doOnNext(homeMoreClick -> homeAnalytics.sendTapOnMoreInteractEvent(
@@ -167,7 +167,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleBundleScrolledRight() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.bundleScrolled()
             .doOnNext(click -> homeAnalytics.sendScrollRightInteractEvent(click.getBundlePosition(),
@@ -185,7 +185,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleBottomReached() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reachesBottom()
             .filter(__ -> moreBundleManager.hasMore(bundleEvent.getTitle()))
@@ -218,7 +218,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handlePullToRefresh() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
             .doOnNext(__ -> homeAnalytics.sendPullRefreshInteractEvent())
@@ -247,7 +247,7 @@ public class MoreBundlePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleRetryClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
