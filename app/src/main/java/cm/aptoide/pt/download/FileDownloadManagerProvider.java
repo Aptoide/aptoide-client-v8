@@ -13,11 +13,13 @@ public class FileDownloadManagerProvider implements FileDownloaderProvider {
 
   private String downloadsPath;
   private com.liulishuo.filedownloader.FileDownloader fileDownloader;
+  private Md5Comparator md5Comparator;
 
   public FileDownloadManagerProvider(String downloadsPath,
-      com.liulishuo.filedownloader.FileDownloader fileDownloader) {
+      com.liulishuo.filedownloader.FileDownloader fileDownloader, Md5Comparator md5Comparator) {
     this.downloadsPath = downloadsPath;
     this.fileDownloader = fileDownloader;
+    this.md5Comparator = md5Comparator;
   }
 
   @Override
@@ -25,8 +27,8 @@ public class FileDownloadManagerProvider implements FileDownloaderProvider {
       String packageName, int versionCode, String fileName,
       PublishSubject<FileDownloadCallback> downloadStatusCallback) {
     return new FileDownloadManager(fileDownloader,
-        new FileDownloadTask(downloadStatusCallback, fileType, md5), downloadsPath,
-        mainDownloadPath, fileType, packageName, versionCode, fileName);
+        new FileDownloadTask(downloadStatusCallback, fileType, md5, md5Comparator, fileName),
+        downloadsPath, mainDownloadPath, fileType, packageName, versionCode, fileName);
   }
 }
 

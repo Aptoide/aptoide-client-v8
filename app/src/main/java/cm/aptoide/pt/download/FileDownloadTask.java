@@ -1,5 +1,6 @@
 package cm.aptoide.pt.download;
 
+import android.util.Log;
 import cm.aptoide.pt.downloadmanager.AppDownloadStatus;
 import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -16,12 +17,16 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   private final String md5;
   private PublishSubject<FileDownloadCallback> downloadStatus;
   private int fileType;
+  private Md5Comparator md5Comparator;
+  private String fileName;
 
   public FileDownloadTask(PublishSubject<FileDownloadCallback> downloadStatus, int fileType,
-      String md5) {
+      String md5, Md5Comparator md5Comparator, String fileName) {
     this.downloadStatus = downloadStatus;
     this.fileType = fileType;
     this.md5 = md5;
+    this.md5Comparator = md5Comparator;
+    this.fileName = fileName;
   }
 
   @Override
@@ -43,8 +48,15 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   }
 
   @Override protected void completed(BaseDownloadTask baseDownloadTask) {
-    downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
-        FileDownloadManager.PROGRESS_MAX_VALUE, fileType, md5));
+    if (md5Comparator.compareMd5(md5, fileName)) {
+      downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
+          FileDownloadManager.PROGRESS_MAX_VALUE, fileType, md5));
+      Log.d("FileDownloader", " Download completed");
+    } else {
+      Log.d("FileDownloader", " Download error");
+      downloadStatus.onNext(
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, fileType, md5));
+    }
   }
 
   @Override protected void error(BaseDownloadTask baseDownloadTask, Throwable error) {

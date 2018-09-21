@@ -111,6 +111,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.FileDownloadManagerProvider;
+import cm.aptoide.pt.download.Md5Comparator;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -334,7 +335,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Provides @Singleton FileDownloaderProvider providesFileDownloaderProvider(
       @Named("cachePath") String cachePath, @Named("user-agent") Interceptor userAgentInterceptor,
       AuthenticationPersistence authenticationPersistence, DownloadAnalytics downloadAnalytics,
-      InstallAnalytics installAnalytics) {
+      InstallAnalytics installAnalytics, Md5Comparator md5Comparator) {
 
     final OkHttpClient.Builder httpClientBuilder =
         new OkHttpClient.Builder().addInterceptor(userAgentInterceptor)
@@ -347,7 +348,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
-    return new FileDownloadManagerProvider(cachePath, FileDownloader.getImpl());
+    return new FileDownloadManagerProvider(cachePath, FileDownloader.getImpl(), md5Comparator);
+  }
+
+  @Singleton @Provides Md5Comparator providesMd5Comparator(@Named("cachePath") String cachePath) {
+    return new Md5Comparator(cachePath);
   }
 
   @Singleton @Provides AppDownloaderProvider providesAppDownloaderProvider(
