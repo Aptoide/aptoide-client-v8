@@ -141,11 +141,11 @@ public class FirstLaunchAnalytics {
       UTMTrackingFileParser utmTrackingFileParser = new UTMTrackingFileParser(utmInputStream);
       myZipFile.close();
 
-      utmSource = utmTrackingFileParser.valueExtracter(UTM_SOURCE);
-      utmMedium = utmTrackingFileParser.valueExtracter(UTM_MEDIUM);
-      utmCampaign = utmTrackingFileParser.valueExtracter(UTM_CAMPAIGN);
-      utmContent = utmTrackingFileParser.valueExtracter(UTM_CONTENT);
-      entryPoint = utmTrackingFileParser.valueExtracter(ENTRY_POINT);
+      utmSource = utmTrackingFileParser.valueExtracter("utm_source");
+      utmMedium = utmTrackingFileParser.valueExtracter("utm_medium");
+      utmCampaign = utmTrackingFileParser.valueExtracter("utm_campaign");
+      utmContent = utmTrackingFileParser.valueExtracter("utm_content");
+      entryPoint = utmTrackingFileParser.valueExtracter("entry_point");
 
       utmInputStream.close();
     } catch (IOException e) {

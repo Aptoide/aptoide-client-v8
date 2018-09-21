@@ -49,7 +49,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
             .log(throwable)));
 
     try {
-      DecimalFormat oneDecimalFormatter = new DecimalFormat("#.#");
+      DecimalFormat oneDecimalFormatter = new DecimalFormat("0.0");
       rating.setText(oneDecimalFormatter.format(pojo.getStars()));
     } catch (Exception e) {
       rating.setText(R.string.appcardview_title_no_stars);

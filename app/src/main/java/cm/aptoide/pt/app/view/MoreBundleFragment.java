@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -71,7 +72,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     notifyItemsAdded = PublishSubject.create();
-    oneDecimalFormatter = new DecimalFormat("#.#");
+    oneDecimalFormatter = new DecimalFormat("0.0");
     setHasOptionsMenu(true);
   }
 
@@ -259,6 +260,15 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     return uiEventsListener.filter(click -> click.getType()
         .equals(HomeEvent.Type.SCROLL_RIGHT))
         .debounce(200, TimeUnit.MILLISECONDS);
+  }
+
+  @Override public Observable<HomeEvent> visibleBundles() {
+    return RxRecyclerView.scrollEvents(bundlesList)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
+        .filter(position -> position != RecyclerView.NO_POSITION)
+        .distinctUntilChanged()
+        .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
 
   @Override public void setToolbarInfo(String title) {

@@ -13,6 +13,8 @@ import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
+import cm.aptoide.pt.account.view.store.ManageStoreFragment;
+import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
@@ -311,11 +313,16 @@ public class DeepLinkManager {
         .subscribe(navigation -> {
           if (navigation != null) {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE);
-            storeAnalytics.sendStoreOpenEvent(APP_SHORTCUT, navigation.getStore()
-                .getName(), false);
-            fragmentNavigator.navigateTo(StoreFragment.newInstance(navigation.getStore()
-                .getName(), navigation.getStore()
-                .getTheme(), StoreFragment.OpenType.GetHome), true);
+            if (!navigation.hasStore()) {
+              fragmentNavigator.navigateTo(
+                  ManageStoreFragment.newInstance(new ManageStoreViewModel(), true), true);
+            } else {
+              storeAnalytics.sendStoreOpenEvent(APP_SHORTCUT, navigation.getStore()
+                  .getName(), false);
+              fragmentNavigator.navigateTo(StoreFragment.newInstance(navigation.getStore()
+                  .getName(), navigation.getStore()
+                  .getTheme(), StoreFragment.OpenType.GetHome), true);
+            }
           } else {
             appShortcutsAnalytics.shortcutNavigation(ShortcutDestinations.MY_STORE_NOT_LOGGED_IN);
             bottomNavigationNavigator.navigateToStore();

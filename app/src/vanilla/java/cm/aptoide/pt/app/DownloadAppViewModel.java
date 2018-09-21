@@ -1,62 +1,40 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
+import cm.aptoide.pt.app.view.AppCoinsViewModel;
 
 /**
- * Created by filipegoncalves on 5/9/18.
+ * Created by D01 on 13/08/2018.
  */
 
 public class DownloadAppViewModel {
 
-  private final Action action;
-  private final int progress;
-  private final DownloadState downloadState;
-  private final GetAppMeta.Pay pay;
+  private final DownloadModel downloadModel;
+  private SimilarAppsViewModel similarAppsViewModel;
+  private AppCoinsViewModel appCoinsViewModel;
 
-  public DownloadAppViewModel(Action action, int progress, DownloadState downloadState,
-      GetAppMeta.Pay pay) {
-    this.action = action;
-    this.progress = progress;
-    this.downloadState = downloadState;
-    this.pay = pay;
+  public DownloadAppViewModel(DownloadModel downloadModel,
+      SimilarAppsViewModel similarAppsViewModel, AppCoinsViewModel appCoinsViewModel) {
+
+    this.downloadModel = downloadModel;
+    this.similarAppsViewModel = similarAppsViewModel;
+    this.appCoinsViewModel = appCoinsViewModel;
   }
 
-  public Action getAction() {
-    return action;
+  public AppCoinsViewModel getAppCoinsViewModel() {
+    if (appCoinsViewModel == null) {
+      appCoinsViewModel = new AppCoinsViewModel();
+    }
+    return appCoinsViewModel;
   }
 
-  public int getProgress() {
-    return progress;
+  public SimilarAppsViewModel getSimilarAppsViewModel() {
+    if (similarAppsViewModel == null) {
+      similarAppsViewModel = new SimilarAppsViewModel();
+    }
+    return similarAppsViewModel;
   }
 
-  public DownloadState getDownloadState() {
-    return downloadState;
-  }
-
-  public boolean isDownloading() {
-    return downloadState.equals(DownloadState.ACTIVE)
-        || downloadState.equals(DownloadState.PAUSE)
-        || downloadState.equals(DownloadState.INDETERMINATE);
-  }
-
-  public GetAppMeta.Pay getPay() {
-    return pay;
-  }
-
-  public boolean hasError() {
-    return downloadState.equals(DownloadState.ERROR) || downloadState.equals(
-        DownloadState.NOT_ENOUGH_STORAGE_ERROR);
-  }
-
-  public enum Error {
-    NETWORK, GENERIC
-  }
-
-  public enum Action {
-    UPDATE, INSTALL, DOWNGRADE, OPEN, PAY
-  }
-
-  public enum DownloadState {
-    ACTIVE, PAUSE, COMPLETE, INDETERMINATE, ERROR, NOT_ENOUGH_STORAGE_ERROR
+  public DownloadModel getDownloadModel() {
+    return downloadModel;
   }
 }

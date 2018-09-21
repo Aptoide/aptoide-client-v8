@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search.view;
 
+import android.support.v4.util.Pair;
 import android.view.MenuItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
@@ -70,7 +71,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   boolean isSearchViewExpanded();
 
-  Observable<SearchQueryEvent> listenToSuggestionClick();
+  Observable<Pair<String, SearchQueryEvent>> listenToSuggestionClick();
 
   Observable<Void> toolbarClick();
 

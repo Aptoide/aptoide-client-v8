@@ -14,66 +14,66 @@ public class DownloadStateParser {
   public DownloadStateParser() {
   }
 
-  public DownloadAppViewModel.DownloadState parseDownloadState(Install.InstallationStatus state) {
-    DownloadAppViewModel.DownloadState downloadState;
+  public DownloadModel.DownloadState parseDownloadState(Install.InstallationStatus state) {
+    DownloadModel.DownloadState downloadState;
     switch (state) {
       case INSTALLING:
-        downloadState = DownloadAppViewModel.DownloadState.ACTIVE;
+        downloadState = DownloadModel.DownloadState.ACTIVE;
         break;
       case PAUSED:
-        downloadState = DownloadAppViewModel.DownloadState.PAUSE;
+        downloadState = DownloadModel.DownloadState.PAUSE;
         break;
       case IN_QUEUE:
-        downloadState = DownloadAppViewModel.DownloadState.INDETERMINATE;
+        downloadState = DownloadModel.DownloadState.INDETERMINATE;
         break;
       case INSTALLED:
-        downloadState = DownloadAppViewModel.DownloadState.COMPLETE;
+        downloadState = DownloadModel.DownloadState.COMPLETE;
         break;
       case UNINSTALLED:
-        downloadState = DownloadAppViewModel.DownloadState.COMPLETE;
+        downloadState = DownloadModel.DownloadState.COMPLETE;
         break;
       case INSTALLATION_TIMEOUT:
       case GENERIC_ERROR:
-        downloadState = DownloadAppViewModel.DownloadState.ERROR;
+        downloadState = DownloadModel.DownloadState.ERROR;
         break;
       case NOT_ENOUGH_SPACE_ERROR:
-        downloadState = DownloadAppViewModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
+        downloadState = DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
         break;
       default:
-        downloadState = DownloadAppViewModel.DownloadState.COMPLETE;
+        downloadState = DownloadModel.DownloadState.COMPLETE;
         break;
     }
     return downloadState;
   }
 
-  public DownloadAppViewModel.Action parseDownloadType(Install.InstallationType type,
-      boolean paidApp, boolean wasPaid) {
-    DownloadAppViewModel.Action action;
+  public DownloadModel.Action parseDownloadType(Install.InstallationType type, boolean paidApp,
+      boolean wasPaid) {
+    DownloadModel.Action action;
     if (paidApp && !wasPaid) {
-      action = DownloadAppViewModel.Action.PAY;
+      action = DownloadModel.Action.PAY;
     } else {
       switch (type) {
         case INSTALLED:
-          action = DownloadAppViewModel.Action.OPEN;
+          action = DownloadModel.Action.OPEN;
           break;
         case INSTALL:
-          action = DownloadAppViewModel.Action.INSTALL;
+          action = DownloadModel.Action.INSTALL;
           break;
         case DOWNGRADE:
-          action = DownloadAppViewModel.Action.DOWNGRADE;
+          action = DownloadModel.Action.DOWNGRADE;
           break;
         case UPDATE:
-          action = DownloadAppViewModel.Action.UPDATE;
+          action = DownloadModel.Action.UPDATE;
           break;
         default:
-          action = DownloadAppViewModel.Action.INSTALL;
+          action = DownloadModel.Action.INSTALL;
           break;
       }
     }
     return action;
   }
 
-  public int parseDownloadAction(DownloadAppViewModel.Action action) {
+  public int parseDownloadAction(DownloadModel.Action action) {
     int downloadAction;
     switch (action) {
       case INSTALL:

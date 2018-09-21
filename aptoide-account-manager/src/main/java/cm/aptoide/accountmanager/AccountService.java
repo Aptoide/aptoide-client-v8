@@ -11,6 +11,12 @@ public interface AccountService {
 
   Single<Account> createAccount(String email, String password);
 
+  Completable changeBirthdate(String birthdate);
+
+  Completable updateTermsAndConditions();
+
+  Completable changeSubscribeNewsletter(String isSubscribed);
+
   Single<Account> getAccount();
 
   Completable updateAccount(String nickname, String avatarPath);

@@ -260,7 +260,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             }
             default:
             case IDLE:
-            case COLLAPSED: {
+            case MOVING: {
               if (animationsEnabled) {
                 appIcon.animate()
                     .alpha(0F)

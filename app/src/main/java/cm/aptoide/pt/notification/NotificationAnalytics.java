@@ -17,7 +17,7 @@ public class NotificationAnalytics {
   public static final String NOTIFICATION_RECEIVED = "Aptoide_Push_Notification_Received";
   public static final String NOTIFICATION_PRESSED = "Aptoide_Push_Notification_Click";
   public static final String NOTIFICATION_EVENT_NAME = "NOTIFICATION";
-  private static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
+  public static final String NOTIFICATION_IMPRESSION = "Aptoide_Push_Notification_Impression";
   private static final String TYPE = "type";
   private static final String AB_TESTING_GROUP = "ab_testing_group";
   private static final String PACKAGE_NAME = "package_name";
@@ -45,6 +45,11 @@ public class NotificationAnalytics {
         AnalyticsManager.Action.AUTO, getViewName(true));
   }
 
+  public void sendUpdatesNotificationImpressionEvent() {
+    analyticsManager.logEvent(createUpdateNotificationEventsMap(), NOTIFICATION_IMPRESSION,
+        AnalyticsManager.Action.IMPRESSION, getViewName(true));
+  }
+
   public void sendUpdatesNotificationClickEvent() {
     analyticsManager.logEvent(createUpdateNotificationEventsMap(), NOTIFICATION_PRESSED,
         AnalyticsManager.Action.CLICK, getViewName(true));
@@ -69,7 +74,7 @@ public class NotificationAnalytics {
   @NonNull
   private Map<String, Object> createCampaignNotificationMap(String abTestingGroup, int campaignId) {
     Map<String, Object> map = new HashMap<>();
-    map.put(CAMPAIGN_ID, campaignId);
+    map.put(CAMPAIGN_ID, campaignId != 0 ? String.valueOf(campaignId) : null);
     map.put(AB_TESTING_GROUP, abTestingGroup);
     return map;
   }
@@ -95,7 +100,7 @@ public class NotificationAnalytics {
       @AptoideNotification.NotificationType int type, String abTestingGroup, int campaignId,
       String url) {
     Map<String, Object> map = new HashMap<>();
-    map.put(CAMPAIGN_ID, String.valueOf(campaignId));
+    map.put(CAMPAIGN_ID, campaignId != 0 ? String.valueOf(campaignId) : null);
     map.put(TYPE, matchNotificationTypeToString(type).toString()
         .toLowerCase());
     map = addToMapIfNotNull(map, abTestingGroup, getPackageNameFromUrl(url));

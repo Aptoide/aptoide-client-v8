@@ -14,6 +14,8 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
+import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
+
 /**
  * Created by jdandrade on 07/03/2018.
  */
@@ -49,8 +51,6 @@ public class HomePresenter implements Presenter {
 
     handleAppClick();
 
-    handleRewardAppClick();
-
     handleRecommendedAppClick();
 
     handleAdClick();
@@ -70,26 +70,90 @@ public class HomePresenter implements Presenter {
     handleDiscoveryButtonClick();
 
     handleBundleScrolledRight();
+
+    handleKnowMoreClick();
+
+    handleDismissClick();
+
+    handleActionBundlesImpression();
+
+    handleLoggedInAcceptTermsAndConditions();
+
+    handleTermsAndConditionsContinueClicked();
+
+    handleTermsAndConditionsLogOutClicked();
+
+    handleClickOnTermsAndConditions();
+
+    handleClickOnPrivacyPolicy();
+
+    handleEditorialCardClick();
   }
 
-  private void handleRewardAppClick() {
+  @VisibleForTesting public void handleActionBundlesImpression() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.rewardAppClicked()
-            .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
-                    .getRating(), click.getApp()
-                    .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
-                click.getBundle()
-                    .getTag(), click.getBundle()
-                    .getContent()
-                    .size()))
-            .map(appClick -> ((RewardApp) appClick.getApp()))
-            .doOnNext(rewardApp -> homeNavigator.navigateToRewardAppView(rewardApp.getAppId(),
-                rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getRewardValue()))
-            .retry())
+        .flatMap(created -> view.visibleBundles())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .doOnNext(homeEvent -> {
+          if (homeEvent.getBundle()
+              .getType()
+              .equals(HomeBundle.BundleType.INFO_BUNDLE)) {
+            homeAnalytics.sendAppcImpressionEvent(homeEvent.getBundle()
+                .getTag(), homeEvent.getBundlePosition());
+          } else {
+            ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();
+            homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
+                homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                    .getCardId());
+          }
+        })
+        .filter(homeEvent -> homeEvent.getBundle()
+            .getType()
+            .equals(HomeBundle.BundleType.INFO_BUNDLE))
+        .map(HomeEvent::getBundle)
+        .cast(ActionBundle.class)
+        .flatMapCompletable(home::actionBundleImpression)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
+        .subscribe(actionBundle -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleKnowMoreClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.infoBundleKnowMoreClicked())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendAppcKnowMoreInteractEvent(homeEvent.getBundle()
+              .getTag(), homeEvent.getBundlePosition());
+          homeNavigator.navigateToAppCoinsInformationView();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleDismissClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.dismissBundleClicked())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .doOnNext(homeEvent -> homeAnalytics.sendAppcDismissInteractEvent(homeEvent.getBundle()
+            .getTag(), homeEvent.getBundlePosition()))
+        .flatMap(homeEvent -> home.remove((ActionBundle) homeEvent.getBundle())
+            .andThen(Observable.just(homeEvent)))
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> view.hideBundle(homeEvent.getBundlePosition()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void onCreateLoadBundles() {
@@ -141,7 +205,16 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(click -> {
               Application app = click.getApp();
-              homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+              if (click.getBundle()
+                  .getType()
+                  .equals(EDITORS)) {
+                homeNavigator.navigateWithEditorsPosition(click.getApp()
+                    .getAppId(), click.getApp()
+                    .getPackageName(), "", "", click.getApp()
+                    .getTag(), String.valueOf(click.getAppPosition()));
+              } else {
+                homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+              }
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -164,6 +237,24 @@ public class HomePresenter implements Presenter {
                 .getRating(), click.getApp()
                 .getPackageName(), click.getBundlePosition(), click.getBundle()
                 .getTag(), ((SocialBundle) click.getBundle()).getCardType(), click.getType()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(homeClick -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleEditorialCardClick() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.editorialCardClicked()
+            .observeOn(viewScheduler)
+            .doOnNext(click -> {
+              homeAnalytics.sendEditorialInteractEvent(click.getBundle()
+                  .getTag(), click.getBundlePosition(), click.getCardId());
+              homeNavigator.navigateToEditorial(click.getCardId());
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -370,6 +461,71 @@ public class HomePresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleLoggedInAcceptTermsAndConditions() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
+        .filter(Account::isLoggedIn)
+        .filter(
+            account -> !(account.acceptedPrivacyPolicy() && account.acceptedTermsAndConditions()))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showTermsAndConditionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleTermsAndConditionsContinueClicked() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsContinueClicked())
+        .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleTermsAndConditionsLogOutClicked() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsLogOutClicked())
+        .flatMapCompletable(__ -> accountManager.logout())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleClickOnTermsAndConditions() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsClicked())
+        .doOnNext(__ -> homeNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void handleClickOnPrivacyPolicy() {
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.privacyPolicyClicked())
+        .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
         });
   }
 

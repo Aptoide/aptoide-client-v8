@@ -2,6 +2,8 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
@@ -11,20 +13,19 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 public class GridAppCoinsRewardAppsDisplayable extends DisplayablePojo<Application> {
 
+  private AppNavigator appNavigator;
   private String tag;
   private NavigationTracker navigationTracker;
-  private GetRewardAppCoinsAppsNavigator rewardAppCoinsAppsNavigator;
 
   public GridAppCoinsRewardAppsDisplayable() {
   }
 
   public GridAppCoinsRewardAppsDisplayable(Application app, String tag,
-      NavigationTracker navigationTracker,
-      GetRewardAppCoinsAppsNavigator rewardAppCoinsAppsNavigator) {
+      NavigationTracker navigationTracker, AppNavigator appNavigator) {
     super(app);
     this.tag = tag;
     this.navigationTracker = navigationTracker;
-    this.rewardAppCoinsAppsNavigator = rewardAppCoinsAppsNavigator;
+    this.appNavigator = appNavigator;
   }
 
   @Override protected Configs getConfig() {
@@ -44,7 +45,7 @@ public class GridAppCoinsRewardAppsDisplayable extends DisplayablePojo<Applicati
   }
 
   public void openAppView() {
-    rewardAppCoinsAppsNavigator.navigateToRewardAppView(getPojo().getAppId(),
-        getPojo().getPackageName(), tag, ((RewardApp) getPojo()).getRewardValue());
+    appNavigator.navigateWithAppId(getPojo().getAppId(), getPojo().getPackageName(),
+        NewAppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 }

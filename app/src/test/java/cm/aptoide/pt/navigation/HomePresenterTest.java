@@ -1,10 +1,13 @@
 package cm.aptoide.pt.navigation;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.home.ActionBundle;
+import cm.aptoide.pt.home.ActionItem;
 import cm.aptoide.pt.home.AdBundle;
 import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdHomeEvent;
@@ -28,6 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -68,6 +72,9 @@ public class HomePresenterTest {
   private PublishSubject<Void> imageClickEvent;
   private PublishSubject<Account> accountStatusEvent;
   private PublishSubject<HomeEvent> bundleScrolledEvent;
+  private PublishSubject<HomeEvent> knowMoreEvent;
+  private PublishSubject<HomeEvent> dismissEvent;
+  private PublishSubject<HomeEvent> visibleBundleEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -82,16 +89,19 @@ public class HomePresenterTest {
     imageClickEvent = PublishSubject.create();
     bundleScrolledEvent = PublishSubject.create();
     accountStatusEvent = PublishSubject.create();
+    knowMoreEvent = PublishSubject.create();
+    dismissEvent = PublishSubject.create();
+    visibleBundleEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper(), aptoideAccountManager, homeAnalytics);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
-            300, "");
+            300, "", false, false);
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
     bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
     localTopAppsBundle = bundlesModel.getList()
-        .get(0);
+        .get(1);
 
     when(view.getLifecycle()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
@@ -104,6 +114,9 @@ public class HomePresenterTest {
     when(view.imageClick()).thenReturn(imageClickEvent);
     when(view.bundleScrolled()).thenReturn(bundleScrolledEvent);
     when(aptoideAccountManager.accountStatus()).thenReturn(accountStatusEvent);
+    when(view.infoBundleKnowMoreClicked()).thenReturn(knowMoreEvent);
+    when(view.dismissBundleClicked()).thenReturn(dismissEvent);
+    when(view.visibleBundles()).thenReturn(visibleBundleEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -159,7 +172,6 @@ public class HomePresenterTest {
   @Test public void adClicked_NavigateToAppView() {
 
     AdHomeEvent event = createAdHomeEvent();
-
 
     //Given an initialised HomePresenter
     presenter.handleAdClick();
@@ -310,6 +322,50 @@ public class HomePresenterTest {
     verify(homeAnalytics).sendScrollRightInteractEvent(2, localTopAppsBundle.getTag(),
         localTopAppsBundle.getContent()
             .size());
+  }
+
+  @Test public void onAppCoinsKnowMoreClick_NavigateToAppCoinsInformationFragment() {
+    //Given an initialised HomePresenter
+    presenter.handleKnowMoreClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an user clicks on the KNOW MORE button in the AppCoins onboarding card
+    knowMoreEvent.onNext(new HomeEvent(getFakeActionBundle(), 4, HomeEvent.Type.KNOW_MORE));
+    //Then it should navigate to the AppCoins wallet information view.
+    verify(homeNavigator).navigateToAppCoinsInformationView();
+  }
+
+  @Test public void onDismissBundleClick_RemoveBundleFromCacheAndView() {
+    //Given an initialised HomePresenter
+    presenter.handleDismissClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And a bundle position to be dismissed
+    int bundlePositionToBeRemoved = 4;
+    ActionBundle bundle = getFakeActionBundle();
+    when(home.remove(bundle)).thenReturn(Completable.complete());
+    //When an user clicks on the dismiss button in the information bundle
+    dismissEvent.onNext(new HomeEvent(bundle, bundlePositionToBeRemoved, HomeEvent.Type.KNOW_MORE));
+    //Then it should remove the bundle from the cache and view.
+    verify(home).remove(bundle);
+    verify(view).hideBundle(bundlePositionToBeRemoved);
+  }
+
+  @Test public void onActionBundleSeen_SendImpression() {
+    //Given an initialised HomePresenter
+    presenter.handleActionBundlesImpression();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And an action bundle
+    ActionBundle bundle = getFakeActionBundle();
+    HomeEvent event = new HomeEvent(bundle, 1, HomeEvent.Type.KNOW_MORE);
+    when(home.actionBundleImpression(bundle)).thenReturn(Completable.complete());
+    //When the bundle is visible to the user
+    visibleBundleEvent.onNext(event);
+    //Then bundle should be marked as read (impression)
+    verify(home).actionBundleImpression(bundle);
+  }
+
+  @NonNull private ActionBundle getFakeActionBundle() {
+    return new ActionBundle("title", HomeBundle.BundleType.INFO_BUNDLE, null, "tag",
+        new ActionItem("1", "layout", "title", "message", "icon", "url", ""));
   }
 
   private AdHomeEvent createAdHomeEvent() {

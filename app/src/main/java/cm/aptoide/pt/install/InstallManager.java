@@ -111,6 +111,7 @@ public class InstallManager {
             .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
                 download.getVersionCode()).first())
             .toList())
+        .distinctUntilChanged()
         .map(installs -> sortList(installs));
   }
 
@@ -517,6 +518,10 @@ public class InstallManager {
         .flatMapIterable(list -> list)
         .filter(item -> !item.isSystemApp())
         .toList();
+  }
+
+  public Observable<Boolean> isInstalled(String packageName) {
+    return Observable.just(installedRepository.contains(packageName));
   }
 
   public Observable<Install> filterInstalled(Install item) {

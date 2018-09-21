@@ -5,6 +5,7 @@ import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.model.v3.CheckUserCredentialsJson;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
+import cm.aptoide.pt.dataprovider.model.v3.TermsAndConditionsResponse;
 import cm.aptoide.pt.dataprovider.model.v3.TransactionResponse;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
@@ -53,4 +54,18 @@ public interface Service {
   @POST("createUser") @Multipart Observable<BaseV3Response> createUserWithFile(
       @Part MultipartBody.Part user_avatar, @PartMap() HashMapNotNull<String, RequestBody> args,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+  @POST("changeUserBirthdate") @FormUrlEncoded Observable<BaseV3Response> changeUserBirthdate(
+      @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+  @POST("changeUserNewsletterSubscription") @FormUrlEncoded
+  Observable<BaseV3Response> changeUserNewsletterSubscription(@FieldMap BaseBody arg,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+  @POST("getUserInfo") @FormUrlEncoded
+  Observable<TermsAndConditionsResponse> getTermsAndConditionsStatus(@FieldMap BaseBody args,
+      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+  @POST("acceptUserAgreement") @FormUrlEncoded Observable<BaseV3Response> updateTermsAndConditions(
+      @FieldMap BaseBody arg, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 }

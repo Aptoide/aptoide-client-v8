@@ -14,30 +14,25 @@ public class AppInBundleViewHolder extends AppViewHolder {
 
   private final TextView nameTextView;
   private final ImageView iconView;
-  private final TextView rating;
   private final PublishSubject<HomeEvent> appClicks;
-  private final DecimalFormat oneDecimalFormatter;
+  private AppSecondaryInfoViewHolder appInfoViewHolder;
 
   public AppInBundleViewHolder(View itemView, PublishSubject<HomeEvent> appClicks,
       DecimalFormat oneDecimalFormatter) {
     super(itemView);
+    appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, oneDecimalFormatter);
     nameTextView = ((TextView) itemView.findViewById(R.id.name));
     iconView = ((ImageView) itemView.findViewById(R.id.icon));
-    rating = (TextView) itemView.findViewById(R.id.rating_label);
     this.appClicks = appClicks;
-    this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
   public void setApp(Application app, HomeBundle homeBundle, int bundlePosition, int position) {
     nameTextView.setText(app.getName());
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, iconView, R.drawable.placeholder_square);
-    float rating = app.getRating();
-    if (rating == 0) {
-      this.rating.setText(R.string.appcardview_title_no_stars);
-    } else {
-      this.rating.setText(oneDecimalFormatter.format(rating));
-    }
+
+    appInfoViewHolder.setInfo(app.hasAppcBilling(), app.getRating(), true);
+
     itemView.setOnClickListener(v -> appClicks.onNext(
         new AppHomeEvent(app, position, homeBundle, bundlePosition, HomeEvent.Type.APP)));
   }

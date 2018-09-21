@@ -48,7 +48,7 @@ ext {
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '25.4.0'
+  SUPPORT_LIB_VERSION = '26.0.1'
 
   // Google Play Services
   PLAY_SERVICES_VERSION = '9.8.0'
@@ -87,7 +87,7 @@ ext {
   GLIDE_VERSION = '4.7.1'
 
   // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '4.17.0'
+  FACEBOOK_ANDROID_SDK_VERSION = '4.28.0'
 
   // File Downloader lib
   FILE_DOWNLOADER_VERSION = '1.4.1'

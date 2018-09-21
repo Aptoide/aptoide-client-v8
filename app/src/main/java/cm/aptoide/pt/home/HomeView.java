@@ -9,9 +9,11 @@ import rx.Observable;
 
 public interface HomeView extends BundleView {
 
-  Observable<AppHomeEvent> rewardAppClicked();
-
   Observable<AppHomeEvent> recommendedAppClicked();
+
+  Observable<EditorialHomeEvent> editorialCardClicked();
+
+  Observable<HomeEvent> infoBundleKnowMoreClicked();
 
   void scrollToTop();
 
@@ -21,7 +23,21 @@ public interface HomeView extends BundleView {
 
   Observable<Void> discoveryButtonClick();
 
+  Observable<HomeEvent> dismissBundleClicked();
+
+  Observable<Void> termsAndConditionsContinueClicked();
+
+  Observable<Void> termsAndConditionsLogOutClicked();
+
+  Observable<Void> privacyPolicyClicked();
+
+  Observable<Void> termsAndConditionsClicked();
+
+  void hideBundle(int bundlePosition);
+
   void showAvatar();
 
   void setDefaultUserImage();
+
+  void showTermsAndConditionsDialog();
 }

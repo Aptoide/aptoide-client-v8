@@ -15,6 +15,9 @@ public class SearchAnalytics {
   public static final String NO_RESULTS = "Search_No_Results";
   public static final String APP_CLICK = "Search_Results_App_View_Click";
   public static final String SEARCH_START = "Search_Start";
+  private static final String FROM_TRENDING = "trending";
+  private static final String FROM_AUTOCOMPLETE = "autocomplete";
+  private static final String MANUAL = "manual";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -23,20 +26,24 @@ public class SearchAnalytics {
     this.navigationTracker = navigationTracker;
   }
 
-  public void searchFromSuggestion(String query, int suggestionPosition) {
-    search(query, true, suggestionPosition);
+  public void searchFromSuggestion(String query, int suggestionPosition, String inputQuery) {
+
+    search(query, true, suggestionPosition,
+        inputQuery.isEmpty() ? FROM_TRENDING : FROM_AUTOCOMPLETE, inputQuery);
   }
 
   public void search(String query) {
-    search(query, false, 0);
+    search(query, false, 0, MANUAL, query);
   }
 
-  private void search(String query, boolean isSuggestion, int suggestionPosition) {
+  private void search(String query, boolean isSuggestion, int suggestionPosition, String source,
+      String inputQuery) {
     Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, query);
-    map.put(AttributeKey.IS_SUGGESTION, Boolean.toString(isSuggestion));
+    map.put(AttributeKey.SEARCH_TERM_SOURCE, source);
+    map.put(AttributeKey.KEYWORD_INPUT, inputQuery);
     if (isSuggestion) {
-      map.put(AttributeKey.SUGGESTION_POSITION, Integer.toString(suggestionPosition));
+      map.put(AttributeKey.SEARCH_TERM_POSITION, Integer.toString(suggestionPosition));
     }
     analyticsManager.logEvent(map, SEARCH, AnalyticsManager.Action.CLICK, getViewName(false));
   }
@@ -83,9 +90,10 @@ public class SearchAnalytics {
     private static final String QUERY = "search_term";
     private static final String SOURCE = "source";
     private static final String PACKAGE_NAME = "package_name";
-    private static final String IS_SUGGESTION = "is_suggestion";
-    private static final String SUGGESTION_POSITION = "suggestion_position";
+    private static final String SEARCH_TERM_SOURCE = "search_term_source";
+    private static final String SEARCH_TERM_POSITION = "search_term_position";
     private static final String IS_AD = "is_ad";
     private static final String POSITION = "position";
+    private static final String KEYWORD_INPUT = "inserted_keyword";
   }
 }

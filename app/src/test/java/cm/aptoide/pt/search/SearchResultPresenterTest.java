@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search;
 
+import android.support.v4.util.Pair;
 import android.support.v7.widget.SearchView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -146,7 +147,8 @@ public class SearchResultPresenterTest {
     presenter.handleSuggestionClicked();
 
     //When the user clicks on a sugestion
-    when(searchResultView.listenToSuggestionClick()).thenReturn(Observable.just(searchQueryEvent));
+    when(searchResultView.listenToSuggestionClick()).thenReturn(
+        Observable.just(new Pair<>("a", searchQueryEvent)));
     when(searchQueryEvent.hasQuery()).thenReturn(true);
     when(searchQueryEvent.isSubmitted()).thenReturn(true);
 
@@ -415,8 +417,8 @@ public class SearchResultPresenterTest {
     //Then it should navigate to the results and send the necessary analytics
     verify(searchResultView).collapseSearchBar(false);
     verify(searchResultView).hideSuggestionsViews();
+    verify(searchAnalytics).search(anyString());
     verify(searchNavigator).navigate(anyString());
-    verify(searchAnalytics).searchFromSuggestion(anyString(), anyInt());
   }
 
   @Test public void handleNoSuggestionQueryTextSubmittedTest() {

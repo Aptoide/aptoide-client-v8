@@ -65,6 +65,8 @@ public class AppViewViewModel {
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
   private final String marketName;
+  private boolean hasBilling;
+  private boolean hasAdvertising;
 
   public AppViewViewModel(long appId, String appName, Store store, String storeTheme,
       boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
@@ -75,7 +77,8 @@ public class AppViewViewModel {
       String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid,
       String paidAppPath, String paymentStatus, boolean isLatestTrustedVersion, String uniqueName,
       OpenType openType, double appc, SearchAdResult minimalAd, String editorsChoice,
-      String originTag, boolean isStoreFollowed, String marketName) {
+      String originTag, boolean isStoreFollowed, String marketName, boolean hasBilling,
+      boolean hasAdvertising) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -120,6 +123,8 @@ public class AppViewViewModel {
     this.originTag = originTag;
     this.isStoreFollowed = isStoreFollowed;
     this.marketName = marketName;
+    this.hasBilling = hasBilling;
+    this.hasAdvertising = hasAdvertising;
     this.loading = false;
     this.error = null;
   }
@@ -168,9 +173,11 @@ public class AppViewViewModel {
     this.minimalAd = null;
     this.editorsChoice = "";
     this.originTag = "";
-    marketName = "";
+    this.marketName = "";
     this.isStoreFollowed = false;
     this.error = null;
+    this.hasBilling = false;
+    this.hasAdvertising = false;
   }
 
   public AppViewViewModel(DetailedAppRequestResult.Error error) {
@@ -217,9 +224,11 @@ public class AppViewViewModel {
     this.minimalAd = null;
     this.editorsChoice = "";
     this.originTag = "";
-    marketName = "";
+    this.marketName = "";
     this.isStoreFollowed = false;
     this.loading = false;
+    this.hasBilling = false;
+    this.hasAdvertising = false;
   }
 
   public boolean isStoreFollowed() {
@@ -408,5 +417,13 @@ public class AppViewViewModel {
 
   public String getMarketName() {
     return marketName;
+  }
+
+  public boolean hasBilling() {
+    return hasBilling;
+  }
+
+  public boolean hasAdvertising() {
+    return this.hasAdvertising;
   }
 }

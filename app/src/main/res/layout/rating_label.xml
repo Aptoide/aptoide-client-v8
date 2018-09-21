@@ -2,11 +2,14 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rating_info_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="2dp"
     android:orientation="horizontal"
+    android:visibility="invisible"
     tools:showIn="@layout/app_home_item"
+    tools:visibility="visible"
     >
 
   <ImageView

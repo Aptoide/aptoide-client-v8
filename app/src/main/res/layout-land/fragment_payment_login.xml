@@ -54,7 +54,7 @@
         android:layout_marginLeft="72dp"
         android:layout_marginRight="72dp"
         android:layout_marginStart="72dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="sans-serif"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="8sp"
@@ -90,7 +90,6 @@
       <Button
           android:id="@+id/fragment_payment_login_facebook_button"
           android:layout_width="0dp"
-          android:layout_height="56dp"
           android:layout_marginEnd="8dp"
           android:layout_marginRight="8dp"
           android:layout_weight="1"
@@ -100,7 +99,6 @@
       <Button
           android:id="@+id/fragment_payment_login_google_button"
           android:layout_width="0dp"
-          android:layout_height="56dp"
           android:layout_marginLeft="8dp"
           android:layout_marginStart="8dp"
           android:layout_weight="1"
@@ -159,34 +157,6 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/fragment_payment_login_aptoide_buttons_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="132dp"
-        android:layout_marginLeft="132dp"
-        android:layout_marginRight="132dp"
-        android:layout_marginStart="132dp"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        >
-
-      <Button
-          android:id="@+id/fragment_payment_login_join_button"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          tools:text="Join Aptoide"
-          style="@style/Aptoide.Button.Ghost"
-          />
-      <Button
-          android:id="@+id/fragment_payment_login_small_button"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          android:text="@string/login"
-          style="@style/Aptoide.Button.Ghost"
-          />
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/fragment_payment_login_username_password_container"
@@ -288,18 +258,6 @@
         android:visibility="gone"
 
         >
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:gravity="center"
-          android:paddingBottom="8dp"
-          android:paddingTop="16dp"
-          android:text="@string/accept_terms_signup"
-          android:textAlignment="center"
-          android:textColor="@color/grey_fog_dark"
-          style="@style/Aptoide.TextView.Regular.XS"
-          />
 
       <Button
           android:id="@+id/fragment_payment_login_sign_up_button"
@@ -345,5 +303,65 @@
           />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_payment_login_aptoide_buttons_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="132dp"
+        android:layout_marginLeft="132dp"
+        android:layout_marginRight="132dp"
+        android:layout_marginStart="132dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+
+      <Button
+          android:id="@+id/fragment_payment_login_join_button"
+          android:layout_width="0dp"
+          android:layout_weight="1"
+          tools:text="Join Aptoide"
+          style="@style/Aptoide.Button.Ghost"
+          />
+      <Button
+          android:id="@+id/fragment_payment_login_small_button"
+          android:layout_width="0dp"
+          android:layout_weight="1"
+          android:text="@string/login"
+          style="@style/Aptoide.Button.Ghost"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="19dp"
+        android:layout_marginStart="19dp"
+        >
+      <CheckBox
+          android:id="@+id/tc_checkbox"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+
+          android:paddingBottom="8dp"
+          android:paddingTop="14dp"
+          />
+      <TextView
+          android:id="@+id/terms_and_conditions"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginEnd="37dp"
+          android:layout_marginRight="37dp"
+          android:gravity="center"
+
+          android:textAlignment="center"
+          android:textColor="@color/grey_fog_dark"
+          tools:text="@string/accept_terms_signup"
+          style="@style/Aptoide.TextView.Regular.XS"
+          />
+    </LinearLayout>
+
   </LinearLayout>
 </RelativeLayout>

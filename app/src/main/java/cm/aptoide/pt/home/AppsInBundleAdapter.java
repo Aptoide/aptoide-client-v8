@@ -37,11 +37,10 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     switch (viewType) {
       case REWARD_APP:
         return new RewardAppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.reward_app_home_item, parent, false), appClickedEvents,
-            new DecimalFormat("#.##"));
+            .inflate(REWARD_APP, parent, false), appClickedEvents);
       case APP:
         return new AppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.app_home_item, parent, false), appClickedEvents, oneDecimalFormatter);
+            .inflate(APP, parent, false), appClickedEvents, oneDecimalFormatter);
       default:
         throw new IllegalArgumentException("Wrong type of App");
     }

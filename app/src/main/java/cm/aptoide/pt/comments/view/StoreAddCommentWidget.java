@@ -1,10 +1,6 @@
 package cm.aptoide.pt.comments.view;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -16,7 +12,6 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -48,17 +43,9 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    @ColorInt int color = getColorOrDefault(displayable.getStoreTheme(), context);
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      commentStore.setBackground(d);
-    } else {
-      Drawable d = context.getResources()
-          .getDrawable(R.drawable.dialog_bg_2);
-      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-      commentStore.setBackgroundDrawable(d);
-    }
+    commentStore.setBackgroundDrawable(getContext().getResources()
+        .getDrawable(displayable.getStoreTheme()
+            .getRaisedButtonDrawable()));
 
     compositeSubscription.add(RxView.clicks(commentStore)
         .flatMap(a -> showStoreCommentFragment(displayable.getStoreId(), displayable.getStoreName(),
@@ -69,16 +56,6 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
           CrashReport.getInstance()
               .log(err);
         }));
-  }
-
-  private int getColorOrDefault(StoreTheme theme, Context context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources()
-          .getColor(theme.getPrimaryColor(), context.getTheme());
-    } else {
-      return context.getResources()
-          .getColor(theme.getPrimaryColor());
-    }
   }
 
   private Observable<Void> showStoreCommentFragment(final long storeId,

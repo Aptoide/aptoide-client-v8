@@ -20,6 +20,7 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
   private final TextView nameTextView;
   private final ImageView featureGraphic;
   private final TextView rating;
+  private final ImageView appIcon;
 
   public FeatureGraphicInBundleViewHolder(View view, DecimalFormat oneDecimalFormatter,
       PublishSubject<HomeEvent> appClickedEvents) {
@@ -29,6 +30,7 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
     nameTextView = ((TextView) itemView.findViewById(R.id.app_name));
     featureGraphic = ((ImageView) itemView.findViewById(R.id.featured_graphic));
     rating = (TextView) itemView.findViewById(R.id.rating_label);
+    appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
   }
 
   public void setFeatureGraphicApplication(FeatureGraphicApplication featureGraphicApplication,
@@ -37,7 +39,8 @@ class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(featureGraphicApplication.getFeatureGraphic(), R.drawable.placeholder_brick,
             featureGraphic);
-
+    ImageLoader.with(itemView.getContext())
+        .load(featureGraphicApplication.getIcon(), R.drawable.placeholder_square, appIcon);
     float rating = featureGraphicApplication.getRating();
     if (rating == 0) {
       this.rating.setText(R.string.appcardview_title_no_stars);

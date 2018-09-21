@@ -2,10 +2,14 @@ package cm.aptoide.pt.account.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.CompoundButtonCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -15,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideCredentials;
@@ -66,8 +71,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private View rootView;
-  private String marketName;
+  private CheckBox termsConditionCheckBox;
+  private Drawable checkboxDrawable;
+  private int originalHeight;
 
+  private String marketName;
   private PublishSubject<Void> privacyPolicySubject;
   private PublishSubject<Void> termsAndConditionsSubject;
 
@@ -136,14 +144,16 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return RxView.clicks(loginSelectionButton);
   }
 
-  @Override public Observable<Void> showAptoideSignUpAreaClick() {
-    return RxView.clicks(signUpSelectionButton);
+  @Override public Observable<Boolean> showAptoideSignUpAreaClick() {
+    return RxView.clicks(signUpSelectionButton)
+        .map(event -> termsConditionCheckBox.isChecked());
   }
 
-  @Override public Observable<Void> googleSignUpEvent() {
+  @Override public Observable<Boolean> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_GOOGLE,
-            getStartupClickOrigin()));
+            getStartupClickOrigin()))
+        .map(event -> termsConditionCheckBox.isChecked());
   }
 
   @Override public Observable<Void> showHidePasswordClick() {
@@ -159,10 +169,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .map(dialog -> null);
   }
 
-  @Override public Observable<Void> facebookSignUpEvent() {
+  @Override public Observable<Boolean> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
-            getStartupClickOrigin()));
+            getStartupClickOrigin()))
+        .map(event -> termsConditionCheckBox.isChecked());
   }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
@@ -188,18 +199,20 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void showAptoideSignUpArea() {
-    setAptoideSignUpLoginAreaVisible();
+    setAptoideSignUpAreaVisible();
     loginArea.setVisibility(View.GONE);
     signUpArea.setVisibility(View.VISIBLE);
     separator.setVisibility(View.GONE);
-    termsAndConditions.setVisibility(View.VISIBLE);
+    termsConditionCheckBox.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
   }
 
   @Override public void showAptoideLoginArea() {
-    setAptoideSignUpLoginAreaVisible();
+    setAptoideLoginAreaVisible();
     loginArea.setVisibility(View.VISIBLE);
     signUpArea.setVisibility(View.GONE);
     separator.setVisibility(View.GONE);
+    termsConditionCheckBox.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.GONE);
   }
 
@@ -214,6 +227,38 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Override public void showError(String message) {
     Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public void showTermsConditionError() {
+    //Shifts the bottomsheet up and then down again to create space for the error snack when in portrait
+    Snackbar snackbar = Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+        Snackbar.LENGTH_SHORT);
+
+    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+      snackbar.addCallback(new Snackbar.Callback() {
+
+        @Override public void onShown(Snackbar snackbar) {
+          float newHeight = 360 * getResources().getDisplayMetrics().density;
+          bottomSheetBehavior.setPeekHeight((int) newHeight);
+        }
+
+        @Override public void onDismissed(Snackbar snackbar, int event) {
+          bottomSheetBehavior.setPeekHeight(originalHeight);
+        }
+      });
+    }
+    snackbar.show();
+
+    Drawable replacementDrawable = checkboxDrawable.getConstantState()
+        .newDrawable()
+        .mutate();
+
+    replacementDrawable.setColorFilter(getResources().getColor(R.color.red),
+        PorterDuff.Mode.SRC_ATOP);
+
+    termsConditionCheckBox.setButtonDrawable(replacementDrawable);
+    termsConditionCheckBox.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> termsConditionCheckBox.setButtonDrawable(checkboxDrawable));
   }
 
   @Override public void showFacebookLogin() {
@@ -256,11 +301,13 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public boolean tryCloseLoginBottomSheet() {
     if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
+      bottomSheetBehavior.setPeekHeight(originalHeight);
       credentialsEditTextsArea.setVisibility(View.GONE);
       loginSignupSelectionArea.setVisibility(View.VISIBLE);
       loginArea.setVisibility(View.GONE);
       signUpArea.setVisibility(View.GONE);
       separator.setVisibility(View.VISIBLE);
+      termsConditionCheckBox.setVisibility(View.VISIBLE);
       termsAndConditions.setVisibility(View.VISIBLE);
       return true;
     }
@@ -286,7 +333,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private AptoideCredentials getCredentials() {
     return new AptoideCredentials(aptoideEmailEditText.getText()
         .toString(), aptoidePasswordEditText.getText()
-        .toString());
+        .toString(), termsConditionCheckBox.isChecked());
   }
 
   private AccountAnalytics.StartupClickOrigin getStartupClickOrigin() {
@@ -299,11 +346,21 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
   }
 
-  private void setAptoideSignUpLoginAreaVisible() {
+  private void setAptoideLoginAreaVisible() {
     credentialsEditTextsArea.setVisibility(View.VISIBLE);
     loginSignupSelectionArea.setVisibility(View.GONE);
     if (bottomSheetBehavior != null) {
-      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+      float newHeight = 320 * getResources().getDisplayMetrics().density;
+      bottomSheetBehavior.setPeekHeight((int) newHeight);
+    }
+  }
+
+  private void setAptoideSignUpAreaVisible() {
+    credentialsEditTextsArea.setVisibility(View.VISIBLE);
+    loginSignupSelectionArea.setVisibility(View.GONE);
+    if (bottomSheetBehavior != null) {
+      float newHeight = 280 * getResources().getDisplayMetrics().density;
+      bottomSheetBehavior.setPeekHeight((int) newHeight);
     }
   }
 
@@ -333,6 +390,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
+    termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
+    checkboxDrawable = CompoundButtonCompat.getButtonDrawable(termsConditionCheckBox);
+
     if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
       buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
     } else {
@@ -394,6 +454,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       // a child of CoordinatorLayout
     }
 
+    originalHeight = bottomSheetBehavior.getPeekHeight();
     attachPresenter(presenter);
     registerClickHandler(presenter);
   }
@@ -401,6 +462,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Override public void onDestroyView() {
     unregisterClickHandler(presenter);
     unlockScreenRotation();
+    termsAndConditions = null;
+    credentialsEditTextsArea = null;
+    termsConditionCheckBox = null;
     super.onDestroyView();
   }
 }

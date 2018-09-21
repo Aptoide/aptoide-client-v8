@@ -67,7 +67,7 @@ import rx.Single;
           view.collapseSearchBar(true);
           navigator.navigate(data.getQuery());
           if (data.isSuggestion()) {
-            searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition());
+            searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition(), "");
           } else {
             searchAnalytics.search(data.getQuery());
           }

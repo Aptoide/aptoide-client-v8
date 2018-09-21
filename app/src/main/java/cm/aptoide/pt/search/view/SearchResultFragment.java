@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -383,8 +384,8 @@ public class SearchResultFragment extends BackButtonFragment
     return searchMenuItem.isActionViewExpanded();
   }
 
-  @Override public Observable<SearchQueryEvent> listenToSuggestionClick() {
-    return suggestionClickedPublishSubject;
+  @Override public Observable<Pair<String, SearchQueryEvent>> listenToSuggestionClick() {
+    return suggestionClickedPublishSubject.map(event -> new Pair<>(unsubmittedQuery, event));
   }
 
   @Override public Observable<Void> toolbarClick() {

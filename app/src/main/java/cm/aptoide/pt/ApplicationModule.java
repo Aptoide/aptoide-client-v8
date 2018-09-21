@@ -69,14 +69,19 @@ import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
 import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
 import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.app.AppCoinsManager;
+import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.view.EditorialAnalytics;
+import cm.aptoide.pt.app.view.EditorialService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -114,6 +119,8 @@ import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.impressions.ImpressionManager;
+import cm.aptoide.pt.impressions.ImpressionService;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
@@ -585,12 +592,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("no-authentication-v3") BodyInterceptor<BaseBody> noAuthenticationBodyInterceptorV3,
+      @Named("defaultInterceptorV3")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("default") ObjectMapper objectMapper, Converter.Factory converterFactory,
       @Named("extraID") String extraId, AccountFactory accountFactory) {
     return new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
         objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
-        authenticationPersistence, noAuthenticationBodyInterceptorV3, multipartBodyInterceptor,
-        bodyInterceptorWebV7, bodyInterceptorPoolV7);
+        authenticationPersistence, noAuthenticationBodyInterceptorV3, bodyInterceptorV3,
+        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7);
   }
 
   @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
@@ -1001,10 +1010,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("ab-testing-base-host") String providesABTestingBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_AB_TESTING_HOST
+        + "/api/v1/";
+  }
+
   @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
-      @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      @Named("ab-testing-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
-    return new Retrofit.Builder().baseUrl("https://abtesting.aptoide.com/api/v1/")
+    return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
         .addCallAdapterFactory(rxCallAdapterFactory)
         .addConverterFactory(converterFactory)
@@ -1084,13 +1102,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("aptoide") AptoideBiEventLogger providesAptoideBILogger(
-      EventsPersistence persistence, AptoideBiEventService service, CrashReport crashReport,
+      EventsPersistence persistence, AptoideBiEventService service, Crashlytics crashlytics,
       @Named("default") SharedPreferences preferences, AnalyticsLogger debugLogger) {
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, new SharedPreferencesSessionPersistence(preferences),
             service, new CompositeSubscription(), Schedulers.computation(),
             BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, crashReport, debugLogger),
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS,
+            new CrashlyticsCrashLogger(crashlytics), debugLogger),
         BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
   }
 
@@ -1113,8 +1132,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         TimelineAnalytics.COMMENT, TimelineAnalytics.SHARE, TimelineAnalytics.SHARE_SEND,
         TimelineAnalytics.COMMENT_SEND, TimelineAnalytics.FAB, TimelineAnalytics.SCROLLING_EVENT,
         TimelineAnalytics.OPEN_TIMELINE_EVENT, AccountAnalytics.APTOIDE_EVENT_NAME,
-        DownloadAnalytics.DOWNLOAD_EVENT, DownloadAnalytics.DOWNLOAD_EVENT_NAME,
-        InstallAnalytics.INSTALL_EVENT_NAME);
+        DownloadAnalytics.DOWNLOAD_EVENT_NAME, InstallAnalytics.INSTALL_EVENT_NAME);
   }
 
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
@@ -1192,6 +1210,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppCenter providesAppCenter(AppCenterRepository appCenterRepository) {
     return new AppCenter(appCenterRepository);
+  }
+
+  @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService) {
+    return new AppCoinsManager(appCoinsService);
+  }
+
+  @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
+    return new AppCoinsService(okHttpClient, tokenInvalidator, sharedPreferences,
+        bodyInterceptorPoolV7, converterFactory);
   }
 
   @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(
@@ -1315,5 +1345,32 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides ABTestManager providesABTestManager(
       ABTestCenterRepository abTestCenterRepository) {
     return new ABTestManager(abTestCenterRepository);
+  }
+
+  @Singleton @Provides ImpressionManager providesImpressionManager(
+      ImpressionService impressionService) {
+    return new ImpressionManager(impressionService);
+  }
+
+  @Singleton @Provides ImpressionService providesImpressionService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
+    return new ImpressionService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        sharedPreferences, converterFactory);
+  }
+
+  @Singleton @Provides EditorialService providesEditorialService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new EditorialService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        converterFactory, sharedPreferences);
+  }
+
+  @Singleton @Provides EditorialAnalytics providesEditorialAnalytics(
+      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
   }
 }

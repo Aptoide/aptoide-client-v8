@@ -85,7 +85,7 @@ public class ShareAppHelper {
       View alertDialogView = inflater.inflate(R.layout.logged_in_share, null);
       alertDialog.setView(alertDialogView);
 
-      alertDialogView.findViewById(R.id.continue_button)
+      alertDialogView.findViewById(R.id.recommend_button)
           .setOnClickListener(view -> {
             socialRepository.share(packageName, storeId, "app");
             ShowMessage.asSnack(activity, R.string.social_timeline_share_dialog_title);

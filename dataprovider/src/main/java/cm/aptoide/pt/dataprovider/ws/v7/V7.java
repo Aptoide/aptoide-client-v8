@@ -8,14 +8,15 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.GetMySubscribedStoresResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.GetUserInfo;
+import cm.aptoide.pt.dataprovider.model.v7.ListAppCoinsCampaigns;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
 import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
@@ -46,6 +47,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetSocialRecommendsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
@@ -346,6 +349,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body SetReviewRatingRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
+    @POST("user/action/item/card/get/card_id={cardId}") Observable<EditorialCard> getEditorial(
+        @Path(value = "cardId") String cardId, @Body BaseBody body);
+
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
         @Path(value = "action") String action, @Path(value = "context") String context,
@@ -525,11 +531,18 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body GetSocialRecommendsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("appcoins/ads/get/limit={limit}")
-    Observable<BaseV7EndlessDataListResponse<AppCoinsRewardApp>> getAppCoinsAds(
-        @Body GetAppCoinsAdsRequest.Body body,
+    @POST("appcoins/campaigns/get/limit={limit}") Observable<ListAppCoinsCampaigns> getAppCoinsAds(
+        @Body GetAppCoinsCampaignsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Path(value = "limit") int limit);
+
+    @POST("{url}") Observable<ActionItemResponse> getActionItem(
+        @Path(value = "url", encoded = true) String path, @Body GetActionItemRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/action/item/card/markAsRead/") Observable<BaseV7Response> setRead(
+        @Body MarkAsReadRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }
 

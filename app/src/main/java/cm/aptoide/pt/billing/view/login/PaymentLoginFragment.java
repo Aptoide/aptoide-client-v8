@@ -7,14 +7,20 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
@@ -28,6 +34,7 @@ import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class PaymentLoginFragment extends GooglePlayServicesFragment implements PaymentLoginView {
 
@@ -69,6 +76,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private boolean passwordVisible;
   private boolean progressVisible;
   private boolean facebookEmailRequiredDialogVisible;
+  private PublishSubject<Void> privacyPolicySubject;
+  private PublishSubject<Void> termsAndConditionsSubject;
+  private TextView termsAndConditions;
+  private CheckBox termsConditionCheckBox;
 
   public static Fragment newInstance() {
     return new PaymentLoginFragment();
@@ -80,6 +91,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     backButtonRelay = PublishRelay.create();
     upNavigationRelay = PublishRelay.create();
     passwordKeyboardGoRelay = PublishRelay.create();
+    privacyPolicySubject = PublishSubject.create();
+    termsAndConditionsSubject = PublishSubject.create();
     setHasOptionsMenu(true);
   }
 
@@ -94,16 +107,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-
-    if (item.getItemId() == android.R.id.home) {
-      upNavigationRelay.call(null);
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   @Nullable @Override
@@ -166,6 +169,43 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     progressDialog = new ProgressDialog(getContext());
     progressDialog.setMessage(getString(cm.aptoide.pt.utils.R.string.please_wait));
     progressDialog.setCancelable(false);
+    termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
+
+    ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (termsAndConditionsSubject != null) {
+          termsAndConditionsSubject.onNext(null);
+        }
+      }
+    };
+
+    ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (privacyPolicySubject != null) {
+          privacyPolicySubject.onNext(null);
+        }
+      }
+    };
+
+    String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
+    String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
+    String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
+    String privacyAndTerms =
+        String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
+
+    SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
+    privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder),
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder)
+            + termsAndConditionsPlaceHolder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    privacyAndTermsSpan.setSpan(privacyPolicyClickListener,
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder),
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
+    termsAndConditions.setText(privacyAndTermsSpan);
+    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.facebook_email_permission_regected_message)
@@ -174,7 +214,13 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .build();
 
     RxView.clicks(aptoideJoinToggle)
-        .doOnNext(__ -> showUsernamePasswordContainer(false))
+        .doOnNext(__ -> {
+          if (termsConditionCheckBox.isChecked()) {
+            showUsernamePasswordContainer(false);
+          } else {
+            showTermsConditionError();
+          }
+        })
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe();
 
@@ -243,7 +289,24 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     usernameEditText = null;
     passwordEditText = null;
     passwordShowHideToggle = null;
+    termsAndConditions = null;
     super.onDestroyView();
+  }
+
+  @Override public void onDestroy() {
+    privacyPolicySubject = null;
+    termsAndConditionsSubject = null;
+    super.onDestroy();
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+
+    if (item.getItemId() == android.R.id.home) {
+      upNavigationRelay.call(null);
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public Observable<Void> backButtonEvent() {
@@ -260,16 +323,26 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     return upNavigationRelay;
   }
 
-  @Override public Observable<Void> facebookSignUpEvent() {
-    return RxView.clicks(facebookButton);
+  @Override public Observable<Boolean> facebookSignUpEvent() {
+    return RxView.clicks(facebookButton)
+        .map(event -> termsConditionCheckBox.isChecked());
   }
 
-  @Override public Observable<Void> googleSignUpEvent() {
-    return RxView.clicks(googleButton);
+  @Override public Observable<Boolean> googleSignUpEvent() {
+    return RxView.clicks(googleButton)
+        .map(event -> termsConditionCheckBox.isChecked());
   }
 
   @Override public Observable<Void> recoverPasswordEvent() {
     return RxView.clicks(recoverPasswordButton);
+  }
+
+  @Override public Observable<Void> termsAndConditionsClickEvent() {
+    return termsAndConditionsSubject;
+  }
+
+  @Override public Observable<Void> privacyPolicyClickEvent() {
+    return privacyPolicySubject;
   }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
@@ -278,7 +351,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .doOnNext(__ -> hideKeyboard())
         .map(__ -> new AptoideCredentials(usernameEditText.getText()
             .toString(), passwordEditText.getText()
-            .toString()));
+            .toString(), termsConditionCheckBox.isChecked()));
   }
 
   @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
@@ -287,7 +360,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .doOnNext(__ -> hideKeyboard())
         .map(__ -> new AptoideCredentials(usernameEditText.getText()
             .toString(), passwordEditText.getText()
-            .toString()));
+            .toString(), termsConditionCheckBox.isChecked()));
   }
 
   @Override public Observable<Void> grantFacebookRequiredPermissionsEvent() {
@@ -310,6 +383,12 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .show();
   }
 
+  @Override public void showTermsConditionError() {
+    Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+        Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
   @Override public void showFacebookPermissionsRequiredError() {
     if (!facebookEmailRequiredDialog.isShowing()) {
       facebookEmailRequiredDialogVisible = true;
@@ -325,10 +404,14 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       loginVisible = true;
       aptoideLoginContainer.setVisibility(View.VISIBLE);
       aptoideSignUpContainer.setVisibility(View.GONE);
+      termsConditionCheckBox.setVisibility(View.GONE);
+      termsAndConditions.setVisibility(View.GONE);
     } else {
       loginVisible = false;
       aptoideLoginContainer.setVisibility(View.GONE);
       aptoideSignUpContainer.setVisibility(View.VISIBLE);
+      termsConditionCheckBox.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
     }
 
     aptoideLoginSignUpSeparator.setVisibility(View.GONE);
@@ -338,6 +421,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private void hideUsernamePasswordContainer() {
     aptoideLoginSignUpSeparator.setVisibility(View.VISIBLE);
     aptoideLoginSignUpButtonContainer.setVisibility(View.VISIBLE);
+    termsConditionCheckBox.setVisibility(View.VISIBLE);
+    termsAndConditions.setVisibility(View.VISIBLE);
     usernamePasswordContainer.setVisibility(View.GONE);
     aptoideLoginContainer.setVisibility(View.GONE);
     aptoideSignUpContainer.setVisibility(View.GONE);

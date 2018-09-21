@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/appc_info_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="5dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="invisible"
+    tools:visibility="visible"
+    >
+
+  <ImageView
+      android:layout_width="16dp"
+      android:layout_height="16dp"
+      android:layout_marginEnd="5dp"
+      android:layout_marginRight="5dp"
+      android:src="@drawable/ic_appcoins_white_border"
+      />
+
+  <TextView
+      android:id="@+id/appc_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/default_orange_gradient_end"
+      tools:text="GET APPC"
+      style="@style/Aptoide.TextView.Medium.XXS.OrangeGradientEnd"
+      />
+
+</LinearLayout>

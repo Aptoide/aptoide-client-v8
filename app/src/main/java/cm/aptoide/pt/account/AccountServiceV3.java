@@ -10,6 +10,7 @@ import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v3.TermsAndConditionsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.GetUserInfo;
 import cm.aptoide.pt.dataprovider.model.v7.GetUserMeta;
@@ -17,8 +18,13 @@ import cm.aptoide.pt.dataprovider.model.v7.GetUserSettings;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserBirthdateRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserNewsletterSubscription;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.GetTermsAndConditionsStatusRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.UpdateTermsAndConditionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.GetMySubscribedStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserInfoRequest;
@@ -30,6 +36,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -51,6 +58,7 @@ public class AccountServiceV3 implements AccountService {
   private final TokenInvalidator tokenInvalidator;
   private final AuthenticationPersistence authenticationPersistence;
   private final BodyInterceptor<BaseBody> v3NoAuthorizationBodyInterceptor;
+  private final BodyInterceptor<BaseBody> defaultBodyInterceptorV3;
   private final BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptorV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7;
@@ -60,6 +68,7 @@ public class AccountServiceV3 implements AccountService {
       ObjectMapper serializer, SharedPreferences sharedPreferences, String extraId,
       TokenInvalidator refreshTokenInvalidator, AuthenticationPersistence authenticationPersistence,
       BodyInterceptor<BaseBody> v3NoAuthorizationBodyInterceptor,
+      BodyInterceptor<BaseBody> defaultBodyInterceptorV3,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7) {
@@ -73,6 +82,7 @@ public class AccountServiceV3 implements AccountService {
     this.tokenInvalidator = refreshTokenInvalidator;
     this.authenticationPersistence = authenticationPersistence;
     this.v3NoAuthorizationBodyInterceptor = v3NoAuthorizationBodyInterceptor;
+    this.defaultBodyInterceptorV3 = defaultBodyInterceptorV3;
     this.multipartBodyInterceptorV7 = multipartBodyInterceptorV7;
     this.bodyInterceptorWebV7 = bodyInterceptorWebV7;
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
@@ -128,9 +138,51 @@ public class AccountServiceV3 implements AccountService {
         });
   }
 
+  @Override public Completable changeBirthdate(String birthdate) {
+    return ChangeUserBirthdateRequest.of(birthdate, defaultBodyInterceptorV3, converterFactory,
+        httpClient, tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V3.getErrorMessage(response)));
+          }
+        });
+  }
+
+  @Override public Completable updateTermsAndConditions() {
+    return UpdateTermsAndConditionsRequest.of(defaultBodyInterceptorV3, converterFactory,
+        httpClient, tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V3.getErrorMessage(response)));
+          }
+        });
+  }
+
+  @Override public Completable changeSubscribeNewsletter(String isSubscribed) {
+    return ChangeUserNewsletterSubscription.of(isSubscribed, defaultBodyInterceptorV3,
+        converterFactory, httpClient, tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.isOk()) {
+            return Completable.complete();
+          } else {
+            return Completable.error(new Exception(V3.getErrorMessage(response)));
+          }
+        });
+  }
+
   @Override public Single<Account> getAccount() {
-    return Single.zip(getServerAccount(), getSubscribedStores(),
-        (response, stores) -> mapServerAccountToAccount(response, stores));
+    return Single.zip(getServerAccount(), getSubscribedStores(), getTermsAndConditionsForAccount(),
+        (response, stores, terms) -> mapServerAccountToAccount(response, stores, terms));
   }
 
   @Override public Completable updateAccount(String nickname, String avatarPath) {
@@ -230,7 +282,8 @@ public class AccountServiceV3 implements AccountService {
         .flatMap(observable -> observable);
   }
 
-  private Account mapServerAccountToAccount(GetUserInfo userInfo, List<Store> subscribedStores) {
+  private Account mapServerAccountToAccount(GetUserInfo userInfo, List<Store> subscribedStores,
+      TermsAndConditionsResponse terms) {
     final GetUserMeta.Data userData = userInfo.getNodes()
         .getMeta()
         .getData();
@@ -241,7 +294,8 @@ public class AccountServiceV3 implements AccountService {
         String.valueOf(userData.getId()), userData.getIdentity()
             .getEmail(), userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
         userSettings.isMature(), userSettings.getAccess()
-            .isConfirmed());
+            .isConfirmed(), terms.isOk() && terms.isPrivacy(), terms.isOk() && terms.isTos(),
+        terms.isOk() ? terms.getBirthdate() : new Date(1970, 1, 1));
   }
 
   private Completable changeSubscription(String storeName, String storeUserName,
@@ -292,5 +346,12 @@ public class AccountServiceV3 implements AccountService {
           Logger.getInstance()
               .w("AccountManagerService", "retryOnTicket() doOnNext()");
         }));
+  }
+
+  private Single<TermsAndConditionsResponse> getTermsAndConditionsForAccount() {
+    return GetTermsAndConditionsStatusRequest.of(defaultBodyInterceptorV3, converterFactory,
+        httpClient, tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .toSingle();
   }
 }
