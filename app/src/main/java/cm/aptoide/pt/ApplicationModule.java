@@ -84,6 +84,9 @@ import cm.aptoide.pt.app.view.EditorialService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.comment.Comments;
+import cm.aptoide.pt.comment.CommentsRepository;
+import cm.aptoide.pt.comment.mock.CommentsFakeDataSource;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -1391,5 +1394,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides CommentsRepository providesCommentsRepository() {
+    return new CommentsRepository(new CommentsFakeDataSource());
+  }
+
+  @Singleton @Provides Comments providesComments(CommentsRepository commentsRepository) {
+    return new Comments(commentsRepository);
   }
 }

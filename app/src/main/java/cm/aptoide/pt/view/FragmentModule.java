@@ -61,6 +61,7 @@ import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
+import cm.aptoide.pt.comment.Comments;
 import cm.aptoide.pt.comment.CommentsListManager;
 import cm.aptoide.pt.comment.CommentsPresenter;
 import cm.aptoide.pt.comment.CommentsView;
@@ -385,8 +386,8 @@ import rx.schedulers.Schedulers;
     return new ApkFyExperiment(abTestManager);
   }
 
-  @FragmentScope @Provides CommentsListManager providesComments() {
-    return new CommentsListManager();
+  @FragmentScope @Provides CommentsListManager providesCommentsListManager(Comments comments) {
+    return new CommentsListManager(comments);
   }
 
   @FragmentScope @Provides CommentsPresenter providesCommentsPresenter(
