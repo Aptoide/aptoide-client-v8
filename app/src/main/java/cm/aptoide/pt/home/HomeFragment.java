@@ -61,7 +61,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private BottomNavigationActivity bottomNavigationActivity;
   private LoggedInTermsAndConditionsDialog gdprDialog;
 
-  private PublishSubject<String> gdprDialogUiSubject;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -73,7 +72,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void onDestroy() {
     uiEventsListener = null;
     oneDecimalFormatter = null;
-    gdprDialogUiSubject = null;
     adClickedEvents = null;
     userAvatar = null;
     super.onDestroy();
@@ -85,7 +83,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
-    gdprDialogUiSubject = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
@@ -115,6 +112,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
+    gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
     attachPresenter(presenter);
   }
 
@@ -282,7 +280,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   }
 
   @Override public Observable<String> gdprDialogClicked() {
-    return gdprDialogUiSubject;
+    return gdprDialog.dialogClicked();
   }
 
   @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
@@ -328,7 +326,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   }
 
   @Override public void showTermsAndConditionsDialog() {
-    new LoggedInTermsAndConditionsDialog(getContext(), gdprDialogUiSubject).showDialog();
+    gdprDialog.showDialog();
   }
 
   private boolean isEndReached() {

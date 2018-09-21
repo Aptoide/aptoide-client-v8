@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import rx.Observable;
 import rx.subjects.PublishSubject;
 
 /**
@@ -20,8 +21,10 @@ import rx.subjects.PublishSubject;
 public class LoggedInTermsAndConditionsDialog {
 
   private AlertDialog dialog;
+  private PublishSubject<String> uiEvents;
 
-  public LoggedInTermsAndConditionsDialog(Context context, PublishSubject<String> uiEvents) {
+  public LoggedInTermsAndConditionsDialog(Context context) {
+    uiEvents = PublishSubject.create();
     LayoutInflater inflater = LayoutInflater.from(context);
     dialog = new AlertDialog.Builder(context).create();
     View dialogView = inflater.inflate(R.layout.dialog_logged_in_accept_tos, null);
@@ -50,6 +53,11 @@ public class LoggedInTermsAndConditionsDialog {
 
   public void destroyDialog() {
     dialog = null;
+    uiEvents = null;
+  }
+
+  public Observable<String> dialogClicked() {
+    return uiEvents;
   }
 
   private void setPrivacyPolicyLinks(View dialogView, Context context,
