@@ -42,7 +42,7 @@ public interface EditorialView extends View {
 
   Observable<ScrollEvent> placeHolderVisibilityChange();
 
-  void removeBottomCardAnimation(EditorialViewModel editorialViewModel);
+  void removeBottomCardAnimation();
 
   void addBottomCardAnimation();
 

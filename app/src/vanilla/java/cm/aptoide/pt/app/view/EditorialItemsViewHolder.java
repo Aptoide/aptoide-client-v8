@@ -109,6 +109,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
     manageMediaVisibility(editorialItem);
     if (editorialItem.isPlaceHolderType()) {
+      setPlaceHolderInfo(editorialItem.getAppName(), editorialItem.getIcon(),
+          editorialItem.getRating());
       appCardLayout.setVisibility(View.INVISIBLE);
       appCardLayout.setScaleX(0.1f);
       appCardLayout.setScaleY(0.1f);
@@ -172,19 +174,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  public boolean isVisible(float screenHeight, float screenWidth) {
-    final Rect placeHolderPosition = new Rect();
-    appCardLayout.getLocalVisibleRect(placeHolderPosition);
-    final Rect screen =
-        new Rect(0, 0, (int) screenWidth, (int) screenHeight - appCardLayout.getHeight() * 2);
-    return placeHolderPosition.intersect(screen);
-  }
-
-  public View getPlaceHolder() {
-    return appCardLayout;
-  }
-
-  public void setPlaceHolderInfo(String appName, String image, String buttonText, float rating) {
+  private void setPlaceHolderInfo(String appName, String image, float rating) {
     ImageLoader.with(itemView.getContext())
         .load(image, appCardImage);
     appCardImage.setVisibility(View.VISIBLE);
@@ -196,8 +186,19 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCardRatingLayout.setVisibility(View.VISIBLE);
     appCardNameWithRating.setText(appName);
     appCardNameWithRating.setVisibility(View.VISIBLE);
-    appCardButton.setText(buttonText);
     appCardLayout.setVisibility(View.VISIBLE);
+  }
+
+  public boolean isVisible(float screenHeight, float screenWidth) {
+    final Rect placeHolderPosition = new Rect();
+    appCardLayout.getLocalVisibleRect(placeHolderPosition);
+    final Rect screen =
+        new Rect(0, 0, (int) screenWidth, (int) screenHeight - appCardLayout.getHeight() * 2);
+    return placeHolderPosition.intersect(screen);
+  }
+
+  public View getPlaceHolder() {
+    return appCardLayout;
   }
 
   public void setPlaceHolderDownloadingInfo(DownloadModel downloadModel) {

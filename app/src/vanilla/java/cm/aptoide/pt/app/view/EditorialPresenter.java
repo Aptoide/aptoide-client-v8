@@ -239,19 +239,16 @@ public class EditorialPresenter implements Presenter {
   private void handlePlaceHolderVisibilityChange() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.placeHolderVisibilityChange()
-            .flatMapSingle(scrollEvent -> editorialManager.loadEditorialViewModel()
-                .observeOn(viewScheduler)
-                .doOnSuccess(editorialViewModel -> {
-                  if (scrollEvent.getItemShown() && scrollEvent.isScrollDown()) {
-                    view.removeBottomCardAnimation(editorialViewModel);
-                  } else if (!scrollEvent.getItemShown() && !scrollEvent.isScrollDown()) {
-                    view.addBottomCardAnimation();
-                  }
-                }))
-            .retry())
+        .flatMap(created -> view.placeHolderVisibilityChange())
+        .doOnNext(scrollEvent -> {
+          if (scrollEvent.getItemShown() && scrollEvent.isScrollDown()) {
+            view.removeBottomCardAnimation();
+          } else if (!scrollEvent.getItemShown() && !scrollEvent.isScrollDown()) {
+            view.addBottomCardAnimation();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(bundles -> {
+        .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });

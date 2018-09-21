@@ -63,12 +63,6 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
     notifyDataSetChanged();
   }
 
-  public void setPlaceHolderInfo(String appName, String icon, String buttonText, float rating) {
-    if (appCardPlaceholderEditorialViewHolder != null) {
-      appCardPlaceholderEditorialViewHolder.setPlaceHolderInfo(appName, icon, buttonText, rating);
-    }
-  }
-
   public void setPlaceHolderDownloadingInfo(DownloadModel downloadModel) {
     if (appCardPlaceholderEditorialViewHolder != null) {
       appCardPlaceholderEditorialViewHolder.setPlaceHolderDownloadingInfo(downloadModel);

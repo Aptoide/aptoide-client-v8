@@ -410,7 +410,7 @@ public class EditorialFragment extends NavigationTrackFragment
                 isItemShown)));
   }
 
-  @Override public void removeBottomCardAnimation(EditorialViewModel editorialViewModel) {
+  @Override public void removeBottomCardAnimation() {
     View view = getPlaceHolder();
     if (!bottomCardHidden && view != null) {
       appCardLayout.animate()
@@ -421,9 +421,6 @@ public class EditorialFragment extends NavigationTrackFragment
           .setListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animator) {
               View view = adapter.getPlaceHolder();
-              adapter.setPlaceHolderInfo(editorialViewModel.getAppName(),
-                  editorialViewModel.getIcon(), appCardButton.getText()
-                      .toString(), editorialViewModel.getRating());
               view.animate()
                   .scaleX(1f)
                   .scaleY(1f)
@@ -435,7 +432,7 @@ public class EditorialFragment extends NavigationTrackFragment
                     }
 
                     @Override public void onAnimationEnd(Animator animator) {
-                      animator.end();
+
                     }
 
                     @Override public void onAnimationCancel(Animator animator) {
@@ -451,7 +448,6 @@ public class EditorialFragment extends NavigationTrackFragment
 
             @Override public void onAnimationEnd(Animator animator) {
               bottomCardHidden = true;
-              animator.end();
             }
 
             @Override public void onAnimationCancel(Animator animator) {
@@ -487,7 +483,7 @@ public class EditorialFragment extends NavigationTrackFragment
                     }
 
                     @Override public void onAnimationEnd(Animator animator) {
-                      animator.end();
+
                     }
 
                     @Override public void onAnimationCancel(Animator animator) {
@@ -504,7 +500,6 @@ public class EditorialFragment extends NavigationTrackFragment
             @Override public void onAnimationEnd(Animator animator) {
               view.setVisibility(View.INVISIBLE);
               bottomCardHidden = false;
-              animator.end();
             }
 
             @Override public void onAnimationCancel(Animator animator) {
