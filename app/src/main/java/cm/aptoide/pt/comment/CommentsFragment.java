@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.List;
@@ -40,7 +41,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
         .getSimpleName());
   }
 
-  @Override public void showComments(List<String> comments) {
+  @Override public void showComments(List<Comment> comments) {
     // TODO: 21/09/2018 actual comments shown
   }
 

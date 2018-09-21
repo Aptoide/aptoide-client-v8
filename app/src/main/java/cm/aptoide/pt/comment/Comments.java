@@ -1,5 +1,6 @@
 package cm.aptoide.pt.comment;
 
+import cm.aptoide.pt.comment.data.Comment;
 import java.util.List;
 import rx.Single;
 
@@ -10,7 +11,7 @@ public class Comments {
     this.commentsRepository = commentsRepository;
   }
 
-  public Single<List<String>> loadComments() {
+  public Single<List<Comment>> loadComments() {
     return commentsRepository.loadComments();
   }
 }

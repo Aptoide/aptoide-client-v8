@@ -1,12 +1,11 @@
 package cm.aptoide.pt.comment;
 
+import cm.aptoide.pt.comment.mock.CommentsFakeDataSource;
 import cm.aptoide.pt.presenter.View;
-import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -33,7 +32,7 @@ public class CommentsListManagerPresenterTest {
 
   @Test public void showCommentsTest() {
     when(commentsListManager.loadComments()).thenReturn(
-        Single.just(Arrays.asList("comment1", "comment2", "comment2")));
+        new CommentsFakeDataSource().loadComments());
     //Given an initialized CommentsPresenter
     presenter.present();
     //When the the view is shown to the screen
