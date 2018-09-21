@@ -43,4 +43,12 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Override public void showComments(List<String> comments) {
     // TODO: 21/09/2018 actual comments shown
   }
+
+  @Override public void showLoading() {
+    // TODO: 21/09/2018 show loading
+  }
+
+  @Override public void hideLoading() {
+    // TODO: 21/09/2018 hide loading
+  }
 }
