@@ -3,7 +3,6 @@ package cm.aptoide.pt.comments.view;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Dimension;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,34 +19,31 @@ import com.jakewharton.rxbinding.view.RxView;
 /**
  * Created by trinkes on 8/4/16.
  */
-public class CommentWidget extends Widget<CommentDisplayable> {
+public class StoreCommentWidget extends Widget<StoreCommentDisplayable> {
 
-  private static final String TAG = CommentWidget.class.getName();
   private static final int MARGIN_IN_DIP = 15;
 
-  private View replyLayout;
   private View outerLayout;
   private ImageView userAvatar;
   private TextView userName;
-  private TextView datePos1;
-  private TextView datePos2;
+  private TextView date;
   private TextView comment;
+  private TextView replies;
 
-  public CommentWidget(View itemView) {
+  public StoreCommentWidget(View itemView) {
     super(itemView);
   }
 
-  @Override protected void assignViews(View itemView) {
-    userAvatar = (ImageView) itemView.findViewById(R.id.user_icon);
-    outerLayout = itemView.findViewById(R.id.outer_layout);
-    userName = (TextView) itemView.findViewById(R.id.user_name);
-    datePos1 = (TextView) itemView.findViewById(R.id.added_date_pos1);
-    datePos2 = (TextView) itemView.findViewById(R.id.date);
-    comment = (TextView) itemView.findViewById(R.id.comment);
-    replyLayout = itemView.findViewById(R.id.reply_layout);
+  @Override protected void assignViews(View view) {
+    userAvatar = view.findViewById(R.id.user_icon);
+    outerLayout = view.findViewById(R.id.outer_layout);
+    userName = view.findViewById(R.id.user_name);
+    date = view.findViewById(R.id.date);
+    comment = view.findViewById(R.id.comment);
+    replies = view.findViewById(R.id.replies);
   }
 
-  @Override public void bindView(CommentDisplayable displayable) {
+  @Override public void bindView(StoreCommentDisplayable displayable) {
     Comment comment = displayable.getComment();
 
     final FragmentActivity context = getContext();
@@ -60,17 +56,13 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     String date = AptoideUtils.DateTimeU.getInstance(getContext())
         .getTimeDiffString(context, comment.getAdded()
             .getTime(), getContext().getResources());
-    datePos1.setText(date);
-    datePos2.setText(date);
+    this.date.setText(date);
 
     this.comment.setText(comment.getBody());
 
-    if (ComplexComment.class.isAssignableFrom(comment.getClass())) {
-      datePos2.setVisibility(View.VISIBLE);
-      bindComplexComment((ComplexComment) comment);
-    } else {
-      datePos1.setVisibility(View.VISIBLE);
-    }
+    this.date.setVisibility(View.VISIBLE);
+
+    this.replies.setText("7 replies");
 
     compositeSubscription.add(RxView.clicks(itemView)
         .doOnNext(click -> displayable.itemClicked(itemView))
@@ -95,28 +87,29 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     outerLayout.setBackgroundColor(color);
 
     // set left/start margin width in default comment
-    setLayoutLeftPadding(complexComment);
+    //setLayoutLeftPadding(complexComment);
 
-    if (complexComment.getLevel() == 1) {
-      // first level
-      replyLayout.setVisibility(View.VISIBLE);
-      compositeSubscription.add(RxView.clicks(replyLayout)
-          .flatMap(aVoid -> complexComment.observeReplySubmission()
-              .doOnError(err -> {
-                Snackbar.make(userAvatar, R.string.error_occured, Snackbar.LENGTH_SHORT);
-              })
-              .toObservable())
-          .retry()
-          .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
-            CrashReport.getInstance()
-                .log(err);
-          }));
-    } else {
-      // other levels
-      replyLayout.setVisibility(View.GONE);
-      userAvatar.setScaleX(0.7F);
-      userAvatar.setScaleY(0.7F);
-    }
+    //if (complexComment.getLevel() == 1) {
+    //  // first level
+    //  replyLayout.setVisibility(View.VISIBLE);
+    //  compositeSubscription.add(RxView.clicks(replyLayout)
+    //      .flatMap(aVoid -> complexComment.observeReplySubmission()
+    //          .doOnError(err -> {
+    //            Snackbar.make(userAvatar, R.string.error_occured, Snackbar.LENGTH_SHORT);
+    //          })
+    //          .toObservable())
+    //      .retry()
+    //      .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
+    //        CrashReport.getInstance()
+    //            .log(err);
+    //      }));
+    //} else {
+    //  // other levels
+    //  replyLayout.setVisibility(View.GONE);
+    //
+    //  userAvatar.setScaleX(0.7F);
+    //  userAvatar.setScaleY(0.7F);
+    //}
   }
 
   private void setLayoutLeftPadding(ComplexComment complexComment) {

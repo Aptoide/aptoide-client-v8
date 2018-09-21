@@ -42,6 +42,8 @@ import cm.aptoide.pt.comments.view.CommentsReadMoreWidget;
 import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.comments.view.RateAndReviewCommentWidget;
 import cm.aptoide.pt.comments.view.StoreAddCommentWidget;
+import cm.aptoide.pt.comments.view.StoreCommentDisplayable;
+import cm.aptoide.pt.comments.view.StoreCommentWidget;
 import cm.aptoide.pt.comments.view.StoreLatestCommentsWidget;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;
@@ -228,6 +230,8 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(CommentWidget.class, CommentDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(StoreCommentWidget.class, StoreCommentDisplayable.class));
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((CommentsReadMoreWidget.class),
         CommentsReadMoreDisplayable.class));

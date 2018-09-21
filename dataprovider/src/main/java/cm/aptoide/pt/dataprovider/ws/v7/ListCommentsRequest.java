@@ -37,7 +37,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
     ListCommentsRequest.url = url;
 
-    Body body = new Body(refresh, Order.desc);
+    Body body = new Body(refresh, Order.desc, 0);
     if (storeCredentials != null) {
       body.setStoreUser(storeCredentials.getUsername());
       body.setStorePassSha1(storeCredentials.getPasswordSha1());
@@ -163,6 +163,10 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.order = order;
       this.storeUser = username;
       this.storePassSha1 = password;
+    }
+
+    public Body(boolean refresh, Order desc, int subLimit) {
+      this.subLimit = subLimit;
     }
 
     @Override public int getOffset() {

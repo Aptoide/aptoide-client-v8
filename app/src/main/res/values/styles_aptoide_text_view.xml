@@ -74,6 +74,10 @@
     <item name="android:textColor">@color/grey_fog_dark</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XS.GreyFogNormal">
+    <item name="android:textColor">@color/grey_fog_normal</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XXS.GreyFog">
     <item name="android:textColor">@color/grey_fog_dark</item>
   </style>

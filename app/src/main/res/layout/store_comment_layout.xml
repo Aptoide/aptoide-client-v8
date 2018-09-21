@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
+    app:cardUseCompatPadding="true"
     >
   <RelativeLayout
       android:id="@+id/outer_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/white"
-      android:paddingBottom="14dp"
-      android:paddingEnd="15dp"
-      android:paddingLeft="15dp"
-      android:paddingRight="15dp"
-      android:paddingStart="15dp"
-      android:paddingTop="14dp"
+      android:paddingBottom="12dp"
+      android:paddingEnd="8dp"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:paddingStart="8dp"
+      android:paddingTop="8dp"
       >
 
     <ImageView
         android:id="@+id/user_icon"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_user_circle"
-        tools:scaleX="0.7"
-        tools:scaleY="0.7"
+        android:layout_marginTop="2dp"
+        tools:src="@drawable/updates_badge_circle"
         />
 
     <TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10.3dp"
-        android:layout_marginStart="10.3dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toEndOf="@id/user_icon"
         android:layout_toRightOf="@id/user_icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="@dimen/text_size_extra_small"
         android:textStyle="bold"
         tools:text="Mary Pollaki"
+        style="@style/Aptoide.TextView.Regular.S.Grey"
         />
 
     <TextView
@@ -52,6 +53,7 @@
         android:layout_alignLeft="@id/user_name"
         android:layout_alignStart="@id/user_name"
         android:layout_below="@id/user_name"
+        android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="@dimen/text_size_extra_small"
@@ -60,48 +62,33 @@
         tools:visibility="visible"
         />
 
-    <LinearLayout
-        android:id="@+id/reply_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/user_name"
-        android:layout_toEndOf="@id/user_name"
-        android:layout_toRightOf="@id/user_name"
-        android:gravity="right|end"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible"
-        >
-      <ImageView
-          android:layout_width="10dp"
-          android:layout_height="10dp"
-          android:src="@drawable/ic_reply"
-          />
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/reply"
-          android:textAllCaps="true"
-          android:textSize="10sp"
-          />
-
-    </LinearLayout>
-
     <TextView
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignLeft="@id/user_name"
+        android:layout_alignStart="@id/user_name"
         android:layout_below="@id/user_icon"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:paddingBottom="6dp"
-        android:textSize="@dimen/text_size_medium_small"
+        android:lines="2"
         tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
+        style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+        />
+
+    <TextView
+        android:id="@+id/replies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/comment"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="12dp"
+        tools:text="7 replies"
+        style="@style/Aptoide.TextView.Regular.XS.GreyFogNormal"
         />
 
   </RelativeLayout>
-</FrameLayout>
+</android.support.v7.widget.CardView>
