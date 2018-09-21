@@ -8,7 +8,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.StoreTheme;
@@ -63,8 +62,10 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
               String url =
                   action != null ? action.replace(V7.getHost(sharedPreferences), "") : null;
               displayable.getStoreTabNavigator()
-                  .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
-                      storeContext);
+                  .navigateToCommentsList();
+              //displayable.getStoreTabNavigator()
+              //    .navigateToCommentGridRecyclerView(CommentType.STORE, url, "View Comments",
+              //        storeContext);
             } else {
               displayable.getStoreTabNavigator()
                   .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext);

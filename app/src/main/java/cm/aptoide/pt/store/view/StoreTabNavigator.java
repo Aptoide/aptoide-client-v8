@@ -5,9 +5,8 @@
 
 package cm.aptoide.pt.store.view;
 
-import cm.aptoide.pt.comments.view.CommentListFragment;
+import cm.aptoide.pt.comment.CommentsFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 
@@ -26,10 +25,7 @@ public class StoreTabNavigator {
         true);
   }
 
-  public void navigateToCommentGridRecyclerView(CommentType commentType, String url,
-      String storeAnalyticsAction, StoreContext storeContext) {
-    fragmentNavigator.navigateTo(
-        CommentListFragment.newInstanceUrl(commentType, url, storeAnalyticsAction, storeContext),
-        true);
+  public void navigateToCommentsList() {
+    fragmentNavigator.navigateTo(new CommentsFragment(), true);
   }
 }
