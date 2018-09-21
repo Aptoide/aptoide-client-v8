@@ -320,6 +320,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return RxView.clicks(userAvatar);
   }
 
+  @Override public Observable<Void> discoveryButtonClick() {
+    return RxView.clicks(discoveryButton);
+  }
+
   @Override public Observable<HomeEvent> dismissBundleClicked() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.DISMISS_BUNDLE));
@@ -343,10 +347,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void hideBundle(int bundlePosition) {
     adapter.remove(bundlePosition);
-  }
-
-  @Override public Observable<Void> discoveryButtonClick() {
-    return RxView.clicks(discoveryButton);
   }
 
   @Override public void showAvatar() {
