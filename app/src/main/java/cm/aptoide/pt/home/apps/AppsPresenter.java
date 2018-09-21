@@ -90,7 +90,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void removeInstalledUpdates() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(computation)
         .flatMap(__ -> appsManager.getInstalledUpdateApps())
@@ -105,7 +105,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleRefreshApps() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.refreshApps()
             .flatMapCompletable(__ -> appsManager.refreshAllUpdates()
@@ -126,7 +126,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void observeDownloadInstallations() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(computation)
         .flatMap(__ -> appsManager.getInstalledDownloads())
@@ -138,7 +138,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleUpdateCardClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.updateClick())
         .doOnNext(app -> appsNavigator.navigateToAppView(((UpdateApp) app).getAppId(),
@@ -150,7 +150,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void observeExcludedUpdates() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(computation)
         .flatMap(__ -> appsManager.getUpdatesList(true))
@@ -164,7 +164,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleUpdateCardLongClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.updateLongClick())
         .doOnNext(app -> view.showIgnoreUpdate())
@@ -179,7 +179,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void observeUpdatesList() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(computation)
         .flatMap(__ -> appsManager.getUpdateDownloadsList())
@@ -191,7 +191,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleResumeUpdateClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> Observable.merge(view.resumeUpdate(), view.retryUpdate()))
@@ -203,7 +203,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleCancelUpdateClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelUpdate())
@@ -215,7 +215,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handlePauseUpdateClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseUpdate())
@@ -227,7 +227,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleUpdateAppClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.updateApp()
@@ -251,7 +251,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleBottomNavigationEvents() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> appsNavigator.bottomNavigation())
         .observeOn(viewScheduler)
@@ -264,7 +264,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleUpdateAllClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.updateAll()
@@ -280,7 +280,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleInstallAppClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.installApp())
@@ -291,7 +291,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleCancelDownloadClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelDownload())
@@ -303,7 +303,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleResumeDownloadClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> Observable.merge(view.resumeDownload(), view.retryDownload())
@@ -317,7 +317,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handlePauseDownloadClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseDownload())
@@ -328,7 +328,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void getDownloads() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(computation)
         .flatMap(__ -> appsManager.getDownloadApps())
@@ -340,7 +340,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void getInstalledApps() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(computation)
         .flatMap(__ -> appsManager.getInstalledApps())
@@ -352,7 +352,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void getAvailableUpdatesList() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> appsManager.getUpdatesList(false))
         .observeOn(viewScheduler)
@@ -363,7 +363,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void loadUserImage() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> accountManager.accountStatus())
         .flatMap(account -> getUserAvatar(account))
@@ -384,7 +384,7 @@ public class AppsPresenter implements Presenter {
   }
 
   private void handleUserAvatarClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.imageClick()
             .observeOn(viewScheduler)

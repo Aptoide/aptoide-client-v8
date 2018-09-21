@@ -41,7 +41,7 @@ public class AppCoinsInfoPresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleClickOnInstallButton() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> Observable.merge(view.installButtonClick(), view.cardViewClick()))
         .flatMap(click -> installManager.isInstalled(appcWalletPackageName))
@@ -59,7 +59,7 @@ public class AppCoinsInfoPresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleClickOnAppcWalletLink() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.appCoinsWalletLinkClick())
         .doOnNext(click -> appCoinsInfoNavigator.navigateToAppCoinsWallet())
@@ -69,7 +69,7 @@ public class AppCoinsInfoPresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleClickOnCoinbaseLink() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.coinbaseLinkClick())
         .doOnNext(click -> appCoinsInfoNavigator.navigateToCoinbaseLink())
@@ -79,7 +79,7 @@ public class AppCoinsInfoPresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleButtonText() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> installManager.isInstalled(appcWalletPackageName))
         .doOnNext(view::setButtonText)

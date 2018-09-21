@@ -82,7 +82,7 @@ public class MoreBundlePresenterTest {
     localTopAppsBundle = bundlesModel.getList()
         .get(0);
 
-    when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
     when(view.adClicked()).thenReturn(adClickEvent);
     when(view.moreClicked()).thenReturn(moreClickEvent);

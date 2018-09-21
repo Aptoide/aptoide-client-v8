@@ -68,7 +68,7 @@ public class ListStoreAppsPresenterTest {
             crashReporter, listStoreAppsNavigator, LIMIT_APPS_TEST);
 
     //simulate view lifecycle event
-    when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
 
   @Test public void getAppsFromRepositoryAndShowInView() {

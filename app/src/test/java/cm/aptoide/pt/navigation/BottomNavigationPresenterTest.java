@@ -65,7 +65,7 @@ public class BottomNavigationPresenterTest {
         bottomNavigationNavigator, updatesManager);
 
     //simulate view lifecycle event
-    when(mainView.getLifecycle()).thenReturn(lifecycleEvent);
+    when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(bottomNavigationActivity.navigationEvent()).thenReturn(navigationEvent);
   }
 
