@@ -246,7 +246,7 @@ public class EditorialPresenter implements Presenter {
                   if (scrollEvent.getItemShown() && scrollEvent.isScrollDown()) {
                     view.removeBottomCardAnimation(editorialViewModel);
                   } else if (!scrollEvent.getItemShown() && !scrollEvent.isScrollDown()) {
-                    view.addBottomCardAnimation(editorialViewModel);
+                    view.addBottomCardAnimation();
                   }
                 }))
             .retry())

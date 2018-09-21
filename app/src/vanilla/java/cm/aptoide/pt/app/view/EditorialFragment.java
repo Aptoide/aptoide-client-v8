@@ -466,7 +466,7 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  @Override public void addBottomCardAnimation(EditorialViewModel editorialViewModel) {
+  @Override public void addBottomCardAnimation() {
     View view = getPlaceHolder();
     if (bottomCardHidden && view != null) {
       view.animate()

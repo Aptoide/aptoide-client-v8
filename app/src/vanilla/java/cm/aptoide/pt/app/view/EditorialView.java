@@ -44,7 +44,7 @@ public interface EditorialView extends View {
 
   void removeBottomCardAnimation(EditorialViewModel editorialViewModel);
 
-  void addBottomCardAnimation(EditorialViewModel editorialViewModel);
+  void addBottomCardAnimation();
 
   Observable<EditorialEvent> mediaContentClicked();
 }
