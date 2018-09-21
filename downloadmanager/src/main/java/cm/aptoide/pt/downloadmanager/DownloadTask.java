@@ -56,8 +56,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private FileDownloader fileDownloader;
 
   DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils,
-      Analytics analytics, OldAptoideDownloadManager downloadManager, String apkPath, String obbPath,
-      String genericPath, FileDownloader fileDownloader) {
+      Analytics analytics, OldAptoideDownloadManager downloadManager, String apkPath,
+      String obbPath, String genericPath, FileDownloader fileDownloader) {
     this.analytics = analytics;
     this.download = download;
     this.md5 = download.getMd5();
