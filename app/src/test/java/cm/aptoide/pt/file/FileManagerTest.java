@@ -1,11 +1,12 @@
 package cm.aptoide.pt.file;
 
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
-import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
+import rx.Completable;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class FileManagerTest {
 
   private static CacheHelper cacheHelper;
-  private static OldAptoideDownloadManager downloadManager;
+  private static AptoideDownloadManager downloadManager;
   private static FileUtils fileUtils;
   private String[] folders;
 
@@ -30,8 +31,8 @@ public class FileManagerTest {
     cacheHelper = mock(CacheHelper.class);
     when(cacheHelper.cleanCache()).thenReturn(Observable.just(10L));
 
-    downloadManager = mock(OldAptoideDownloadManager.class);
-    when(downloadManager.invalidateDatabase()).thenReturn(Observable.just(null));
+    downloadManager = mock(AptoideDownloadManager.class);
+    when(downloadManager.invalidateDatabase()).thenReturn(Completable.complete());
 
     fileUtils = mock(FileUtils.class);
   }
