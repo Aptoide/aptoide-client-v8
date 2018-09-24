@@ -133,7 +133,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
               .load(editorialMedia.getUrl(), image);
           image.setVisibility(View.VISIBLE);
         }
-        if (editorialMedia.isVideo()) {
+        if (editorialMedia.isVideo() && editorialMedia.hasUrl()) {
           videoThumbnailContainer.setVisibility(View.VISIBLE);
           setupVideo(editorialMedia.getUrl());
         }
@@ -151,8 +151,6 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private void setupVideo(String url) {
     String[] splitUrl = url.split("=");
     YTParams params = new YTParams();
-    //params.setControls(0);
-    //params.setAutoplay(1);
     params.setVolume(100);
     params.setPlaybackQuality(PlaybackQuality.small);
 
