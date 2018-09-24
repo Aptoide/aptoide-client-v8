@@ -8,6 +8,8 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.Order;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -34,9 +36,10 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
   }
 
   @Override public Single<List<Comment>> loadComments(long storeId) {
-    return ListCommentsRequest.of(storeId, 0, 7, false, bodyInterceptor, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
-        .observe()
+    return new ListCommentsRequest(new ListCommentsRequest.Body(
+        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences), Order.desc, 0),
+        bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences).
+        observe()
         .flatMap(response -> {
           if (response.isOk()) {
             return Observable.just(map(response.getDataList()
