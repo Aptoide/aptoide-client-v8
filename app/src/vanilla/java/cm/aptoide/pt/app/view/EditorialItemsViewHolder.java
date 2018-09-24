@@ -10,6 +10,9 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import com.jaedongchicken.ytplayer.YoutubePlayerView;
+import com.jaedongchicken.ytplayer.model.PlaybackQuality;
+import com.jaedongchicken.ytplayer.model.YTParams;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import rx.subjects.PublishSubject;
@@ -34,6 +37,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private ImageView image;
   private ImageView videoThumbnail;
   private FrameLayout videoThumbnailContainer;
+  private YoutubePlayerView videoPlayer;
   private RecyclerView mediaList;
   private View appCard;
   private MediaBundleAdapter mediaBundleAdapter;
@@ -60,6 +64,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
     appCardRating = (TextView) appCard.findViewById(R.id.rating_label);
     appCardRatingLayout = appCard.findViewById(R.id.rating_layout);
+    videoPlayer = view.findViewById(R.id.video_view);
     mediaBundleAdapter = new MediaBundleAdapter(new ArrayList<>(), editorialMediaClicked);
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -133,15 +138,17 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
           image.setVisibility(View.VISIBLE);
         }
         if (editorialMedia.isVideo()) {
-          if (editorialMedia.getThumbnail() != null) {
-            ImageLoader.with(itemView.getContext())
-                .load(editorialMedia.getThumbnail(), videoThumbnail);
-          }
-          if (editorialMedia.hasUrl()) {
-            videoThumbnailContainer.setVisibility(View.VISIBLE);
-            videoThumbnailContainer.setOnClickListener(
-                v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
-          }
+          videoThumbnailContainer.setVisibility(View.VISIBLE);
+          setupVideo(editorialMedia.getUrl());
+          //if (editorialMedia.getThumbnail() != null) {
+          //  ImageLoader.with(itemView.getContext())
+          //      .load(editorialMedia.getThumbnail(), videoThumbnail);
+          //}
+          //if (editorialMedia.hasUrl()) {
+          //  videoThumbnailContainer.setVisibility(View.VISIBLE);
+          //  videoThumbnailContainer.setOnClickListener(
+          //      v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
+          //}
         }
       }
 
@@ -152,5 +159,56 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         description.setVisibility(View.VISIBLE);
       }
     }
+  }
+
+  private void setupVideo(String url) {
+    String[] splitUrl = url.split("=");
+    YTParams params = new YTParams();
+    //params.setControls(0);
+    //params.setAutoplay(1);
+    params.setVolume(100);
+    params.setPlaybackQuality(PlaybackQuality.small);
+
+    videoPlayer.initializeWithCustomURL(splitUrl[1], params,
+        new YoutubePlayerView.YouTubeListener() {
+          @Override public void onReady() {
+            videoPlayer.postDelayed(() -> {
+              videoPlayer.setVisibility(View.VISIBLE);
+              videoThumbnailContainer.setVisibility(View.GONE);
+            }, 100);
+          }
+
+          @Override public void onStateChange(YoutubePlayerView.STATE state) {
+
+          }
+
+          @Override public void onPlaybackQualityChange(String arg) {
+
+          }
+
+          @Override public void onPlaybackRateChange(String arg) {
+
+          }
+
+          @Override public void onError(String arg) {
+
+          }
+
+          @Override public void onApiChange(String arg) {
+
+          }
+
+          @Override public void onCurrentSecond(double second) {
+
+          }
+
+          @Override public void onDuration(double duration) {
+
+          }
+
+          @Override public void logs(String log) {
+
+          }
+        });
   }
 }
