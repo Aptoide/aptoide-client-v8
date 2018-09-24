@@ -3,6 +3,7 @@ package cm.aptoide.pt.comment;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
+import rx.Observable;
 
 public interface CommentsView extends View {
 
@@ -13,4 +14,8 @@ public interface CommentsView extends View {
   void hideLoading();
 
   void showGeneralError();
+
+  void hideRefreshLoading();
+
+  Observable<Void> refreshes();
 }

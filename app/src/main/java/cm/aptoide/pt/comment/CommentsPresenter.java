@@ -1,7 +1,10 @@
 package cm.aptoide.pt.comment;
 
+import android.support.annotation.VisibleForTesting;
+import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import java.util.List;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -20,6 +23,26 @@ public class CommentsPresenter implements Presenter {
 
   @Override public void present() {
     showComments();
+
+    pullToRefresh();
+  }
+
+  @VisibleForTesting public void pullToRefresh() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.refreshes())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showLoading())
+        .flatMapSingle(__ -> commentsListManager.loadFreshComments())
+        .observeOn(viewScheduler)
+        .doOnNext(comments -> view.hideRefreshLoading())
+        .doOnNext(this::showComments)
+        .doOnError(throwable -> view.showGeneralError())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comments -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private void showComments() {
@@ -28,15 +51,17 @@ public class CommentsPresenter implements Presenter {
         .doOnNext(created -> view.showLoading())
         .flatMapSingle(created -> commentsListManager.loadComments())
         .observeOn(viewScheduler)
-        .doOnNext(comments -> {
-          view.showComments(comments);
-          view.hideLoading();
-        })
+        .doOnNext(this::showComments)
         .doOnError(throwable -> view.showGeneralError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comments -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  private void showComments(List<Comment> comments) {
+    view.showComments(comments);
+    view.hideLoading();
   }
 }

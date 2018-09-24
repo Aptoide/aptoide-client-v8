@@ -2,6 +2,7 @@ package cm.aptoide.pt.comment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +14,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import rx.Observable;
 
 public class CommentsFragment extends NavigationTrackFragment implements CommentsView {
 
@@ -23,6 +26,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Inject AptoideUtils.DateTimeU dateUtils;
   private RecyclerView commentsList;
   private CommentsAdapter commentsAdapter;
+  private SwipeRefreshLayout swipeRefreshLayout;
   private View loading;
 
   @Nullable @Override
@@ -39,6 +43,9 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     loading = view.findViewById(R.id.progress_bar);
+    swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
+    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
+        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     commentsList = view.findViewById(R.id.comments_list);
     commentsList.setLayoutManager(
         new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -71,5 +78,13 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     // TODO: 24/09/2018 show error
     Toast.makeText(this.getContext(), "ERROR", Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<Void> refreshes() {
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
+  @Override public void hideRefreshLoading() {
+    this.swipeRefreshLayout.setRefreshing(false);
   }
 }
