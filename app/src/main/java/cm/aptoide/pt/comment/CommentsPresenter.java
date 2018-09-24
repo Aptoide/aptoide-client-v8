@@ -23,7 +23,7 @@ public class CommentsPresenter implements Presenter {
   }
 
   private void showComments() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
         .flatMapSingle(created -> commentsListManager.loadComments())
