@@ -13,22 +13,27 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutionException;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by neuro on 24-05-2016.
@@ -344,6 +349,50 @@ public class ImageLoader {
     } else {
       Log.e(TAG, "::load() Context is null");
     }
+    return null;
+  }
+
+  public Target<Bitmap> loadWithPalette(String url, ImageView imageView,
+      PublishSubject<Integer> viewPaletteColorReceiver) {
+    Context context = weakContext.get();
+    if (context != null) {
+      String newImageUrl = AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager);
+      if (newImageUrl != null) {
+        Uri uri = Uri.parse(newImageUrl);
+        return Glide.with(context)
+            .asBitmap()
+            .load(uri)
+            .apply(getRequestOptions())
+            .listener(new RequestListener<Bitmap>() {
+
+              @Override public boolean onLoadFailed(@Nullable GlideException e, Object o,
+                  Target<Bitmap> target, boolean b) {
+                viewPaletteColorReceiver.onNext(-1);
+                return false;
+              }
+
+              @Override
+              public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target,
+                  DataSource dataSource, boolean b) {
+                Palette.from(bitmap)
+                    .maximumColorCount(6)
+                    .generate(palette -> {
+                      Palette.Swatch swatch = palette.getDominantSwatch();
+                      if (swatch != null) {
+                        viewPaletteColorReceiver.onNext(swatch.getRgb());
+                      }
+                    });
+                return false;
+              }
+            })
+            .into(imageView);
+      } else {
+        Log.e(TAG, "newImageUrl is null");
+      }
+    } else {
+      Log.e(TAG, "::load() Context is null");
+    }
+    viewPaletteColorReceiver.onNext(-1);
     return null;
   }
 

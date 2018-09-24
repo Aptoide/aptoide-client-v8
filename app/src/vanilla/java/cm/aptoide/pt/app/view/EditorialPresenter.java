@@ -47,6 +47,7 @@ public class EditorialPresenter implements Presenter {
     handleRetryClick();
     handleClickOnMedia();
     handleClickOnAppCard();
+    handlePaletteColor();
 
     handleInstallClick();
     pauseDownload();
@@ -234,5 +235,19 @@ public class EditorialPresenter implements Presenter {
 
   private Completable openInstalledApp(String packageName) {
     return Completable.fromAction(() -> view.openApp(packageName));
+  }
+
+  private void handlePaletteColor() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.paletteColorExtracted())
+        .observeOn(viewScheduler)
+        .doOnNext(view::applyPaletteColor)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          view.applyPaletteColor(-1);
+          throw new OnErrorNotImplementedException(error);
+        });
   }
 }

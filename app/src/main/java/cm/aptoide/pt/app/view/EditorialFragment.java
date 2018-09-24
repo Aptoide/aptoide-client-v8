@@ -94,12 +94,14 @@ public class EditorialFragment extends NavigationTrackFragment
   private DecimalFormat oneDecimalFormatter;
 
   private PublishSubject<String> editorialMediaClicked;
+  private PublishSubject<Integer> paletteColorSubject;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     ready = PublishSubject.create();
+    paletteColorSubject = PublishSubject.create();
     editorialMediaClicked = PublishSubject.create();
     setHasOptionsMenu(true);
   }
@@ -215,6 +217,7 @@ public class EditorialFragment extends NavigationTrackFragment
     }
     ready = null;
     window = null;
+    paletteColorSubject = null;
     oneDecimalFormatter = null;
   }
 
@@ -367,17 +370,27 @@ public class EditorialFragment extends NavigationTrackFragment
     return editorialMediaClicked;
   }
 
-  private void populateAppContent(EditorialViewModel editorialViewModel) {
-    String title = editorialViewModel.getTitle();
-    toolbar.setTitle(title);
-    toolbarTitle.setText(title);
+  @Override public Observable<Integer> paletteColorExtracted() {
+    return paletteColorSubject;
+  }
+
+  @Override public void applyPaletteColor(int paletteColor) {
+    if (paletteColor != -1) {
+      actionItemCard.setBackgroundColor(paletteColor);
+    }
     actionItemCard.setVisibility(View.VISIBLE);
+  }
+
+  private void populateAppContent(EditorialViewModel editorialViewModel) {
     if (editorialViewModel.hasBackgroundImage()) {
       ImageLoader.with(getContext())
-          .load(editorialViewModel.getBackgroundImage(), appImage);
+          .loadWithPalette(editorialViewModel.getBackgroundImage(), appImage, paletteColorSubject);
     } else {
       appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
     }
+    String title = editorialViewModel.getTitle();
+    toolbar.setTitle(title);
+    toolbarTitle.setText(title);
     appImage.setVisibility(View.VISIBLE);
     itemName.setText(editorialViewModel.getCardType());
     itemName.setVisibility(View.VISIBLE);

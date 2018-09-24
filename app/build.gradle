@@ -440,6 +440,8 @@ dependencies {
 
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 
+  //Color Palette
+  implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
 
   implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}") {
     exclude group: "com.android.support"

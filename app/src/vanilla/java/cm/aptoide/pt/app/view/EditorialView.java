@@ -42,4 +42,8 @@ public interface EditorialView extends View {
   void readyToDownload();
 
   Observable<String> mediaContentClicked();
+
+  Observable<Integer> paletteColorExtracted();
+
+  void applyPaletteColor(int paletteColor);
 }
