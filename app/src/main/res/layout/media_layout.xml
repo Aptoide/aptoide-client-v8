@@ -19,24 +19,22 @@
   <FrameLayout
       android:id="@+id/editorial_video_thumbnail_container"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:foreground="@color/overlay_black"
+      android:layout_height="200dp"
       android:visibility="gone"
       >
     <ImageView
         android:id="@+id/editorial_video_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@color/black_87_alpha"
-        android:tint="@color/semi_transparent_black"
-        />
-
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:src="@drawable/btn_movie_play_normal"
+        android:background="@color/grey_fog_normal"
+        android:src="@drawable/placeholder_brick"
         />
   </FrameLayout>
+  <com.jaedongchicken.ytplayer.YoutubePlayerView
+      android:id="@+id/video_view"
+      android:layout_width="match_parent"
+      android:layout_height="200dp"
+      android:visibility="gone"
+      />
 </FrameLayout>
