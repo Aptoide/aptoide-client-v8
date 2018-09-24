@@ -23,6 +23,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Inject AptoideUtils.DateTimeU dateUtils;
   private RecyclerView commentsList;
   private CommentsAdapter commentsAdapter;
+  private View loading;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,7 +38,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
+    loading = view.findViewById(R.id.progress_bar);
     commentsList = view.findViewById(R.id.comments_list);
     commentsList.setLayoutManager(
         new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -57,15 +58,13 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   }
 
   @Override public void showLoading() {
-    // TODO: 21/09/2018 show loading
-    Toast.makeText(this.getContext(), "showLoading", Toast.LENGTH_SHORT)
-        .show();
+    commentsList.setVisibility(View.GONE);
+    loading.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
-    // TODO: 21/09/2018 hide loading
-    Toast.makeText(this.getContext(), "hideLoading", Toast.LENGTH_SHORT)
-        .show();
+    commentsList.setVisibility(View.VISIBLE);
+    loading.setVisibility(View.GONE);
   }
 
   @Override public void showGeneralError() {
