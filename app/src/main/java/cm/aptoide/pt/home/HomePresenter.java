@@ -89,7 +89,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.visibleBundles())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
@@ -120,7 +120,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleKnowMoreClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.infoBundleKnowMoreClicked())
         .observeOn(viewScheduler)
@@ -137,7 +137,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleDismissClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.dismissBundleClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
@@ -155,7 +155,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void onCreateLoadBundles() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .doOnNext(created -> view.showLoading())
@@ -190,7 +190,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleAppClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
             .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
@@ -223,7 +223,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleRecommendedAppClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.recommendedAppClicked()
             .observeOn(viewScheduler)
@@ -244,7 +244,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleEditorialCardClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.editorialCardClicked()
             .observeOn(viewScheduler)
@@ -262,7 +262,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleBottomNavigationEvents() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> homeNavigator.bottomNavigation())
         .observeOn(viewScheduler)
@@ -275,7 +275,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleAdClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
             .doOnNext(adHomeEvent -> homeAnalytics.sendAdInteractEvent(adHomeEvent.getAdClick()
@@ -302,7 +302,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleMoreClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
             .doOnNext(homeMoreClick -> homeAnalytics.sendTapOnMoreInteractEvent(
@@ -321,7 +321,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleBundleScrolledRight() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.bundleScrolled()
             .doOnNext(click -> homeAnalytics.sendScrollRightInteractEvent(click.getBundlePosition(),
@@ -339,7 +339,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleBottomReached() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reachesBottom()
             .filter(__ -> home.hasMore())
@@ -372,7 +372,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handlePullToRefresh() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
             .doOnNext(__ -> homeAnalytics.sendPullRefreshInteractEvent())
@@ -401,7 +401,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleRetryClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
@@ -414,7 +414,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void loadUserImage() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> accountManager.accountStatus())
         .flatMap(account -> getUserAvatar(account))
@@ -435,7 +435,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleUserImageClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.imageClick()
             .observeOn(viewScheduler)
@@ -449,7 +449,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleLoggedInAcceptTermsAndConditions() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> accountManager.accountStatus()
             .first())
@@ -466,7 +466,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleTermsAndConditionsContinueClicked() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.termsAndConditionsContinueClicked())
         .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
@@ -478,7 +478,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleTermsAndConditionsLogOutClicked() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.termsAndConditionsLogOutClicked())
         .flatMapCompletable(__ -> accountManager.logout())
@@ -490,7 +490,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleClickOnTermsAndConditions() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.termsAndConditionsClicked())
         .doOnNext(__ -> homeNavigator.navigateToTermsAndConditions())
@@ -502,7 +502,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleClickOnPrivacyPolicy() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.privacyPolicyClicked())
         .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())

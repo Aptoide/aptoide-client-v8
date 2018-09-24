@@ -1,7 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -68,10 +66,12 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     int color;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       color = context.getResources()
-          .getColor(displayable.getStoreTheme().getPrimaryColor(), context.getTheme());
+          .getColor(displayable.getStoreTheme()
+              .getPrimaryColor(), context.getTheme());
     } else {
       color = context.getResources()
-          .getColor(displayable.getStoreTheme().getPrimaryColor());
+          .getColor(displayable.getStoreTheme()
+              .getPrimaryColor());
     }
 
     final GetAppMeta.App appData = appMeta.second.getData();
@@ -123,7 +123,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
     // apply button background
     installButton.setBackgroundDrawable(getContext().getResources()
-        .getDrawable(displayable.getStoreTheme().getRaisedButtonDrawable()));
+        .getDrawable(displayable.getStoreTheme()
+            .getRaisedButtonDrawable()));
 
     installButton.setText(context.getString(isAppInstalled ? R.string.open : R.string.install));
 

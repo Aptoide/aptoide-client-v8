@@ -43,7 +43,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
   }
 
   @Override public void present() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> createViewsAndButtons().andThen(setupHandlers()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

@@ -243,8 +243,10 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void onDestroyView() {
     ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
-    window.getDecorView()
-        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      window.getDecorView()
+          .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+    }
     toolbar = null;
     appImage = null;
     itemName = null;

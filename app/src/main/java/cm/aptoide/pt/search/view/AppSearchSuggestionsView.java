@@ -76,7 +76,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
         android.support.v7.appcompat.R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+    getLifecycleEvent().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> RxSearchView.queryTextChangeEvents(searchView))
         .doOnNext(event -> queryTextChangedPublisher.onNext(new SearchQueryEvent(event.queryText()
             .toString(), event.isSubmitted())))
@@ -89,7 +89,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   }
 
   private void toolbarClickExpandsSearch() {
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+    getLifecycleEvent().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> toolbarClickObservable)
         .doOnNext(__ -> searchAnalytics.searchStart(SearchSource.SEARCH_TOOLBAR, true))
         .doOnNext(__ -> focusInSearchBar())
@@ -99,7 +99,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   }
 
   private void searchMenuItemClickExpandsSearch() {
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+    getLifecycleEvent().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> toolbarMenuItemClick)
         .filter(item -> item.getItemId() == searchMenuItem.getItemId())
         .doOnNext(__ -> searchAnalytics.searchStart(SearchSource.SEARCH_ICON, true))
@@ -149,8 +149,8 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
     return parentView.bindUntilEvent(lifecycleEvent);
   }
 
-  @Override public Observable<LifecycleEvent> getLifecycle() {
-    return parentView.getLifecycle();
+  @Override public Observable<LifecycleEvent> getLifecycleEvent() {
+    return parentView.getLifecycleEvent();
   }
 
   @Override public void attachPresenter(Presenter presenter) {

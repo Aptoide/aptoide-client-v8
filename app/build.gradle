@@ -433,6 +433,7 @@ dependencies {
   implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
   //noinspection GradleDependency
   implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
 
   implementation "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
 

@@ -149,8 +149,8 @@
           android:layout_gravity="right|end"
           android:textAllCaps="true"
           android:textSize="@dimen/text_size_medium_small"
-          style="@style/Aptoide.Button.S"
           tools:text="Install"
+          style="@style/Aptoide.Button.S"
           />
     </FrameLayout>
 

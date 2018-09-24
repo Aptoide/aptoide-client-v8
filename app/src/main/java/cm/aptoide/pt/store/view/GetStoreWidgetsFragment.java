@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.store.view.home.AdultRowDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
 import rx.functions.Action1;
@@ -45,5 +44,4 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
   @Override public void onResume() {
     super.onResume();
   }
-
 }
