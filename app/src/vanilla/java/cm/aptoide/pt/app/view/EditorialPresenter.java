@@ -237,7 +237,7 @@ public class EditorialPresenter implements Presenter {
   }
 
   private void handlePlaceHolderVisibilityChange() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.placeHolderVisibilityChange())
         .doOnNext(scrollEvent -> {
