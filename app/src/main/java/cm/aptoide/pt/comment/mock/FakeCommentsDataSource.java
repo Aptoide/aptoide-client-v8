@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.List;
 import rx.Single;
 
-public class CommentsFakeDataSource implements CommentsDataSource {
-  @Override public Single<List<Comment>> loadComments() {
+public class FakeCommentsDataSource implements CommentsDataSource {
+  @Override public Single<List<Comment>> loadComments(long storeId) {
     return getFakeComments();
   }
 

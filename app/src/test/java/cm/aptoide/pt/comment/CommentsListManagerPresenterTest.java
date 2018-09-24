@@ -1,6 +1,6 @@
 package cm.aptoide.pt.comment;
 
-import cm.aptoide.pt.comment.mock.CommentsFakeDataSource;
+import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
 import cm.aptoide.pt.presenter.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class CommentsListManagerPresenterTest {
 
   @Test public void showCommentsTest() {
     when(commentsListManager.loadComments()).thenReturn(
-        new CommentsFakeDataSource().loadComments());
+        new FakeCommentsDataSource().loadComments(storeId));
     //Given an initialized CommentsPresenter
     presenter.present();
     //When the the view is shown to the screen

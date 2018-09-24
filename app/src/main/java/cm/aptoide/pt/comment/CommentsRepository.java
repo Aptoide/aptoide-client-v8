@@ -11,7 +11,7 @@ public class CommentsRepository {
     this.dataSource = dataSource;
   }
 
-  public Single<List<Comment>> loadComments() {
-    return dataSource.loadComments();
+  public Single<List<Comment>> loadComments(long storeId) {
+    return dataSource.loadComments(storeId);
   }
 }

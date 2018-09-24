@@ -6,5 +6,5 @@ import rx.Single;
 
 public interface CommentsDataSource {
 
-  Single<List<Comment>> loadComments();
+  Single<List<Comment>> loadComments(long storeId);
 }

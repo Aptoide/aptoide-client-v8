@@ -11,4 +11,6 @@ public interface CommentsView extends View {
   void showLoading();
 
   void hideLoading();
+
+  void showGeneralError();
 }

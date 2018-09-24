@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.data.Comment;
@@ -57,9 +58,19 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public void showLoading() {
     // TODO: 21/09/2018 show loading
+    Toast.makeText(this.getContext(), "showLoading", Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override public void hideLoading() {
     // TODO: 21/09/2018 hide loading
+    Toast.makeText(this.getContext(), "hideLoading", Toast.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public void showGeneralError() {
+    // TODO: 24/09/2018 show error
+    Toast.makeText(this.getContext(), "ERROR", Toast.LENGTH_SHORT)
+        .show();
   }
 }

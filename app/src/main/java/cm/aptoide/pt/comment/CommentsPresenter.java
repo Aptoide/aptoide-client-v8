@@ -32,6 +32,7 @@ public class CommentsPresenter implements Presenter {
           view.showComments(comments);
           view.hideLoading();
         })
+        .doOnError(throwable -> view.showGeneralError())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comments -> {
         }, throwable -> {

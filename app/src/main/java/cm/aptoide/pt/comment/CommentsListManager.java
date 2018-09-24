@@ -6,12 +6,14 @@ import rx.Single;
 
 public class CommentsListManager {
   private final Comments comments;
+  private final long storeId;
 
-  public CommentsListManager(Comments comments) {
+  public CommentsListManager(long storeId, Comments comments) {
+    this.storeId = storeId;
     this.comments = comments;
   }
 
   public Single<List<Comment>> loadComments() {
-    return comments.loadComments();
+    return comments.loadComments(storeId);
   }
 }
