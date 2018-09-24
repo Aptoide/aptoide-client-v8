@@ -60,7 +60,7 @@ public class MyAccountPresenterTest {
         new MyAccountPresenter(view, accountManager, crashReport, sharedPreferences,
             Schedulers.immediate(), navigator, analytics);
 
-    when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
 
   @Test public void populateAccountViewsTest() {

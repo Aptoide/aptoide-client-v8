@@ -62,10 +62,10 @@ public abstract class NotificationApplicationView extends AptoideApplication
 
   @NonNull @Override
   public <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {
-    return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
+    return RxLifecycle.bindUntilEvent(getLifecycleEvent(), lifecycleEvent);
   }
 
-  @Override public Observable<LifecycleEvent> getLifecycle() {
+  @Override public Observable<LifecycleEvent> getLifecycleEvent() {
     return lifecycleEventBehaviorSubject;
   }
 

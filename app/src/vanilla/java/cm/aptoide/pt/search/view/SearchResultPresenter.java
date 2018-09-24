@@ -85,7 +85,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleFragmentRestorationVisibility() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
         .filter(__ -> !view.shouldFocusInSearchBar() && view.shouldShowSuggestions())
@@ -96,7 +96,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void getTrendingOnStart() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
         .flatMapSingle(__ -> trendingManager.getTrendingListSuggestions()
@@ -109,7 +109,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void focusInSearchBar() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
         .first()
@@ -122,7 +122,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void stopLoadingMoreOnDestroy() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.DESTROY))
         .first()
         .toSingle()
@@ -131,7 +131,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleAllStoresListReachedBottom() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.allStoresResultReachedBottom())
@@ -162,7 +162,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleFollowedStoresListReachedBottom() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.followedStoresResultReachedBottom())
@@ -189,7 +189,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void firstAdsDataLoad() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
         .filter(viewModel -> hasValidQuery(viewModel))
@@ -221,7 +221,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleClickToOpenAppViewFromItem() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onViewItemClicked())
@@ -232,7 +232,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleClickToOpenAppViewFromAdd() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onAdClicked())
@@ -248,7 +248,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleClickOnNoResultsImage() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickNoResultsSearchButton())
@@ -274,7 +274,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleClickFollowedStoresSearchButton() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickFollowedStoresSearchButton())
@@ -285,7 +285,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleClickEverywhereSearchButton() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickEverywhereSearchButton())
@@ -363,7 +363,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void doFirstSearch() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
         .filter(viewModel -> viewModel.getAllStoresOffset() == 0
@@ -398,7 +398,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleQueryTextCleaned() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges().filter(
             data -> !data.hasQuery() && view.isSearchViewExpanded())
@@ -413,7 +413,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleQueryTextChanged() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
         .first()
@@ -440,7 +440,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleQueryTextSubmitted() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.searchSetup())
         .first()
@@ -459,7 +459,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleSuggestionClicked() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.listenToSuggestionClick())
         .filter(data -> data.second.hasQuery() && data.second.isSubmitted())
@@ -476,7 +476,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleToolbarClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.toolbarClick())
         .doOnNext(__ -> {
@@ -491,7 +491,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleSearchMenuItemClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.RESUME)
         .flatMap(__ -> view.searchMenuItemClick())
         .doOnNext(__ -> {
@@ -504,7 +504,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleClickOnBottomNavWithResults() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> bottomNavigator.navigationEvent()
             .filter(navigationEvent -> bottomNavigationMapper.mapItemClicked(navigationEvent)
@@ -521,7 +521,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void handleClickOnBottomNavWithoutResults() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> bottomNavigator.navigationEvent()
             .filter(navigationEvent -> bottomNavigationMapper.mapItemClicked(navigationEvent)
@@ -538,7 +538,7 @@ import rx.functions.Func2;
   }
 
   @VisibleForTesting public void listenToSearchQueries() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.RESUME)
         .flatMap(__ -> view.searchSetup())
         .first()

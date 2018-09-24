@@ -83,7 +83,7 @@ public class SearchResultPresenterTest {
             Schedulers.immediate(), searchManager, trendingManager, searchSuggestionManager,
             aptoideBottomNavigator, bottomNavigationMapper);
     //simulate view lifecycle event
-    when(searchResultView.getLifecycle()).thenReturn(lifecycleEvent);
+    when(searchResultView.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
 
   @Test public void getTrendingOnStartTest() {

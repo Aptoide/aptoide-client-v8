@@ -121,10 +121,10 @@ public abstract class  FragmentView extends BaseFragment implements View {
 
   @NonNull @Override
   public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {
-    return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
+    return RxLifecycle.bindUntilEvent(getLifecycleEvent(), lifecycleEvent);
   }
 
-  @Override public Observable<LifecycleEvent> getLifecycle() {
+  @Override public Observable<LifecycleEvent> getLifecycleEvent() {
     return lifecycle().flatMap(event -> convertToEvent(event));
   }
 

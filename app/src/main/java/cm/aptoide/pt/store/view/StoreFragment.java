@@ -327,7 +327,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   private void handleOptionsItemSelected(Observable<MenuItem> toolbarMenuItemClick) {
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+    getLifecycleEvent().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> toolbarMenuItemClick)
         .filter(menuItem -> menuItem != null && menuItem.getItemId() == R.id.menu_item_share)
         .doOnNext(__ -> {
