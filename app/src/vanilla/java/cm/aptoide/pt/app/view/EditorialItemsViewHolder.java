@@ -35,13 +35,11 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private TextView message;
   private View media;
   private ImageView image;
-  private ImageView videoThumbnail;
   private FrameLayout videoThumbnailContainer;
   private YoutubePlayerView videoPlayer;
   private RecyclerView mediaList;
   private View appCard;
   private MediaBundleAdapter mediaBundleAdapter;
-  private PublishSubject<String> editorialMediaClicked;
 
   public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
       PublishSubject<String> editorialMediaClicked) {
@@ -53,13 +51,11 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     message = (TextView) view.findViewById(R.id.editorial_item_message);
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
-    videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
     videoThumbnailContainer = view.findViewById(R.id.editorial_video_thumbnail_container);
     description = (TextView) view.findViewById(R.id.editorial_image_description);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCard = view.findViewById(R.id.app_cardview);
     this.oneDecimalFormat = oneDecimalFormat;
-    this.editorialMediaClicked = editorialMediaClicked;
     appCardImage = (ImageView) appCard.findViewById(R.id.app_icon_imageview);
     appCardName = (TextView) appCard.findViewById(R.id.app_title_textview);
     appCardRating = (TextView) appCard.findViewById(R.id.rating_label);
@@ -140,15 +136,6 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         if (editorialMedia.isVideo()) {
           videoThumbnailContainer.setVisibility(View.VISIBLE);
           setupVideo(editorialMedia.getUrl());
-          //if (editorialMedia.getThumbnail() != null) {
-          //  ImageLoader.with(itemView.getContext())
-          //      .load(editorialMedia.getThumbnail(), videoThumbnail);
-          //}
-          //if (editorialMedia.hasUrl()) {
-          //  videoThumbnailContainer.setVisibility(View.VISIBLE);
-          //  videoThumbnailContainer.setOnClickListener(
-          //      v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
-          //}
         }
       }
 
