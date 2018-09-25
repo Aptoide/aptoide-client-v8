@@ -149,13 +149,16 @@ public class DisplayablesFactory {
                   navigationTracker));
 
         case COMMENTS_GROUP:
-          return Observable.from(createCommentsGroup(widget, storeTheme, widget.getTag(), storeContext, storeTabNavigator, navigationTracker));
+          return Observable.from(
+              createCommentsGroup(widget, storeTheme, widget.getTag(), storeContext,
+                  storeTabNavigator, navigationTracker));
 
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
           String message = dataObj.getMessage();
           return Observable.just(
-              new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject()), StoreTheme.get(storeTheme)));
+              new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject()),
+                  StoreTheme.get(storeTheme)));
       }
     }
     return Observable.empty();
@@ -407,7 +410,8 @@ public class DisplayablesFactory {
         (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
     ListComments comments = data.first;
     displayables.add(
-        new StoreGridHeaderDisplayable(wsWidget, storeTheme, tag, storeContext, storeTabNavigator, navigationTracker));
+        new StoreGridHeaderDisplayable(wsWidget, storeTheme, tag, storeContext, storeTabNavigator,
+            navigationTracker));
     if (comments != null
         && comments.getDataList() != null
         && comments.getDataList()

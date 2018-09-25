@@ -35,9 +35,9 @@ class MediaViewHolder extends RecyclerView.ViewHolder {
           ImageLoader.with(itemView.getContext())
               .load(editorialMedia.getThumbnail(), videoThumbnail);
         }
-          videoThumbnailContainer.setVisibility(View.VISIBLE);
-          videoThumbnailContainer.setOnClickListener(
-              v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
+        videoThumbnailContainer.setVisibility(View.VISIBLE);
+        videoThumbnailContainer.setOnClickListener(
+            v -> editorialMediaClicked.onNext(editorialMedia.getUrl()));
       } else {
         ImageLoader.with(itemView.getContext())
             .load(editorialMedia.getUrl(), image);

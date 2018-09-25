@@ -436,7 +436,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    getLifecycle().filter(lifecycleEvent -> lifecycleEvent.equals(LifecycleEvent.CREATE))
+    getLifecycleEvent().filter(lifecycleEvent -> lifecycleEvent.equals(LifecycleEvent.CREATE))
         .flatMap(viewCreated -> accountNavigator.notLoggedInViewResults(LOGIN_REQUEST_CODE)
             .filter(success -> success)
             .flatMapCompletable(
@@ -602,7 +602,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   }
 
   private void handleMenuItemClick(Observable<MenuItem> menuItemObservable) {
-    getLifecycle().filter(event -> event == LifecycleEvent.RESUME)
+    getLifecycleEvent().filter(event -> event == LifecycleEvent.RESUME)
         .flatMap(__ -> menuItemObservable)
         .filter(menuItem -> menuItem != null)
         .map(menuItem -> menuItem.getItemId())

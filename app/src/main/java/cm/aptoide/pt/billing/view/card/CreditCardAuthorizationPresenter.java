@@ -65,7 +65,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void handleCancel() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cancelEvent())
         .observeOn(viewScheduler)
@@ -79,7 +79,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedCheckAuthorizationActive() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billing.getPayment(sku))
         .first(payment -> payment.isCompleted())
@@ -92,7 +92,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedCheckAuthorizationFailed() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billing.getPayment(sku))
         .first(payment -> payment.isFailed())
@@ -104,7 +104,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedCheckAuthorizationProcessing() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billing.getPayment(sku))
         .filter(payment -> payment.isProcessing())
@@ -116,7 +116,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void handleAdyenCreditCardResults() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(authorization -> view.creditCardDetailsEvent())
         .doOnNext(__ -> view.showLoading())
@@ -128,7 +128,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void handleAdyenUriRedirect() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> adyen.getRedirectUrl())
         .observeOn(viewScheduler)
@@ -142,7 +142,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void handleAdyenUriResult() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> navigator.uriResults())
         .flatMapCompletable(uri -> adyen.finishUri(uri))
@@ -153,7 +153,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void handleAdyenPaymentResult() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> adyen.getPaymentResult())
         .flatMapCompletable(result -> {
@@ -170,7 +170,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedShowCreditCardInputView() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> adyen.getPaymentData())
         .observeOn(viewScheduler)
@@ -192,7 +192,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedSelectCreditCardPayment() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> adyen.getCreditCardPaymentService())
         .flatMapCompletable(creditCard -> adyen.selectPaymentService(creditCard))
@@ -203,7 +203,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedCreatePayment() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> billing.getPayment(sku))
@@ -220,7 +220,7 @@ public class CreditCardAuthorizationPresenter implements Presenter {
   }
 
   private void handleErrorDismissEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismisses())
         .doOnNext(__ -> popViewWithError())
