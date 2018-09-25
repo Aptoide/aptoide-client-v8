@@ -28,6 +28,29 @@ public class CommentsPresenter implements Presenter {
     showComments();
 
     pullToRefresh();
+
+    reachesBottom();
+  }
+
+  @VisibleForTesting public void reachesBottom() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reachesBottom())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showLoadMore())
+        .flatMapSingle(__ -> commentsListManager.loadMoreComments())
+        .observeOn(viewScheduler)
+        .doOnNext(this::addComments)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comments -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void addComments(List<Comment> comments) {
+    view.hideLoadMore();
+    view.addComments(comments);
   }
 
   @VisibleForTesting public void pullToRefresh() {

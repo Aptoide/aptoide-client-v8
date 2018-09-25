@@ -1,6 +1,5 @@
 package cm.aptoide.pt.comment.view;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,7 +8,7 @@ import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 
-public class CommentViewHolder extends RecyclerView.ViewHolder {
+public class CommentViewHolder extends AbstractCommentViewHolder {
 
   private final View outerLayout;
   private final ImageView userAvatar;

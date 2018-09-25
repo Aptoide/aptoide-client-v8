@@ -20,4 +20,8 @@ public class CommentsListManager {
   public Single<List<Comment>> loadFreshComments() {
     return loadComments();
   }
+
+  public Single<List<Comment>> loadMoreComments() {
+    return loadComments();
+  }
 }

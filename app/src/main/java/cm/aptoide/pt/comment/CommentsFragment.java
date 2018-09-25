@@ -14,6 +14,7 @@ import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
@@ -21,6 +22,10 @@ import rx.Observable;
 
 public class CommentsFragment extends NavigationTrackFragment implements CommentsView {
 
+  /**
+   * The minimum number of items to have below your current scroll position before loading more.
+   */
+  private static final int VISIBLE_THRESHOLD = 2;
   @Inject CommentsPresenter commentsPresenter;
   @Inject AptoideUtils.DateTimeU dateUtils;
   private RecyclerView commentsList;
@@ -28,6 +33,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   private SwipeRefreshLayout swipeRefreshLayout;
   private View loading;
   private View genericErrorView;
+  private LinearLayoutManager layoutManager;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -48,9 +54,9 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     commentsList = view.findViewById(R.id.comments_list);
-    commentsList.setLayoutManager(
-        new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
-    commentsAdapter = new CommentsAdapter(dateUtils, Collections.emptyList());
+    layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+    commentsList.setLayoutManager(layoutManager);
+    commentsAdapter = new CommentsAdapter(Collections.emptyList(), dateUtils);
     commentsList.setAdapter(commentsAdapter);
 
     attachPresenter(commentsPresenter);
@@ -62,7 +68,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   }
 
   @Override public void showComments(List<Comment> comments) {
-    commentsAdapter.addComments(comments);
+    commentsAdapter.setComments(comments);
   }
 
   @Override public void showLoading() {
@@ -88,8 +94,35 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     this.swipeRefreshLayout.setRefreshing(false);
   }
 
+  @Override public void addComments(List<Comment> comments) {
+    commentsAdapter.addComments(comments);
+  }
+
+  @Override public void showLoadMore() {
+    commentsAdapter.addLoadMore();
+  }
+
+  @Override public void hideLoadMore() {
+    if (commentsAdapter != null) {
+      commentsAdapter.removeLoadMore();
+    }
+  }
+
   @Override public Observable<Void> refreshes() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+  }
+
+  @Override public Observable<Object> reachesBottom() {
+    return RxRecyclerView.scrollEvents(commentsList)
+        .map(scroll -> isEndReached())
+        .distinctUntilChanged()
+        .filter(isEnd -> isEnd)
+        .cast(Object.class);
+  }
+
+  private boolean isEndReached() {
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
+        <= VISIBLE_THRESHOLD;
   }
 
   @Override public void onDestroyView() {

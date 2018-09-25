@@ -17,6 +17,14 @@ public class Comment {
     this.date = date;
   }
 
+  public Comment() {
+    this.id = -1;
+    this.message = "";
+    this.user = null;
+    this.replies = -1;
+    this.date = null;
+  }
+
   public long getId() {
     return id;
   }

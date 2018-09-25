@@ -17,5 +17,13 @@ public interface CommentsView extends View {
 
   void hideRefreshLoading();
 
+  void addComments(List<Comment> comments);
+
+  void showLoadMore();
+
+  void hideLoadMore();
+
   Observable<Void> refreshes();
+
+  Observable<Object> reachesBottom();
 }
