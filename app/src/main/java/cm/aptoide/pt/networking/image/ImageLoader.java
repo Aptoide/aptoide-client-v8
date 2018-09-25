@@ -378,9 +378,11 @@ public class ImageLoader {
                     .maximumColorCount(6)
                     .generate(palette -> {
                       Palette.Swatch swatch = palette.getDominantSwatch();
+                      int swatchRgb = -1;
                       if (swatch != null) {
-                        viewPaletteColorReceiver.onNext(swatch.getRgb());
+                        swatchRgb = swatch.getRgb();
                       }
+                      viewPaletteColorReceiver.onNext(swatchRgb);
                     });
                 return false;
               }
