@@ -12,27 +12,42 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
   private AppDownloadState appDownloadState;
   private int downloadProgress;
   private int fileType;
+  private String md5;
 
   public FileDownloadTaskStatus(AppDownloadState appDownloadState, int downloadProgress,
-      int fileType) {
+      int fileType, String md5) {
     this.appDownloadState = appDownloadState;
     this.downloadProgress = downloadProgress;
     this.fileType = fileType;
+    this.md5 = md5;
   }
 
-  public FileDownloadTaskStatus(AppDownloadState appDownloadState) {
+  public FileDownloadTaskStatus(AppDownloadState appDownloadState, String md5) {
     this.appDownloadState = appDownloadState;
+    this.md5 = md5;
+  }
+
+  public String getMd5() {
+    return md5;
   }
 
   @Override public int getDownloadProgress() {
     return downloadProgress;
   }
 
-  @Override public int getType() {
+  @Override public int getFileType() {
     return fileType;
   }
 
   @Override public AppDownloadState getDownloadState() {
     return appDownloadState;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final FileDownloadTaskStatus that = (FileDownloadTaskStatus) o;
+
+    return md5.equals(that.getMd5());
   }
 }

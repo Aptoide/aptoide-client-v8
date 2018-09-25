@@ -1,9 +1,12 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
+import java.util.ArrayList;
 import java.util.HashMap;
 import rx.Completable;
 import rx.Observable;
+import rx.Subscription;
 import rx.subjects.PublishSubject;
 
 /**
@@ -17,6 +20,7 @@ public class AppDownloadManager implements AppDownloader {
   private HashMap<String, FileDownloader> fileDownloaderPersistence;
   private PublishSubject<FileDownloadCallback> fileDownloadSubject;
   private AppDownloadStatus appDownloadStatus;
+  private Subscription subscribe;
 
   public AppDownloadManager(FileDownloaderProvider fileDownloaderProvider, DownloadApp app,
       HashMap<String, FileDownloader> fileDownloaderPersistence) {
@@ -24,21 +28,27 @@ public class AppDownloadManager implements AppDownloader {
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
     fileDownloadSubject = PublishSubject.create();
-    appDownloadStatus = new AppDownloadStatus(app.getMd5(), null, null, null, AppDownloadStatus.AppDownloadState.PENDING);
+    appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
+        AppDownloadStatus.AppDownloadState.PENDING);
   }
 
-  @Override public Completable startAppDownload() {
-    return Observable.from(app.getDownloadFiles())
+  @Override public void startAppDownload() {
+    subscribe = Observable.from(app.getDownloadFiles())
         .flatMap(downloadAppFile -> Observable.just(
-            fileDownloaderProvider.createFileDownloader(downloadAppFile.getMainDownloadPath(),
-                downloadAppFile.getFileType(), downloadAppFile.getPackageName(),
-                downloadAppFile.getVersionCode(), downloadAppFile.getFileName(),
-                PublishSubject.create()))
+            fileDownloaderProvider.createFileDownloader(downloadAppFile.getDownloadMd5(),
+                downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
+                downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
+                downloadAppFile.getFileName(), PublishSubject.create()))
             .doOnNext(fileDownloader -> fileDownloaderPersistence.put(
-                downloadAppFile.getAlternativeDownloadPath(), fileDownloader)))
-        .flatMapCompletable(fileDownloader -> fileDownloader.startFileDownload())
-        .flatMap(fileDownloader -> handleFileDownloadProgress(fileDownloader))
-        .toCompletable();
+                downloadAppFile.getMainDownloadPath(), fileDownloader)))
+        .flatMap(fileDownloader -> fileDownloader.startFileDownload()
+            .andThen(handleFileDownloadProgress(fileDownloader)))
+        .doOnError(throwable -> {
+          throw new IllegalStateException(throwable);
+        })
+        .toCompletable()
+        .subscribe(() -> {
+        }, Throwable::printStackTrace);
   }
 
   @Override public Completable pauseAppDownload() {
@@ -56,21 +66,27 @@ public class AppDownloadManager implements AppDownloader {
   }
 
   @Override public Observable<AppDownloadStatus> observeDownloadProgress() {
-    return fileDownloadSubject.flatMapCompletable(fileDownloadCallback -> {
+    return observeFileDownload().flatMap(fileDownloadCallback -> {
       setAppDownloadStatus(fileDownloadCallback);
-      return Completable.complete();
+      return Observable.just(appDownloadStatus);
     })
+        .doOnError(throwable -> throwable.printStackTrace())
+        .doOnSubscribe(() -> Log.d("FileDownloader", "observeDownloadProgress: just subscribe"))
         .map(__ -> appDownloadStatus);
   }
 
-  private void setAppDownloadStatus(FileDownloadCallback fileDownloadCallback) {
-    if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.APK.getType()) {
-      appDownloadStatus.setApk(fileDownloadCallback);
-    } else if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.OBB_MAIN.getType()) {
-      appDownloadStatus.setObbMain(fileDownloadCallback);
-    } else if (fileDownloadCallback.getFileType() == DownloadAppFile.FileType.OBB_PATCH.getType()) {
-      appDownloadStatus.setObbPatch(fileDownloadCallback);
+  public void stop() {
+    if (!subscribe.isUnsubscribed()) {
+      subscribe.unsubscribe();
     }
+  }
+
+  private Observable<FileDownloadCallback> observeFileDownload() {
+    return fileDownloadSubject;
+  }
+
+  private void setAppDownloadStatus(FileDownloadCallback fileDownloadCallback) {
+    appDownloadStatus.setFileDownloadCallback(fileDownloadCallback);
     appDownloadStatus.setAppDownloadState(fileDownloadCallback.getDownloadState());
   }
 

@@ -23,6 +23,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import java.util.Locale;
@@ -106,7 +107,7 @@ public class InstallService extends BaseService {
   }
 
   private Observable<Boolean> stopDownload(String md5) {
-    return downloadManager.pauseDownloadSync(md5)
+    return downloadManager.pauseDownload(md5)
         .andThen(hasNextDownload());
   }
 
@@ -123,7 +124,7 @@ public class InstallService extends BaseService {
 
   private Observable<Boolean> downloadAndInstallCurrentDownload(Context context,
       boolean forceDefaultInstall) {
-    return downloadManager.getCurrentDownload()
+    return downloadManager.getCurrentInProgressDownload()
         .first()
         .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5(),
             forceDefaultInstall));
@@ -135,8 +136,7 @@ public class InstallService extends BaseService {
         .first()
         .doOnNext(download -> initInstallationProgress(download))
         .flatMap(download -> downloadManager.startDownload(download)
-            .first())
-        .flatMap(download -> downloadManager.getDownload(download.getMd5()))
+            .andThen(downloadManager.getDownload(md5)))
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
           if (download.getOverallDownloadStatus() == Download.PROGRESS) {
@@ -161,7 +161,7 @@ public class InstallService extends BaseService {
   }
 
   private Observable<Boolean> hasNextDownload() {
-    return downloadManager.getCurrentDownloads()
+    return downloadManager.getCurrentActiveDownloads()
         .first()
         .map(downloads -> downloads != null && !downloads.isEmpty());
   }
@@ -230,7 +230,7 @@ public class InstallService extends BaseService {
 
   @NonNull private NotificationCompat.Action getPauseAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
+    appIdExtras.putString(OldAptoideDownloadManager.FILE_MD5_EXTRA, md5);
     return getAction(cm.aptoide.pt.downloadmanager.R.drawable.media_pause,
         getString(cm.aptoide.pt.downloadmanager.R.string.pause_download), requestCode,
         ACTION_STOP_INSTALL, md5);
@@ -238,7 +238,7 @@ public class InstallService extends BaseService {
 
   @NonNull private NotificationCompat.Action getDownloadManagerAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
+    appIdExtras.putString(OldAptoideDownloadManager.FILE_MD5_EXTRA, md5);
     return getAction(R.drawable.ic_manager, getString(R.string.open_apps_manager), requestCode,
         ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
@@ -255,7 +255,7 @@ public class InstallService extends BaseService {
             .append(" - ")
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
         .setContentIntent(contentIntent)
-        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, installation.getProgress(),
+        .setProgress(OldAptoideDownloadManager.PROGRESS_MAX_VALUE, installation.getProgress(),
             installation.isIndeterminate())
         .addAction(pauseAction)
         .addAction(openDownloadManager);

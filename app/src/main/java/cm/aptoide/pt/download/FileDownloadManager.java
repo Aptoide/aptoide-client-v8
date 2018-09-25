@@ -14,8 +14,8 @@ import rx.Observable;
 public class FileDownloadManager implements FileDownloader {
 
   public static final int RETRY_TIMES = 3;
+  public static final int PROGRESS_MAX_VALUE = 100;
   private static final int APTOIDE_DOWNLOAD_TASK_TAG_KEY = 888;
-  private static final int PROGRESS_MAX_VALUE = 100;
   private final String mainDownloadPath;
   private final int fileType;
   private final String packageName;
@@ -40,12 +40,12 @@ public class FileDownloadManager implements FileDownloader {
   }
 
   @Override public Completable startFileDownload() {
-    return Completable.fromCallable(() -> {
+    return Completable.fromAction(() -> {
       if (mainDownloadPath == null || mainDownloadPath.isEmpty()) {
         throw new IllegalArgumentException("The url for the download can not be empty");
       } else {
         createBaseDownloadTask(mainDownloadPath, versionCode, packageName, fileType, fileName);
-        return fileDownloader.start(fileDownloadTask, false);
+        fileDownloader.start(fileDownloadTask, false);
       }
     });
   }

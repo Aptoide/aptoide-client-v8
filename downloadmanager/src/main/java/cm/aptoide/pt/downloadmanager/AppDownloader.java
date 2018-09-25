@@ -9,7 +9,7 @@ import rx.Observable;
 
 public interface AppDownloader {
 
-  Completable startAppDownload();
+  void startAppDownload();
 
   Completable pauseAppDownload();
 

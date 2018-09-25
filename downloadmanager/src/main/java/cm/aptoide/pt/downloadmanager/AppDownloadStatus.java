@@ -1,5 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
+import java.util.List;
+
 /**
  * Created by filipegoncalves on 8/28/18.
  */
@@ -7,17 +9,13 @@ package cm.aptoide.pt.downloadmanager;
 public class AppDownloadStatus {
 
   private String md5;
-  private FileDownloadCallback apk;
-  private FileDownloadCallback obbMain;
-  private FileDownloadCallback obbPatch;
+  private List<FileDownloadCallback> fileDownloadCallbackList;
   private AppDownloadState appDownloadState;
 
-  public AppDownloadStatus(String md5, FileDownloadCallback apk, FileDownloadCallback obbMain,
-      FileDownloadCallback obbPatch, AppDownloadState appDownloadState) {
+  public AppDownloadStatus(String md5, List<FileDownloadCallback> fileDownloadCallbackList,
+      AppDownloadState appDownloadState) {
     this.md5 = md5;
-    this.apk = apk;
-    this.obbMain = obbMain;
-    this.obbPatch = obbPatch;
+    this.fileDownloadCallbackList = fileDownloadCallbackList;
     this.appDownloadState = appDownloadState;
   }
 
@@ -27,36 +25,31 @@ public class AppDownloadStatus {
 
   public int getOverallProgress() {
     int overallProgress = 0;
-    if (apk != null) {
-      overallProgress += apk.getDownloadProgress();
+    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
+      overallProgress += fileDownloadCallback.getDownloadProgress();
     }
-    if (obbMain != null) {
-      overallProgress += obbMain.getDownloadProgress();
+    if (fileDownloadCallbackList.size() > 0) {
+      return overallProgress / fileDownloadCallbackList.size();
+    } else {
+      return overallProgress;
     }
-    if (obbPatch != null) {
-      overallProgress += obbPatch.getDownloadProgress();
-    }
-    return overallProgress;
   }
 
   public AppDownloadState getDownloadStatus() {
     return appDownloadState;
   }
 
-  public void setApk(FileDownloadCallback apk) {
-    this.apk = apk;
-  }
-
-  public void setObbMain(FileDownloadCallback obbMain) {
-    this.obbMain = obbMain;
-  }
-
-  public void setObbPatch(FileDownloadCallback obbPatch) {
-    this.obbPatch = obbPatch;
-  }
-
   public void setAppDownloadState(AppDownloadState appDownloadState) {
     this.appDownloadState = appDownloadState;
+  }
+
+  public void setFileDownloadCallback(FileDownloadCallback fileDownloadCallback) {
+    if (!fileDownloadCallbackList.contains(fileDownloadCallback)) {
+      fileDownloadCallbackList.add(fileDownloadCallback);
+    } else {
+      int index = fileDownloadCallbackList.indexOf(fileDownloadCallback);
+      fileDownloadCallbackList.set(index, fileDownloadCallback);
+    }
   }
 
   public enum AppDownloadState {

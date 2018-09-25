@@ -11,6 +11,9 @@ public class DownloadStatusMapper {
   public int mapAppDownloadStatus(AppDownloadStatus.AppDownloadState appDownloadState) {
     int downloadState;
     switch (appDownloadState) {
+      case PROGRESS:
+        downloadState = Download.PROGRESS;
+        break;
       case INVALID_STATUS:
         downloadState = Download.INVALID_STATUS;
         break;

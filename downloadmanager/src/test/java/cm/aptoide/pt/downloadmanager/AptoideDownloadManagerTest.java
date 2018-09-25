@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 /**
  * Created by filipegoncalves on 7/30/18.
  */
-public class NewAptoideDownloadManagerTest {
+public class AptoideDownloadManagerTest {
   @Test public void start() throws Exception {
   }
 

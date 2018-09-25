@@ -24,7 +24,7 @@ public interface DownloadManager {
   Observable<List<Download>> getDownloadsList();
 
   //NOTIFICACOES
-  Observable<Download> getCurrentActiveDownload();
+  Observable<Download> getCurrentInProgressDownload();
 
   Observable<List<Download>> getCurrentActiveDownloads();
 
@@ -35,4 +35,6 @@ public interface DownloadManager {
   Observable<Integer> getDownloadStatus(String md5);
 
   Completable removeDownload(String md5);
+
+  Completable invalidateDatabase();
 }

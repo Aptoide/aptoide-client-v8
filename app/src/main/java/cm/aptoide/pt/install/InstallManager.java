@@ -104,7 +104,7 @@ public class InstallManager {
   }
 
   public Observable<List<Install>> getInstallations() {
-    return Observable.combineLatest(aptoideDownloadManager.getDownloads(),
+    return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
         installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
@@ -172,7 +172,7 @@ public class InstallManager {
   }
 
   public Observable<Install> getInstall(String md5, String packageName, int versioncode) {
-    return Observable.combineLatest(aptoideDownloadManager.getAsListDownload(md5),
+    return Observable.combineLatest(aptoideDownloadManager.getDownloadsByMd5(md5),
         installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
         (download, installationState, installationType) -> createInstall(download,
             installationState, md5, packageName, versioncode, installationType));
