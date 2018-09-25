@@ -35,6 +35,7 @@ public class AppMapper {
         break;
       case PAUSED:
       case IN_QUEUE:
+      case INITIAL_STATE:
         status = DownloadApp.Status.STANDBY;
         break;
       case INSTALLING:
