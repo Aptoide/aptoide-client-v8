@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface VideosView extends View {
 
-    void showVideos(List<Video> videos);
+  void showVideos(List<Video> videos);
 }
