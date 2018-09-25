@@ -311,9 +311,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
       DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
-      CacheHelper cacheHelper, @Named("cachePath") String cachePath,
-      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
-      DownloadAnalytics downloadAnalytics) {
+      @Named("cachePath") String cachePath, DownloadAppMapper downloadAppMapper,
+      AppDownloaderProvider appDownloaderProvider, DownloadAnalytics downloadAnalytics) {
     final String apkPath = cachePath + "apks/";
     final String obbPath = cachePath + "obb/";
 
