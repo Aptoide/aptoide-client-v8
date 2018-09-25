@@ -7,5 +7,5 @@
       android:endColor="@color/blue_grey_gradient_end"
       android:startColor="@color/blue_grey"
       android:type="linear"/>
-  <corners android:radius="5dp"/>
+  <corners android:radius="4dp"/>
 </shape>

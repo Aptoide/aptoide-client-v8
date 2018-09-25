@@ -25,7 +25,7 @@
         android:layout_centerVertical="true"
         android:textAllCaps="true"
         tools:text="follow"
-        style="@style/Aptoide.Button.S.Gradient"
+        style="@style/Aptoide.Button.S"
         />
 
     <ImageView
