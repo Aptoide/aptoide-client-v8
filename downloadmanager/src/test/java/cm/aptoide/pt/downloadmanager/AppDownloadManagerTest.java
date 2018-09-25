@@ -9,9 +9,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Completable;
+import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.subjects.PublishSubject;
 
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -25,6 +27,7 @@ public class AppDownloadManagerTest {
   @Mock private FileDownloader fileDownloaderMainObb;
   @Mock private FileDownloader fileDownloaderPatchObb;
   @Mock private FileDownloaderProvider fileDownloaderProvider;
+  @Mock private FileDownloadCallback fileDownloadCallback;
   private DownloadAppFile apk;
   private DownloadAppFile mainObb;
   private DownloadAppFile patchObb;
@@ -35,89 +38,73 @@ public class AppDownloadManagerTest {
 
   @Before public void setupAppDownloaderTest() {
     MockitoAnnotations.initMocks(this);
-    apk = new DownloadAppFile("http://apkdownload.com/file/app.apk", "", "appMd5", 123,
+    apk = new DownloadAppFile("http://apkdownload.com/file/app.apk", "", "apkMd5", 123,
         "cm.aptoide.pt", "app.apk", DownloadAppFile.FileType.APK);
-    mainObb = new DownloadAppFile("http://apkdownload.com/file/mainObb.apk", "", "appMd5", 123,
+    mainObb = new DownloadAppFile("http://apkdownload.com/file/mainObb.apk", "", "mainObbMd5", 123,
         "cm.aptoide.pt", "mainObb", DownloadAppFile.FileType.OBB);
-    patchObb = new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "", "appMd5", 123,
-        "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB);
+    patchObb =
+        new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "", "patchObbMd5", 123,
+            "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB);
 
     DownloadApp appToDownload = new DownloadApp(getFilesListWithApk(), "md5Apk");
     DownloadApp appToDownloadWithObbs = new DownloadApp(getFilesListWithObbs(), "md5WithObb");
     DownloadApp appToDownloadEmptyError = new DownloadApp(Collections.emptyList(), "md5Empty");
     testSubscriber = TestSubscriber.create();
-    appDownloadManager = new AppDownloadManager(fileDownloaderProvider, appToDownload,
-        createFileDownloaderPersistence());
-    appDownloadManagerWithObbs =
-        new AppDownloadManager(fileDownloaderProvider, appToDownloadWithObbs,
-            createFileDownloaderPersistence());
-    appDownloadManagerWithNoFiles =
-        new AppDownloadManager(fileDownloaderProvider, appToDownloadEmptyError,
-            createFileDownloaderPersistence());
+
+    appDownloadManager = new AppDownloadManager(new FileDownloaderProvider() {
+      @Override
+      public FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
+          String packageName, int versionCode, String fileName,
+          PublishSubject<FileDownloadCallback> fileDownloadCallback) {
+        return fileDownloaderApk;
+      }
+    }, appToDownload, createFileDownloaderPersistence());
+
+    appDownloadManagerWithObbs = new AppDownloadManager(new FileDownloaderProvider() {
+      @Override
+      public FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
+          String packageName, int versionCode, String fileName,
+          PublishSubject<FileDownloadCallback> fileDownloadCallback) {
+        return fileDownloaderApk;
+      }
+    }, appToDownloadWithObbs, createFileDownloaderPersistence());
+
+    appDownloadManagerWithNoFiles = new AppDownloadManager(new FileDownloaderProvider() {
+      @Override
+      public FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
+          String packageName, int versionCode, String fileName,
+          PublishSubject<FileDownloadCallback> fileDownloadCallback) {
+        return fileDownloaderApk;
+      }
+    }, appToDownloadEmptyError, createFileDownloaderPersistence());
   }
 
   @Test public void startAppDownloadWithOneFile() throws Exception {
 
-    PublishSubject<FileDownloadCallback> fileDownloadCallbackPublishSubject =
-        PublishSubject.create();
     when(fileDownloaderApk.startFileDownload()).thenReturn(Completable.complete());
 
-    when(fileDownloaderProvider.createFileDownloader(apk.getMainDownloadPath(), apk.getFileType(),
-        apk.getPackageName(), apk.getVersionCode(), apk.getFileName(),
-        fileDownloadCallbackPublishSubject)).thenReturn(fileDownloaderApk);
+    when(fileDownloaderApk.observeFileDownloadProgress()).thenReturn(
+        Observable.just(fileDownloadCallback));
 
-    appDownloadManager.startAppDownload()
-        .subscribe(testSubscriber);
+    appDownloadManager.startAppDownload();
 
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-    verify(fileDownloaderApk).startFileDownload();
+    verify(fileDownloaderApk, times(1)).startFileDownload();
   }
 
   @Test public void startAppDownloadWithMultipleFiles() throws Exception {
-    PublishSubject<FileDownloadCallback> fileDownloadCallbackPublishSubjectApk =
-        PublishSubject.create();
-    PublishSubject<FileDownloadCallback> fileDownloadCallbackPublishSubjectObbMain =
-        PublishSubject.create();
-    PublishSubject<FileDownloadCallback> fileDownloadCallbackPublishSubjectObbPath =
-        PublishSubject.create();
-
-    when(fileDownloaderProvider.createFileDownloader(apk.getMainDownloadPath(), apk.getFileType(),
-        apk.getPackageName(), apk.getVersionCode(), apk.getFileName(),
-        fileDownloadCallbackPublishSubjectApk)).thenReturn(fileDownloaderApk);
-
-    when(fileDownloaderProvider.createFileDownloader(mainObb.getMainDownloadPath(),
-        mainObb.getFileType(), mainObb.getPackageName(), mainObb.getVersionCode(),
-        mainObb.getFileName(), fileDownloadCallbackPublishSubjectObbMain)).thenReturn(
-        fileDownloaderMainObb);
-
-    when(fileDownloaderProvider.createFileDownloader(patchObb.getMainDownloadPath(),
-        patchObb.getFileType(), patchObb.getPackageName(), patchObb.getVersionCode(),
-        patchObb.getFileName(), fileDownloadCallbackPublishSubjectObbMain)).thenReturn(
-        fileDownloaderPatchObb);
-
-    when(fileDownloaderProvider.createFileDownloader(apk.getMainDownloadPath(), apk.getFileType(),
-        apk.getPackageName(), apk.getVersionCode(), apk.getFileName(),
-        fileDownloadCallbackPublishSubjectObbMain)).thenReturn(fileDownloaderApk);
 
     when(fileDownloaderApk.startFileDownload()).thenReturn(Completable.complete());
-    when(fileDownloaderMainObb.startFileDownload()).thenReturn(Completable.complete());
-    when(fileDownloaderPatchObb.startFileDownload()).thenReturn(Completable.complete());
+    when(fileDownloaderApk.observeFileDownloadProgress()).thenReturn(
+        Observable.just(fileDownloadCallback));
 
-    appDownloadManagerWithObbs.startAppDownload()
-        .subscribe(testSubscriber);
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-    verify(fileDownloaderApk).startFileDownload();
-    verify(fileDownloaderMainObb).startFileDownload();
-    verify(fileDownloaderPatchObb).startFileDownload();
+    appDownloadManagerWithObbs.startAppDownload();
+
+    verify(fileDownloaderApk, times(3)).startFileDownload();
   }
 
   @Test public void startAppDownloadWithNoFiles() throws Exception {
-    appDownloadManagerWithNoFiles.startAppDownload()
-        .subscribe(testSubscriber);
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
+    appDownloadManagerWithNoFiles.startAppDownload();
+
     verifyZeroInteractions(fileDownloaderApk);
     verifyZeroInteractions(fileDownloaderMainObb);
     verifyZeroInteractions(fileDownloaderPatchObb);
@@ -128,9 +115,10 @@ public class AppDownloadManagerTest {
     PublishSubject<FileDownloadCallback> fileDownloadCallbackPublishSubjectEmpty =
         PublishSubject.create();
 
-    when(fileDownloaderProvider.createFileDownloader(apk.getMainDownloadPath(), apk.getFileType(),
-        apk.getPackageName(), apk.getVersionCode(), apk.getFileName(),
-        fileDownloadCallbackPublishSubjectEmpty)).thenReturn(fileDownloaderApk);
+    when(
+        fileDownloaderProvider.createFileDownloader(apk.getDownloadMd5(), apk.getMainDownloadPath(),
+            apk.getFileType(), apk.getPackageName(), apk.getVersionCode(), apk.getFileName(),
+            fileDownloadCallbackPublishSubjectEmpty)).thenReturn(fileDownloaderApk);
 
     when(fileDownloaderApk.pauseDownload()).thenReturn(Completable.complete());
 

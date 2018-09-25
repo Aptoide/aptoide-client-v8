@@ -45,7 +45,7 @@ public class FileDownloadManager implements FileDownloader {
         throw new IllegalArgumentException("The url for the download can not be empty");
       } else {
         createBaseDownloadTask(mainDownloadPath, versionCode, packageName, fileType, fileName);
-        boolean downloadStart = fileDownloader.start(fileDownloadTask, false);
+        fileDownloader.start(fileDownloadTask, false);
       }
     });
   }
