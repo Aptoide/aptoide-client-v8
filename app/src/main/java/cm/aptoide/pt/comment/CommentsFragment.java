@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.data.Comment;
@@ -28,6 +27,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   private CommentsAdapter commentsAdapter;
   private SwipeRefreshLayout swipeRefreshLayout;
   private View loading;
+  private View genericErrorView;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -43,6 +43,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     loading = view.findViewById(R.id.progress_bar);
+    genericErrorView = view.findViewById(R.id.generic_error);
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
@@ -66,25 +67,37 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public void showLoading() {
     commentsList.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
     loading.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     commentsList.setVisibility(View.VISIBLE);
     loading.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
   }
 
   @Override public void showGeneralError() {
-    // TODO: 24/09/2018 show error
-    Toast.makeText(this.getContext(), "ERROR", Toast.LENGTH_SHORT)
-        .show();
+    this.genericErrorView.setVisibility(View.VISIBLE);
+    this.commentsList.setVisibility(View.GONE);
+    this.loading.setVisibility(View.GONE);
+    this.swipeRefreshLayout.setRefreshing(false);
+  }
+
+  @Override public void hideRefreshLoading() {
+    this.swipeRefreshLayout.setRefreshing(false);
   }
 
   @Override public Observable<Void> refreshes() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
 
-  @Override public void hideRefreshLoading() {
-    this.swipeRefreshLayout.setRefreshing(false);
+  @Override public void onDestroyView() {
+    commentsList = null;
+    commentsAdapter = null;
+    swipeRefreshLayout = null;
+    genericErrorView = null;
+    loading = null;
+    super.onDestroyView();
   }
 }

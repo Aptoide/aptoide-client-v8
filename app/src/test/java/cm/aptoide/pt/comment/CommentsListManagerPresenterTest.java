@@ -2,6 +2,7 @@ package cm.aptoide.pt.comment;
 
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
 import org.junit.Before;
@@ -19,6 +20,7 @@ public class CommentsListManagerPresenterTest {
 
   @Mock private CommentsFragment view;
   @Mock private CommentsListManager commentsListManager;
+  @Mock private CrashReport crashReporter;
 
   private CommentsPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -31,7 +33,8 @@ public class CommentsListManagerPresenterTest {
     lifecycleEvent = PublishSubject.create();
     pullToRefreshEvent = PublishSubject.create();
 
-    presenter = new CommentsPresenter(view, commentsListManager, Schedulers.immediate());
+    presenter =
+        new CommentsPresenter(view, commentsListManager, Schedulers.immediate(), crashReporter);
     fakeCommentsDataSource = new FakeCommentsDataSource();
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
@@ -41,7 +44,7 @@ public class CommentsListManagerPresenterTest {
   @Test public void showCommentsTest() {
     when(commentsListManager.loadComments()).thenReturn(fakeCommentsDataSource.loadComments(15));
     //Given an initialized CommentsPresenter
-    presenter.present();
+    presenter.showComments();
     //When the view is shown to the screen
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the loading should be shown
@@ -50,6 +53,21 @@ public class CommentsListManagerPresenterTest {
     verify(commentsListManager).loadComments();
     //Then the loading should be hidden
     verify(view).hideLoading();
+  }
+
+  @Test public void showErrorIfCommentsFail() {
+    when(commentsListManager.loadComments()).thenReturn(
+        Single.error(new IllegalStateException("test")));
+    //Given an initialized CommentsPresenter
+    presenter.showComments();
+    //When the view is shown to the screen
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //Then the loading should be shown
+    verify(view).showLoading();
+    //Then the comments should be requested
+    verify(commentsListManager).loadComments();
+    //Then the loading should be hidden
+    verify(view).showGeneralError();
   }
 
   @Test public void pullRefreshTest() {

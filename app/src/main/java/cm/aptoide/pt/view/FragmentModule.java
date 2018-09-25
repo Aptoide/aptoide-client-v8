@@ -393,6 +393,6 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides CommentsPresenter providesCommentsPresenter(
       CommentsListManager commentsListManager) {
     return new CommentsPresenter((CommentsView) fragment, commentsListManager,
-        AndroidSchedulers.mainThread());
+        AndroidSchedulers.mainThread(), CrashReport.getInstance());
   }
 }
