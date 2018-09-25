@@ -22,10 +22,11 @@ public class AppDownloadManager implements AppDownloader {
   private AppDownloadStatus appDownloadStatus;
   private Subscription subscribe;
 
-  public AppDownloadManager(FileDownloaderProvider fileDownloaderProvider, DownloadApp app) {
+  public AppDownloadManager(FileDownloaderProvider fileDownloaderProvider, DownloadApp app,
+      HashMap<String, FileDownloader> fileDownloaderPersistence) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
-    this.fileDownloaderPersistence = new HashMap<>();
+    this.fileDownloaderPersistence = fileDownloaderPersistence;
     fileDownloadSubject = PublishSubject.create();
     appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
         AppDownloadStatus.AppDownloadState.PENDING);

@@ -58,7 +58,7 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback) {
         return fileDownloaderApk;
       }
-    }, appToDownload);
+    }, appToDownload, createFileDownloaderPersistence());
 
     appDownloadManagerWithObbs = new AppDownloadManager(new FileDownloaderProvider() {
       @Override
@@ -67,7 +67,7 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback) {
         return fileDownloaderApk;
       }
-    }, appToDownloadWithObbs);
+    }, appToDownloadWithObbs, createFileDownloaderPersistence());
 
     appDownloadManagerWithNoFiles = new AppDownloadManager(new FileDownloaderProvider() {
       @Override
@@ -76,7 +76,7 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback) {
         return fileDownloaderApk;
       }
-    }, appToDownloadEmptyError);
+    }, appToDownloadEmptyError, createFileDownloaderPersistence());
   }
 
   @Test public void startAppDownloadWithOneFile() throws Exception {
