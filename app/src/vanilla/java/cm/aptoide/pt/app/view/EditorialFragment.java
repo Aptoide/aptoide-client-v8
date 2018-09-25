@@ -631,7 +631,7 @@ public class EditorialFragment extends NavigationTrackFragment
 
   private View getPlaceHolder() {
     if (appCardPlaceHolder == null) {
-      return adapter.getPlaceHolder();
+      appCardPlaceHolder = adapter.getPlaceHolder();
     }
     return appCardPlaceHolder;
   }
