@@ -1,12 +1,13 @@
 package cm.aptoide.pt.comment;
 
-import cm.aptoide.pt.comment.data.Comment;
-import java.util.List;
+import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import rx.Single;
 
 public interface CommentsDataSource {
 
-  Single<List<Comment>> loadComments(long storeId);
+  Single<CommentsResponseModel> loadComments(long storeId);
 
-  Single<List<Comment>> loadFreshComments(long storeId);
+  Single<CommentsResponseModel> loadFreshComments(long storeId);
+
+  Single<CommentsResponseModel> loadNextComments(long storeId, int offset);
 }

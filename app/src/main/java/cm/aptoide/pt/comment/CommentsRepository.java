@@ -1,7 +1,6 @@
 package cm.aptoide.pt.comment;
 
-import cm.aptoide.pt.comment.data.Comment;
-import java.util.List;
+import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import rx.Single;
 
 public class CommentsRepository {
@@ -11,11 +10,15 @@ public class CommentsRepository {
     this.dataSource = dataSource;
   }
 
-  public Single<List<Comment>> loadComments(long storeId) {
+  public Single<CommentsResponseModel> loadComments(long storeId) {
     return dataSource.loadComments(storeId);
   }
 
-  public Single<List<Comment>> loadFreshComments(long storeId) {
+  public Single<CommentsResponseModel> loadFreshComments(long storeId) {
     return dataSource.loadFreshComments(storeId);
+  }
+
+  public Single<CommentsResponseModel> loadNextComments(long storeId, int offset) {
+    return dataSource.loadNextComments(storeId, offset);
   }
 }

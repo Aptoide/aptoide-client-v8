@@ -3,6 +3,7 @@ package cm.aptoide.pt.comment.network;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.comment.CommentsDataSource;
 import cm.aptoide.pt.comment.data.Comment;
+import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.comment.data.User;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -34,14 +35,16 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
     this.sharedPreferences = sharedPreferences;
   }
 
-  public Single<List<Comment>> loadComments(long storeId, boolean invalidateHttpCache) {
-    return new ListCommentsRequest(new ListCommentsRequest.Body(invalidateHttpCache, Order.desc, 0),
+  private Single<CommentsResponseModel> loadComments(long storeId, boolean invalidateHttpCache,
+      int offset) {
+    return new ListCommentsRequest(new ListCommentsRequest.Body(storeId, Order.desc, 0, offset),
         bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences).
-        observe()
+        observe(invalidateHttpCache)
         .flatMap(response -> {
           if (response.isOk()) {
-            return Observable.just(map(response.getDataList()
-                .getList()));
+            return Observable.just(new CommentsResponseModel(map(response.getDataList()
+                .getList()), response.getDataList()
+                .getNext()));
           } else {
             return Observable.error(new IllegalArgumentException(response.getError()
                 .getDescription()));
@@ -50,12 +53,16 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
         .toSingle();
   }
 
-  @Override public Single<List<Comment>> loadComments(long storeId) {
-    return loadComments(storeId, false);
+  @Override public Single<CommentsResponseModel> loadComments(long storeId) {
+    return loadComments(storeId, false, 0);
   }
 
-  @Override public Single<List<Comment>> loadFreshComments(long storeId) {
-    return loadComments(storeId, true);
+  @Override public Single<CommentsResponseModel> loadFreshComments(long storeId) {
+    return loadComments(storeId, true, 0);
+  }
+
+  @Override public Single<CommentsResponseModel> loadNextComments(long storeId, int offset) {
+    return loadComments(storeId, false, offset);
   }
 
   private List<Comment> map(List<cm.aptoide.pt.dataprovider.model.v7.Comment> networkComments) {

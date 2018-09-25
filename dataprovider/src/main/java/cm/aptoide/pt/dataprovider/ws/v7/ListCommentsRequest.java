@@ -171,6 +171,13 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.order = order;
     }
 
+    public Body(Long storeId, Order order, int subLimit, int offset) {
+      this.storeId = storeId;
+      this.order = order;
+      this.subLimit = subLimit;
+      this.offset = offset;
+    }
+
     @Override public int getOffset() {
       return offset;
     }
