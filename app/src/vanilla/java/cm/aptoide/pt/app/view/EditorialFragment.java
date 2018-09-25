@@ -99,7 +99,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private DecimalFormat oneDecimalFormatter;
   private NestedScrollView scrollView;
   private View appCardLayout;
-  private boolean bottomCardHidden;
+  private boolean isBottomCardHidden;
   private View appCardPlaceHolder;
 
   private PublishSubject<EditorialEvent> uiEventsListener;
@@ -119,7 +119,7 @@ public class EditorialFragment extends NavigationTrackFragment
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
     }
-    bottomCardHidden = false;
+    isBottomCardHidden = false;
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setTitle("");
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
@@ -414,105 +414,15 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void removeBottomCardAnimation() {
     View view = getPlaceHolder();
-    if (!bottomCardHidden && view != null) {
-      appCardLayout.animate()
-          .scaleY(0f)
-          .scaleX(0f)
-          .alpha(0)
-          .setDuration(300)
-          .setListener(new Animator.AnimatorListener() {
-            @Override public void onAnimationStart(Animator animator) {
-              View view = adapter.getPlaceHolder();
-              view.animate()
-                  .scaleX(1f)
-                  .scaleY(1f)
-                  .alpha(1)
-                  .setDuration(300)
-                  .setListener(new Animator.AnimatorListener() {
-                    @Override public void onAnimationStart(Animator animator) {
-                      view.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override public void onAnimationEnd(Animator animator) {
-
-                    }
-
-                    @Override public void onAnimationCancel(Animator animator) {
-
-                    }
-
-                    @Override public void onAnimationRepeat(Animator animator) {
-
-                    }
-                  })
-                  .start();
-            }
-
-            @Override public void onAnimationEnd(Animator animator) {
-              bottomCardHidden = true;
-            }
-
-            @Override public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override public void onAnimationRepeat(Animator animator) {
-
-            }
-          })
-          .start();
+    if (!isBottomCardHidden && view != null) {
+      configureAppCardAnimation(appCardLayout, view, 0f, 300, true);
     }
   }
 
   @Override public void addBottomCardAnimation() {
     View view = getPlaceHolder();
-    if (bottomCardHidden && view != null) {
-      view.animate()
-          .scaleY(0.1f)
-          .scaleX(0.1f)
-          .alpha(0)
-          .setDuration(300)
-          .setListener(new Animator.AnimatorListener() {
-            @Override public void onAnimationStart(Animator animator) {
-              appCardLayout.animate()
-                  .scaleX(1f)
-                  .scaleY(1f)
-                  .alpha(1)
-                  .setDuration(300)
-                  .setListener(new Animator.AnimatorListener() {
-                    @Override public void onAnimationStart(Animator animator) {
-                      appCardLayout.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override public void onAnimationEnd(Animator animator) {
-
-                    }
-
-                    @Override public void onAnimationCancel(Animator animator) {
-
-                    }
-
-                    @Override public void onAnimationRepeat(Animator animator) {
-
-                    }
-                  })
-                  .start();
-            }
-
-            @Override public void onAnimationEnd(Animator animator) {
-              view.setVisibility(View.INVISIBLE);
-              bottomCardHidden = false;
-            }
-
-            @Override public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override public void onAnimationRepeat(Animator animator) {
-
-            }
-          })
-          .start();
+    if (isBottomCardHidden && view != null) {
+      configureAppCardAnimation(view, appCardLayout, 0.1f, 300, false);
     }
   }
 
@@ -665,6 +575,58 @@ public class EditorialFragment extends NavigationTrackFragment
 
   private boolean isItemShown() {
     return adapter.isItemShown(screenHeight, screenWidth);
+  }
+
+  private void configureAppCardAnimation(View layoutToHide, View layoutToShow, float hideScale,
+      int duration, boolean bottomCardHidden) {
+    layoutToHide.animate()
+        .scaleY(hideScale)
+        .scaleX(hideScale)
+        .alpha(0)
+        .setDuration(duration)
+        .setListener(new Animator.AnimatorListener() {
+          @Override public void onAnimationStart(Animator animator) {
+            layoutToShow.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .alpha(1)
+                .setDuration(duration)
+                .setListener(new Animator.AnimatorListener() {
+                  @Override public void onAnimationStart(Animator animator) {
+                    layoutToShow.setVisibility(View.VISIBLE);
+                  }
+
+                  @Override public void onAnimationEnd(Animator animator) {
+
+                  }
+
+                  @Override public void onAnimationCancel(Animator animator) {
+
+                  }
+
+                  @Override public void onAnimationRepeat(Animator animator) {
+
+                  }
+                })
+                .start();
+          }
+
+          @Override public void onAnimationEnd(Animator animator) {
+            if (!bottomCardHidden) {
+              layoutToHide.setVisibility(View.INVISIBLE);
+            }
+            isBottomCardHidden = bottomCardHidden;
+          }
+
+          @Override public void onAnimationCancel(Animator animator) {
+
+          }
+
+          @Override public void onAnimationRepeat(Animator animator) {
+
+          }
+        })
+        .start();
   }
 
   private View getPlaceHolder() {
