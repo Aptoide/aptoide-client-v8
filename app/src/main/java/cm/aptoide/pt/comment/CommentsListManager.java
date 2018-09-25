@@ -18,7 +18,7 @@ public class CommentsListManager {
   }
 
   public Single<List<Comment>> loadFreshComments() {
-    return loadComments();
+    return comments.loadFreshComments(storeId);
   }
 
   public Single<List<Comment>> loadMoreComments() {

@@ -14,4 +14,8 @@ public class Comments {
   public Single<List<Comment>> loadComments(long storeId) {
     return commentsRepository.loadComments(storeId);
   }
+
+  public Single<List<Comment>> loadFreshComments(long storeId) {
+    return commentsRepository.loadFreshComments(storeId);
+  }
 }

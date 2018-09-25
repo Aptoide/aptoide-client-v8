@@ -7,4 +7,6 @@ import rx.Single;
 public interface CommentsDataSource {
 
   Single<List<Comment>> loadComments(long storeId);
+
+  Single<List<Comment>> loadFreshComments(long storeId);
 }

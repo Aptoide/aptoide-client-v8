@@ -9,7 +9,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.Order;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -35,9 +34,8 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
     this.sharedPreferences = sharedPreferences;
   }
 
-  @Override public Single<List<Comment>> loadComments(long storeId) {
-    return new ListCommentsRequest(new ListCommentsRequest.Body(
-        ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences), Order.desc, 0),
+  public Single<List<Comment>> loadComments(long storeId, boolean invalidateHttpCache) {
+    return new ListCommentsRequest(new ListCommentsRequest.Body(invalidateHttpCache, Order.desc, 0),
         bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences).
         observe()
         .flatMap(response -> {
@@ -50,6 +48,14 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
           }
         })
         .toSingle();
+  }
+
+  @Override public Single<List<Comment>> loadComments(long storeId) {
+    return loadComments(storeId, false);
+  }
+
+  @Override public Single<List<Comment>> loadFreshComments(long storeId) {
+    return loadComments(storeId, true);
   }
 
   private List<Comment> map(List<cm.aptoide.pt.dataprovider.model.v7.Comment> networkComments) {

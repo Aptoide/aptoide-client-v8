@@ -13,6 +13,10 @@ public class FakeCommentsDataSource implements CommentsDataSource {
     return getFakeComments();
   }
 
+  @Override public Single<List<Comment>> loadFreshComments(long storeId) {
+    return getFakeComments();
+  }
+
   private Single<List<Comment>> getFakeComments() {
     List<Comment> comments = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
