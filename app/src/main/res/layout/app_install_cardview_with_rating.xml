@@ -47,21 +47,6 @@
         style="@style/Aptoide.TextView.Medium.S.Black"
         />
 
-    <TextView
-        android:id="@+id/app_title_textview_without_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:lines="1"
-        android:visibility="gone"
-        tools:text="@string/appc_title_settings_appcoins_wallet"
-        style="@style/Aptoide.TextView.Medium.S.Black"
-        />
-
     <LinearLayout
         android:id="@+id/rating_layout"
         android:layout_width="wrap_content"
