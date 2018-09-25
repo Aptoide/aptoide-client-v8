@@ -451,7 +451,7 @@ public class HomePresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleDiscoveryButtonClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.discoveryButtonClick()
             .observeOn(viewScheduler)

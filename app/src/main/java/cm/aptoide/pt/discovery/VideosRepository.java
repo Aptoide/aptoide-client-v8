@@ -1,6 +1,7 @@
 package cm.aptoide.pt.discovery;
 
 import java.util.List;
+import rx.Observable;
 
 public class VideosRepository {
 
@@ -11,11 +12,11 @@ public class VideosRepository {
     this.videoDataSource = videoDataSource;
   }
 
-  public List<Video> loadVideos() {
+  public Observable<List<Video>> loadVideos() {
     return loadFreshVideos();
   }
 
-  private List<Video> loadFreshVideos() {
+  private Observable<List<Video>> loadFreshVideos() {
     return videoDataSource.loadFreshVideos(VIDEO_KEY);
   }
 }

@@ -16,13 +16,14 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 
-public class VideosFragment extends NavigationTrackFragment implements VideosContract.View {
+public class VideosFragment extends NavigationTrackFragment implements VideosView {
 
+  @Inject VideosPresenter presenter;
   private RecyclerView list;
   private VideoAdapter adapter;
   private LinearLayout videosEmptyState;
-  private VideosContract.UserActionListener actionListener;
   private Button discoveryOptionButton;
   private Toolbar toolbar;
 
@@ -30,13 +31,12 @@ public class VideosFragment extends NavigationTrackFragment implements VideosCon
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     adapter = new VideoAdapter(Collections.emptyList());
-    this.actionListener =
-        new VideosPresenter(this, new VideosRepository(new FakeVideoDataSource()));
     return inflater.inflate(R.layout.fragment_videos, container, false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     list = (RecyclerView) view.findViewById(R.id.fragment_videos_list);
     videosEmptyState = (LinearLayout) view.findViewById(R.id.video_empty_state);
 
@@ -50,17 +50,16 @@ public class VideosFragment extends NavigationTrackFragment implements VideosCon
 
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
-
-    actionListener.present();
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
+    attachPresenter(presenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
   }
 
   @Override public void showVideos(List<Video> videos) {

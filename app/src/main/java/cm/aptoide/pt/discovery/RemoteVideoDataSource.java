@@ -1,15 +1,15 @@
 package cm.aptoide.pt.discovery;
 
 import java.util.List;
+import rx.Observable;
 
 public class RemoteVideoDataSource implements VideoDataSource {
 
-
-  @Override public List<Video> loadFreshVideos(String key) {
+  @Override public Observable<List<Video>> loadFreshVideos(String key) {
     return null;
   }
 
-  @Override public List<Video> loadNextVideos(int offset, int limit, String key) {
+  @Override public Observable<List<Video>> loadNextVideos(int offset, int limit, String key) {
     return null;
   }
 
