@@ -7,6 +7,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import rx.subjects.PublishSubject;
 
 public class CommentViewHolder extends AbstractCommentViewHolder {
 
@@ -17,8 +18,10 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
   private final TextView comment;
   private final TextView replies;
   private final AptoideUtils.DateTimeU dateUtils;
+  private final PublishSubject<Long> commentClickEvent;
 
-  public CommentViewHolder(View view, AptoideUtils.DateTimeU dateUtils) {
+  public CommentViewHolder(View view, AptoideUtils.DateTimeU dateUtils,
+      PublishSubject<Long> commentClickEvent) {
     super(view);
     userAvatar = view.findViewById(R.id.user_icon);
     outerLayout = view.findViewById(R.id.outer_layout);
@@ -27,6 +30,7 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
     comment = view.findViewById(R.id.comment);
     replies = view.findViewById(R.id.replies);
     this.dateUtils = dateUtils;
+    this.commentClickEvent = commentClickEvent;
   }
 
   public void setComment(Comment comment) {
@@ -50,5 +54,7 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
     } else {
       this.replies.setVisibility(View.INVISIBLE);
     }
+
+    itemView.setOnClickListener(view -> commentClickEvent.onNext(comment.getId()));
   }
 }

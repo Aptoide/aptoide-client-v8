@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class CommentsFragment extends NavigationTrackFragment implements CommentsView {
 
@@ -28,6 +29,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   private static final int VISIBLE_THRESHOLD = 2;
   @Inject CommentsPresenter commentsPresenter;
   @Inject AptoideUtils.DateTimeU dateUtils;
+  private PublishSubject<Long> commentClickEvent;
   private RecyclerView commentsList;
   private CommentsAdapter commentsAdapter;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -44,6 +46,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    commentClickEvent = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     commentsList = view.findViewById(R.id.comments_list);
     layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
     commentsList.setLayoutManager(layoutManager);
-    commentsAdapter = new CommentsAdapter(Collections.emptyList(), dateUtils);
+    commentsAdapter = new CommentsAdapter(Collections.emptyList(), dateUtils, commentClickEvent);
     commentsList.setAdapter(commentsAdapter);
 
     attachPresenter(commentsPresenter);
@@ -118,6 +121,10 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
         .cast(Object.class);
+  }
+
+  @Override public Observable<Long> commentClick() {
+    return commentClickEvent;
   }
 
   private boolean isEndReached() {

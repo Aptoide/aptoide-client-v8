@@ -63,6 +63,7 @@ import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.comment.Comments;
 import cm.aptoide.pt.comment.CommentsListManager;
+import cm.aptoide.pt.comment.CommentsNavigator;
 import cm.aptoide.pt.comment.CommentsPresenter;
 import cm.aptoide.pt.comment.CommentsView;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -391,8 +392,13 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides CommentsPresenter providesCommentsPresenter(
-      CommentsListManager commentsListManager) {
-    return new CommentsPresenter((CommentsView) fragment, commentsListManager,
+      CommentsListManager commentsListManager, CommentsNavigator commentsNavigator) {
+    return new CommentsPresenter((CommentsView) fragment, commentsListManager, commentsNavigator,
         AndroidSchedulers.mainThread(), CrashReport.getInstance());
+  }
+
+  @FragmentScope @Provides CommentsNavigator providesCommentsNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new CommentsNavigator(fragmentNavigator);
   }
 }

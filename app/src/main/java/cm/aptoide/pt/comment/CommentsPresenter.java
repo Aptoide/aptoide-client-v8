@@ -12,13 +12,15 @@ public class CommentsPresenter implements Presenter {
 
   private final CommentsView view;
   private final CommentsListManager commentsListManager;
+  private final CommentsNavigator commentsNavigator;
   private final Scheduler viewScheduler;
   private final CrashReport crashReporter;
 
   public CommentsPresenter(CommentsView view, CommentsListManager commentsListManager,
-      Scheduler viewScheduler, CrashReport crashReporter) {
+      CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter) {
     this.view = view;
     this.commentsListManager = commentsListManager;
+    this.commentsNavigator = commentsNavigator;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
   }
@@ -29,6 +31,8 @@ public class CommentsPresenter implements Presenter {
     pullToRefresh();
 
     reachesBottom();
+
+    clickComment();
   }
 
   @VisibleForTesting public void reachesBottom() {
@@ -83,6 +87,18 @@ public class CommentsPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comments -> {
         }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void clickComment() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.commentClick())
+        .doOnNext(commentsNavigator::navigateToCommentView)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(commentId -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private void showComments(CommentsResponseModel model) {

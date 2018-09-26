@@ -26,4 +26,6 @@ public interface CommentsView extends View {
   Observable<Void> refreshes();
 
   Observable<Object> reachesBottom();
+
+  Observable<Long> commentClick();
 }

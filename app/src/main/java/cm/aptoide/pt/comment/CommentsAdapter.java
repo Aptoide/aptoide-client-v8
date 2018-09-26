@@ -11,25 +11,29 @@ import cm.aptoide.pt.comment.view.CommentViewHolder;
 import cm.aptoide.pt.comment.view.LoadingCommentViewHolder;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
+import rx.subjects.PublishSubject;
 
 class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHolder> {
   private static final int LOADING = R.layout.progress_item;
   private static final int COMMENT = R.layout.comment_item;
   private final AptoideUtils.DateTimeU dateUtils;
   private final Comment progressComment;
+  private final PublishSubject<Long> commentClickEvent;
   private List<Comment> comments;
 
-  CommentsAdapter(List<Comment> comments, AptoideUtils.DateTimeU dateUtils) {
+  CommentsAdapter(List<Comment> comments, AptoideUtils.DateTimeU dateUtils,
+      PublishSubject<Long> commentClickEvent) {
     this.dateUtils = dateUtils;
     this.comments = comments;
     progressComment = new CommentLoading();
+    this.commentClickEvent = commentClickEvent;
   }
 
   @Override public AbstractCommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
       case COMMENT:
         return new CommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(COMMENT, parent, false), dateUtils);
+            .inflate(COMMENT, parent, false), dateUtils, commentClickEvent);
       case LOADING:
         return new LoadingCommentViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(LOADING, parent, false));
