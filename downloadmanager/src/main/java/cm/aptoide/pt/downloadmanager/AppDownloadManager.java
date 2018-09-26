@@ -71,7 +71,6 @@ public class AppDownloadManager implements AppDownloader {
       return Observable.just(appDownloadStatus);
     })
         .doOnError(throwable -> throwable.printStackTrace())
-        .doOnSubscribe(() -> Log.d("FileDownloader", "observeDownloadProgress: just subscribe"))
         .map(__ -> appDownloadStatus);
   }
 
