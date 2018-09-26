@@ -387,7 +387,7 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides CommentsListManager providesCommentsListManager(Comments comments) {
-    return new CommentsListManager(15, comments, 0);
+    return new CommentsListManager(arguments.getLong("storeId", -1), comments, 0);
   }
 
   @FragmentScope @Provides CommentsPresenter providesCommentsPresenter(

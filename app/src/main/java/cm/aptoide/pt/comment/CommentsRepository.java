@@ -11,7 +11,7 @@ public class CommentsRepository {
   }
 
   public Single<CommentsResponseModel> loadComments(long storeId) {
-    return dataSource.loadComments(storeId);
+    return dataSource.loadComments(storeId, false);
   }
 
   public Single<CommentsResponseModel> loadFreshComments(long storeId) {

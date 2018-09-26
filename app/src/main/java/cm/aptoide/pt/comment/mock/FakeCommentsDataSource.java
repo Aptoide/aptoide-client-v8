@@ -10,7 +10,8 @@ import java.util.List;
 import rx.Single;
 
 public class FakeCommentsDataSource implements CommentsDataSource {
-  @Override public Single<CommentsResponseModel> loadComments(long storeId) {
+  @Override
+  public Single<CommentsResponseModel> loadComments(long storeId, boolean invalidateHttpCache) {
     return getFakeCommentsResponse();
   }
 

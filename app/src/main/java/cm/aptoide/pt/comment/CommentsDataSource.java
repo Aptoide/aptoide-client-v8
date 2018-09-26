@@ -5,7 +5,7 @@ import rx.Single;
 
 public interface CommentsDataSource {
 
-  Single<CommentsResponseModel> loadComments(long storeId);
+  Single<CommentsResponseModel> loadComments(long storeId, boolean invalidateHttpCache);
 
   Single<CommentsResponseModel> loadFreshComments(long storeId);
 

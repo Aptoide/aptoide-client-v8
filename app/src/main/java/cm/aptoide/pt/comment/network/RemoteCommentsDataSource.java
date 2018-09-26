@@ -6,6 +6,7 @@ import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.comment.data.User;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
@@ -37,7 +38,8 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
 
   private Single<CommentsResponseModel> loadComments(long storeId, boolean invalidateHttpCache,
       int offset) {
-    return new ListCommentsRequest(new ListCommentsRequest.Body(storeId, Order.desc, 0, offset),
+    return new ListCommentsRequest(
+        new ListCommentsRequest.Body(storeId, Order.desc, 0, offset, CommentType.STORE),
         bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences).
         observe(invalidateHttpCache)
         .flatMap(response -> {
@@ -53,7 +55,8 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
         .toSingle();
   }
 
-  @Override public Single<CommentsResponseModel> loadComments(long storeId) {
+  @Override
+  public Single<CommentsResponseModel> loadComments(long storeId, boolean invalidateHttpCache) {
     return loadComments(storeId, false, 0);
   }
 

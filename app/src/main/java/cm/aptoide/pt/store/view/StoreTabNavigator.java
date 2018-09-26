@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.store.view;
 
+import android.os.Bundle;
 import cm.aptoide.pt.comment.CommentsFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -25,7 +26,11 @@ public class StoreTabNavigator {
         true);
   }
 
-  public void navigateToCommentsList() {
-    fragmentNavigator.navigateTo(new CommentsFragment(), true);
+  public void navigateToCommentsList(Long storeId) {
+    CommentsFragment fragment = new CommentsFragment();
+    Bundle args = new Bundle();
+    args.putLong("storeId", storeId);
+    fragment.setArguments(args);
+    fragmentNavigator.navigateTo(fragment, true);
   }
 }

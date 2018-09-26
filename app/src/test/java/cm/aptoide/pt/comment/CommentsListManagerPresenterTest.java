@@ -43,8 +43,9 @@ public class CommentsListManagerPresenterTest {
   }
 
   @Test public void showCommentsTest() {
-    when(commentsListManager.loadComments()).thenReturn(fakeCommentsDataSource.loadComments(15)
-        .map(CommentsResponseModel::getComments));
+    when(commentsListManager.loadComments()).thenReturn(
+        fakeCommentsDataSource.loadComments(15, false)
+            .map(CommentsResponseModel::getComments));
     //Given an initialized CommentsPresenter
     presenter.showComments();
     //When the view is shown to the screen
@@ -73,7 +74,7 @@ public class CommentsListManagerPresenterTest {
   }
 
   @Test public void pullRefreshTest() {
-    Single<List<Comment>> value = fakeCommentsDataSource.loadComments(15)
+    Single<List<Comment>> value = fakeCommentsDataSource.loadComments(15, false)
         .map(CommentsResponseModel::getComments);
     when(commentsListManager.loadFreshComments()).thenReturn(value);
     //Given an initialized CommentsPresenter
