@@ -1,7 +1,6 @@
 package cm.aptoide.pt.comment;
 
-import cm.aptoide.pt.comment.data.Comment;
-import java.util.List;
+import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import rx.Single;
 
 public class CommentsListManager {
@@ -15,21 +14,18 @@ public class CommentsListManager {
     this.offset = offset;
   }
 
-  public Single<List<Comment>> loadComments() {
+  public Single<CommentsResponseModel> loadComments() {
     return comments.loadComments(storeId)
-        .doOnSuccess(commentsResponseModel -> offset = commentsResponseModel.getOffset())
-        .map(commentsResponseModel -> commentsResponseModel.getComments());
+        .doOnSuccess(commentsResponseModel -> offset = commentsResponseModel.getOffset());
   }
 
-  public Single<List<Comment>> loadFreshComments() {
+  public Single<CommentsResponseModel> loadFreshComments() {
     return comments.loadFreshComments(storeId)
-        .doOnSuccess(commentsResponseModel -> offset = commentsResponseModel.getOffset())
-        .map(commentsResponseModel -> commentsResponseModel.getComments());
+        .doOnSuccess(commentsResponseModel -> offset = commentsResponseModel.getOffset());
   }
 
-  public Single<List<Comment>> loadMoreComments() {
+  public Single<CommentsResponseModel> loadMoreComments() {
     return comments.loadNextComments(storeId, offset)
-        .doOnSuccess(commentsResponseModel -> offset = commentsResponseModel.getOffset())
-        .map(commentsResponseModel -> commentsResponseModel.getComments());
+        .doOnSuccess(commentsResponseModel -> offset = commentsResponseModel.getOffset());
   }
 }

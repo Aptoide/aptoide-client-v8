@@ -1,11 +1,10 @@
 package cm.aptoide.pt.comment;
 
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.pt.comment.data.Comment;
+import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import java.util.List;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -48,9 +47,11 @@ public class CommentsPresenter implements Presenter {
         });
   }
 
-  private void addComments(List<Comment> comments) {
-    view.hideLoadMore();
-    view.addComments(comments);
+  private void addComments(CommentsResponseModel model) {
+    if (!model.isLoading()) {
+      view.hideLoadMore();
+      view.addComments(model.getComments());
+    }
   }
 
   @VisibleForTesting public void pullToRefresh() {
@@ -84,8 +85,10 @@ public class CommentsPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void showComments(List<Comment> comments) {
-    view.showComments(comments);
-    view.hideLoading();
+  private void showComments(CommentsResponseModel model) {
+    if (!model.isLoading()) {
+      view.showComments(model.getComments());
+      view.hideLoading();
+    }
   }
 }

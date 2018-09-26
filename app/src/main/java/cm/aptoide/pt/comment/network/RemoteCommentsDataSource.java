@@ -25,6 +25,7 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private boolean loadingComments;
 
   public RemoteCommentsDataSource(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient okHttpClient, Converter.Factory converterFactory,
@@ -38,10 +39,16 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
 
   private Single<CommentsResponseModel> loadComments(long storeId, boolean invalidateHttpCache,
       int offset) {
+    if (loadingComments) {
+      return Single.just(new CommentsResponseModel(true));
+    }
     return new ListCommentsRequest(
         new ListCommentsRequest.Body(storeId, Order.desc, 0, offset, CommentType.STORE),
         bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences).
         observe(invalidateHttpCache)
+        .doOnSubscribe(() -> loadingComments = true)
+        .doOnUnsubscribe(() -> loadingComments = false)
+        .doOnTerminate(() -> loadingComments = false)
         .flatMap(response -> {
           if (response.isOk()) {
             return Observable.just(new CommentsResponseModel(map(response.getDataList()
