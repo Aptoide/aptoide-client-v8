@@ -68,7 +68,7 @@ public class InstallManager {
   public void removeInstallationFile(String md5, String packageName, int versionCode) {
     stopInstallation(md5);
     installedRepository.remove(packageName, versionCode)
-        .andThen(Completable.fromAction(() -> aptoideDownloadManager.removeDownload(md5)))
+        .andThen(aptoideDownloadManager.removeDownload(md5))
         .subscribe(() -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));

@@ -151,8 +151,9 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Completable removeDownload(String md5) {
     return downloadsRepository.getDownload(md5)
         .first()
-        .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
-            appDownloader -> appDownloader.removeAppDownload()))
+        .flatMap(download -> getAppDownloader(download.getMd5()))
+        .flatMapCompletable(appDownloader -> appDownloader.removeAppDownload())
+        .flatMapCompletable(__ -> downloadsRepository.remove(md5))
         .toCompletable();
   }
 
