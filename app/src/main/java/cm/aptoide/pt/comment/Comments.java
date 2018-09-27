@@ -21,4 +21,8 @@ public class Comments {
   public Single<CommentsResponseModel> loadNextComments(long storeId, int offset) {
     return commentsRepository.loadNextComments(storeId, offset);
   }
+
+  public Single<CommentResponseModel> loadComment(long commentId) {
+    return Single.just(new CommentResponseModel());
+  }
 }

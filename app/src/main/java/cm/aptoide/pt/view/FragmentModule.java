@@ -66,6 +66,9 @@ import cm.aptoide.pt.comment.CommentsListManager;
 import cm.aptoide.pt.comment.CommentsNavigator;
 import cm.aptoide.pt.comment.CommentsPresenter;
 import cm.aptoide.pt.comment.CommentsView;
+import cm.aptoide.pt.commentdetail.CommentDetailManager;
+import cm.aptoide.pt.commentdetail.CommentDetailPresenter;
+import cm.aptoide.pt.commentdetail.CommentDetailView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -400,5 +403,15 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides CommentsNavigator providesCommentsNavigator(
       FragmentNavigator fragmentNavigator) {
     return new CommentsNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides CommentDetailManager commentDetailManager(Comments comments) {
+    return new CommentDetailManager(comments, arguments.getLong("comment_id", -1));
+  }
+
+  @FragmentScope @Provides CommentDetailPresenter providesCommentDetailPresenter(
+      CommentDetailManager commentManager) {
+    return new CommentDetailPresenter((CommentDetailView) fragment, commentManager,
+        AndroidSchedulers.mainThread());
   }
 }
