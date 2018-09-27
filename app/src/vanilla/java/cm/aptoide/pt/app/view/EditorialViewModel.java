@@ -30,13 +30,15 @@ class EditorialViewModel {
   private final String backgroundImage;
   private final String pathAlt;
   private final String md5;
+  private final int placeHolderPosition;
   private final boolean loading;
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
       String title, String appName, float rating, String packageName, long size, String icon,
       String graphic, Obb obb, long storeId, String storeName, String storeTheme, String vername,
-      int vercode, String path, String backgroundImage, String pathAlt, String md5) {
+      int vercode, String path, String backgroundImage, String pathAlt, String md5,
+      int placeHolderPosition) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
@@ -57,6 +59,7 @@ class EditorialViewModel {
     this.backgroundImage = backgroundImage;
     this.pathAlt = pathAlt;
     this.md5 = md5;
+    this.placeHolderPosition = placeHolderPosition;
     this.loading = false;
     this.error = null;
   }
@@ -84,6 +87,7 @@ class EditorialViewModel {
     this.backgroundImage = null;
     this.pathAlt = null;
     this.md5 = null;
+    this.placeHolderPosition = -1;
   }
 
   public EditorialViewModel(Error error) {
@@ -109,6 +113,7 @@ class EditorialViewModel {
     this.backgroundImage = null;
     this.pathAlt = null;
     this.md5 = null;
+    this.placeHolderPosition = -1;
   }
 
   public boolean hasContent() {
@@ -213,6 +218,10 @@ class EditorialViewModel {
 
   public String getTitle() {
     return title;
+  }
+
+  public int getPlaceHolderPosition() {
+    return placeHolderPosition;
   }
 
   public enum Error {

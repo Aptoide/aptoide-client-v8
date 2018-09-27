@@ -84,7 +84,7 @@ public class EditorialService {
       List<EditorialContent> editorialContentList = new ArrayList<>();
       editorialContentList =
           mapEditorialContent(contentList, editorialContentList, appName, icon, rating);
-
+      int placeHolderPosition = getPlaceHolderPosition(editorialContentList);
       String packageName = app.getPackageName();
       long size = app.getSize();
       String graphic = app.getGraphic();
@@ -104,10 +104,22 @@ public class EditorialService {
       return Observable.just(
           new EditorialViewModel(editorialContentList, cardType, appId, card.getTitle(), appName,
               rating, packageName, size, icon, graphic, obb, storeId, storeName, storeTheme,
-              vername, vercode, path, backgroundImage, pathAlt, md5));
+              vername, vercode, path, backgroundImage, pathAlt, md5, placeHolderPosition));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
+  }
+
+  private int getPlaceHolderPosition(List<EditorialContent> editorialContentList) {
+    if (editorialContentList != null) {
+      for (int i = 0; i < editorialContentList.size(); i++) {
+        EditorialContent editorialContent = editorialContentList.get(i);
+        if (editorialContent.isPlaceHolderType()) {
+          return i;
+        }
+      }
+    }
+    return -1;
   }
 
   private List<EditorialContent> mapEditorialContent(List<Content> contentList,

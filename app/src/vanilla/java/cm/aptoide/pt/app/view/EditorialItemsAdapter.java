@@ -2,10 +2,8 @@ package cm.aptoide.pt.app.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.DownloadModel;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -18,7 +16,6 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
 
   private final DecimalFormat oneDecimalFormat;
   private List<EditorialContent> editorialItemList;
-  private EditorialItemsViewHolder appCardPlaceholderEditorialViewHolder;
   private PublishSubject<EditorialEvent> editorialMediaClicked;
 
   public EditorialItemsAdapter(List<EditorialContent> editorialItemList,
@@ -36,10 +33,6 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
 
   @Override
   public void onBindViewHolder(EditorialItemsViewHolder editorialItemsViewHolder, int position) {
-    if (editorialItemList.get(position)
-        .isPlaceHolderType()) {
-      this.appCardPlaceholderEditorialViewHolder = editorialItemsViewHolder;
-    }
     editorialItemsViewHolder.setVisibility(editorialItemList.get(position), position);
   }
 
@@ -47,33 +40,8 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
     return editorialItemList.size();
   }
 
-  public boolean isItemShown(float screenHeight, float screenWidth) {
-    return appCardPlaceholderEditorialViewHolder.isVisible(screenHeight, screenWidth);
-  }
-
-  public View getPlaceHolder() {
-    if (appCardPlaceholderEditorialViewHolder != null) {
-      return appCardPlaceholderEditorialViewHolder.getPlaceHolder();
-    }
-    return null;
-  }
-
   public void add(List<EditorialContent> editorialItemList) {
     this.editorialItemList.addAll(editorialItemList);
     notifyDataSetChanged();
-  }
-
-  public void setPlaceHolderDownloadingInfo(DownloadModel downloadModel) {
-    if (appCardPlaceholderEditorialViewHolder != null) {
-      appCardPlaceholderEditorialViewHolder.setPlaceHolderDownloadingInfo(downloadModel);
-    }
-  }
-
-  public void setPlaceHolderDefaultInfo(DownloadModel downloadModel, String update, String install,
-      String open) {
-    if (appCardPlaceholderEditorialViewHolder != null) {
-      appCardPlaceholderEditorialViewHolder.setPlaceHolderDefaultStateInfo(downloadModel, update,
-          install, open);
-    }
   }
 }
