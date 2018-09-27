@@ -368,6 +368,7 @@ public class ImageLoader {
               @Override public boolean onLoadFailed(@Nullable GlideException e, Object o,
                   Target<Bitmap> target, boolean b) {
                 viewPaletteColorReceiver.onNext(-1);
+                Log.e(TAG, "RequestListener on failed called");
                 return false;
               }
 
@@ -381,6 +382,8 @@ public class ImageLoader {
                       int swatchRgb = -1;
                       if (swatch != null) {
                         swatchRgb = swatch.getRgb();
+                      } else {
+                        Log.e(TAG, "Unable to get palette dominant swatch");
                       }
                       viewPaletteColorReceiver.onNext(swatchRgb);
                     });

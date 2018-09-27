@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -377,6 +378,9 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void applyPaletteColor(int paletteColor) {
     if (paletteColor != -1) {
       actionItemCard.setBackgroundColor(paletteColor);
+      if (ColorUtils.calculateLuminance(paletteColor) > 0.7) {
+        itemName.setTextColor(getResources().getColor(R.color.black_text));
+      }
     }
     actionItemCard.setVisibility(View.VISIBLE);
   }
