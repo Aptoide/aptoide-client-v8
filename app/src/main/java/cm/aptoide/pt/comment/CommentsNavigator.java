@@ -1,6 +1,7 @@
 package cm.aptoide.pt.comment;
 
-import android.widget.Toast;
+import android.os.Bundle;
+import cm.aptoide.pt.commentdetail.CommentDetailFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 
 public class CommentsNavigator {
@@ -11,9 +12,10 @@ public class CommentsNavigator {
   }
 
   public void navigateToCommentView(Long commentId) {
-    // TODO: 26/09/2018 navigate to comment view
-    Toast.makeText(fragmentNavigator.getFragment()
-        .getContext(), "COMMENT CLICKED " + commentId, Toast.LENGTH_SHORT)
-        .show();
+    CommentDetailFragment fragment = new CommentDetailFragment();
+    Bundle args = new Bundle();
+    args.putLong("comment_id", commentId);
+    fragment.setArguments(args);
+    fragmentNavigator.navigateTo(fragment, true);
   }
 }
