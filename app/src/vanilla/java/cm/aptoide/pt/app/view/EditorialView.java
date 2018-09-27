@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.support.v7.graphics.Palette;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.presenter.View;
@@ -43,7 +44,7 @@ public interface EditorialView extends View {
 
   Observable<String> mediaContentClicked();
 
-  Observable<Integer> paletteColorExtracted();
+  Observable<Palette.Swatch> paletteSwatchExtracted();
 
-  void applyPaletteColor(int paletteColor);
+  void applyPaletteSwatch(Palette.Swatch swatch);
 }

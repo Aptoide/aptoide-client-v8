@@ -353,7 +353,7 @@ public class ImageLoader {
   }
 
   public Target<Bitmap> loadWithPalette(String url, ImageView imageView,
-      PublishSubject<Integer> viewPaletteColorReceiver) {
+      PublishSubject<Palette.Swatch> viewPaletteSwatchReceiver) {
     Context context = weakContext.get();
     if (context != null) {
       String newImageUrl = AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager);
@@ -367,7 +367,7 @@ public class ImageLoader {
 
               @Override public boolean onLoadFailed(@Nullable GlideException e, Object o,
                   Target<Bitmap> target, boolean b) {
-                viewPaletteColorReceiver.onNext(-1);
+                viewPaletteSwatchReceiver.onNext(null);
                 Log.e(TAG, "RequestListener on failed called");
                 return false;
               }
@@ -379,13 +379,10 @@ public class ImageLoader {
                     .maximumColorCount(6)
                     .generate(palette -> {
                       Palette.Swatch swatch = palette.getDominantSwatch();
-                      int swatchRgb = -1;
-                      if (swatch != null) {
-                        swatchRgb = swatch.getRgb();
-                      } else {
+                      if (swatch == null) {
                         Log.e(TAG, "Unable to get palette dominant swatch");
                       }
-                      viewPaletteColorReceiver.onNext(swatchRgb);
+                      viewPaletteSwatchReceiver.onNext(swatch);
                     });
                 return false;
               }
@@ -397,7 +394,7 @@ public class ImageLoader {
     } else {
       Log.e(TAG, "::load() Context is null");
     }
-    viewPaletteColorReceiver.onNext(-1);
+    viewPaletteSwatchReceiver.onNext(null);
     return null;
   }
 

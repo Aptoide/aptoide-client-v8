@@ -10,6 +10,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -49,6 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.util.AptoideColorUtils.getChangedColorLightness;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
@@ -95,14 +97,14 @@ public class EditorialFragment extends NavigationTrackFragment
   private DecimalFormat oneDecimalFormatter;
 
   private PublishSubject<String> editorialMediaClicked;
-  private PublishSubject<Integer> paletteColorSubject;
+  private PublishSubject<Palette.Swatch> paletteSwatchSubject;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     ready = PublishSubject.create();
-    paletteColorSubject = PublishSubject.create();
+    paletteSwatchSubject = PublishSubject.create();
     editorialMediaClicked = PublishSubject.create();
     setHasOptionsMenu(true);
   }
@@ -218,7 +220,7 @@ public class EditorialFragment extends NavigationTrackFragment
     }
     ready = null;
     window = null;
-    paletteColorSubject = null;
+    paletteSwatchSubject = null;
     oneDecimalFormatter = null;
   }
 
@@ -371,15 +373,14 @@ public class EditorialFragment extends NavigationTrackFragment
     return editorialMediaClicked;
   }
 
-  @Override public Observable<Integer> paletteColorExtracted() {
-    return paletteColorSubject;
+  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
+    return paletteSwatchSubject;
   }
 
-  @Override public void applyPaletteColor(int paletteColor) {
-    if (paletteColor != -1) {
-      actionItemCard.setBackgroundColor(paletteColor);
-      if (ColorUtils.calculateLuminance(paletteColor) > 0.7) {
-        itemName.setTextColor(getResources().getColor(R.color.black_text));
+  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
+    if (swatch != null) {
+      if (ColorUtils.calculateLuminance(swatch.getRgb()) > 0.5) {
+        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
       }
     }
     actionItemCard.setVisibility(View.VISIBLE);
@@ -388,7 +389,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     if (editorialViewModel.hasBackgroundImage()) {
       ImageLoader.with(getContext())
-          .loadWithPalette(editorialViewModel.getBackgroundImage(), appImage, paletteColorSubject);
+          .loadWithPalette(editorialViewModel.getBackgroundImage(), appImage, paletteSwatchSubject);
     } else {
       appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
     }

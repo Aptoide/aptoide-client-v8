@@ -240,13 +240,13 @@ public class EditorialPresenter implements Presenter {
   private void handlePaletteColor() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.paletteColorExtracted())
+        .flatMap(created -> view.paletteSwatchExtracted())
         .observeOn(viewScheduler)
-        .doOnNext(view::applyPaletteColor)
+        .doOnNext(paletteSwatch -> view.applyPaletteSwatch(paletteSwatch))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          view.applyPaletteColor(-1);
+          view.applyPaletteSwatch(null);
           throw new OnErrorNotImplementedException(error);
         });
   }
