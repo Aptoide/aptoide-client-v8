@@ -14,6 +14,12 @@ public class CommentDetailManager {
 
   public Single<CommentDetailViewModel> loadCommentModel() {
     return comments.loadComment(commentId)
-        .map(commentResponseModel -> new CommentDetailViewModel());
+        .map(commentResponseModel -> new CommentDetailViewModel(commentResponseModel.getComment()
+            .getUser()
+            .getName(), commentResponseModel.getComment()
+            .getUser()
+            .getAvatar(), commentResponseModel.getComment()
+            .getMessage(), commentResponseModel.getComment()
+            .getReplies() + "", commentResponseModel.getReplies()));
   }
 }

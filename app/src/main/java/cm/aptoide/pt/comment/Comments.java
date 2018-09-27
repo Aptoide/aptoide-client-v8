@@ -22,7 +22,7 @@ public class Comments {
     return commentsRepository.loadNextComments(storeId, offset);
   }
 
-  public Single<CommentResponseModel> loadComment(long commentId) {
-    return Single.just(new CommentResponseModel());
+  public Single<CommentDetailResponseModel> loadComment(long commentId) {
+    return commentsRepository.loadComment(commentId);
   }
 }

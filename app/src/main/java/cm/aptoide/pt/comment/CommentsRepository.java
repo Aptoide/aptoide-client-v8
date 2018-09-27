@@ -21,4 +21,8 @@ public class CommentsRepository {
   public Single<CommentsResponseModel> loadNextComments(long storeId, int offset) {
     return dataSource.loadNextComments(storeId, offset);
   }
+
+  public Single<CommentDetailResponseModel> loadComment(long commentId) {
+    return dataSource.loadComments(commentId);
+  }
 }

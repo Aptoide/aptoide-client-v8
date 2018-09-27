@@ -1,6 +1,7 @@
 package cm.aptoide.pt.comment.network;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.comment.CommentDetailResponseModel;
 import cm.aptoide.pt.comment.CommentsDataSource;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.data.CommentsResponseModel;
@@ -73,6 +74,10 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
 
   @Override public Single<CommentsResponseModel> loadNextComments(long storeId, int offset) {
     return loadComments(storeId, false, offset);
+  }
+
+  @Override public Single<CommentDetailResponseModel> loadComments(long commentId) {
+    return null;
   }
 
   private List<Comment> map(List<cm.aptoide.pt.dataprovider.model.v7.Comment> networkComments) {

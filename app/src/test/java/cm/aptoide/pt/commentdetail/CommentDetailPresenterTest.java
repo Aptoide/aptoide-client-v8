@@ -1,5 +1,7 @@
 package cm.aptoide.pt.commentdetail;
 
+import cm.aptoide.pt.comment.CommentDetailResponseModel;
+import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
 import cm.aptoide.pt.presenter.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,19 +21,29 @@ public class CommentDetailPresenterTest {
 
   private CommentDetailPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
+  private FakeCommentsDataSource fakeCommentsDataSource;
 
   @Before public void setupCommentsPresenter() {
     MockitoAnnotations.initMocks(this);
     lifecycleEvent = PublishSubject.create();
 
     presenter = new CommentDetailPresenter(view, commentDetailManager, Schedulers.immediate());
+    fakeCommentsDataSource = new FakeCommentsDataSource();
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
 
   @Test public void showCommentViewModelTest() {
-    when(commentDetailManager.loadCommentModel()).thenReturn(
-        Single.just(new CommentDetailViewModel()));
+    CommentDetailResponseModel dataModelResponse = fakeCommentsDataSource.loadComments(0)
+        .toBlocking()
+        .value();
+
+    CommentDetailViewModel viewModel =
+        new CommentDetailViewModel("Filipe Gonçalves", "http://via.placeholder.com/350x150",
+            "Eu sou do Benfica", "7 replies", dataModelResponse.getReplies());
+
+    when(commentDetailManager.loadCommentModel()).thenReturn(Single.just(viewModel));
+
     //Given an initialized presenter
     presenter.showCommentViewModel();
     //When the view is shown to the screen
@@ -42,5 +54,7 @@ public class CommentDetailPresenterTest {
     verify(commentDetailManager).loadCommentModel();
     //Then the loading should be hidden
     verify(view).hideLoading();
+    //Then the comments view model should be shown in the view
+    verify(view).showCommentModel(viewModel);
   }
 }

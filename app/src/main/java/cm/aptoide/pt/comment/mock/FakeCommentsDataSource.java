@@ -1,5 +1,7 @@
 package cm.aptoide.pt.comment.mock;
 
+import android.support.annotation.NonNull;
+import cm.aptoide.pt.comment.CommentDetailResponseModel;
 import cm.aptoide.pt.comment.CommentsDataSource;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.data.CommentsResponseModel;
@@ -23,11 +25,24 @@ public class FakeCommentsDataSource implements CommentsDataSource {
     return getFakeCommentsResponse();
   }
 
+  @Override public Single<CommentDetailResponseModel> loadComments(long commentId) {
+    return Single.just(new CommentDetailResponseModel(getFakeComment(-1), getFakeComments()));
+  }
+
   private Single<CommentsResponseModel> getFakeCommentsResponse() {
+    List<Comment> comments = getFakeComments();
+    return Single.just(new CommentsResponseModel(comments, 0));
+  }
+
+  @NonNull private List<Comment> getFakeComments() {
     List<Comment> comments = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      comments.add(new Comment(i, "comment " + i, new User(i, null, "user " + i), i, new Date()));
+      comments.add(getFakeComment(i));
     }
-    return Single.just(new CommentsResponseModel(comments, 0));
+    return comments;
+  }
+
+  @NonNull private Comment getFakeComment(int i) {
+    return new Comment(i, "comment " + i, new User(i, null, "user " + i), i, new Date());
   }
 }
