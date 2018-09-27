@@ -43,7 +43,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_message"
-        style="@style/Aptoide.Button.S.Gradient.Rounded"
+        style="@style/Aptoide.Button.S"
         />
 
   </android.support.constraint.ConstraintLayout>
