@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,6 +60,8 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class EditorialFragment extends NavigationTrackFragment
     implements EditorialView, NotBottomNavigationView {
+
+  private static final String TAG = EditorialFragment.class.getName();
 
   @Inject EditorialPresenter presenter;
   @Inject @Named("screenWidth") float screenWidth;
@@ -344,21 +347,25 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void showDownloadModel(DownloadModel downloadModel) {
     this.action = downloadModel.getAction();
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        getViewHolderForAdapterPosition(placeHolderPosition);
     if (downloadModel.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       cardInfoLayout.setVisibility(View.GONE);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
-      ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
-          placeHolderPosition)).setPlaceHolderDownloadingInfo(downloadModel);
+      if (editorialItemsViewHolder != null) {
+        editorialItemsViewHolder.setPlaceHolderDownloadingInfo(downloadModel);
+      }
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       cardInfoLayout.setVisibility(View.VISIBLE);
       setButtonText(downloadModel);
-      ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
-          placeHolderPosition)).setPlaceHolderDefaultStateInfo(downloadModel,
-          getResources().getString(R.string.appview_button_update),
-          getResources().getString(R.string.appview_button_install),
-          getResources().getString(R.string.appview_button_open));
+      if (editorialItemsViewHolder != null) {
+        editorialItemsViewHolder.setPlaceHolderDefaultStateInfo(downloadModel,
+            getResources().getString(R.string.appview_button_update),
+            getResources().getString(R.string.appview_button_install),
+            getResources().getString(R.string.appview_button_open));
+      }
       if (downloadModel.hasError()) {
         handleDownloadError(downloadModel.getDownloadState());
       }
@@ -415,18 +422,24 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void removeBottomCardAnimation() {
-    View view = ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
-        placeHolderPosition)).getPlaceHolder();
-    if (!isBottomCardHidden && view != null) {
-      configureAppCardAnimation(appCardLayout, view, 0f, 300, true);
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        getViewHolderForAdapterPosition(placeHolderPosition);
+    if (editorialItemsViewHolder != null) {
+      View view = editorialItemsViewHolder.getPlaceHolder();
+      if (!isBottomCardHidden && view != null) {
+        configureAppCardAnimation(appCardLayout, view, 0f, 300, true);
+      }
     }
   }
 
   @Override public void addBottomCardAnimation() {
-    View view = ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
-        placeHolderPosition)).getPlaceHolder();
-    if (isBottomCardHidden && view != null) {
-      configureAppCardAnimation(view, appCardLayout, 0.1f, 300, false);
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        getViewHolderForAdapterPosition(placeHolderPosition);
+    if (editorialItemsViewHolder != null) {
+      View view = editorialItemsViewHolder.getPlaceHolder();
+      if (isBottomCardHidden && view != null) {
+        configureAppCardAnimation(view, appCardLayout, 0.1f, 300, false);
+      }
     }
   }
 
@@ -579,8 +592,10 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private boolean isItemShown() {
-    return ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
-        placeHolderPosition)).isVisible(screenHeight, screenWidth);
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        getViewHolderForAdapterPosition(placeHolderPosition);
+    return editorialItemsViewHolder != null && editorialItemsViewHolder.isVisible(screenHeight,
+        screenWidth);
   }
 
   private void configureAppCardAnimation(View layoutToHide, View layoutToShow, float hideScale,
@@ -633,5 +648,18 @@ public class EditorialFragment extends NavigationTrackFragment
           }
         })
         .start();
+  }
+
+  private EditorialItemsViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {
+    if (placeHolderPosition != -1) {
+      EditorialItemsViewHolder editorialItemsViewHolder =
+          ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
+              placeHolderPosition));
+      if (editorialItemsViewHolder == null) {
+        Log.e(TAG, "Unable to find editorialViewHolder");
+      }
+      return editorialItemsViewHolder;
+    }
+    return null;
   }
 }
