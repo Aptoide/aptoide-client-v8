@@ -36,7 +36,7 @@ public interface EditorialView extends View {
 
   Observable<EditorialEvent> cancelDownload();
 
-  Observable<Void> isAppViewReadyToDownload();
+  Observable<Void> isViewReady();
 
   void readyToDownload();
 
@@ -47,4 +47,6 @@ public interface EditorialView extends View {
   void addBottomCardAnimation();
 
   Observable<EditorialEvent> mediaContentClicked();
+
+  void managePlaceHolderVisibity();
 }

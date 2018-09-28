@@ -401,7 +401,7 @@ public class EditorialFragment extends NavigationTrackFragment
             .equals(EditorialEvent.Type.CANCEL)));
   }
 
-  @Override public Observable<Void> isAppViewReadyToDownload() {
+  @Override public Observable<Void> isViewReady() {
     return ready;
   }
 
@@ -444,6 +444,15 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public Observable<EditorialEvent> mediaContentClicked() {
     return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
         .equals(EditorialEvent.Type.MEDIA));
+  }
+
+  @Override public void managePlaceHolderVisibity() {
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        getViewHolderForAdapterPosition(placeHolderPosition);
+    if (editorialItemsViewHolder != null && editorialItemsViewHolder.isVisible(screenHeight,
+        screenWidth)) {
+      removeBottomCardAnimation();
+    }
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {

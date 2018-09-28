@@ -54,6 +54,7 @@ public class EditorialPresenter implements Presenter {
     cancelDownload();
     loadDownloadApp();
     handlePlaceHolderVisibilityChange();
+    handlePlaceHolderVisivibility();
   }
 
   private void onCreateLoadAppOfTheWeek() {
@@ -218,13 +219,26 @@ public class EditorialPresenter implements Presenter {
   private void loadDownloadApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.isAppViewReadyToDownload())
+        .flatMap(created -> view.isViewReady())
         .flatMap(create -> editorialManager.loadEditorialViewModel()
             .toObservable())
         .flatMap(app -> editorialManager.loadDownloadModel(app.getMd5(), app.getPackageName(),
             app.getVercode(), false, null))
         .observeOn(viewScheduler)
         .doOnNext(view::showDownloadModel)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handlePlaceHolderVisivibility() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.isViewReady())
+        .observeOn(viewScheduler)
+        .doOnNext(model -> view.managePlaceHolderVisibity())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
