@@ -102,7 +102,6 @@ public class EditorialFragment extends NavigationTrackFragment
   private DecimalFormat oneDecimalFormatter;
   private NestedScrollView scrollView;
   private View appCardLayout;
-  private boolean isBottomCardHidden;
   private int placeHolderPosition;
 
   private PublishSubject<EditorialEvent> uiEventsListener;
@@ -122,7 +121,6 @@ public class EditorialFragment extends NavigationTrackFragment
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
     }
-    isBottomCardHidden = false;
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setTitle("");
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
@@ -415,10 +413,10 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxNestedScrollView.scrollChangeEvents(scrollView)
         .flatMap(viewScrollChangeEvent -> Observable.just(viewScrollChangeEvent)
             .map(scrollDown -> isItemShown())
-            .distinctUntilChanged()
             .map(isItemShown -> new ScrollEvent(
                 isScrollDown(viewScrollChangeEvent.oldScrollY(), viewScrollChangeEvent.scrollY()),
-                isItemShown)));
+                isItemShown)))
+        .distinctUntilChanged(ScrollEvent::getItemShown);
   }
 
   @Override public void removeBottomCardAnimation() {
@@ -426,7 +424,7 @@ public class EditorialFragment extends NavigationTrackFragment
         getViewHolderForAdapterPosition(placeHolderPosition);
     if (editorialItemsViewHolder != null) {
       View view = editorialItemsViewHolder.getPlaceHolder();
-      if (!isBottomCardHidden && view != null) {
+      if (view != null) {
         configureAppCardAnimation(appCardLayout, view, 0f, 300, true);
       }
     }
@@ -437,7 +435,7 @@ public class EditorialFragment extends NavigationTrackFragment
         getViewHolderForAdapterPosition(placeHolderPosition);
     if (editorialItemsViewHolder != null) {
       View view = editorialItemsViewHolder.getPlaceHolder();
-      if (isBottomCardHidden && view != null) {
+      if (view != null) {
         configureAppCardAnimation(view, appCardLayout, 0.1f, 300, false);
       }
     }
@@ -599,7 +597,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void configureAppCardAnimation(View layoutToHide, View layoutToShow, float hideScale,
-      int duration, boolean bottomCardHidden) {
+      int duration, boolean isRemoveBottomCard) {
     layoutToHide.animate()
         .scaleY(hideScale)
         .scaleX(hideScale)
@@ -633,10 +631,9 @@ public class EditorialFragment extends NavigationTrackFragment
           }
 
           @Override public void onAnimationEnd(Animator animator) {
-            if (!bottomCardHidden) {
+            if (!isRemoveBottomCard) {
               layoutToHide.setVisibility(View.INVISIBLE);
             }
-            isBottomCardHidden = bottomCardHidden;
           }
 
           @Override public void onAnimationCancel(Animator animator) {
