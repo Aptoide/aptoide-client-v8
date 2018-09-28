@@ -40,7 +40,7 @@ public class StoreCommentWidget extends Widget<StoreCommentDisplayable> {
     userName = view.findViewById(R.id.user_name);
     date = view.findViewById(R.id.date);
     comment = view.findViewById(R.id.comment);
-    replies = view.findViewById(R.id.replies);
+    replies = view.findViewById(R.id.replies_number);
   }
 
   @Override public void bindView(StoreCommentDisplayable displayable) {

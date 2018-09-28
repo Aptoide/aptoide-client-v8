@@ -15,7 +15,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -27,6 +27,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private static final int VISIBLE_THRESHOLD = 2;
+
   @Inject CommentsPresenter commentsPresenter;
   @Inject AptoideUtils.DateTimeU dateUtils;
   private PublishSubject<Long> commentClickEvent;
@@ -60,7 +61,8 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     commentsList = view.findViewById(R.id.comments_list);
     layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
     commentsList.setLayoutManager(layoutManager);
-    commentsAdapter = new CommentsAdapter(Collections.emptyList(), dateUtils, commentClickEvent);
+    commentsAdapter =
+        new CommentsAdapter(new ArrayList<>(), dateUtils, commentClickEvent, R.layout.comment_item);
     commentsList.setAdapter(commentsAdapter);
 
     attachPresenter(commentsPresenter);

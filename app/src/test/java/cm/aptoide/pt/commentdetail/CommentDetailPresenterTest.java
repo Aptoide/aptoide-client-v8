@@ -3,6 +3,7 @@ package cm.aptoide.pt.commentdetail;
 import cm.aptoide.pt.comment.CommentDetailResponseModel;
 import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
 import cm.aptoide.pt.presenter.View;
+import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -40,7 +41,7 @@ public class CommentDetailPresenterTest {
 
     CommentDetailViewModel viewModel =
         new CommentDetailViewModel("Filipe Gonçalves", "http://via.placeholder.com/350x150",
-            "Eu sou do Benfica", "7 replies", dataModelResponse.getReplies());
+            "Eu sou do Benfica", 7, dataModelResponse.getReplies(), new Date());
 
     when(commentDetailManager.loadCommentModel()).thenReturn(Single.just(viewModel));
 

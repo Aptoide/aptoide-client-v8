@@ -28,7 +28,7 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
     userName = view.findViewById(R.id.user_name);
     date = view.findViewById(R.id.date);
     comment = view.findViewById(R.id.comment);
-    replies = view.findViewById(R.id.replies);
+    replies = view.findViewById(R.id.replies_number);
     this.dateUtils = dateUtils;
     this.commentClickEvent = commentClickEvent;
   }

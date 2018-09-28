@@ -13,30 +13,32 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
-class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHolder> {
-  private static final int LOADING = R.layout.progress_item;
-  private static final int COMMENT = R.layout.comment_item;
+public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHolder> {
+  private static final int COMMENT = 1;
+  private static final int LOADING = 2;
   private final AptoideUtils.DateTimeU dateUtils;
   private final Comment progressComment;
   private final PublishSubject<Long> commentClickEvent;
+  private final int commentViewId;
   private List<Comment> comments;
 
-  CommentsAdapter(List<Comment> comments, AptoideUtils.DateTimeU dateUtils,
-      PublishSubject<Long> commentClickEvent) {
+  public CommentsAdapter(List<Comment> comments, AptoideUtils.DateTimeU dateUtils,
+      PublishSubject<Long> commentClickEvent, int commentItemId) {
     this.dateUtils = dateUtils;
     this.comments = comments;
-    progressComment = new CommentLoading();
+    this.progressComment = new CommentLoading();
     this.commentClickEvent = commentClickEvent;
+    this.commentViewId = commentItemId;
   }
 
   @Override public AbstractCommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
       case COMMENT:
         return new CommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(COMMENT, parent, false), dateUtils, commentClickEvent);
+            .inflate(commentViewId, parent, false), dateUtils, commentClickEvent);
       case LOADING:
         return new LoadingCommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(LOADING, parent, false));
+            .inflate(R.layout.progress_item, parent, false));
       default:
         throw new IllegalStateException("Invalid comment view type");
     }
@@ -59,7 +61,7 @@ class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHolder> {
     return comments.size();
   }
 
-  void setComments(List<Comment> comments) {
+  public void setComments(List<Comment> comments) {
     this.comments = comments;
     notifyDataSetChanged();
   }

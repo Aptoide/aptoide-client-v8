@@ -20,6 +20,7 @@ public class CommentDetailManager {
             .getUser()
             .getAvatar(), commentResponseModel.getComment()
             .getMessage(), commentResponseModel.getComment()
-            .getReplies() + "", commentResponseModel.getReplies()));
+            .getReplies(), commentResponseModel.getReplies(), commentResponseModel.getComment()
+            .getDate()));
   }
 }
