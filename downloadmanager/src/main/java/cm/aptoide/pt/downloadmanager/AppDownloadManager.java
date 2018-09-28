@@ -1,7 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 import rx.Completable;

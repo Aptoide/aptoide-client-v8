@@ -151,9 +151,11 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Completable removeDownload(String md5) {
     return downloadsRepository.getDownload(md5)
         .first()
-        .flatMap(download -> getAppDownloader(download.getMd5()))
-        .flatMapCompletable(appDownloader -> appDownloader.removeAppDownload())
-        .flatMapCompletable(__ -> downloadsRepository.remove(md5))
+        .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
+            appDownloader -> appDownloader.removeAppDownload()
+                .andThen(downloadsRepository.remove(md5))
+                .andThen(Observable.just(download))))
+        .doOnNext(download -> removeDownloadFiles(download))
         .toCompletable();
   }
 
@@ -164,6 +166,13 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMapCompletable(download -> downloadsRepository.remove(download.getMd5()))
         .toList()
         .toCompletable();
+  }
+
+  private void removeDownloadFiles(Download download) {
+    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      FileUtils.removeFile(fileToDownload.getFilePath());
+      FileUtils.removeFile(cachePath + fileToDownload.getFileName() + ".temp");
+    }
   }
 
   private AppDownloader createAppDownloadManager(Download download) {
