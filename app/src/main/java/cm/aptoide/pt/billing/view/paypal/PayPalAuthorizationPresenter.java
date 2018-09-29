@@ -49,7 +49,7 @@ public class PayPalAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedShowAuthorization() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .first(event -> event.equals(View.LifecycleEvent.RESUME))
         .doOnNext(__ -> view.showLoading())
         .flatMap(created -> billing.getPayment(sku))
@@ -69,7 +69,7 @@ public class PayPalAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedCheckAuthorizationActive() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .first(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billing.getPayment(sku))
         .first(payment -> payment.isCompleted())
@@ -84,7 +84,7 @@ public class PayPalAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedCheckAuthorizationFailed() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .first(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billing.getPayment(sku))
         .first(payment -> payment.isFailed())
@@ -96,7 +96,7 @@ public class PayPalAuthorizationPresenter implements Presenter {
   }
 
   private void onViewCreatedCheckAuthorizationProcessing() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .first(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billing.getPayment(sku))
         .first(authorization -> authorization.isProcessing())
@@ -108,7 +108,7 @@ public class PayPalAuthorizationPresenter implements Presenter {
   }
 
   private void handlePayPalResultEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> billingNavigator.payPalResults(PAY_APP_REQUEST_CODE))
         .doOnNext(result -> view.showLoading())
@@ -133,7 +133,7 @@ public class PayPalAuthorizationPresenter implements Presenter {
   }
 
   private void handleErrorDismissEvent() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.errorDismisses())
         .doOnNext(product -> popViewWithError())

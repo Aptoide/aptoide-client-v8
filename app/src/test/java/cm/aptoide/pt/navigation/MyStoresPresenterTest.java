@@ -45,7 +45,7 @@ public class MyStoresPresenterTest {
     presenter = new MyStoresPresenter(view, Schedulers.immediate(), aptoideAccountManager,
         myStoresNavigator);
 
-    when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.imageClick()).thenReturn(imageClickEvent);
     when(myStoresNavigator.bottomNavigationEvent()).thenReturn(navigationEvent);
     when(aptoideAccountManager.accountStatus()).thenReturn(accountStatusEvent);

@@ -49,8 +49,8 @@
         android:id="@+id/appc_billing_text_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
         android:text="@string/appc_message_appview_appcoins_iab"
+        android:visibility="visible"
         style="@style/Aptoide.TextView.Medium.XXS"
         />
   </LinearLayout>

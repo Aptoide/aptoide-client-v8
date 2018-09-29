@@ -1,17 +1,17 @@
 buildscript {
   repositories {
     jcenter()
-	google()
+	  google()
     mavenLocal()
     maven { url "https://maven.fabric.io/public" }
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.1.4'
+    classpath 'com.android.tools.build:gradle:3.2.0'
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4' //0.8.3
     classpath 'io.realm:realm-gradle-plugin:3.5.0' //5.5.0
     //classpath 'com.novoda:gradle-android-command-plugin:1.7.1' //2.0.1
-    classpath 'io.fabric.tools:gradle:1.25.4'
+    classpath 'io.fabric.tools:gradle:1.26.1'
   }
 }
 
@@ -33,7 +33,7 @@ task clean(type: Delete) {
 // from controlling version.
 // This will override gradle-wrapper.properties
 task wrapper(type: Wrapper) {
-  gradleVersion = '4.10.1'
+  gradleVersion = '4.10.2'
   distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
@@ -44,17 +44,17 @@ ext {
   //
 
   USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
-  BUILD_TOOLS_VERSION = '28.0.2'
+  BUILD_TOOLS_VERSION = '28.0.3'
 
   //
   // gradle build script dependencies versions
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '26.0.1' //28.0.0-rc02
+  SUPPORT_LIB_VERSION = '26.1.0' //28.0.0
 
   // Google Play Services
-  PLAY_SERVICES_VERSION = '9.8.0' //15.0.1
+  PLAY_SERVICES_VERSION = '15.0.1'
 
   JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
 
@@ -82,7 +82,7 @@ ext {
   RUNNER_VERSION = '1.0.2'
   RULES_VERSION = '1.0.2'
   TESTING_SUPPORT_LIB_VERSION = '0.1'
-  JACKSON_VERSION = '2.8.11.2' //2.9.6
+  JACKSON_VERSION = '2.8.11.2' //2.9.7
 
   // Material tab strip
   MATERIAL_TAB_STRIP_VERSION = '1.1.1'
@@ -91,7 +91,7 @@ ext {
   GLIDE_VERSION = '4.8.0'
 
   // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '4.36.0'
+  FACEBOOK_ANDROID_SDK_VERSION = '4.37.0'
 
   // File Downloader lib
   FILE_DOWNLOADER_VERSION = '1.4.1' //1.7.5
@@ -112,7 +112,7 @@ ext {
 
   CONSTRAINT_LAYOUT_VERSION = '1.1.3' //2.0.0-alpha2
 
-  LEAK_CANARY_VERSION = '1.5'
+  LEAK_CANARY_VERSION = '1.5' //1.6.1
   PARCELER_VERSION = '1.1.11'
 
   ADYEN_VERSION = '1.14.2' //2.0.2

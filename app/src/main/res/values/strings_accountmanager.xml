@@ -20,7 +20,7 @@
   <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
     <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
   <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  
+
   <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
 
   <!-- WIZARD -->
@@ -55,7 +55,7 @@
   <string name="createuser_short_subscribe_newsletter">Yes, I want to subscribe to Aptoide\'s newsletter</string>
   <string name="createuser_title_date_of_birth">Date of Birth</string>
   <string name="createuser_title_choose_date">Choose date</string>
-  
+
   <!--User interests fragment -->
 
   <!--Create Store fragment-->
@@ -69,7 +69,6 @@
   <string name="save_edit_store">Save</string>
   <string name="edit_store_title_social_networks">Social Networks</string>
   <string name="edit_store_short_enter_username">Enter username</string>
-
 
 
   <string name="upload_dialog_title">Upload photo</string>

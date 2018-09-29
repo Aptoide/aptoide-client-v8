@@ -48,8 +48,8 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
         getFragmentNavigator().navigateTo(
             StoreTabGridRecyclerFragment.newInstance(event, pojo.getLabel(),
-                displayable.getStoreTheme(), displayable.getTag(), displayable.getStoreContext(),
-                false), true);
+                displayable.getStoreTheme(), displayable.getTag(), displayable.getStoreContext()),
+            true);
       } else {
         switch (name) {
           case facebook:

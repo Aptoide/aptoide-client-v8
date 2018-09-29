@@ -46,6 +46,7 @@ public class EditorialPresenter implements Presenter {
     onCreateLoadAppOfTheWeek();
     handleRetryClick();
     handleClickOnMedia();
+    handleClickOnAppCard();
 
     handleInstallClick();
     pauseDownload();
@@ -55,7 +56,7 @@ public class EditorialPresenter implements Presenter {
   }
 
   private void onCreateLoadAppOfTheWeek() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
         .flatMapSingle(created -> loadEditorialViewModel())
@@ -81,7 +82,7 @@ public class EditorialPresenter implements Presenter {
   }
 
   private void handleRetryClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
@@ -93,7 +94,7 @@ public class EditorialPresenter implements Presenter {
   }
 
   private void handleClickOnMedia() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.mediaContentClicked())
         .doOnNext(editorialNavigator::navigateToUri)
@@ -102,8 +103,21 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
+  private void handleClickOnAppCard() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.appCardClicked())
+        .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
+        .doOnNext(model -> {
+          editorialNavigator.navigateToAppView(model.getAppId(), model.getPackageName());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(notificationUrl -> {
+        }, crashReporter::log);
+  }
+
   private void handleInstallClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.installButtonClick()
             .flatMapCompletable(action -> {
@@ -135,7 +149,7 @@ public class EditorialPresenter implements Presenter {
   }
 
   private void cancelDownload() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelDownload()
             .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
@@ -151,7 +165,7 @@ public class EditorialPresenter implements Presenter {
   }
 
   private void resumeDownload() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
             .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
@@ -169,7 +183,7 @@ public class EditorialPresenter implements Presenter {
   }
 
   private void pauseDownload() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.pauseDownload()
             .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
@@ -201,7 +215,7 @@ public class EditorialPresenter implements Presenter {
   }
 
   private void loadDownloadApp() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.isAppViewReadyToDownload())
         .flatMap(create -> editorialManager.loadEditorialViewModel()

@@ -101,15 +101,15 @@ public class EditorialFragment extends NavigationTrackFragment
     window = getActivity().getWindow();
     ready = PublishSubject.create();
     editorialMediaClicked = PublishSubject.create();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
-    }
     setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
+    }
 
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setTitle("");
@@ -164,7 +164,7 @@ public class EditorialFragment extends NavigationTrackFragment
             getResources().getDrawable(R.drawable.editorial_up_bottom_black_gradient));
         toolbarTitle.setTextColor(getResources().getColor(R.color.tw__solid_white));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
+          handleStatusBar(false);
         }
         if (backArrow != null) {
           backArrow.setColorFilter(getResources().getColor(R.color.tw__solid_white),
@@ -176,7 +176,7 @@ public class EditorialFragment extends NavigationTrackFragment
         toolbar.setBackgroundColor(getResources().getColor(R.color.tw__transparent));
         toolbarTitle.setTextColor(getResources().getColor(R.color.black));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          window.setStatusBarColor(getResources().getColor(R.color.white));
+          handleStatusBar(true);
         }
         if (backArrow != null) {
           backArrow.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
@@ -209,7 +209,6 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroy() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
     super.onDestroy();
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
       errorMessageSubscription.unsubscribe();
@@ -233,6 +232,11 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroyView() {
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      window.getDecorView()
+          .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+    }
     toolbar = null;
     appImage = null;
     itemName = null;
@@ -290,6 +294,10 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public Observable<DownloadModel.Action> installButtonClick() {
     return RxView.clicks(appCardButton)
         .map(__ -> action);
+  }
+
+  @Override public Observable<Void> appCardClicked() {
+    return RxView.clicks(appCardView);
   }
 
   @Override public void populateView(EditorialViewModel editorialViewModel) {
@@ -470,6 +478,30 @@ public class EditorialFragment extends NavigationTrackFragment
         showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
             getContext().getString(R.string.out_of_space_dialog_message));
         break;
+    }
+  }
+
+  private void handleStatusBar(boolean collapseState) {
+    if (collapseState) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        window.setStatusBarColor(getResources().getColor(R.color.grey_medium));
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        window.getDecorView()
+            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        window.setStatusBarColor(getResources().getColor(R.color.white));
+      }
+    } else {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
+        window.getDecorView()
+            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        window.getDecorView()
+            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
+      }
     }
   }
 }

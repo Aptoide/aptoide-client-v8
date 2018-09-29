@@ -13,13 +13,13 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static com.google.android.gms.internal.zzs.TAG;
-
 /**
  * Created by neuro on 30-12-2016.
  */
 
 public class ApkFy {
+  
+  private static final String TAG = "ApkFy";
 
   private final Context context;
   private final Intent intent;

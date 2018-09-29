@@ -72,7 +72,7 @@
           android:layout_alignParentEnd="true"
           android:layout_alignParentRight="true"
           android:text="@string/install"
-          style="@style/Aptoide.Button.S.Gradient.Rounded"
+          style="@style/Aptoide.Button.S"
           />
     </RelativeLayout>
   </LinearLayout>

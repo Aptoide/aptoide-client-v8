@@ -51,7 +51,7 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void handleCalendarClickLayout() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(event -> view.calendarLayoutClick())
         .doOnNext(click -> view.showCalendar())
@@ -61,7 +61,7 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void onViewCreatedLoadUserData() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .filter(__ -> isFirstTime)
         .flatMapSingle(__ -> accountManager.accountStatus()
@@ -98,7 +98,7 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void handleSaveDataClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveUserDataButtonClick()
             .doOnNext(viewModel -> {
@@ -124,7 +124,7 @@ public class ManageUserPresenter implements Presenter {
   }
 
   private void handleCancelClick() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.cancelButtonClick()
             .doOnNext(__2 -> navigator.goBack()))

@@ -46,8 +46,8 @@ public class DownloadStateParser {
     return downloadState;
   }
 
-  public DownloadModel.Action parseDownloadType(Install.InstallationType type,
-      boolean paidApp, boolean wasPaid) {
+  public DownloadModel.Action parseDownloadType(Install.InstallationType type, boolean paidApp,
+      boolean wasPaid) {
     DownloadModel.Action action;
     if (paidApp && !wasPaid) {
       action = DownloadModel.Action.PAY;

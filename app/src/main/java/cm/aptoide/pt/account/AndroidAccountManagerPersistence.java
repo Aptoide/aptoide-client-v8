@@ -7,6 +7,7 @@ import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
+import java.util.Date;
 import rx.Completable;
 import rx.Scheduler;
 import rx.Single;
@@ -30,6 +31,9 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
   private static final String ACCOUNT_STORE_THEME = "account_store_theme";
   private static final String ACCOUNT_STORE_USERNAME = "account_store_username";
   private static final String ACCOUNT_STORE_PASSWORD = "account_store_password";
+  private static final String ACCOUNT_PRIVACY_POLICY = "account_privacy_policy";
+  private static final String ACCOUNT_TERMS_AND_CONDITIONS = "account_terms_and_conditions";
+  private static final String ACCOUNT_BIRTH_DATE = "account_birth_date";
 
   private final AccountManager androidAccountManager;
   private final DatabaseStoreDataPersist storePersist;
@@ -91,6 +95,13 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
           androidAccountManager.setUserData(androidAccount, ACCOUNT_STORE_PASSWORD,
               account.getStore()
                   .getPassword());
+          androidAccountManager.setUserData(androidAccount, ACCOUNT_TERMS_AND_CONDITIONS,
+              String.valueOf(account.acceptedTermsAndConditions()));
+          androidAccountManager.setUserData(androidAccount, ACCOUNT_PRIVACY_POLICY,
+              String.valueOf(account.acceptedPrivacyPolicy()));
+          androidAccountManager.setUserData(androidAccount, ACCOUNT_BIRTH_DATE,
+              account.getBirthDate()
+                  .toLocaleString());
 
           return storePersist.persist(account.getSubscribedStores())
               .doOnCompleted(() -> {
@@ -110,7 +121,20 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
 
               final String access =
                   androidAccountManager.getUserData(androidAccount, ACCOUNT_ACCESS_LEVEL);
-
+              final boolean terms =
+                  androidAccountManager.getUserData(androidAccount, ACCOUNT_TERMS_AND_CONDITIONS)
+                      != null ? Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
+                      ACCOUNT_TERMS_AND_CONDITIONS)) : false;
+              final boolean privacy =
+                  androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY) != null
+                      ? Boolean.valueOf(
+                      androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY))
+                      : false;
+              final Date birthdate =
+                  androidAccountManager.getUserData(androidAccount, ACCOUNT_BIRTH_DATE) != null
+                      ? new Date(
+                      androidAccountManager.getUserData(androidAccount, ACCOUNT_BIRTH_DATE))
+                      : new Date(1970, 1, 1);
               return storePersist.get()
                   .doOnError(err -> CrashReport.getInstance()
                       .log(err))
@@ -130,7 +154,7 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
                                 Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
                                     ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
                                     androidAccountManager.getUserData(androidAccount,
-                                        ACCOUNT_ACCESS_CONFIRMED))));
+                                        ACCOUNT_ACCESS_CONFIRMED)), privacy, terms, birthdate));
                           }
 
                           return Single.error(

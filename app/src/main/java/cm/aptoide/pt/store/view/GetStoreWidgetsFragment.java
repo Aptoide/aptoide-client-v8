@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.store.view.home.AdultRowDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
 import rx.functions.Action1;
@@ -17,16 +16,8 @@ import rx.functions.Action1;
 
 public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWidgets> {
 
-  public static Fragment newInstance(boolean addAdultFilter) {
-    Bundle args = new Bundle();
-    args.putBoolean(BundleKeys.ADD_ADULT_FILTER, addAdultFilter);
-    Fragment fragment = new GetStoreWidgetsFragment();
-    Bundle arguments = fragment.getArguments();
-    if (arguments != null) {
-      args.putAll(arguments);
-    }
-    fragment.setArguments(args);
-    return fragment;
+  public static Fragment newInstance() {
+    return new GetStoreWidgetsFragment();
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,16 +26,6 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-
-    if (getArguments().getBoolean(BundleKeys.ADD_ADULT_FILTER, false)) {
-      endlessRecyclerOnScrollListener.addOnEndlessFinishListener(__ -> {
-        final AdultRowDisplayable displayable =
-            new AdultRowDisplayable(GetStoreWidgetsFragment.this);
-        if (!GetStoreWidgetsFragment.this.contains(displayable)) {
-          GetStoreWidgetsFragment.this.addDisplayable(displayable, true);
-        }
-      });
-    }
   }
 
   @Override
@@ -62,9 +43,5 @@ public class GetStoreWidgetsFragment extends GetStoreEndlessFragment<GetStoreWid
 
   @Override public void onResume() {
     super.onResume();
-  }
-
-  private static class BundleKeys {
-    private static final String ADD_ADULT_FILTER = "addAdultFilter";
   }
 }

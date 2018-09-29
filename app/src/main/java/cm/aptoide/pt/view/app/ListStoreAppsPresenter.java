@@ -44,7 +44,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateHandleRetry() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getRetryEvent()
             .observeOn(viewScheduler)
@@ -72,7 +72,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateHandleRefresh() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> view.getRefreshEvent()
             .observeOn(viewScheduler)
@@ -99,7 +99,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateLoadApps() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(lifecycleEvent -> getApps())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -120,7 +120,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateHandleBottomReached() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.reachesBottom()
             .observeOn(viewScheduler)
@@ -144,7 +144,7 @@ public class ListStoreAppsPresenter implements Presenter {
   }
 
   private void onCreateHandleAppClicks() {
-    view.getLifecycle()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.getAppClick()
             .doOnNext(app -> navigator.navigateToAppView(app.getAppId(), app.getPackageName())))

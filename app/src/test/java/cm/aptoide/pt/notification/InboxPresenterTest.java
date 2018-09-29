@@ -56,7 +56,7 @@ public class InboxPresenterTest {
     notifications.add(notification);
     notifications.add(notification2);
 
-    when(view.getLifecycle()).thenReturn(lifecycleEvent);
+    when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
 
   @Test public void showInboxNotifications() {

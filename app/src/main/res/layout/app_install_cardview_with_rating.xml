@@ -94,7 +94,7 @@
         android:textAllCaps="true"
         android:textSize="12sp"
         android:visibility="visible"
-        style="@style/Aptoide.Button.S.Gradient"
+        style="@style/Aptoide.Button.S"
         />
   </RelativeLayout>
 

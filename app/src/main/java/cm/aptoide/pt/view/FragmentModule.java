@@ -78,6 +78,7 @@ import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -208,7 +209,7 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator);
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()));
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,

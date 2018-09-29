@@ -73,7 +73,7 @@ public class ImagePickerPresenterTest {
             imageValidator, Schedulers.immediate(), uriToPathResolver, navigator, contentResolver,
             imageLoader);
 
-    when(userView.getLifecycle()).thenReturn(lifecycleEvent);
+    when(userView.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
 
   @Test public void handlePickImageClickTest() {
