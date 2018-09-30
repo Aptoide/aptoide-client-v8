@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -19,27 +18,35 @@ public interface EditorialView extends View {
 
   Observable<DownloadModel.Action> installButtonClick();
 
-  Observable<Void> appCardClicked();
+  Observable<EditorialEvent> appCardClicked();
 
   void populateView(EditorialViewModel editorialViewModel);
 
   void showError(EditorialViewModel.Error error);
 
-  void showDownloadAppModel(DownloadAppViewModel model);
+  void showDownloadModel(DownloadModel model);
 
   Observable<Boolean> showRootInstallWarningPopup();
 
   void openApp(String packageName);
 
-  Observable<Void> pauseDownload();
+  Observable<EditorialEvent> pauseDownload();
 
-  Observable<Void> resumeDownload();
+  Observable<EditorialEvent> resumeDownload();
 
-  Observable<Void> cancelDownload();
+  Observable<EditorialEvent> cancelDownload();
 
-  Observable<Void> isAppViewReadyToDownload();
+  Observable<Void> isViewReady();
 
   void readyToDownload();
 
-  Observable<String> mediaContentClicked();
+  Observable<ScrollEvent> placeHolderVisibilityChange();
+
+  void removeBottomCardAnimation();
+
+  void addBottomCardAnimation();
+
+  Observable<EditorialEvent> mediaContentClicked();
+
+  void managePlaceHolderVisibity();
 }
