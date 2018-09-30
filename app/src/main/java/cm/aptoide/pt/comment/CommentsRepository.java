@@ -23,6 +23,6 @@ public class CommentsRepository {
   }
 
   public Single<CommentDetailResponseModel> loadComment(long commentId) {
-    return dataSource.loadComments(commentId);
+    return dataSource.loadComment(commentId);
   }
 }

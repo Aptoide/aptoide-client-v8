@@ -25,7 +25,7 @@ public class FakeCommentsDataSource implements CommentsDataSource {
     return getFakeCommentsResponse();
   }
 
-  @Override public Single<CommentDetailResponseModel> loadComments(long commentId) {
+  @Override public Single<CommentDetailResponseModel> loadComment(long commentId) {
     return Single.just(new CommentDetailResponseModel(getFakeComment(-1), getFakeComments()));
   }
 

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.CommentsAdapter;
+import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -32,7 +33,7 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
   private RecyclerView repliesList;
   private CommentsAdapter repliesAdapter;
   private LinearLayoutManager layoutManager;
-  private PublishSubject<Long> commentClickEvent;
+  private PublishSubject<Comment> commentClickEvent;
   private View loading;
   private View genericErrorView;
 

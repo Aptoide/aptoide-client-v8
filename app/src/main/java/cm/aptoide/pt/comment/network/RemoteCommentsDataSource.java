@@ -7,6 +7,7 @@ import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.comment.data.User;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -76,8 +77,25 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
     return loadComments(storeId, false, offset);
   }
 
-  @Override public Single<CommentDetailResponseModel> loadComments(long commentId) {
-    return null;
+  @Override public Single<CommentDetailResponseModel> loadComment(long commentId) {
+    return new ListCommentsRequest(new ListCommentsRequest.Body(commentId, Order.desc, 10, 0),
+        bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
+        sharedPreferences).observe()
+        .flatMap(response -> {
+          if (response.isOk()) {
+            return Observable.just(new CommentDetailResponseModel(new Comment(),
+                map(getReplies(response.getDataList()))));
+          } else {
+            return Observable.error(new IllegalArgumentException(response.getError()
+                .getDescription()));
+          }
+        })
+        .toSingle();
+  }
+
+  private List<cm.aptoide.pt.dataprovider.model.v7.Comment> getReplies(
+      DataList<cm.aptoide.pt.dataprovider.model.v7.Comment> dataList) {
+    return dataList.getList();
   }
 
   private List<Comment> map(List<cm.aptoide.pt.dataprovider.model.v7.Comment> networkComments) {

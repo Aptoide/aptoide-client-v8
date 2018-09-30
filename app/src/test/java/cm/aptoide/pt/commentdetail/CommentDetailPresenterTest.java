@@ -35,13 +35,13 @@ public class CommentDetailPresenterTest {
   }
 
   @Test public void showCommentViewModelTest() {
-    CommentDetailResponseModel dataModelResponse = fakeCommentsDataSource.loadComments(0)
+    CommentDetailResponseModel dataModelResponse = fakeCommentsDataSource.loadComment(0)
         .toBlocking()
         .value();
 
     CommentDetailViewModel viewModel =
         new CommentDetailViewModel("Filipe Gonçalves", "http://via.placeholder.com/350x150",
-            "Eu sou do Benfica", 7, dataModelResponse.getReplies(), new Date());
+            "Eu sou do Benfica", 7, new Date(), dataModelResponse.getReplies());
 
     when(commentDetailManager.loadCommentModel()).thenReturn(Single.just(viewModel));
 

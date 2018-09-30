@@ -18,10 +18,10 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
   private final TextView comment;
   private final TextView replies;
   private final AptoideUtils.DateTimeU dateUtils;
-  private final PublishSubject<Long> commentClickEvent;
+  private final PublishSubject<Comment> commentClickEvent;
 
   public CommentViewHolder(View view, AptoideUtils.DateTimeU dateUtils,
-      PublishSubject<Long> commentClickEvent) {
+      PublishSubject<Comment> commentClickEvent) {
     super(view);
     userAvatar = view.findViewById(R.id.user_icon);
     outerLayout = view.findViewById(R.id.outer_layout);
@@ -55,6 +55,6 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
       this.replies.setVisibility(View.INVISIBLE);
     }
 
-    itemView.setOnClickListener(view -> commentClickEvent.onNext(comment.getId()));
+    itemView.setOnClickListener(view -> commentClickEvent.onNext(comment));
   }
 }

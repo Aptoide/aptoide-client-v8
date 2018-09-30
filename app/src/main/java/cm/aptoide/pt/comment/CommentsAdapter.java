@@ -18,12 +18,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
   private static final int LOADING = 2;
   private final AptoideUtils.DateTimeU dateUtils;
   private final Comment progressComment;
-  private final PublishSubject<Long> commentClickEvent;
+  private final PublishSubject<Comment> commentClickEvent;
   private final int commentViewId;
   private List<Comment> comments;
 
   public CommentsAdapter(List<Comment> comments, AptoideUtils.DateTimeU dateUtils,
-      PublishSubject<Long> commentClickEvent, int commentItemId) {
+      PublishSubject<Comment> commentClickEvent, int commentItemId) {
     this.dateUtils = dateUtils;
     this.comments = comments;
     this.progressComment = new CommentLoading();

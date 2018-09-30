@@ -27,5 +27,5 @@ public interface CommentsView extends View {
 
   Observable<Object> reachesBottom();
 
-  Observable<Long> commentClick();
+  Observable<Comment> commentClick();
 }

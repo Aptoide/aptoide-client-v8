@@ -30,7 +30,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Inject CommentsPresenter commentsPresenter;
   @Inject AptoideUtils.DateTimeU dateUtils;
-  private PublishSubject<Long> commentClickEvent;
+  private PublishSubject<Comment> commentClickEvent;
   private RecyclerView commentsList;
   private CommentsAdapter commentsAdapter;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -126,7 +126,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
         .cast(Object.class);
   }
 
-  @Override public Observable<Long> commentClick() {
+  @Override public Observable<Comment> commentClick() {
     return commentClickEvent;
   }
 

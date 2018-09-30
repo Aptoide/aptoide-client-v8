@@ -66,6 +66,7 @@ import cm.aptoide.pt.comment.CommentsListManager;
 import cm.aptoide.pt.comment.CommentsNavigator;
 import cm.aptoide.pt.comment.CommentsPresenter;
 import cm.aptoide.pt.comment.CommentsView;
+import cm.aptoide.pt.comment.data.User;
 import cm.aptoide.pt.commentdetail.CommentDetailManager;
 import cm.aptoide.pt.commentdetail.CommentDetailPresenter;
 import cm.aptoide.pt.commentdetail.CommentDetailView;
@@ -406,7 +407,13 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides CommentDetailManager commentDetailManager(Comments comments) {
-    return new CommentDetailManager(comments, arguments.getLong("comment_id", -1));
+    return new CommentDetailManager(comments, arguments.getLong("comment_id", -1),
+        arguments.getString("comment_message", ""),
+        new User(arguments.getLong("comment_user_id", -1),
+            arguments.getString("comment_user_avatar", null),
+            arguments.getString("comment_user_name", "")),
+        arguments.getInt("comment_replies_number", 0),
+        arguments.getString("comment_timestamp", "0"));
   }
 
   @FragmentScope @Provides CommentDetailPresenter providesCommentDetailPresenter(

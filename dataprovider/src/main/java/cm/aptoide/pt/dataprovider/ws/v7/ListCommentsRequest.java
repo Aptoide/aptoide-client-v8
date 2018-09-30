@@ -145,6 +145,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     @JsonProperty("store_user") private String storeUser;
     @JsonProperty("store_pass_sha1") private String storePassSha1;
     @JsonProperty("card_uid") private String timelineCardId;
+    private Long commentId;
 
     public Body(boolean refresh, Order order) {
       this.refresh = refresh;
@@ -177,6 +178,13 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.subLimit = subLimit;
       this.offset = offset;
       this.commentType = commentType.name();
+    }
+
+    public Body(long commentId, Order order, int subLimit, int offset) {
+      this.commentId = commentId;
+      this.order = order;
+      this.subLimit = subLimit;
+      this.offset = offset;
     }
 
     @Override public int getOffset() {
@@ -263,6 +271,14 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
     public void setTimelineCardId(String timelineCardId) {
       this.timelineCardId = timelineCardId;
+    }
+
+    public Long getCommentId() {
+      return commentId;
+    }
+
+    public void setCommentId(long commentId) {
+      this.commentId = commentId;
     }
   }
 }

@@ -14,7 +14,7 @@ public class CommentDetailViewModel {
   private final Date date;
 
   public CommentDetailViewModel(String commentUserName, String commentAvatar, String commentMessage,
-      int repliesNumber, List<Comment> replies, Date date) {
+      int repliesNumber, Date date, List<Comment> replies) {
     this.commentUserName = commentUserName;
     this.commentAvatar = commentAvatar;
     this.commentMessage = commentMessage;

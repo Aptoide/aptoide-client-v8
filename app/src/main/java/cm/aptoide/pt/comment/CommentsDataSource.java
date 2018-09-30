@@ -11,5 +11,5 @@ public interface CommentsDataSource {
 
   Single<CommentsResponseModel> loadNextComments(long storeId, int offset);
 
-  Single<CommentDetailResponseModel> loadComments(long commentId);
+  Single<CommentDetailResponseModel> loadComment(long commentId);
 }

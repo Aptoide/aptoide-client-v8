@@ -86,7 +86,7 @@ import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.comment.Comments;
 import cm.aptoide.pt.comment.CommentsRepository;
-import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
+import cm.aptoide.pt.comment.network.RemoteCommentsDataSource;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -1400,10 +1400,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
-    //return new CommentsRepository(
-    //    new RemoteCommentsDataSource(bodyInterceptorPoolV7, okHttpClient, converterFactory,
-    //        tokenInvalidator, sharedPreferences));
-    return new CommentsRepository(new FakeCommentsDataSource());
+    return new CommentsRepository(
+        new RemoteCommentsDataSource(bodyInterceptorPoolV7, okHttpClient, converterFactory,
+            tokenInvalidator, sharedPreferences));
   }
 
   @Singleton @Provides Comments providesComments(CommentsRepository commentsRepository) {
