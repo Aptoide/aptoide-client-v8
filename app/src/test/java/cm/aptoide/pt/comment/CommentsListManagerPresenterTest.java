@@ -1,5 +1,6 @@
 package cm.aptoide.pt.comment;
 
+import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -25,7 +26,7 @@ public class CommentsListManagerPresenterTest {
   private CommentsPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Void> pullToRefreshEvent;
-  private PublishSubject<Long> commentClickEvent;
+  private PublishSubject<Comment> commentClickEvent;
   private FakeCommentsDataSource fakeCommentsDataSource;
 
   @Before public void setupCommentsPresenter() {
@@ -100,8 +101,9 @@ public class CommentsListManagerPresenterTest {
     //When the view is shown to the screen
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And a comment is clicked
-    commentClickEvent.onNext(100L);
+    Comment comment = new Comment();
+    commentClickEvent.onNext(comment);
     //Then navigation to the comment detail should start
-    verify(commentsNavigator).navigateToCommentView(100L);
+    verify(commentsNavigator).navigateToCommentView(comment);
   }
 }
