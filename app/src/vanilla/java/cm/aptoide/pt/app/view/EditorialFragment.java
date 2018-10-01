@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.graphics.ColorUtils;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -415,17 +415,6 @@ public class EditorialFragment extends NavigationTrackFragment
     ready.onNext(null);
   }
 
-  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
-    return paletteSwatchSubject;
-  }
-
-  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
-    if (swatch != null) {
-      if (ColorUtils.calculateLuminance(swatch.getRgb()) > 0.5) {
-        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
-      }
-    }
-
   @Override public Observable<ScrollEvent> placeHolderVisibilityChange() {
     return RxNestedScrollView.scrollChangeEvents(scrollView)
         .flatMap(viewScrollChangeEvent -> Observable.just(viewScrollChangeEvent)
@@ -472,15 +461,24 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  private void populateAppContent(EditorialViewModel editorialViewModel) {
-    placeHolderPosition = editorialViewModel.getPlaceHolderPosition();
-    String title = editorialViewModel.getTitle();
-    toolbar.setTitle(title);
-    toolbarTitle.setText(title);
+  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
+    return paletteSwatchSubject;
+  }
+
+  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
+    if (swatch != null) {
+      int color = swatch.getRgb();
+      if (ColorUtils.calculateLuminance(color) > 0.5) {
+        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
+      } else {
+        actionItemCard.setBackgroundColor(color);
+      }
+    }
     actionItemCard.setVisibility(View.VISIBLE);
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
+    placeHolderPosition = editorialViewModel.getPlaceHolderPosition();
     if (editorialViewModel.hasBackgroundImage()) {
       ImageLoader.with(getContext())
           .loadWithPalette(editorialViewModel.getBackgroundImage(), appImage, paletteSwatchSubject);
