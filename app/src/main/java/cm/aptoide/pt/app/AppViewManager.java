@@ -1,5 +1,7 @@
 package cm.aptoide.pt.app;
 
+import com.appnext.nativeads.NativeAd;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -26,6 +28,8 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
+import rx.functions.Action1;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 04/05/18.
@@ -114,9 +118,9 @@ public class AppViewManager {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
-      return loadAdForSimilarApps(packageName, keyWords).flatMap(
+      return loadAppNextAdForSimilarApps(keyWords).toSingle().flatMap(
           adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
-            cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getMinimalAd(),
+            cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getNativeAd(),
                 recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
                 recommendedAppsRequestResult.getError(), adResult.getError());
             return cachedSimilarAppsViewModel;
@@ -193,6 +197,10 @@ public class AppViewManager {
   private Single<MinimalAdRequestResult> loadAdForSimilarApps(String packageName,
       List<String> keyWords) {
     return adsManager.loadAd(packageName, keyWords);
+  }
+
+  private PublishSubject<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
+    return adsManager.loadAppnextAd(keywords);
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {
