@@ -147,6 +147,10 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       } else {
         EditorialMedia editorialMedia = editorialItem.getMedia()
             .get(0);
+        if (editorialMedia.hasDescription()) {
+          description.setText(editorialMedia.getDescription());
+          description.setVisibility(View.VISIBLE);
+        }
         if (editorialMedia.isImage()) {
           ImageLoader.with(itemView.getContext())
               .load(editorialMedia.getUrl(), image);
@@ -163,13 +167,6 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
                 new EditorialEvent(EditorialEvent.Type.MEDIA, editorialMedia.getUrl())));
           }
         }
-      }
-
-      EditorialMedia editorialMedia = editorialItem.getMedia()
-          .get(0);
-      if (editorialMedia.hasDescription()) {
-        description.setText(editorialMedia.getDescription());
-        description.setVisibility(View.VISIBLE);
       }
     }
   }

@@ -1,42 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="328dp"
-    android:layout_height="200dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     >
-  <ImageView
-      android:id="@+id/image_item"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:adjustViewBounds="true"
-      android:scaleType="centerCrop"
-      android:visibility="gone"
-      tools:background="@color/grey_fog_normal"
-      tools:visibility="visible"
-      />
-
   <FrameLayout
-      android:id="@+id/editorial_video_thumbnail_container"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:foreground="@color/overlay_black"
-      android:visibility="gone"
+      android:id="@+id/media_container"
+      android:layout_width="328dp"
+      android:layout_height="200dp"
       >
     <ImageView
-        android:id="@+id/editorial_video_thumbnail"
+        android:id="@+id/image_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@color/black_87_alpha"
-        android:tint="@color/semi_transparent_black"
+        android:visibility="gone"
+        tools:background="@color/grey_fog_normal"
+        tools:visibility="visible"
         />
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:src="@drawable/btn_movie_play_normal"
-        />
+    <FrameLayout
+        android:id="@+id/editorial_video_thumbnail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@color/overlay_black"
+        android:visibility="gone"
+        >
+      <ImageView
+          android:id="@+id/editorial_video_thumbnail"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:scaleType="centerCrop"
+          android:src="@color/black_87_alpha"
+          android:tint="@color/semi_transparent_black"
+          />
+
+      <ImageView
+          android:layout_width="50dp"
+          android:layout_height="50dp"
+          android:layout_gravity="center"
+          android:src="@drawable/btn_movie_play_normal"
+          />
+    </FrameLayout>
   </FrameLayout>
-</FrameLayout>
+  <TextView
+      android:id="@+id/editorial_image_description"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/media_container"
+      android:layout_marginLeft="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="11dp"
+      android:visibility="gone"
+      tools:text="Description"
+      tools:visibility="visible"
+      style="@style/Aptoide.TextView.Regular.XS"
+      />
+</RelativeLayout>
