@@ -15,6 +15,7 @@ class EditorialViewModel {
   private final long appId;
   private final String title;
   private final String appName;
+  private final float rating;
   private final String packageName;
   private final long size;
   private final String icon;
@@ -29,18 +30,21 @@ class EditorialViewModel {
   private final String backgroundImage;
   private final String pathAlt;
   private final String md5;
+  private final int placeHolderPosition;
   private final boolean loading;
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
-      String title, String appName, String packageName, long size, String icon, String graphic,
-      Obb obb, long storeId, String storeName, String storeTheme, String vername, int vercode,
-      String path, String backgroundImage, String pathAlt, String md5) {
+      String title, String appName, float rating, String packageName, long size, String icon,
+      String graphic, Obb obb, long storeId, String storeName, String storeTheme, String vername,
+      int vercode, String path, String backgroundImage, String pathAlt, String md5,
+      int placeHolderPosition) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
     this.title = title;
     this.appName = appName;
+    this.rating = rating;
     this.packageName = packageName;
     this.size = size;
     this.icon = icon;
@@ -55,6 +59,7 @@ class EditorialViewModel {
     this.backgroundImage = backgroundImage;
     this.pathAlt = pathAlt;
     this.md5 = md5;
+    this.placeHolderPosition = placeHolderPosition;
     this.loading = false;
     this.error = null;
   }
@@ -67,6 +72,7 @@ class EditorialViewModel {
     this.appId = -1;
     this.title = null;
     this.appName = null;
+    this.rating = -1;
     this.packageName = null;
     this.size = -1;
     this.icon = null;
@@ -81,6 +87,7 @@ class EditorialViewModel {
     this.backgroundImage = null;
     this.pathAlt = null;
     this.md5 = null;
+    this.placeHolderPosition = -1;
   }
 
   public EditorialViewModel(Error error) {
@@ -91,6 +98,7 @@ class EditorialViewModel {
     this.appId = -1;
     this.title = null;
     this.appName = null;
+    this.rating = -1;
     this.packageName = null;
     this.size = -1;
     this.icon = null;
@@ -105,6 +113,7 @@ class EditorialViewModel {
     this.backgroundImage = null;
     this.pathAlt = null;
     this.md5 = null;
+    this.placeHolderPosition = -1;
   }
 
   public boolean hasContent() {
@@ -203,8 +212,16 @@ class EditorialViewModel {
     return md5;
   }
 
+  public float getRating() {
+    return rating;
+  }
+
   public String getTitle() {
     return title;
+  }
+
+  public int getPlaceHolderPosition() {
+    return placeHolderPosition;
   }
 
   public enum Error {

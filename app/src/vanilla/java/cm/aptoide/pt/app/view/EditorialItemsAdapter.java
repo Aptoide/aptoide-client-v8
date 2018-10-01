@@ -16,10 +16,10 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
 
   private final DecimalFormat oneDecimalFormat;
   private List<EditorialContent> editorialItemList;
-  private PublishSubject<String> editorialMediaClicked;
+  private PublishSubject<EditorialEvent> editorialMediaClicked;
 
   public EditorialItemsAdapter(List<EditorialContent> editorialItemList,
-      DecimalFormat oneDecimalFormat, PublishSubject<String> editorialMediaClicked) {
+      DecimalFormat oneDecimalFormat, PublishSubject<EditorialEvent> editorialMediaClicked) {
     this.editorialItemList = editorialItemList;
     this.oneDecimalFormat = oneDecimalFormat;
     this.editorialMediaClicked = editorialMediaClicked;
@@ -40,18 +40,8 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
     return editorialItemList.size();
   }
 
-  public void update(List<EditorialContent> editorialItemList) {
-    this.editorialItemList = editorialItemList;
-    notifyDataSetChanged();
-  }
-
   public void add(List<EditorialContent> editorialItemList) {
     this.editorialItemList.addAll(editorialItemList);
     notifyDataSetChanged();
-  }
-
-  public void remove(int itemPosition) {
-    editorialItemList.remove(itemPosition);
-    notifyItemRemoved(itemPosition);
   }
 }

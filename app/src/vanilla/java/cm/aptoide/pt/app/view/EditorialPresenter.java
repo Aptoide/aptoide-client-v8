@@ -54,6 +54,8 @@ public class EditorialPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
+    handlePlaceHolderVisibilityChange();
+    handlePlaceHolderVisivibility();
   }
 
   private void onCreateLoadAppOfTheWeek() {
@@ -98,7 +100,7 @@ public class EditorialPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.mediaContentClicked())
-        .doOnNext(editorialNavigator::navigateToUri)
+        .doOnNext(editorialEvent -> editorialNavigator.navigateToUri(editorialEvent.getUrl()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
@@ -218,14 +220,26 @@ public class EditorialPresenter implements Presenter {
   private void loadDownloadApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.isAppViewReadyToDownload())
+        .flatMap(created -> view.isViewReady())
         .flatMap(create -> editorialManager.loadEditorialViewModel()
             .toObservable())
-        .flatMap(
-            app -> editorialManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-                app.getVercode(), false, null))
+        .flatMap(app -> editorialManager.loadDownloadModel(app.getMd5(), app.getPackageName(),
+            app.getVercode(), false, null))
         .observeOn(viewScheduler)
-        .doOnNext(model -> view.showDownloadAppModel(model))
+        .doOnNext(view::showDownloadModel)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handlePlaceHolderVisivibility() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.isViewReady())
+        .observeOn(viewScheduler)
+        .doOnNext(model -> view.managePlaceHolderVisibity())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -235,6 +249,24 @@ public class EditorialPresenter implements Presenter {
 
   private Completable openInstalledApp(String packageName) {
     return Completable.fromAction(() -> view.openApp(packageName));
+  }
+
+  private void handlePlaceHolderVisibilityChange() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.placeHolderVisibilityChange())
+        .doOnNext(scrollEvent -> {
+          if (scrollEvent.getItemShown() && scrollEvent.isScrollDown()) {
+            view.removeBottomCardAnimation();
+          } else if (!scrollEvent.getItemShown() && !scrollEvent.isScrollDown()) {
+            view.addBottomCardAnimation();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private void handlePaletteColor() {
