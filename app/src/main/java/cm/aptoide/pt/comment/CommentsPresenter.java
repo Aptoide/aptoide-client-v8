@@ -1,7 +1,6 @@
 package cm.aptoide.pt.comment;
 
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -33,6 +32,20 @@ public class CommentsPresenter implements Presenter {
     reachesBottom();
 
     clickComment();
+
+    postComment();
+  }
+
+  @VisibleForTesting public void postComment() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.commentPost())
+        .flatMapCompletable(commentsListManager::postComment)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comment -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void reachesBottom() {
@@ -51,7 +64,7 @@ public class CommentsPresenter implements Presenter {
         });
   }
 
-  private void addComments(CommentsResponseModel model) {
+  private void addComments(CommentsListViewModel model) {
     if (!model.isLoading()) {
       view.hideLoadMore();
       view.addComments(model.getComments());
@@ -101,9 +114,9 @@ public class CommentsPresenter implements Presenter {
         });
   }
 
-  private void showComments(CommentsResponseModel model) {
+  private void showComments(CommentsListViewModel model) {
     if (!model.isLoading()) {
-      view.showComments(model.getComments());
+      view.showComments(model);
       view.hideLoading();
     }
   }

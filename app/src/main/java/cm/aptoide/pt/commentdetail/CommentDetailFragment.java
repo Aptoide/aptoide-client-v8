@@ -13,6 +13,7 @@ import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.CommentsAdapter;
+import cm.aptoide.pt.comment.SubmitComment;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -57,7 +58,7 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
     layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
     repliesList.setLayoutManager(layoutManager);
     repliesAdapter = new CommentsAdapter(new ArrayList<>(), dateUtils, commentClickEvent,
-        R.layout.comment_inner_layout);
+        R.layout.comment_inner_layout, PublishSubject.create());
     repliesList.setAdapter(repliesAdapter);
     repliesList.addItemDecoration(new DividerItemDecoration(this.getContext(), 0));
 
@@ -108,7 +109,7 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
       repliesNumber.setText(String.format(this.getContext()
           .getString(R.string.comment_replies_number_short), viewModel.getRepliesNumber()));
     }
-    repliesAdapter.setComments(viewModel.getReplies());
+    repliesAdapter.setComments(viewModel.getReplies(), new SubmitComment(null));
   }
 
   @Override public void showLoading() {

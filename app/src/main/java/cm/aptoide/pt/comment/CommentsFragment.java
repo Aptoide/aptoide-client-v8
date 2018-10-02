@@ -27,9 +27,9 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
    * The minimum number of items to have below your current scroll position before loading more.
    */
   private static final int VISIBLE_THRESHOLD = 2;
-
   @Inject CommentsPresenter commentsPresenter;
   @Inject AptoideUtils.DateTimeU dateUtils;
+  private PublishSubject<Comment> postComment;
   private PublishSubject<Comment> commentClickEvent;
   private RecyclerView commentsList;
   private CommentsAdapter commentsAdapter;
@@ -49,6 +49,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     commentClickEvent = PublishSubject.create();
+    postComment = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -62,7 +63,8 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
     commentsList.setLayoutManager(layoutManager);
     commentsAdapter =
-        new CommentsAdapter(new ArrayList<>(), dateUtils, commentClickEvent, R.layout.comment_item);
+        new CommentsAdapter(new ArrayList<>(), dateUtils, commentClickEvent, R.layout.comment_item,
+            postComment);
     commentsList.setAdapter(commentsAdapter);
 
     attachPresenter(commentsPresenter);
@@ -73,8 +75,8 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
         .getSimpleName());
   }
 
-  @Override public void showComments(List<Comment> comments) {
-    commentsAdapter.setComments(comments);
+  @Override public void showComments(CommentsListViewModel viewModel) {
+    commentsAdapter.setComments(viewModel.getComments(), new SubmitComment(viewModel.getAvatar()));
   }
 
   @Override public void showLoading() {
@@ -128,6 +130,10 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public Observable<Comment> commentClick() {
     return commentClickEvent;
+  }
+
+  @Override public Observable<Comment> commentPost() {
+    return postComment;
   }
 
   private boolean isEndReached() {

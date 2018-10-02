@@ -7,7 +7,7 @@ import rx.Observable;
 
 public interface CommentsView extends View {
 
-  void showComments(List<Comment> comments);
+  void showComments(CommentsListViewModel comments);
 
   void showLoading();
 
@@ -28,4 +28,6 @@ public interface CommentsView extends View {
   Observable<Object> reachesBottom();
 
   Observable<Comment> commentClick();
+
+  Observable<Comment> commentPost();
 }

@@ -16,19 +16,23 @@ import rx.subjects.PublishSubject;
 public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHolder> {
   private static final int COMMENT = 1;
   private static final int LOADING = 2;
+  private static final int ADD_COMMENT = 3;
   private final AptoideUtils.DateTimeU dateUtils;
   private final Comment progressComment;
   private final PublishSubject<Comment> commentClickEvent;
   private final int commentViewId;
+  private final PublishSubject<Comment> postComment;
   private List<Comment> comments;
 
   public CommentsAdapter(List<Comment> comments, AptoideUtils.DateTimeU dateUtils,
-      PublishSubject<Comment> commentClickEvent, int commentItemId) {
+      PublishSubject<Comment> commentClickEvent, int commentItemId,
+      PublishSubject<Comment> postComment) {
     this.dateUtils = dateUtils;
     this.comments = comments;
     this.progressComment = new CommentLoading();
     this.commentClickEvent = commentClickEvent;
     this.commentViewId = commentItemId;
+    this.postComment = postComment;
   }
 
   @Override public AbstractCommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,6 +43,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
       case LOADING:
         return new LoadingCommentViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.progress_item, parent, false));
+      case ADD_COMMENT:
+        return new SubmitCommentViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.add_comment_item, parent, false), postComment);
       default:
         throw new IllegalStateException("Invalid comment view type");
     }
@@ -52,6 +59,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
     Comment comment = comments.get(position);
     if (comment instanceof CommentLoading) {
       return LOADING;
+    } else if (comment instanceof SubmitComment) {
+      return ADD_COMMENT;
     } else {
       return COMMENT;
     }
@@ -61,8 +70,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
     return comments.size();
   }
 
-  public void setComments(List<Comment> comments) {
+  public void setComments(List<Comment> comments, SubmitComment submitComment) {
     this.comments = comments;
+    this.comments.add(0, submitComment);
     notifyDataSetChanged();
   }
 

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -91,6 +92,10 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
           }
         })
         .toSingle();
+  }
+
+  @Override public Completable writeComment() {
+    return Completable.complete();
   }
 
   private List<cm.aptoide.pt.dataprovider.model.v7.Comment> getReplies(

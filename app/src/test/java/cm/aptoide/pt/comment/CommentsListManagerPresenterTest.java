@@ -1,7 +1,6 @@
 package cm.aptoide.pt.comment;
 
 import cm.aptoide.pt.comment.data.Comment;
-import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.View;
@@ -9,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -27,6 +27,7 @@ public class CommentsListManagerPresenterTest {
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Void> pullToRefreshEvent;
   private PublishSubject<Comment> commentClickEvent;
+  private PublishSubject<Comment> commentPostEvent;
   private FakeCommentsDataSource fakeCommentsDataSource;
 
   @Before public void setupCommentsPresenter() {
@@ -35,6 +36,7 @@ public class CommentsListManagerPresenterTest {
     lifecycleEvent = PublishSubject.create();
     pullToRefreshEvent = PublishSubject.create();
     commentClickEvent = PublishSubject.create();
+    commentPostEvent = PublishSubject.create();
 
     presenter =
         new CommentsPresenter(view, commentsListManager, commentsNavigator, Schedulers.immediate(),
@@ -44,11 +46,14 @@ public class CommentsListManagerPresenterTest {
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.refreshes()).thenReturn(pullToRefreshEvent);
     when(view.commentClick()).thenReturn(commentClickEvent);
+    when(view.commentPost()).thenReturn(commentPostEvent);
   }
 
   @Test public void showCommentsTest() {
     when(commentsListManager.loadComments()).thenReturn(
-        fakeCommentsDataSource.loadComments(15, false));
+        fakeCommentsDataSource.loadComments(15, false)
+            .map(commentsResponseModel -> new CommentsListViewModel("",
+                commentsResponseModel.getComments(), false)));
     //Given an initialized CommentsPresenter
     presenter.showComments();
     //When the view is shown to the screen
@@ -77,8 +82,13 @@ public class CommentsListManagerPresenterTest {
   }
 
   @Test public void pullRefreshTest() {
-    Single<CommentsResponseModel> value = fakeCommentsDataSource.loadComments(15, false);
-    when(commentsListManager.loadFreshComments()).thenReturn(value);
+    CommentsListViewModel commentsViewModel = fakeCommentsDataSource.loadComments(15, false)
+        .map(commentsResponseModel -> new CommentsListViewModel("",
+            commentsResponseModel.getComments(), false))
+        .toBlocking()
+        .value();
+
+    when(commentsListManager.loadFreshComments()).thenReturn(Single.just(commentsViewModel));
     //Given an initialized CommentsPresenter
     presenter.pullToRefresh();
     //When the view is shown to the screen
@@ -90,9 +100,7 @@ public class CommentsListManagerPresenterTest {
     //Then the fresh comments should be requests
     verify(commentsListManager).loadFreshComments();
     //Then the comments should be shown
-    verify(view).showComments(value.toBlocking()
-        .value()
-        .getComments());
+    verify(view).showComments(commentsViewModel);
   }
 
   @Test public void commentClick() {
@@ -105,5 +113,19 @@ public class CommentsListManagerPresenterTest {
     commentClickEvent.onNext(comment);
     //Then navigation to the comment detail should start
     verify(commentsNavigator).navigateToCommentView(comment);
+  }
+
+  @Test public void postComment() {
+    //Given an initialized CommentsPresenter
+    presenter.postComment();
+    //When the view is shown to the screen
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And a comment is written
+    Comment comment = new Comment();
+    when(commentsListManager.postComment(comment)).thenReturn(Completable.complete());
+    //And the send action button is clicked
+    commentPostEvent.onNext(comment);
+    //Then the comment should be sent to the repository
+    verify(commentsListManager).postComment(comment);
   }
 }

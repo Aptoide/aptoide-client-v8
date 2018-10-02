@@ -391,8 +391,9 @@ import rx.schedulers.Schedulers;
     return new ApkFyExperiment(abTestManager);
   }
 
-  @FragmentScope @Provides CommentsListManager providesCommentsListManager(Comments comments) {
-    return new CommentsListManager(arguments.getLong("storeId", -1), comments, 0);
+  @FragmentScope @Provides CommentsListManager providesCommentsListManager(Comments comments,
+      AptoideAccountManager accountManager) {
+    return new CommentsListManager(accountManager, arguments.getLong("storeId", -1), comments, 0);
   }
 
   @FragmentScope @Provides CommentsPresenter providesCommentsPresenter(

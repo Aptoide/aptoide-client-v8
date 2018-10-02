@@ -9,6 +9,7 @@ import cm.aptoide.pt.comment.data.User;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import rx.Completable;
 import rx.Single;
 
 public class FakeCommentsDataSource implements CommentsDataSource {
@@ -27,6 +28,10 @@ public class FakeCommentsDataSource implements CommentsDataSource {
 
   @Override public Single<CommentDetailResponseModel> loadComment(long commentId) {
     return Single.just(new CommentDetailResponseModel(getFakeComment(-1), getFakeComments()));
+  }
+
+  @Override public Completable writeComment() {
+    return Completable.complete();
   }
 
   private Single<CommentsResponseModel> getFakeCommentsResponse() {
