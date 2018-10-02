@@ -30,7 +30,7 @@ public class FakeCommentsDataSource implements CommentsDataSource {
     return Single.just(new CommentDetailResponseModel(getFakeComment(-1), getFakeComments()));
   }
 
-  @Override public Completable writeComment() {
+  @Override public Completable writeComment(long storeId, String message) {
     return Completable.complete();
   }
 

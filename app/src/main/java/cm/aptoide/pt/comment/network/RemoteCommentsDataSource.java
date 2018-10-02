@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.Order;
+import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -94,8 +95,18 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
         .toSingle();
   }
 
-  @Override public Completable writeComment() {
-    return Completable.complete();
+  @Override public Completable writeComment(long storeId, String message) {
+    return new PostCommentForStore(new PostCommentForStore.Body(storeId, message), bodyInterceptor,
+        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences).observe()
+        .flatMap(response -> {
+          if (response.isOk()) {
+            return Observable.empty();
+          } else {
+            return Observable.error(new IllegalStateException(response.getError()
+                .getDescription()));
+          }
+        })
+        .toCompletable();
   }
 
   private List<cm.aptoide.pt.dataprovider.model.v7.Comment> getReplies(

@@ -49,6 +49,6 @@ public class CommentsListManager {
   }
 
   public Completable postComment(Comment comment) {
-    return comments.writeComment();
+    return comments.writeComment(storeId, comment.getMessage());
   }
 }

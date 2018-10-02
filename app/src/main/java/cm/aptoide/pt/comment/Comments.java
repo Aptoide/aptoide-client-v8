@@ -27,7 +27,7 @@ public class Comments {
     return commentsRepository.loadComment(commentId);
   }
 
-  public Completable writeComment() {
-    return commentsRepository.writeComment();
+  public Completable writeComment(long storeId, String message) {
+    return commentsRepository.writeComment(storeId, message);
   }
 }
