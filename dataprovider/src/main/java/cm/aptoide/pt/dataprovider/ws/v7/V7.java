@@ -23,6 +23,8 @@ import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
 import cm.aptoide.pt.dataprovider.model.v7.ListReviews;
 import cm.aptoide.pt.dataprovider.model.v7.SetComment;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
+import cm.aptoide.pt.dataprovider.model.v7.discovery.HasVideosResponse;
+import cm.aptoide.pt.dataprovider.model.v7.discovery.VideosResponse;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
@@ -47,6 +49,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.discovery.GetVideosRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.discovery.HasVideosRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
@@ -542,6 +546,14 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("user/action/item/card/markAsRead/") Observable<BaseV7Response> setRead(
         @Body MarkAsReadRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("community/videos/get") Observable<VideosResponse> getVideos(
+        @Body GetVideosRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("community/videos/count") Observable<HasVideosResponse> hasVideos(
+        @Body HasVideosRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }

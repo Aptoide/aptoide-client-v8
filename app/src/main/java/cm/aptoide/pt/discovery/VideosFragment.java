@@ -14,15 +14,19 @@ import android.widget.LinearLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import rx.Observable;
 
 public class VideosFragment extends NavigationTrackFragment implements VideosView {
+  private static final int VISIBLE_THRESHOLD = 2;
 
   @Inject VideosPresenter presenter;
   private RecyclerView list;
   private VideoAdapter adapter;
+  private LinearLayoutManager layoutManager;
   private LinearLayout videosEmptyState;
   private Button discoveryOptionButton;
   private Toolbar toolbar;
@@ -48,6 +52,9 @@ public class VideosFragment extends NavigationTrackFragment implements VideosVie
 
     setHasOptionsMenu(true);
 
+    layoutManager = new LinearLayoutManager(getContext());
+    list.setLayoutManager(layoutManager);
+
     list.setAdapter(adapter);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     attachPresenter(presenter);
@@ -66,6 +73,18 @@ public class VideosFragment extends NavigationTrackFragment implements VideosVie
     adapter.add(videos);
   }
 
+  @Override public void showMoreVideos(List<Video> videos) {
+    adapter.addMore(videos);
+  }
+
+  @Override public Observable<Object> reachesBottom() {
+    return RxRecyclerView.scrollEvents(list)
+        .map(scroll -> isEndReached())
+        .distinctUntilChanged()
+        .filter(isEnd -> isEnd)
+        .cast(Object.class);
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
 
@@ -79,5 +98,10 @@ public class VideosFragment extends NavigationTrackFragment implements VideosVie
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  private boolean isEndReached() {
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
+        <= VISIBLE_THRESHOLD;
   }
 }

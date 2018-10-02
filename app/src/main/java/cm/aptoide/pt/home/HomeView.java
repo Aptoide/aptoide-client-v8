@@ -40,4 +40,6 @@ public interface HomeView extends BundleView {
   void setDefaultUserImage();
 
   void showTermsAndConditionsDialog();
+
+  void showDiscoveryButton(boolean isLive);
 }

@@ -24,7 +24,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
     holder.setAppName(videosList.get(position));
     holder.setAppScore(videosList.get(position));
     holder.setAppInfoBackgroundColour(videosList.get(position));
-
   }
 
   @Override public int getItemCount() {
@@ -33,6 +32,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
   public void add(List<Video> videosList) {
     this.videosList = videosList;
+    notifyDataSetChanged();
+  }
+
+  public void addMore(List<Video> videos) {
+    this.videosList.addAll(videos);
     notifyDataSetChanged();
   }
 }
