@@ -10,7 +10,11 @@ public class CommentsListViewModel {
   private final boolean loading;
 
   public CommentsListViewModel(String avatar, List<Comment> comments, boolean loading) {
-    this.avatar = avatar;
+    if ("".equals(avatar)) {
+      this.avatar = null;
+    } else {
+      this.avatar = avatar;
+    }
     this.comments = comments;
     this.loading = loading;
   }

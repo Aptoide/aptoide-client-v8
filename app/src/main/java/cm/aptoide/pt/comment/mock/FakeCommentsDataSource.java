@@ -34,6 +34,10 @@ public class FakeCommentsDataSource implements CommentsDataSource {
     return Completable.complete();
   }
 
+  @Override public Completable writeComment(long storeId, String message, long parentId) {
+    return Completable.complete();
+  }
+
   private Single<CommentsResponseModel> getFakeCommentsResponse() {
     List<Comment> comments = getFakeComments();
     return Single.just(new CommentsResponseModel(comments, 0));

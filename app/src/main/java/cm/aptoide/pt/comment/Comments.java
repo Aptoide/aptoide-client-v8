@@ -30,4 +30,8 @@ public class Comments {
   public Completable writeComment(long storeId, String message) {
     return commentsRepository.writeComment(storeId, message);
   }
+
+  public Completable writeComment(long storeId, String message, long parentId) {
+    return commentsRepository.writeComment(storeId, message, parentId);
+  }
 }

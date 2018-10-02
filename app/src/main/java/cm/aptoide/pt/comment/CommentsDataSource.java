@@ -15,4 +15,6 @@ public interface CommentsDataSource {
   Single<CommentDetailResponseModel> loadComment(long commentId);
 
   Completable writeComment(long storeId, String message);
+
+  Completable writeComment(long storeId, String message, long parentId);
 }

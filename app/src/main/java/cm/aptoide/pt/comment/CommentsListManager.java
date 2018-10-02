@@ -51,4 +51,8 @@ public class CommentsListManager {
   public Completable postComment(Comment comment) {
     return comments.writeComment(storeId, comment.getMessage());
   }
+
+  public Completable replyComment(Comment comment, long parentId) {
+    return comments.writeComment(storeId, comment.getMessage(), parentId);
+  }
 }

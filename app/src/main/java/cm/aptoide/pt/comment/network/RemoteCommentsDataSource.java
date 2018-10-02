@@ -109,6 +109,21 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
         .toCompletable();
   }
 
+  @Override public Completable writeComment(long storeId, String message, long parentId) {
+    return new PostCommentForStore(new PostCommentForStore.Body(storeId, message, parentId),
+        bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
+        sharedPreferences).observe()
+        .flatMap(response -> {
+          if (response.isOk()) {
+            return Observable.empty();
+          } else {
+            return Observable.error(new IllegalStateException(response.getError()
+                .getDescription()));
+          }
+        })
+        .toCompletable();
+  }
+
   private List<cm.aptoide.pt.dataprovider.model.v7.Comment> getReplies(
       DataList<cm.aptoide.pt.dataprovider.model.v7.Comment> dataList) {
     return dataList.getList();

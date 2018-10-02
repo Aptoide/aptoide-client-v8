@@ -30,4 +30,8 @@ public class CommentsRepository {
   public Completable writeComment(long storeId, String message) {
     return dataSource.writeComment(storeId, message);
   }
+
+  public Completable writeComment(long storeId, String message, long parentId) {
+    return dataSource.writeComment(storeId, message, parentId);
+  }
 }
