@@ -7,6 +7,8 @@ import com.appnext.nativeads.NativeAd;
 import com.appnext.nativeads.NativeAdListener;
 import com.appnext.nativeads.NativeAdRequest;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import cm.aptoide.pt.BuildConfig;
@@ -61,6 +63,11 @@ public class AppNextAdRepository {
     public String getCategory(List<String> keywords){
         for(String s : keywords){
             s = s.substring(0,1).toUpperCase() + s.substring(1).toLowerCase();
+            try {
+                s = URLEncoder.encode(s, "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                // Ignore
+            }
             switch (s){
                 case "Action":
                     return s;
@@ -68,19 +75,20 @@ public class AppNextAdRepository {
                     return s;
                 case "Arcade":
                     return s;
-                case "Arcade & Action":
+                case "Arcade%20%26%20Action":
                     return s;
                 case "Board":
                     return s;
-                case "Books & Reference":
+                case "Books":
+                case "Books%20%26%20Reference":
                     return s;
-                case "Brain & Puzzle":
+                case "Brain%20%26%20Puzzle":
                     return s;
                 case "Business":
                     return s;
                 case "Card":
                     return s;
-                case "Cards & Casino":
+                case "Cards%20%26%20Casino":
                     return s;
                 case "Casino":
                     return s;
@@ -100,23 +108,23 @@ public class AppNextAdRepository {
                     return s;
                 case "Finance":
                     return s;
-                case "Health & Fitness":
+                case "Health%20%26%20Fitness":
                     return s;
-                case "Libraries & Demo":
+                case "Libraries%20%26%20Demo":
                     return s;
                 case "Lifestyle":
                     return s;
-                case "Live Wallpaper":
+                case "Live%20Wallpaper":
                     return s;
-                case "Media & Video":
+                case "Media%20%26%20Video":
                     return s;
                 case "Medical":
                     return s;
                 case "Music":
                     return s;
-                case "Music & Audio":
+                case "Music%20%26%20Audio":
                     return s;
-                case "News & Magazines":
+                case "News%20%26%20Magazines":
                     return s;
                 case "Personalization":
                     return s;
@@ -128,7 +136,7 @@ public class AppNextAdRepository {
                     return s;
                 case "Racing":
                     return s;
-                case "Role Playing":
+                case "Role%20Playing":
                     return s;
                 case "Shopping":
                     return s;
@@ -138,14 +146,15 @@ public class AppNextAdRepository {
                     return s;
                 case "Sports":
                     return s;
-                case "Sports Games":
+                case "Sports%20Games":
                     return s;
                 case "Strategy":
                     return s;
                 case "Tools":
                     return s;
-                case "Travel & Local":
-                    return s;
+                case "Travel":
+                case "Travel%20%26%20Local":
+                    return "Travel%20%26%20Local";
                 case "Trivia":
                     return s;
                 case "Weather":
