@@ -61,7 +61,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private BottomNavigationActivity bottomNavigationActivity;
   private LoggedInTermsAndConditionsDialog gdprDialog;
 
-
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
     if (activity instanceof BottomNavigationActivity) {
