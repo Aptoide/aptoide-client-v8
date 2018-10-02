@@ -2,7 +2,6 @@ package cm.aptoide.pt.discovery;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.graphics.Palette;
@@ -13,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -66,15 +66,10 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
     appScore.setText(Double.toString(video.getRating()));
   }
 
-  public void setAppIcon(Video video) {
-    Glide.with(this.context)
-        .asBitmap()
-        .load(video.getImageUrl())
-        .into(appIcon);
-  }
-
   public void setAppInfoBackgroundColour(Video video) {
 
+    ImageLoader.with(this.context)
+        .loadVideoAppInfoBackgroundColor(video, appInfoBackground, installButton, appIcon);
     GlideApp.with(this.context)
         .asBitmap()
         .load(video.getImageUrl())
@@ -111,5 +106,12 @@ public class VideoViewHolder extends RecyclerView.ViewHolder {
 
   public ImageView getAppIcon() {
     return appIcon;
+  }
+
+  public void setAppIcon(Video video) {
+    Glide.with(this.context)
+        .asBitmap()
+        .load(video.getImageUrl())
+        .into(appIcon);
   }
 }

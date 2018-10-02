@@ -13,20 +13,29 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.discovery.GlideApp;
+import cm.aptoide.pt.discovery.Video;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.target.ViewTarget;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutionException;
 
@@ -177,6 +186,46 @@ public class ImageLoader {
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
+    }
+    return null;
+  }
+
+  public ViewTarget<ImageView, Bitmap> loadVideoAppInfoBackgroundColor(Video video,
+      View appInfoBackground, Button installButton, ImageView appIcon) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return GlideApp.with(context)
+          .asBitmap()
+          .load(video.getImageUrl())
+          .disallowHardwareConfig()
+          .diskCacheStrategy(DiskCacheStrategy.ALL)
+          .placeholder(R.mipmap.ic_launcher)
+          .listener(new RequestListener<Bitmap>() {
+
+            @Override public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                Target<Bitmap> target, boolean isFirstResource) {
+              return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target,
+                DataSource dataSource, boolean isFirstResource) {
+
+              if (resource != null) {
+                Palette.Swatch p = Palette.from(resource)
+                    .generate()
+                    .getVibrantSwatch();
+                appInfoBackground.setBackgroundColor(p != null ? p.getRgb() : context.getResources()
+                    .getColor(R.color.default_orange_gradient_end));
+                installButton.setTextColor(p != null ? p.getRgb() : context.getResources()
+                    .getColor(R.color.default_orange_gradient_end));
+              }
+              return false;
+            }
+          })
+          .into(appIcon);
+    } else {
+      Log.e(TAG, "::loadVideoAppInfoBackgroundColor() Context is null");
     }
     return null;
   }

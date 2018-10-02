@@ -24,8 +24,5 @@ public class GetVideosRequest extends V7<GetVideos, GetVideosRequest.Body> {
   }
 
   public class Body extends BaseBody {
-
-    @Override public void setRefresh(boolean refresh) {
-    }
   }
 }
