@@ -1,6 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.VisibleForTesting;
+import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import rx.Completable;
@@ -33,15 +34,7 @@ public class AppDownloadManager implements AppDownloader {
 
   @Override public void startAppDownload() {
     subscribe = Observable.from(app.getDownloadFiles())
-        .flatMap(downloadAppFile -> Observable.just(
-            fileDownloaderProvider.createFileDownloader(downloadAppFile.getDownloadMd5(),
-                downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
-                downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
-                downloadAppFile.getFileName(), PublishSubject.create()))
-            .doOnNext(fileDownloader -> fileDownloaderPersistence.put(
-                downloadAppFile.getMainDownloadPath(), fileDownloader)))
-        .flatMap(fileDownloader -> fileDownloader.startFileDownload()
-            .andThen(handleFileDownloadProgress(fileDownloader)))
+        .flatMap(downloadAppFile -> startFileDownload(downloadAppFile))
         .doOnError(throwable -> {
           throw new IllegalStateException(throwable);
         })
@@ -77,6 +70,21 @@ public class AppDownloadManager implements AppDownloader {
     if (!subscribe.isUnsubscribed()) {
       subscribe.unsubscribe();
     }
+  }
+
+  private Observable<FileDownloadCallback> startFileDownload(DownloadAppFile downloadAppFile) {
+    return Observable.just(
+        fileDownloaderProvider.createFileDownloader(downloadAppFile.getDownloadMd5(),
+            downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
+            downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
+            downloadAppFile.getFileName(), PublishSubject.create()))
+        .doOnNext(
+            fileDownloader -> fileDownloaderPersistence.put(downloadAppFile.getMainDownloadPath(),
+                fileDownloader))
+        .doOnNext(__ -> Logger.getInstance()
+            .d("AppDownloader", "Starting app file download " + downloadAppFile.getFileName()))
+        .flatMap(fileDownloader -> fileDownloader.startFileDownload()
+            .andThen(handleFileDownloadProgress(fileDownloader)));
   }
 
   private Observable<FileDownloadCallback> observeFileDownload() {
