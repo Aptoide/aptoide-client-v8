@@ -39,6 +39,49 @@ public class AppDownloadStatus {
     return appDownloadState;
   }
 
+  private AppDownloadState getAppDownloadState() {
+    AppDownloadStatus.AppDownloadState previousState = null;
+    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
+      if (fileDownloadCallback.getDownloadState() == AppDownloadStatus.AppDownloadState.ERROR) {
+        return AppDownloadState.ERROR;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND) {
+        return AppDownloadState.ERROR_FILE_NOT_FOUND;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
+        return AppDownloadState.ERROR_NOT_ENOUGH_SPACE;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.WARN) {
+        return AppDownloadState.WARN;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.PAUSED) {
+        return AppDownloadState.PAUSED;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.INVALID_STATUS) {
+        return AppDownloadState.INVALID_STATUS;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.COMPLETED) {
+        if (previousState != null
+            && previousState != AppDownloadStatus.AppDownloadState.COMPLETED) {
+          return AppDownloadState.PROGRESS;
+        } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+            == fileDownloadCallbackList.size() - 1) {
+          return AppDownloadState.COMPLETED;
+        }
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.PENDING) {
+        if (previousState != null && previousState != AppDownloadStatus.AppDownloadState.PENDING) {
+          return AppDownloadState.PROGRESS;
+        } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+            == fileDownloadCallbackList.size() - 1) {
+          return AppDownloadState.PENDING;
+        }
+      }
+      previousState = fileDownloadCallback.getDownloadState();
+    }
+    return AppDownloadState.PROGRESS;
+  }
+
   public void setFileDownloadCallback(FileDownloadCallback fileDownloadCallback) {
     if (!fileDownloadCallbackList.contains(fileDownloadCallback)) {
       fileDownloadCallbackList.add(fileDownloadCallback);
@@ -46,10 +89,11 @@ public class AppDownloadStatus {
       int index = fileDownloadCallbackList.indexOf(fileDownloadCallback);
       fileDownloadCallbackList.set(index, fileDownloadCallback);
     }
+    refreshAppDownloadState();
   }
 
-  public List<FileDownloadCallback> getFileCallbacks() {
-    return fileDownloadCallbackList;
+  private void refreshAppDownloadState() {
+    appDownloadState = getAppDownloadState();
   }
 
   public enum AppDownloadState {

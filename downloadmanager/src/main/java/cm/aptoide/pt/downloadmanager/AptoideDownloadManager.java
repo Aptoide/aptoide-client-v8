@@ -256,10 +256,11 @@ public class AptoideDownloadManager implements DownloadManager {
       AppDownloadStatus appDownloadStatus) {
     download.setOverallProgress(appDownloadStatus.getOverallProgress());
     download.setOverallDownloadStatus(
-        downloadStatusMapper.getAppDownloadStatus(appDownloadStatus.getFileCallbacks()));
+        downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
+
     download.setDownloadError(
         downloadStatusMapper.mapDownloadError(appDownloadStatus.getDownloadStatus()));
-    // TODO: 10/2/18 set correct file download status
+
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       fileToDownload.setStatus(
           downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
