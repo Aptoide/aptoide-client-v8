@@ -47,6 +47,7 @@ public class EditorialPresenter implements Presenter {
     handleRetryClick();
     handleClickOnMedia();
     handleClickOnAppCard();
+    handlePaletteColor();
 
     handleInstallClick();
     pauseDownload();
@@ -265,6 +266,20 @@ public class EditorialPresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handlePaletteColor() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.paletteSwatchExtracted())
+        .observeOn(viewScheduler)
+        .doOnNext(paletteSwatch -> view.applyPaletteSwatch(paletteSwatch))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          view.applyPaletteSwatch(null);
+          throw new OnErrorNotImplementedException(error);
         });
   }
 }

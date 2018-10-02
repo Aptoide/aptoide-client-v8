@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +54,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.util.AptoideColorUtils.getChangedColorLightness;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
@@ -105,12 +108,14 @@ public class EditorialFragment extends NavigationTrackFragment
   private int placeHolderPosition;
 
   private PublishSubject<EditorialEvent> uiEventsListener;
+  private PublishSubject<Palette.Swatch> paletteSwatchSubject;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     ready = PublishSubject.create();
+    paletteSwatchSubject = PublishSubject.create();
     uiEventsListener = PublishSubject.create();
     setHasOptionsMenu(true);
   }
@@ -226,6 +231,7 @@ public class EditorialFragment extends NavigationTrackFragment
     }
     ready = null;
     window = null;
+    paletteSwatchSubject = null;
     oneDecimalFormatter = null;
   }
 
@@ -455,18 +461,33 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
+  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
+    return paletteSwatchSubject;
+  }
+
+  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
+    if (swatch != null) {
+      int color = swatch.getRgb();
+      if (ColorUtils.calculateLuminance(color) > 0.5) {
+        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
+      } else {
+        actionItemCard.setBackgroundColor(color);
+      }
+    }
+    actionItemCard.setVisibility(View.VISIBLE);
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     placeHolderPosition = editorialViewModel.getPlaceHolderPosition();
-    String title = editorialViewModel.getTitle();
-    toolbar.setTitle(title);
-    toolbarTitle.setText(title);
-    actionItemCard.setVisibility(View.VISIBLE);
     if (editorialViewModel.hasBackgroundImage()) {
       ImageLoader.with(getContext())
-          .load(editorialViewModel.getBackgroundImage(), appImage);
+          .loadWithPalette(editorialViewModel.getBackgroundImage(), appImage, paletteSwatchSubject);
     } else {
       appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
     }
+    String title = editorialViewModel.getTitle();
+    toolbar.setTitle(title);
+    toolbarTitle.setText(title);
     appImage.setVisibility(View.VISIBLE);
     itemName.setText(editorialViewModel.getCardType());
     itemName.setVisibility(View.VISIBLE);
