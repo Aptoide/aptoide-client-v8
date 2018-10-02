@@ -93,7 +93,6 @@ public class AppDownloadManager implements AppDownloader {
 
   private void setAppDownloadStatus(FileDownloadCallback fileDownloadCallback) {
     appDownloadStatus.setFileDownloadCallback(fileDownloadCallback);
-    appDownloadStatus.setAppDownloadState(fileDownloadCallback.getDownloadState());
   }
 
   private Observable<FileDownloadCallback> handleFileDownloadProgress(

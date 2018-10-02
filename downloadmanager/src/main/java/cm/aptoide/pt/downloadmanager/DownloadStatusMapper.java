@@ -1,6 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
+import java.util.List;
 
 /**
  * Created by filipegoncalves on 9/4/18.
@@ -54,5 +55,48 @@ public class DownloadStatusMapper {
         break;
     }
     return downloadError;
+  }
+
+  public int getAppDownloadStatus(List<FileDownloadCallback> fileDownloadCallbackList) {
+    AppDownloadStatus.AppDownloadState previousState = null;
+    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
+      if (fileDownloadCallback.getDownloadState() == AppDownloadStatus.AppDownloadState.ERROR) {
+        return Download.ERROR;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND) {
+        return Download.ERROR;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
+        return Download.ERROR;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.WARN) {
+        return Download.WARN;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.PAUSED) {
+        return Download.PAUSED;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.INVALID_STATUS) {
+        return Download.INVALID_STATUS;
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.COMPLETED) {
+        if (previousState != null
+            && previousState != AppDownloadStatus.AppDownloadState.COMPLETED) {
+          return Download.PROGRESS;
+        } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+            == fileDownloadCallbackList.size() - 1) {
+          return Download.COMPLETED;
+        }
+      } else if (fileDownloadCallback.getDownloadState()
+          == AppDownloadStatus.AppDownloadState.PENDING) {
+        if (previousState != null && previousState != AppDownloadStatus.AppDownloadState.PENDING) {
+          return Download.PROGRESS;
+        } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+            == fileDownloadCallbackList.size() - 1) {
+          return Download.PENDING;
+        }
+      }
+      previousState = fileDownloadCallback.getDownloadState();
+    }
+    return Download.PROGRESS;
   }
 }

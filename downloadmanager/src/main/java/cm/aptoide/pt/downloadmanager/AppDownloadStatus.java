@@ -39,10 +39,6 @@ public class AppDownloadStatus {
     return appDownloadState;
   }
 
-  public void setAppDownloadState(AppDownloadState appDownloadState) {
-    this.appDownloadState = appDownloadState;
-  }
-
   public void setFileDownloadCallback(FileDownloadCallback fileDownloadCallback) {
     if (!fileDownloadCallbackList.contains(fileDownloadCallback)) {
       fileDownloadCallbackList.add(fileDownloadCallback);
@@ -50,6 +46,10 @@ public class AppDownloadStatus {
       int index = fileDownloadCallbackList.indexOf(fileDownloadCallback);
       fileDownloadCallbackList.set(index, fileDownloadCallback);
     }
+  }
+
+  public List<FileDownloadCallback> getFileCallbacks() {
+    return fileDownloadCallbackList;
   }
 
   public enum AppDownloadState {

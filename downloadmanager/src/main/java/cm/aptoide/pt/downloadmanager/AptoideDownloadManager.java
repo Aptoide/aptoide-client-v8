@@ -3,6 +3,7 @@ package cm.aptoide.pt.downloadmanager;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.RealmList;
 import java.util.HashMap;
@@ -212,6 +213,8 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private void handleCompletedDownload(Download download) {
+    Logger.getInstance()
+        .d("AptoideDownloadManager", "Download is completed " + download.getMd5());
     moveCompletedDownloadFiles(download.getFilesToDownload());
     removeAppDownloader(download.getMd5());
   }
@@ -253,9 +256,10 @@ public class AptoideDownloadManager implements DownloadManager {
       AppDownloadStatus appDownloadStatus) {
     download.setOverallProgress(appDownloadStatus.getOverallProgress());
     download.setOverallDownloadStatus(
-        downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
+        downloadStatusMapper.getAppDownloadStatus(appDownloadStatus.getFileCallbacks()));
     download.setDownloadError(
         downloadStatusMapper.mapDownloadError(appDownloadStatus.getDownloadStatus()));
+    // TODO: 10/2/18 set correct file download status
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       fileToDownload.setStatus(
           downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
