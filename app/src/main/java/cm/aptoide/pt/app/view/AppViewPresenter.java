@@ -620,7 +620,7 @@ public class AppViewPresenter implements Presenter {
             if (adsViewModel.hasRecommendedAppsError()) view.hideSimilarApps();
             if (adsViewModel.hasAdError()) view.populateSimilarWithoutAds(adsViewModel);
           } else {
-            if(!adsViewModel.getRecommendedApps().isEmpty()) view.populateSimilar(adsViewModel);
+            view.populateSimilar(adsViewModel);
           }
         })
         .toObservable();
