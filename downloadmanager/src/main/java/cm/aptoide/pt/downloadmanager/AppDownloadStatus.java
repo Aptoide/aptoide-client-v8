@@ -96,6 +96,35 @@ public class AppDownloadStatus {
     appDownloadState = getAppDownloadState();
   }
 
+  public AppDownloadState getFileDownloadStatus(String md5) {
+
+    FileDownloadCallback fileDownloadCallback = getFileDownloadCallback(md5);
+    if (fileDownloadCallback == null) {
+      return AppDownloadState.PROGRESS;
+    } else {
+      return fileDownloadCallback.getDownloadState();
+    }
+  }
+
+  public int getFileDownloadProgress(String md5) {
+    FileDownloadCallback fileDownloadCallback = getFileDownloadCallback(md5);
+    if (fileDownloadCallback == null) {
+      return 0;
+    } else {
+      return fileDownloadCallback.getDownloadProgress();
+    }
+  }
+
+  private FileDownloadCallback getFileDownloadCallback(String md5) {
+    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
+      if (fileDownloadCallback.getMd5()
+          .equals(md5)) {
+        return fileDownloadCallback;
+      }
+    }
+    return null;
+  }
+
   public enum AppDownloadState {
     INVALID_STATUS, COMPLETED, PENDING, PAUSED, WARN, ERROR, ERROR_FILE_NOT_FOUND, ERROR_NOT_ENOUGH_SPACE, PROGRESS
   }

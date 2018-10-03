@@ -262,9 +262,10 @@ public class AptoideDownloadManager implements DownloadManager {
         downloadStatusMapper.mapDownloadError(appDownloadStatus.getDownloadStatus()));
 
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      fileToDownload.setStatus(
-          downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
-      fileToDownload.setProgress(appDownloadStatus.getOverallProgress());
+      fileToDownload.setStatus(downloadStatusMapper.mapAppDownloadStatus(
+          appDownloadStatus.getFileDownloadStatus(fileToDownload.getMd5())));
+      fileToDownload.setProgress(
+          appDownloadStatus.getFileDownloadProgress(fileToDownload.getMd5()));
     }
     return Observable.just(download);
   }

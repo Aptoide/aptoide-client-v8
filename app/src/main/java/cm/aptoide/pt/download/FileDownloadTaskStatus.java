@@ -27,7 +27,7 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
     this.md5 = md5;
   }
 
-  public String getMd5() {
+  @Override public String getMd5() {
     return md5;
   }
 

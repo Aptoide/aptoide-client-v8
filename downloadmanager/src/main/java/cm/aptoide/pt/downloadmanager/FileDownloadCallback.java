@@ -10,4 +10,6 @@ public interface FileDownloadCallback {
   int getFileType();
 
   AppDownloadStatus.AppDownloadState getDownloadState();
+
+  String getMd5();
 }
