@@ -7,5 +7,5 @@
       android:endColor="@color/lime_gradient_end"
       android:startColor="@color/lime"
       android:type="linear"/>
-  <corners android:radius="5dp"/>
+  <corners android:radius="4dp"/>
 </shape>
