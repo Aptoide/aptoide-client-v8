@@ -115,26 +115,44 @@
     </android.support.v7.widget.RecyclerView>
   </FrameLayout>
 
-  <TextView
-      android:id="@+id/editorial_image_description"
-      android:layout_width="wrap_content"
+  <TextSwitcher
+      android:id="@+id/editorial_image_description_switcher"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/editorial_item_media"
       android:layout_marginLeft="8dp"
       android:layout_marginStart="8dp"
       android:layout_marginTop="11dp"
       android:visibility="gone"
-      tools:text="Description"
       tools:visibility="visible"
-      style="@style/Aptoide.TextView.Regular.XS"
-      />
+      >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:visibility="gone"
+        tools:text="Description"
+        tools:visibility="visible"
+        style="@style/Aptoide.TextView.Regular.XS"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:lines="1"
+        android:visibility="gone"
+        tools:text="Description"
+        tools:visibility="visible"
+        style="@style/Aptoide.TextView.Regular.XS"
+        />
+  </TextSwitcher>
 
   <include
       layout="@layout/app_install_cardview_with_rating"
       android:id="@+id/app_cardview"
       android:layout_width="match_parent"
       android:layout_height="56dp"
-      android:layout_below="@id/editorial_image_description"
+      android:layout_below="@id/editorial_image_description_switcher"
       android:layout_marginLeft="8dp"
       android:layout_marginRight="8dp"
       android:layout_marginTop="32dp"

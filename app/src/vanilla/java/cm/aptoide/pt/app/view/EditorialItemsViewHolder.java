@@ -3,20 +3,28 @@ package cm.aptoide.pt.app.view;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -31,7 +39,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private final View appCardLayout;
   private final DecimalFormat oneDecimalFormat;
   private final Button appCardButton;
-  private TextView description;
+  private final LinearLayoutManager layoutManager;
+  private TextSwitcher descriptionSwitcher;
   private View itemText;
   private View title;
   private TextView firstTitle;
@@ -53,6 +62,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private ImageView resumeDownload;
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
+  private int currentMediaPosition;
+  private boolean mediaDescriptionVisible;
 
   public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
       PublishSubject<EditorialEvent> uiEventListener) {
@@ -66,7 +77,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     image = (ImageView) view.findViewById(R.id.editorial_image);
     videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
     videoThumbnailContainer = view.findViewById(R.id.editorial_video_thumbnail_container);
-    description = (TextView) view.findViewById(R.id.editorial_image_description);
+    descriptionSwitcher =
+        (TextSwitcher) view.findViewById(R.id.editorial_image_description_switcher);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCardLayout = view.findViewById(R.id.app_cardview);
     this.oneDecimalFormat = oneDecimalFormat;
@@ -88,13 +100,25 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
 
-    LinearLayoutManager layoutManager =
+    layoutManager =
         new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+    SnapHelper mediaSnap = new SnapToStartHelper();
+    mediaSnap.attachToRecyclerView(mediaList);
+
+    Animation fadeIn = new AlphaAnimation(0, 1);
+    fadeIn.setDuration(500);
+    Animation fadeOut = new AlphaAnimation(1, 0);
+    fadeOut.setDuration(500);
+    currentMediaPosition = -1;
+    descriptionSwitcher.setInAnimation(fadeIn);
+    descriptionSwitcher.setOutAnimation(fadeOut);
+
     mediaList.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
           RecyclerView.State state) {
         int margin = AptoideUtils.ScreenU.getPixelsForDip(6, view.getResources());
-        outRect.set(0, margin, margin, margin);
+        outRect.set(0, 0, margin, 0);
       }
     });
     mediaList.setLayoutManager(layoutManager);
@@ -138,18 +162,52 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
+  private void manageDescriptionVisibility(Integer firstVisibleItem, List<EditorialMedia> media) {
+    if (firstVisibleItem >= 0 && !mediaDescriptionVisible) {
+      int lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition();
+      if (firstVisibleItem == lastVisibleItem) {
+        String descriptionText = media.get(firstVisibleItem)
+            .getDescription();
+        descriptionSwitcher.setVisibility(View.VISIBLE);
+        if (currentMediaPosition != firstVisibleItem) {
+          descriptionSwitcher.setText(descriptionText);
+          currentMediaPosition = firstVisibleItem;
+        }
+      } else {
+        if (!mediaDescriptionVisible) {
+          for (int mediaPosition = 0; mediaPosition < mediaBundleAdapter.getItemCount();
+              mediaPosition++) {
+            MediaViewHolder mediaViewHolder =
+                ((MediaViewHolder) mediaList.findViewHolderForAdapterPosition(mediaPosition));
+            if (mediaViewHolder != null) {
+              mediaViewHolder.setDescriptionVisible();
+              mediaDescriptionVisible = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
   private void manageMediaVisibility(EditorialContent editorialItem) {
     if (editorialItem.hasMedia()) {
+      List<EditorialMedia> editorialMediaList = editorialItem.getMedia();
       media.setVisibility(View.VISIBLE);
       if (editorialItem.hasListOfMedia()) {
-        mediaBundleAdapter.add(editorialItem.getMedia());
+        mediaBundleAdapter.add(editorialMediaList);
         mediaList.setVisibility(View.VISIBLE);
+        RxRecyclerView.scrollEvents(mediaList)
+            .map(scrollEvent -> layoutManager.findFirstCompletelyVisibleItemPosition())
+            .distinctUntilChanged()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(firstVisibleItem -> manageDescriptionVisibility(firstVisibleItem,
+                editorialItem.getMedia()))
+            .subscribe();
       } else {
-        EditorialMedia editorialMedia = editorialItem.getMedia()
-            .get(0);
+        EditorialMedia editorialMedia = editorialMediaList.get(0);
         if (editorialMedia.hasDescription()) {
-          description.setText(editorialMedia.getDescription());
-          description.setVisibility(View.VISIBLE);
+          descriptionSwitcher.setCurrentText(editorialMedia.getDescription());
+          descriptionSwitcher.setVisibility(View.VISIBLE);
         }
         if (editorialMedia.isImage()) {
           ImageLoader.with(itemView.getContext())

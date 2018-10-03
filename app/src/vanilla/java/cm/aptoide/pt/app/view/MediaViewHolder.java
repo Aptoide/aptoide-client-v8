@@ -47,7 +47,10 @@ class MediaViewHolder extends RecyclerView.ViewHolder {
         image.setVisibility(View.VISIBLE);
       }
       description.setText(editorialMedia.getDescription());
-      description.setVisibility(View.VISIBLE);
     }
+  }
+
+  public void setDescriptionVisible() {
+    description.setVisibility(View.VISIBLE);
   }
 }
