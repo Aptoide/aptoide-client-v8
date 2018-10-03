@@ -27,7 +27,7 @@ import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.Observable;
 
-public abstract class  FragmentView extends BaseFragment implements View {
+public abstract class FragmentView extends BaseFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
 
