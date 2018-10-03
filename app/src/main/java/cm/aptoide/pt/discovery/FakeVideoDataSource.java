@@ -15,7 +15,7 @@ public class FakeVideoDataSource implements VideoDataSource {
     return loadFreshVideos(limit);
   }
 
-  @Override public boolean hasMore(Integer offset, String title) {
+  @Override public boolean hasMore(Integer offset) {
     return true;
   }
 

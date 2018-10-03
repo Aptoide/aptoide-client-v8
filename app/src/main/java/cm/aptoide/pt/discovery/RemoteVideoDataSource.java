@@ -20,6 +20,7 @@ public class RemoteVideoDataSource implements VideoDataSource {
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private int total;
 
   public RemoteVideoDataSource(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okHttpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
@@ -47,14 +48,16 @@ public class RemoteVideoDataSource implements VideoDataSource {
         .map(this::mapToVideos);
   }
 
-  @Override public boolean hasMore(Integer offset, String title) {
-    return false;
+  @Override public boolean hasMore(Integer offset) {
+    return offset < total;
   }
 
   private VideosList mapToVideos(VideosResponse videosResponse) {
     List<Video> result = new ArrayList<>();
     List<VideosData> videosResponseList = videosResponse.getDataList()
         .getList();
+
+    total = videosResponse.getTotal();
 
     for (VideosData data : videosResponseList) {
       result.add(new Video(data.getUrl(), data.getApp()

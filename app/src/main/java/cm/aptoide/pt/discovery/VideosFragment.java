@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import rx.Observable;
 
 public class VideosFragment extends NavigationTrackFragment implements VideosView {
-  private static final int VISIBLE_THRESHOLD = 2;
+  private static final int VISIBLE_THRESHOLD = 1;
 
   @Inject VideosPresenter presenter;
   private RecyclerView list;
@@ -56,7 +56,6 @@ public class VideosFragment extends NavigationTrackFragment implements VideosVie
     list.setLayoutManager(layoutManager);
 
     list.setAdapter(adapter);
-    list.setLayoutManager(new LinearLayoutManager(getContext()));
     attachPresenter(presenter);
   }
 
@@ -83,6 +82,14 @@ public class VideosFragment extends NavigationTrackFragment implements VideosVie
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
         .cast(Object.class);
+  }
+
+  @Override public void showLoadMore() {
+    adapter.addLoadMore();
+  }
+
+  @Override public void hideLoadMore() {
+    adapter.removeLoadMore();
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

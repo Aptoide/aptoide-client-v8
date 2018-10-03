@@ -58,7 +58,7 @@
           android:layout_width="40dp"
           android:layout_height="40dp"
           android:layout_centerVertical="true"
-          android:visibility="visible"
+          android:visibility="gone"
           >
         <ImageButton
             android:id="@+id/discovery_actionbar_button"

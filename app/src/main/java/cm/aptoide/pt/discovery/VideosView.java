@@ -11,4 +11,8 @@ public interface VideosView extends View {
   void showMoreVideos(List<Video> videos);
 
   Observable<Object> reachesBottom();
+
+  void showLoadMore();
+
+  void hideLoadMore();
 }

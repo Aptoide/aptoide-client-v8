@@ -40,8 +40,10 @@ public class VideosPresenter implements Presenter {
   private void handleBottomReached() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.reachesBottom())
-        .flatMapSingle(bottomReached -> loadNextBundles())
+        .flatMap(event -> view.reachesBottom()
+            .filter(__ -> videosManager.hasMore())
+            .doOnNext(__ -> view.showLoadMore())
+            .flatMapSingle(bottomReached -> loadNextBundles()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
@@ -52,6 +54,9 @@ public class VideosPresenter implements Presenter {
   @NonNull private Single<VideosList> loadNextBundles() {
     return videosManager.loadMoreVideos()
         .observeOn(viewScheduler)
-        .doOnSuccess(videosList -> view.showMoreVideos(videosList.getVideoList()));
+        .doOnSuccess(videosList -> {
+          view.showMoreVideos(videosList.getVideoList());
+          view.hideLoadMore();
+        });
   }
 }

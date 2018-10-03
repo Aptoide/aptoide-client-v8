@@ -31,4 +31,8 @@ public class VideosManager {
   public Observable<String> shouldShowVideos() {
     return infoVideoService.shouldShowVideos();
   }
+
+  public boolean hasMore() {
+    return videosRepository.hasMore(offset);
+  }
 }

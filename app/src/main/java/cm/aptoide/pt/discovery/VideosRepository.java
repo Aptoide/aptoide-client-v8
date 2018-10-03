@@ -19,6 +19,10 @@ public class VideosRepository {
     return videoDataSource.loadNextVideos(offset, LIMIT);
   }
 
+  public boolean hasMore(int offset) {
+    return videoDataSource.hasMore(offset);
+  }
+
   private Single<VideosList> loadFreshVideos() {
     return videoDataSource.loadFreshVideos(LIMIT);
   }

@@ -8,5 +8,5 @@ interface VideoDataSource {
 
   Single<VideosList> loadNextVideos(int offset, int limit);
 
-  boolean hasMore(Integer offset, String title);
+  boolean hasMore(Integer offset);
 }
