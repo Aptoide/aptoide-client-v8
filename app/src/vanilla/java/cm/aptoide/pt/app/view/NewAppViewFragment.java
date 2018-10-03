@@ -988,6 +988,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
       String appName) {
+    // Example of usage, should probably inject the experiment
+    //ApkFyExperiment experiment = new ApkFyExperiment(abTestManager, AndroidSchedulers.mainThread());
+    //experiment.performAbTest(() -> appNavigator.navigateWithAppId(appId, packageName, openType, ""),
+    //    () -> Log.i("APKFY_AB_TEST", "NEW DIALOG!"));
+
     return GenericDialogs.createGenericOkCancelMessageWithCustomView(getContext(), title,
         getContext().getString(R.string.installapp_alrt, appName), R.layout.apkfy_onboard_message)
         .filter(response -> response.equals(YES))
