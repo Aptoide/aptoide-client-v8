@@ -1,11 +1,13 @@
 package cm.aptoide.pt.app.view;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LifecycleRegistry;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -23,28 +25,25 @@ import rx.subjects.PublishSubject;
  * Created by D01 on 28/08/2018.
  */
 
-class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
+abstract class EditorialItemsViewHolder extends RecyclerView.ViewHolder implements LifecycleOwner {
+  private final View appCardLayout;
   private final ImageView appCardImage;
   private final TextView appCardRating;
   private final View appCardRatingLayout;
   private final TextView appCardNameWithRating;
-  private final View appCardLayout;
   private final DecimalFormat oneDecimalFormat;
   private final Button appCardButton;
+  View title;
+  View media;
+  ImageView image;
+  PublishSubject<EditorialEvent> uiEventListener;
   private TextView description;
   private View itemText;
-  private View title;
+  private RecyclerView mediaList;
+  private MediaBundleAdapter mediaBundleAdapter;
   private TextView firstTitle;
   private TextView secondaryTitle;
   private TextView message;
-  private View media;
-  private ImageView image;
-  private ImageView videoThumbnail;
-  private FrameLayout videoThumbnailContainer;
-  private RecyclerView mediaList;
-  private MediaBundleAdapter mediaBundleAdapter;
-  private PublishSubject<EditorialEvent> uiEventListener;
-
   private LinearLayout downloadInfoLayout;
   private ProgressBar downloadProgressBar;
   private TextView downloadProgressValue;
@@ -54,7 +53,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
 
-  public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
+  EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
       PublishSubject<EditorialEvent> uiEventListener) {
     super(view);
     itemText = view.findViewById(R.id.editorial_item_text);
@@ -64,8 +63,6 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     message = (TextView) view.findViewById(R.id.editorial_item_message);
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
-    videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
-    videoThumbnailContainer = view.findViewById(R.id.editorial_video_thumbnail_container);
     description = (TextView) view.findViewById(R.id.editorial_image_description);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCardLayout = view.findViewById(R.id.app_cardview);
@@ -101,7 +98,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     mediaList.setAdapter(mediaBundleAdapter);
   }
 
-  public void setVisibility(EditorialContent editorialItem, int position) {
+  void setVisibility(EditorialContent editorialItem, int position) {
     if (editorialItem.hasTitle() || editorialItem.hasMessage()) {
       itemText.setVisibility(View.VISIBLE);
       manageTitleVisibility(editorialItem, position);
@@ -153,15 +150,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
           image.setVisibility(View.VISIBLE);
         }
         if (editorialMedia.isVideo()) {
-          if (editorialMedia.getThumbnail() != null) {
-            ImageLoader.with(itemView.getContext())
-                .load(editorialMedia.getThumbnail(), videoThumbnail);
-          }
-          if (editorialMedia.hasUrl()) {
-            videoThumbnailContainer.setVisibility(View.VISIBLE);
-            videoThumbnailContainer.setOnClickListener(v -> uiEventListener.onNext(
-                new EditorialEvent(EditorialEvent.Type.MEDIA, editorialMedia.getUrl())));
-          }
+          handleVideo(editorialMedia);
         }
       }
 
@@ -173,6 +162,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       }
     }
   }
+
+  abstract void handleVideo(EditorialMedia editorialMedia);
 
   private void setPlaceHolderInfo(String appName, String image, float rating) {
     ImageLoader.with(itemView.getContext())
@@ -189,7 +180,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     appCardLayout.setVisibility(View.VISIBLE);
   }
 
-  public boolean isVisible(float screenHeight, float screenWidth) {
+  boolean isVisible(float screenHeight, float screenWidth) {
     final Rect placeHolderPosition = new Rect();
     appCardLayout.getLocalVisibleRect(placeHolderPosition);
     final Rect screen =
@@ -197,18 +188,18 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     return placeHolderPosition.intersect(screen);
   }
 
-  public View getPlaceHolder() {
+  View getPlaceHolder() {
     return appCardLayout;
   }
 
-  public void setPlaceHolderDownloadingInfo(DownloadModel downloadModel) {
+  void setPlaceHolderDownloadingInfo(DownloadModel downloadModel) {
     downloadInfoLayout.setVisibility(View.VISIBLE);
     cardInfoLayout.setVisibility(View.GONE);
     setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
   }
 
-  public void setPlaceHolderDefaultStateInfo(DownloadModel downloadModel, String update,
-      String install, String open) {
+  void setPlaceHolderDefaultStateInfo(DownloadModel downloadModel, String update, String install,
+      String open) {
     downloadInfoLayout.setVisibility(View.GONE);
     cardInfoLayout.setVisibility(View.VISIBLE);
     setButtonText(downloadModel, update, install, open);
@@ -285,5 +276,9 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.APPCARD)));
     appCardButton.setOnClickListener(
         click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.BUTTON)));
+  }
+
+  @Override public Lifecycle getLifecycle() {
+    return new LifecycleRegistry(this);
   }
 }

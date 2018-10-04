@@ -447,6 +447,8 @@ dependencies {
     exclude group: "com.android.support"
   }
 
+  implementation "com.pierfrancescosoffritti.androidyoutubeplayer:${YOUTUBE_PLAYER_VERSION}"
+
   annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
 
   implementation "com.adyen.checkout:core:${ADYEN_VERSION}"

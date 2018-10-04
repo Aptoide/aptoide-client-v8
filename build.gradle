@@ -116,6 +116,8 @@ ext {
 
   TEST_FAIRY_VERSION = '1.5.5'
   DAGGER_VERSION = '2.12'
+
+  YOUTUBE_PLAYER_VERSION = 'core:8.0.1'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

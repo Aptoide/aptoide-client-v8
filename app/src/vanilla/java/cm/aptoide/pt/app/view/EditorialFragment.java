@@ -44,6 +44,7 @@ import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -110,6 +111,10 @@ public class EditorialFragment extends NavigationTrackFragment
   private PublishSubject<EditorialEvent> uiEventsListener;
   private PublishSubject<Palette.Swatch> paletteSwatchSubject;
 
+  private YouTubePlayerView youTubePlayerView;
+
+
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
@@ -157,7 +162,6 @@ public class EditorialFragment extends NavigationTrackFragment
     adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
     editorialItems.setLayoutManager(layoutManager);
     editorialItems.setAdapter(adapter);
-
     cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
     downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));

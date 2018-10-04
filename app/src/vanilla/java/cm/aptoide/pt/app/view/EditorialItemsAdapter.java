@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -26,9 +27,15 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
   }
 
   @Override public EditorialItemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new EditorialItemsViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.editorial_item_layout, parent, false), oneDecimalFormat,
-        editorialMediaClicked);
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      return new EditorialItemsLegacyViewHolder(LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.editorial_item_layout, parent, false), oneDecimalFormat,
+          editorialMediaClicked);
+    } else {
+      return new EditorialItemsVideoPlayerViewHolder(LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.editorial_item_layout, parent, false), oneDecimalFormat,
+          editorialMediaClicked);
+    }
   }
 
   @Override
