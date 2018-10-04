@@ -1,6 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,15 +16,16 @@ import rx.subjects.PublishSubject;
 
 public class AppDownloadManager implements AppDownloader {
 
+  private static final String TAG = "AppDownloadManager";
   private final DownloadApp app;
-  private FileDownloaderProvider fileDownloaderProvider;
-  private HashMap<String, FileDownloader> fileDownloaderPersistence;
+  private RetryFileDownloaderProvider fileDownloaderProvider;
+  private HashMap<String, RetryFileDownloader> fileDownloaderPersistence;
   private PublishSubject<FileDownloadCallback> fileDownloadSubject;
   private AppDownloadStatus appDownloadStatus;
   private Subscription subscribe;
 
-  public AppDownloadManager(FileDownloaderProvider fileDownloaderProvider, DownloadApp app,
-      HashMap<String, FileDownloader> fileDownloaderPersistence) {
+  public AppDownloadManager(RetryFileDownloaderProvider fileDownloaderProvider, DownloadApp app,
+      HashMap<String, RetryFileDownloader> fileDownloaderPersistence) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
@@ -35,11 +37,8 @@ public class AppDownloadManager implements AppDownloader {
   @Override public void startAppDownload() {
     subscribe = Observable.from(app.getDownloadFiles())
         .flatMap(downloadAppFile -> startFileDownload(downloadAppFile))
-        .doOnError(throwable -> {
-          throw new IllegalStateException(throwable);
-        })
-        .toCompletable()
-        .subscribe(() -> {
+        .subscribe(__ -> {
+          Log.d(TAG, "startAppDownload: completed");
         }, Throwable::printStackTrace);
   }
 
@@ -74,17 +73,19 @@ public class AppDownloadManager implements AppDownloader {
 
   private Observable<FileDownloadCallback> startFileDownload(DownloadAppFile downloadAppFile) {
     return Observable.just(
-        fileDownloaderProvider.createFileDownloader(downloadAppFile.getDownloadMd5(),
+        fileDownloaderProvider.createRetryFileDownloader(downloadAppFile.getDownloadMd5(),
             downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
             downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
-            downloadAppFile.getFileName(), PublishSubject.create()))
+            downloadAppFile.getFileName(), PublishSubject.create(),
+            downloadAppFile.getAlternativeDownloadPath()))
         .doOnNext(
             fileDownloader -> fileDownloaderPersistence.put(downloadAppFile.getMainDownloadPath(),
                 fileDownloader))
         .doOnNext(__ -> Logger.getInstance()
             .d("AppDownloader", "Starting app file download " + downloadAppFile.getFileName()))
-        .flatMap(fileDownloader -> fileDownloader.startFileDownload()
-            .andThen(handleFileDownloadProgress(fileDownloader)));
+        .doOnNext(fileDownloader -> fileDownloader.startFileDownload())
+        .flatMap(fileDownloader -> handleFileDownloadProgress(fileDownloader))
+        .doOnError(Throwable::printStackTrace);
   }
 
   private Observable<FileDownloadCallback> observeFileDownload() {
@@ -96,12 +97,15 @@ public class AppDownloadManager implements AppDownloader {
   }
 
   private Observable<FileDownloadCallback> handleFileDownloadProgress(
-      FileDownloader fileDownloader) {
-    return fileDownloader.observeFileDownloadProgress()
+      RetryFileDownloader fileDownloader) {
+    return Completable.fromAction(() -> Log.d(TAG, "handleFileDownloadProgress: started"))
+        .andThen(fileDownloader.observeFileDownloadProgress())
+        .doOnNext(fileDownloadCallback -> Log.d(TAG, "handleFileDownloadProgress: cenas"))
         .doOnNext(fileDownloadCallback -> fileDownloadSubject.onNext(fileDownloadCallback));
   }
 
-  @VisibleForTesting public Observable<FileDownloader> getFileDownloader(String mainDownloadPath) {
+  @VisibleForTesting
+  public Observable<RetryFileDownloader> getFileDownloader(String mainDownloadPath) {
     return Observable.just(fileDownloaderPersistence.get(mainDownloadPath));
   }
 }

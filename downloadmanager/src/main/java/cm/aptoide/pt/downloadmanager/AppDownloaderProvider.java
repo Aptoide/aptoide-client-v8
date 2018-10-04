@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 public class AppDownloaderProvider {
 
-  private final FileDownloaderProvider fileDownloaderProvider;
+  private final RetryFileDownloaderProvider fileDownloaderProvider;
 
-  public AppDownloaderProvider(FileDownloaderProvider fileDownloaderProvider) {
+  public AppDownloaderProvider(RetryFileDownloaderProvider fileDownloaderProvider) {
     this.fileDownloaderProvider = fileDownloaderProvider;
   }
 
