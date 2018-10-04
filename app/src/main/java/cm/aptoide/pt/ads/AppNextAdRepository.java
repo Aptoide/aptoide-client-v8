@@ -17,17 +17,14 @@ import rx.subjects.PublishSubject;
 
 public class AppNextAdRepository {
 
-//    private final PublishSubject<AppNextAdResult> subject;
     private final Context context;
 
     public AppNextAdRepository(Context context, PublishSubject<AppNextAdResult> publishSubject){
         this.context = context;
-//        this.subject = publishSubject;
     }
 
     public PublishSubject<AppNextAdResult> loadAd(List<String> keywords){
         PublishSubject<AppNextAdResult> subject = PublishSubject.create();
-        String placementId = BuildConfig.APPNEXT_PLACEMENT_ID;
         NativeAd nativeAd = new NativeAd(context, BuildConfig.APPNEXT_PLACEMENT_ID);
         nativeAd.setAdListener(new NativeAdListener() {
             @Override
@@ -80,6 +77,7 @@ public class AppNextAdRepository {
                 case "Board":
                     return s;
                 case "Books":
+                case "Reference":
                 case "Books%20%26%20Reference":
                     return s;
                 case "Brain%20%26%20Puzzle":
@@ -96,8 +94,8 @@ public class AppNextAdRepository {
                     return s;
                 case "Comics":
                     return s;
-                case "Communications":
-                    return s;
+                case "Communication":
+                    return "Communications";
                 case "Education":
                     return s;
                 case "Educational":
@@ -108,24 +106,28 @@ public class AppNextAdRepository {
                     return s;
                 case "Finance":
                     return s;
+                case "Health":
                 case "Health%20%26%20Fitness":
                     return s;
+                case "Demo":
                 case "Libraries%20%26%20Demo":
                     return s;
                 case "Lifestyle":
                     return s;
                 case "Live%20Wallpaper":
                     return s;
+                case "Multimedia":
                 case "Media%20%26%20Video":
-                    return s;
+                    return "Media%20%26%20Video";
                 case "Medical":
                     return s;
                 case "Music":
                     return s;
                 case "Music%20%26%20Audio":
                     return s;
+                case "News & Weather":
                 case "News%20%26%20Magazines":
-                    return s;
+                    return "News%20%26%20Magazines";
                 case "Personalization":
                     return s;
                 case "Photography":
