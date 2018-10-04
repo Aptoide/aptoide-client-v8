@@ -447,6 +447,33 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
+  @Override public Observable<EditorialEvent> mediaListDescriptionCreated() {
+    return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+        .equals(EditorialEvent.Type.MEDIA_LIST))
+        .distinctUntilChanged(EditorialEvent::getFirstVisiblePosition);
+  }
+
+  @Override
+  public void manageMediaListDescriptionAnimationVisibility(EditorialEvent editorialEvent) {
+    int contentPosition = editorialEvent.getPosition();
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
+            contentPosition));
+    if (editorialItemsViewHolder != null) {
+      editorialItemsViewHolder.manageDescriptionAnimationVisibility(
+          editorialEvent.getFirstVisiblePosition(), editorialEvent.getMedia());
+    }
+  }
+
+  @Override public void setMediaListDescriptionsVisible(EditorialEvent editorialEvent) {
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
+            editorialEvent.getPosition()));
+    if (editorialItemsViewHolder != null) {
+      editorialItemsViewHolder.setAllDescriptionsVisible();
+    }
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     placeHolderPosition = editorialViewModel.getPlaceHolderPosition();
     String title = editorialViewModel.getTitle();

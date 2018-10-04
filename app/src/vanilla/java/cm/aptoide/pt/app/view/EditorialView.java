@@ -49,4 +49,10 @@ public interface EditorialView extends View {
   Observable<EditorialEvent> mediaContentClicked();
 
   void managePlaceHolderVisibity();
+
+  Observable<EditorialEvent> mediaListDescriptionCreated();
+
+  void manageMediaListDescriptionAnimationVisibility(EditorialEvent editorialEvent);
+
+  void setMediaListDescriptionsVisible(EditorialEvent editorialEvent);
 }

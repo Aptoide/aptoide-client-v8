@@ -20,11 +20,9 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
-import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -107,7 +105,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     mediaSnap.attachToRecyclerView(mediaList);
 
     Animation fadeIn = new AlphaAnimation(0, 1);
-    fadeIn.setDuration(500);
+    fadeIn.setDuration(1000);
     Animation fadeOut = new AlphaAnimation(1, 0);
     fadeOut.setDuration(500);
     currentMediaPosition = -1;
@@ -131,7 +129,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       manageTitleVisibility(editorialItem, position);
       manageMessageVisibility(editorialItem);
     }
-    manageMediaVisibility(editorialItem);
+    manageMediaVisibility(editorialItem, position);
     if (editorialItem.isPlaceHolderType()) {
       setPlaceHolderInfo(editorialItem.getAppName(), editorialItem.getIcon(),
           editorialItem.getRating());
@@ -162,47 +160,49 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  private void manageDescriptionVisibility(Integer firstVisibleItem, List<EditorialMedia> media) {
-    if (firstVisibleItem >= 0 && !mediaDescriptionVisible) {
-      int lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition();
-      if (firstVisibleItem == lastVisibleItem) {
-        String descriptionText = media.get(firstVisibleItem)
-            .getDescription();
-        descriptionSwitcher.setVisibility(View.VISIBLE);
-        if (currentMediaPosition != firstVisibleItem) {
-          descriptionSwitcher.setText(descriptionText);
-          currentMediaPosition = firstVisibleItem;
-        }
-      } else {
-        if (!mediaDescriptionVisible) {
-          for (int mediaPosition = 0; mediaPosition < mediaBundleAdapter.getItemCount();
-              mediaPosition++) {
-            MediaViewHolder mediaViewHolder =
-                ((MediaViewHolder) mediaList.findViewHolderForAdapterPosition(mediaPosition));
-            if (mediaViewHolder != null) {
-              mediaViewHolder.setDescriptionVisible();
-              mediaDescriptionVisible = true;
-            }
-          }
+  public void manageDescriptionAnimationVisibility(int firstVisibleItem,
+      List<EditorialMedia> media) {
+    if (!mediaDescriptionVisible) {
+      String descriptionText = media.get(firstVisibleItem)
+          .getDescription();
+      descriptionSwitcher.setVisibility(View.VISIBLE);
+      if (currentMediaPosition != firstVisibleItem) {
+        descriptionSwitcher.setText(descriptionText);
+        currentMediaPosition = firstVisibleItem;
+      }
+    }
+  }
+
+  public void setAllDescriptionsVisible() {
+    if (!mediaDescriptionVisible) {
+      for (int mediaPosition = 0; mediaPosition < mediaBundleAdapter.getItemCount();
+          mediaPosition++) {
+        MediaViewHolder mediaViewHolder =
+            ((MediaViewHolder) mediaList.findViewHolderForAdapterPosition(mediaPosition));
+        if (mediaViewHolder != null) {
+          mediaViewHolder.setDescriptionVisible();
+          mediaDescriptionVisible = true;
         }
       }
     }
   }
 
-  private void manageMediaVisibility(EditorialContent editorialItem) {
+  private void manageMediaVisibility(EditorialContent editorialItem, int position) {
     if (editorialItem.hasMedia()) {
       List<EditorialMedia> editorialMediaList = editorialItem.getMedia();
       media.setVisibility(View.VISIBLE);
       if (editorialItem.hasListOfMedia()) {
         mediaBundleAdapter.add(editorialMediaList);
         mediaList.setVisibility(View.VISIBLE);
-        RxRecyclerView.scrollEvents(mediaList)
-            .map(scrollEvent -> layoutManager.findFirstCompletelyVisibleItemPosition())
-            .distinctUntilChanged()
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(firstVisibleItem -> manageDescriptionVisibility(firstVisibleItem,
-                editorialItem.getMedia()))
-            .subscribe();
+        mediaList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+          @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.MEDIA_LIST,
+                layoutManager.findFirstCompletelyVisibleItemPosition(),
+                layoutManager.findLastCompletelyVisibleItemPosition(), position,
+                editorialItem.getMedia()));
+          }
+        });
       } else {
         EditorialMedia editorialMedia = editorialMediaList.get(0);
         if (editorialMedia.hasDescription()) {
