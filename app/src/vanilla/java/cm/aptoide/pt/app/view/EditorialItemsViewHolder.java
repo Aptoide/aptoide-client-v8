@@ -165,8 +165,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     if (!mediaDescriptionVisible) {
       String descriptionText = media.get(firstVisibleItem)
           .getDescription();
-      descriptionSwitcher.setVisibility(View.VISIBLE);
       if (currentMediaPosition != firstVisibleItem) {
+        descriptionSwitcher.setVisibility(View.VISIBLE);
         descriptionSwitcher.setText(descriptionText);
         currentMediaPosition = firstVisibleItem;
       }
@@ -194,15 +194,17 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       if (editorialItem.hasListOfMedia()) {
         mediaBundleAdapter.add(editorialMediaList);
         mediaList.setVisibility(View.VISIBLE);
-        mediaList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-          @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.MEDIA_LIST,
-                layoutManager.findFirstCompletelyVisibleItemPosition(),
-                layoutManager.findLastCompletelyVisibleItemPosition(), position,
-                editorialItem.getMedia()));
-          }
-        });
+        if (editorialItem.hasAnyMediaDescription()) {
+          mediaList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+              super.onScrolled(recyclerView, dx, dy);
+              uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.MEDIA_LIST,
+                  layoutManager.findFirstCompletelyVisibleItemPosition(),
+                  layoutManager.findLastCompletelyVisibleItemPosition(), position,
+                  editorialItem.getMedia()));
+            }
+          });
+        }
       } else {
         EditorialMedia editorialMedia = editorialMediaList.get(0);
         if (editorialMedia.hasDescription()) {
