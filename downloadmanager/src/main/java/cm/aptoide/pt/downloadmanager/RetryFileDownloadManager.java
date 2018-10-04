@@ -1,6 +1,5 @@
 package cm.aptoide.pt.downloadmanager;
 
-import android.util.Log;
 import cm.aptoide.pt.logger.Logger;
 import rx.Completable;
 import rx.Observable;
@@ -40,10 +39,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
 
   @Override public void startFileDownload() {
     startDownloadSubscription = Observable.just(setupFileDownloader())
-        .doOnNext(__ -> Logger.getInstance()
-            .d("RetryFileDownloader", "Starting app file download " + fileName))
         .flatMap(fileDownloader -> fileDownloader.startFileDownload()
-            .doOnCompleted(() -> Log.d(TAG, "startFileDownload: completed"))
             .andThen(handleFileDownloadProgress(fileDownloader)))
         .subscribe();
   }
@@ -75,9 +71,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
           if (fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND) {
             Logger.getInstance()
-                .d("RetryFileDownloader",
-                    "File not found error, restarting the download with the alternative link");
-            //create new filedownloader
+                .d(TAG, "File not found error, restarting the download with the alternative link");
             FileDownloader retryFileDownloader =
                 fileDownloaderProvider.createFileDownloader(md5, alternativeDownloadPath, fileType,
                     packageName, versionCode, fileName, PublishSubject.create());
@@ -85,8 +79,6 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
             return retryFileDownloader.startFileDownload()
                 .andThen(handleFileDownloadProgress(retryFileDownloader));
           } else {
-            Logger.getInstance()
-                .d("RetryFileDownloader", "updating progress");
             return Observable.just(fileDownloadCallback);
           }
         })

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +37,6 @@ public class AppDownloadManager implements AppDownloader {
     subscribe = Observable.from(app.getDownloadFiles())
         .flatMap(downloadAppFile -> startFileDownload(downloadAppFile))
         .subscribe(__ -> {
-          Log.d(TAG, "startAppDownload: completed");
         }, Throwable::printStackTrace);
   }
 
@@ -82,7 +80,7 @@ public class AppDownloadManager implements AppDownloader {
             fileDownloader -> fileDownloaderPersistence.put(downloadAppFile.getMainDownloadPath(),
                 fileDownloader))
         .doOnNext(__ -> Logger.getInstance()
-            .d("AppDownloader", "Starting app file download " + downloadAppFile.getFileName()))
+            .d(TAG, "Starting app file download " + downloadAppFile.getFileName()))
         .doOnNext(fileDownloader -> fileDownloader.startFileDownload())
         .flatMap(fileDownloader -> handleFileDownloadProgress(fileDownloader))
         .doOnError(Throwable::printStackTrace);
@@ -98,9 +96,7 @@ public class AppDownloadManager implements AppDownloader {
 
   private Observable<FileDownloadCallback> handleFileDownloadProgress(
       RetryFileDownloader fileDownloader) {
-    return Completable.fromAction(() -> Log.d(TAG, "handleFileDownloadProgress: started"))
-        .andThen(fileDownloader.observeFileDownloadProgress())
-        .doOnNext(fileDownloadCallback -> Log.d(TAG, "handleFileDownloadProgress: cenas"))
+    return fileDownloader.observeFileDownloadProgress()
         .doOnNext(fileDownloadCallback -> fileDownloadSubject.onNext(fileDownloadCallback));
   }
 
