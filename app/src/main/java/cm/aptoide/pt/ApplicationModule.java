@@ -893,7 +893,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
         application.getApplicationContext(), connectivityManager, application.getResources(),
         adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
-        application::getPartnerId, new MinimalAdMapper(), new AppNextAdRepository(application.getApplicationContext(), PublishSubject.create()));
+        application::getPartnerId, new MinimalAdMapper(), new AppNextAdRepository(application.getApplicationContext()));
   }
 
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(

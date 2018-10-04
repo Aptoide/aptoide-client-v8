@@ -19,7 +19,7 @@ public class AppNextAdRepository {
 
     private final Context context;
 
-    public AppNextAdRepository(Context context, PublishSubject<AppNextAdResult> publishSubject){
+    public AppNextAdRepository(Context context){
         this.context = context;
     }
 
