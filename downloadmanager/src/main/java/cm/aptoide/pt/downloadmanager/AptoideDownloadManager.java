@@ -214,7 +214,10 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private void handleCompletedDownload(Download download) {
     Logger.getInstance()
-        .d("AptoideDownloadManager", "Download is completed " + download.getMd5());
+        .d("AptoideDownloadManager", "Download is completed "
+            + download.getMd5()
+            + " download progress: "
+            + download.getOverallProgress());
     moveCompletedDownloadFiles(download.getFilesToDownload());
     removeAppDownloader(download.getMd5());
   }
