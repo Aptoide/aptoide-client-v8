@@ -97,7 +97,14 @@ public class AppDownloadManager implements AppDownloader {
   private Observable<FileDownloadCallback> handleFileDownloadProgress(
       RetryFileDownloader fileDownloader) {
     return fileDownloader.observeFileDownloadProgress()
-        .doOnNext(fileDownloadCallback -> fileDownloadSubject.onNext(fileDownloadCallback));
+        .doOnNext(fileDownloadCallback -> fileDownloadSubject.onNext(fileDownloadCallback))
+        .filter(fileDownloadCallback -> fileDownloadCallback.getDownloadState()
+            == AppDownloadStatus.AppDownloadState.COMPLETED)
+        .doOnNext(fileDownloadCallback -> handleCompletedFileDownload(fileDownloader));
+  }
+
+  private void handleCompletedFileDownload(RetryFileDownloader fileDownloader) {
+    fileDownloader.stop();
   }
 
   @VisibleForTesting
