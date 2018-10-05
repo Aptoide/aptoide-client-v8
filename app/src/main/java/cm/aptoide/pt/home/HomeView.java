@@ -13,6 +13,8 @@ public interface HomeView extends BundleView {
 
   Observable<EditorialHomeEvent> editorialCardClicked();
 
+  Observable<String> gdprDialogClicked();
+
   Observable<HomeEvent> infoBundleKnowMoreClicked();
 
   void scrollToTop();
@@ -22,14 +24,6 @@ public interface HomeView extends BundleView {
   Observable<Void> imageClick();
 
   Observable<HomeEvent> dismissBundleClicked();
-
-  Observable<Void> termsAndConditionsContinueClicked();
-
-  Observable<Void> termsAndConditionsLogOutClicked();
-
-  Observable<Void> privacyPolicyClicked();
-
-  Observable<Void> termsAndConditionsClicked();
 
   void hideBundle(int bundlePosition);
 

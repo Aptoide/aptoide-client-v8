@@ -18,7 +18,7 @@ import java.util.zip.ZipFile;
  */
 
 public class ApkFy {
-  
+
   private static final String TAG = "ApkFy";
 
   private final Context context;

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app.view;
 
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.appview.PreferencesManager;
@@ -88,12 +87,6 @@ public class EditorialManager {
         downloadStateParser.getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
         AppContext.EDITORIAL, downloadStateParser.getOrigin(download.getAction()), campaignId,
         abTestGroup);
-  }
-
-  public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
-    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay).map(
-        downloadModel -> new DownloadAppViewModel(downloadModel, null, null));
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,

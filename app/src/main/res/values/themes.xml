@@ -471,4 +471,7 @@
     <item name="toolbarTheme">@style/ToolbarBlackTransparent</item>
   </style>
 
+  <style name="AptoideEditorialThemeGrey" parent="AptoideThemeDefault">
+    <item name="colorPrimaryDark">@color/grey_700</item>
+  </style>
 </resources>
