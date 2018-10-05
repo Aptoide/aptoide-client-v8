@@ -364,8 +364,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides RetryFileDownloaderProvider providesRetryFileDownloaderProvider(
-      @Named("cachePath") String cachePath, FileDownloaderProvider fileDownloaderProvider) {
-    return new RetryFileDownloadManagerProvider(cachePath, fileDownloaderProvider);
+      FileDownloaderProvider fileDownloaderProvider) {
+    return new RetryFileDownloadManagerProvider(fileDownloaderProvider);
   }
 
   @Singleton @Provides DownloadsRepository provideDownloadsRepository(

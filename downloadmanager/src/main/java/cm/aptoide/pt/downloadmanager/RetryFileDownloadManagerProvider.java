@@ -4,12 +4,9 @@ import rx.subjects.PublishSubject;
 
 public class RetryFileDownloadManagerProvider implements RetryFileDownloaderProvider {
 
-  private final String downloadsPath;
   private FileDownloaderProvider fileDownloaderProvider;
 
-  public RetryFileDownloadManagerProvider(String downloadsPath,
-      FileDownloaderProvider fileDownloaderProvider) {
-    this.downloadsPath = downloadsPath;
+  public RetryFileDownloadManagerProvider(FileDownloaderProvider fileDownloaderProvider) {
     this.fileDownloaderProvider = fileDownloaderProvider;
   }
 
@@ -18,6 +15,6 @@ public class RetryFileDownloadManagerProvider implements RetryFileDownloaderProv
       int fileType, String packageName, int versionCode, String fileName,
       PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeDownloadPath) {
     return new RetryFileDownloadManager(mainDownloadPath, fileType, packageName, versionCode,
-        fileName, md5, downloadsPath, fileDownloaderProvider, alternativeDownloadPath);
+        fileName, md5, fileDownloaderProvider, alternativeDownloadPath);
   }
 }

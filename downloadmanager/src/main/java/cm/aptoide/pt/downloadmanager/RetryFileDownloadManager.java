@@ -15,7 +15,6 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
   private final int versionCode;
   private final String fileName;
   private String md5;
-  private String downloadsPath;
   private FileDownloaderProvider fileDownloaderProvider;
   private String alternativeDownloadPath;
   private FileDownloader fileDownloader;
@@ -23,15 +22,14 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
   private Subscription startDownloadSubscription;
 
   public RetryFileDownloadManager(String mainDownloadPath, int fileType, String packageName,
-      int versionCode, String fileName, String md5, String downloadsPath,
-      FileDownloaderProvider fileDownloaderProvider, String alternativeDownloadPath) {
+      int versionCode, String fileName, String md5, FileDownloaderProvider fileDownloaderProvider,
+      String alternativeDownloadPath) {
     this.mainDownloadPath = mainDownloadPath;
     this.fileType = fileType;
     this.packageName = packageName;
     this.versionCode = versionCode;
     this.fileName = fileName;
     this.md5 = md5;
-    this.downloadsPath = downloadsPath;
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.alternativeDownloadPath = alternativeDownloadPath;
     retryFileDownloadSubject = PublishSubject.create();
