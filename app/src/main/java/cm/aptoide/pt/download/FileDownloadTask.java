@@ -18,6 +18,7 @@ import rx.subjects.PublishSubject;
 public class FileDownloadTask extends FileDownloadLargeFileListener {
 
   private static final int FILE_NOTFOUND_HTTP_ERROR = 404;
+  private final String TAG = "FileDownloader";
   private final String md5;
   private PublishSubject<FileDownloadCallback> downloadStatus;
   private int fileType;
@@ -55,31 +56,32 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
     if (md5Comparator.compareMd5(md5, fileName)) {
       downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
           FileDownloadManager.PROGRESS_MAX_VALUE, fileType, md5));
-      Log.d("FileDownloader", " Download completed");
+      Log.d(TAG, " Download completed");
     } else {
-      Log.d("FileDownloader", " Download error");
+      Log.d(TAG, " Download error");
       downloadStatus.onNext(
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, fileType, md5));
     }
   }
 
   @Override protected void error(BaseDownloadTask baseDownloadTask, Throwable error) {
+    error.printStackTrace();
     if (error instanceof FileDownloadHttpException
         && ((FileDownloadHttpException) error).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
       Logger.getInstance()
-          .d("FileDownloader", "File not found error on app: " + md5);
+          .d(TAG, "File not found error on app: " + md5);
       downloadStatus.onNext(
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND, 0,
               fileType, md5));
     } else if (error instanceof FileDownloadOutOfSpaceException) {
       Logger.getInstance()
-          .d("FileDownloader", "Out of space error for the app: " + md5);
+          .d(TAG, "Out of space error for the app: " + md5);
       downloadStatus.onNext(
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE, 0,
               fileType, md5));
     } else {
       Logger.getInstance()
-          .d("FileDownloader", "Generic error on app: " + md5);
+          .d(TAG, "Generic error on app: " + md5);
       downloadStatus.onNext(
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, fileType, md5));
     }
