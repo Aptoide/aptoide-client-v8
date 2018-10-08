@@ -23,10 +23,10 @@ import static org.mockito.Mockito.when;
  */
 public class AppDownloadManagerTest {
 
-  @Mock private FileDownloader fileDownloaderApk;
-  @Mock private FileDownloader fileDownloaderMainObb;
-  @Mock private FileDownloader fileDownloaderPatchObb;
-  @Mock private FileDownloaderProvider fileDownloaderProvider;
+  @Mock private RetryFileDownloader fileDownloaderApk;
+  @Mock private RetryFileDownloader fileDownloaderMainObb;
+  @Mock private RetryFileDownloader fileDownloaderPatchObb;
+  @Mock private RetryFileDownloaderProvider fileDownloaderProvider;
   @Mock private FileDownloadCallback fileDownloadCallback;
   private DownloadAppFile apk;
   private DownloadAppFile mainObb;
@@ -51,29 +51,29 @@ public class AppDownloadManagerTest {
     DownloadApp appToDownloadEmptyError = new DownloadApp(Collections.emptyList(), "md5Empty");
     testSubscriber = TestSubscriber.create();
 
-    appDownloadManager = new AppDownloadManager(new FileDownloaderProvider() {
+    appDownloadManager = new AppDownloadManager(new RetryFileDownloaderProvider() {
       @Override
-      public FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
-          String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback) {
+      public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
+          int fileType, String packageName, int versionCode, String fileName,
+          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
     }, appToDownload, createFileDownloaderPersistence());
 
-    appDownloadManagerWithObbs = new AppDownloadManager(new FileDownloaderProvider() {
+    appDownloadManagerWithObbs = new AppDownloadManager(new RetryFileDownloaderProvider() {
       @Override
-      public FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
-          String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback) {
+      public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
+          int fileType, String packageName, int versionCode, String fileName,
+          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
     }, appToDownloadWithObbs, createFileDownloaderPersistence());
 
-    appDownloadManagerWithNoFiles = new AppDownloadManager(new FileDownloaderProvider() {
+    appDownloadManagerWithNoFiles = new AppDownloadManager(new RetryFileDownloaderProvider() {
       @Override
-      public FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
-          String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback) {
+      public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
+          int fileType, String packageName, int versionCode, String fileName,
+          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
     }, appToDownloadEmptyError, createFileDownloaderPersistence());
@@ -81,7 +81,7 @@ public class AppDownloadManagerTest {
 
   @Test public void startAppDownloadWithOneFile() throws Exception {
 
-    when(fileDownloaderApk.startFileDownload()).thenReturn(Completable.complete());
+    //when(fileDownloaderApk.startFileDownload()).thenReturn(Completable.complete());
 
     when(fileDownloaderApk.observeFileDownloadProgress()).thenReturn(
         Observable.just(fileDownloadCallback));
@@ -93,7 +93,7 @@ public class AppDownloadManagerTest {
 
   @Test public void startAppDownloadWithMultipleFiles() throws Exception {
 
-    when(fileDownloaderApk.startFileDownload()).thenReturn(Completable.complete());
+    //when(fileDownloaderApk.startFileDownload()).thenReturn(Completable.complete());
     when(fileDownloaderApk.observeFileDownloadProgress()).thenReturn(
         Observable.just(fileDownloadCallback));
 
@@ -115,10 +115,10 @@ public class AppDownloadManagerTest {
     PublishSubject<FileDownloadCallback> fileDownloadCallbackPublishSubjectEmpty =
         PublishSubject.create();
 
-    when(
-        fileDownloaderProvider.createFileDownloader(apk.getDownloadMd5(), apk.getMainDownloadPath(),
-            apk.getFileType(), apk.getPackageName(), apk.getVersionCode(), apk.getFileName(),
-            fileDownloadCallbackPublishSubjectEmpty)).thenReturn(fileDownloaderApk);
+    when(fileDownloaderProvider.createRetryFileDownloader(apk.getDownloadMd5(),
+        apk.getMainDownloadPath(), apk.getFileType(), apk.getPackageName(), apk.getVersionCode(),
+        apk.getFileName(), fileDownloadCallbackPublishSubjectEmpty,
+        apk.getAlternativeDownloadPath())).thenReturn(fileDownloaderApk);
 
     when(fileDownloaderApk.pauseDownload()).thenReturn(Completable.complete());
 
@@ -210,8 +210,8 @@ public class AppDownloadManagerTest {
     return appFileList;
   }
 
-  private HashMap<String, FileDownloader> createFileDownloaderPersistence() {
-    HashMap<String, FileDownloader> persistence = new HashMap<>();
+  private HashMap<String, RetryFileDownloader> createFileDownloaderPersistence() {
+    HashMap<String, RetryFileDownloader> persistence = new HashMap<>();
     persistence.put("http://apkdownload.com/file/app.apk", fileDownloaderApk);
     persistence.put("http://apkdownload.com/file/mainObb.apk", fileDownloaderMainObb);
     persistence.put("http://apkdownload.com/file/patchObb.apk", fileDownloaderPatchObb);
