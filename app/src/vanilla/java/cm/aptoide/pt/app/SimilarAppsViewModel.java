@@ -1,9 +1,8 @@
 package cm.aptoide.pt.app;
 
-import com.appnext.core.AppnextError;
-import com.appnext.nativeads.NativeAd;
+import cm.aptoide.pt.ads.model.ApplicationAd;
+import cm.aptoide.pt.ads.model.ApplicationAdError;
 
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.AppsList;
 import java.util.Collections;
@@ -15,14 +14,14 @@ import java.util.List;
 
 public class SimilarAppsViewModel {
 
-  private final NativeAd ad;
+  private final ApplicationAd ad;
   private final List<Application> recommendedApps;
   private final boolean loading;
   private final AppsList.Error recommendedAppsError;
-  private final AppnextError adError;
+  private final ApplicationAdError adError;
 
-  public SimilarAppsViewModel(NativeAd ad, List<Application> recommendedApps, boolean loading,
-      AppsList.Error recommendedAppsError, AppnextError adResultError) {
+  public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
+      AppsList.Error recommendedAppsError, ApplicationAdError adResultError) {
     this.ad = ad;
     this.recommendedApps = recommendedApps;
     this.loading = loading;
@@ -38,7 +37,7 @@ public class SimilarAppsViewModel {
     this.adError = null;
   }
 
-  public NativeAd getAd() {
+  public ApplicationAd getAd() {
     return ad;
   }
 
@@ -62,7 +61,7 @@ public class SimilarAppsViewModel {
     return (recommendedAppsError != null || adError != null);
   }
 
-  public AppnextError getAdError() {
+  public ApplicationAdError getAdError() {
     return adError;
   }
 

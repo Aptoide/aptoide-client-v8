@@ -43,9 +43,9 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
       adLabel.setVisibility(View.VISIBLE);
       nameTextView.setText(app.getAd().getAdTitle());
       ImageLoader.with(itemView.getContext())
-          .loadWithRoundCorners(app.getAd().getIconURL(), 8, iconView, R.drawable.placeholder_square);
-      app.getAd().registerClickableViews(itemView);
-      float rating = 0;
+          .loadWithRoundCorners(app.getAd().getIconUrl(), 8, iconView, R.drawable.placeholder_square);
+      app.getAd().registerClickableView(itemView);
+      float rating = app.getAd().getStars();
       if (rating == 0) {
         this.rating.setText(R.string.appcardview_title_no_stars);
       } else {

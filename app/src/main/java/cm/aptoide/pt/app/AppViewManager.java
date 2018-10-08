@@ -1,6 +1,6 @@
 package cm.aptoide.pt.app;
 
-import com.appnext.nativeads.NativeAd;
+import cm.aptoide.pt.ads.model.ApplicationAdError;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -28,7 +28,6 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -120,9 +119,11 @@ public class AppViewManager {
     } else {
       return loadAppNextAdForSimilarApps(keyWords).toSingle().flatMap(
           adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
-            cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getNativeAd(),
+            ApplicationAdError adError = null;
+            if(adResult.getError() != null) adError = new ApplicationAdError(adResult.getError());
+            cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
                 recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError(), adResult.getError());
+                recommendedAppsRequestResult.getError(), adError);
             return cachedSimilarAppsViewModel;
           }));
     }

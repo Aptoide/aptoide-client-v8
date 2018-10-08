@@ -1,8 +1,7 @@
 package cm.aptoide.pt.app;
 
-import com.appnext.nativeads.NativeAd;
+import cm.aptoide.pt.ads.model.ApplicationAd;
 
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.view.app.Application;
 
 /**
@@ -12,9 +11,9 @@ import cm.aptoide.pt.view.app.Application;
 public class AppViewSimilarApp {
 
   private Application app;
-  private NativeAd ad;
+  private ApplicationAd ad;
 
-  public AppViewSimilarApp(Application app, NativeAd ad) {
+  public AppViewSimilarApp(Application app, ApplicationAd ad) {
     this.app = app;
     this.ad = ad;
   }
@@ -23,7 +22,7 @@ public class AppViewSimilarApp {
     return app;
   }
 
-  public NativeAd getAd() {
+  public ApplicationAd getAd() {
     return ad;
   }
 
