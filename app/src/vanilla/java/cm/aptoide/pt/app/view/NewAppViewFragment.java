@@ -47,7 +47,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
@@ -128,7 +127,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
-  @Inject ABTestManager abTestManager;
+  @Inject ApkFyExperiment apkFyExperiment;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -1002,8 +1001,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
       String appName, double appc, float rating, String icon, int downloads) {
     // Example of usage, should probably inject the experiment
-    ApkFyExperiment experiment = new ApkFyExperiment(abTestManager, AndroidSchedulers.mainThread());
-    return experiment.performAbTest()
+    return apkFyExperiment.performAbTest()
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(result -> {
           if (result) {

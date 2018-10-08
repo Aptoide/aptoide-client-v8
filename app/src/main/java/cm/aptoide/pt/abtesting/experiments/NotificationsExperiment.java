@@ -4,15 +4,15 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import rx.Observable;
 
 /**
- * Created by franciscoaleixo on 21/09/2018.
+ * Created by franciscocalado on 08/10/2018.
  */
 
-public class ApkFyExperiment {
-  private static final String EXPERIMENT_ID = "apkfy";
+public class NotificationsExperiment {
+  private static final String EXPERIMENT_ID = "notifications";
 
   private ABTestManager abTestManager;
 
-  public ApkFyExperiment(ABTestManager abTestManager) {
+  public NotificationsExperiment(ABTestManager abTestManager) {
     this.abTestManager = abTestManager;
   }
 
@@ -25,9 +25,9 @@ public class ApkFyExperiment {
           }
           switch (experimentAssigment) {
             case "default":
-            case "old_dialogue":
+            case "show":
               return Observable.just(true);
-            case "newdialog":
+            case "hide":
               return Observable.just(false);
           }
           return Observable.error(new Throwable());
