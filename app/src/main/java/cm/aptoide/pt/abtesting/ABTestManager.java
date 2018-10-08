@@ -27,7 +27,8 @@ public class ABTestManager {
   }
 
   public enum ExperimentType {
-    SHARE_DIALOG("ASV-recommend_continue_test");
+    SHARE_DIALOG("ASV-recommend_continue_test"),
+    SIMILAR_AD("ASV-1068-AppNext_Test");
 
     private String name;
 

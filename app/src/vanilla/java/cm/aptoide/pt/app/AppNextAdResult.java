@@ -1,13 +1,12 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.ads.model.AppNextNativeAd;
-import cm.aptoide.pt.ads.model.ApplicationAd;
+import cm.aptoide.pt.ads.model.ApplicationAdError;
 import com.appnext.core.AppnextError;
 import com.appnext.nativeads.NativeAd;
 
-import cm.aptoide.pt.view.app.AppsList;
 
-public class AppNextAdResult {
+public class AppNextAdResult implements ApplicationAdResult{
     private final AppNextNativeAd ad;
     private final AppnextError error;
 
@@ -25,7 +24,8 @@ public class AppNextAdResult {
         return ad;
     }
 
-    public AppnextError getError() {
-        return error;
+    public ApplicationAdError getError() {
+        if(error == null) return null;
+        return new ApplicationAdError(error);
     }
 }
