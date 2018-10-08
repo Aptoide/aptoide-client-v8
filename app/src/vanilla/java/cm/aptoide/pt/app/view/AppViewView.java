@@ -88,6 +88,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<ShareDialogs.ShareResponse> shareDialogResponse();
 
+  Observable<String> apkfyDialogPositiveClick();
+
   Observable<Integer> scrollReviewsResponse();
 
   void navigateToDeveloperWebsite(AppViewViewModel app);
@@ -135,5 +137,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<DownloadModel.Action> showOpenAndInstallDialog(String title, String appName);
 
-  Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title, String appName);
+  Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title, String appName,
+      double appc, float rating, String icon, int downloads);
+
+  void showApkfyElement(String appName);
 }

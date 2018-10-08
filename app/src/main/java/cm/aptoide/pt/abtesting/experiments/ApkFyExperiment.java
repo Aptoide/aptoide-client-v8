@@ -1,9 +1,8 @@
 package cm.aptoide.pt.abtesting.experiments;
 
 import cm.aptoide.pt.abtesting.ABTestManager;
-import rx.Completable;
+import rx.Observable;
 import rx.Scheduler;
-import rx.functions.Action0;
 
 /**
  * Created by franciscoaleixo on 21/09/2018.
@@ -15,27 +14,26 @@ public class ApkFyExperiment {
   private ABTestManager abTestManager;
   private Scheduler scheduler;
 
-  public ApkFyExperiment(ABTestManager abTestManager, Scheduler scheduler){
+  public ApkFyExperiment(ABTestManager abTestManager, Scheduler scheduler) {
     this.abTestManager = abTestManager;
     this.scheduler = scheduler;
   }
-  public void performAbTest(Action0 oldDialogAction, Action0 newDialogAction){
-    abTestManager.getExperiment(EXPERIMENT_ID)
-        .flatMapCompletable(experiment -> {
+
+  public Observable<Boolean> performAbTest() {
+    return abTestManager.getExperiment(EXPERIMENT_ID)
+        .flatMap(experiment -> {
           String experimentAssigment = "default";
-          if(!experiment.isExperimentOver() && experiment.isPartOfExperiment()){
+          if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
             experimentAssigment = experiment.getAssignment();
           }
-          switch (experimentAssigment){
+          switch (experimentAssigment) {
             case "default":
             case "old_dialogue":
-              return Completable.fromAction(oldDialogAction);
+              return Observable.just(true);
             case "newdialog":
-              return Completable.fromAction(newDialogAction);
+              return Observable.just(false);
           }
-          return Completable.complete();
-        })
-        .observeOn(scheduler)
-        .subscribe();
+          return Observable.error(new Throwable());
+        });
   }
 }
