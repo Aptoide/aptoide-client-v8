@@ -20,14 +20,12 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   private final String TAG = "FileDownloader";
   private final String md5;
   private PublishSubject<FileDownloadCallback> downloadStatus;
-  private int fileType;
   private Md5Comparator md5Comparator;
   private String fileName;
 
-  public FileDownloadTask(PublishSubject<FileDownloadCallback> downloadStatus, int fileType,
-      String md5, Md5Comparator md5Comparator, String fileName) {
+  public FileDownloadTask(PublishSubject<FileDownloadCallback> downloadStatus, String md5,
+      Md5Comparator md5Comparator, String fileName) {
     this.downloadStatus = downloadStatus;
-    this.fileType = fileType;
     this.md5 = md5;
     this.md5Comparator = md5Comparator;
     this.fileName = fileName;
@@ -36,19 +34,19 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   @Override
   protected void pending(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PENDING,
-        calculateProgress(soFarBytes, totalBytes), fileType, md5));
+        calculateProgress(soFarBytes, totalBytes), md5));
   }
 
   @Override
   protected void progress(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PROGRESS,
-        calculateProgress(soFarBytes, totalBytes), fileType, md5));
+        calculateProgress(soFarBytes, totalBytes), md5));
   }
 
   @Override
   protected void paused(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PAUSED,
-        calculateProgress(soFarBytes, totalBytes), fileType, md5));
+        calculateProgress(soFarBytes, totalBytes), md5));
   }
 
   @Override protected void completed(BaseDownloadTask baseDownloadTask) {
@@ -56,14 +54,14 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
     if (md5Comparator.compareMd5(md5, fileName)) {
       fileDownloadTaskStatus =
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
-              FileDownloadManager.PROGRESS_MAX_VALUE, fileType, md5);
+              FileDownloadManager.PROGRESS_MAX_VALUE, md5);
       Logger.getInstance()
           .d(TAG, " Download completed");
     } else {
       Logger.getInstance()
           .d(TAG, " Download error");
       fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, fileType, md5);
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, md5);
     }
     downloadStatus.onNext(fileDownloadTaskStatus);
   }
@@ -77,19 +75,19 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
           .d(TAG, "File not found error on app: " + md5);
       fileDownloadTaskStatus =
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND, 0,
-              fileType, md5);
+              md5);
     } else if (error instanceof FileDownloadOutOfSpaceException) {
       Logger.getInstance()
           .d(TAG, "Out of space error for the app: " + md5);
 
       fileDownloadTaskStatus =
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE, 0,
-              fileType, md5);
+              md5);
     } else {
       Logger.getInstance()
           .d(TAG, "Generic error on app: " + md5);
       fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, fileType, md5);
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, md5);
     }
     downloadStatus.onNext(fileDownloadTaskStatus);
   }
