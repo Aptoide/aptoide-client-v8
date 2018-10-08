@@ -13,17 +13,17 @@ import rx.subjects.PublishSubject;
 
 class MediaBundleAdapter extends RecyclerView.Adapter<MediaViewHolder> {
   private List<EditorialMedia> media;
-  private PublishSubject<String> editorialMediaClicked;
+  private PublishSubject<EditorialEvent> uiEventListener;
 
   public MediaBundleAdapter(List<EditorialMedia> media,
-      PublishSubject<String> editorialMediaClicked) {
+      PublishSubject<EditorialEvent> uiEventListener) {
     this.media = media;
-    this.editorialMediaClicked = editorialMediaClicked;
+    this.uiEventListener = uiEventListener;
   }
 
   @Override public MediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new MediaViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.media_layout, parent, false), editorialMediaClicked);
+        .inflate(R.layout.media_layout, parent, false), uiEventListener);
   }
 
   @Override public void onBindViewHolder(MediaViewHolder mediaViewHolder, int position) {
