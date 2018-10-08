@@ -27,20 +27,16 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
     this.md5 = md5;
   }
 
-  @Override public String getMd5() {
-    return md5;
-  }
-
   @Override public int getDownloadProgress() {
     return downloadProgress;
   }
 
-  @Override public int getFileType() {
-    return fileType;
-  }
-
   @Override public AppDownloadState getDownloadState() {
     return appDownloadState;
+  }
+
+  @Override public String getMd5() {
+    return md5;
   }
 
   @Override public boolean equals(Object o) {
