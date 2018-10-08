@@ -1,10 +1,12 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.ads.model.ApplicationAd;
 import cm.aptoide.pt.ads.model.ApplicationAdError;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
@@ -122,6 +124,25 @@ public class AppViewManager {
             ApplicationAdError adError = null;
             if(adResult.getError() != null) adError = new ApplicationAdError(adResult.getError());
             cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
+                recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
+                recommendedAppsRequestResult.getError(), adError);
+            return cachedSimilarAppsViewModel;
+          }));
+    }
+  }
+
+  public Single<SimilarAppsViewModel> loadAptoideSimilarAppsViewModel(String packageName,
+      List<String> keyWords) {
+    if (cachedSimilarAppsViewModel != null) {
+      return Single.just(cachedSimilarAppsViewModel);
+    } else {
+      return loadAdForSimilarApps(packageName, keyWords).flatMap(
+          adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
+            ApplicationAdError adError = null;
+            ApplicationAd applicationAd = null;
+            if(adResult.getMinimalAd() != null) applicationAd = new AptoideNativeAd(adResult.getMinimalAd());
+            if(adResult.getError() != null) adError = new ApplicationAdError(adResult.getError());
+            cachedSimilarAppsViewModel = new SimilarAppsViewModel(applicationAd,
                 recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
                 recommendedAppsRequestResult.getError(), adError);
             return cachedSimilarAppsViewModel;

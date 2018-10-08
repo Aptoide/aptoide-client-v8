@@ -28,5 +28,7 @@ public class AptoideNativeAd implements ApplicationAd {
 
   @Override public void registerClickableView(View view) {}
 
-
+  public MinimalAd getMinimalAd(){
+    return minimalAd;
+  }
 }
