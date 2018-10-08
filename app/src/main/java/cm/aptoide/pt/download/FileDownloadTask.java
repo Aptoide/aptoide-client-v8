@@ -1,6 +1,5 @@
 package cm.aptoide.pt.download;
 
-import android.util.Log;
 import cm.aptoide.pt.downloadmanager.AppDownloadStatus;
 import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
 import cm.aptoide.pt.logger.Logger;
@@ -56,9 +55,11 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
     if (md5Comparator.compareMd5(md5, fileName)) {
       downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
           FileDownloadManager.PROGRESS_MAX_VALUE, fileType, md5));
-      Log.d(TAG, " Download completed");
+      Logger.getInstance()
+          .d(TAG, " Download completed");
     } else {
-      Log.d(TAG, " Download error");
+      Logger.getInstance()
+          .d(TAG, " Download error");
       downloadStatus.onNext(
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, 0, fileType, md5));
     }
