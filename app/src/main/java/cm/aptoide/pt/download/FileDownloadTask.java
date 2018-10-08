@@ -17,7 +17,7 @@ import rx.subjects.PublishSubject;
 
 public class FileDownloadTask extends FileDownloadLargeFileListener {
 
-  private static final int FILE_NOTFOUND_HTTP_ERROR = 404;
+  private static final int FILE_NOT_FOUND_HTTP_ERROR = 404;
   private final String TAG = "FileDownloader";
   private final String md5;
   private PublishSubject<FileDownloadCallback> downloadStatus;
@@ -67,7 +67,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   @Override protected void error(BaseDownloadTask baseDownloadTask, Throwable error) {
     error.printStackTrace();
     if (error instanceof FileDownloadHttpException
-        && ((FileDownloadHttpException) error).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
+        && ((FileDownloadHttpException) error).getCode() == FILE_NOT_FOUND_HTTP_ERROR) {
       Logger.getInstance()
           .d(TAG, "File not found error on app: " + md5);
       downloadStatus.onNext(
