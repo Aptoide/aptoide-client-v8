@@ -62,6 +62,14 @@ public class FileDownloadManager implements FileDownloader {
     return fileDownloadTask.onDownloadStateChanged();
   }
 
+  //the listener is removed to not receive the paused callback
+  @Override public void stopFailedDownload() {
+    int taskId = fileDownloader.replaceListener(downloadId, null);
+    if (taskId != 0) {
+      fileDownloader.pause(taskId);
+    }
+  }
+
   private void createBaseDownloadTask(String mainDownloadPath, int versionCode, String packageName,
       int fileType, String fileName) {
 

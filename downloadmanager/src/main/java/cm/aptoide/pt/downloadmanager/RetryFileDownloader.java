@@ -14,4 +14,6 @@ public interface RetryFileDownloader {
   Observable<FileDownloadCallback> observeFileDownloadProgress();
 
   void stop();
+
+  void stopFailedDownload();
 }

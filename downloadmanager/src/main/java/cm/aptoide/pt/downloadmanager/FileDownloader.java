@@ -15,4 +15,6 @@ public interface FileDownloader {
   Completable removeDownloadFile();
 
   Observable<FileDownloadCallback> observeFileDownloadProgress();
+
+  void stopFailedDownload();
 }

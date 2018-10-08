@@ -98,9 +98,28 @@ public class AppDownloadManager implements AppDownloader {
       RetryFileDownloader fileDownloader) {
     return fileDownloader.observeFileDownloadProgress()
         .doOnNext(fileDownloadCallback -> fileDownloadSubject.onNext(fileDownloadCallback))
+        .doOnNext(fileDownloadCallback -> {
+          if (fileDownloadCallback.getDownloadState()
+              == AppDownloadStatus.AppDownloadState.COMPLETED) {
+            handleCompletedFileDownload(fileDownloader);
+          } else if (fileDownloadCallback.getDownloadState()
+              == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND
+              || fileDownloadCallback.getDownloadState() == AppDownloadStatus.AppDownloadState.ERROR
+              || fileDownloadCallback.getDownloadState()
+              == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
+            handleErrorFileDownload();
+          }
+        })
         .filter(fileDownloadCallback -> fileDownloadCallback.getDownloadState()
             == AppDownloadStatus.AppDownloadState.COMPLETED)
         .doOnNext(fileDownloadCallback -> handleCompletedFileDownload(fileDownloader));
+  }
+
+  private void handleErrorFileDownload() {
+
+    for (RetryFileDownloader retryFileDownloader : fileDownloaderPersistence.values()) {
+      retryFileDownloader.stopFailedDownload();
+    }
   }
 
   private void handleCompletedFileDownload(RetryFileDownloader fileDownloader) {
