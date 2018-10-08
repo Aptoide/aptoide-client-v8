@@ -220,8 +220,8 @@ public class AptoideDownloadManager implements DownloadManager {
     AppDownloader appDownloader = appDownloaderMap.get(md5);
     if (appDownloader != null) {
       appDownloader.stop();
+      appDownloaderMap.remove(md5);
     }
-    appDownloaderMap.remove(md5);
   }
 
   private void moveCompletedDownloadFiles(RealmList<FileToDownload> filesToDownload) {
