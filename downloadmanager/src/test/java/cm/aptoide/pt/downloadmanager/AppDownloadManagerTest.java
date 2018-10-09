@@ -80,9 +80,6 @@ public class AppDownloadManagerTest {
   }
 
   @Test public void startAppDownloadWithOneFile() throws Exception {
-
-    //when(fileDownloaderApk.startFileDownload()).thenReturn(Completable.complete());
-
     when(fileDownloaderApk.observeFileDownloadProgress()).thenReturn(
         Observable.just(fileDownloadCallback));
 
@@ -92,8 +89,6 @@ public class AppDownloadManagerTest {
   }
 
   @Test public void startAppDownloadWithMultipleFiles() throws Exception {
-
-    //when(fileDownloaderApk.startFileDownload()).thenReturn(Completable.complete());
     when(fileDownloaderApk.observeFileDownloadProgress()).thenReturn(
         Observable.just(fileDownloadCallback));
 
