@@ -101,6 +101,7 @@ public class AppViewPresenter implements Presenter {
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
     handleAppBought();
+    handleApkfyDialogPositiveClick();
   }
 
   @VisibleForTesting public void handleFirstLoad() {
@@ -585,7 +586,8 @@ public class AppViewPresenter implements Presenter {
                 .first()
                 .observeOn(viewScheduler)
                 .flatMap(account -> view.showOpenAndInstallApkFyDialog(appViewModel.getMarketName(),
-                    appViewModel.getAppName())
+                    appViewModel.getAppName(), appViewModel.getAppc(), appViewModel.getRating()
+                        .getAverage(), appViewModel.getIcon(), appViewModel.getPackageDownloads())
                     .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
                         appViewModel.getAppId()).observeOn(viewScheduler)
                         .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
@@ -902,6 +904,18 @@ public class AppViewPresenter implements Presenter {
                             appViewViewModel.getPackageName(), appViewViewModel.getAppId())))
                 .toObservable())
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleApkfyDialogPositiveClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.apkfyDialogPositiveClick())
+        .doOnNext(appname -> view.showApkfyElement(appname))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

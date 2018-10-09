@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.animation.Animator;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -8,9 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +55,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.util.AptoideColorUtils.getChangedColorLightness;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
@@ -105,12 +109,14 @@ public class EditorialFragment extends NavigationTrackFragment
   private int placeHolderPosition;
 
   private PublishSubject<EditorialEvent> uiEventsListener;
+  private PublishSubject<Palette.Swatch> paletteSwatchSubject;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     ready = PublishSubject.create();
+    paletteSwatchSubject = PublishSubject.create();
     uiEventsListener = PublishSubject.create();
     setHasOptionsMenu(true);
   }
@@ -170,41 +176,32 @@ public class EditorialFragment extends NavigationTrackFragment
 
     appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
-      private void setExpandedState() {
-        toolbar.setBackgroundDrawable(
-            getResources().getDrawable(R.drawable.editorial_up_bottom_black_gradient));
-        toolbarTitle.setTextColor(getResources().getColor(R.color.tw__solid_white));
+      private void configureAppBarLayout(Drawable drawable, int toolbarColor, boolean isCollapsed) {
+        toolbar.setBackgroundDrawable(drawable);
+        toolbarTitle.setTextColor(toolbarColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          handleStatusBar(false);
+          handleStatusBar(isCollapsed);
         }
         if (backArrow != null) {
-          backArrow.setColorFilter(getResources().getColor(R.color.tw__solid_white),
-              PorterDuff.Mode.SRC_IN);
-        }
-      }
-
-      private void setCollapsedState() {
-        toolbar.setBackgroundColor(getResources().getColor(R.color.tw__transparent));
-        toolbarTitle.setTextColor(getResources().getColor(R.color.black));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          handleStatusBar(true);
-        }
-        if (backArrow != null) {
-          backArrow.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+          backArrow.setColorFilter(toolbarColor, PorterDuff.Mode.SRC_IN);
         }
       }
 
       @Override public void onStateChanged(AppBarLayout appBarLayout, State state) {
+        Resources resources = getResources();
         switch (state) {
           case EXPANDED:
             break;
           default:
           case IDLE:
           case MOVING:
-            setExpandedState();
+            configureAppBarLayout(
+                resources.getDrawable(R.drawable.editorial_up_bottom_black_gradient),
+                resources.getColor(R.color.tw__solid_white), false);
             break;
           case COLLAPSED:
-            setCollapsedState();
+            configureAppBarLayout(resources.getDrawable(R.drawable.tw__transparent),
+                resources.getColor(R.color.black), true);
             break;
         }
       }
@@ -226,6 +223,7 @@ public class EditorialFragment extends NavigationTrackFragment
     }
     ready = null;
     window = null;
+    paletteSwatchSubject = null;
     oneDecimalFormatter = null;
   }
 
@@ -345,21 +343,21 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void showDownloadModel(DownloadModel downloadModel) {
     this.action = downloadModel.getAction();
-    EditorialItemsViewHolder editorialItemsViewHolder =
+    EditorialItemsViewHolder placeHolderViewHolder =
         getViewHolderForAdapterPosition(placeHolderPosition);
     if (downloadModel.isDownloading()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       cardInfoLayout.setVisibility(View.GONE);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
-      if (editorialItemsViewHolder != null) {
-        editorialItemsViewHolder.setPlaceHolderDownloadingInfo(downloadModel);
+      if (placeHolderViewHolder != null) {
+        placeHolderViewHolder.setPlaceHolderDownloadingInfo(downloadModel);
       }
     } else {
       downloadInfoLayout.setVisibility(View.GONE);
       cardInfoLayout.setVisibility(View.VISIBLE);
       setButtonText(downloadModel);
-      if (editorialItemsViewHolder != null) {
-        editorialItemsViewHolder.setPlaceHolderDefaultStateInfo(downloadModel,
+      if (placeHolderViewHolder != null) {
+        placeHolderViewHolder.setPlaceHolderDefaultStateInfo(downloadModel,
             getResources().getString(R.string.appview_button_update),
             getResources().getString(R.string.appview_button_install),
             getResources().getString(R.string.appview_button_open));
@@ -420,10 +418,10 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void removeBottomCardAnimation() {
-    EditorialItemsViewHolder editorialItemsViewHolder =
+    EditorialItemsViewHolder placeHolderViewHolder =
         getViewHolderForAdapterPosition(placeHolderPosition);
-    if (editorialItemsViewHolder != null) {
-      View view = editorialItemsViewHolder.getPlaceHolder();
+    if (placeHolderViewHolder != null) {
+      View view = placeHolderViewHolder.getPlaceHolder();
       if (view != null) {
         configureAppCardAnimation(appCardLayout, view, 0f, 300, true);
       }
@@ -431,10 +429,10 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void addBottomCardAnimation() {
-    EditorialItemsViewHolder editorialItemsViewHolder =
+    EditorialItemsViewHolder placeHolderViewHolder =
         getViewHolderForAdapterPosition(placeHolderPosition);
-    if (editorialItemsViewHolder != null) {
-      View view = editorialItemsViewHolder.getPlaceHolder();
+    if (placeHolderViewHolder != null) {
+      View view = placeHolderViewHolder.getPlaceHolder();
       if (view != null) {
         configureAppCardAnimation(view, appCardLayout, 0.1f, 300, false);
       }
@@ -447,26 +445,68 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void managePlaceHolderVisibity() {
-    EditorialItemsViewHolder editorialItemsViewHolder =
+    EditorialItemsViewHolder placeHolderViewHolder =
         getViewHolderForAdapterPosition(placeHolderPosition);
-    if (editorialItemsViewHolder != null && editorialItemsViewHolder.isVisible(screenHeight,
+    if (placeHolderViewHolder != null && placeHolderViewHolder.isVisible(screenHeight,
         screenWidth)) {
       removeBottomCardAnimation();
     }
   }
 
+  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
+    return paletteSwatchSubject;
+  }
+
+  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
+    if (swatch != null) {
+      int color = swatch.getRgb();
+      if (ColorUtils.calculateLuminance(color) > 0.5) {
+        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
+      } else {
+        actionItemCard.setBackgroundColor(color);
+      }
+    }
+    actionItemCard.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<EditorialEvent> mediaListDescriptionChanged() {
+    return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+        .equals(EditorialEvent.Type.MEDIA_LIST))
+        .distinctUntilChanged(EditorialEvent::getFirstVisiblePosition);
+  }
+
+  @Override
+  public void manageMediaListDescriptionAnimationVisibility(EditorialEvent editorialEvent) {
+    int contentPosition = editorialEvent.getPosition();
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
+            contentPosition));
+    if (editorialItemsViewHolder != null) {
+      editorialItemsViewHolder.manageDescriptionAnimationVisibility(
+          editorialEvent.getFirstVisiblePosition(), editorialEvent.getMedia());
+    }
+  }
+
+  @Override public void setMediaListDescriptionsVisible(EditorialEvent editorialEvent) {
+    EditorialItemsViewHolder editorialItemsViewHolder =
+        ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
+            editorialEvent.getPosition()));
+    if (editorialItemsViewHolder != null) {
+      editorialItemsViewHolder.setAllDescriptionsVisible();
+    }
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     placeHolderPosition = editorialViewModel.getPlaceHolderPosition();
-    String title = editorialViewModel.getTitle();
-    toolbar.setTitle(title);
-    toolbarTitle.setText(title);
-    actionItemCard.setVisibility(View.VISIBLE);
     if (editorialViewModel.hasBackgroundImage()) {
       ImageLoader.with(getContext())
-          .load(editorialViewModel.getBackgroundImage(), appImage);
+          .loadWithPalette(editorialViewModel.getBackgroundImage(), appImage, paletteSwatchSubject);
     } else {
       appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
     }
+    String title = editorialViewModel.getTitle();
+    toolbar.setTitle(title);
+    toolbarTitle.setText(title);
     appImage.setVisibility(View.VISIBLE);
     itemName.setText(editorialViewModel.getCardType());
     itemName.setVisibility(View.VISIBLE);
@@ -599,9 +639,9 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private boolean isItemShown() {
-    EditorialItemsViewHolder editorialItemsViewHolder =
+    EditorialItemsViewHolder placeHolderViewHolder =
         getViewHolderForAdapterPosition(placeHolderPosition);
-    return editorialItemsViewHolder != null && editorialItemsViewHolder.isVisible(screenHeight,
+    return placeHolderViewHolder != null && placeHolderViewHolder.isVisible(screenHeight,
         screenWidth);
   }
 
@@ -658,13 +698,13 @@ public class EditorialFragment extends NavigationTrackFragment
 
   private EditorialItemsViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {
     if (placeHolderPosition != -1) {
-      EditorialItemsViewHolder editorialItemsViewHolder =
+      EditorialItemsViewHolder placeHolderViewHolder =
           ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
               placeHolderPosition));
-      if (editorialItemsViewHolder == null) {
+      if (placeHolderViewHolder == null) {
         Log.e(TAG, "Unable to find editorialViewHolder");
       }
-      return editorialItemsViewHolder;
+      return placeHolderViewHolder;
     }
     return null;
   }

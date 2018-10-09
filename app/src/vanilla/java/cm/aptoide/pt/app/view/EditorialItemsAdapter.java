@@ -16,19 +16,18 @@ class EditorialItemsAdapter extends RecyclerView.Adapter<EditorialItemsViewHolde
 
   private final DecimalFormat oneDecimalFormat;
   private List<EditorialContent> editorialItemList;
-  private PublishSubject<EditorialEvent> editorialMediaClicked;
+  private PublishSubject<EditorialEvent> uiEventListener;
 
   public EditorialItemsAdapter(List<EditorialContent> editorialItemList,
-      DecimalFormat oneDecimalFormat, PublishSubject<EditorialEvent> editorialMediaClicked) {
+      DecimalFormat oneDecimalFormat, PublishSubject<EditorialEvent> uiEventListener) {
     this.editorialItemList = editorialItemList;
     this.oneDecimalFormat = oneDecimalFormat;
-    this.editorialMediaClicked = editorialMediaClicked;
+    this.uiEventListener = uiEventListener;
   }
 
   @Override public EditorialItemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new EditorialItemsViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.editorial_item_layout, parent, false), oneDecimalFormat,
-        editorialMediaClicked);
+        .inflate(R.layout.editorial_item_layout, parent, false), oneDecimalFormat, uiEventListener);
   }
 
   @Override
