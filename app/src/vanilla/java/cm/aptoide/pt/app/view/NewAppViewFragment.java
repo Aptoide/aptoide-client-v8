@@ -1000,7 +1000,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
       String appName, double appc, float rating, String icon, int downloads) {
-    // Example of usage, should probably inject the experiment
     return apkFyExperiment.performAbTest()
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(result -> {
@@ -1538,9 +1537,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       }
 
       ((TextView) dialogLayout.findViewById(R.id.app_downloads)).setText(
-          String.format("%s", AptoideUtils.StringU.withSuffix(downloads))
-              + " "
-              + getResources().getString(R.string.downloads));
+          String.format("%s %s", AptoideUtils.StringU.withSuffix(downloads),
+              getResources().getString(R.string.downloads)));
 
       ImageLoader.with(getContext())
           .load(icon, dialogLayout.findViewById(R.id.app_icon));
