@@ -12,7 +12,7 @@ import rx.Single;
  */
 
 public class SimilarAdExperiment {
-  private final String IDENTIFIER = "SimilarAdExperiment";
+  private final String AD_IDENTIFIER = "ASV-1068-AppNext_Test";
 
   private ABTestManager abTestManager;
   private Scheduler scheduler;
@@ -25,7 +25,7 @@ public class SimilarAdExperiment {
   }
 
   public Single<ApplicationAdResult> getSimilarAd(String packageName, List<String> keywords){
-    return abTestManager.getExperiment(ABTestManager.ExperimentType.SIMILAR_AD)
+    return abTestManager.getExperiment(AD_IDENTIFIER)
         .flatMapSingle(experiment -> {
           String experimentAssigment = "default";
           if(!experiment.isExperimentOver() && experiment.isPartOfExperiment()){

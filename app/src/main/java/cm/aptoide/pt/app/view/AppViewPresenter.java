@@ -9,6 +9,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewViewModel;
@@ -409,9 +410,11 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(similarAppClickEvent -> {
           if (similarAppClickEvent.getSimilar()
               .isAd()) {
-//            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
-//            appViewNavigator.navigateToAd(similarAppClickEvent.getSimilar()
-//                .getAd());
+            if(similarAppClickEvent.getSimilar().getAd() instanceof AptoideNativeAd){
+              appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
+              appViewNavigator.navigateToAd(((AptoideNativeAd) similarAppClickEvent.getSimilar()
+                  .getAd()).getMinimalAd());
+            }
           } else {
             appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
             appViewNavigator.navigateToAppView(similarAppClickEvent.getSimilar()
