@@ -109,10 +109,7 @@ public class AppDownloadManager implements AppDownloader {
               == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
             handleErrorFileDownload();
           }
-        })
-        .filter(fileDownloadCallback -> fileDownloadCallback.getDownloadState()
-            == AppDownloadStatus.AppDownloadState.COMPLETED)
-        .doOnNext(fileDownloadCallback -> handleCompletedFileDownload(fileDownloader));
+        });
   }
 
   private void handleErrorFileDownload() {
