@@ -408,9 +408,9 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(similarAppClickEvent -> {
           if (similarAppClickEvent.getSimilar()
               .isAd()) {
-            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
-            appViewNavigator.navigateToAd(similarAppClickEvent.getSimilar()
-                .getAd());
+//            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
+//            appViewNavigator.navigateToAd(similarAppClickEvent.getSimilar()
+//                .getAd());
           } else {
             appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
             appViewNavigator.navigateToAppView(similarAppClickEvent.getSimilar()

@@ -21,12 +21,14 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
   private final TextView rating;
   private final TextView adLabel;
 
+  private final View itemView;
   private DecimalFormat oneDecimalFormatter;
   private PublishSubject<SimilarAppClickEvent> appClicked;
 
   public AppViewSimilarAppViewHolder(View itemView, DecimalFormat oneDecimalFormatter,
       PublishSubject<SimilarAppClickEvent> appClicked) {
     super(itemView);
+    this.itemView = itemView;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClicked = appClicked;
 
@@ -39,13 +41,11 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
   public void setSimilarApp(AppViewSimilarApp app, String type) {
     if (app.isAd()) {
       adLabel.setVisibility(View.VISIBLE);
-      nameTextView.setText(app.getAd()
-          .getName());
+      nameTextView.setText(app.getAd().getAdTitle());
       ImageLoader.with(itemView.getContext())
-          .loadWithRoundCorners(app.getAd()
-              .getIconPath(), 8, iconView, R.drawable.placeholder_square);
-      float rating = app.getAd()
-          .getStars();
+          .loadWithRoundCorners(app.getAd().getIconUrl(), 8, iconView, R.drawable.placeholder_square);
+      app.getAd().registerClickableView(itemView);
+      float rating = app.getAd().getStars();
       if (rating == 0) {
         this.rating.setText(R.string.appcardview_title_no_stars);
       } else {

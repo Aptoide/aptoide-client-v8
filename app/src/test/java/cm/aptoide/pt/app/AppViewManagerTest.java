@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -382,7 +383,7 @@ public class AppViewManagerTest {
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
+        appViewManager.loadAptoideSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 
@@ -391,7 +392,7 @@ public class AppViewManagerTest {
     verify(adsManager).loadAd("anyString", keywords);
 
     //And a SimilarAppsViewModel should be returned with an Ad, a list of similarApps, no loading and no errors
-    Assert.assertEquals(minimalAd, similarAppsViewModel.getAd());
+    Assert.assertEquals(minimalAd, ((AptoideNativeAd) similarAppsViewModel.getAd()).getMinimalAd());
     Assert.assertEquals(Collections.emptyList(), similarAppsViewModel.getRecommendedApps());
     Assert.assertEquals(false, similarAppsViewModel.isLoading());
     Assert.assertEquals(false, similarAppsViewModel.hasError());
@@ -411,7 +412,7 @@ public class AppViewManagerTest {
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
 
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
+        appViewManager.loadAptoideSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 

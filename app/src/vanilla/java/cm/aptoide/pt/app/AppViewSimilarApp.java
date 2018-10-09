@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.ads.model.ApplicationAd;
+
 import cm.aptoide.pt.view.app.Application;
 
 /**
@@ -10,9 +11,9 @@ import cm.aptoide.pt.view.app.Application;
 public class AppViewSimilarApp {
 
   private Application app;
-  private MinimalAd ad;
+  private ApplicationAd ad;
 
-  public AppViewSimilarApp(Application app, MinimalAd ad) {
+  public AppViewSimilarApp(Application app, ApplicationAd ad) {
     this.app = app;
     this.ad = ad;
   }
@@ -21,7 +22,7 @@ public class AppViewSimilarApp {
     return app;
   }
 
-  public MinimalAd getAd() {
+  public ApplicationAd getAd() {
     return ad;
   }
 

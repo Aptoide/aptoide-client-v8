@@ -637,6 +637,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void populateSimilar(SimilarAppsViewModel similarApps) {
     similarAppsAdapter.update(mapToSimilar(similarApps, true));
     similarDownloadsAdapter.update(mapToSimilar(similarApps, true));
+    similarBottomView.setVisibility(View.VISIBLE);
   }
 
   @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
