@@ -27,14 +27,14 @@ public class ABTestService {
     this.aptoideId = aptoideId;
   }
 
-  public Observable<ExperimentModel> getExperiment(ABTestManager.ExperimentType experimentToGet) {
-    return service.getExperiment(experimentToGet.getName(), aptoideId)
+  public Observable<ExperimentModel> getExperiment(String identifier) {
+    return service.getExperiment(identifier, aptoideId)
         .map((ABTestImpressionResponse response) -> mapToExperimentModel(response, false))
         .onErrorReturn(response -> new ExperimentModel(new Experiment(), true));
   }
 
-  public Observable<Boolean> recordImpression(ABTestManager.ExperimentType experiment) {
-    return service.recordImpression(experiment.getName(), aptoideId,
+  public Observable<Boolean> recordImpression(String identifier) {
+    return service.recordImpression(identifier, aptoideId,
         new ABTestRequestBody(IMPRESSION))
         .doOnNext(voidResponse -> Logger.getInstance()
             .d(this.getClass()
@@ -43,9 +43,9 @@ public class ABTestService {
         .map(__ -> true);
   }
 
-  public Observable<Boolean> recordAction(ABTestManager.ExperimentType experimentType,
+  public Observable<Boolean> recordAction(String identifier,
       String assignment) {
-    return service.recordAction(experimentType.getName(), aptoideId,
+    return service.recordAction(identifier, aptoideId,
         new ABTestRequestBody(assignment))
         .map(__ -> true);
   }

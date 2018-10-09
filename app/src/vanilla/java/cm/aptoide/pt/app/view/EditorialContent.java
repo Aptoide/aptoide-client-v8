@@ -74,4 +74,13 @@ class EditorialContent {
   public float getRating() {
     return rating;
   }
+
+  public boolean hasAnyMediaDescription() {
+    for (EditorialMedia editorialMedia : media) {
+      if (editorialMedia.hasDescription()) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

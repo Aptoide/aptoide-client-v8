@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -55,10 +56,11 @@ public class EditorialPresenter implements Presenter {
     cancelDownload();
     loadDownloadApp();
     handlePlaceHolderVisibilityChange();
-    handlePlaceHolderVisivibility();
+    handlePlaceHolderVisibility();
+    handleMediaListDescriptionVisibility();
   }
 
-  private void onCreateLoadAppOfTheWeek() {
+  @VisibleForTesting public void onCreateLoadAppOfTheWeek() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
@@ -84,7 +86,7 @@ public class EditorialPresenter implements Presenter {
         .map(editorialViewModel -> editorialViewModel);
   }
 
-  private void handleRetryClick() {
+  @VisibleForTesting public void handleRetryClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
@@ -96,7 +98,7 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleClickOnMedia() {
+  @VisibleForTesting public void handleClickOnMedia() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.mediaContentClicked())
@@ -106,7 +108,7 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleClickOnAppCard() {
+  @VisibleForTesting public void handleClickOnAppCard() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.appCardClicked())
@@ -217,7 +219,7 @@ public class EditorialPresenter implements Presenter {
         .toCompletable();
   }
 
-  private void loadDownloadApp() {
+  @VisibleForTesting public void loadDownloadApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.isViewReady())
@@ -234,7 +236,7 @@ public class EditorialPresenter implements Presenter {
         });
   }
 
-  private void handlePlaceHolderVisivibility() {
+  @VisibleForTesting public void handlePlaceHolderVisibility() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.isViewReady())
@@ -251,7 +253,7 @@ public class EditorialPresenter implements Presenter {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private void handlePlaceHolderVisibilityChange() {
+  @VisibleForTesting public void handlePlaceHolderVisibilityChange() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.placeHolderVisibilityChange())
@@ -269,7 +271,7 @@ public class EditorialPresenter implements Presenter {
         });
   }
 
-  private void handlePaletteColor() {
+  @VisibleForTesting public void handlePaletteColor() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.paletteSwatchExtracted())
@@ -281,5 +283,31 @@ public class EditorialPresenter implements Presenter {
           view.applyPaletteSwatch(null);
           throw new OnErrorNotImplementedException(error);
         });
+  }
+
+  @VisibleForTesting void handleMediaListDescriptionVisibility() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.mediaListDescriptionChanged())
+        .observeOn(viewScheduler)
+        .filter(editorialEvent -> editorialEvent.getFirstVisiblePosition() >= 0)
+        .doOnNext(editorialEvent -> {
+          int firstVisiblePosition = editorialEvent.getFirstVisiblePosition();
+          if (isOnlyOneMediaVisible(firstVisiblePosition,
+              editorialEvent.getLastVisibleItemPosition())) {
+            view.manageMediaListDescriptionAnimationVisibility(editorialEvent);
+          } else {
+            view.setMediaListDescriptionsVisible(editorialEvent);
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {
+    return firstVisiblePosition == lastVisiblePosition;
   }
 }

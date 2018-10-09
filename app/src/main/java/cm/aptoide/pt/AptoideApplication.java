@@ -19,6 +19,8 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -181,6 +183,8 @@ public abstract class AptoideApplication extends Application {
   @Inject InstallAnalytics installAnalytics;
   @Inject FirstLaunchAnalytics firstLaunchAnalytics;
   @Inject InvalidRefreshTokenLogoutManager invalidRefreshTokenLogoutManager;
+  @Inject ABTestService.ServiceV7 abTestService;
+  @Inject RealmExperimentPersistence abTestExperimentPersistence;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -977,6 +981,14 @@ public abstract class AptoideApplication extends Application {
 
   public AdultContentAnalytics getAdultContentAnalytics() {
     return adultContentAnalytics;
+  }
+
+  public ABTestService.ServiceV7 getAbTestService() {
+    return abTestService;
+  }
+
+  public RealmExperimentPersistence getAbTestExperimentPersistence() {
+    return abTestExperimentPersistence;
   }
 }
 
