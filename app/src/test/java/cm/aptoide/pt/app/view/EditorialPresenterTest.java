@@ -242,4 +242,32 @@ public class EditorialPresenterTest {
     //Then it should deliver that swatch to the view
     verify(view).applyPaletteSwatch(swatch);
   }
+
+  @Test public void handleMediaListDescriptionVisibilityOnlyOneMediaVisibleTest() {
+    //Given an initialized presenter
+    editorialPresenter.handleMediaListDescriptionVisibility();
+    EditorialEvent editorialEvent =
+        new EditorialEvent(EditorialEvent.Type.MEDIA_LIST, 1, 1, 3, Collections.emptyList());
+    //When the mediaList description is changes, then an event with the first and last item position of that list, the position of the viewHolder, and a list of the media should be returned
+    when(view.mediaListDescriptionChanged()).thenReturn(Observable.just(editorialEvent));
+
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then it should deliver that swatch to the view
+    verify(view).manageMediaListDescriptionAnimationVisibility(editorialEvent);
+  }
+
+  @Test public void handleMediaListDescriptionVisibilityMoreThanOneMediaVisibleTest() {
+    //Given an initialized presenter
+    editorialPresenter.handleMediaListDescriptionVisibility();
+    EditorialEvent editorialEvent =
+        new EditorialEvent(EditorialEvent.Type.MEDIA_LIST, 1, 3, 3, Collections.emptyList());
+    //When the mediaList description is changes, then an event with the first and last item position of that list, the position of the viewHolder, and a list of the media should be returned
+    when(view.mediaListDescriptionChanged()).thenReturn(Observable.just(editorialEvent));
+
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then it should deliver that swatch to the view
+    verify(view).setMediaListDescriptionsVisible(editorialEvent);
+  }
 }

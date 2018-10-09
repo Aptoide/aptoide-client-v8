@@ -285,10 +285,10 @@ public class EditorialPresenter implements Presenter {
         });
   }
 
-  private void handleMediaListDescriptionVisibility() {
+  @VisibleForTesting void handleMediaListDescriptionVisibility() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.mediaListDescriptionCreated())
+        .flatMap(created -> view.mediaListDescriptionChanged())
         .observeOn(viewScheduler)
         .filter(editorialEvent -> editorialEvent.getFirstVisiblePosition() >= 0)
         .doOnNext(editorialEvent -> {
