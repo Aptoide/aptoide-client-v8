@@ -120,6 +120,8 @@ import cm.aptoide.pt.downloadmanager.DownloadAppMapper;
 import cm.aptoide.pt.downloadmanager.DownloadStatusMapper;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
+import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
+import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BundleDataSource;
@@ -357,8 +359,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppDownloaderProvider providesAppDownloaderProvider(
-      FileDownloaderProvider fileDownloaderProvider) {
+      RetryFileDownloaderProvider fileDownloaderProvider) {
     return new AppDownloaderProvider(fileDownloaderProvider);
+  }
+
+  @Singleton @Provides RetryFileDownloaderProvider providesRetryFileDownloaderProvider(
+      FileDownloaderProvider fileDownloaderProvider) {
+    return new RetryFileDownloadManagerProvider(fileDownloaderProvider);
   }
 
   @Singleton @Provides DownloadsRepository provideDownloadsRepository(

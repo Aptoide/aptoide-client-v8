@@ -45,7 +45,7 @@ public class FileDownloadManager implements FileDownloader {
         throw new IllegalArgumentException("The url for the download can not be empty");
       } else {
         createBaseDownloadTask(mainDownloadPath, versionCode, packageName, fileType, fileName);
-        fileDownloader.start(fileDownloadTask, false);
+        fileDownloader.start(fileDownloadTask, true);
       }
     });
   }
@@ -60,6 +60,14 @@ public class FileDownloadManager implements FileDownloader {
 
   @Override public Observable<FileDownloadCallback> observeFileDownloadProgress() {
     return fileDownloadTask.onDownloadStateChanged();
+  }
+
+  //the listener is removed to not receive the paused callback
+  @Override public void stopFailedDownload() {
+    int taskId = fileDownloader.replaceListener(downloadId, null);
+    if (taskId != 0) {
+      fileDownloader.pause(taskId);
+    }
   }
 
   private void createBaseDownloadTask(String mainDownloadPath, int versionCode, String packageName,

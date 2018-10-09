@@ -27,8 +27,8 @@ public class FileDownloadManagerProvider implements FileDownloaderProvider {
       String packageName, int versionCode, String fileName,
       PublishSubject<FileDownloadCallback> downloadStatusCallback) {
     return new FileDownloadManager(fileDownloader,
-        new FileDownloadTask(downloadStatusCallback, fileType, md5, md5Comparator, fileName),
-        downloadsPath, mainDownloadPath, fileType, packageName, versionCode, fileName);
+        new FileDownloadTask(downloadStatusCallback, md5, md5Comparator, fileName), downloadsPath,
+        mainDownloadPath, fileType, packageName, versionCode, fileName);
   }
 }
 

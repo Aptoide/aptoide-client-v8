@@ -47,7 +47,7 @@ public class FileDownloadManagerTest {
         .subscribe(testSubscriber);
     testSubscriber.assertNoErrors();
     testSubscriber.assertCompleted();
-    verify(fileDownloader).start(fileDownloadTask, false);
+    verify(fileDownloader).start(fileDownloadTask, true);
   }
 
   @Test public void startFileDownloadEmptyLink() throws Exception {

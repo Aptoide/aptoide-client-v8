@@ -16,4 +16,6 @@ public interface AppDownloader {
   Completable removeAppDownload();
 
   Observable<AppDownloadStatus> observeDownloadProgress();
+
+  void stop();
 }

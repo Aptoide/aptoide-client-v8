@@ -24,6 +24,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -37,11 +38,11 @@ public class InstallManager {
 
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
-  private final DownloadRepository downloadRepository;
-  private final InstalledRepository installedRepository;
   private final SharedPreferences sharedPreferences;
   private final SharedPreferences securePreferences;
   private final Context context;
+  @Inject DownloadRepository downloadRepository;
+  @Inject InstalledRepository installedRepository;
   private RootAvailabilityManager rootAvailabilityManager;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
@@ -67,7 +68,7 @@ public class InstallManager {
   public void removeInstallationFile(String md5, String packageName, int versionCode) {
     stopInstallation(md5);
     installedRepository.remove(packageName, versionCode)
-        .andThen(Completable.fromAction(() -> aptoideDownloadManager.removeDownload(md5)))
+        .andThen(aptoideDownloadManager.removeDownload(md5))
         .subscribe(() -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));

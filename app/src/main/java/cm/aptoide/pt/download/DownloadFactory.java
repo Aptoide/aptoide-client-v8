@@ -169,7 +169,7 @@ public class DownloadFactory {
     download.setFilesToDownload(createFileList(update.getMd5(), update.getPackageName(),
         update.getApkPath() + UPDATE_ACTION, update.getAlternativeApkPath() + UPDATE_ACTION,
         update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
-        update.getPatchObbMd5(), update.getVersionCode(), update.getUpdateVersionName(),
+        update.getPatchObbMd5(), update.getUpdateVersionCode(), update.getUpdateVersionName(),
         update.getMainObbName(), update.getPatchObbName()));
     return download;
   }
