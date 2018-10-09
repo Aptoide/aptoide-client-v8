@@ -56,6 +56,7 @@ public class EditorialPresenter implements Presenter {
     loadDownloadApp();
     handlePlaceHolderVisibilityChange();
     handlePlaceHolderVisivibility();
+    handleMediaListDescriptionVisibility();
   }
 
   private void onCreateLoadAppOfTheWeek() {
@@ -281,5 +282,31 @@ public class EditorialPresenter implements Presenter {
           view.applyPaletteSwatch(null);
           throw new OnErrorNotImplementedException(error);
         });
+  }
+
+  private void handleMediaListDescriptionVisibility() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.mediaListDescriptionCreated())
+        .observeOn(viewScheduler)
+        .filter(editorialEvent -> editorialEvent.getFirstVisiblePosition() >= 0)
+        .doOnNext(editorialEvent -> {
+          int firstVisiblePosition = editorialEvent.getFirstVisiblePosition();
+          if (isOnlyOneMediaVisible(firstVisiblePosition,
+              editorialEvent.getLastVisibleItemPosition())) {
+            view.manageMediaListDescriptionAnimationVisibility(editorialEvent);
+          } else {
+            view.setMediaListDescriptionsVisible(editorialEvent);
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {
+    return firstVisiblePosition == lastVisiblePosition;
   }
 }
