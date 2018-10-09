@@ -55,7 +55,7 @@ public interface EditorialView extends View {
 
   void applyPaletteSwatch(Palette.Swatch swatch);
 
-  Observable<EditorialEvent> mediaListDescriptionCreated();
+  Observable<EditorialEvent> mediaListDescriptionChanged();
 
   void manageMediaListDescriptionAnimationVisibility(EditorialEvent editorialEvent);
 

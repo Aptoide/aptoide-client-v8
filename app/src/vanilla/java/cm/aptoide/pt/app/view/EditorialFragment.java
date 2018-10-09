@@ -453,7 +453,23 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  @Override public Observable<EditorialEvent> mediaListDescriptionCreated() {
+  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
+    return paletteSwatchSubject;
+  }
+
+  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
+    if (swatch != null) {
+      int color = swatch.getRgb();
+      if (ColorUtils.calculateLuminance(color) > 0.5) {
+        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
+      } else {
+        actionItemCard.setBackgroundColor(color);
+      }
+    }
+    actionItemCard.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<EditorialEvent> mediaListDescriptionChanged() {
     return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
         .equals(EditorialEvent.Type.MEDIA_LIST))
         .distinctUntilChanged(EditorialEvent::getFirstVisiblePosition);
@@ -478,22 +494,6 @@ public class EditorialFragment extends NavigationTrackFragment
     if (editorialItemsViewHolder != null) {
       editorialItemsViewHolder.setAllDescriptionsVisible();
     }
-  }
-
-  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
-    return paletteSwatchSubject;
-  }
-
-  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
-    if (swatch != null) {
-      int color = swatch.getRgb();
-      if (ColorUtils.calculateLuminance(color) > 0.5) {
-        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
-      } else {
-        actionItemCard.setBackgroundColor(color);
-      }
-    }
-    actionItemCard.setVisibility(View.VISIBLE);
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
