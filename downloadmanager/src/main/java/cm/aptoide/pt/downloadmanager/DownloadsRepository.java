@@ -49,4 +49,12 @@ public class DownloadsRepository {
   public Observable<List<Download>> getCurrentActiveDownloads() {
     return downloadAccessor.getRunningDownloads();
   }
+
+  public Observable<List<Download>> getInProgressDownloadsList() {
+    return downloadAccessor.getRunningDownloads()
+        .flatMap(downloads -> Observable.from(downloads)
+            .filter(download -> download.getOverallDownloadStatus() == Download.PROGRESS)
+            .toList())
+        .distinctUntilChanged();
+  }
 }

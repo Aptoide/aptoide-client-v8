@@ -44,13 +44,17 @@ public class AptoideDownloadManager implements DownloadManager {
     appDownloaderMap = new HashMap<>();
   }
 
-  public void start() {
-    dispatchDownloadsSubscription = downloadsRepository.getInQueueDownloads()
+  public synchronized void start() {
+    dispatchDownloadsSubscription = (downloadsRepository.getInProgressDownloadsList()
+        .filter(List::isEmpty)
+        .flatMap(__ -> downloadsRepository.getInQueueDownloads())
         .filter(downloads -> !downloads.isEmpty())
+        .first()
         .map(downloads -> downloads.get(0))
         .flatMap(download -> getAppDownloader(download.getMd5()).doOnNext(
             AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
+        .doOnError(throwable -> throwable.printStackTrace())).retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
