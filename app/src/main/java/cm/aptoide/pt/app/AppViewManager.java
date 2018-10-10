@@ -1,5 +1,7 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.abtesting.ABTestManager;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.ads.model.ApplicationAd;
 import cm.aptoide.pt.ads.model.ApplicationAdError;
 
@@ -30,7 +32,6 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 04/05/18.
@@ -63,6 +64,8 @@ public class AppViewManager {
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
 
+  private SimilarAdExperiment similarAdExperiment;
+
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
       StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
@@ -70,7 +73,7 @@ public class AppViewManager {
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
-      String marketName, AppCoinsManager appCoinsManager) {
+      String marketName, AppCoinsManager appCoinsManager, SimilarAdExperiment similarAdExperiment) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -91,6 +94,7 @@ public class AppViewManager {
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
     this.isFirstLoad = true;
+    this.similarAdExperiment = similarAdExperiment;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -119,13 +123,11 @@ public class AppViewManager {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
-      return loadAppNextAdForSimilarApps(keyWords).toSingle().flatMap(
+      return similarAdExperiment.getSimilarAd(packageName, keyWords).flatMap(
           adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
-            ApplicationAdError adError = null;
-            if(adResult.getError() != null) adError = new ApplicationAdError(adResult.getError());
             cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
                 recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError(), adError);
+                recommendedAppsRequestResult.getError(), adResult.getError());
             return cachedSimilarAppsViewModel;
           }));
     }
@@ -138,13 +140,11 @@ public class AppViewManager {
     } else {
       return loadAdForSimilarApps(packageName, keyWords).flatMap(
           adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
-            ApplicationAdError adError = null;
             ApplicationAd applicationAd = null;
             if(adResult.getMinimalAd() != null) applicationAd = new AptoideNativeAd(adResult.getMinimalAd());
-            if(adResult.getError() != null) adError = new ApplicationAdError(adResult.getError());
             cachedSimilarAppsViewModel = new SimilarAppsViewModel(applicationAd,
                 recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError(), adError);
+                recommendedAppsRequestResult.getError(), adResult.getError());
             return cachedSimilarAppsViewModel;
           }));
     }
@@ -221,7 +221,7 @@ public class AppViewManager {
     return adsManager.loadAd(packageName, keyWords);
   }
 
-  private PublishSubject<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
+  private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
     return adsManager.loadAppnextAd(keywords);
   }
 

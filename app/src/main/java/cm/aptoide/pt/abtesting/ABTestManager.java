@@ -13,30 +13,17 @@ public class ABTestManager {
     this.abTestCenterRepository = abTestCenterRepository;
   }
 
-  public Observable<Experiment> getExperiment(ExperimentType experiment) {
-    return abTestCenterRepository.getExperiment(experiment)
+  public Observable<Experiment> getExperiment(String identifier) {
+    return abTestCenterRepository.getExperiment(identifier)
         .first();
   }
 
-  public Observable<Boolean> recordImpression(ExperimentType experiment) {
-    return abTestCenterRepository.recordImpression(experiment);
+  public Observable<Boolean> recordImpression(String identifier) {
+    return abTestCenterRepository.recordImpression(identifier);
   }
 
-  public Observable<Boolean> recordAction(ExperimentType experiment) {
-    return abTestCenterRepository.recordAction(experiment);
+  public Observable<Boolean> recordAction(String identifier) {
+    return abTestCenterRepository.recordAction(identifier);
   }
 
-  public enum ExperimentType {
-    SHARE_DIALOG("ASV-recommend_continue_test");
-
-    private String name;
-
-    ExperimentType(String name) {
-      this.name = name;
-    }
-
-    public String getName() {
-      return name;
-    }
-  }
 }

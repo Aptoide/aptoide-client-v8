@@ -34,18 +34,8 @@ class MediaBundleAdapter extends RecyclerView.Adapter<MediaViewHolder> {
     return media.size();
   }
 
-  public void update(List<EditorialMedia> media) {
-    this.media = media;
-    notifyDataSetChanged();
-  }
-
   public void add(List<EditorialMedia> media) {
     this.media.addAll(media);
     notifyDataSetChanged();
-  }
-
-  public void remove(int itemPosition) {
-    media.remove(itemPosition);
-    notifyItemRemoved(itemPosition);
   }
 }

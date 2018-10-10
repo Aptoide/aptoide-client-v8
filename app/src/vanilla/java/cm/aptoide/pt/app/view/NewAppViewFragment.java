@@ -47,6 +47,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -106,10 +107,12 @@ import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
+import rx.subscriptions.Subscriptions;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
@@ -124,6 +127,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
+  @Inject ApkFyExperiment apkFyExperiment;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -144,6 +148,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> skipRecommendsDialogClick;
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
+  private PublishSubject<String> apkfyDialogConfirmSubject;
 
   //Views
   private View noNetworkErrorView;
@@ -224,6 +229,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private NestedScrollView scrollView;
   private int scrollViewY;
   private AppViewAppcInfoViewHolder appcInfoView;
+  private View apkfyElement;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -237,6 +243,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     reviewsAutoScroll = PublishSubject.create();
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
+    apkfyDialogConfirmSubject = PublishSubject.create();
 
     shareRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
@@ -304,6 +311,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     reviewsView = (RecyclerView) view.findViewById(R.id.top_comments_list);
     rateAppButton = (Button) view.findViewById(R.id.rate_this_button);
     showAllReviewsButton = (Button) view.findViewById(R.id.read_all_button);
+    apkfyElement = view.findViewById(R.id.apkfy_element);
 
     goodAppLayoutWrapper = view.findViewById(R.id.good_app_layout);
     flagsLayoutWrapper = view.findViewById(R.id.rating_flags_layout);
@@ -758,6 +766,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     return shareDialogClick;
   }
 
+  @Override public Observable<String> apkfyDialogPositiveClick() {
+    return apkfyDialogConfirmSubject;
+  }
+
   @Override public Observable<Integer> scrollReviewsResponse() {
     return reviewsAutoScroll;
   }
@@ -988,11 +1000,27 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
-      String appName) {
-    return GenericDialogs.createGenericOkCancelMessageWithCustomView(getContext(), title,
-        getContext().getString(R.string.installapp_alrt, appName), R.layout.apkfy_onboard_message)
+      String appName, double appc, float rating, String icon, int downloads) {
+    return apkFyExperiment.performAbTest()
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(result -> {
+          if (result) {
+            return GenericDialogs.createGenericOkCancelMessageWithCustomView(getContext(), title,
+                getContext().getString(R.string.installapp_alrt, appName),
+                R.layout.apkfy_onboard_message);
+          } else {
+            return createCustomDialogForApkfy(appName, appc, rating, icon, downloads);
+          }
+        })
         .filter(response -> response.equals(YES))
         .map(__ -> action);
+  }
+
+  @Override public void showApkfyElement(String appName) {
+    apkfyElement.setVisibility(View.VISIBLE);
+    String message = getString(R.string.appview_message_apkfy_1);
+    ((TextView) apkfyElement.findViewById(R.id.apkfy_message_1)).setText(
+        String.format(message, appName));
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
@@ -1489,6 +1517,48 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     if (scrollView != null) {
       outState.putInt(KEY_SCROLL_Y, scrollView.getScrollY());
     }
+  }
+
+  private Observable<GenericDialogs.EResponse> createCustomDialogForApkfy(String appName,
+      double appc, float rating, String icon, int downloads) {
+    return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
+      LayoutInflater inflater = LayoutInflater.from(getContext());
+      View dialogLayout = inflater.inflate(R.layout.apkfy_new_dialog, null);
+      final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(dialogLayout)
+          .create();
+      ((TextView) dialogLayout.findViewById(R.id.app_name)).setText(appName);
+      ((TextView) dialogLayout.findViewById(R.id.app_rating)).setText(
+          new DecimalFormat("0.0").format(rating));
+      if (appc > 0) {
+        ((TextView) dialogLayout.findViewById(R.id.appc_value)).setText(
+            new DecimalFormat("0.00").format(appc));
+      } else {
+        dialogLayout.findViewById(R.id.appc_layout)
+            .setVisibility(View.GONE);
+      }
+
+      ((TextView) dialogLayout.findViewById(R.id.app_downloads)).setText(
+          String.format("%s %s", AptoideUtils.StringU.withSuffix(downloads),
+              getResources().getString(R.string.downloads)));
+
+      ImageLoader.with(getContext())
+          .load(icon, dialogLayout.findViewById(R.id.app_icon));
+
+      dialogLayout.findViewById(R.id.positive_button)
+          .setOnClickListener(listener -> {
+            subscriber.onNext(GenericDialogs.EResponse.YES);
+            subscriber.onCompleted();
+            apkfyDialogConfirmSubject.onNext(appName);
+          });
+      dialogLayout.findViewById(R.id.negative_button)
+
+          .setOnClickListener(listener -> {
+            subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+            subscriber.onCompleted();
+          });
+      subscriber.add(Subscriptions.create(dialog::dismiss));
+      dialog.show();
+    });
   }
 
   public enum BundleKeys {

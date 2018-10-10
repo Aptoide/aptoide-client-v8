@@ -72,8 +72,8 @@
   <string name="appview_similar_apps">Similar apps</string>
   <string name="appview_short_downloading">Downloading</string>
   <string name="appview_message_apkfy">Keep Aptoide installed in your device to keep all your apps updated! Discover new apps in our unrestricted app store.</string>
-  <string name="appview_title_apkfy_">Keep Aptoide installed to get</string>
-  <string name="appview_message_apkfy_1">100% safe updates of %s</string>
+  <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
+  <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
 
   <!-- AppView developer area-->

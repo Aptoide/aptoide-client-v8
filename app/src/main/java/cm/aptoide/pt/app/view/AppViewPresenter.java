@@ -9,6 +9,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewViewModel;
@@ -101,6 +102,7 @@ public class AppViewPresenter implements Presenter {
     dontShowAgainLoggedInRecommendsDialogClick();
     handleNotLoggedinShareResults();
     handleAppBought();
+    handleApkfyDialogPositiveClick();
   }
 
   @VisibleForTesting public void handleFirstLoad() {
@@ -408,9 +410,11 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(similarAppClickEvent -> {
           if (similarAppClickEvent.getSimilar()
               .isAd()) {
-//            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
-//            appViewNavigator.navigateToAd(similarAppClickEvent.getSimilar()
-//                .getAd());
+            if(similarAppClickEvent.getSimilar().getAd() instanceof AptoideNativeAd){
+              appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
+              appViewNavigator.navigateToAd(((AptoideNativeAd) similarAppClickEvent.getSimilar()
+                  .getAd()).getMinimalAd());
+            }
           } else {
             appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
             appViewNavigator.navigateToAppView(similarAppClickEvent.getSimilar()
@@ -585,7 +589,8 @@ public class AppViewPresenter implements Presenter {
                 .first()
                 .observeOn(viewScheduler)
                 .flatMap(account -> view.showOpenAndInstallApkFyDialog(appViewModel.getMarketName(),
-                    appViewModel.getAppName())
+                    appViewModel.getAppName(), appViewModel.getAppc(), appViewModel.getRating()
+                        .getAverage(), appViewModel.getIcon(), appViewModel.getPackageDownloads())
                     .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
                         appViewModel.getAppId()).observeOn(viewScheduler)
                         .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
@@ -902,6 +907,18 @@ public class AppViewPresenter implements Presenter {
                             appViewViewModel.getPackageName(), appViewViewModel.getAppId())))
                 .toObservable())
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleApkfyDialogPositiveClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.apkfyDialogPositiveClick())
+        .doOnNext(appname -> view.showApkfyElement(appname))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

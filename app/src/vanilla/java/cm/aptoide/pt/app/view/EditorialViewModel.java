@@ -36,9 +36,9 @@ class EditorialViewModel {
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
       String title, String appName, float rating, String packageName, long size, String icon,
-      String graphic, Obb obb, long storeId, String storeName, String storeTheme, String vername,
-      int vercode, String path, String backgroundImage, String pathAlt, String md5,
-      int placeHolderPosition) {
+      String graphic, Obb obb, long storeId, String storeName, String storeTheme,
+      String versionName, int versionCode, String path, String backgroundImage, String pathAlt,
+      String md5, int placeHolderPosition) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
@@ -53,8 +53,8 @@ class EditorialViewModel {
     this.storeId = storeId;
     this.storeName = storeName;
     this.storeTheme = storeTheme;
-    this.vername = vername;
-    this.vercode = vercode;
+    this.vername = versionName;
+    this.vercode = versionCode;
     this.path = path;
     this.backgroundImage = backgroundImage;
     this.pathAlt = pathAlt;

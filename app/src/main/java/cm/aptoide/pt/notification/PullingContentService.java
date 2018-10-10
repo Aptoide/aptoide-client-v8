@@ -15,16 +15,23 @@ import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.ABTestCenterRepository;
+import cm.aptoide.pt.abtesting.ABTestManager;
+import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
+import cm.aptoide.pt.abtesting.experiments.NotificationsExperiment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -40,6 +47,7 @@ public class PullingContentService extends Service {
   public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
   public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_HALF_DAY;
   public static final int UPDATE_NOTIFICATION_ID = 123;
+  private AptoideApplication application;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private UpdateRepository updateRepository;
@@ -57,7 +65,7 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    application = (AptoideApplication) getApplicationContext();
     marketName = application.getMarketName();
     sharedPreferences = application.getDefaultSharedPreferences();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
@@ -118,9 +126,15 @@ public class PullingContentService extends Service {
             return Observable.just(updates);
           }
         }))
-        .subscribe(updates -> {
-          notificationAnalytics.sendUpdatesNotificationReceivedEvent();
-          setUpdatesNotification(updates, startId);
+        .observeOn(Schedulers.io())
+        .flatMap(updates -> getNotificationsExperiment(application.getIdsRepository(),
+            application.getAbTestService(),
+            application.getAbTestExperimentPersistence()).performAbTest()
+            .doOnNext(showNotifications -> {
+              notificationAnalytics.sendUpdatesNotificationReceivedEvent();
+              setUpdatesNotification(updates, startId, showNotifications);
+            }))
+        .subscribe(__ -> {
         }, throwable -> {
           throwable.printStackTrace();
           CrashReport.getInstance()
@@ -152,7 +166,8 @@ public class PullingContentService extends Service {
         });
   }
 
-  private void setUpdatesNotification(List<Update> updates, int startId) {
+  private void setUpdatesNotification(List<Update> updates, int startId,
+      boolean showNotifications) {
     Intent resultIntent = new Intent(getApplicationContext(),
         AptoideApplication.getActivityProvider()
             .getMainActivityFragmentClass());
@@ -164,7 +179,8 @@ public class PullingContentService extends Service {
     int numberUpdates = updates.size();
     if (numberUpdates > 0
         && numberUpdates != ManagerPreferences.getLastUpdates(sharedPreferences)
-        && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)) {
+        && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)
+        && showNotifications) {
       CharSequence tickerText =
           AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(), marketName);
       CharSequence contentTitle = marketName;
@@ -198,5 +214,12 @@ public class PullingContentService extends Service {
       ManagerPreferences.setLastUpdates(numberUpdates, sharedPreferences);
     }
     stopSelf(startId);
+  }
+
+  private NotificationsExperiment getNotificationsExperiment(IdsRepository idsRepository,
+      ABTestService.ServiceV7 service, RealmExperimentPersistence persistence) {
+    return new NotificationsExperiment(new ABTestManager(
+        new ABTestCenterRepository(new ABTestService(service, idsRepository.getUniqueIdentifier()),
+            new HashMap<>(), persistence)));
   }
 }
