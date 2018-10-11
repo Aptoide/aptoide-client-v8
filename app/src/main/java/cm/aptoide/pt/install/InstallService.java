@@ -180,7 +180,7 @@ public class InstallService extends BaseService {
 
   private Completable stopForegroundAndInstall(Context context, Download download,
       boolean removeNotification, boolean forceDefaultInstall) {
-    Installer installer = getInstaller(download.getMd5());
+    Installer installer = getInstaller();
     stopForeground(removeNotification);
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
@@ -195,7 +195,7 @@ public class InstallService extends BaseService {
     }
   }
 
-  private Installer getInstaller(String md5) {
+  private Installer getInstaller() {
     return defaultInstaller;
   }
 
