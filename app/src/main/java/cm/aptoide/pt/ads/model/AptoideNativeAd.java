@@ -28,6 +28,14 @@ public class AptoideNativeAd implements ApplicationAd {
 
   @Override public void registerClickableView(View view) {}
 
+  @Override public String getPackageName() {
+    return minimalAd.getPackageName();
+  }
+
+  @Override public Network getNetwork() {
+    return Network.SERVER;
+  }
+
   public MinimalAd getMinimalAd(){
     return minimalAd;
   }

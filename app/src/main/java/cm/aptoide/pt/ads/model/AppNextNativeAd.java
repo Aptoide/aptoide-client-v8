@@ -30,4 +30,11 @@ public class AppNextNativeAd implements ApplicationAd{
     nativeAd.registerClickableViews(view);
   }
 
+  @Override public String getPackageName() {
+    return nativeAd.getAppPackageName();
+  }
+
+  @Override public Network getNetwork() {
+    return Network.APPNEXT;
+  }
 }

@@ -118,13 +118,14 @@ public class AppNavigator {
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateWithAd(SearchAdResult searchAdResult) {
+  public void navigateWithAd(SearchAdResult searchAdResult, String tag) {
     Bundle bundle = new Bundle();
     bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
     bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(),
         searchAdResult.getPackageName());
     bundle.putParcelable(NewAppViewFragment.BundleKeys.MINIMAL_AD.name(),
         Parcels.wrap(searchAdResult));
+    if(tag != null) bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
     NewAppViewFragment fragment = new NewAppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);

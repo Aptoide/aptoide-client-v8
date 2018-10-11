@@ -7,8 +7,21 @@ import android.view.View;
  */
 
 public interface ApplicationAd {
+  enum Network {
+    SERVER("Server"), APPNEXT("AppNext");
+    private String name;
+    Network(String network) {
+      this.name = network;
+    }
+    public String getName() {
+      return name;
+    }
+  }
+
   String getAdTitle();
   String getIconUrl();
   Integer getStars();
   void registerClickableView(View view);
+  String getPackageName();
+  Network getNetwork();
 }
