@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -55,11 +56,13 @@ public class AppViewPresenter implements Presenter {
   private Scheduler viewScheduler;
   private CrashReport crashReport;
 
+  private SimilarAdExperiment similarAdExperiment;
+
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, AppViewSimilarAppAnalytics similarAppAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
       CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService) {
+      PermissionService permissionService, SimilarAdExperiment similarAdExperiment) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -71,6 +74,7 @@ public class AppViewPresenter implements Presenter {
     this.crashReport = crashReport;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.similarAdExperiment = similarAdExperiment;
   }
 
   @Override public void present() {
@@ -149,6 +153,7 @@ public class AppViewPresenter implements Presenter {
             if(similarAppsViewModel != null && similarAppsViewModel.getAd() != null){
               isAd = true;
               network = similarAppsViewModel.getAd().getNetwork();
+              similarAdExperiment.recordAdImpression();
             }
             similarAppAnalytics.similarAppBundleImpression(network, isAd);
           }
@@ -447,6 +452,7 @@ public class AppViewPresenter implements Presenter {
               appViewNavigator.navigateToAd(((AptoideNativeAd) appViewSimilarApp
                   .getAd()).getMinimalAd(), similarAppClickEvent.getType());
             }
+            similarAdExperiment.recordAdClick();
           } else {
             packageName = appViewSimilarApp.getApp().getPackageName();
             appViewNavigator.navigateToAppView(appViewSimilarApp.getApp().getAppId(),
