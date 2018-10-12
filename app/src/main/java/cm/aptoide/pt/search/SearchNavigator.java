@@ -55,7 +55,7 @@ public class SearchNavigator {
   }
 
   public void goToAppView(SearchAdResult searchAdResult) {
-    appNavigator.navigateWithAd(searchAdResult);
+    appNavigator.navigateWithAd(searchAdResult, null);
   }
 
   public void goToStoreFragment(String storeName, String theme) {

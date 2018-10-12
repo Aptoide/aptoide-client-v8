@@ -149,6 +149,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
+  private PublishSubject<Void> scrollViewOnScroll;
 
   //Views
   private View noNetworkErrorView;
@@ -249,6 +250,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
+
+    scrollViewOnScroll = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -419,6 +422,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       scrollViewY = savedInstanceState.getInt(KEY_SCROLL_Y, 0);
     }
 
+    scrollView.getViewTreeObserver().addOnScrollChangedListener(
+        () -> {
+          if(scrollViewOnScroll != null) scrollViewOnScroll.onNext(null);
+        }
+    );
+
     collapsingToolbarLayout =
         ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
     collapsingToolbarLayout.setExpandedTitleColor(
@@ -451,6 +460,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     genericRetryClick = null;
     dialogUtils = null;
     presenter = null;
+    scrollViewOnScroll = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -645,12 +655,24 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public void populateSimilar(SimilarAppsViewModel similarApps) {
     similarAppsAdapter.update(mapToSimilar(similarApps, true));
     similarDownloadsAdapter.update(mapToSimilar(similarApps, true));
+    similarBottomView.setVisibility(View.VISIBLE);
   }
 
   @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
     similarAppsAdapter.update(mapToSimilar(ads, false));
     similarDownloadsAdapter.update(mapToSimilar(ads, false));
     similarBottomView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<Void> handleScroll(){
+    return scrollViewOnScroll;
+  }
+
+  @Override public boolean isSimilarAppsVisible(){
+    Rect scrollBounds = new Rect();
+    scrollView.getHitRect(scrollBounds);
+    return similarDownloadView.getLocalVisibleRect(scrollBounds)
+        || similarBottomView.getLocalVisibleRect(scrollBounds);
   }
 
   @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {

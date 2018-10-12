@@ -1,6 +1,9 @@
 package cm.aptoide.pt.app;
 
 import android.support.annotation.NonNull;
+
+import com.appnext.nativeads.NativeAd;
+
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -12,6 +15,7 @@ import cm.aptoide.pt.view.app.AppsList;
 import java.util.List;
 import rx.Observable;
 import rx.Single;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 04/05/18.
@@ -40,6 +44,10 @@ public class AdsManager {
         .flatMap(minimalAds -> Observable.just(new MinimalAdRequestResult(minimalAds.get(0))))
         .toSingle()
         .onErrorReturn(throwable -> createMinimalAdRequestResultError(throwable));
+  }
+
+  public Single<AppNextAdResult> loadAppnextAd(List<String> keywords){
+    return adsRepository.loadAppNextAd(keywords).toSingle();
   }
 
   @NonNull private MinimalAdRequestResult createMinimalAdRequestResultError(Throwable throwable) {
