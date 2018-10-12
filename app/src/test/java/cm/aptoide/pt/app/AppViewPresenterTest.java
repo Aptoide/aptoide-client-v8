@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -47,6 +48,7 @@ public class AppViewPresenterTest {
   @Mock private AppViewManager appViewManager;
   @Mock private AptoideAccountManager accountManager;
   @Mock private CrashReport crashReporter;
+  @Mock private SimilarAdExperiment similarAdExperiment;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -58,7 +60,7 @@ public class AppViewPresenterTest {
     MockitoAnnotations.initMocks(this);
     presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, similarAppsAnalytics,
         appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-        permissionManager, permissionService);
+        permissionManager, permissionService, similarAdExperiment);
 
     lifecycleEvent = PublishSubject.create();
 

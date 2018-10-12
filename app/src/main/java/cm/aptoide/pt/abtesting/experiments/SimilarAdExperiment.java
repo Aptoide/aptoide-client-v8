@@ -44,4 +44,12 @@ public class SimilarAdExperiment {
         .observeOn(scheduler);
   }
 
+  public void recordAdImpression(){
+    abTestManager.recordImpression(EXPERIMENT_ID);
+  }
+
+  public void recordAdClick(){
+    abTestManager.recordAction(EXPERIMENT_ID);
+  }
+
 }
