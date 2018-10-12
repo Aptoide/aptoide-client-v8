@@ -54,13 +54,9 @@ public class AppViewSimilarAppAnalytics {
 
     analyticsManager.logEvent(data, SIMILAR_APP_INTERACT,
         action == Action.IMPRESSION ? AnalyticsManager.Action.IMPRESSION : AnalyticsManager.Action.CLICK,
-        getViewName(true));
+        navigationTracker.getViewName(true));
     Logger.getInstance()
         .w(TAG, "Facebook Event: " + SIMILAR_APP_INTERACT + " : " + data.toString());
-  }
-
-  private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent);
   }
 
   public enum Action {
