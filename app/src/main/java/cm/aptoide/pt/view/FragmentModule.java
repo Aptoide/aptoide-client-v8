@@ -290,11 +290,11 @@ import rx.schedulers.Schedulers;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       AppViewSimilarAppAnalytics similarAppAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      CrashReport crashReport, SimilarAdExperiment similarAdExperiment) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         similarAppAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()));
+        ((PermissionService) fragment.getContext()), similarAdExperiment);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {

@@ -423,7 +423,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     }
 
     scrollView.getViewTreeObserver().addOnScrollChangedListener(
-        () -> scrollViewOnScroll.onNext(null)
+        () -> {
+          if(scrollViewOnScroll != null) scrollViewOnScroll.onNext(null);
+        }
     );
 
     collapsingToolbarLayout =
@@ -458,6 +460,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     genericRetryClick = null;
     dialogUtils = null;
     presenter = null;
+    scrollViewOnScroll = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
