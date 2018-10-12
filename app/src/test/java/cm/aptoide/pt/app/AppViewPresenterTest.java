@@ -41,6 +41,7 @@ public class AppViewPresenterTest {
   @Mock private PermissionManager permissionManager;
   @Mock private PermissionService permissionService;
   @Mock private AppViewAnalytics appViewAnalytics;
+  @Mock private AppViewSimilarAppAnalytics similarAppsAnalytics;
   @Mock private AccountNavigator accountNavigator;
   @Mock private AppViewNavigator appViewNavigator;
   @Mock private AppViewManager appViewManager;
@@ -55,9 +56,9 @@ public class AppViewPresenterTest {
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
-    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, appViewNavigator,
-        appViewManager, accountManager, Schedulers.immediate(), crashReporter, permissionManager,
-        permissionService);
+    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, similarAppsAnalytics,
+        appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
+        permissionManager, permissionService);
 
     lifecycleEvent = PublishSubject.create();
 

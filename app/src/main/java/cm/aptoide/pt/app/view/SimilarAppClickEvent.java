@@ -10,10 +10,12 @@ public class SimilarAppClickEvent {
 
   private AppViewSimilarApp similar;
   private String type;
+  private int position;
 
-  public SimilarAppClickEvent(AppViewSimilarApp similar, String type) {
+  public SimilarAppClickEvent(AppViewSimilarApp similar, String type, int position) {
     this.similar = similar;
     this.type = type;
+    this.position = position;
   }
 
   public AppViewSimilarApp getSimilar() {
@@ -22,5 +24,9 @@ public class SimilarAppClickEvent {
 
   public String getType() {
     return type;
+  }
+
+  public int getPosition() {
+    return position;
   }
 }
