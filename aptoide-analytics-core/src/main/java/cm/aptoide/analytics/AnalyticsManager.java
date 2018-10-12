@@ -1,6 +1,5 @@
 package cm.aptoide.analytics;
 
-import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,7 +69,7 @@ public class AnalyticsManager {
    *
    * @param url The url to log.
    */
-  public void logEvent(@NonNull String url) {
+  public void logEvent(String url) {
     knockEventLogger.log(url);
   }
 
