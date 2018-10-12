@@ -108,26 +108,29 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> loadApp().flatMap(
-            appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).toObservable()
-                .map(__1 -> appViewViewModel)))
+        .flatMap(__ -> loadApp().flatMapSingle(
+            appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).onErrorReturn(
+                __1 -> null)
+                .map(__1 -> appViewViewModel))
+            .filter(app -> app.hasDonations())
+            .flatMapSingle(app -> appViewManager.getTopDonations(app.getPackageName()))
+            .observeOn(viewScheduler)
+            .doOnNext(donations -> view.showDonations(donations)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private Completable manageOrganicAds(SearchAdResult searchAdResult) {
+  private Single<SearchAdResult> manageOrganicAds(SearchAdResult searchAdResult) {
     if (searchAdResult == null) {
       return appViewManager.loadAdsFromAppView()
           .doOnSuccess(ad -> {
             appViewManager.setSearchAdResult(ad);
             handleAdsLogic(appViewManager.getSearchAdResult());
           })
-          .doOnError(throwable -> crashReport.log(throwable))
-          .toCompletable();
+          .doOnError(throwable -> crashReport.log(throwable));
     }
-    return Completable.complete()
-        .doOnCompleted(() -> handleAdsLogic(searchAdResult));
+    return Single.just(null);
   }
 
   private void handleAdsLogic(SearchAdResult searchAdResult) {

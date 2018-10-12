@@ -58,6 +58,8 @@ import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.app.view.donations.Donation;
+import cm.aptoide.pt.app.view.donations.DonationsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter;
 import cm.aptoide.pt.billing.exception.BillingException;
@@ -133,6 +135,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private ActionBar actionBar;
   private ScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
+  private DonationsAdapter donationsAdapter;
   private AppViewSimilarAppsAdapter similarAppsAdapter;
   private AppViewSimilarAppsAdapter similarDownloadsAdapter;
   private PublishSubject<ScreenShotClickEvent> screenShotClick;
@@ -230,6 +233,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private int scrollViewY;
   private AppViewAppcInfoViewHolder appcInfoView;
   private View apkfyElement;
+  private View donationsElement;
+  private RecyclerView donationsList;
+  private View donationsListLayout;
+  private ProgressBar donationsProgress;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -319,6 +326,16 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     needsLicenseLayout = view.findViewById(R.id.needs_licence_layout);
     fakeAppLayout = view.findViewById(R.id.fake_app_layout);
     virusLayout = view.findViewById(R.id.virus_layout);
+    donationsElement = view.findViewById(R.id.donations_element);
+    donationsList = view.findViewById(R.id.donations_list);
+    donationsProgress = view.findViewById(R.id.donations_progress);
+    donationsListLayout = view.findViewById(R.id.donations_list_layout);
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()) {
+      @Override public boolean canScrollVertically() {
+        return false;
+      }
+    };
+    donationsList.setLayoutManager(linearLayoutManager);
 
     workingWellText = (TextView) view.findViewById(R.id.working_well_count);
     needsLicenceText = (TextView) view.findViewById(R.id.needs_licence_count);
@@ -348,6 +365,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+
+    donationsAdapter = new DonationsAdapter(new ArrayList<>());
+    donationsList.setAdapter(donationsAdapter);
 
     screenshotsAdapter =
         new ScreenshotsAdapter(new ArrayList<>(), new ArrayList<>(), screenShotClick);
@@ -529,6 +549,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     actionBar = null;
     scrollView = null;
     collapsingToolbarLayout = null;
+    donationsAdapter = null;
+    donationsElement = null;
+    donationsList = null;
   }
 
   @Override public void showLoading() {
@@ -577,6 +600,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     } else {
       storeFollow.setText(R.string.follow);
     }
+
+    if (model.hasDonations()) {//model.hasDonations()) {
+      donationsElement.setVisibility(View.VISIBLE);
+      donationsListLayout.setVisibility(View.VISIBLE);
+    }
+
     if ((model.getMedia()
         .getScreenshots() != null && !model.getMedia()
         .getScreenshots()
@@ -1020,6 +1049,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     String message = getString(R.string.appview_message_apkfy_1);
     ((TextView) apkfyElement.findViewById(R.id.apkfy_message_1)).setText(
         String.format(message, appName));
+  }
+
+  @Override public void showDonations(List<Donation> donations) {
+    donationsAdapter.setDonations(donations);
+    donationsProgress.setVisibility(View.GONE);
+    donationsList.setVisibility(View.VISIBLE);
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {

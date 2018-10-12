@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
+import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -218,7 +219,8 @@ public class AppViewManager {
             app.isLatestTrustedVersion(), app.getUniqueName(), appViewConfiguration.shouldInstall(),
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
-            isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising()));
+            isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(),
+            app.getBdsFlags()));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {
@@ -370,5 +372,9 @@ public class AppViewManager {
           }));
     }
     return Completable.complete();
+  }
+
+  public Single<List<Donation>> getTopDonations(String packageName) {
+    return appCoinsManager.getDonationsList(packageName);
   }
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:text="Top donations"
+      style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+      />
+  <FrameLayout
+      android:id="@+id/donations_list_layout"
+      android:layout_width="match_parent"
+      android:layout_height="170dp"
+      android:visibility="gone"
+      >
+    <ProgressBar
+        android:id="@+id/donations_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/donations_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        />
+  </FrameLayout>
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:text="Donations are a great way to show your support for this developer and make a difference. Donate Appcoins now to get on the leaderboard."
+      android:textColor="@color/silver_dark"
+      style="@style/Aptoide.TextView.Regular.XS"
+      />
+  <Button
+      android:layout_width="match_parent"
+      android:text="donate"
+      style="@style/Aptoide.Button.Ghost.S.Grey"
+      />
+
+</LinearLayout>

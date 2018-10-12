@@ -77,6 +77,7 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialService;
+import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -249,6 +250,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
+
+  private static final String DONATIONS_URL = "https://api.blockchainds.com/";
 
   private final AptoideApplication application;
   private final String aptoideMd5sum;
@@ -1029,6 +1032,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("retrofit-donations") Retrofit providesDonationsRetrofit(
+      @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(DONATIONS_URL)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
@@ -1042,6 +1055,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
       @Named("retrofit-AB") Retrofit retrofit) {
     return retrofit.create(ABTestService.ServiceV7.class);
+  }
+
+  @Singleton @Provides DonationsService.ServiceV7 providesDonationsServiceV7(
+      @Named("retrofit-donations") Retrofit retrofit) {
+    return retrofit.create(DonationsService.ServiceV7.class);
   }
 
   @Singleton @Provides CrashReport providesCrashReports() {
@@ -1212,8 +1230,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCenter(appCenterRepository);
   }
 
-  @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService) {
-    return new AppCoinsManager(appCoinsService);
+  @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService,
+      DonationsService donationsService) {
+    return new AppCoinsManager(appCoinsService, donationsService);
   }
 
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("pool-v7")
@@ -1372,5 +1391,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides DonationsService providesDonationsService(
+      DonationsService.ServiceV7 service) {
+    return new DonationsService(service);
   }
 }
