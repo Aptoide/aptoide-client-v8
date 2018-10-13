@@ -25,5 +25,4 @@ public class ABTestManager {
   public Observable<Boolean> recordAction(String identifier) {
     return abTestCenterRepository.recordAction(identifier);
   }
-
 }
