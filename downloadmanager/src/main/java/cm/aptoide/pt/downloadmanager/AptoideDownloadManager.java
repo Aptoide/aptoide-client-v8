@@ -3,6 +3,7 @@ package cm.aptoide.pt.downloadmanager;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.RealmList;
 import java.util.HashMap;
@@ -45,16 +46,29 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   public synchronized void start() {
-    dispatchDownloadsSubscription = (downloadsRepository.getInProgressDownloadsList()
+    dispatchDownloadsSubscription = downloadsRepository.getInProgressDownloadsList()
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .doOnNext(downloads -> Logger.getInstance()
+            .d("AptoideDownloadManager", "getting downloads in progress " + downloads.size()))
         .filter(List::isEmpty)
-        .flatMap(__ -> downloadsRepository.getInQueueDownloads())
+        .flatMap(__ -> downloadsRepository.getInQueueDownloads()
+            .first())
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .doOnNext(downloads -> Logger.getInstance()
+            .d("AptoideDownloadManager", "getting the queued downloads " + downloads.size()))
         .filter(downloads -> !downloads.isEmpty())
-        .first()
         .map(downloads -> downloads.get(0))
+        .doOnNext(download -> Logger.getInstance()
+            .d("AptoideDownloadManager",
+                "download " + download.getPackageName() + " " + download.getAppName()))
         .flatMap(download -> getAppDownloader(download.getMd5()).doOnNext(
             AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
-        .doOnError(throwable -> throwable.printStackTrace())).retry()
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .doOnError(throwable -> throwable.printStackTrace())
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
@@ -230,7 +244,14 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private void moveCompletedDownloadFiles(RealmList<FileToDownload> filesToDownload) {
     for (FileToDownload fileToDownload : filesToDownload) {
+      Logger.getInstance()
+          .d("AptoideDownloadManager", "trying to move file : "
+              + fileToDownload.getFileName()
+              + " "
+              + fileToDownload.getPackageName());
       String newFilePath = getFilePathFromFileType(fileToDownload);
+      Logger.getInstance()
+          .d("AptoideDownloadManager", "filePath");
       fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
       fileToDownload.setPath(newFilePath);
     }
