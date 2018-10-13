@@ -66,7 +66,6 @@ public class AptoideDownloadManager implements DownloadManager {
             .flatMap(this::handleDownloadProgress))
         .doOnError(throwable -> throwable.printStackTrace())
         .retry()
-        .doOnError(throwable -> throwable.printStackTrace())
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
