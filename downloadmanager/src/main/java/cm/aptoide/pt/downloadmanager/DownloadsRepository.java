@@ -53,8 +53,8 @@ public class DownloadsRepository {
   public Observable<List<Download>> getInProgressDownloadsList() {
     return downloadAccessor.getRunningDownloads()
         .flatMap(downloads -> Observable.from(downloads)
-            .filter(download -> download.getOverallDownloadStatus() == Download.PROGRESS)
-            .toList())
-        .distinctUntilChanged();
+            .filter(download -> download.getOverallDownloadStatus() == Download.PROGRESS
+                || download.getOverallDownloadStatus() == (Download.PENDING))
+            .toList());
   }
 }
