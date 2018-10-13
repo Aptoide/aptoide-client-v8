@@ -19,6 +19,7 @@ import rx.schedulers.Schedulers;
 
 public class AptoideDownloadManager implements DownloadManager {
 
+  private static final String TAG = "AptoideDownloadManager";
   private final String cachePath;
   private final String apkPath;
   private final String obbPath;
@@ -50,19 +51,16 @@ public class AptoideDownloadManager implements DownloadManager {
         .doOnError(throwable -> throwable.printStackTrace())
         .retry()
         .doOnNext(downloads -> Logger.getInstance()
-            .d("AptoideDownloadManager", "getting downloads in progress " + downloads.size()))
+            .d(TAG, "Downloads in Progress " + downloads.size()))
         .filter(List::isEmpty)
         .flatMap(__ -> downloadsRepository.getInQueueDownloads()
             .first())
         .doOnError(throwable -> throwable.printStackTrace())
         .retry()
         .doOnNext(downloads -> Logger.getInstance()
-            .d("AptoideDownloadManager", "getting the queued downloads " + downloads.size()))
+            .d(TAG, "Queued downloads " + downloads.size()))
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
-        .doOnNext(download -> Logger.getInstance()
-            .d("AptoideDownloadManager",
-                "download " + download.getPackageName() + " " + download.getAppName()))
         .flatMap(download -> getAppDownloader(download.getMd5()).doOnNext(
             AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
@@ -250,8 +248,6 @@ public class AptoideDownloadManager implements DownloadManager {
               + " "
               + fileToDownload.getPackageName());
       String newFilePath = getFilePathFromFileType(fileToDownload);
-      Logger.getInstance()
-          .d("AptoideDownloadManager", "filePath");
       fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
       fileToDownload.setPath(newFilePath);
     }
