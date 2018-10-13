@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -41,11 +42,13 @@ public class AppViewPresenterTest {
   @Mock private PermissionManager permissionManager;
   @Mock private PermissionService permissionService;
   @Mock private AppViewAnalytics appViewAnalytics;
+  @Mock private AppViewSimilarAppAnalytics similarAppsAnalytics;
   @Mock private AccountNavigator accountNavigator;
   @Mock private AppViewNavigator appViewNavigator;
   @Mock private AppViewManager appViewManager;
   @Mock private AptoideAccountManager accountManager;
   @Mock private CrashReport crashReporter;
+  @Mock private SimilarAdExperiment similarAdExperiment;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -55,9 +58,9 @@ public class AppViewPresenterTest {
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
-    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, appViewNavigator,
-        appViewManager, accountManager, Schedulers.immediate(), crashReporter, permissionManager,
-        permissionService);
+    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, similarAppsAnalytics,
+        appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
+        permissionManager, permissionService, similarAdExperiment);
 
     lifecycleEvent = PublishSubject.create();
 

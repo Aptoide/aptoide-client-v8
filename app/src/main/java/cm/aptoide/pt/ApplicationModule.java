@@ -46,6 +46,7 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -61,6 +62,7 @@ import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.AppNextAdRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -71,7 +73,9 @@ import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
+import cm.aptoide.pt.app.AppNextAdResult;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
@@ -250,6 +254,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -932,16 +937,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         storeRepository);
   }
 
+  @Singleton @Provides AppNextAdRepository providesAppNextAdRepository(){
+    return new AppNextAdRepository(application.getApplicationContext());
+  }
+
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      ConnectivityManager connectivityManager) {
+      ConnectivityManager connectivityManager, AppNextAdRepository appNextAdRepository) {
     return new AdsRepository(idsRepository, accountManager, okHttpClient,
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
         application.getApplicationContext(), connectivityManager, application.getResources(),
         adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
-        application::getPartnerId, new MinimalAdMapper());
+        application::getPartnerId, new MinimalAdMapper(), appNextAdRepository);
   }
 
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
@@ -1339,6 +1348,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
   }
 
+  @Singleton @Provides AppViewSimilarAppAnalytics providesAppViewSimilarAppsAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
+  }
+
   @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(
       @Named("default") SharedPreferences sharedPreferences) {
     return new UserPreferencesPersister(sharedPreferences);
@@ -1370,6 +1384,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AdsManager(adsRepository, AccessorFactory.getAccessorFor(
         ((AptoideApplication) application.getApplicationContext()).getDatabase(),
         StoredMinimalAd.class), new MinimalAdMapper());
+  }
+
+  @Singleton @Provides SimilarAdExperiment providesSimilarAdExperiment(
+      ABTestManager abTestManager, AdsManager adsManager){
+    return new SimilarAdExperiment(abTestManager, AndroidSchedulers.mainThread(), adsManager);
   }
 
   @Singleton @Provides BillingAnalytics providesBillingAnalytics(AnalyticsManager analyticsManager,

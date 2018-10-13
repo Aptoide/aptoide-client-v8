@@ -50,6 +50,10 @@ public interface AppViewView extends InstallAppView {
 
   void displayStoreFollowedSnack(String storeName);
 
+  Observable<Void> handleScroll();
+
+  boolean isSimilarAppsVisible();
+
   Observable<Void> clickDeveloperWebsite();
 
   Observable<Void> clickDeveloperEmail();
