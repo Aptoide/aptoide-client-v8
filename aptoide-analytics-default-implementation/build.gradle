@@ -78,7 +78,7 @@ dependencies {
   implementation "com.flurry.android:analytics:6.4.2"
 }
 
-version = 1
+version = "1.0.3"
 
 //region Publishing
 task sourcesJar(type: Jar) {
@@ -101,7 +101,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 publishing {
   publications {
     MyPublication(MavenPublication) {
-      groupId 'com.asfoundation'
+      groupId 'aptoide-client-v8'
       artifactId project.name
       version project.version
       artifact(sourcesJar)
@@ -134,10 +134,10 @@ bintray {
   key = "${APTOIDE_BINTRAY_KEY}"
   publications = ['MyPublication']
   pkg {
-    repo = 'asf'
+    repo = 'Aptoide'
     name = "${project.name}"
     licenses = ['GPL-3.0']
-    vcsUrl = 'https://github.com/AppStoreFoundation/AppCoins-ethereumj'
+    vcsUrl = 'https://github.com/Aptoide/aptoide-client-v8'
 
     version {
       name = project.version
