@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.utils.FileUtils;
-import io.realm.RealmList;
 import java.util.HashMap;
 import java.util.List;
 import rx.Completable;
@@ -168,6 +167,15 @@ public class AptoideDownloadManager implements DownloadManager {
         .toCompletable();
   }
 
+  @Override public void moveCompletedDownloadFiles(Download download) {
+    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      String newFilePath = getFilePathFromFileType(fileToDownload);
+      fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
+      fileToDownload.setPath(newFilePath);
+    }
+    downloadsRepository.save(download);
+  }
+
   private void removeDownloadFiles(Download download) {
     for (FileToDownload fileToDownload : download.getFilesToDownload()) {
       FileUtils.removeFile(fileToDownload.getFilePath());
@@ -191,8 +199,7 @@ public class AptoideDownloadManager implements DownloadManager {
       downloadState = Download.PROGRESS;
     } else {
       for (FileToDownload fileToDownload : download.getFilesToDownload()) {
-        if (!FileUtils.fileExists(
-            getFilePathFromFileType(fileToDownload) + fileToDownload.getFileName())) {
+        if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
           downloadState = Download.FILE_MISSING;
           break;
         }
@@ -208,14 +215,8 @@ public class AptoideDownloadManager implements DownloadManager {
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
         .doOnNext(download -> downloadsRepository.save(download))
         .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .doOnNext(download -> handleCompletedDownload(download))
+        .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .subscribeOn(Schedulers.io());
-  }
-
-  private void handleCompletedDownload(Download download) {
-    moveCompletedDownloadFiles(download.getFilesToDownload());
-    downloadsRepository.save(download);
-    removeAppDownloader(download.getMd5());
   }
 
   private void removeAppDownloader(String md5) {
@@ -223,14 +224,6 @@ public class AptoideDownloadManager implements DownloadManager {
     if (appDownloader != null) {
       appDownloader.stop();
       appDownloaderMap.remove(md5);
-    }
-  }
-
-  private void moveCompletedDownloadFiles(RealmList<FileToDownload> filesToDownload) {
-    for (FileToDownload fileToDownload : filesToDownload) {
-      String newFilePath = getFilePathFromFileType(fileToDownload);
-      fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
-      fileToDownload.setPath(newFilePath);
     }
   }
 

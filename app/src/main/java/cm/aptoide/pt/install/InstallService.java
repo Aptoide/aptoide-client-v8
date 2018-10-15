@@ -144,6 +144,7 @@ public class InstallService extends BaseService {
           }
         })
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .doOnNext(download -> downloadManager.moveCompletedDownloadFiles(download))
         .flatMap(download -> stopForegroundAndInstall(context, download, true,
             forceDefaultInstall).andThen(sendBackgroundInstallFinishedBroadcast(download))
             .andThen(hasNextDownload()));
