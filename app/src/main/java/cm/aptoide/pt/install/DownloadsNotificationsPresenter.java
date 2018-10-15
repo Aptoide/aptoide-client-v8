@@ -10,13 +10,13 @@ import rx.subscriptions.CompositeSubscription;
 public class DownloadsNotificationsPresenter {
 
   private static final String TAG = DownloadsNotificationsPresenter.class.getSimpleName();
-  private DownloadsNotification view;
+  private DownloadsNotification service;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
 
-  public DownloadsNotificationsPresenter(DownloadsNotification view,
+  public DownloadsNotificationsPresenter(DownloadsNotification service,
       InstallManager installManager) {
-    this.view = view;
+    this.service = service;
     this.installManager = installManager;
     subscriptions = new CompositeSubscription();
   }
@@ -29,14 +29,14 @@ public class DownloadsNotificationsPresenter {
 
   private void handleOpenAppView() {
 
-    subscriptions.add(view.handleOpenAppView()
-        .doOnNext(md5 -> view.openAppView(md5))
+    subscriptions.add(service.handleOpenAppView()
+        .doOnNext(md5 -> service.openAppView(md5))
         .subscribe());
   }
 
   private void handleOpenDownloadManager() {
-    subscriptions.add(view.handleOpenDownloadManager()
-        .doOnNext(openDownloadManagerView -> view.openDownloadManager())
+    subscriptions.add(service.handleOpenDownloadManager()
+        .doOnNext(openDownloadManagerView -> service.openDownloadManager())
         .subscribe());
   }
 
@@ -45,12 +45,12 @@ public class DownloadsNotificationsPresenter {
         .subscribe(installation -> {
           if (!installation.isIndeterminate()) {
             String md5 = installation.getMd5();
-            view.setupNotification(md5, installation.getAppName(), installation.getProgress(),
+            service.setupNotification(md5, installation.getAppName(), installation.getProgress(),
                 installation.isIndeterminate());
           }
         }, throwable -> {
           Log.e(TAG, "Error on handleOpenDownloadManager");
-          view.removeNotificationAndStop();
+          service.removeNotificationAndStop();
         }));
   }
 
