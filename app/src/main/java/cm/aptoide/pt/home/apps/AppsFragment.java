@@ -107,7 +107,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
             installAnalytics, updatesAnalytics, getContext().getPackageManager(), getContext(),
             new DownloadFactory(
                 ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
-        AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
+        AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
         new PermissionManager(), ((PermissionService) getContext()), accountManager,
         appsNavigator));
   }
