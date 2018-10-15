@@ -76,7 +76,7 @@ public class InstallService extends BaseService implements DownloadsNotification
     openDownloadManagerAction = PublishSubject.create();
     openAppViewAction = PublishSubject.create();
     presenter = new DownloadsNotificationsPresenter(this, installManager);
-    presenter.onCreate();
+    presenter.setupSubscriptions();
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
   }
 
@@ -107,6 +107,9 @@ public class InstallService extends BaseService implements DownloadsNotification
 
   @Override public void onDestroy() {
     subscriptions.unsubscribe();
+    presenter.onDestroy();
+    openAppViewAction = null;
+    openDownloadManagerAction = null;
     super.onDestroy();
   }
 
@@ -174,8 +177,7 @@ public class InstallService extends BaseService implements DownloadsNotification
         .map(downloads -> downloads != null && !downloads.isEmpty());
   }
 
-  @Override
-  public void removeNotificationAndStop() {
+  @Override public void removeNotificationAndStop() {
     stopForeground(true);
     stopSelf();
   }
@@ -235,8 +237,7 @@ public class InstallService extends BaseService implements DownloadsNotification
             .append(" - ")
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
         .setContentIntent(contentIntent)
-        .setProgress(OldAptoideDownloadManager.PROGRESS_MAX_VALUE, progress,
-            isIndeterminate)
+        .setProgress(OldAptoideDownloadManager.PROGRESS_MAX_VALUE, progress, isIndeterminate)
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
@@ -264,7 +265,8 @@ public class InstallService extends BaseService implements DownloadsNotification
     startActivity(intent);
   }
 
-  @Override public void setupNotification(String md5, String appName, int progress, boolean isIndeterminate) {
+  @Override
+  public void setupNotification(String md5, String appName, int progress, boolean isIndeterminate) {
     int requestCode = md5.hashCode();
 
     NotificationCompat.Action downloadManagerAction = getDownloadManagerAction(requestCode, md5);
@@ -273,11 +275,13 @@ public class InstallService extends BaseService implements DownloadsNotification
 
     if (notification == null) {
       notification =
-          buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction, appViewPendingIntent);
+          buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction,
+              appViewPendingIntent);
     } else {
       long oldWhen = notification.when;
       notification =
-          buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction, appViewPendingIntent);
+          buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction,
+              appViewPendingIntent);
       notification.when = oldWhen;
     }
 

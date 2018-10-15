@@ -9,6 +9,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class DownloadsNotificationsPresenter {
 
+  private static final String TAG = DownloadsNotificationsPresenter.class.getSimpleName();
   private DownloadsNotification view;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
@@ -20,10 +21,10 @@ public class DownloadsNotificationsPresenter {
     subscriptions = new CompositeSubscription();
   }
 
-  public void onCreate() {
+  public void setupSubscriptions() {
     handleOpenAppView();
     handleOpenDownloadManager();
-    getCurrentInstallation();
+    handleCurrentInstallation();
   }
 
   private void handleOpenAppView() {
@@ -39,15 +40,16 @@ public class DownloadsNotificationsPresenter {
         .subscribe());
   }
 
-  private void getCurrentInstallation(){
+  private void handleCurrentInstallation() {
     subscriptions.add(installManager.getCurrentInstallation()
         .subscribe(installation -> {
           if (!installation.isIndeterminate()) {
             String md5 = installation.getMd5();
-            view.setupNotification(md5, installation.getAppName(), installation.getProgress(), installation.isIndeterminate());
+            view.setupNotification(md5, installation.getAppName(), installation.getProgress(),
+                installation.isIndeterminate());
           }
         }, throwable -> {
-          Log.e("TAG", "Error on handleOpenDownloadManager");
+          Log.e(TAG, "Error on handleOpenDownloadManager");
           view.removeNotificationAndStop();
         }));
   }

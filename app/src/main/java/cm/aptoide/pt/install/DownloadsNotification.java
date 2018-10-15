@@ -6,7 +6,7 @@ import rx.Observable;
  * Created by tiagopedrinho on 09/10/2018.
  */
 
-public interface DownloadsNotification{
+public interface DownloadsNotification {
 
   Observable<String> handleOpenAppView();
 
@@ -19,5 +19,4 @@ public interface DownloadsNotification{
   void setupNotification(String md5, String appName, int progress, boolean isIndeterminate);
 
   void removeNotificationAndStop();
-
 }
