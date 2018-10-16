@@ -21,6 +21,8 @@ public interface HomeView extends BundleView {
 
   Observable<Void> imageClick();
 
+  Observable<Void> discoveryButtonClick();
+
   Observable<HomeEvent> dismissBundleClicked();
 
   Observable<Void> termsAndConditionsContinueClicked();

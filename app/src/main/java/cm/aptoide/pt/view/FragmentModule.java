@@ -64,6 +64,10 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.discovery.FakeVideoDataSource;
+import cm.aptoide.pt.discovery.VideosPresenter;
+import cm.aptoide.pt.discovery.VideosRepository;
+import cm.aptoide.pt.discovery.VideosView;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -355,6 +359,10 @@ import rx.schedulers.Schedulers;
     return new EditorialRepository(editorialService);
   }
 
+  @FragmentScope @Provides VideosRepository providesVideosRepository() {
+    return new VideosRepository(new FakeVideoDataSource());
+  }
+
   @FragmentScope @Provides EditorialManager providesEditorialManager(
       EditorialRepository editorialRepository, InstallManager installManager,
       PreferencesManager preferencesManager, DownloadFactory downloadFactory,
@@ -371,5 +379,10 @@ import rx.schedulers.Schedulers;
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator);
+  }
+
+  @FragmentScope @Provides VideosPresenter providesVideosPresenter(
+      VideosRepository videosRepository) {
+    return new VideosPresenter((VideosView) fragment, videosRepository);
   }
 }

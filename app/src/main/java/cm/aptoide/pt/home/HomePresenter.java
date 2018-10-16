@@ -67,6 +67,8 @@ public class HomePresenter implements Presenter {
 
     handleUserImageClick();
 
+    handleDiscoveryButtonClick();
+
     handleBundleScrolledRight();
 
     handleKnowMoreClick();
@@ -440,6 +442,20 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.imageClick()
             .observeOn(viewScheduler)
             .doOnNext(account -> homeNavigator.navigateToMyAccount())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleDiscoveryButtonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.discoveryButtonClick()
+            .observeOn(viewScheduler)
+            .doOnNext(__ -> homeNavigator.navigateToVideosView())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

@@ -7,6 +7,7 @@ import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.discovery.VideosFragment;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -71,6 +72,16 @@ public class HomeNavigator {
 
   public void navigateToMyAccount() {
     fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
+  }
+
+  public void navigateToVideosView() {
+    fragmentNavigator.navigateTo(new VideosFragment(), true);
+  }
+
+  public void navigateToRewardAppView(long appId, String packageName, String tag,
+      double rewardAppCoins) {
+    appNavigator.navigateWithAppcReward(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY,
+        tag, rewardAppCoins);
   }
 
   private NewAppViewFragment.OpenType parseAction(HomeEvent.Type type) {
