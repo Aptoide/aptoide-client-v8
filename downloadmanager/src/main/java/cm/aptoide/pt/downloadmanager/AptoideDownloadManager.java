@@ -11,7 +11,6 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by filipegoncalves on 7/27/18.
@@ -82,8 +81,7 @@ public class AptoideDownloadManager implements DownloadManager {
       download.setTimeStamp(System.currentTimeMillis());
       downloadsRepository.save(download);
       appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download));
-    })
-        .subscribeOn(Schedulers.computation());
+    });
   }
 
   @Override public Observable<Download> getDownload(String md5) {
@@ -222,8 +220,7 @@ public class AptoideDownloadManager implements DownloadManager {
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
         .doOnNext(download -> downloadsRepository.save(download))
         .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .doOnNext(download -> handleCompletedDownload(download))
-        .subscribeOn(Schedulers.io());
+        .doOnNext(download -> handleCompletedDownload(download));
   }
 
   private void handleCompletedDownload(Download download) {
@@ -247,7 +244,9 @@ public class AptoideDownloadManager implements DownloadManager {
               + " "
               + fileToDownload.getPackageName());
       String newFilePath = getFilePathFromFileType(fileToDownload);
-      fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
+      if (fileUtils.fileExists(fileToDownload.getPath())) {
+        fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
+      }
       fileToDownload.setPath(newFilePath);
     }
   }
