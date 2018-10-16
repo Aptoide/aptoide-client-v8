@@ -53,15 +53,31 @@
           android:visibility="invisible"
           tools:visibility="visible"
           />
-
-      <ImageButton
-          android:id="@+id/discovery_actionbar_button"
-          android:layout_width="34dp"
-          android:layout_height="34dp"
+      <RelativeLayout
+          android:id="@+id/discovery_button_layout"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:layout_centerVertical="true"
-          android:src="@drawable/discovery_button"
-          />
-
+          android:visibility="gone"
+          >
+        <ImageButton
+            android:id="@+id/discovery_actionbar_button"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/discovery_button"
+            />
+        <ImageView
+            android:id="@+id/discovery_actionbar_live_marker"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/discovery_live_icon"
+            android:visibility="visible"
+            />
+      </RelativeLayout>
     </RelativeLayout>
   </android.support.v7.widget.Toolbar>
 

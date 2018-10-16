@@ -5,6 +5,7 @@ import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.discovery.VideosManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -30,10 +31,11 @@ public class HomePresenter implements Presenter {
   private final AdMapper adMapper;
   private final AptoideAccountManager accountManager;
   private final HomeAnalytics homeAnalytics;
+  private final VideosManager videosManager;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager,
-      HomeAnalytics homeAnalytics) {
+      HomeAnalytics homeAnalytics, VideosManager videosManager) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
@@ -42,6 +44,7 @@ public class HomePresenter implements Presenter {
     this.adMapper = adMapper;
     this.accountManager = accountManager;
     this.homeAnalytics = homeAnalytics;
+    this.videosManager = videosManager;
   }
 
   @Override public void present() {
@@ -88,6 +91,8 @@ public class HomePresenter implements Presenter {
     handleClickOnPrivacyPolicy();
 
     handleEditorialCardClick();
+
+    shouldShowDiscoveryButton();
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -444,6 +449,22 @@ public class HomePresenter implements Presenter {
             .doOnNext(account -> homeNavigator.navigateToMyAccount())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void shouldShowDiscoveryButton() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> videosManager.shouldShowVideos())
+        .observeOn(viewScheduler)
+        .doOnNext(videoType -> {
+          if (videoType.equals("streaming")) {
+            view.showDiscoveryButton(true);
+          } else if (videoType.equals("not_streaming")) view.showDiscoveryButton(false);
+        })
         .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);

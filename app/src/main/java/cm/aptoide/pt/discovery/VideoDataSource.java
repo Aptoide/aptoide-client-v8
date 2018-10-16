@@ -1,13 +1,12 @@
 package cm.aptoide.pt.discovery;
 
-import java.util.List;
-import rx.Observable;
+import rx.Single;
 
 interface VideoDataSource {
 
-  Observable<List<Video>> loadFreshVideos(String key);
+  Single<VideosList> loadFreshVideos(int limit);
 
-  Observable<List<Video>> loadNextVideos(int offset, int limit, String key);
+  Single<VideosList> loadNextVideos(int offset, int limit);
 
-  boolean hasMore(Integer offset, String title);
+  boolean hasMore(Integer offset);
 }

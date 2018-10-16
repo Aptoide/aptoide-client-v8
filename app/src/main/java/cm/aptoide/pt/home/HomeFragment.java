@@ -67,6 +67,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private ImageView userAvatar;
 
   private View discoveryButton;
+  private View discoveryBaseButton;
 
   private BottomNavigationActivity bottomNavigationActivity;
 
@@ -118,7 +119,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         savedInstanceState.putParcelable(LIST_STATE_KEY, null);
       }
     }
-    discoveryButton = view.findViewById(R.id.discovery_actionbar_button);
+    discoveryButton = view.findViewById(R.id.discovery_button_layout);
+    discoveryBaseButton = view.findViewById(R.id.discovery_actionbar_button);
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
     bundlesList = (RecyclerView) view.findViewById(R.id.bundles_list);
     genericErrorView = view.findViewById(R.id.generic_error);
@@ -321,7 +323,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   }
 
   @Override public Observable<Void> discoveryButtonClick() {
-    return RxView.clicks(discoveryButton);
+    return RxView.clicks(discoveryBaseButton);
   }
 
   @Override public Observable<HomeEvent> dismissBundleClicked() {
@@ -380,6 +382,14 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
           alertDialog.dismiss();
         });
     alertDialog.show();
+  }
+
+  @Override public void showDiscoveryButton(boolean isLive) {
+    if (isLive) {
+      discoveryButton.findViewById(R.id.discovery_actionbar_live_marker)
+          .setVisibility(View.VISIBLE);
+    }
+    discoveryButton.setVisibility(View.VISIBLE);
   }
 
   private boolean isEndReached() {

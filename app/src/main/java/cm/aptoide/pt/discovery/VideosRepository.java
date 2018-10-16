@@ -1,22 +1,29 @@
 package cm.aptoide.pt.discovery;
 
-import java.util.List;
-import rx.Observable;
+import rx.Single;
 
 public class VideosRepository {
 
-  public static final String VIDEO_KEY = "Video";
+  public static final int LIMIT = 10;
   private final VideoDataSource videoDataSource;
 
   public VideosRepository(VideoDataSource videoDataSource) {
     this.videoDataSource = videoDataSource;
   }
 
-  public Observable<List<Video>> loadVideos() {
+  public Single<VideosList> loadVideos() {
     return loadFreshVideos();
   }
 
-  private Observable<List<Video>> loadFreshVideos() {
-    return videoDataSource.loadFreshVideos(VIDEO_KEY);
+  public Single<VideosList> loadMoreVideos(int offset) {
+    return videoDataSource.loadNextVideos(offset, LIMIT);
+  }
+
+  public boolean hasMore(int offset) {
+    return videoDataSource.hasMore(offset);
+  }
+
+  private Single<VideosList> loadFreshVideos() {
+    return videoDataSource.loadFreshVideos(LIMIT);
   }
 }

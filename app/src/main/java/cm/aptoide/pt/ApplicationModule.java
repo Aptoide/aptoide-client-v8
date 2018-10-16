@@ -106,6 +106,9 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
+import cm.aptoide.pt.discovery.InfoVideoService;
+import cm.aptoide.pt.discovery.RemoteVideoDataSource;
+import cm.aptoide.pt.discovery.VideosRepository;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
@@ -1372,5 +1375,26 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides RemoteVideoDataSource providesRemoteVideoDataSource(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new RemoteVideoDataSource(bodyInterceptorPoolV7, okHttpClient, converter,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  @Singleton @Provides InfoVideoService providesInfoVideoService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new InfoVideoService(bodyInterceptorPoolV7, okHttpClient, converter, tokenInvalidator,
+        sharedPreferences);
+  }
+
+  @Singleton @Provides VideosRepository providesVideosRepository(
+      RemoteVideoDataSource remoteVideoDataSource) {
+    return new VideosRepository(remoteVideoDataSource);
   }
 }

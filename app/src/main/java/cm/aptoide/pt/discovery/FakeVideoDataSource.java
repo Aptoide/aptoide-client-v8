@@ -3,27 +3,27 @@ package cm.aptoide.pt.discovery;
 import cm.aptoide.pt.R;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
+import rx.Single;
 
 public class FakeVideoDataSource implements VideoDataSource {
 
-  @Override public Observable<List<Video>> loadFreshVideos(String key) {
+  @Override public Single<VideosList> loadFreshVideos(int limit) {
     return getVideos();
   }
 
-  @Override public Observable<List<Video>> loadNextVideos(int offset, int limit, String key) {
-    return loadFreshVideos(key);
+  @Override public Single<VideosList> loadNextVideos(int offset, int limit) {
+    return loadFreshVideos(limit);
   }
 
-  @Override public boolean hasMore(Integer offset, String title) {
+  @Override public boolean hasMore(Integer offset) {
     return true;
   }
 
-  private Observable<List<Video>> getVideos() {
+  private Single<VideosList> getVideos() {
     return getFakeVideos();
   }
 
-  public Observable<List<Video>> getFakeVideos() {
+  public Single<VideosList> getFakeVideos() {
     List<Video> videoList = new ArrayList<>();
 
     String imgUrl1 =
@@ -39,15 +39,15 @@ public class FakeVideoDataSource implements VideoDataSource {
     String videoUrl2 = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov";
     String videoUrl3 = "http://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4";
 
-    Video zombsAPP = new Video(videoUrl1, "Game #1", 4.2, imgUrl1);
+    Video zombsAPP = new Video(videoUrl1, "Game #1", 4.2, imgUrl1, "non_streaming");
     videoList.add(zombsAPP);
 
-    Video subwayAPP = new Video(videoUrl2, "Game #2", 3.9, imgUrl2);
+    Video subwayAPP = new Video(videoUrl2, "Game #2", 3.9, imgUrl2, "non_streaming");
     videoList.add(subwayAPP);
 
-    Video androidAPP = new Video(videoUrl3, "Game #3", 4.0, imgUrl3);
+    Video androidAPP = new Video(videoUrl3, "Game #3", 4.0, imgUrl3, "non_streaming");
     videoList.add(androidAPP);
 
-    return Observable.just(videoList);
+    return Single.just(new VideosList(videoList, 0));
   }
 }
