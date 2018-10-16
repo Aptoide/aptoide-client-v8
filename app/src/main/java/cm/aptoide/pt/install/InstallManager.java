@@ -159,13 +159,13 @@ public class InstallManager {
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
-        .doOnNext(downloadProgress -> {
-          if (downloadProgress.getOverallDownloadStatus() == Download.ERROR) {
-            downloadProgress.setOverallDownloadStatus(Download.INVALID_STATUS);
-            downloadRepository.save(downloadProgress);
+        .doOnNext(storedDownload -> {
+          if (storedDownload.getOverallDownloadStatus() == Download.ERROR) {
+            storedDownload.setOverallDownloadStatus(Download.INVALID_STATUS);
+            downloadRepository.save(storedDownload);
           }
         })
-        .flatMap(download1 -> getInstall(download.getMd5(), download.getPackageName(),
+        .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
         .flatMap(install -> installInBackground(install, forceDefaultInstall))
         .first()

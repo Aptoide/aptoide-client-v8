@@ -452,8 +452,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides DownloadFactory provideDownloadFactory(
-      @Named("marketName") String marketName) {
-    return new DownloadFactory(marketName);
+      @Named("marketName") String marketName, @Named("cachePath") String cachePath) {
+    return new DownloadFactory(marketName, cachePath);
   }
 
   @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,

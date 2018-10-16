@@ -191,7 +191,8 @@ public class AptoideDownloadManager implements DownloadManager {
       downloadState = Download.PROGRESS;
     } else {
       for (FileToDownload fileToDownload : download.getFilesToDownload()) {
-        if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
+        if (!FileUtils.fileExists(
+            getFilePathFromFileType(fileToDownload) + fileToDownload.getFileName())) {
           downloadState = Download.FILE_MISSING;
           break;
         }
@@ -213,6 +214,7 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private void handleCompletedDownload(Download download) {
     moveCompletedDownloadFiles(download.getFilesToDownload());
+    downloadsRepository.save(download);
     removeAppDownloader(download.getMd5());
   }
 
