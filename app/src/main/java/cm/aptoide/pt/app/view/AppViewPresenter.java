@@ -59,10 +59,11 @@ public class AppViewPresenter implements Presenter {
   private SimilarAdExperiment similarAdExperiment;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
-      AppViewAnalytics appViewAnalytics, AppViewSimilarAppAnalytics similarAppAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
-      CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService, SimilarAdExperiment similarAdExperiment) {
+      AppViewAnalytics appViewAnalytics, AppViewSimilarAppAnalytics similarAppAnalytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
+      PermissionManager permissionManager, PermissionService permissionService,
+      SimilarAdExperiment similarAdExperiment) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -142,24 +143,23 @@ public class AppViewPresenter implements Presenter {
         .doOnCompleted(() -> handleAdsLogic(searchAdResult));
   }
 
-  private void handleOnScroll(){
+  private void handleOnScroll() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.handleScroll())
-        .doOnNext(__ -> {
-          if(view.isSimilarAppsVisible()){
-            boolean isAd = false;
-            ApplicationAd.Network network = null;
-            if(similarAppsViewModel != null && similarAppsViewModel.getAd() != null){
-              isAd = true;
-              network = similarAppsViewModel.getAd().getNetwork();
-              similarAdExperiment.recordAdImpression();
-            }
-            similarAppAnalytics.similarAppBundleImpression(network, isAd);
-          }
-        })
+        .flatMap(lifecycleEvent -> view.scrollVisibleSimilarApps())
         .takeUntil(__ -> view.isSimilarAppsVisible())
-        .subscribe(__ -> {}, err -> crashReport.log(err));
+        .observeOn(Schedulers.io())
+        .flatMap(__ -> {
+          if (similarAppsViewModel != null && similarAppsViewModel.getAd() != null) {
+            similarAppAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
+                .getNetwork(), true);
+            return similarAdExperiment.recordAdImpression();
+          }
+          similarAppAnalytics.similarAppBundleImpression(null, false);
+          return Observable.empty();
+        })
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private void handleAdsLogic(SearchAdResult searchAdResult) {
@@ -438,7 +438,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickSimilarApp())
-        .doOnNext(similarAppClickEvent -> {
+        .flatMap(similarAppClickEvent -> {
           boolean isAd = false;
           ApplicationAd.Network network = null;
           String packageName;
@@ -446,22 +446,35 @@ public class AppViewPresenter implements Presenter {
 
           if (appViewSimilarApp.isAd()) {
             isAd = true;
-            network = appViewSimilarApp.getAd().getNetwork();
-            packageName = appViewSimilarApp.getAd().getPackageName();
-            if(appViewSimilarApp.getAd().getNetwork() == ApplicationAd.Network.SERVER){
-              appViewNavigator.navigateToAd(((AptoideNativeAd) appViewSimilarApp
-                  .getAd()).getMinimalAd(), similarAppClickEvent.getType());
+            network = appViewSimilarApp.getAd()
+                .getNetwork();
+            packageName = appViewSimilarApp.getAd()
+                .getPackageName();
+            if (appViewSimilarApp.getAd()
+                .getNetwork() == ApplicationAd.Network.SERVER) {
+              appViewNavigator.navigateToAd(
+                  ((AptoideNativeAd) appViewSimilarApp.getAd()).getMinimalAd(),
+                  similarAppClickEvent.getType());
             }
-            similarAdExperiment.recordAdClick();
           } else {
-            packageName = appViewSimilarApp.getApp().getPackageName();
-            appViewNavigator.navigateToAppView(appViewSimilarApp.getApp().getAppId(),
-                packageName, similarAppClickEvent.getType());
+            packageName = appViewSimilarApp.getApp()
+                .getPackageName();
+            appViewNavigator.navigateToAppView(appViewSimilarApp.getApp()
+                .getAppId(), packageName, similarAppClickEvent.getType());
           }
           appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
           similarAppAnalytics.similarAppClick(network, packageName,
               similarAppClickEvent.getPosition(), isAd);
+          return isAd ? similarAdExperiment.recordAdClick() : Observable.empty();
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.appNextAdClick())
+        .flatMap(__ -> similarAdExperiment.recordAdClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));

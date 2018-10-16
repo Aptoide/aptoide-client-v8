@@ -168,6 +168,10 @@ public class AdsRepository {
     return appNextAdRepository.loadAd(keywords);
   }
 
+  public PublishSubject<AppNextAdResult> appNextAdClick(){
+    return appNextAdRepository.clickAd();
+  }
+
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
     return accountManager.accountStatus()
