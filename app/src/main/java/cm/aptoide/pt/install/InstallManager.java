@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
@@ -22,6 +23,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.utils.FileUtils;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
@@ -40,6 +42,10 @@ public class InstallManager {
   private final Installer installer;
   private final SharedPreferences sharedPreferences;
   private final SharedPreferences securePreferences;
+  private final String cachePath;
+  private final String apkPath;
+  private final String obbPath;
+  private final FileUtils fileUtils;
   private final Context context;
   @Inject DownloadRepository downloadRepository;
   @Inject InstalledRepository installedRepository;
@@ -48,7 +54,8 @@ public class InstallManager {
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
-      DownloadRepository downloadRepository, InstalledRepository installedRepository) {
+      DownloadRepository downloadRepository, InstalledRepository installedRepository,
+      String cachePath, String apkPath, String obbPath, FileUtils fileUtils) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -57,6 +64,10 @@ public class InstallManager {
     this.installedRepository = installedRepository;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
+    this.cachePath = cachePath;
+    this.apkPath = apkPath;
+    this.obbPath = obbPath;
+    this.fileUtils = fileUtils;
   }
 
   public void stopAllInstallations() {
@@ -561,5 +572,31 @@ public class InstallManager {
         })
         .toBlocking()
         .first();
+  }
+
+  public void moveCompletedDownloadFiles(Download download) {
+    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      String newFilePath = getFilePathFromFileType(fileToDownload);
+      fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
+      fileToDownload.setPath(newFilePath);
+    }
+    downloadRepository.save(download);
+  }
+
+  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
+    String path;
+    switch (fileToDownload.getFileType()) {
+      case FileToDownload.APK:
+        path = apkPath;
+        break;
+      case FileToDownload.OBB:
+        path = obbPath + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.GENERIC:
+      default:
+        path = cachePath;
+        break;
+    }
+    return path;
   }
 }

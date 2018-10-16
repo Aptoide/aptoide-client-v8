@@ -37,6 +37,4 @@ public interface DownloadManager {
   Completable removeDownload(String md5);
 
   Completable invalidateDatabase();
-
-  void moveCompletedDownloadFiles(Download download);
 }

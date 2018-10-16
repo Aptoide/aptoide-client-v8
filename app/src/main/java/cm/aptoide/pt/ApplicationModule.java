@@ -137,6 +137,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
@@ -268,8 +269,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     this.aptoideMd5sum = aptoideMd5sum;
   }
 
-  @Singleton @Provides InstallManager providesInstallManager() {
-    return application.getInstallManager();
+  @Singleton @Provides InstallManager providesInstallManager(
+      AptoideDownloadManager aptoideDownloadManager, InstallerAnalytics installerAnalytics,
+      RootAvailabilityManager rootAvailabilityManager,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      @Named("secureShared") SharedPreferences secureSharedPreferences,
+      DownloadRepository downloadRepository, InstalledRepository installedRepository,
+      @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
+      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
+    return new InstallManager(application, aptoideDownloadManager,
+        new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
+        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
+        downloadRepository, installedRepository, cachePath, apkPath, obbPath,
+        new FileUtils(downloadAnalytics::moveFile));
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -311,6 +323,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.APPLICATION_ID;
   }
 
+  @Singleton @Provides @Named("apkPath") String provideApkPath(
+      @Named("cachePath") String cachePath) {
+    return cachePath + "apks/";
+  }
+
+  @Singleton @Provides @Named("obbPath") String provideObbPath(
+      @Named("cachePath") String cachePath) {
+    return cachePath + "obb/";
+  }
+
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
       DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
       @Named("cachePath") String cachePath, DownloadAppMapper downloadAppMapper,
@@ -321,9 +343,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     FileUtils.createDir(apkPath);
     FileUtils.createDir(obbPath);
 
-    return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath, apkPath,
-        obbPath, downloadAppMapper, appDownloaderProvider,
-        new FileUtils(downloadAnalytics::moveFile));
+    return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
+        downloadAppMapper, appDownloaderProvider);
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {
@@ -553,7 +574,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences);
   }
 
-  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler() {
+  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
+      InstallManager installManager) {
 
     Intent retryActionIntent = new Intent(application, RootInstallNotificationEventReceiver.class);
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
@@ -573,11 +595,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
     int notificationId = 230498;
     return new RootInstallationRetryHandler(notificationId,
-        application.getSystemNotificationShower(), application.getInstallManager(),
-        PublishRelay.create(), 0, application,
-        new RootInstallErrorNotificationFactory(notificationId,
-            BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
-            deleteAction));
+        application.getSystemNotificationShower(), installManager, PublishRelay.create(), 0,
+        application, new RootInstallErrorNotificationFactory(notificationId,
+        BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
+        deleteAction));
   }
 
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
@@ -947,10 +968,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
       @Named("default") OkHttpClient okHttpClient, @Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      InstallManager installManager) {
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
-        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences,
-        application.getInstallManager());
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
   }
 
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
@@ -1305,9 +1326,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
-      @Named("marketName") String marketName, PackageRepository packageRepository) {
-    return new BundlesResponseMapper(marketName, application.getInstallManager(),
-        packageRepository);
+      @Named("marketName") String marketName, PackageRepository packageRepository,
+      InstallManager installManager) {
+    return new BundlesResponseMapper(marketName, installManager, packageRepository);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
