@@ -99,7 +99,7 @@
 
   <string name="zero">0</string>
   <string name="working_well">Works well</string>
-  <string name="needs_license">Needs licensee</string>
+  <string name="needs_license">Needs license</string>
   <string name="fake_app">Fake app</string>
   <string name="virus">Virus</string>
   <string name="additional_information">Additional information</string>
