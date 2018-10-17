@@ -438,6 +438,14 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickSimilarApp())
+        .observeOn(Schedulers.io())
+        .flatMap(similarAppClickEvent -> {
+          if(similarAppClickEvent.getSimilar().isAd()){
+            return similarAdExperiment.recordAdClick().map(__ -> similarAppClickEvent);
+          }
+          return Observable.just(similarAppClickEvent);
+        })
+        .observeOn(viewScheduler)
         .flatMap(similarAppClickEvent -> {
           boolean isAd = false;
           ApplicationAd.Network network = null;
@@ -467,8 +475,6 @@ public class AppViewPresenter implements Presenter {
               similarAppClickEvent.getPosition(), isAd);
           return Observable.just(isAd);
         })
-        .observeOn(Schedulers.io())
-        .flatMap(isAd ->  isAd ? similarAdExperiment.recordAdClick() : Observable.empty())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
