@@ -18,9 +18,11 @@ import rx.subjects.PublishSubject;
 public class AppNextAdRepository {
 
     private final Context context;
+    private PublishSubject<AppNextAdResult> clickSubject;
 
     public AppNextAdRepository(Context context){
         this.context = context;
+        this.clickSubject = PublishSubject.create();
     }
 
     public PublishSubject<AppNextAdResult> loadAd(List<String> keywords){
@@ -37,6 +39,7 @@ public class AppNextAdRepository {
             @Override
             public void onAdClicked(NativeAd nativeAd) {
                 super.onAdClicked(nativeAd);
+                clickSubject.onNext(new AppNextAdResult(nativeAd));
             }
 
             @Override
@@ -55,6 +58,10 @@ public class AppNextAdRepository {
                 .setCachingPolicy(NativeAdRequest.CachingPolicy.STATIC_ONLY)
                 .setCategories(getCategory(keywords)));
         return subject;
+    }
+
+    public PublishSubject<AppNextAdResult> clickAd(){
+        return clickSubject;
     }
 
     public String getCategory(List<String> keywords){

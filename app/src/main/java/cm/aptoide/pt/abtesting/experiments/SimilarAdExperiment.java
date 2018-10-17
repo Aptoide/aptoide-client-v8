@@ -4,6 +4,7 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.ApplicationAdResult;
 import java.util.List;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 
@@ -26,6 +27,7 @@ public class SimilarAdExperiment {
 
   public Single<ApplicationAdResult> getSimilarAd(String packageName, List<String> keywords){
     return abTestManager.getExperiment(EXPERIMENT_ID)
+        .observeOn(scheduler)
         .flatMapSingle(experiment -> {
           String experimentAssigment = "default";
           if(!experiment.isExperimentOver() && experiment.isPartOfExperiment()){
@@ -40,16 +42,15 @@ public class SimilarAdExperiment {
               return adsManager.loadAd(packageName, keywords);
           }
         })
-        .toSingle()
-        .observeOn(scheduler);
+        .toSingle();
   }
 
-  public void recordAdImpression(){
-    abTestManager.recordImpression(EXPERIMENT_ID);
+  public Observable<Boolean> recordAdImpression(){
+    return abTestManager.recordImpression(EXPERIMENT_ID);
   }
 
-  public void recordAdClick(){
-    abTestManager.recordAction(EXPERIMENT_ID);
+  public Observable<Boolean> recordAdClick(){
+    return abTestManager.recordAction(EXPERIMENT_ID);
   }
 
 }
