@@ -465,16 +465,20 @@ public class AppViewPresenter implements Presenter {
           appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
           similarAppAnalytics.similarAppClick(network, packageName,
               similarAppClickEvent.getPosition(), isAd);
-          return isAd ? similarAdExperiment.recordAdClick() : Observable.empty();
+          return Observable.just(isAd);
         })
+        .observeOn(Schedulers.io())
+        .flatMap(isAd ->  isAd ? similarAdExperiment.recordAdClick() : Observable.empty())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
 
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.appNextAdClick())
-        .flatMap(__ -> similarAdExperiment.recordAdClick())
+        .flatMap(__ -> appViewManager.appNextAdClick()
+            .observeOn(Schedulers.io())
+            .flatMap(result -> similarAdExperiment.recordAdClick()))
+        .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
