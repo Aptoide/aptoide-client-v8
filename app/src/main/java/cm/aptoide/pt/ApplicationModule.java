@@ -73,7 +73,6 @@ import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
-import cm.aptoide.pt.app.AppNextAdResult;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
@@ -937,7 +936,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         storeRepository);
   }
 
-  @Singleton @Provides AppNextAdRepository providesAppNextAdRepository(){
+  @Singleton @Provides AppNextAdRepository providesAppNextAdRepository() {
     return new AppNextAdRepository(application.getApplicationContext());
   }
 
@@ -1386,8 +1385,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoredMinimalAd.class), new MinimalAdMapper());
   }
 
-  @Singleton @Provides SimilarAdExperiment providesSimilarAdExperiment(
-      ABTestManager abTestManager, AdsManager adsManager){
+  @Singleton @Provides SimilarAdExperiment providesSimilarAdExperiment(ABTestManager abTestManager,
+      AdsManager adsManager) {
     return new SimilarAdExperiment(abTestManager, AndroidSchedulers.mainThread(), adsManager);
   }
 

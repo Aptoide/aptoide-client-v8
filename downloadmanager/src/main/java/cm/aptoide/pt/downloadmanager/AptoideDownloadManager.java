@@ -3,6 +3,7 @@ package cm.aptoide.pt.downloadmanager;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import io.realm.RealmList;
 import java.util.HashMap;
@@ -10,7 +11,6 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by filipegoncalves on 7/27/18.
@@ -18,6 +18,7 @@ import rx.schedulers.Schedulers;
 
 public class AptoideDownloadManager implements DownloadManager {
 
+  private static final String TAG = "AptoideDownloadManager";
   private final String cachePath;
   private final String apkPath;
   private final String obbPath;
@@ -44,13 +45,26 @@ public class AptoideDownloadManager implements DownloadManager {
     appDownloaderMap = new HashMap<>();
   }
 
-  public void start() {
-    dispatchDownloadsSubscription = downloadsRepository.getInQueueDownloads()
+  public synchronized void start() {
+    dispatchDownloadsSubscription = downloadsRepository.getInProgressDownloadsList()
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .doOnNext(downloads -> Logger.getInstance()
+            .d(TAG, "Downloads in Progress " + downloads.size()))
+        .filter(List::isEmpty)
+        .flatMap(__ -> downloadsRepository.getInQueueDownloads()
+            .first())
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .doOnNext(downloads -> Logger.getInstance()
+            .d(TAG, "Queued downloads " + downloads.size()))
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
         .flatMap(download -> getAppDownloader(download.getMd5()).doOnNext(
             AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
@@ -67,8 +81,7 @@ public class AptoideDownloadManager implements DownloadManager {
       download.setTimeStamp(System.currentTimeMillis());
       downloadsRepository.save(download);
       appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download));
-    })
-        .subscribeOn(Schedulers.computation());
+    });
   }
 
   @Override public Observable<Download> getDownload(String md5) {
@@ -207,8 +220,7 @@ public class AptoideDownloadManager implements DownloadManager {
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
         .doOnNext(download -> downloadsRepository.save(download))
         .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .doOnNext(download -> handleCompletedDownload(download))
-        .subscribeOn(Schedulers.io());
+        .doOnNext(download -> handleCompletedDownload(download));
   }
 
   private void handleCompletedDownload(Download download) {
@@ -226,8 +238,15 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private void moveCompletedDownloadFiles(RealmList<FileToDownload> filesToDownload) {
     for (FileToDownload fileToDownload : filesToDownload) {
+      Logger.getInstance()
+          .d("AptoideDownloadManager", "trying to move file : "
+              + fileToDownload.getFileName()
+              + " "
+              + fileToDownload.getPackageName());
       String newFilePath = getFilePathFromFileType(fileToDownload);
-      fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
+      if (fileUtils.fileExists(fileToDownload.getPath())) {
+        fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
+      }
       fileToDownload.setPath(newFilePath);
     }
   }
