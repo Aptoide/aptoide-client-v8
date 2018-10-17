@@ -36,6 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,6 +59,7 @@ import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.app.view.donations.DonateDialog;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
@@ -237,6 +239,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private RecyclerView donationsList;
   private View donationsListLayout;
   private ProgressBar donationsProgress;
+  private View donateInstallCard;
+  private Button installCardDonateButton;
+  private Button listDonateButton;
+  private DonateDialog donateDialog;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -330,6 +336,9 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     donationsList = view.findViewById(R.id.donations_list);
     donationsProgress = view.findViewById(R.id.donations_progress);
     donationsListLayout = view.findViewById(R.id.donations_list_layout);
+    donateInstallCard = view.findViewById(R.id.donate_install_card);
+    listDonateButton = view.findViewById(R.id.donate_button);
+    installCardDonateButton = view.findViewById(R.id.install_card_donate_button);
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()) {
       @Override public boolean canScrollVertically() {
         return false;
@@ -397,6 +406,15 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarApps.setAdapter(similarAppsAdapter);
     similarDownloadApps.setLayoutManager(similarDownloadsLayout);
     similarApps.setLayoutManager(similarLayout);
+
+    donateDialog = new DonateDialog(getContext(), PublishSubject.create());
+    WindowManager.LayoutParams dialogParams = donateDialog.getWindow()
+        .getAttributes();
+    dialogParams.width = (int) Math.round(getActivity().getWindow()
+        .getAttributes().width * 0.8);
+    dialogParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+    donateDialog.getWindow()
+        .setAttributes(dialogParams);
 
     similarApps.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
@@ -601,7 +619,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       storeFollow.setText(R.string.follow);
     }
 
-    if (model.hasDonations()) {//model.hasDonations()) {
+    if (true) {//model.hasDonations() after getApk webservice is updated
       donationsElement.setVisibility(View.VISIBLE);
       donationsListLayout.setVisibility(View.VISIBLE);
     }
@@ -788,6 +806,11 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public Observable<Void> clickGenericRetry() {
     return genericRetryClick;
+  }
+
+  @Override public Observable<Void> clickDonateButton() {
+    return Observable.merge(RxView.clicks(installCardDonateButton),
+        RxView.clicks(listDonateButton));
   }
 
   @Override public Observable<ShareDialogs.ShareResponse> shareDialogResponse() {
@@ -1057,6 +1080,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     donationsList.setVisibility(View.VISIBLE);
   }
 
+  @Override public void showDonationsDialog() {
+    donateDialog.show();
+  }
+
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
     if (!hasSimilarApps) {
       hideSimilarApps();
@@ -1293,7 +1320,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         .map(response -> (response.equals(YES)));
   }
 
-  @Override public void showDownloadAppModel(DownloadAppViewModel model) {
+  @Override public void showDownloadAppModel(DownloadAppViewModel model, boolean hasDonations) {
     DownloadModel downloadModel = model.getDownloadModel();
     SimilarAppsViewModel similarAppsViewModel = model.getSimilarAppsViewModel();
     AppCoinsViewModel appCoinsViewModel = model.getAppCoinsViewModel();
@@ -1302,12 +1329,18 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       registerPaymentResult();
     }
     if (downloadModel.isDownloading()) {
+      if (true) {//hasDonations after getApk webservice is updated
+        donateInstallCard.setVisibility(View.VISIBLE);
+      }
       appcInfoView.hideInfo();
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
       manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), true);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
+      if (true) {//hasDonations after getApk webservice is updated
+        donateInstallCard.setVisibility(View.GONE);
+      }
       appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
           formatAppCoinsRewardMessage());
       downloadInfoLayout.setVisibility(View.GONE);

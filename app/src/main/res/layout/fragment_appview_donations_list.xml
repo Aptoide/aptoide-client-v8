@@ -42,6 +42,7 @@
       style="@style/Aptoide.TextView.Regular.XS"
       />
   <Button
+      android:id="@+id/donate_button"
       android:layout_width="match_parent"
       android:text="donate"
       style="@style/Aptoide.Button.Ghost.S.Grey"

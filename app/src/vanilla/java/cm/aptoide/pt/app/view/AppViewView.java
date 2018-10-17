@@ -88,6 +88,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickGenericRetry();
 
+  Observable<Void> clickDonateButton();
+
   Observable<ShareDialogs.ShareResponse> shareDialogResponse();
 
   Observable<String> apkfyDialogPositiveClick();
@@ -145,4 +147,6 @@ public interface AppViewView extends InstallAppView {
   void showApkfyElement(String appName);
 
   void showDonations(List<Donation> donations);
+
+  void showDonationsDialog();
 }

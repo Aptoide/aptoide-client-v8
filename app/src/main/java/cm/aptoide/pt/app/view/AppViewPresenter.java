@@ -102,6 +102,7 @@ public class AppViewPresenter implements Presenter {
     handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
+    handleClickOnDonateButton();
   }
 
   @VisibleForTesting public void handleFirstLoad() {
@@ -112,7 +113,7 @@ public class AppViewPresenter implements Presenter {
             appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).onErrorReturn(
                 __1 -> null)
                 .map(__1 -> appViewViewModel))
-            .filter(app -> app.hasDonations())
+            .filter(app -> true)//app.hasDonations() after getApk webservice is updated
             .flatMapSingle(app -> appViewManager.getTopDonations(app.getPackageName()))
             .observeOn(viewScheduler)
             .doOnNext(donations -> view.showDonations(donations)))
@@ -528,7 +529,8 @@ public class AppViewPresenter implements Presenter {
                 appViewViewModel.isPaid(), appViewViewModel.getPay())
                 .first()
                 .observeOn(viewScheduler)
-                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
+                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
+                    appViewViewModel.hasDonations()))
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
@@ -803,9 +805,9 @@ public class AppViewPresenter implements Presenter {
             .toObservable())
         .filter(app -> !app.isLoading())
         .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode(), app.isPaid(), app.getPay()))
+            app.getVersionCode(), app.isPaid(), app.getPay())
         .observeOn(viewScheduler)
-        .doOnNext(model -> view.showDownloadAppModel(model))
+            .doOnNext(model -> view.showDownloadAppModel(model, app.hasDonations())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -919,6 +921,18 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.apkfyDialogPositiveClick())
         .doOnNext(appname -> view.showApkfyElement(appname))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleClickOnDonateButton() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickDonateButton())
+        .doOnNext(__ -> view.showDonationsDialog())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

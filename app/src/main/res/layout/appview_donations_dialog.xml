@@ -24,6 +24,7 @@
         />
 
     <EditText
+        android:id="@+id/nickname"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginBottom="32dp"
@@ -35,10 +36,11 @@
         android:hint="Nickname"
         android:paddingLeft="18dp"
         android:paddingStart="18dp"
-        android:textColorHint="@color/black_87_alpha"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
 
-    <TextView
+    <EditText
+        android:id="@+id/appc_value"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginBottom="42dp"
@@ -48,13 +50,15 @@
         android:layout_marginStart="16dp"
         android:background="#F6F6F6"
         android:gravity="center_vertical"
+        android:inputType="numberDecimal"
         android:paddingLeft="16dp"
         android:paddingStart="16dp"
-        tools:text="2 APPC"
+        tools:hint="2 APPC"
         style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
 
     <SeekBar
+        android:id="@+id/appc_slider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
@@ -62,8 +66,6 @@
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginStart="2dp"
-        android:max="5"
-        android:progress="2"
         />
 
     <LinearLayout
@@ -76,6 +78,7 @@
         android:orientation="horizontal"
         >
       <Button
+          android:id="@+id/cancel_button"
           android:layout_width="78dp"
           android:layout_marginEnd="16dp"
           android:layout_marginRight="16dp"
@@ -83,6 +86,7 @@
           style="@style/Aptoide.Button.Flat"
           />
       <Button
+          android:id="@+id/donate_button"
           android:layout_width="78dp"
           android:text="Donate"
           style="@style/Aptoide.Button.Flat"

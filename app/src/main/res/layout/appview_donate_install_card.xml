@@ -28,6 +28,7 @@
         style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
     <Button
+        android:id="@+id/install_card_donate_button"
         android:layout_width="168dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
