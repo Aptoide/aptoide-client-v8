@@ -34,8 +34,7 @@ public class ABTestService {
   }
 
   public Observable<Boolean> recordImpression(String identifier) {
-    return service.recordImpression(identifier, aptoideId,
-        new ABTestRequestBody(IMPRESSION))
+    return service.recordImpression(identifier, aptoideId, new ABTestRequestBody(IMPRESSION))
         .doOnNext(voidResponse -> Logger.getInstance()
             .d(this.getClass()
                 .getName(), "response : " + voidResponse.isSuccessful()))
@@ -43,10 +42,8 @@ public class ABTestService {
         .map(__ -> true);
   }
 
-  public Observable<Boolean> recordAction(String identifier,
-      String assignment) {
-    return service.recordAction(identifier, aptoideId,
-        new ABTestRequestBody(assignment))
+  public Observable<Boolean> recordAction(String identifier, String assignment) {
+    return service.recordAction(identifier, aptoideId, new ABTestRequestBody(assignment))
         .map(__ -> true);
   }
 

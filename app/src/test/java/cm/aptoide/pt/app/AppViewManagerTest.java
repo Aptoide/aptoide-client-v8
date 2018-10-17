@@ -3,7 +3,9 @@ package cm.aptoide.pt.app;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.ABTestManager;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -70,6 +72,7 @@ public class AppViewManagerTest {
   @Mock private DownloadFactory downloadFactory;
   @Mock private ABTestManager abTestManager;
   @Mock private AppCoinsManager appCoinsManager;
+  @Mock private SimilarAdExperiment similarAdExperiment;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
   private AppStats appStats;
@@ -86,7 +89,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
@@ -104,7 +108,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -151,7 +156,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -198,7 +204,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -244,7 +251,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -286,7 +294,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -312,7 +321,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -338,7 +348,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -382,7 +393,7 @@ public class AppViewManagerTest {
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
+        appViewManager.loadAptoideSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 
@@ -391,7 +402,7 @@ public class AppViewManagerTest {
     verify(adsManager).loadAd("anyString", keywords);
 
     //And a SimilarAppsViewModel should be returned with an Ad, a list of similarApps, no loading and no errors
-    Assert.assertEquals(minimalAd, similarAppsViewModel.getAd());
+    Assert.assertEquals(minimalAd, ((AptoideNativeAd) similarAppsViewModel.getAd()).getMinimalAd());
     Assert.assertEquals(Collections.emptyList(), similarAppsViewModel.getRecommendedApps());
     Assert.assertEquals(false, similarAppsViewModel.isLoading());
     Assert.assertEquals(false, similarAppsViewModel.hasError());
@@ -411,7 +422,7 @@ public class AppViewManagerTest {
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
 
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
+        appViewManager.loadAptoideSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 
@@ -447,7 +458,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "marketName", appCoinsManager);
+            installAnalytics, limit, socialRepository, "marketName", appCoinsManager,
+            similarAdExperiment);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -551,7 +563,8 @@ public class AppViewManagerTest {
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, socialRepository, "anyString", appCoinsManager);
+            installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
+            similarAdExperiment);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));

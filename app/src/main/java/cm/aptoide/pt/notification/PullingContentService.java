@@ -126,6 +126,7 @@ public class PullingContentService extends Service {
             return Observable.just(updates);
           }
         }))
+        .filter(__ -> ManagerPreferences.isUpdateNotificationEnable(sharedPreferences))
         .observeOn(Schedulers.io())
         .flatMap(updates -> getNotificationsExperiment(application.getIdsRepository(),
             application.getAbTestService(),

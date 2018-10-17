@@ -59,8 +59,8 @@ public class AppViewNavigator {
     appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
-  public void navigateToAd(MinimalAd ad) {
-    appNavigator.navigateWithAd(new SearchAdResult(ad));
+  public void navigateToAd(MinimalAd ad, String tag) {
+    appNavigator.navigateWithAd(new SearchAdResult(ad), tag);
   }
 
   public void navigateToDescriptionReadMore(String name, String description, String theme) {

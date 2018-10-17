@@ -951,7 +951,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   }
 
   public void showSuggestedApps() {
-    appViewSimilarAppAnalytics.similarAppsIsShown();
     setSuggestedShowing(true);
 
     adsRepository.loadAdsFromAppviewSuggested(getPackageName(), appViewModel.getKeywords())

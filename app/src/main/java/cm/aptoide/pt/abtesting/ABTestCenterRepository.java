@@ -33,8 +33,7 @@ public class ABTestCenterRepository {
             .getExperiment());
       } else {
         return service.getExperiment(identifier)
-            .flatMap(experimentToCache -> cacheExperiment(experimentToCache,
-                identifier).flatMap(
+            .flatMap(experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
                 __ -> Observable.just(experimentToCache.getExperiment())));
       }
     }
@@ -49,16 +48,15 @@ public class ABTestCenterRepository {
             return Observable.just(model.getExperiment());
           } else {
             return service.getExperiment(identifier)
-                .flatMap(experimentToCache -> cacheExperiment(experimentToCache,
-                    identifier).flatMap(
-                    __ -> Observable.just(experimentToCache.getExperiment())));
+                .flatMap(
+                    experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
+                        __ -> Observable.just(experimentToCache.getExperiment())));
           }
         });
   }
 
   public Observable<Boolean> recordImpression(String identifier) {
-    if (localCache.containsKey(identifier) && !localCache.get(
-        identifier)
+    if (localCache.containsKey(identifier) && !localCache.get(identifier)
         .hasError() && !localCache.get(identifier)
         .getExperiment()
         .isExperimentOver()) {
@@ -68,8 +66,7 @@ public class ABTestCenterRepository {
   }
 
   public Observable<Boolean> recordAction(String identifier) {
-    if (localCache.containsKey(identifier) && !localCache.get(
-        identifier)
+    if (localCache.containsKey(identifier) && !localCache.get(identifier)
         .hasError() && !localCache.get(identifier)
         .getExperiment()
         .isExperimentOver()) {

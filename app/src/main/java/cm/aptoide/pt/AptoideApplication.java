@@ -108,6 +108,8 @@ import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
+
+import com.appnext.base.Appnext;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -310,6 +312,8 @@ public abstract class AptoideApplication extends Application {
         .subscribe(() -> {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
+
+    initializeAppNext();
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -617,6 +621,10 @@ public abstract class AptoideApplication extends Application {
   private void initializeFlurry(Context context, String flurryKey) {
     new FlurryAgent.Builder().withLogEnabled(false)
         .build(context, flurryKey);
+  }
+
+  private void initializeAppNext() {
+    Appnext.init(this);
   }
 
   private Completable sendAppStartToAnalytics() {
