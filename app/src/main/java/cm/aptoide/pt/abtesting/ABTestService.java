@@ -44,6 +44,10 @@ public class ABTestService {
 
   public Observable<Boolean> recordAction(String identifier, String assignment) {
     return service.recordAction(identifier, aptoideId, new ABTestRequestBody(assignment))
+        .doOnNext(voidResponse -> Logger.getInstance()
+            .d(this.getClass()
+                .getName(), "response : " + voidResponse.isSuccessful()))
+        .doOnError(throwable -> throwable.printStackTrace())
         .map(__ -> true);
   }
 
