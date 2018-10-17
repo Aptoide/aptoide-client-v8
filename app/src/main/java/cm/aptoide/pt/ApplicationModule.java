@@ -277,6 +277,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadRepository downloadRepository, InstalledRepository installedRepository,
       @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
       @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
+
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
@@ -336,9 +337,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
       DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
       @Named("cachePath") String cachePath, DownloadAppMapper downloadAppMapper,
-      AppDownloaderProvider appDownloaderProvider, DownloadAnalytics downloadAnalytics) {
-    final String apkPath = cachePath + "apks/";
-    final String obbPath = cachePath + "obb/";
+      AppDownloaderProvider appDownloaderProvider, @Named("apkPath") String apkPath,
+      @Named("obbPath") String obbPath) {
 
     FileUtils.createDir(apkPath);
     FileUtils.createDir(obbPath);
