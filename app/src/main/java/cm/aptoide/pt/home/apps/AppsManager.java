@@ -61,7 +61,7 @@ public class AppsManager {
 
   public Observable<List<App>> getUpdateDownloadsList() {
     return installManager.getInstallations()
-        .throttleFirst(200, TimeUnit.MILLISECONDS)
+        .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.empty();
@@ -84,7 +84,7 @@ public class AppsManager {
 
   public Observable<List<App>> getDownloadApps() {
     return installManager.getInstallations()
-        .throttleFirst(200, TimeUnit.MILLISECONDS)
+        .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.just(Collections.emptyList());
