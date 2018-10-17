@@ -55,11 +55,13 @@ public class AppsManager {
 
   public Observable<List<App>> getUpdatesList(boolean isExcluded) {
     return updatesManager.getUpdatesList(isExcluded)
+        .distinctUntilChanged()
         .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
   public Observable<List<App>> getUpdateDownloadsList() {
     return installManager.getInstallations()
+        .distinctUntilChanged()
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.empty();
@@ -74,6 +76,7 @@ public class AppsManager {
 
   public Observable<List<App>> getInstalledApps() {
     return installManager.fetchInstalled()
+        .distinctUntilChanged()
         .flatMapIterable(list -> list)
         .flatMap(item -> updatesManager.filterUpdates(item))
         .toList()
@@ -82,6 +85,7 @@ public class AppsManager {
 
   public Observable<List<App>> getDownloadApps() {
     return installManager.getInstallations()
+        .distinctUntilChanged()
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.just(Collections.emptyList());
@@ -244,6 +248,7 @@ public class AppsManager {
 
   public Observable<List<App>> getInstalledUpdateApps() {
     return installManager.fetchInstalled()
+        .distinctUntilChanged()
         .flatMapIterable(list -> list)
         .flatMap(installedApp -> getUpdates(installedApp))
         .toList()
