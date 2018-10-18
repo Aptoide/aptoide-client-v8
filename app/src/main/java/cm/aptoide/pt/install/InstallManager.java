@@ -16,12 +16,12 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
+import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationState;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
@@ -48,14 +48,14 @@ public class InstallManager {
   private final String obbPath;
   private final FileUtils fileUtils;
   private final Context context;
-  @Inject DownloadRepository downloadRepository;
+  @Inject DownloadsRepository downloadRepository;
   @Inject InstalledRepository installedRepository;
   private RootAvailabilityManager rootAvailabilityManager;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
-      DownloadRepository downloadRepository, InstalledRepository installedRepository,
+      DownloadsRepository downloadRepository, InstalledRepository installedRepository,
       String cachePath, String apkPath, String obbPath, FileUtils fileUtils) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
@@ -498,7 +498,7 @@ public class InstallManager {
    * @return the download object to be resumed or null if doesn't exists
    */
   public Single<Download> getDownload(String md5) {
-    return downloadRepository.get(md5)
+    return downloadRepository.getDownload(md5)
         .first()
         .toSingle();
   }
@@ -586,9 +586,9 @@ public class InstallManager {
       if (FileUtils.fileExists(fileToDownload.getFilePath())) {
         fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
         fileToDownload.setPath(newFilePath);
-        downloadRepository.save(download);
       }
     }
+    downloadRepository.save(download);
   }
 
   @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
