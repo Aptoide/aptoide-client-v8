@@ -232,7 +232,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Override public void showTermsConditionError() {
     //Shifts the bottomsheet up and then down again to create space for the error snack when in portrait
     Snackbar snackbar = Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
-        Snackbar.LENGTH_SHORT);
+        4500);
 
     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
       snackbar.addCallback(new Snackbar.Callback() {
@@ -240,10 +240,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         @Override public void onShown(Snackbar snackbar) {
           float newHeight = 360 * getResources().getDisplayMetrics().density;
           bottomSheetBehavior.setPeekHeight((int) newHeight);
-        }
-
-        @Override public void onDismissed(Snackbar snackbar, int event) {
-          bottomSheetBehavior.setPeekHeight(originalHeight);
         }
       });
     }
