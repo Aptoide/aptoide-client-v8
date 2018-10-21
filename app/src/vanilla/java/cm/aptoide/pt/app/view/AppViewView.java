@@ -12,6 +12,7 @@ import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
+import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
 import rx.Observable;
 
 /**
@@ -50,6 +51,10 @@ public interface AppViewView extends InstallAppView {
 
   void displayStoreFollowedSnack(String storeName);
 
+  Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps();
+
+  boolean isSimilarAppsVisible();
+
   Observable<Void> clickDeveloperWebsite();
 
   Observable<Void> clickDeveloperEmail();
@@ -87,6 +92,8 @@ public interface AppViewView extends InstallAppView {
   Observable<Void> clickGenericRetry();
 
   Observable<ShareDialogs.ShareResponse> shareDialogResponse();
+
+  Observable<String> apkfyDialogPositiveClick();
 
   Observable<Integer> scrollReviewsResponse();
 
@@ -135,5 +142,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<DownloadModel.Action> showOpenAndInstallDialog(String title, String appName);
 
-  Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title, String appName);
+  Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title, String appName,
+      double appc, float rating, String icon, int downloads);
+
+  void showApkfyElement(String appName);
 }

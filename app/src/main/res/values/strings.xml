@@ -58,23 +58,30 @@
   <string name="appview_newer_version">Newer version available</string>
   <string name="appview_latest_version_text">Latest version</string>
   <string name="appview_version_text">Version</string>
-  <string name="appview_rate_this_app">Rate this app</string>
+  <string name="appview_rate_this_app">Rate this App</string>
   <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
   <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t contain any threats!</string>
   <string name="appview_rating_card_text">Rating</string>
   <string name="appview_button_read_all">read all <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Trusted</string>
   <string name="see_more">See more</string>
-  <string name="appview_title_you_might_also_like">You might also like</string>
+  <string name="appview_title_you_might_also_like">You Might Also Like</string>
   <string name="appcardview_title_no_stars" translatable="false">- -</string>
   <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
-  <string name="appview_uploaded_by">App uploaded by</string>
-  <string name="appview_similar_apps">Similar apps</string>
+  <string name="appview_uploaded_by">App Uploaded by</string>
+  <string name="appview_similar_apps">Similar Apps</string>
   <string name="appview_short_downloading">Downloading</string>
   <string name="appview_message_apkfy">Keep Aptoide installed in your device to keep all your apps updated! Discover new apps in our unrestricted app store.</string>
-  <string name="appview_title_apkfy_">Keep Aptoide installed to get</string>
-  <string name="appview_message_apkfy_1">100% safe updates of %s</string>
+  <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
+  <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
+  
+  
+  <!-- AppView Donations-->  
+  <string name="appview_title_donations_leaderboard">Top Donations</string>
+  <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
+  <string name="appview_button_donations">DONATE</string>
+  <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -99,7 +106,7 @@
 
   <string name="zero">0</string>
   <string name="working_well">Works well</string>
-  <string name="needs_license">Needs licensee</string>
+  <string name="needs_license">Needs license</string>
   <string name="fake_app">Fake app</string>
   <string name="virus">Virus</string>
   <string name="additional_information">Additional information</string>

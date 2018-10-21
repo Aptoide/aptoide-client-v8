@@ -9,7 +9,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
+
+import com.appnext.core.AppnextError;
+import com.appnext.nativeads.NativeAd;
+import com.appnext.nativeads.NativeAdListener;
+import com.appnext.nativeads.NativeAdRequest;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.app.AppNextAdResult;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -24,7 +32,9 @@ import java.util.Random;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by marcelobenites on 7/27/16.
@@ -44,6 +54,7 @@ public class AdsRepository {
   private final Resources resources;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final MinimalAdMapper adMapper;
+  private final AppNextAdRepository appNextAdRepository;
 
   public AdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory, QManager qManager,
@@ -51,7 +62,7 @@ public class AdsRepository {
       ConnectivityManager connectivityManager, Resources resources,
       AdsApplicationVersionCodeProvider versionCodeProvider,
       GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker,
-      PartnerIdProvider partnerIdProvider, MinimalAdMapper adMapper) {
+      PartnerIdProvider partnerIdProvider, MinimalAdMapper adMapper, AppNextAdRepository appNextAdRepository) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.versionCodeProvider = versionCodeProvider;
@@ -65,6 +76,7 @@ public class AdsRepository {
     this.connectivityManager = connectivityManager;
     this.resources = resources;
     this.adMapper = adMapper;
+    this.appNextAdRepository = appNextAdRepository;
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
@@ -151,6 +163,15 @@ public class AdsRepository {
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()).subscribeOn(Schedulers.io()));
   }
+
+  public PublishSubject<AppNextAdResult> loadAppNextAd(List<String> keywords){
+    return appNextAdRepository.loadAd(keywords);
+  }
+
+  public PublishSubject<AppNextAdResult> appNextAdClick(){
+    return appNextAdRepository.clickAd();
+  }
+
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
     return accountManager.accountStatus()

@@ -10,5 +10,5 @@ public interface ExperimentPersistence {
 
   void save(String experimentName, Experiment experiment);
 
-  Observable<ExperimentModel> get(ABTestManager.ExperimentType experimentType);
+  Observable<ExperimentModel> get(String identifier);
 }

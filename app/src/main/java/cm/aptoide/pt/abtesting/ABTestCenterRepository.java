@@ -21,60 +21,57 @@ public class ABTestCenterRepository {
     this.persistence = persistence;
   }
 
-  public Observable<Experiment> getExperiment(ABTestManager.ExperimentType experiment) {
-    if (localCache.containsKey(experiment.getName())) {
-      if (!localCache.get(experiment.getName())
+  public Observable<Experiment> getExperiment(String identifier) {
+    if (localCache.containsKey(identifier)) {
+      if (!localCache.get(identifier)
           .getExperiment()
-          .isExpired() && !localCache.get(experiment.getName())
-          .hasError() && !localCache.get(experiment.getName())
+          .isExpired() && !localCache.get(identifier)
+          .hasError() && !localCache.get(identifier)
           .getExperiment()
           .isExperimentOver()) {
-        return Observable.just(localCache.get(experiment.getName())
+        return Observable.just(localCache.get(identifier)
             .getExperiment());
       } else {
-        return service.getExperiment(experiment)
-            .flatMap(experimentToCache -> cacheExperiment(experimentToCache,
-                experiment.getName()).flatMap(
+        return service.getExperiment(identifier)
+            .flatMap(experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
                 __ -> Observable.just(experimentToCache.getExperiment())));
       }
     }
-    return persistence.get(ABTestManager.ExperimentType.SHARE_DIALOG)
+    return persistence.get(identifier)
         .observeOn(Schedulers.io())
         .flatMap(model -> {
           if (!model.hasError() && !model.getExperiment()
               .isExpired()) {
-            if (!localCache.containsKey(experiment.getName())) {
-              localCache.put(experiment.getName(), model);
+            if (!localCache.containsKey(identifier)) {
+              localCache.put(identifier, model);
             }
             return Observable.just(model.getExperiment());
           } else {
-            return service.getExperiment(experiment)
-                .flatMap(experimentToCache -> cacheExperiment(experimentToCache,
-                    experiment.getName()).flatMap(
-                    __ -> Observable.just(experimentToCache.getExperiment())));
+            return service.getExperiment(identifier)
+                .flatMap(
+                    experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
+                        __ -> Observable.just(experimentToCache.getExperiment())));
           }
         });
   }
 
-  public Observable<Boolean> recordImpression(ABTestManager.ExperimentType experimentType) {
-    if (localCache.containsKey(experimentType.getName()) && !localCache.get(
-        experimentType.getName())
-        .hasError() && !localCache.get(experimentType.getName())
+  public Observable<Boolean> recordImpression(String identifier) {
+    if (localCache.containsKey(identifier) && !localCache.get(identifier)
+        .hasError() && !localCache.get(identifier)
         .getExperiment()
         .isExperimentOver()) {
-      return service.recordImpression(experimentType);
+      return service.recordImpression(identifier);
     }
     return Observable.just(false);
   }
 
-  public Observable<Boolean> recordAction(ABTestManager.ExperimentType experimentType) {
-    if (localCache.containsKey(experimentType.getName()) && !localCache.get(
-        experimentType.getName())
-        .hasError() && !localCache.get(experimentType.getName())
+  public Observable<Boolean> recordAction(String identifier) {
+    if (localCache.containsKey(identifier) && !localCache.get(identifier)
+        .hasError() && !localCache.get(identifier)
         .getExperiment()
         .isExperimentOver()) {
-      return getExperiment(experimentType).flatMap(
-          experiment -> service.recordAction(experimentType, experiment.getAssignment()));
+      return getExperiment(identifier).flatMap(
+          experiment -> service.recordAction(identifier, experiment.getAssignment()));
     }
     return Observable.just(false);
   }

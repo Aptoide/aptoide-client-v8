@@ -26,9 +26,8 @@ public class RealmExperimentPersistence implements ExperimentPersistence {
     }
   }
 
-  @Override public Observable<ExperimentModel> get(ABTestManager.ExperimentType experimentType) {
-    return database.get(RealmExperiment.class, RealmExperiment.PRIMARY_KEY_NAME,
-        experimentType.getName())
+  @Override public Observable<ExperimentModel> get(String identifier) {
+    return database.get(RealmExperiment.class, RealmExperiment.PRIMARY_KEY_NAME, identifier)
         .map(experiment -> {
           if (experiment == null) {
             return new ExperimentModel(new Experiment(), true);
