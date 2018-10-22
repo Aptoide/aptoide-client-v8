@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 
+import static cm.aptoide.pt.install.Install.InstallationType.INSTALL;
+import static cm.aptoide.pt.install.Install.InstallationType.INSTALLED;
 import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
 
 /**
@@ -232,16 +234,26 @@ public class AppsManager {
   }
 
   public Observable<List<App>> getInstalledDownloads() {
+    return installManager.fetchInstalled()
+        .distinctUntilChanged()
+        .flatMapIterable(installedAppsList -> installedAppsList)
+        .flatMap(installedApp -> getDownload(installedApp))
+        .toList()
+        .map(installedApps -> appMapper.getDownloadApps(installedApps));
+  }
+
+  private Observable<Install> getDownload(Installed installedApp) {
     return installManager.getInstallations()
+        .first()
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.empty();
           }
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
-              .flatMap(install -> installManager.filterNonInstalled(install))
+              .filter(install -> install.getType() == INSTALL || install.getType() == INSTALLED)
               .toList()
-              .map(installedApps -> appMapper.getDownloadApps(installedApps));
+              .flatMap(updates -> getMatchingInstalledUpdate(updates, installedApp));
         });
   }
 
