@@ -510,8 +510,8 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appViewManager.appNextAdClick()
             .observeOn(Schedulers.io())
-            .flatMap(result -> similarAdExperiment.recordAdClick()))
-        .retry()
+            .flatMap(result -> similarAdExperiment.recordAdClick())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
