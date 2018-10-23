@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app;
 
+import android.os.Build;
 import cm.aptoide.pt.app.view.NewAppViewFragment.OpenType;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -436,6 +437,8 @@ public class AppViewViewModel {
   }
 
   public boolean hasDonations() {
-    return bdsFlags != null && !bdsFlags.isEmpty();
+    return bdsFlags != null
+        && !bdsFlags.isEmpty()
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
   }
 }

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.donations.DonateDialogFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -114,5 +115,9 @@ public class AppViewNavigator {
   public Observable<Boolean> notLoggedInViewResults() {
     return fragmentNavigator.results(NOT_LOGGED_IN_SHARE_REQUEST_CODE)
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
+  }
+
+  public void navigateToDonationsDialog(String packageName, String tag) {
+    fragmentNavigator.navigateToDialogFragment(DonateDialogFragment.newInstance(packageName), tag);
   }
 }

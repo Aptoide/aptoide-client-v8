@@ -24,7 +24,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:text="Do you like this app? Show some love and support for the developers with a donation!"
+        android:text="@string/appview_donations_card_message"
         style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
     <Button
@@ -32,7 +32,7 @@
         android:layout_width="168dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:text="donate"
+        android:text="@string/dialog_donations_donate"
         style="@style/Aptoide.Button"
         />
   </LinearLayout>

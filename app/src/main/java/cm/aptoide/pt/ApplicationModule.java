@@ -147,6 +147,7 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
+import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
@@ -251,7 +252,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
 
-  private static final String DONATIONS_URL = "https://api.blockchainds.com/";
+  private static final String DONATIONS_URL = "http://api-dev.blockchainds.com/";
 
   private final AptoideApplication application;
   private final String aptoideMd5sum;
@@ -423,6 +424,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new UserAgentInterceptor(androidAccountProvider, idsRepository, partnerId,
         new DisplayMetrics(), AptoideUtils.SystemU.TERMINAL_INFO,
         AptoideUtils.Core.getDefaultVername(application));
+  }
+
+  @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
+      AndroidAccountProvider androidAccountProvider, IdsRepository idsRepository) {
+    return new UserAgentInterceptorV8(androidAccountProvider, idsRepository,
+        AptoideUtils.SystemU.getRelease(), AptoideUtils.SystemU.getModel(),
+        AptoideUtils.SystemU.getProduct(), System.getProperty("os.arch"), new DisplayMetrics(),
+        AptoideUtils.Core.getDefaultVername(application)
+            .replace("aptoide-", ""));
   }
 
   @Singleton @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
@@ -661,6 +671,33 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     okHttpClientBuilder.readTimeout(1, TimeUnit.MINUTES);
     okHttpClientBuilder.writeTimeout(1, TimeUnit.MINUTES);
     okHttpClientBuilder.pingInterval(10, TimeUnit.SECONDS);
+
+    if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
+      okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
+    }
+
+    return okHttpClientBuilder.build();
+  }
+
+  @Singleton @Provides @Named("v8") OkHttpClient provideV8OkHttpClient(L2Cache httpClientCache,
+      @Named("user-agent-v8") Interceptor userAgentInterceptorV8,
+      @Named("default") SharedPreferences sharedPreferences,
+      @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
+    final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+    okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
+    okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+
+    final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
+    try {
+      // For billing to handle stale data properly the cache should only be stored in memory.
+      // In order to make sure it happens we clean up all data persisted in disk when client
+      // is first created. It only affects API calls with GET verb.
+      cache.evictAll();
+    } catch (IOException ignored) {
+    }
+    okHttpClientBuilder.cache(cache); // 10 MiB
+    okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
+    okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
 
     if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
       okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
@@ -1033,7 +1070,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("retrofit-donations") Retrofit providesDonationsRetrofit(
-      @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(DONATIONS_URL)
         .client(httpClient)
@@ -1393,8 +1430,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
   }
 
-  @Singleton @Provides DonationsService providesDonationsService(
-      DonationsService.ServiceV7 service) {
-    return new DonationsService(service);
+  @Singleton @Provides DonationsService providesDonationsService(DonationsService.ServiceV7 service,
+      @Named("default") SharedPreferences sharedPreferences,
+      @Named("default") OkHttpClient v8OkHttpClient, Converter.Factory converterFactory,
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      TokenInvalidator tokenInvalidator) {
+    return new DonationsService(service, sharedPreferences, v8OkHttpClient, converterFactory,
+        bodyInterceptorPoolV7, tokenInvalidator);
   }
 }

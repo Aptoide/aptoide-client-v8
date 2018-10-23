@@ -36,7 +36,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,7 +58,6 @@ import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
-import cm.aptoide.pt.app.view.donations.DonateDialog;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
@@ -242,7 +240,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View donateInstallCard;
   private Button installCardDonateButton;
   private Button listDonateButton;
-  private DonateDialog donateDialog;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -406,15 +403,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarApps.setAdapter(similarAppsAdapter);
     similarDownloadApps.setLayoutManager(similarDownloadsLayout);
     similarApps.setLayoutManager(similarLayout);
-
-    donateDialog = new DonateDialog(getContext(), PublishSubject.create());
-    WindowManager.LayoutParams dialogParams = donateDialog.getWindow()
-        .getAttributes();
-    dialogParams.width = (int) Math.round(getActivity().getWindow()
-        .getAttributes().width * 0.8);
-    dialogParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-    donateDialog.getWindow()
-        .setAttributes(dialogParams);
 
     similarApps.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
@@ -1078,10 +1066,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     donationsAdapter.setDonations(donations);
     donationsProgress.setVisibility(View.GONE);
     donationsList.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void showDonationsDialog() {
-    donateDialog.show();
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {

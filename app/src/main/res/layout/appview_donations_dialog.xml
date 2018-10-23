@@ -5,90 +5,145 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
-  <LinearLayout
+  <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
       >
+    <LinearLayout
+        android:id="@+id/donations_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="32dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="19dp"
+          android:text="@string/dialog_donations_donation"
+          android:textColor="@color/black"
+          style="@style/Aptoide.TextView.Regular.L"
+          />
+
+      <EditText
+          android:id="@+id/nickname"
+          android:layout_width="match_parent"
+          android:layout_height="56dp"
+          android:layout_marginBottom="32dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          android:background="#F6F6F6"
+          android:hint="@string/dialog_donations_nickname"
+          android:paddingLeft="18dp"
+          android:paddingStart="18dp"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+          />
+
+      <EditText
+          android:id="@+id/appc_value"
+          android:layout_width="match_parent"
+          android:layout_height="56dp"
+          android:layout_marginBottom="42dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginStart="16dp"
+          android:background="#F6F6F6"
+          android:gravity="center_vertical"
+          android:inputType="numberDecimal"
+          android:paddingLeft="16dp"
+          android:paddingStart="16dp"
+          tools:hint="2 APPC"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+          />
+
+      <SeekBar
+          android:id="@+id/appc_slider"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="24dp"
+          android:layout_marginEnd="2dp"
+          android:layout_marginLeft="2dp"
+          android:layout_marginRight="2dp"
+          android:layout_marginStart="2dp"
+
+          />
+
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:layout_marginBottom="8dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginRight="8dp"
+          android:orientation="horizontal"
+          >
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="78dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/cancel"
+            style="@style/Aptoide.Button.Flat"
+            />
+        <Button
+            android:id="@+id/donate_button"
+            android:layout_width="78dp"
+            android:text="@string/dialog_donations_donate"
+            style="@style/Aptoide.Button.Flat"
+            />
+      </LinearLayout>
+    </LinearLayout>
+  </ScrollView>
+  <ProgressBar
+      android:id="@+id/donations_progress"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_gravity="center"
+      android:layout_margin="15dp"
+      android:visibility="gone"
+      />
+  <LinearLayout
+      android:id="@+id/no_wallet_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:visibility="gone"
+      >
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="19dp"
-        android:text="Donation"
-        android:textColor="@color/black"
-        style="@style/Aptoide.TextView.Regular.L"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:text="You don't have a wallet. Install now?"
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
-
-    <EditText
-        android:id="@+id/nickname"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:background="#F6F6F6"
-        android:hint="Nickname"
-        android:paddingLeft="18dp"
-        android:paddingStart="18dp"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
-        />
-
-    <EditText
-        android:id="@+id/appc_value"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginBottom="42dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:background="#F6F6F6"
-        android:gravity="center_vertical"
-        android:inputType="numberDecimal"
-        android:paddingLeft="16dp"
-        android:paddingStart="16dp"
-        tools:hint="2 APPC"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
-        />
-
-    <SeekBar
-        android:id="@+id/appc_slider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginStart="2dp"
-        />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:orientation="horizontal"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         >
       <Button
-          android:id="@+id/cancel_button"
-          android:layout_width="78dp"
+          android:id="@+id/no_wallet_cancel_button"
+          android:layout_width="95dp"
           android:layout_marginEnd="16dp"
           android:layout_marginRight="16dp"
           android:text="@string/cancel"
           style="@style/Aptoide.Button.Flat"
           />
       <Button
-          android:id="@+id/donate_button"
-          android:layout_width="78dp"
-          android:text="Donate"
+          android:id="@+id/no_wallet_continue_button"
+          android:layout_width="95dp"
+          android:text="@string/appview_button_continue"
           style="@style/Aptoide.Button.Flat"
           />
     </LinearLayout>

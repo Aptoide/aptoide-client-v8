@@ -551,5 +551,11 @@
   <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
 
+  <!--Donations-->
+  <string name="dialog_donations_donation">Donation</string>
+  <string name="dialog_donations_nickname">Nickname</string>
+  <string name="dialog_donations_donate">Donate</string>
+  <string name="appview_donations_card_message">Do you like this app? Show some love and support for the developers with a donation!</string>
+
 </resources>
 
