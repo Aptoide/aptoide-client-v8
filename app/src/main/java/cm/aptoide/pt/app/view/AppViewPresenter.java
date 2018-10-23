@@ -121,6 +121,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.similarAppsVisibility())
+        .observeOn(Schedulers.io())
         .flatMap(similarAppsVisible -> {
           SimilarAppsViewModel similarAppsViewModel =
               appViewManager.getCachedSimilarAppsViewModel();
@@ -183,6 +184,7 @@ public class AppViewPresenter implements Presenter {
           similarAppAnalytics.similarAppBundleImpression(null, false);
           return Observable.empty();
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }

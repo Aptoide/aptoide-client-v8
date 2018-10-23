@@ -59,7 +59,7 @@ public class SimilarAdExperiment {
     return abTestManager.recordAction(EXPERIMENT_ID);
   }
 
-  public boolean isImpressionRecorded() {
+  public synchronized boolean isImpressionRecorded() {
     return isImpressionRecorded;
   }
 }
