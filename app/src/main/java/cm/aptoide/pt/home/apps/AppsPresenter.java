@@ -157,6 +157,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(io)
         .flatMap(__ -> appsManager.getUpdatesList(true))
         .distinctUntilChanged()
+        .filter(excludedUpdatesList -> !excludedUpdatesList.isEmpty())
         .observeOn(viewScheduler)
         .doOnNext(excludedUpdatesList -> view.removeExcludedUpdates(excludedUpdatesList))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
