@@ -151,6 +151,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
+  private PublishSubject<Boolean> similarAppsVisibilitySubject;
 
   //Views
   private View noNetworkErrorView;
@@ -246,6 +247,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
+    similarAppsVisibilitySubject = PublishSubject.create();
 
     shareRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
@@ -453,6 +455,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     genericRetryClick = null;
     dialogUtils = null;
     presenter = null;
+    similarAppsVisibilitySubject = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -531,6 +534,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     actionBar = null;
     scrollView = null;
     collapsingToolbarLayout = null;
+    similarAppsVisibilitySubject = null;
   }
 
   @Override public void showLoading() {
@@ -656,18 +660,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarBottomView.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps(){
-    return RxNestedScrollView.scrollChangeEvents(scrollView)
-        .filter(__ -> isSimilarAppsVisible());
-  }
-
-  @Override public boolean isSimilarAppsVisible(){
-    Rect scrollBounds = new Rect();
-    scrollView.getHitRect(scrollBounds);
-    return similarDownloadView.getLocalVisibleRect(scrollBounds)
-        || similarBottomView.getLocalVisibleRect(scrollBounds);
-  }
-
   @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {
     return RxView.clicks(workingWellLayout)
         .flatMap(__ -> Observable.just(FlagsVote.VoteType.GOOD));
@@ -702,6 +694,22 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     String messageToDisplay = String.format(getString(R.string.store_followed), storeName);
     Toast.makeText(getContext(), messageToDisplay, Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps() {
+    return RxNestedScrollView.scrollChangeEvents(scrollView)
+        .filter(__ -> isSimilarAppsVisible());
+  }
+
+  @Override public Observable<Boolean> similarAppsVisibility(){
+    return similarAppsVisibilitySubject;
+  }
+
+  @Override public boolean isSimilarAppsVisible() {
+    Rect scrollBounds = new Rect();
+    scrollView.getHitRect(scrollBounds);
+    return similarDownloadView.getLocalVisibleRect(scrollBounds)
+        || similarBottomView.getLocalVisibleRect(scrollBounds);
   }
 
   @Override public Observable<Void> clickDeveloperWebsite() {
@@ -1044,6 +1052,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       if (isDownloading) {
         similarBottomView.setVisibility(View.GONE);
         similarDownloadView.setVisibility(View.VISIBLE);
+        similarAppsVisibilitySubject.onNext(true);
       } else {
         if (similarDownloadView.getVisibility() != View.VISIBLE) {
           similarBottomView.setVisibility(View.VISIBLE);

@@ -46,7 +46,6 @@ public class AppViewPresenter implements Presenter {
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
   private AppViewView view;
-  private SimilarAppsViewModel similarAppsViewModel;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
   private AppViewSimilarAppAnalytics similarAppAnalytics;
@@ -103,6 +102,7 @@ public class AppViewPresenter implements Presenter {
     handleRecommendsShare();
     handleClickOnRetry();
     handleOnScroll();
+    handleOnSimilarAppsVisible();
 
     handleInstallButtonClick();
     pauseDownload();
@@ -115,6 +115,28 @@ public class AppViewPresenter implements Presenter {
     handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
+  }
+
+  private void handleOnSimilarAppsVisible() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.similarAppsVisibility())
+        .observeOn(Schedulers.io())
+        .flatMap(similarAppsVisible -> {
+          SimilarAppsViewModel similarAppsViewModel =
+              appViewManager.getCachedSimilarAppsViewModel();
+          if (similarAppsViewModel != null
+              && similarAppsViewModel.hasAd()
+              && !similarAdExperiment.isImpressionRecorded()) {
+            similarAppAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
+                .getNetwork(), true);
+            return similarAdExperiment.recordAdImpression();
+          }
+          return Observable.empty();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @VisibleForTesting public void handleFirstLoad() {
@@ -150,7 +172,11 @@ public class AppViewPresenter implements Presenter {
         .takeUntil(__ -> view.isSimilarAppsVisible())
         .observeOn(Schedulers.io())
         .flatMap(__ -> {
-          if (similarAppsViewModel != null && similarAppsViewModel.getAd() != null) {
+          SimilarAppsViewModel similarAppsViewModel =
+              appViewManager.getCachedSimilarAppsViewModel();
+          if (similarAppsViewModel != null
+              && similarAppsViewModel.getAd() != null
+              && !similarAdExperiment.isImpressionRecorded()) {
             similarAppAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
                 .getNetwork(), true);
             return similarAdExperiment.recordAdImpression();
@@ -158,6 +184,7 @@ public class AppViewPresenter implements Presenter {
           similarAppAnalytics.similarAppBundleImpression(null, false);
           return Observable.empty();
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
@@ -440,8 +467,10 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.clickSimilarApp())
         .observeOn(Schedulers.io())
         .flatMap(similarAppClickEvent -> {
-          if(similarAppClickEvent.getSimilar().isAd()){
-            return similarAdExperiment.recordAdClick().map(__ -> similarAppClickEvent);
+          if (similarAppClickEvent.getSimilar()
+              .isAd()) {
+            return similarAdExperiment.recordAdClick()
+                .map(__ -> similarAppClickEvent);
           }
           return Observable.just(similarAppClickEvent);
         })
@@ -483,8 +512,8 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appViewManager.appNextAdClick()
             .observeOn(Schedulers.io())
-            .flatMap(result -> similarAdExperiment.recordAdClick()))
-        .retry()
+            .flatMap(result -> similarAdExperiment.recordAdClick())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -680,7 +709,6 @@ public class AppViewPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
-          this.similarAppsViewModel = adsViewModel;
           if (!adsViewModel.hasSimilarApps()) {
             view.hideSimilarApps();
           } else if (adsViewModel.hasError()) {
