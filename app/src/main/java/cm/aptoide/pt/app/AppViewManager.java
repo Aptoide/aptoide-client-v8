@@ -32,6 +32,7 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 04/05/18.
@@ -223,6 +224,10 @@ public class AppViewManager {
 
   private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
     return adsManager.loadAppnextAd(keywords);
+  }
+
+  public PublishSubject<AppNextAdResult> appNextAdClick(){
+    return adsManager.appNextAdClick();
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {
