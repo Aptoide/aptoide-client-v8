@@ -222,10 +222,6 @@ android {
     variant.buildConfigField "String", "SIGNATURE_BACKUP", "\"" + project.SIGNATURE_BACKUP + "\""
     variant.buildConfigField "String", "SIGNATURE_UPLOADER",
         "\"" + project.SIGNATURE_UPLOADER + "\""
-    variant.buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
-    variant.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
-    variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_SIXPACK_HOST",
-        "\"" + project.APTOIDE_WEB_SERVICES_SIXPACK_HOST + "\""
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
         "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
@@ -414,9 +410,6 @@ dependencies {
   implementation 'org.slf4j:slf4j-api:1.7.21'
   implementation 'org.jmdns:jmdns:3.5.1'
 
-  //  Sixpack
-  implementation 'com.seatgeek:sixpack-java:0.4-SNAPSHOT'
-
   // Fabric
   implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
     transitive = true
@@ -430,6 +423,7 @@ dependencies {
   }
 
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
+  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
   // Parceler - https://github.com/johncarl81/parceler
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"

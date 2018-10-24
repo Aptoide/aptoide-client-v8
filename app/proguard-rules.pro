@@ -41,9 +41,6 @@
 -dontwarn okhttp3.**
 -dontwarn okio.**
 
-#Six pack
--keepclassmembers class com.seatgeek.sixpack.** { <fields>; }
-
 # Jackson
 -keepattributes *Annotation*,EnclosingMethod,Signature
 -keepnames class com.fasterxml.jackson.** { *; }
