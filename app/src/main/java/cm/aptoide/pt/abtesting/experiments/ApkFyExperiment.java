@@ -8,7 +8,7 @@ import rx.Observable;
  */
 
 public class ApkFyExperiment {
-  private static final String EXPERIMENT_ID = "apkfy";
+  private static final String EXPERIMENT_ID = "ASV-1037_APKFY";
 
   private ABTestManager abTestManager;
 
@@ -25,9 +25,9 @@ public class ApkFyExperiment {
           }
           switch (experimentAssigment) {
             case "default":
-            case "old_dialogue":
+            case "oldDialog":
               return Observable.just(true);
-            case "newdialog":
+            case "newDialog":
               return Observable.just(false);
           }
           return Observable.error(new Throwable());

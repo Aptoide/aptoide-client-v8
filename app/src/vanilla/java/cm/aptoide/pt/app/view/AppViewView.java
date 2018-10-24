@@ -12,6 +12,7 @@ import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
+import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
 import rx.Observable;
 
 /**
@@ -49,6 +50,10 @@ public interface AppViewView extends InstallAppView {
   void displayNotLoggedInSnack();
 
   void displayStoreFollowedSnack(String storeName);
+
+  Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps();
+
+  boolean isSimilarAppsVisible();
 
   Observable<Void> clickDeveloperWebsite();
 

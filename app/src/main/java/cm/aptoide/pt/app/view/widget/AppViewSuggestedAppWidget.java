@@ -22,10 +22,6 @@ public class AppViewSuggestedAppWidget extends GridAppWidget<AppViewSuggestedApp
       long appId) {
     Action1<Void> superAction = super.newOnClickListener(displayable, pojo, appId);
 
-    return aVoid -> {
-      superAction.call(aVoid);
-      displayable.getAppViewSimilarAppAnalytics()
-          .openSimilarApp();
-    };
+    return aVoid -> {};
   }
 }

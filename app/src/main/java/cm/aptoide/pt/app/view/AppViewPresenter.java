@@ -5,12 +5,17 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.model.ApplicationAd;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.AppViewSimilarApp;
+import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
@@ -41,22 +46,28 @@ public class AppViewPresenter implements Presenter {
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
   private AppViewView view;
+  private SimilarAppsViewModel similarAppsViewModel;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
+  private AppViewSimilarAppAnalytics similarAppAnalytics;
   private AppViewNavigator appViewNavigator;
   private AppViewManager appViewManager;
   private AptoideAccountManager accountManager;
   private Scheduler viewScheduler;
   private CrashReport crashReport;
 
+  private SimilarAdExperiment similarAdExperiment;
+
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
-      AppViewAnalytics appViewAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
-      CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService) {
+      AppViewAnalytics appViewAnalytics, AppViewSimilarAppAnalytics similarAppAnalytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
+      PermissionManager permissionManager, PermissionService permissionService,
+      SimilarAdExperiment similarAdExperiment) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
+    this.similarAppAnalytics = similarAppAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -64,6 +75,7 @@ public class AppViewPresenter implements Presenter {
     this.crashReport = crashReport;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.similarAdExperiment = similarAdExperiment;
   }
 
   @Override public void present() {
@@ -90,6 +102,7 @@ public class AppViewPresenter implements Presenter {
     handleDefaultShare();
     handleRecommendsShare();
     handleClickOnRetry();
+    handleOnScroll();
 
     handleInstallButtonClick();
     pauseDownload();
@@ -128,6 +141,25 @@ public class AppViewPresenter implements Presenter {
     }
     return Completable.complete()
         .doOnCompleted(() -> handleAdsLogic(searchAdResult));
+  }
+
+  private void handleOnScroll() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(lifecycleEvent -> view.scrollVisibleSimilarApps())
+        .takeUntil(__ -> view.isSimilarAppsVisible())
+        .observeOn(Schedulers.io())
+        .flatMap(__ -> {
+          if (similarAppsViewModel != null && similarAppsViewModel.getAd() != null) {
+            similarAppAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
+                .getNetwork(), true);
+            return similarAdExperiment.recordAdImpression();
+          }
+          similarAppAnalytics.similarAppBundleImpression(null, false);
+          return Observable.empty();
+        })
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private void handleAdsLogic(SearchAdResult searchAdResult) {
@@ -406,21 +438,53 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickSimilarApp())
-        .doOnNext(similarAppClickEvent -> {
-          if (similarAppClickEvent.getSimilar()
-              .isAd()) {
-            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
-            appViewNavigator.navigateToAd(similarAppClickEvent.getSimilar()
-                .getAd());
-          } else {
-            appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
-            appViewNavigator.navigateToAppView(similarAppClickEvent.getSimilar()
-                .getApp()
-                .getAppId(), similarAppClickEvent.getSimilar()
-                .getApp()
-                .getPackageName(), "");
+        .observeOn(Schedulers.io())
+        .flatMap(similarAppClickEvent -> {
+          if(similarAppClickEvent.getSimilar().isAd()){
+            return similarAdExperiment.recordAdClick().map(__ -> similarAppClickEvent);
           }
+          return Observable.just(similarAppClickEvent);
         })
+        .observeOn(viewScheduler)
+        .flatMap(similarAppClickEvent -> {
+          boolean isAd = false;
+          ApplicationAd.Network network = null;
+          String packageName;
+          AppViewSimilarApp appViewSimilarApp = similarAppClickEvent.getSimilar();
+
+          if (appViewSimilarApp.isAd()) {
+            isAd = true;
+            network = appViewSimilarApp.getAd()
+                .getNetwork();
+            packageName = appViewSimilarApp.getAd()
+                .getPackageName();
+            if (appViewSimilarApp.getAd()
+                .getNetwork() == ApplicationAd.Network.SERVER) {
+              appViewNavigator.navigateToAd(
+                  ((AptoideNativeAd) appViewSimilarApp.getAd()).getMinimalAd(),
+                  similarAppClickEvent.getType());
+            }
+          } else {
+            packageName = appViewSimilarApp.getApp()
+                .getPackageName();
+            appViewNavigator.navigateToAppView(appViewSimilarApp.getApp()
+                .getAppId(), packageName, similarAppClickEvent.getType());
+          }
+          appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
+          similarAppAnalytics.similarAppClick(network, packageName,
+              similarAppClickEvent.getPosition(), isAd);
+          return Observable.just(isAd);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.appNextAdClick()
+            .observeOn(Schedulers.io())
+            .flatMap(result -> similarAdExperiment.recordAdClick()))
+        .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -616,6 +680,7 @@ public class AppViewPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
+          this.similarAppsViewModel = adsViewModel;
           if (!adsViewModel.hasSimilarApps()) {
             view.hideSimilarApps();
           } else if (adsViewModel.hasError()) {

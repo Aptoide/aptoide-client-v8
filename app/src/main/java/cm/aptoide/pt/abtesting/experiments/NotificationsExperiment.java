@@ -8,7 +8,7 @@ import rx.Observable;
  */
 
 public class NotificationsExperiment {
-  private static final String EXPERIMENT_ID = "notifications";
+  private static final String EXPERIMENT_ID = "ASV-1037_notifications";
 
   private ABTestManager abTestManager;
 
