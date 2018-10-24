@@ -576,14 +576,14 @@ public class InstallManager {
   }
 
   public void moveCompletedDownloadFiles(Download download) {
-    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       Logger.getInstance()
           .d("AptoideDownloadManager", "trying to move file : "
               + fileToDownload.getFileName()
               + " "
               + fileToDownload.getPackageName());
-      String newFilePath = getFilePathFromFileType(fileToDownload);
       if (FileUtils.fileExists(fileToDownload.getFilePath())) {
+        String newFilePath = getFilePathFromFileType(fileToDownload);
         fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
         fileToDownload.setPath(newFilePath);
       }

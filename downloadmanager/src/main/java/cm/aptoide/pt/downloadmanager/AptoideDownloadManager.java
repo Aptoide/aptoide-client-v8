@@ -173,7 +173,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private void removeDownloadFiles(Download download) {
-    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       FileUtils.removeFile(fileToDownload.getFilePath());
       FileUtils.removeFile(cachePath + fileToDownload.getFileName() + ".temp");
     }
@@ -194,7 +194,7 @@ public class AptoideDownloadManager implements DownloadManager {
     if (download.getOverallDownloadStatus() == Download.PROGRESS) {
       downloadState = Download.PROGRESS;
     } else {
-      for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
         if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
           downloadState = Download.FILE_MISSING;
           break;
@@ -209,9 +209,9 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
             .first()
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
-        .doOnNext(download -> downloadsRepository.save(download))
         .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .doOnNext(download -> removeAppDownloader(download.getMd5()));
+        .doOnNext(download -> removeAppDownloader(download.getMd5()))
+        .takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED);
   }
 
   private void removeAppDownloader(String md5) {
@@ -235,6 +235,7 @@ public class AptoideDownloadManager implements DownloadManager {
       fileToDownload.setProgress(
           appDownloadStatus.getFileDownloadProgress(fileToDownload.getMd5()));
     }
+    downloadsRepository.save(download);
     return Observable.just(download);
   }
 
