@@ -231,8 +231,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void showTermsConditionError() {
     //Shifts the bottomsheet up and then down again to create space for the error snack when in portrait
-    Snackbar snackbar = Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
-        4500);
+    Snackbar snackbar =
+        Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error), 4500);
 
     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
       snackbar.addCallback(new Snackbar.Callback() {
