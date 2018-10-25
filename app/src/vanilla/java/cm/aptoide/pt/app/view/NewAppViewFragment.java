@@ -656,18 +656,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarBottomView.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps(){
-    return RxNestedScrollView.scrollChangeEvents(scrollView)
-        .filter(__ -> isSimilarAppsVisible());
-  }
-
-  @Override public boolean isSimilarAppsVisible(){
-    Rect scrollBounds = new Rect();
-    scrollView.getHitRect(scrollBounds);
-    return similarDownloadView.getLocalVisibleRect(scrollBounds)
-        || similarBottomView.getLocalVisibleRect(scrollBounds);
-  }
-
   @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {
     return RxView.clicks(workingWellLayout)
         .flatMap(__ -> Observable.just(FlagsVote.VoteType.GOOD));
@@ -702,6 +690,18 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     String messageToDisplay = String.format(getString(R.string.store_followed), storeName);
     Toast.makeText(getContext(), messageToDisplay, Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps() {
+    return RxNestedScrollView.scrollChangeEvents(scrollView)
+        .filter(__ -> isSimilarAppsVisible());
+  }
+
+  @Override public boolean isSimilarAppsVisible() {
+    Rect scrollBounds = new Rect();
+    scrollView.getHitRect(scrollBounds);
+    return similarDownloadView.getLocalVisibleRect(scrollBounds)
+        || similarBottomView.getLocalVisibleRect(scrollBounds);
   }
 
   @Override public Observable<Void> clickDeveloperWebsite() {
