@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.Display;
 import android.view.Gravity;
@@ -64,6 +66,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
 
   private DonateDialogPresenter presenter;
   private InputMethodManager imm;
+  private InputFilter editTextFilter;
 
   public static DonateDialogFragment newInstance(String packageName, boolean hasWallet) {
     Bundle args = new Bundle();
@@ -85,6 +88,32 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     textUpdate = true;
     sliderUpdate = true;
     imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+    editTextFilter = new InputFilter() {
+      final int maxDigitsBeforeDecimalPoint = 6;
+      final int maxDigitsAfterDecimalPoint = 2;
+
+      @Override
+      public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart,
+          int dend) {
+        StringBuilder builder = new StringBuilder(dest);
+        builder.replace(dstart, dend, source.subSequence(start, end)
+            .toString());
+        if (!builder.toString()
+            .matches("(([1-9]{1})([0-9]{0,"
+                + (maxDigitsBeforeDecimalPoint - 1)
+                + "})?)?(\\.[0-9]{0,"
+                + maxDigitsAfterDecimalPoint
+                + "})?"
+
+            )) {
+          if (source.length() == 0) return dest.subSequence(dstart, dend);
+          return "";
+        }
+
+        return null;
+      }
+    };
+
   }
 
   @Override public void onDestroyView() {
@@ -100,6 +129,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
 
   private void setValueInsertProperties() {
     appcValue.setText(String.valueOf(SEEKBAR_START));
+    appcValue.setFilters(new InputFilter[] { editTextFilter });
     appcValue.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
