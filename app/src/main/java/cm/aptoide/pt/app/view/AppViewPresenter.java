@@ -113,7 +113,7 @@ public class AppViewPresenter implements Presenter {
             appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).onErrorReturn(
                 __1 -> null)
                 .map(__1 -> appViewViewModel))
-            .filter(app -> true)//app.hasDonations() after getApk webservice is updated
+            .filter(app -> app.hasDonations())// after getApk webservice is updated
             .flatMapSingle(app -> appViewManager.getTopDonations(app.getPackageName()))
             .observeOn(viewScheduler)
             .doOnNext(donations -> view.showDonations(donations)))

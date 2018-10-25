@@ -15,4 +15,6 @@ public interface DonateDialogView {
   void showNoWalletView();
 
   void dismissDialog();
+
+  void showErrorMessage();
 }

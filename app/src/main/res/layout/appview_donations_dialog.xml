@@ -12,7 +12,8 @@
     <LinearLayout
         android:id="@+id/donations_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
         android:orientation="vertical"
         >
 
@@ -39,6 +40,7 @@
           android:layout_marginStart="16dp"
           android:background="#F6F6F6"
           android:hint="@string/dialog_donations_nickname"
+          android:imeOptions="actionDone"
           android:paddingLeft="18dp"
           android:paddingStart="18dp"
           style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
@@ -46,20 +48,24 @@
 
       <EditText
           android:id="@+id/appc_value"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="56dp"
-          android:layout_marginBottom="42dp"
-          android:layout_marginEnd="16dp"
-          android:layout_marginLeft="16dp"
-          android:layout_marginRight="16dp"
-          android:layout_marginStart="16dp"
-          android:background="#F6F6F6"
-          android:gravity="center_vertical"
+          android:layout_gravity="center"
+          android:layout_marginBottom="6dp"
+          android:imeOptions="actionDone"
           android:inputType="numberDecimal"
-          android:paddingLeft="16dp"
-          android:paddingStart="16dp"
-          tools:hint="2 APPC"
-          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+          android:textColor="@color/black"
+          tools:hint="2"
+          style="@style/Aptoide.TextView.Regular.XL"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginBottom="32dp"
+          android:text="APPC"
+          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           />
 
       <SeekBar
@@ -94,7 +100,7 @@
         <Button
             android:id="@+id/donate_button"
             android:layout_width="78dp"
-            android:text="@string/dialog_donations_donate"
+            android:text="@string/appview_button_donations"
             style="@style/Aptoide.Button.Flat"
             />
       </LinearLayout>
@@ -122,7 +128,7 @@
         android:layout_marginBottom="30dp"
         android:layout_marginTop="25dp"
         android:gravity="center"
-        android:text="You don't have a wallet. Install now?"
+        android:text="@string/appview_message_donations_nowallet"
         style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
     <LinearLayout
@@ -143,9 +149,37 @@
       <Button
           android:id="@+id/no_wallet_continue_button"
           android:layout_width="95dp"
-          android:text="@string/appview_button_continue"
+          android:text="@string/yes"
           style="@style/Aptoide.Button.Flat"
           />
     </LinearLayout>
+  </LinearLayout>
+  <LinearLayout
+      android:id="@+id/error_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:visibility="gone"
+      >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:text="@string/error_occured"
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+        />
+
+    <Button
+        android:id="@+id/error_ok_button"
+        android:layout_width="95dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/all_button_ok"
+        style="@style/Aptoide.Button.Flat"
+        />
   </LinearLayout>
 </android.support.v7.widget.CardView>

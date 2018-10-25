@@ -235,6 +235,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View apkfyElement;
   private View donationsElement;
   private RecyclerView donationsList;
+  private View donationsListEmptyState;
   private View donationsListLayout;
   private ProgressBar donationsProgress;
   private View donateInstallCard;
@@ -331,6 +332,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     virusLayout = view.findViewById(R.id.virus_layout);
     donationsElement = view.findViewById(R.id.donations_element);
     donationsList = view.findViewById(R.id.donations_list);
+    donationsListEmptyState = view.findViewById(R.id.donations_list_empty_state);
     donationsProgress = view.findViewById(R.id.donations_progress);
     donationsListLayout = view.findViewById(R.id.donations_list_layout);
     donateInstallCard = view.findViewById(R.id.donate_install_card);
@@ -607,7 +609,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       storeFollow.setText(R.string.follow);
     }
 
-    if (true) {//model.hasDonations() after getApk webservice is updated
+    if (model.hasDonations()) {//after getApk webservice is updated
       donationsElement.setVisibility(View.VISIBLE);
       donationsListLayout.setVisibility(View.VISIBLE);
     }
@@ -1063,9 +1065,13 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void showDonations(List<Donation> donations) {
-    donationsAdapter.setDonations(donations);
     donationsProgress.setVisibility(View.GONE);
-    donationsList.setVisibility(View.VISIBLE);
+    if (donations != null && !donations.isEmpty()) {
+      donationsAdapter.setDonations(donations);
+      donationsList.setVisibility(View.VISIBLE);
+    } else {
+      donationsListEmptyState.setVisibility(View.VISIBLE);
+    }
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
@@ -1313,7 +1319,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       registerPaymentResult();
     }
     if (downloadModel.isDownloading()) {
-      if (true) {//hasDonations after getApk webservice is updated
+      if (hasDonations) {//after getApk webservice is updated
         donateInstallCard.setVisibility(View.VISIBLE);
       }
       appcInfoView.hideInfo();
@@ -1322,7 +1328,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), true);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
-      if (true) {//hasDonations after getApk webservice is updated
+      if (hasDonations) {//after getApk webservice is updated
         donateInstallCard.setVisibility(View.GONE);
       }
       appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),

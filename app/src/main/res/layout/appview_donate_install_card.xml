@@ -14,7 +14,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/ic_illustration_donate_love"
+        android:src="@drawable/illustration_donations"
         />
     <TextView
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:text="@string/appview_donations_card_message"
+        android:text="@string/appview_message_donations_card"
         style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
     <Button
@@ -32,7 +32,7 @@
         android:layout_width="168dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:text="@string/dialog_donations_donate"
+        android:text="@string/appview_button_donations"
         style="@style/Aptoide.Button"
         />
   </LinearLayout>

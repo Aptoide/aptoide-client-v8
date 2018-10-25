@@ -82,6 +82,12 @@
 
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>
 
+  <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
+  <string name="appview_button_donations">DONATE</string>
+  <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
+  <string name="appview_message_donations_nowallet">It seems you don\'t have a wallet. Want to install it now?</string>
+  <string name="appview_message_donations_empty_list">No donations yet! Be the first to claim the top spot!</string>
+
   <!-- Common (menu) -->
   <string name="menu_title_search">Search</string>
   <string name="menu_install">Install</string>
@@ -554,8 +560,6 @@
   <!--Donations-->
   <string name="dialog_donations_donation">Donation</string>
   <string name="dialog_donations_nickname">Nickname</string>
-  <string name="dialog_donations_donate">Donate</string>
-  <string name="appview_donations_card_message">Do you like this app? Show some love and support for the developers with a donation!</string>
 
 </resources>
 

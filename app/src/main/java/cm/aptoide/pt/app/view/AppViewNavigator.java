@@ -1,6 +1,9 @@
 package cm.aptoide.pt.app.view;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
@@ -17,6 +20,7 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import java.util.ArrayList;
+import java.util.List;
 import rx.Observable;
 
 public class AppViewNavigator {
@@ -118,6 +122,19 @@ public class AppViewNavigator {
   }
 
   public void navigateToDonationsDialog(String packageName, String tag) {
-    fragmentNavigator.navigateToDialogFragment(DonateDialogFragment.newInstance(packageName), tag);
+    boolean hasWallet = checkForWallet();
+    fragmentNavigator.navigateToDialogFragment(
+        DonateDialogFragment.newInstance(packageName, hasWallet), tag);
+  }
+
+  private boolean checkForWallet() {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    Uri uri = Uri.parse("ethereum:");
+    intent.setData(uri);
+
+    PackageManager manager = activityNavigator.getActivity()
+        .getPackageManager();
+    List<ResolveInfo> infos = manager.queryIntentActivities(intent, 0);
+    return !infos.isEmpty();
   }
 }

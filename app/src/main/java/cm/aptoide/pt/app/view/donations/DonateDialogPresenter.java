@@ -34,29 +34,38 @@ public class DonateDialogPresenter implements Presenter {
   }
 
   private void handleDonateClick() {
-    subscriptions.add(view.donateClick()
-        .doOnNext(result -> view.showLoading())
-        .flatMap(result -> service.getWalletAddress(result.getPackageName())
-            .toObservable()
-            .observeOn(viewScheduler)
-            .doOnNext(address -> view.sendWalletIntent(result.getValue(), address,
-                result.getPackageName(), result.getNickname())))
-        .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        }));
+    try {
+
+      subscriptions.add(view.donateClick()
+          .doOnNext(result -> view.showLoading())
+          .flatMap(result -> service.getWalletAddress(result.getPackageName())
+              .toObservable()
+              .observeOn(viewScheduler)
+              .doOnNext(address -> view.sendWalletIntent(result.getValue(), address,
+                  result.getPackageName(), result.getNickname())))
+          .subscribe(lifecycleEvent -> {
+          }, throwable -> {
+            throw new OnErrorNotImplementedException(throwable);
+          }));
+    } catch (OnErrorNotImplementedException throwable) {
+      view.showErrorMessage();
+    }
   }
 
   private void handleNoWalletContinueClick() {
-    subscriptions.add(view.noWalletContinueClick()
-        .doOnNext(__ -> {
-          appNavigator.navigateWithPackageName("com.appcoins.wallet",
-              NewAppViewFragment.OpenType.OPEN_ONLY);
-          view.dismissDialog();
-        })
-        .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        }));
+    try {
+      subscriptions.add(view.noWalletContinueClick()
+          .doOnNext(__ -> {
+            appNavigator.navigateWithPackageName("com.appcoins.wallet",
+                NewAppViewFragment.OpenType.OPEN_ONLY);
+            view.dismissDialog();
+          })
+          .subscribe(lifecycleEvent -> {
+          }, throwable -> {
+            throw new OnErrorNotImplementedException(throwable);
+          }));
+    } catch (OnErrorNotImplementedException throwable) {
+      view.showErrorMessage();
+    }
   }
 }
