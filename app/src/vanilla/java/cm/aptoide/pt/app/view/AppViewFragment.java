@@ -46,7 +46,6 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
 import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
@@ -74,7 +73,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.AppAction;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -105,7 +103,6 @@ import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
-import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -145,7 +142,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   private AppRepository appRepository;
   private Subscription subscription;
   private AdsRepository adsRepository;
-  private AppViewInstallDisplayable installDisplayable;
   private Menu menu;
   private InstalledRepository installedRepository;
   private StoreCredentialsProvider storeCredentialsProvider;
@@ -156,13 +152,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
   private BillingAnalytics billingAnalytics;
   private PurchaseBundleMapper purchaseBundleMapper;
   private ShareAppHelper shareAppHelper;
-  private DownloadFactory downloadFactory;
   private TimelineAnalytics timelineAnalytics;
   private AppViewAnalytics appViewAnalytics;
   private StoreAnalytics storeAnalytics;
   private AppViewSimilarAppAnalytics appViewSimilarAppAnalytics;
   private MinimalAdMapper adMapper;
-  private PublishRelay installAppRelay;
   private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private CrashReport crashReport;
   private Observable<MenuItem> toolbarMenuItemClick;
@@ -376,11 +370,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
     appViewSimilarAppAnalytics =
         new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
 
-    installAppRelay = PublishRelay.create();
     shareAppHelper =
         new ShareAppHelper(accountManager, accountNavigator, getActivity(), timelineAnalytics,
             sharedPreferences, application.isCreateStoreUserPrivacyEnabled());
-    downloadFactory = new DownloadFactory(getMarketName());
     notLoggedInShareAnalytics = application.getNotLoggedInShareAnalytics();
 
     crashReport = CrashReport.getInstance();
@@ -740,7 +732,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
               super.onNext(eResponse);
               switch (eResponse) {
                 case YES:
-                  installDisplayable.startInstallationProcess();
                   break;
                 default:
                   break;
@@ -839,14 +830,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter> implements
 
     List<String> fragmentNames = createFragmentNameList(getFragmentManager().getFragments());
 
-    installDisplayable =
-        AppViewInstallDisplayable.newInstance(getApp, installManager, getSearchAdResult(),
-            shouldInstall, downloadFactory, timelineAnalytics, appViewAnalytics, installAppRelay,
-            this, downloadAnalytics, navigationTracker, getEditorsBrickPosition(), installAnalytics,
-            notificationAnalytics.getCampaignId(app.getPackageName(), app.getId()),
-            notificationAnalytics.getAbTestingGroup(app.getPackageName(), app.getId()),
-            fragmentNames);
-    displayables.add(installDisplayable);
     if (appRewardAppcoins > 0) {
       displayables.add(new AppViewRewardAppDisplayable(appRewardAppcoins));
     }
