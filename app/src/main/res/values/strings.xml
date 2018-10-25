@@ -82,7 +82,11 @@
   <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
   <string name="appview_button_donations">DONATE</string>
   <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
-
+  <string name="appview_message_donations_nowallet">It seems you don\'t have a wallet. Want to install it now?</string>
+  <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
+  <string name="appview_title_donations_dialogue">Donation</string>
+  <string name="appview_field_donations_dialogue">Nickname</string>
+    
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
 
