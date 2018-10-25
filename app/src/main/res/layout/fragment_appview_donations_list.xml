@@ -17,6 +17,7 @@
       android:layout_width="match_parent"
       android:layout_height="170dp"
       android:visibility="visible"
+      android:layout_marginBottom="12dp"
       >
     <ProgressBar
         android:id="@+id/donations_progress"
@@ -29,7 +30,6 @@
         android:id="@+id/donations_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:visibility="gone"
         />
     <LinearLayout
@@ -50,7 +50,8 @@
           android:layout_width="188dp"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:text="@string/appview_message_donations_empty_list"
+          android:gravity="center"
+          android:text="@string/appview_message_donations_empty"
           style="@style/Aptoide.TextView.Regular.M.Grey700"
           />
     </LinearLayout>

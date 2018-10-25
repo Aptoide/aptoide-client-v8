@@ -13,8 +13,8 @@ import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
-import java.util.List;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
+import java.util.List;
 import rx.Observable;
 
 /**

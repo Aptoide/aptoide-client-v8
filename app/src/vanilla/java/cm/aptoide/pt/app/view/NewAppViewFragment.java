@@ -693,12 +693,12 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     similarBottomView.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps(){
+  @Override public Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps() {
     return RxNestedScrollView.scrollChangeEvents(scrollView)
         .filter(__ -> isSimilarAppsVisible());
   }
 
-  @Override public boolean isSimilarAppsVisible(){
+  @Override public boolean isSimilarAppsVisible() {
     Rect scrollBounds = new Rect();
     scrollView.getHitRect(scrollBounds);
     return similarDownloadView.getLocalVisibleRect(scrollBounds)

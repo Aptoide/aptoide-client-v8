@@ -444,8 +444,10 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.clickSimilarApp())
         .observeOn(Schedulers.io())
         .flatMap(similarAppClickEvent -> {
-          if(similarAppClickEvent.getSimilar().isAd()){
-            return similarAdExperiment.recordAdClick().map(__ -> similarAppClickEvent);
+          if (similarAppClickEvent.getSimilar()
+              .isAd()) {
+            return similarAdExperiment.recordAdClick()
+                .map(__ -> similarAppClickEvent);
           }
           return Observable.just(similarAppClickEvent);
         })

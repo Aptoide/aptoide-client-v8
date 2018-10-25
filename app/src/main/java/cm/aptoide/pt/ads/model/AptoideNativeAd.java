@@ -26,7 +26,8 @@ public class AptoideNativeAd implements ApplicationAd {
     return minimalAd.getStars();
   }
 
-  @Override public void registerClickableView(View view) {}
+  @Override public void registerClickableView(View view) {
+  }
 
   @Override public String getPackageName() {
     return minimalAd.getPackageName();
@@ -36,7 +37,7 @@ public class AptoideNativeAd implements ApplicationAd {
     return Network.SERVER;
   }
 
-  public MinimalAd getMinimalAd(){
+  public MinimalAd getMinimalAd() {
     return minimalAd;
   }
 }

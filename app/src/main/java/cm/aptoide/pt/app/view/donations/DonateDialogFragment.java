@@ -115,9 +115,14 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
 
       @Override public void afterTextChanged(Editable editable) {
         float value = 0;
-        if (!editable.toString()
-            .equals("")) {
-          value = Float.parseFloat(editable.toString());
+        String strValue = editable.toString();
+
+        if (!strValue.equals("")) {
+          if (strValue.substring(0, 1)
+              .equals(".")) {
+            strValue = "0".concat(strValue);
+          }
+          value = Float.parseFloat(strValue);
         }
 
         if (value >= 0 && value <= MAX) {
@@ -153,12 +158,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
         if (textUpdate) {
           appcValue.setText(String.valueOf(Math.round((i * i) / (1000.0f * 1000.0f) * (MAX))));
         }
-        //appcValue.setText(String.valueOf(Math.floor(D*Math.pow(E, i))));
-        //appcValue.setText(String.valueOf(B*(Math.exp(C*i)-1)));
-        //  appcValue.setText(String.valueOf(i));
-        //  appcValue.setSelection(appcValue.getText()
-        //      .toString()
-        //      .length());
         sliderUpdate = true;
       }
 

@@ -125,7 +125,7 @@ public class AppNavigator {
         searchAdResult.getPackageName());
     bundle.putParcelable(NewAppViewFragment.BundleKeys.MINIMAL_AD.name(),
         Parcels.wrap(searchAdResult));
-    if(tag != null) bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    if (tag != null) bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
     NewAppViewFragment fragment = new NewAppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
