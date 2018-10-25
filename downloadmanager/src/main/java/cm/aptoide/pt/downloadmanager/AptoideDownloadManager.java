@@ -1,11 +1,9 @@
 package cm.aptoide.pt.downloadmanager;
 
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
-import io.realm.RealmList;
 import java.util.HashMap;
 import java.util.List;
 import rx.Completable;
@@ -20,28 +18,21 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private static final String TAG = "AptoideDownloadManager";
   private final String cachePath;
-  private final String apkPath;
-  private final String obbPath;
   private final DownloadAppMapper downloadAppMapper;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
   private AppDownloaderProvider appDownloaderProvider;
   private Subscription dispatchDownloadsSubscription;
-  private FileUtils fileUtils;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
-      DownloadStatusMapper downloadStatusMapper, String cachePath, String apkPath, String obbPath,
-      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
-      FileUtils fileUtils) {
+      DownloadStatusMapper downloadStatusMapper, String cachePath,
+      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
-    this.apkPath = apkPath;
-    this.obbPath = obbPath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
-    this.fileUtils = fileUtils;
     appDownloaderMap = new HashMap<>();
   }
 
@@ -182,7 +173,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private void removeDownloadFiles(Download download) {
-    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       FileUtils.removeFile(fileToDownload.getFilePath());
       FileUtils.removeFile(cachePath + fileToDownload.getFileName() + ".temp");
     }
@@ -203,7 +194,7 @@ public class AptoideDownloadManager implements DownloadManager {
     if (download.getOverallDownloadStatus() == Download.PROGRESS) {
       downloadState = Download.PROGRESS;
     } else {
-      for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
         if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
           downloadState = Download.FILE_MISSING;
           break;
@@ -218,14 +209,9 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
             .first()
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
-        .doOnNext(download -> downloadsRepository.save(download))
         .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .doOnNext(download -> handleCompletedDownload(download));
-  }
-
-  private void handleCompletedDownload(Download download) {
-    moveCompletedDownloadFiles(download.getFilesToDownload());
-    removeAppDownloader(download.getMd5());
+        .doOnNext(download -> removeAppDownloader(download.getMd5()))
+        .takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED);
   }
 
   private void removeAppDownloader(String md5) {
@@ -234,38 +220,6 @@ public class AptoideDownloadManager implements DownloadManager {
       appDownloader.stop();
       appDownloaderMap.remove(md5);
     }
-  }
-
-  private void moveCompletedDownloadFiles(RealmList<FileToDownload> filesToDownload) {
-    for (FileToDownload fileToDownload : filesToDownload) {
-      Logger.getInstance()
-          .d("AptoideDownloadManager", "trying to move file : "
-              + fileToDownload.getFileName()
-              + " "
-              + fileToDownload.getPackageName());
-      String newFilePath = getFilePathFromFileType(fileToDownload);
-      if (fileUtils.fileExists(fileToDownload.getPath())) {
-        fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
-      }
-      fileToDownload.setPath(newFilePath);
-    }
-  }
-
-  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
-    String path;
-    switch (fileToDownload.getFileType()) {
-      case FileToDownload.APK:
-        path = apkPath;
-        break;
-      case FileToDownload.OBB:
-        path = obbPath + fileToDownload.getPackageName() + "/";
-        break;
-      case FileToDownload.GENERIC:
-      default:
-        path = cachePath;
-        break;
-    }
-    return path;
   }
 
   private Observable<Download> updateDownload(Download download,
@@ -281,6 +235,7 @@ public class AptoideDownloadManager implements DownloadManager {
       fileToDownload.setProgress(
           appDownloadStatus.getFileDownloadProgress(fileToDownload.getMd5()));
     }
+    downloadsRepository.save(download);
     return Observable.just(download);
   }
 

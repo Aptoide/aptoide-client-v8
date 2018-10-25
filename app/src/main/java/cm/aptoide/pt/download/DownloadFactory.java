@@ -24,9 +24,11 @@ public class DownloadFactory {
   private static final String INSTALL_ACTION = "?action=install";
   private static final String DOWNGRADE_ACTION = "?action=downgrade";
   private final String marketName;
+  private final String cachePath;
 
-  public DownloadFactory(String marketName) {
+  public DownloadFactory(String marketName, String cachePath) {
     this.marketName = marketName;
+    this.cachePath = cachePath;
   }
 
   public Download create(GetAppMeta.App appToDownload, int downloadAction)
@@ -137,19 +139,18 @@ public class DownloadFactory {
       String mainObbName, String patchObbName) {
 
     final RealmList<FileToDownload> downloads = new RealmList<>();
-
     downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
-        FileToDownload.APK, packageName, versionCode, versionName));
+        FileToDownload.APK, packageName, versionCode, versionName, cachePath));
 
     if (mainObbPath != null) {
       downloads.add(FileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
-          FileToDownload.OBB, packageName, versionCode, versionName));
+          FileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
     if (patchObbPath != null) {
       downloads.add(
           FileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
-              FileToDownload.OBB, packageName, versionCode, versionName));
+              FileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
     return downloads;
