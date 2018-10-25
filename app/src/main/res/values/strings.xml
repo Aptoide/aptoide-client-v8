@@ -86,6 +86,7 @@
   <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
   <string name="appview_title_donations_dialogue">Donation</string>
   <string name="appview_field_donations_dialogue">Nickname</string>
+  <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
     
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
