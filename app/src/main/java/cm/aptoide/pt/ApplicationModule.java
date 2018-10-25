@@ -404,11 +404,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("cachePath") String cachePath) {
     final List<CacheHelper.FolderToManage> folders = new LinkedList<>();
 
-    long month = DateUtils.DAY_IN_MILLIS;
-    folders.add(new CacheHelper.FolderToManage(new File(cachePath), month));
-    folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), month));
+    long day = DateUtils.DAY_IN_MILLIS;
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath), day));
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), day));
     folders.add(new CacheHelper.FolderToManage(
-        new File(application.getCacheDir() + "image_manager_disk_cache/"), month));
+        new File(application.getCacheDir() + "image_manager_disk_cache/"), day));
     return new CacheHelper(ManagerPreferences.getCacheLimit(defaultSharedPreferences), folders,
         new FileUtils());
   }
