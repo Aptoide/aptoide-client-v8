@@ -75,9 +75,9 @@
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
-
-
-  <!-- AppView Donations-->
+  
+  
+  <!-- AppView Donations-->  
   <string name="appview_title_donations_leaderboard">Top Donations</string>
   <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
   <string name="appview_button_donations">DONATE</string>
@@ -86,6 +86,7 @@
   <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
   <string name="appview_title_donations_dialogue">Donation</string>
   <string name="appview_field_donations_dialogue">Nickname</string>
+  <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -561,10 +562,6 @@
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
   <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
-
-  <!--Donations-->
-  <string name="dialog_donations_donation">Donation</string>
-  <string name="dialog_donations_nickname">Nickname</string>
 
 </resources>
 

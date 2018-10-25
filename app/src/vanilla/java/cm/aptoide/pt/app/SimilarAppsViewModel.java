@@ -75,5 +75,4 @@ public class SimilarAppsViewModel {
   public boolean hasAdError() {
     return (adError != null);
   }
-
 }

@@ -165,7 +165,6 @@ public class AdsRepository {
     return appNextAdRepository.clickAd();
   }
 
-
   public Observable<MinimalAd> getAdsFromSearch(String query) {
     return accountManager.accountStatus()
         .first()
