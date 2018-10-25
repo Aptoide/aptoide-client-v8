@@ -582,11 +582,9 @@ public class InstallManager {
               + fileToDownload.getFileName()
               + " "
               + fileToDownload.getPackageName());
-      if (FileUtils.fileExists(fileToDownload.getFilePath())) {
-        String newFilePath = getFilePathFromFileType(fileToDownload);
-        fileUtils.copyFile(cachePath, newFilePath, fileToDownload.getFileName());
-        fileToDownload.setPath(newFilePath);
-      }
+      String newFilePath = getFilePathFromFileType(fileToDownload);
+      fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
+      fileToDownload.setPath(newFilePath);
     }
     downloadRepository.save(download);
   }

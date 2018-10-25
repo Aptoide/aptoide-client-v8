@@ -144,15 +144,17 @@ public class FileUtils {
    * @param fileName Name of the file to be copied
    */
   public void copyFile(String inputPath, String outputPath, String fileName) {
-    if (!fileExists(inputPath + fileName)) {
-      throw new RuntimeException("Input file(" + inputPath + fileName + ") doesn't exists");
-    }
+    if (!inputPath.equals(outputPath)) {
+      if (!fileExists(inputPath + fileName)) {
+        throw new RuntimeException("Input file(" + inputPath + fileName + ") doesn't exists");
+      }
 
-    File file = new File(inputPath + fileName);
-    if (!file.renameTo(new File(outputPath + fileName))) {
-      cloneFile(inputPath, outputPath, fileName);
-    } else if (sendFileMoveEvent != null) {
-      sendFileMoveEvent.call(MOVE);
+      File file = new File(inputPath + fileName);
+      if (!file.renameTo(new File(outputPath + fileName))) {
+        cloneFile(inputPath, outputPath, fileName);
+      } else if (sendFileMoveEvent != null) {
+        sendFileMoveEvent.call(MOVE);
+      }
     }
   }
 
