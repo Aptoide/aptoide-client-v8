@@ -87,11 +87,11 @@ public class CacheHelper implements CacheManager {
     return deletedSize;
   }
 
-  private long removeFilesFromDir(long timeToCache, long now, long deletedSize, File aList) {
-    long dirSize = removeOldFiles(aList, timeToCache, now);
+  private long removeFilesFromDir(long timeToCache, long now, long deletedSize, File directory) {
+    long dirSize = removeOldFiles(directory, timeToCache, now);
     //check if directory is empty, delete it if it's and update the deleted size
-    File[] dirFiles = aList.listFiles();
-    if ((dirFiles == null || dirFiles.length <= 0) && aList.delete()) {
+    File[] dirFiles = directory.listFiles();
+    if ((dirFiles == null || dirFiles.length <= 0) && directory.delete()) {
       deletedSize += dirSize;
     }
     return deletedSize;
