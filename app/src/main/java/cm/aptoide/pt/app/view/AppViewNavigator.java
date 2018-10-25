@@ -7,13 +7,11 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import java.util.ArrayList;
 import rx.Observable;
@@ -67,19 +65,6 @@ public class AppViewNavigator {
     Fragment fragment = AptoideApplication.getFragmentProvider()
         .newDescriptionFragment(name, description, theme);
     fragmentNavigator.navigateTo(fragment, true);
-  }
-
-  public void navigateToSearch(String appName, boolean onlyShowTrustedApps) {
-    Fragment fragment =
-        SearchResultFragment.newInstance(appName, onlyShowTrustedApps, defaultStoreName);
-    fragmentNavigator.navigateTo(fragment, true);
-  }
-
-  public void buyApp(GetAppMeta.App app) {
-    Fragment fragment = fragmentNavigator.peekLast();
-    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
-      ((AppViewFragment) fragment).buyApp(app);
-    }
   }
 
   public void buyApp(long appId) {

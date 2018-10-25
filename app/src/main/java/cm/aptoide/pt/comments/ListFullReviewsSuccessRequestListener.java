@@ -11,11 +11,9 @@ import cm.aptoide.pt.dataprovider.model.v7.Review;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
-import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
@@ -35,15 +33,12 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private FragmentNavigator fragmentNavigator;
-  private FragmentProvider fragmentProvider;
 
   public ListFullReviewsSuccessRequestListener(RateAndReviewsFragment fragment,
       StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> baseBodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, FragmentNavigator fragmentNavigator,
-      FragmentProvider fragmentProvider) {
+      SharedPreferences sharedPreferences) {
     this.fragment = fragment;
     this.httpClient = httpClient;
     this.storeCredentialsProvider = storeCredentialsProvider;
@@ -51,8 +46,6 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.fragmentNavigator = fragmentNavigator;
-    this.fragmentProvider = fragmentProvider;
   }
 
   @Override public void call(ListReviews listFullReviews) {

@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.view.OtherVersionDisplayable;
+import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;

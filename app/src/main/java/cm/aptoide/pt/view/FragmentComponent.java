@@ -10,7 +10,6 @@ import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
@@ -45,8 +44,6 @@ public interface FragmentComponent {
   void inject(ManageUserFragment manageUserFragment);
 
   void inject(ManageStoreFragment manageStoreFragment);
-
-  void inject(AppViewFragment appViewFragment);
 
   void inject(SearchResultFragment searchResultFragment);
 

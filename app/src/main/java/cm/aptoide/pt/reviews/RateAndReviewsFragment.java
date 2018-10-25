@@ -252,9 +252,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
                     ((AptoideApplication) getContext().getApplicationContext()
                         .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
                 httpClient, converterFactory, tokenInvalidator,
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-                getFragmentNavigator(),
-                ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()),
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
             (throwable) -> throwable.printStackTrace());
 
     endlessRecyclerOnScrollListener.addOnEndlessFinishListener(endlessRecyclerOnScrollListener1 -> {
