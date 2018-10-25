@@ -24,7 +24,7 @@
           android:layout_marginLeft="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="19dp"
-          android:text="@string/dialog_donations_donation"
+          android:text="@string/appview_title_donations_dialogue"
           android:textColor="@color/black"
           style="@style/Aptoide.TextView.Regular.L"
           />
@@ -39,7 +39,7 @@
           android:layout_marginRight="16dp"
           android:layout_marginStart="16dp"
           android:background="#F6F6F6"
-          android:hint="@string/dialog_donations_nickname"
+          android:hint="@string/appview_field_donations_dialogue"
           android:imeOptions="actionDone"
           android:paddingLeft="18dp"
           android:paddingStart="18dp"
