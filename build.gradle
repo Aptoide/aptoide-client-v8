@@ -1,24 +1,28 @@
 buildscript {
   repositories {
-    google()
     mavenLocal()
+    google()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     jcenter()
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:3.1.3'
+    classpath 'me.tatarka:gradle-retrolambda:3.7.0'
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     classpath 'io.realm:realm-gradle-plugin:3.5.0'
     //classpath 'com.novoda:gradle-android-command-plugin:1.5.0'
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
   }
 }
 
 allprojects {
   repositories {
-    google()
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
+    maven { url "http://dl.appnext.com" }
+    google()
     jcenter()
   }
 }
@@ -101,6 +105,9 @@ ext {
   FLURRY_VERSION = '6.4.2'
 
   CRASHLYTICS_VERSION = '2.6.5'
+
+  // AppNext SDK
+  APPNEXT_VERSION = '2.4.2.471'
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'
