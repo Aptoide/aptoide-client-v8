@@ -85,23 +85,6 @@ public class AppsPresenter implements Presenter {
     handleBottomNavigationEvents();
 
     handleRefreshApps();
-
-    removeInstalledUpdates();
-  }
-
-  private void removeInstalledUpdates() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(io)
-        .flatMap(__ -> appsManager.getInstalledUpdateApps())
-        .filter(installedUpdatesList -> !installedUpdatesList.isEmpty())
-        .observeOn(viewScheduler)
-        .doOnNext(installedUpdatesList -> view.removeInstalledUpdates(installedUpdatesList))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          crashReport.log(error);
-        });
   }
 
   private void handleRefreshApps() {
