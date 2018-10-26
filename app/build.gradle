@@ -266,7 +266,7 @@ android {
     }
 
     variant.buildConfigField "String", "APPNEXT_PLACEMENT_ID",
-            "\"" + project.APPNEXT_PLACEMENT_ID + "\""
+        "\"" + project.APPNEXT_PLACEMENT_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"

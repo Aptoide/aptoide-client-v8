@@ -225,7 +225,7 @@ public class HomePresenter implements Presenter {
         .observeOn(Schedulers.io())
         .doOnSuccess(appNextAdResult -> {
           AppNextNativeAd ad = appNextAdResult.getAd();
-          if(ad != null){
+          if (ad != null) {
             highlightedAdExperiment.recordAdImpression();
             homeAnalytics.sendAdImpressionEvent(ad.getStars(), ad.getPackageName(), 0, bundleTag,
                 HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);

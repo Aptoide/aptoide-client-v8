@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.model.ApplicationAd;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -105,13 +104,17 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     return bundles.size();
   }
 
-  public void addHighlightedAd(AdClick adClick){
-    for(HomeBundle bundle : bundles){
-      if(bundle.getType() == HomeBundle.BundleType.ADS){
+  public void addHighlightedAd(AdClick adClick) {
+    for (HomeBundle bundle : bundles) {
+      if (bundle.getType() == HomeBundle.BundleType.ADS) {
         List<AdClick> content = (List<AdClick>) bundle.getContent();
-        if(content == null) return;
-        for(int i = 0; i<content.size(); i++){
-          if(content.get(i).getAd().getPackageName().equals(adClick.getAd().getPackageName())){
+        if (content == null) return;
+        for (int i = 0; i < content.size(); i++) {
+          if (content.get(i)
+              .getAd()
+              .getPackageName()
+              .equals(adClick.getAd()
+                  .getPackageName())) {
             content.remove(i);
             break;
           }

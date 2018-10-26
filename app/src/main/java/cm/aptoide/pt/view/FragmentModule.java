@@ -205,7 +205,8 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
-      HomeAnalytics homeAnalytics, HighlightedAdExperiment highlightedAdExperiment, AdsManager adsManager) {
+      HomeAnalytics homeAnalytics, HighlightedAdExperiment highlightedAdExperiment,
+      AdsManager adsManager) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
         CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics,
         highlightedAdExperiment, adsManager);

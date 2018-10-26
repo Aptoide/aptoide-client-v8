@@ -98,8 +98,8 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  private void sendAdInteractEvent(String actionType, int appRating, String packageName, int bundlePosition,
-      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
+  private void sendAdInteractEvent(String actionType, int appRating, String packageName,
+      int bundlePosition, String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", actionType);
     data.put("app_rating", appRating);
@@ -113,13 +113,15 @@ public class HomeAnalytics {
   }
 
   public void sendAdImpressionEvent(int appRating, String packageName, int bundlePosition,
-      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network){
-    sendAdInteractEvent(IMPRESSION, appRating, packageName, bundlePosition, bundleTag, type, network);
+      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
+    sendAdInteractEvent(IMPRESSION, appRating, packageName, bundlePosition, bundleTag, type,
+        network);
   }
 
   public void sendAdClickEvent(int appRating, String packageName, int bundlePosition,
-      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network){
-    sendAdInteractEvent(TAP_ON_APP, appRating, packageName, bundlePosition, bundleTag, type, network);
+      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
+    sendAdInteractEvent(TAP_ON_APP, appRating, packageName, bundlePosition, bundleTag, type,
+        network);
   }
 
   public void sendAppcKnowMoreInteractEvent(String bundleTag, int bundlePosition) {
