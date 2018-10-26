@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.ads.model.ApplicationAd;
-import cm.aptoide.pt.ads.model.ApplicationAd;
 import cm.aptoide.pt.ads.model.ApplicationAdError;
 import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -11,7 +10,7 @@ import cm.aptoide.pt.view.app.AppsList;
  * Created by D01 on 23/05/2018.
  */
 
-public class MinimalAdRequestResult implements ApplicationAdResult{
+public class MinimalAdRequestResult implements ApplicationAdResult {
 
   private final MinimalAd minimalAd;
   private final AppsList.Error error;
@@ -31,12 +30,12 @@ public class MinimalAdRequestResult implements ApplicationAdResult{
   }
 
   @Override public ApplicationAd getAd() {
-    if(minimalAd == null) return null;
+    if (minimalAd == null) return null;
     return new AptoideNativeAd(minimalAd);
   }
 
   public ApplicationAdError getError() {
-    if(error == null) return null;
+    if (error == null) return null;
     return new ApplicationAdError(error);
   }
 }
