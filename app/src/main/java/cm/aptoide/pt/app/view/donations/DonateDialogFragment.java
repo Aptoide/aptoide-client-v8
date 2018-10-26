@@ -226,7 +226,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     } catch (IntentSender.SendIntentException e) {
       e.printStackTrace();
     }
-    //dismiss();
+    donationsProgress.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
@@ -260,7 +260,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     if (requestCode == RC_REQUEST && resultCode == Activity.RESULT_CANCELED) {
       showErrorMessage();
     } else if (requestCode == RC_REQUEST && resultCode == Activity.RESULT_OK) showThankYouMessage();
-    donationsProgress.setVisibility(View.GONE);
   }
 
   public void onResume() {
