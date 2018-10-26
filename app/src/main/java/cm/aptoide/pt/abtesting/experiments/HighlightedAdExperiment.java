@@ -35,7 +35,7 @@ public class HighlightedAdExperiment {
             case "appnext_ad":
               return adsManager.loadAppnextAd(null);
             case "default":
-            case "default_ad":
+            case "no_appnext_ad":
             default:
               return Single.just(new AppNextAdResult(new AppnextError("No ads")));
           }
