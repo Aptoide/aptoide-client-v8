@@ -440,8 +440,10 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.clickSimilarApp())
         .observeOn(Schedulers.io())
         .flatMap(similarAppClickEvent -> {
-          if(similarAppClickEvent.getSimilar().isAd()){
-            return similarAdExperiment.recordAdClick().map(__ -> similarAppClickEvent);
+          if (similarAppClickEvent.getSimilar()
+              .isAd()) {
+            return similarAdExperiment.recordAdClick()
+                .map(__ -> similarAppClickEvent);
           }
           return Observable.just(similarAppClickEvent);
         })
@@ -460,8 +462,7 @@ public class AppViewPresenter implements Presenter {
                 .getPackageName();
             if (appViewSimilarApp.getAd()
                 .getNetwork() == ApplicationAd.Network.SERVER) {
-              appViewNavigator.navigateToAd(
-                  ((AptoideNativeAd) appViewSimilarApp.getAd()).getMinimalAd(),
+              appViewNavigator.navigateToAd((AptoideNativeAd) appViewSimilarApp.getAd(),
                   similarAppClickEvent.getType());
             }
           } else {

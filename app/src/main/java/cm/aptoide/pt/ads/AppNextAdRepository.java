@@ -65,6 +65,7 @@ public class AppNextAdRepository {
     }
 
     public String getCategory(List<String> keywords){
+        if(keywords == null) return "";
         for(String s : keywords){
             s = s.substring(0,1).toUpperCase() + s.substring(1).toLowerCase();
             try {

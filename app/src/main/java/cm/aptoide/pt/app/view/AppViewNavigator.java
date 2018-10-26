@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -59,7 +59,7 @@ public class AppViewNavigator {
     appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
-  public void navigateToAd(MinimalAd ad, String tag) {
+  public void navigateToAd(AptoideNativeAd ad, String tag) {
     appNavigator.navigateWithAd(new SearchAdResult(ad), tag);
   }
 
