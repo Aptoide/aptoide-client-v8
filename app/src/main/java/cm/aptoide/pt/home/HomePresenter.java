@@ -7,6 +7,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.abtesting.experiments.HighlightedAdExperiment;
 import cm.aptoide.pt.ads.model.AppNextNativeAd;
 import cm.aptoide.pt.ads.model.ApplicationAd;
+import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppNextAdResult;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
@@ -17,6 +18,7 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
+import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.home.HomeBundle.BundleType.ADS;
 import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
@@ -36,10 +38,12 @@ public class HomePresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final HomeAnalytics homeAnalytics;
   private final HighlightedAdExperiment highlightedAdExperiment;
+  private final AdsManager adsManager;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager,
-      HomeAnalytics homeAnalytics, HighlightedAdExperiment highlightedAdExperiment) {
+      HomeAnalytics homeAnalytics, HighlightedAdExperiment highlightedAdExperiment,
+      AdsManager adsManager) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
@@ -49,6 +53,7 @@ public class HomePresenter implements Presenter {
     this.accountManager = accountManager;
     this.homeAnalytics = homeAnalytics;
     this.highlightedAdExperiment = highlightedAdExperiment;
+    this.adsManager = adsManager;
   }
 
   @Override public void present() {
@@ -93,6 +98,27 @@ public class HomePresenter implements Presenter {
     handleClickOnPrivacyPolicy();
 
     handleEditorialCardClick();
+
+    handleAppNextAdClick();
+  }
+
+  private void handleAppNextAdClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> adsManager.appNextAdClick()
+            .observeOn(Schedulers.io())
+            .flatMap(result -> {
+              AppNextNativeAd ad = result.getAd();
+              homeAnalytics.sendAdClickEvent(ad.getStars(), ad.getPackageName(), 0,
+                  "ads-highlighted", HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
+              return highlightedAdExperiment.recordAdClick();
+            }))
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -168,7 +194,7 @@ public class HomePresenter implements Presenter {
         .doOnNext(created -> view.showLoading())
         .flatMapSingle(created -> loadBundles())
         .filter(bundlesModel -> !hasAppNextHighlightedAd(bundlesModel))
-        .flatMapSingle(__  -> loadAppNextAd())
+        .flatMapSingle(__ -> loadAppNextAd("ads-highlighted"))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
@@ -187,13 +213,22 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private Single<AppNextAdResult> loadAppNextAd() {
+  private Single<AppNextAdResult> loadAppNextAd(String bundleTag) {
     return highlightedAdExperiment.getAppNextAd()
         .observeOn(viewScheduler)
         .doOnSuccess(appNextAdResult -> {
           AppNextNativeAd ad = appNextAdResult.getAd();
           if (ad != null) {
-            view.addHighlightedAd(new AdClick(ad, "Highlighted"));
+            view.addHighlightedAd(new AdClick(ad, bundleTag));
+          }
+        })
+        .observeOn(Schedulers.io())
+        .doOnSuccess(appNextAdResult -> {
+          AppNextNativeAd ad = appNextAdResult.getAd();
+          if(ad != null){
+            highlightedAdExperiment.recordAdImpression();
+            homeAnalytics.sendAdImpressionEvent(ad.getStars(), ad.getPackageName(), 0, bundleTag,
+                HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
           }
         });
   }
@@ -312,12 +347,12 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
-            .doOnNext(adHomeEvent -> homeAnalytics.sendAdInteractEvent(adHomeEvent.getAdClick()
+            .doOnNext(adHomeEvent -> homeAnalytics.sendAdClickEvent(adHomeEvent.getAdClick()
                 .getAd()
                 .getStars(), adHomeEvent.getAdClick()
                 .getAd()
                 .getPackageName(), adHomeEvent.getBundlePosition(), adHomeEvent.getBundle()
-                .getTag(), adHomeEvent.getType()))
+                .getTag(), adHomeEvent.getType(), ApplicationAd.Network.SERVER))
             .map(adHomeEvent -> adHomeEvent.getAdClick())
             .map(adMapper.mapAdToSearchAd())
             .observeOn(viewScheduler)
@@ -410,7 +445,7 @@ public class HomePresenter implements Presenter {
             .doOnNext(__ -> homeAnalytics.sendPullRefreshInteractEvent())
             .flatMapSingle(refreshed -> loadFreshBundles())
             .filter(bundlesModel -> !hasAppNextHighlightedAd(bundlesModel))
-            .flatMapSingle(__  -> loadAppNextAd())
+            .flatMapSingle(__ -> loadAppNextAd("ads-highlighted"))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
