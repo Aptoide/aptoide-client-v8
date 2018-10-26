@@ -4,7 +4,6 @@ import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.presenter.Presenter;
 import rx.Scheduler;
-import rx.exceptions.OnErrorNotImplementedException;
 import rx.subscriptions.CompositeSubscription;
 
 public class DonateDialogPresenter implements Presenter {
@@ -34,38 +33,30 @@ public class DonateDialogPresenter implements Presenter {
   }
 
   private void handleDonateClick() {
-    try {
 
-      subscriptions.add(view.donateClick()
-          .doOnNext(result -> view.showLoading())
-          .flatMap(result -> service.getWalletAddress(result.getPackageName())
-              .toObservable()
-              .observeOn(viewScheduler)
-              .doOnNext(address -> view.sendWalletIntent(result.getValue(), address,
-                  result.getPackageName(), result.getNickname())))
-          .subscribe(lifecycleEvent -> {
-          }, throwable -> {
-            throw new OnErrorNotImplementedException(throwable);
-          }));
-    } catch (OnErrorNotImplementedException throwable) {
-      view.showErrorMessage();
-    }
+    subscriptions.add(view.donateClick()
+        .doOnNext(result -> view.showLoading())
+        .flatMap(result -> service.getWalletAddress(result.getPackageName())
+            .toObservable()
+            .observeOn(viewScheduler)
+            .doOnNext(address -> view.sendWalletIntent(result.getValue(), address,
+                result.getPackageName(), result.getNickname())))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          view.showErrorMessage();
+        }));
   }
 
   private void handleNoWalletContinueClick() {
-    try {
-      subscriptions.add(view.noWalletContinueClick()
-          .doOnNext(__ -> {
-            appNavigator.navigateWithPackageName("com.appcoins.wallet",
-                NewAppViewFragment.OpenType.OPEN_ONLY);
-            view.dismissDialog();
-          })
-          .subscribe(lifecycleEvent -> {
-          }, throwable -> {
-            throw new OnErrorNotImplementedException(throwable);
-          }));
-    } catch (OnErrorNotImplementedException throwable) {
-      view.showErrorMessage();
-    }
+    subscriptions.add(view.noWalletContinueClick()
+        .doOnNext(__ -> {
+          appNavigator.navigateWithPackageName("com.appcoins.wallet",
+              NewAppViewFragment.OpenType.OPEN_ONLY);
+          view.dismissDialog();
+        })
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          view.showErrorMessage();
+        }));
   }
 }

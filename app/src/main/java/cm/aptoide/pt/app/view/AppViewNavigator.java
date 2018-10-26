@@ -122,12 +122,12 @@ public class AppViewNavigator {
   }
 
   public void navigateToDonationsDialog(String packageName, String tag) {
-    boolean hasWallet = checkForWallet();
+    boolean hasWallet = hasWallet();
     fragmentNavigator.navigateToDialogFragment(
         DonateDialogFragment.newInstance(packageName, hasWallet), tag);
   }
 
-  private boolean checkForWallet() {
+  private boolean hasWallet() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     Uri uri = Uri.parse("ethereum:");
     intent.setData(uri);

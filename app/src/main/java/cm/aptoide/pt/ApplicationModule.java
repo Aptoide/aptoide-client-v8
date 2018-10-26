@@ -431,10 +431,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
-      AndroidAccountProvider androidAccountProvider, IdsRepository idsRepository) {
-    return new UserAgentInterceptorV8(androidAccountProvider, idsRepository,
-        AptoideUtils.SystemU.getRelease(), AptoideUtils.SystemU.getModel(),
-        AptoideUtils.SystemU.getProduct(), System.getProperty("os.arch"), new DisplayMetrics(),
+      IdsRepository idsRepository) {
+    return new UserAgentInterceptorV8(idsRepository, AptoideUtils.SystemU.getRelease(),
+        AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
+        System.getProperty("os.arch"), new DisplayMetrics(),
         AptoideUtils.Core.getDefaultVername(application)
             .replace("aptoide-", ""));
   }
@@ -1102,9 +1102,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(ABTestService.ServiceV7.class);
   }
 
-  @Singleton @Provides DonationsService.ServiceV7 providesDonationsServiceV7(
+  @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
       @Named("retrofit-donations") Retrofit retrofit) {
-    return retrofit.create(DonationsService.ServiceV7.class);
+    return retrofit.create(DonationsService.ServiceV8.class);
   }
 
   @Singleton @Provides CrashReport providesCrashReports() {
@@ -1448,7 +1448,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
   }
 
-  @Singleton @Provides DonationsService providesDonationsService(DonationsService.ServiceV7 service,
+  @Singleton @Provides DonationsService providesDonationsService(DonationsService.ServiceV8 service,
       @Named("default") SharedPreferences sharedPreferences,
       @Named("default") OkHttpClient v8OkHttpClient, Converter.Factory converterFactory,
       @Named("pool-v7")

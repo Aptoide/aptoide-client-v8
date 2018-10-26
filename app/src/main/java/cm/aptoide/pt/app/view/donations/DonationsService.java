@@ -22,13 +22,13 @@ import rx.Single;
 public class DonationsService {
 
   private final BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
-  private ServiceV7 service;
+  private ServiceV8 service;
   private SharedPreferences sharedPreferences;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
 
-  public DonationsService(ServiceV7 service, SharedPreferences sharedPreferences,
+  public DonationsService(ServiceV8 service, SharedPreferences sharedPreferences,
       OkHttpClient okHttpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptorPoolV7, TokenInvalidator tokenInvalidator) {
     this.service = service;
@@ -46,7 +46,6 @@ public class DonationsService {
   }
 
   public Single<String> getWalletAddress(String packageName) {
-    //return Single.just("0xda99070eb09ab6ab7e49866c390b01d3bca9d516");
     return GetWalletAddressRequest.of(packageName, sharedPreferences, httpClient, converterFactory,
         bodyInterceptorPoolV7, tokenInvalidator)
         .observe()
@@ -64,8 +63,8 @@ public class DonationsService {
     return result;
   }
 
-  public interface ServiceV7 {
-    @GET("broker/8.20181010/leaderboard/donations")//?domain=<package name>&limit=5"
+  public interface ServiceV8 {
+    @GET("broker/8.20181010/leaderboard/donations")
     Observable<GetDonations> getDonations(@Query("domain") String packageName,
         @Query("limit") int limit);
   }

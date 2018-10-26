@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:theme="@style/AptoideThemeDefault"
     >
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:visibility="visible"
       >
     <LinearLayout
         android:id="@+id/donations_view"
@@ -182,6 +184,39 @@
 
     <Button
         android:id="@+id/error_ok_button"
+        android:layout_width="95dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/all_button_ok"
+        style="@style/Aptoide.Button.Flat"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/thank_you_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:visibility="gone"
+      >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:text="@string/appview_message_donations_completed"
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+        />
+
+    <Button
+        android:id="@+id/thank_you_ok_button"
         android:layout_width="95dp"
         android:layout_gravity="end"
         android:layout_marginEnd="10dp"
