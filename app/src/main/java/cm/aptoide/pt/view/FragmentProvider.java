@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -19,26 +18,13 @@ import java.util.List;
  */
 public interface FragmentProvider {
 
-  @Deprecated Fragment newSendFeedbackFragment(String screenshotFilePath);
-
-  @Deprecated Fragment newSendFeedbackFragment(String screenshotFilePath, String postId);
-
   @Deprecated Fragment newStoreFragment(String storeName, String storeTheme);
 
   @Deprecated Fragment newStoreFragment(String storeName, String storeTheme,
       StoreFragment.OpenType openType);
 
-  @Deprecated Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab,
-      StoreFragment.OpenType openType);
-
-  @Deprecated Fragment newStoreFragment(long userId, String storeTheme, Event.Name defaultTab,
-      StoreFragment.OpenType openType);
-
   @Deprecated Fragment newStoreFragment(long userId, String storeTheme,
       StoreFragment.OpenType openType);
-
-  @Deprecated Fragment newAppViewFragment(String packageName, String storeName,
-      AppViewFragment.OpenType openType);
 
   @Deprecated Fragment newAppViewFragment(long appId, String packageName, String tag);
 
@@ -51,8 +37,6 @@ public interface FragmentProvider {
   @Deprecated Fragment newAppViewFragment(SearchAdResult searchAdResult, String tag);
 
   @Deprecated Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
-
-  @Deprecated Fragment newFragmentTopStores();
 
   @Deprecated Fragment newLatestReviewsFragment(long storeId, StoreContext storeContext);
 
@@ -72,38 +56,14 @@ public interface FragmentProvider {
   @Deprecated Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag, StoreContext storeContext, boolean addAdultFilter);
 
-  @Deprecated Fragment newListAppsFragment();
-
-  @Deprecated Fragment newGetStoreFragment();
-
-  @Deprecated Fragment newMyStoresSubscribedFragment();
-
-  @Deprecated Fragment newMyStoresFragment();
-
-  @Deprecated Fragment newGetStoreWidgetsFragment(boolean addAdultFilter);
-
-  @Deprecated Fragment newGetAdsFragment();
-
-  @Deprecated Fragment newListStoresFragment();
-
   @Deprecated Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
       StoreContext storeName);
-
-  @Deprecated Fragment newOtherVersionsFragment(String appName, String appImgUrl,
-      String appPackage);
-
-  @Deprecated Fragment newExcludedUpdatesFragment();
-
-  @Deprecated Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
-      String packageName, String storeTheme);
 
   @Deprecated Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId);
 
   @Deprecated Fragment newDescriptionFragment(String appName, String description,
       String storeTheme);
-
-  @Deprecated Fragment newSocialFragment(String socialUrl, String pageTitle);
 
   @Deprecated Fragment newSettingsFragment();
 
@@ -119,12 +79,6 @@ public interface FragmentProvider {
   @Deprecated Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
       String title, StoreContext storeName);
 
-  @Deprecated Fragment newTimeLineLikesFragment(String cardUid, long numberOfLikes,
-      String storeTheme, String title, StoreContext storeContext);
-
-  @Deprecated Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url,
-      String storeAnalyticsAction, StoreContext storeContext);
-
   @Deprecated Fragment newAddressBookFragment();
 
   @Deprecated Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);
@@ -138,6 +92,4 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newTimeLineFollowersFragment(String storeTheme, String title,
       StoreContext storeContext);
-
-  @Deprecated Fragment newRecommendedStoresFragment();
 }
