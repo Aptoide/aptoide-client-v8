@@ -402,7 +402,7 @@ public class AppViewManagerTest {
     verify(adsManager).loadAd("anyString", keywords);
 
     //And a SimilarAppsViewModel should be returned with an Ad, a list of similarApps, no loading and no errors
-    Assert.assertEquals(minimalAd, ((AptoideNativeAd) similarAppsViewModel.getAd()).getMinimalAd());
+    Assert.assertEquals(new AptoideNativeAd(minimalAd), similarAppsViewModel.getAd());
     Assert.assertEquals(Collections.emptyList(), similarAppsViewModel.getRecommendedApps());
     Assert.assertEquals(false, similarAppsViewModel.isLoading());
     Assert.assertEquals(false, similarAppsViewModel.hasError());

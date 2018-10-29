@@ -142,4 +142,44 @@ public class AptoideNativeAd implements ApplicationAd {
   public Long getModified() {
     return modified;
   }
+
+  @Override public int hashCode() {
+    int result = cpdUrl.hashCode();
+    result = 31 * result + description.hashCode();
+    result = 31 * result + packageName.hashCode();
+    result = 31 * result + clickUrl.hashCode();
+    result = 31 * result + cpcUrl.hashCode();
+    result = 31 * result + cpiUrl.hashCode();
+    result = 31 * result + name.hashCode();
+    result = 31 * result + iconPath.hashCode();
+    result = 31 * result + downloads.hashCode();
+    result = 31 * result + stars.hashCode();
+    result = 31 * result + (int) (networkId ^ (networkId >>> 32));
+    result = 31 * result + (int) (appId ^ (appId >>> 32));
+    result = 31 * result + (int) (adId ^ (adId >>> 32));
+    result = 31 * result + (int) (modified ^ (modified >>> 32));
+    return result;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof AptoideNativeAd)) return false;
+
+    AptoideNativeAd ad = (AptoideNativeAd) o;
+
+    return ad.modified.equals(this.modified)
+        && ad.stars.equals(this.stars)
+        && ad.downloads.equals(this.downloads)
+        && ad.description.equals(this.description)
+        && ad.iconPath.equals(this.iconPath)
+        && ad.name.equals(this.name)
+        && ad.cpiUrl.equals(this.cpiUrl)
+        && ad.adId.equals(this.adId)
+        && ad.cpdUrl.equals(this.cpdUrl)
+        && ad.cpcUrl.equals(this.cpcUrl)
+        && ad.appId.equals(this.appId)
+        && ad.clickUrl.equals(this.clickUrl)
+        && ad.networkId.equals(this.networkId)
+        && ad.packageName.equals(packageName);
+  }
 }

@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.abtesting.experiments.HighlightedAdExperiment;
 import cm.aptoide.pt.ads.model.AppNextNativeAd;
 import cm.aptoide.pt.ads.model.ApplicationAd;
 import cm.aptoide.pt.app.AdsManager;
@@ -37,23 +36,19 @@ public class HomePresenter implements Presenter {
   private final AdMapper adMapper;
   private final AptoideAccountManager accountManager;
   private final HomeAnalytics homeAnalytics;
-  private final HighlightedAdExperiment highlightedAdExperiment;
-  private final AdsManager adsManager;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager,
-      HomeAnalytics homeAnalytics, HighlightedAdExperiment highlightedAdExperiment,
-      AdsManager adsManager) {
+      HomeAnalytics homeAnalytics) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
+
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
     this.accountManager = accountManager;
     this.homeAnalytics = homeAnalytics;
-    this.highlightedAdExperiment = highlightedAdExperiment;
-    this.adsManager = adsManager;
   }
 
   @Override public void present() {
@@ -105,15 +100,15 @@ public class HomePresenter implements Presenter {
   private void handleAppNextAdClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> adsManager.appNextAdClick()
+        .flatMap(__ -> home.appNextClick()
             .observeOn(Schedulers.io())
             .flatMap(result -> {
               AppNextNativeAd ad = result.getAd();
               homeAnalytics.sendAdClickEvent(ad.getStars(), ad.getPackageName(), 0,
                   "ads-highlighted", HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
-              return highlightedAdExperiment.recordAdClick();
-            }))
-        .retry()
+              return home.recordAppNextClick();
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
@@ -214,7 +209,7 @@ public class HomePresenter implements Presenter {
   }
 
   private Single<AppNextAdResult> loadAppNextAd(String bundleTag) {
-    return highlightedAdExperiment.getAppNextAd()
+    return home.loadAppNextAd()
         .observeOn(viewScheduler)
         .doOnSuccess(appNextAdResult -> {
           AppNextNativeAd ad = appNextAdResult.getAd();
@@ -228,7 +223,7 @@ public class HomePresenter implements Presenter {
           if (ad != null) {
             homeAnalytics.sendAdImpressionEvent(ad.getStars(), ad.getPackageName(), 0, bundleTag,
                 HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
-            return highlightedAdExperiment.recordAdImpression()
+            return home.recordAppNextImpression()
                 .map(__ -> appNextAdResult)
                 .toSingle();
           }

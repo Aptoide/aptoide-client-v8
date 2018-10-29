@@ -205,11 +205,9 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
-      HomeAnalytics homeAnalytics, HighlightedAdExperiment highlightedAdExperiment,
-      AdsManager adsManager) {
+      HomeAnalytics homeAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics,
-        highlightedAdExperiment, adsManager);
+        CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
@@ -219,8 +217,9 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager) {
-    return new Home(bundlesRepository, impressionManager);
+      ImpressionManager impressionManager, AdsManager adsManager,
+      HighlightedAdExperiment highlightedAdExperiment) {
+    return new Home(bundlesRepository, impressionManager, adsManager, highlightedAdExperiment);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
