@@ -9,8 +9,8 @@ import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.ListAppsFragment;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.app.view.OtherVersionsFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -81,26 +81,26 @@ public class VanillaFragmentProvider implements FragmentProvider {
   }
 
   @Override public Fragment newAppViewFragment(String packageName, String storeName,
-      NewAppViewFragment.OpenType openType) {
+      AppViewFragment.OpenType openType) {
     Bundle bundle = new Bundle();
     if (!TextUtils.isEmpty(packageName)) {
-      bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+      bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
     }
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
 
   @Override public Fragment newAppViewFragment(long appId, String packageName, String tag) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(),
-        NewAppViewFragment.OpenType.OPEN_ONLY);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(),
+        AppViewFragment.OpenType.OPEN_ONLY);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -108,12 +108,12 @@ public class VanillaFragmentProvider implements FragmentProvider {
   @Override public Fragment newAppViewFragment(long appId, String packageName, String storeTheme,
       String storeName, String tag) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
@@ -121,40 +121,40 @@ public class VanillaFragmentProvider implements FragmentProvider {
   @Override public Fragment newAppViewFragment(long appId, String packageName, String storeTheme,
       String storeName, String tag, String editorsBrickPosition) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    bundle.putString(NewAppViewFragment.BundleKeys.EDITORS_CHOICE_POSITION.name(),
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    bundle.putString(AppViewFragment.BundleKeys.EDITORS_CHOICE_POSITION.name(),
         editorsBrickPosition);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
 
   @Override public Fragment newAppViewFragment(SearchAdResult searchAdResult, String tag) {
     Bundle bundle = new Bundle();
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(),
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(),
         searchAdResult.getPackageName());
-    bundle.putParcelable(NewAppViewFragment.BundleKeys.MINIMAL_AD.name(),
+    bundle.putParcelable(AppViewFragment.BundleKeys.MINIMAL_AD.name(),
         Parcels.wrap(searchAdResult));
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
   }
 
   @Override
-  public Fragment newAppViewFragment(String packageName, NewAppViewFragment.OpenType openType) {
+  public Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType) {
     Bundle bundle = new Bundle();
     if (!TextUtils.isEmpty(packageName)) {
-      bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+      bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
     }
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), null);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), null);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     return fragment;
   }

@@ -9,8 +9,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -43,6 +43,8 @@ import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
+import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
@@ -56,8 +58,6 @@ import cm.aptoide.pt.app.view.EditorialView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
-import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
@@ -289,8 +289,8 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       AppViewSimilarAppAnalytics similarAppAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager,
-      CrashReport crashReport, SimilarAdExperiment similarAdExperiment) {
+      AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
+      SimilarAdExperiment similarAdExperiment) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         similarAppAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
@@ -303,7 +303,7 @@ import rx.schedulers.Schedulers;
         arguments.getString(BundleKeys.STORE_NAME.name(), null),
         arguments.getString(BundleKeys.STORE_THEME.name(), ""),
         Parcels.unwrap(arguments.getParcelable(BundleKeys.MINIMAL_AD.name())),
-        ((NewAppViewFragment.OpenType) arguments.getSerializable(BundleKeys.SHOULD_INSTALL.name())),
+        ((AppViewFragment.OpenType) arguments.getSerializable(BundleKeys.SHOULD_INSTALL.name())),
         arguments.getString(BundleKeys.MD5.name(), ""),
         arguments.getString(BundleKeys.UNAME.name(), ""),
         arguments.getDouble(BundleKeys.APPC.name(), -1),

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.app;
 
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 
 /**
@@ -19,6 +19,6 @@ public class ListStoreAppsNavigator {
   }
 
   public void navigateToAppView(long appId, String packageName) {
-    appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, "");
+    appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, "");
   }
 }

@@ -440,8 +440,10 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.clickSimilarApp())
         .observeOn(Schedulers.io())
         .flatMap(similarAppClickEvent -> {
-          if(similarAppClickEvent.getSimilar().isAd()){
-            return similarAdExperiment.recordAdClick().map(__ -> similarAppClickEvent);
+          if (similarAppClickEvent.getSimilar()
+              .isAd()) {
+            return similarAdExperiment.recordAdClick()
+                .map(__ -> similarAppClickEvent);
           }
           return Observable.just(similarAppClickEvent);
         })
@@ -614,7 +616,7 @@ public class AppViewPresenter implements Presenter {
               .name(), model.hasBilling(), model.hasAdvertising());
         })
         .flatMap(appViewModel -> {
-          if (appViewModel.getOpenType() == NewAppViewFragment.OpenType.OPEN_AND_INSTALL) {
+          if (appViewModel.getOpenType() == AppViewFragment.OpenType.OPEN_AND_INSTALL) {
 
             return accountManager.accountStatus()
                 .first()
@@ -629,7 +631,7 @@ public class AppViewPresenter implements Presenter {
                     .observeOn(viewScheduler))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
-              == NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
+              == AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
             return accountManager.accountStatus()
                 .first()
                 .observeOn(viewScheduler)
@@ -644,8 +646,7 @@ public class AppViewPresenter implements Presenter {
                             appViewModel.getPackageName()))
                         .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
-          } else if (appViewModel.getOpenType()
-              == NewAppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
+          } else if (appViewModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
             return accountManager.accountStatus()
                 .first()
                 .observeOn(viewScheduler)

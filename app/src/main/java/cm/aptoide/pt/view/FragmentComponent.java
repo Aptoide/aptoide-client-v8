@@ -10,9 +10,9 @@ import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
@@ -87,7 +87,7 @@ public interface FragmentComponent {
 
   void inject(GetRewardAppCoinsAppsFragment getRewardAppCoinsAppsFragment);
 
-  void inject(NewAppViewFragment newAppViewFragment);
+  void inject(AppViewFragment appViewFragment);
 
   void inject(RateAndReviewsFragment rateAndReviewsFragment);
 

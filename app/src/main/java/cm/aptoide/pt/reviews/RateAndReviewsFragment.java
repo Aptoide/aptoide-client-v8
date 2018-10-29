@@ -14,7 +14,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.comments.view.CommentDisplayable;
 import cm.aptoide.pt.comments.view.CommentsAdapter;
@@ -149,7 +149,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     }
     if (itemId == R.id.menu_install) {
       appNavigator.navigateWithPackageAndStoreNames(packageName, storeName,
-          NewAppViewFragment.OpenType.OPEN_AND_INSTALL);
+          AppViewFragment.OpenType.OPEN_AND_INSTALL);
       return true;
     }
     return super.onOptionsItemSelected(item);

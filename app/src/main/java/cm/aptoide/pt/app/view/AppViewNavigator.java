@@ -54,7 +54,7 @@ public class AppViewNavigator {
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
-    appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, tag);
+    appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
   public void navigateToAd(MinimalAd ad, String tag) {
@@ -69,8 +69,8 @@ public class AppViewNavigator {
 
   public void buyApp(long appId) {
     Fragment fragment = fragmentNavigator.peekLast();
-    if (fragment != null && NewAppViewFragment.class.isAssignableFrom(fragment.getClass())) {
-      ((NewAppViewFragment) fragment).buyApp(appId);
+    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
+      ((AppViewFragment) fragment).buyApp(appId);
     }
   }
 
