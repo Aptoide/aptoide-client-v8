@@ -41,17 +41,22 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
   public void setSimilarApp(AppViewSimilarApp app, String type) {
     if (app.isAd()) {
       adLabel.setVisibility(View.VISIBLE);
-      nameTextView.setText(app.getAd().getAdTitle());
+      nameTextView.setText(app.getAd()
+          .getAdTitle());
       ImageLoader.with(itemView.getContext())
-          .loadWithRoundCorners(app.getAd().getIconUrl(), 8, iconView, R.drawable.placeholder_square);
-      app.getAd().registerClickableView(itemView);
-      float rating = app.getAd().getStars();
+          .loadWithRoundCorners(app.getAd()
+              .getIconUrl(), 8, iconView, R.drawable.placeholder_square);
+      app.getAd()
+          .registerClickableView(itemView);
+      float rating = app.getAd()
+          .getStars();
       if (rating == 0) {
         this.rating.setText(R.string.appcardview_title_no_stars);
       } else {
         this.rating.setText(oneDecimalFormatter.format(rating));
       }
-      itemView.setOnClickListener(view -> appClicked.onNext(new SimilarAppClickEvent(app, type, getLayoutPosition())));
+      itemView.setOnClickListener(
+          view -> appClicked.onNext(new SimilarAppClickEvent(app, type, getLayoutPosition())));
     } else {
       adLabel.setVisibility(View.GONE);
       nameTextView.setText(app.getApp()
@@ -66,7 +71,8 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
       } else {
         this.rating.setText(oneDecimalFormatter.format(rating));
       }
-      itemView.setOnClickListener(view -> appClicked.onNext(new SimilarAppClickEvent(app, type, getLayoutPosition())));
+      itemView.setOnClickListener(
+          view -> appClicked.onNext(new SimilarAppClickEvent(app, type, getLayoutPosition())));
     }
   }
 }

@@ -35,26 +35,27 @@ public class AppViewSimilarAppAnalytics {
     this.navigationTracker = navigationTracker;
   }
 
-  public void similarAppBundleImpression(ApplicationAd.Network network, boolean isAd){
+  public void similarAppBundleImpression(ApplicationAd.Network network, boolean isAd) {
     similarAppInteract(network, Action.IMPRESSION, null, -1, isAd);
   }
 
-  public void similarAppClick(ApplicationAd.Network network, String packageName, int position, boolean isAd){
+  public void similarAppClick(ApplicationAd.Network network, String packageName, int position,
+      boolean isAd) {
     similarAppInteract(network, Action.TAP_ON_APP, packageName, position, isAd);
   }
 
   private void similarAppInteract(ApplicationAd.Network network, Action action, String packageName,
       int position, boolean isAd) {
     Map<String, Object> data = new HashMap<>();
-    if(isAd) data.put(NETWORK, network.getName());
+    if (isAd) data.put(NETWORK, network.getName());
     data.put(ACTION, action.getName());
     data.put(IS_AD, isAd ? "true" : "false");
-    if(action == Action.TAP_ON_APP) data.put(PACKAGE_NAME, packageName);
-    if(action == Action.TAP_ON_APP) data.put(POSITION, position);
+    if (action == Action.TAP_ON_APP) data.put(PACKAGE_NAME, packageName);
+    if (action == Action.TAP_ON_APP) data.put(POSITION, position);
 
     analyticsManager.logEvent(data, SIMILAR_APP_INTERACT,
-        action == Action.IMPRESSION ? AnalyticsManager.Action.IMPRESSION : AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
+        action == Action.IMPRESSION ? AnalyticsManager.Action.IMPRESSION
+            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
     Logger.getInstance()
         .w(TAG, "Facebook Event: " + SIMILAR_APP_INTERACT + " : " + data.toString());
   }
@@ -62,9 +63,11 @@ public class AppViewSimilarAppAnalytics {
   public enum Action {
     IMPRESSION("impression"), TAP_ON_APP("tap_on_app");
     private String name;
+
     Action(String network) {
       this.name = network;
     }
+
     public String getName() {
       return name;
     }

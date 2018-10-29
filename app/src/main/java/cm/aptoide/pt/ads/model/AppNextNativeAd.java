@@ -7,7 +7,7 @@ import com.appnext.nativeads.NativeAd;
  * Created by franciscoaleixo on 04/10/2018.
  */
 
-public class AppNextNativeAd implements ApplicationAd{
+public class AppNextNativeAd implements ApplicationAd {
   private final NativeAd nativeAd;
 
   public AppNextNativeAd(NativeAd nativeAd) {

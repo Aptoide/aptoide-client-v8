@@ -115,32 +115,36 @@ public class AppViewPresenter implements Presenter {
     handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
+    handleClickOnDonateButton();
   }
 
   @VisibleForTesting public void handleFirstLoad() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> loadApp().flatMap(
-            appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).toObservable()
-                .map(__1 -> appViewViewModel)))
+        .flatMap(__ -> loadApp().flatMapSingle(
+            appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).onErrorReturn(
+                __1 -> null)
+                .map(__1 -> appViewViewModel))
+            .filter(app -> app.hasDonations())// after getApk webservice is updated
+            .flatMapSingle(app -> appViewManager.getTopDonations(app.getPackageName()))
+            .observeOn(viewScheduler)
+            .doOnNext(donations -> view.showDonations(donations)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private Completable manageOrganicAds(SearchAdResult searchAdResult) {
+  private Single<SearchAdResult> manageOrganicAds(SearchAdResult searchAdResult) {
     if (searchAdResult == null) {
       return appViewManager.loadAdsFromAppView()
           .doOnSuccess(ad -> {
             appViewManager.setSearchAdResult(ad);
             handleAdsLogic(appViewManager.getSearchAdResult());
           })
-          .doOnError(throwable -> crashReport.log(throwable))
-          .toCompletable();
+          .doOnError(throwable -> crashReport.log(throwable));
     }
-    return Completable.complete()
-        .doOnCompleted(() -> handleAdsLogic(searchAdResult));
+    return Single.just(null);
   }
 
   private void handleOnScroll() {
@@ -440,8 +444,10 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.clickSimilarApp())
         .observeOn(Schedulers.io())
         .flatMap(similarAppClickEvent -> {
-          if(similarAppClickEvent.getSimilar().isAd()){
-            return similarAdExperiment.recordAdClick().map(__ -> similarAppClickEvent);
+          if (similarAppClickEvent.getSimilar()
+              .isAd()) {
+            return similarAdExperiment.recordAdClick()
+                .map(__ -> similarAppClickEvent);
           }
           return Observable.just(similarAppClickEvent);
         })
@@ -589,7 +595,8 @@ public class AppViewPresenter implements Presenter {
                 appViewViewModel.isPaid(), appViewViewModel.getPay())
                 .first()
                 .observeOn(viewScheduler)
-                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel))
+                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
+                    appViewViewModel.hasDonations()))
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
@@ -865,9 +872,9 @@ public class AppViewPresenter implements Presenter {
             .toObservable())
         .filter(app -> !app.isLoading())
         .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode(), app.isPaid(), app.getPay()))
-        .observeOn(viewScheduler)
-        .doOnNext(model -> view.showDownloadAppModel(model))
+            app.getVersionCode(), app.isPaid(), app.getPay())
+            .observeOn(viewScheduler)
+            .doOnNext(model -> view.showDownloadAppModel(model, app.hasDonations())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -981,6 +988,19 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.apkfyDialogPositiveClick())
         .doOnNext(appname -> view.showApkfyElement(appname))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleClickOnDonateButton() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickDonateButton())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(app -> appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

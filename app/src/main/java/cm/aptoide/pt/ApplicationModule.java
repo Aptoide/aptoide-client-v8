@@ -73,7 +73,6 @@ import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
-import cm.aptoide.pt.app.AppNextAdResult;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
@@ -81,6 +80,7 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialService;
+import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -150,6 +150,7 @@ import cm.aptoide.pt.networking.NoAuthenticationBodyInterceptorV3;
 import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
+import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
@@ -254,6 +255,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
+
+  private static final String DONATIONS_URL = "https://api.blockchainds.com/";
 
   private final AptoideApplication application;
   private final String aptoideMd5sum;
@@ -425,6 +428,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new UserAgentInterceptor(androidAccountProvider, idsRepository, partnerId,
         new DisplayMetrics(), AptoideUtils.SystemU.TERMINAL_INFO,
         AptoideUtils.Core.getDefaultVername(application));
+  }
+
+  @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
+      IdsRepository idsRepository) {
+    return new UserAgentInterceptorV8(idsRepository, AptoideUtils.SystemU.getRelease(),
+        AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
+        System.getProperty("os.arch"), new DisplayMetrics(),
+        AptoideUtils.Core.getDefaultVername(application)
+            .replace("aptoide-", ""));
   }
 
   @Singleton @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
@@ -671,6 +683,33 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
+  @Singleton @Provides @Named("v8") OkHttpClient provideV8OkHttpClient(L2Cache httpClientCache,
+      @Named("user-agent-v8") Interceptor userAgentInterceptorV8,
+      @Named("default") SharedPreferences sharedPreferences,
+      @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
+    final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+    okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
+    okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+
+    final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
+    try {
+      // For billing to handle stale data properly the cache should only be stored in memory.
+      // In order to make sure it happens we clean up all data persisted in disk when client
+      // is first created. It only affects API calls with GET verb.
+      cache.evictAll();
+    } catch (IOException ignored) {
+    }
+    okHttpClientBuilder.cache(cache); // 10 MiB
+    okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
+    okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
+
+    if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
+      okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
+    }
+
+    return okHttpClientBuilder.build();
+  }
+
   @Singleton @Provides @Named("default") ObjectMapper provideNonNullObjectMapper() {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -887,7 +926,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         storeRepository);
   }
 
-  @Singleton @Provides AppNextAdRepository providesAppNextAdRepository(){
+  @Singleton @Provides AppNextAdRepository providesAppNextAdRepository() {
     return new AppNextAdRepository(application.getApplicationContext());
   }
 
@@ -1038,6 +1077,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("retrofit-donations") Retrofit providesDonationsRetrofit(
+      @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(DONATIONS_URL)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
@@ -1051,6 +1100,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
       @Named("retrofit-AB") Retrofit retrofit) {
     return retrofit.create(ABTestService.ServiceV7.class);
+  }
+
+  @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
+      @Named("retrofit-donations") Retrofit retrofit) {
+    return retrofit.create(DonationsService.ServiceV8.class);
   }
 
   @Singleton @Provides CrashReport providesCrashReports() {
@@ -1221,8 +1275,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCenter(appCenterRepository);
   }
 
-  @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService) {
-    return new AppCoinsManager(appCoinsService);
+  @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService,
+      DonationsService donationsService) {
+    return new AppCoinsManager(appCoinsService, donationsService);
   }
 
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("pool-v7")
@@ -1336,8 +1391,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoredMinimalAd.class), new MinimalAdMapper());
   }
 
-  @Singleton @Provides SimilarAdExperiment providesSimilarAdExperiment(
-      ABTestManager abTestManager, AdsManager adsManager){
+  @Singleton @Provides SimilarAdExperiment providesSimilarAdExperiment(ABTestManager abTestManager,
+      AdsManager adsManager) {
     return new SimilarAdExperiment(abTestManager, AndroidSchedulers.mainThread(), adsManager);
   }
 
@@ -1391,5 +1446,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides DonationsService providesDonationsService(DonationsService.ServiceV8 service,
+      @Named("default") SharedPreferences sharedPreferences,
+      @Named("default") OkHttpClient v8OkHttpClient, Converter.Factory converterFactory,
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      TokenInvalidator tokenInvalidator) {
+    return new DonationsService(service, sharedPreferences, v8OkHttpClient, converterFactory,
+        bodyInterceptorPoolV7, tokenInvalidator);
   }
 }

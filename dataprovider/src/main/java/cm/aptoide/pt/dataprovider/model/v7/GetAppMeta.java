@@ -271,6 +271,10 @@ public class GetAppMeta extends BaseV7Response {
       return appcoins != null && appcoins.hasAdvertising();
     }
 
+    public List<String> getBdsFlags() {
+      return appcoins.getFlags();
+    }
+
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof App)) return false;
