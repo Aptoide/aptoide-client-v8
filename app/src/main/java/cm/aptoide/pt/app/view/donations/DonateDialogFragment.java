@@ -160,12 +160,11 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
           value = Float.parseFloat(strValue);
         }
 
-        if (value >= 0 && value <= MAX) {
+        if (value > 0) {
           textUpdate = false;
           if (sliderUpdate) {
             appcSlider.setProgress((int) (Math.sqrt(((value) / (MAX)) * 1000.0f * 1000.0f)));
           }
-          textUpdate = true;
         } else {
           appcSlider.setProgress(Math.round(value));
         }
@@ -220,7 +219,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     PendingIntent intent =
         GenericPaymentIntentBuilder.buildBuyIntent(getContext(), "donation", String.valueOf(value),
             address, packageName, GenericPaymentIntentBuilder.TransactionData.TYPE_DONATION,
-            nickname, true);
+            nickname, false);
     try {
       startIntentSenderForResult(intent.getIntentSender(), RC_REQUEST, new Intent(), 0, 0, 0, null);
     } catch (IntentSender.SendIntentException e) {

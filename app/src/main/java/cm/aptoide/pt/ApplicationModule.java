@@ -256,7 +256,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
 
-  private static final String DONATIONS_URL = "http://api-dev.blockchainds.com/";
+  private static final String DONATIONS_URL = "https://api.blockchainds.com/";
 
   private final AptoideApplication application;
   private final String aptoideMd5sum;

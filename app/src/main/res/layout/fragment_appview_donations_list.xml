@@ -9,7 +9,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
-      android:text="Top donations"
+      android:text="@string/appview_title_donations_leaderboard"
       style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
       />
   <FrameLayout
