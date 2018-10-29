@@ -12,16 +12,19 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
+import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationState;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.utils.FileUtils;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
@@ -40,15 +43,20 @@ public class InstallManager {
   private final Installer installer;
   private final SharedPreferences sharedPreferences;
   private final SharedPreferences securePreferences;
+  private final String cachePath;
+  private final String apkPath;
+  private final String obbPath;
+  private final FileUtils fileUtils;
   private final Context context;
-  @Inject DownloadRepository downloadRepository;
+  @Inject DownloadsRepository downloadRepository;
   @Inject InstalledRepository installedRepository;
   private RootAvailabilityManager rootAvailabilityManager;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
-      DownloadRepository downloadRepository, InstalledRepository installedRepository) {
+      DownloadsRepository downloadRepository, InstalledRepository installedRepository,
+      String cachePath, String apkPath, String obbPath, FileUtils fileUtils) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -57,6 +65,10 @@ public class InstallManager {
     this.installedRepository = installedRepository;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
+    this.cachePath = cachePath;
+    this.apkPath = apkPath;
+    this.obbPath = obbPath;
+    this.fileUtils = fileUtils;
   }
 
   public void stopAllInstallations() {
@@ -159,13 +171,13 @@ public class InstallManager {
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
-        .doOnNext(downloadProgress -> {
-          if (downloadProgress.getOverallDownloadStatus() == Download.ERROR) {
-            downloadProgress.setOverallDownloadStatus(Download.INVALID_STATUS);
-            downloadRepository.save(downloadProgress);
+        .doOnNext(storedDownload -> {
+          if (storedDownload.getOverallDownloadStatus() == Download.ERROR) {
+            storedDownload.setOverallDownloadStatus(Download.INVALID_STATUS);
+            downloadRepository.save(storedDownload);
           }
         })
-        .flatMap(download1 -> getInstall(download.getMd5(), download.getPackageName(),
+        .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
         .flatMap(install -> installInBackground(install, forceDefaultInstall))
         .first()
@@ -486,7 +498,7 @@ public class InstallManager {
    * @return the download object to be resumed or null if doesn't exists
    */
   public Single<Download> getDownload(String md5) {
-    return downloadRepository.get(md5)
+    return downloadRepository.getDownload(md5)
         .first()
         .toSingle();
   }
@@ -561,5 +573,36 @@ public class InstallManager {
         })
         .toBlocking()
         .first();
+  }
+
+  public void moveCompletedDownloadFiles(Download download) {
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+      Logger.getInstance()
+          .d("AptoideDownloadManager", "trying to move file : "
+              + fileToDownload.getFileName()
+              + " "
+              + fileToDownload.getPackageName());
+      String newFilePath = getFilePathFromFileType(fileToDownload);
+      fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
+      fileToDownload.setPath(newFilePath);
+    }
+    downloadRepository.save(download);
+  }
+
+  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
+    String path;
+    switch (fileToDownload.getFileType()) {
+      case FileToDownload.APK:
+        path = apkPath;
+        break;
+      case FileToDownload.OBB:
+        path = obbPath + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.GENERIC:
+      default:
+        path = cachePath;
+        break;
+    }
+    return path;
   }
 }

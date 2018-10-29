@@ -34,7 +34,7 @@ public class FileToDownload extends RealmObject {
 
   public static FileToDownload createFileToDownload(String link, String altLink, String md5,
       String fileName, @FileType int fileType, String packageName, int versionCode,
-      String versionName) {
+      String versionName, String cachePath) {
     FileToDownload fileToDownload = new FileToDownload();
     fileToDownload.setLink(link);
     fileToDownload.setMd5(md5);
@@ -42,6 +42,7 @@ public class FileToDownload extends RealmObject {
     fileToDownload.versionCode = versionCode;
     fileToDownload.versionName = versionName;
     fileToDownload.setFileType(fileType);
+    fileToDownload.setPath(cachePath);
     if (!TextUtils.isEmpty(fileName)) {
       if (fileType == APK) {
         fileToDownload.setFileName(fileName + ".apk");
@@ -197,36 +198,6 @@ public class FileToDownload extends RealmObject {
   public void setMd5(String md5) {
     this.md5 = md5;
   }
-
-  //@Override protected FileToDownload clone() {
-  //  FileToDownload clone = new FileToDownload();
-  //  clone.setAppId(getAppId());
-  //  if (this.getLink() != null) {
-  //    clone.setLink(new String(this.getLink()));
-  //  }
-  //  clone.setStatus(this.getStatus());
-  //  if (this.getPath() != null) {
-  //    clone.setPath(new String(this.getPath()));
-  //  }
-  //  if (this.getPackageName() != null) {
-  //    clone.setPackageName(new String(this.getPackageName()));
-  //  }
-  //  clone.setDownloadId(this.getDownloadId());
-  //  clone.setFileType(this.getFileType());
-  //  clone.setProgress(this.getProgress());
-  //  clone.versionCode = versionCode;
-  //  if (this.getMd5() != null) {
-  //    clone.setMd5(new String(this.getMd5()));
-  //  }
-  //  if (this.getFileName() != null) {
-  //    clone.setFileName(new String(this.getFileName()));
-  //  }
-  //  if (!TextUtils.isEmpty(this.getAltLink())) {
-  //    clone.setAltLink(this.getAltLink());
-  //  }
-  //
-  //  return clone;
-  //}
 
   @IntDef({ APK, OBB, GENERIC }) @Retention(RetentionPolicy.SOURCE) public @interface FileType {
 

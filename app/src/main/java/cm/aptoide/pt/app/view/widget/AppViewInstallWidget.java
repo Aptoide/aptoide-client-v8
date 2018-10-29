@@ -24,7 +24,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -52,7 +51,6 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.view.InstallWarningDialog;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
@@ -97,13 +95,10 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   private SocialRepository socialRepository;
   private DownloadFactory downloadFactory;
   private PermissionService permissionService;
-  private PermissionManager permissionManager;
   private SharedPreferences sharedPreferences;
-  private AccountNavigator accountNavigator;
   private AppViewNavigator appViewNavigator;
   private CrashReport crashReport;
   private String marketName;
-  private boolean isCreateStoreUserPrivacyEnabled;
   private boolean isMultiStoreSearch;
   private String defaultStoreName;
   private int campaignId;
@@ -145,11 +140,9 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     crashReport = CrashReport.getInstance();
     campaignId = displayable.getCampaignId();
     abTestGroup = displayable.getAbTestingGroup();
-    accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     installAnalytics = displayable.getInstallAnalytics();
-    isCreateStoreUserPrivacyEnabled = application.isCreateStoreUserPrivacyEnabled();
     marketName = application.getMarketName();
     sharedPreferences = application.getDefaultSharedPreferences();
     isMultiStoreSearch = application.hasMultiStoreSearch();
@@ -215,7 +208,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
     }
 
     permissionService = ((PermissionService) getContext());
-    permissionManager = new PermissionManager();
   }
 
   private void updateUi(AppViewInstallDisplayable displayable, Install install, boolean isSetup,
@@ -415,22 +407,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
                 if (eResponse == GenericDialogs.EResponse.YES) {
 
                   ShowMessage.asSnack(view, R.string.downgrading_msg);
-
-                  DownloadFactory factory = new DownloadFactory(marketName);
-                  Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
-                  showRootInstallWarningPopup(context);
-                  compositeSubscription.add(
-                      new PermissionManager().requestDownloadAccess(permissionRequest)
-                          .flatMap(success -> installManager.install(appDownload)
-                              .toObservable()
-                              .doOnSubscribe(() -> setupEvents(appDownload, InstallType.DOWNGRADE,
-                                  Origin.DOWNGRADE)))
-                          .observeOn(AndroidSchedulers.mainThread())
-                          .subscribe(progress -> {
-                            // TODO: 12/07/2017 this code doesnt run
-                            Logger.getInstance()
-                                .d(TAG, "Installing");
-                          }, throwable -> crashReport.log(throwable)));
                 }
               }
             });
@@ -491,39 +467,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
           isUpdate ? Origin.UPDATE : Origin.INSTALL);
 
       showRootInstallWarningPopup(context);
-      compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
-          .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
-          .map(success -> new DownloadFactory(marketName).create(displayable.getPojo()
-              .getNodes()
-              .getMeta()
-              .getData(), downloadAction))
-          .flatMapCompletable(download -> {
-            if (!displayable.getAppViewFragment()
-                .isSuggestedShowing()) {
-              displayable.getAppViewFragment()
-                  .showSuggestedApps();
-            }
-            return installManager.install(download)
-                .doOnSubscribe(subscription -> setupEvents(download,
-                    isUpdate ? InstallType.UPDATE : InstallType.INSTALL,
-                    isUpdate ? Origin.UPDATE : Origin.INSTALL))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  if (accountManager.isLoggedIn() && ManagerPreferences.isShowPreviewDialog(
-                      sharedPreferences) && isCreateStoreUserPrivacyEnabled) {
-                    showRecommendsDialog(displayable, context);
-                  }
-                  ShowMessage.asSnack(v, installOrUpgradeMsg);
-                });
-          })
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(progress -> {
-          }, err -> {
-            if (err instanceof SecurityException) {
-              ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
-            }
-            crashReport.log(err);
-          }));
     };
 
     findTrustedVersion(app, appVersions);
