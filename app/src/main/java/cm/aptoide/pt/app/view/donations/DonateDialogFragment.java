@@ -165,6 +165,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
           if (sliderUpdate) {
             appcSlider.setProgress((int) (Math.sqrt(((value) / (MAX)) * 1000.0f * 1000.0f)));
           }
+          textUpdate = true;
         } else {
           appcSlider.setProgress(Math.round(value));
         }
