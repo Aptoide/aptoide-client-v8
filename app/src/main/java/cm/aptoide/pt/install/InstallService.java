@@ -28,7 +28,6 @@ import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -139,10 +138,9 @@ public class InstallService extends BaseService implements DownloadsNotification
           .toSingle()
           .flatMap(cleaned -> downloadManager.invalidateDatabase()
               .andThen(Single.just(cleaned)))
-          .subscribe(cleanedSize -> Logger.getInstance()
-                  .d(TAG, "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
-              err -> CrashReport.getInstance()
-                  .log(err)));
+          .subscribe(__ -> {
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
     }
   }
 
@@ -189,11 +187,6 @@ public class InstallService extends BaseService implements DownloadsNotification
     return downloadManager.getCurrentActiveDownloads()
         .first()
         .map(downloads -> downloads != null && !downloads.isEmpty());
-  }
-
-  @Override public void removeNotificationAndStop() {
-    stopForeground(true);
-    stopSelf();
   }
 
   private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
@@ -273,6 +266,21 @@ public class InstallService extends BaseService implements DownloadsNotification
         PendingIntent.FLAG_ONE_SHOT);
   }
 
+  @Override public Observable<String> handleOpenAppView() {
+    return openAppViewAction;
+  }
+
+  @Override public Observable<Void> handleOpenDownloadManager() {
+    return openDownloadManagerAction;
+  }
+
+  @Override public void openAppView(String md5) {
+    Intent intent = createDeeplinkingIntent();
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
+    startActivity(intent);
+  }
+
   @Override public void openDownloadManager() {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION, true);
@@ -302,19 +310,9 @@ public class InstallService extends BaseService implements DownloadsNotification
     startForeground(NOTIFICATION_ID, notification);
   }
 
-  @Override public Observable<String> handleOpenAppView() {
-    return openAppViewAction;
-  }
-
-  @Override public Observable<Void> handleOpenDownloadManager() {
-    return openDownloadManagerAction;
-  }
-
-  @Override public void openAppView(String md5) {
-    Intent intent = createDeeplinkingIntent();
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
-    startActivity(intent);
+  @Override public void removeNotificationAndStop() {
+    stopForeground(true);
+    stopSelf();
   }
 
   @NonNull private Intent createDeeplinkingIntent() {

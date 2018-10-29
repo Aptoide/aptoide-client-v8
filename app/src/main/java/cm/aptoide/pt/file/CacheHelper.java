@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.file;
 
-import android.text.format.DateUtils;
 import cm.aptoide.pt.downloadmanager.CacheManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -19,7 +18,6 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 7/7/16.
  */
 public class CacheHelper implements CacheManager {
-  public static final long MONTH_CACHE_TIME = DateUtils.DAY_IN_MILLIS * 30;
   public static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
   public static String TAG = CacheHelper.class.getSimpleName();
   private final List<FolderToManage> foldersToCleanPath;
