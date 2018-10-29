@@ -28,7 +28,8 @@ public class ManagerPreferences {
    * @return true when updates should hide alpha and beta versions.
    */
   public static boolean getUpdatesFilterAlphaBetaKey(SharedPreferences sharedPreferences) {
-    return sharedPreferences.getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, true);
+    //The preference considers true to be showing updates, unlike the rest of the flow. Negating that value here solves the issue
+    return !sharedPreferences.getBoolean(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY, false);
   }
 
   /**
