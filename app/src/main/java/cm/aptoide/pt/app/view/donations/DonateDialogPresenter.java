@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app.view.donations;
 
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.presenter.Presenter;
 import rx.Scheduler;
 import rx.subscriptions.CompositeSubscription;
@@ -51,7 +51,7 @@ public class DonateDialogPresenter implements Presenter {
     subscriptions.add(view.noWalletContinueClick()
         .doOnNext(__ -> {
           appNavigator.navigateWithPackageName("com.appcoins.wallet",
-              NewAppViewFragment.OpenType.OPEN_ONLY);
+              AppViewFragment.OpenType.OPEN_ONLY);
           view.dismissDialog();
         })
         .subscribe(lifecycleEvent -> {

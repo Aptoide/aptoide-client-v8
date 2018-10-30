@@ -124,7 +124,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  * Created by franciscocalado on 07/05/18.
  */
 
-public class NewAppViewFragment extends NavigationTrackFragment implements AppViewView {
+public class AppViewFragment extends NavigationTrackFragment implements AppViewView {
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
   private static final int PAY_APP_REQUEST_CODE = 12;
