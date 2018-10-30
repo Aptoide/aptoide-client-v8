@@ -94,10 +94,12 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
+    List<String> bdsFlags = new ArrayList<>();
+
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags);
 
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
@@ -143,10 +145,12 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadAppViewModelTestWithMd5Test() {
+    List<String> bdsFlags = new ArrayList<>();
+
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, "md5", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "md5", "",
@@ -191,10 +195,12 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadAppViewViewModelWithUniqueNameTest() {
+    List<String> bdsFlags = new ArrayList<>();
+
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, "any", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "uniqueName", false, false);
+            appStats, null, null, null, true, true, "uniqueName", false, false, bdsFlags);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "",
@@ -239,10 +245,12 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadAppViewViewModelDefaultTest() {
+    List<String> bdsFlags = new ArrayList<>();
+
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "", (long) 1, "any", "any", "any", "any", true, null, null,
             null, null, null, (long) 1, "any", null, null, 1, null, null, store, null, appStats,
-            null, null, null, true, true, "uniqueName", false, false);
+            null, null, null, true, true, "uniqueName", false, false, bdsFlags);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "", "", "", null, null, "", "", 0.0, "", "");
@@ -440,11 +448,13 @@ public class AppViewManagerTest {
   }
 
   @Test public void loadAdsFromAppViewTest() {
+    List<String> bdsFlags = new ArrayList<>();
+
     //Cache App (Test preparation)
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "anyString", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags);
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
             (long) 1);
@@ -547,11 +557,13 @@ public class AppViewManagerTest {
   }
 
   @Test public void downloadAppTest() {
+    List<String> bdsFlags = new ArrayList<>();
+
     //Cache App (Test preparation)
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "packageName", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, "", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "", false, false);
+            appStats, null, null, null, true, true, "", false, false, bdsFlags);
 
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
 

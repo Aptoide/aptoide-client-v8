@@ -205,6 +205,7 @@
           <include
               layout="@layout/install_app_view"/>
 
+
           <include
               layout="@layout/appview_apkfy_layout_element"
               android:id="@+id/apkfy_element"
@@ -216,6 +217,20 @@
               android:layout_marginRight="8dp"
               android:layout_marginStart="8dp"
               android:layout_marginTop="26dp"
+              android:visibility="gone"
+              tools:visibility="visible"
+              />
+
+          <include
+              layout="@layout/appview_donate_install_card"
+              android:id="@+id/donate_install_card"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginEnd="8dp"
+              android:layout_marginLeft="8dp"
+              android:layout_marginRight="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="28dp"
               android:visibility="gone"
               tools:visibility="visible"
               />
@@ -307,6 +322,19 @@
             android:layout_marginRight="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="28dp"
+            />
+
+        <include
+            layout="@layout/fragment_appview_donations_list"
+            android:id="@+id/donations_element"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            tools:visibility="visible"
             />
 
         <include

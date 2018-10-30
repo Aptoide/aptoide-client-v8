@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app;
 
+import android.os.Build;
 import cm.aptoide.pt.app.view.NewAppViewFragment.OpenType;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -67,6 +68,7 @@ public class AppViewViewModel {
   private final String marketName;
   private boolean hasBilling;
   private boolean hasAdvertising;
+  private List<String> bdsFlags;
 
   public AppViewViewModel(long appId, String appName, Store store, String storeTheme,
       boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
@@ -78,7 +80,7 @@ public class AppViewViewModel {
       String paidAppPath, String paymentStatus, boolean isLatestTrustedVersion, String uniqueName,
       OpenType openType, double appc, SearchAdResult minimalAd, String editorsChoice,
       String originTag, boolean isStoreFollowed, String marketName, boolean hasBilling,
-      boolean hasAdvertising) {
+      boolean hasAdvertising, List<String> bdsFlags) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -125,6 +127,7 @@ public class AppViewViewModel {
     this.marketName = marketName;
     this.hasBilling = hasBilling;
     this.hasAdvertising = hasAdvertising;
+    this.bdsFlags = bdsFlags;
     this.loading = false;
     this.error = null;
   }
@@ -178,6 +181,7 @@ public class AppViewViewModel {
     this.error = null;
     this.hasBilling = false;
     this.hasAdvertising = false;
+    this.bdsFlags = null;
   }
 
   public AppViewViewModel(DetailedAppRequestResult.Error error) {
@@ -229,6 +233,7 @@ public class AppViewViewModel {
     this.loading = false;
     this.hasBilling = false;
     this.hasAdvertising = false;
+    this.bdsFlags = null;
   }
 
   public boolean isStoreFollowed() {
@@ -425,5 +430,15 @@ public class AppViewViewModel {
 
   public boolean hasAdvertising() {
     return this.hasAdvertising;
+  }
+
+  public List<String> getBdsFlags() {
+    return bdsFlags;
+  }
+
+  public boolean hasDonations() {
+    return bdsFlags != null
+        && !bdsFlags.isEmpty()
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
   }
 }
