@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.view.Translator;
 import java.text.DecimalFormat;
 
 /**
@@ -11,6 +12,7 @@ import java.text.DecimalFormat;
  */
 
 public class DonationListEntryViewHolder extends RecyclerView.ViewHolder {
+  private static final String DEFAULT_NO_NAME = "Mysterious Donor";
 
   private TextView position;
   private TextView nickname;
@@ -27,6 +29,11 @@ public class DonationListEntryViewHolder extends RecyclerView.ViewHolder {
 
   public void setUp(int position, String nickname, float donatedValue) {
     this.position.setText(String.valueOf(position));
+    if (nickname != null && nickname.equals(DEFAULT_NO_NAME)) {
+      this.nickname.setText(Translator.translate(nickname, itemView.getContext(), ""));
+    } else {
+      this.nickname.setText(nickname);
+    }
     this.nickname.setText(nickname);
     this.donatedValue.setText(decimalFormat.format(donatedValue));
   }

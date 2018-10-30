@@ -299,6 +299,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
       case "Game of the Week":
         translated = context.getString(R.string.home_game_of_the_week);
         break;
+      case "Mysterious Donor":
+        translated = context.getString(R.string.appview_title_donations_leaderboard_unknown);
+        break;
       default:
         translated = string;
         break;
