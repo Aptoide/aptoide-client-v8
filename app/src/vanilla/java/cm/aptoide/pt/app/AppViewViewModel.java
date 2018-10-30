@@ -19,6 +19,7 @@ import java.util.List;
  */
 
 public class AppViewViewModel {
+  private static final String BDS_STORE_FLAG = "STORE_BDS";
 
   private final AppMedia media;
   private final String modified;
@@ -438,7 +439,7 @@ public class AppViewViewModel {
 
   public boolean hasDonations() {
     return bdsFlags != null
-        && !bdsFlags.isEmpty()
+        && !bdsFlags.isEmpty() && bdsFlags.contains(BDS_STORE_FLAG)
         && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
   }
 }
