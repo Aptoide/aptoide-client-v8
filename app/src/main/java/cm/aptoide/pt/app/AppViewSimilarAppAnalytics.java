@@ -15,11 +15,9 @@ import java.util.Map;
 
 public class AppViewSimilarAppAnalytics {
 
-  private static final String TAG = AppViewSimilarAppAnalytics.class.getSimpleName();
-
   public static final String APP_VIEW_SIMILAR_APP_SLIDE_IN = "App_View_Similar_App_Slide_In";
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
-
+  private static final String TAG = AppViewSimilarAppAnalytics.class.getSimpleName();
   private static final String NETWORK = "Network";
   private static final String IS_AD = "Is_ad";
   private static final String POSITION = "Position";

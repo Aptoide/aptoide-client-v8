@@ -32,20 +32,19 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
 
   public void setApp(AdClick adClick, HomeBundle homeBundle, int bundlePosition, int position) {
     nameTextView.setText(adClick.getAd()
-        .getData()
-        .getName());
+        .getAdTitle());
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(adClick.getAd()
-            .getData()
-            .getIcon(), 8, iconView, R.drawable.placeholder_square);
+            .getIconUrl(), 8, iconView, R.drawable.placeholder_square);
     float rating = adClick.getAd()
-        .getData()
         .getStars();
     if (rating == 0) {
       this.rating.setText(R.string.appcardview_title_no_stars);
     } else {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
+    adClick.getAd()
+        .registerClickableView(itemView);
     itemView.setOnClickListener(v -> adClickedEvents.onNext(
         new AdHomeEvent(adClick, position, homeBundle, bundlePosition, HomeEvent.Type.AD)));
   }

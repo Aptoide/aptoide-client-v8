@@ -104,6 +104,27 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     return bundles.size();
   }
 
+  public void addHighlightedAd(AdClick adClick) {
+    for (HomeBundle bundle : bundles) {
+      if (bundle.getType() == HomeBundle.BundleType.ADS) {
+        List<AdClick> content = (List<AdClick>) bundle.getContent();
+        if (content == null) return;
+        for (int i = 0; i < content.size(); i++) {
+          if (content.get(i)
+              .getAd()
+              .getPackageName()
+              .equals(adClick.getAd()
+                  .getPackageName())) {
+            content.remove(i);
+            break;
+          }
+        }
+        content.add(0, adClick);
+      }
+    }
+    notifyDataSetChanged();
+  }
+
   public void update(List<HomeBundle> bundles) {
     this.bundles = bundles;
     notifyDataSetChanged();

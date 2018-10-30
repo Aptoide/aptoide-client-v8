@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search.model;
 
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import org.parceler.Parcel;
 
@@ -45,6 +46,12 @@ import org.parceler.Parcel;
         minimalAd.getCpcUrl(), minimalAd.getCpdUrl(), minimalAd.getCpiUrl(),
         minimalAd.getClickUrl(), minimalAd.getName(), minimalAd.getAppId(),
         minimalAd.getNetworkId());
+  }
+
+  public SearchAdResult(AptoideNativeAd ad) {
+    this(ad.getAdId(), ad.getIconUrl(), ad.getDownloads(), ad.getStars(), ad.getModified(),
+        ad.getPackageName(), ad.getCpcUrl(), ad.getCpdUrl(), ad.getCpiUrl(), ad.getClickUrl(),
+        ad.getAdTitle(), ad.getAppId(), ad.getNetworkId());
   }
 
   public long getAdId() {

@@ -466,8 +466,7 @@ public class AppViewPresenter implements Presenter {
                 .getPackageName();
             if (appViewSimilarApp.getAd()
                 .getNetwork() == ApplicationAd.Network.SERVER) {
-              appViewNavigator.navigateToAd(
-                  ((AptoideNativeAd) appViewSimilarApp.getAd()).getMinimalAd(),
+              appViewNavigator.navigateToAd((AptoideNativeAd) appViewSimilarApp.getAd(),
                   similarAppClickEvent.getType());
             }
           } else {
@@ -489,7 +488,11 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appViewManager.appNextAdClick()
             .observeOn(Schedulers.io())
-            .flatMap(result -> similarAdExperiment.recordAdClick()))
+            .flatMap(result -> {
+              similarAppAnalytics.similarAppClick(ApplicationAd.Network.APPNEXT, result.getAd()
+                  .getPackageName(), 0, true);
+              return similarAdExperiment.recordAdClick();
+            }))
         .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
