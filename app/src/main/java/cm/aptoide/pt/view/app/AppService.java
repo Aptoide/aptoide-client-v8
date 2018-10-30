@@ -230,7 +230,7 @@ public class AppService {
                   .isPaid(), paidApp.getPath()
                   .getStringPath(), paidApp.getPayment()
                   .getStatus(), isLatestTrustedVersion(listAppVersions, file), uniqueName,
-                  app.hasBilling(), app.hasAdvertising()));
+                  app.hasBilling(), app.hasAdvertising(), app.getBdsFlags()));
         });
       }
 
@@ -242,7 +242,7 @@ public class AppService {
               file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
               appMedia, appStats, app.getObb(), app.getPay(), app.getUrls()
               .getW(), app.isPaid(), isLatestTrustedVersion(listAppVersions, file), uniqueName,
-              app.hasBilling(), app.hasAdvertising());
+              app.hasBilling(), app.hasAdvertising(), app.getBdsFlags());
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

@@ -3,7 +3,6 @@ import com.android.builder.model.ProductFlavor
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 buildscript {
@@ -18,10 +17,6 @@ buildscript {
   dependencies {
     classpath 'io.fabric.tools:gradle:1.25.4'
   }
-}
-
-retrolambda {
-  jvmArgs '-noverify'
 }
 
 android {
@@ -174,6 +169,7 @@ android {
     exclude 'META-INF/MANIFEST.MF'
     exclude 'META-INF/LGPL2.1'
     exclude 'META-INF/rxjava.properties'
+    exclude 'version.properties'
   }
 
   testOptions {
@@ -266,7 +262,7 @@ android {
     }
 
     variant.buildConfigField "String", "APPNEXT_PLACEMENT_ID",
-            "\"" + project.APPNEXT_PLACEMENT_ID + "\""
+        "\"" + project.APPNEXT_PLACEMENT_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -459,6 +455,8 @@ dependencies {
   annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   fairyImplementation "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
+
+  implementation "com.asfoundation:appcoins-contract-proxy:0.4.5.19b"
 }
 
 String getDate() {

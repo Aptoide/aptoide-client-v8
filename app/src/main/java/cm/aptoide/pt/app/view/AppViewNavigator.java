@@ -1,12 +1,17 @@
 package cm.aptoide.pt.app.view;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.donations.DonateDialogFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -14,6 +19,7 @@ import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import java.util.ArrayList;
+import java.util.List;
 import rx.Observable;
 
 public class AppViewNavigator {
@@ -57,7 +63,7 @@ public class AppViewNavigator {
     appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
-  public void navigateToAd(MinimalAd ad, String tag) {
+  public void navigateToAd(AptoideNativeAd ad, String tag) {
     appNavigator.navigateWithAd(new SearchAdResult(ad), tag);
   }
 
@@ -99,5 +105,22 @@ public class AppViewNavigator {
   public Observable<Boolean> notLoggedInViewResults() {
     return fragmentNavigator.results(NOT_LOGGED_IN_SHARE_REQUEST_CODE)
         .map(result -> result.getResultCode() == Activity.RESULT_OK);
+  }
+
+  public void navigateToDonationsDialog(String packageName, String tag) {
+    boolean hasWallet = hasWallet();
+    fragmentNavigator.navigateToDialogFragment(
+        DonateDialogFragment.newInstance(packageName, hasWallet), tag);
+  }
+
+  private boolean hasWallet() {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    Uri uri = Uri.parse("ethereum:");
+    intent.setData(uri);
+
+    PackageManager manager = activityNavigator.getActivity()
+        .getPackageManager();
+    List<ResolveInfo> infos = manager.queryIntentActivities(intent, 0);
+    return !infos.isEmpty();
   }
 }

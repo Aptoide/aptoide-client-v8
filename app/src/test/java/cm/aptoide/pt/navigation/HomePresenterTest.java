@@ -3,6 +3,7 @@ package cm.aptoide.pt.navigation;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ads.model.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -179,8 +180,8 @@ public class HomePresenterTest {
     //When an app is clicked
     adClickEvent.onNext(event);
     //then it should navigate to the App's detail View
-    verify(homeAnalytics).sendAdInteractEvent(anyInt(), anyString(), anyInt(), anyString(),
-        eq(HomeEvent.Type.AD));
+    verify(homeAnalytics).sendAdClickEvent(anyInt(), anyString(), anyInt(), anyString(),
+        eq(HomeEvent.Type.AD), eq(ApplicationAd.Network.SERVER));
     verify(homeNavigator).navigateToAppView(any());
   }
 

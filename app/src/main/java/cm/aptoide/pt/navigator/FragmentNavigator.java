@@ -1,5 +1,6 @@
 package cm.aptoide.pt.navigator;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import rx.Observable;
 
@@ -28,4 +29,6 @@ public interface FragmentNavigator {
   Fragment peekLast();
 
   Fragment getFragment();
+
+  void navigateToDialogFragment(DialogFragment fragment, String tag);
 }
