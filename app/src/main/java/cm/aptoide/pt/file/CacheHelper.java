@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.file;
 
-import android.text.format.DateUtils;
 import cm.aptoide.pt.downloadmanager.CacheManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -19,7 +18,6 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 7/7/16.
  */
 public class CacheHelper implements CacheManager {
-  public static final long MONTH_CACHE_TIME = DateUtils.DAY_IN_MILLIS * 30;
   public static final int VALUE_TO_CONVERT_MB_TO_BYTES = 1024 * 1024;
   public static String TAG = CacheHelper.class.getSimpleName();
   private final List<FolderToManage> foldersToCleanPath;
@@ -87,11 +85,11 @@ public class CacheHelper implements CacheManager {
     return deletedSize;
   }
 
-  private long removeFilesFromDir(long timeToCache, long now, long deletedSize, File aList) {
-    long dirSize = removeOldFiles(aList, timeToCache, now);
+  private long removeFilesFromDir(long timeToCache, long now, long deletedSize, File directory) {
+    long dirSize = removeOldFiles(directory, timeToCache, now);
     //check if directory is empty, delete it if it's and update the deleted size
-    File[] dirFiles = aList.listFiles();
-    if ((dirFiles == null || dirFiles.length <= 0) && aList.delete()) {
+    File[] dirFiles = directory.listFiles();
+    if ((dirFiles == null || dirFiles.length <= 0) && directory.delete()) {
       deletedSize += dirSize;
     }
     return deletedSize;
