@@ -225,6 +225,10 @@ public class AppViewManager {
     return adsManager.loadAd(packageName, keyWords);
   }
 
+  public SimilarAppsViewModel getCachedSimilarAppsViewModel() {
+    return cachedSimilarAppsViewModel;
+  }
+
   private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
     return adsManager.loadAppnextAd(keywords);
   }

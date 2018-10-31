@@ -154,6 +154,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
+  private PublishSubject<Boolean> similarAppsVisibilitySubject;
 
   //Views
   private View noNetworkErrorView;
@@ -257,6 +258,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
+
+
 
     shareRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
@@ -481,6 +484,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     genericRetryClick = null;
     dialogUtils = null;
     presenter = null;
+    similarAppsVisibilitySubject = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -732,6 +736,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Override public Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps() {
     return RxNestedScrollView.scrollChangeEvents(scrollView)
         .filter(__ -> isSimilarAppsVisible());
+  }
+
+  @Override public Observable<Boolean> similarAppsVisibility() {
+    return similarAppsVisibilitySubject;
   }
 
   @Override public boolean isSimilarAppsVisible() {
@@ -1096,6 +1104,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       if (isDownloading) {
         similarBottomView.setVisibility(View.GONE);
         similarDownloadView.setVisibility(View.VISIBLE);
+        similarAppsVisibilitySubject.onNext(true);
       } else {
         if (similarDownloadView.getVisibility() != View.VISIBLE) {
           similarBottomView.setVisibility(View.VISIBLE);
