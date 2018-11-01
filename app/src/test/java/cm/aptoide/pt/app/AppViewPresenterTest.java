@@ -6,9 +6,9 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.presenter.View;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 
 public class AppViewPresenterTest {
 
-  @Mock private NewAppViewFragment view;
+  @Mock private AppViewFragment view;
   @Mock private PermissionManager permissionManager;
   @Mock private PermissionService permissionService;
   @Mock private AppViewAnalytics appViewAnalytics;
@@ -82,7 +82,7 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
-            NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
             "marketName", false, false, bdsFlags);
 
     DownloadModel downloadModel =
@@ -214,7 +214,7 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
-            NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
             false, false, bdsFlags);
 
     //Given an initialized presenter

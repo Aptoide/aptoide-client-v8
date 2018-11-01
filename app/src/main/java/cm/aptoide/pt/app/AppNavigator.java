@@ -2,7 +2,7 @@ package cm.aptoide.pt.app;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import org.parceler.Parcels;
@@ -21,60 +21,60 @@ public class AppNavigator {
 
   public void navigateWithUname(String uname) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.UNAME.name(), uname);
+    bundle.putString(AppViewFragment.BundleKeys.UNAME.name(), uname);
 
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateWithMd5(String md5) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.MD5.name(), md5);
+    bundle.putString(AppViewFragment.BundleKeys.MD5.name(), md5);
 
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateWithPackageName(String packageName, NewAppViewFragment.OpenType openType) {
+  public void navigateWithPackageName(String packageName, AppViewFragment.OpenType openType) {
     navigateWithPackageAndStoreNames(packageName, null, openType);
   }
 
   public void navigateWithPackageAndStoreNames(String packageName, String storeName,
-      NewAppViewFragment.OpenType openType) {
+      AppViewFragment.OpenType openType) {
     Bundle bundle = new Bundle();
     if (!TextUtils.isEmpty(packageName)) {
-      bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+      bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
     }
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateWithAppId(long appId, String packageName,
-      NewAppViewFragment.OpenType openType, String tag) {
+  public void navigateWithAppId(long appId, String packageName, AppViewFragment.OpenType openType,
+      String tag) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateWithAppcReward(long appId, String packageName,
-      NewAppViewFragment.OpenType openType, String tag, double appRewardAppc) {
+      AppViewFragment.OpenType openType, String tag, double appRewardAppc) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(NewAppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    bundle.putDouble(NewAppViewFragment.BundleKeys.APPC.name(), appRewardAppc);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putDouble(AppViewFragment.BundleKeys.APPC.name(), appRewardAppc);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
@@ -82,11 +82,11 @@ public class AppNavigator {
   public void navigateWithStore(long appId, String packageName, String storeTheme,
       String storeName) {
     Bundle bundle = new Bundle();
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
@@ -94,12 +94,12 @@ public class AppNavigator {
   public void navigateWithStoreAndTag(long appId, String packageName, String storeTheme,
       String storeName, String tag) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
@@ -107,39 +107,39 @@ public class AppNavigator {
   public void navigatewithEditorsPosition(long appId, String packageName, String storeTheme,
       String storeName, String tag, String editorsPosition) {
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    bundle.putString(NewAppViewFragment.BundleKeys.EDITORS_CHOICE_POSITION.name(), editorsPosition);
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), appId);
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    bundle.putString(AppViewFragment.BundleKeys.EDITORS_CHOICE_POSITION.name(), editorsPosition);
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), storeName);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateWithAd(SearchAdResult searchAdResult, String tag) {
     Bundle bundle = new Bundle();
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(),
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(),
         searchAdResult.getPackageName());
-    bundle.putParcelable(NewAppViewFragment.BundleKeys.MINIMAL_AD.name(),
+    bundle.putParcelable(AppViewFragment.BundleKeys.MINIMAL_AD.name(),
         Parcels.wrap(searchAdResult));
-    if (tag != null) bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    if (tag != null) bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateWithAdAndTag(SearchAdResult searchAdResult, String tag) {
     Bundle bundle = new Bundle();
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(),
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(),
         searchAdResult.getPackageName());
-    bundle.putParcelable(NewAppViewFragment.BundleKeys.MINIMAL_AD.name(),
+    bundle.putParcelable(AppViewFragment.BundleKeys.MINIMAL_AD.name(),
         Parcels.wrap(searchAdResult));
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
@@ -147,15 +147,15 @@ public class AppNavigator {
   public void navigateWithAdAndStoreTheme(SearchAdResult searchAdResult, String storeTheme,
       String tag) {
     Bundle bundle = new Bundle();
-    bundle.putLong(NewAppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(),
+    bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), searchAdResult.getAppId());
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(),
         searchAdResult.getPackageName());
-    bundle.putParcelable(NewAppViewFragment.BundleKeys.MINIMAL_AD.name(),
+    bundle.putParcelable(AppViewFragment.BundleKeys.MINIMAL_AD.name(),
         Parcels.wrap(searchAdResult));
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
-    bundle.putString(NewAppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_THEME.name(), storeTheme);
+    bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
 
-    NewAppViewFragment fragment = new NewAppViewFragment();
+    AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
   }
