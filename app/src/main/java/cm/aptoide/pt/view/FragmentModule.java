@@ -9,8 +9,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
+import cm.aptoide.pt.abtesting.experiments.HighlightedAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -216,8 +217,9 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager) {
-    return new Home(bundlesRepository, impressionManager);
+      ImpressionManager impressionManager, AdsManager adsManager,
+      HighlightedAdExperiment highlightedAdExperiment) {
+    return new Home(bundlesRepository, impressionManager, adsManager, highlightedAdExperiment);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -289,8 +291,8 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       AppViewSimilarAppAnalytics similarAppAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager,
-      CrashReport crashReport, SimilarAdExperiment similarAdExperiment) {
+      AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
+      SimilarAdExperiment similarAdExperiment) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         similarAppAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),

@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.ads.model.ApplicationAd;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class HomeAnalytics {
   public static final String HOME_INTERACT = "Home_Interact";
   static final String SCROLL_RIGHT = "scroll right";
   static final String TAP_ON_APP = "tap on app";
+  static final String IMPRESSION = "impression";
   static final String PULL_REFRESH = "pull refresh";
   static final String PUSH_LOAD_MORE = "push load more";
   static final String TAP_ON_MORE = "tap on more";
@@ -96,17 +98,30 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendAdInteractEvent(int appRating, String packageName, int bundlePosition,
-      String bundleTag, HomeEvent.Type type) {
+  private void sendAdInteractEvent(String actionType, int appRating, String packageName,
+      int bundlePosition, String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_APP);
+    data.put("action", actionType);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
     data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
+    data.put("network", network.getName());
 
     analyticsManager.logEvent(data, HOME_INTERACT, parseAction(type),
         navigationTracker.getViewName(true));
+  }
+
+  public void sendAdImpressionEvent(int appRating, String packageName, int bundlePosition,
+      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
+    sendAdInteractEvent(IMPRESSION, appRating, packageName, bundlePosition, bundleTag, type,
+        network);
+  }
+
+  public void sendAdClickEvent(int appRating, String packageName, int bundlePosition,
+      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
+    sendAdInteractEvent(TAP_ON_APP, appRating, packageName, bundlePosition, bundleTag, type,
+        network);
   }
 
   public void sendAppcKnowMoreInteractEvent(String bundleTag, int bundlePosition) {

@@ -47,6 +47,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.donations.GetWalletAddressResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
@@ -543,6 +544,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("user/action/item/card/markAsRead/") Observable<BaseV7Response> setRead(
         @Body MarkAsReadRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @GET("bds/apks/package/getOwnerWallet") Observable<GetWalletAddressResponse> getWallet(
+        @Query("package_name") String packageName);
   }
 }
 

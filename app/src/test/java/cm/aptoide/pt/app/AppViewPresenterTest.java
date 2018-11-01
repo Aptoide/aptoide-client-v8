@@ -17,7 +17,9 @@ import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.AppRating;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -66,6 +68,7 @@ public class AppViewPresenterTest {
 
     Malware malware = new Malware();
     malware.setRank(Malware.Rank.CRITICAL);
+    List<String> bdsFlags = new ArrayList<>();
 
     appViewViewModel =
         new AppViewViewModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(),
@@ -80,7 +83,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false);
+            "marketName", false, false, bdsFlags);
 
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
@@ -114,7 +117,7 @@ public class AppViewPresenterTest {
     //Then the loading should be shown
     verify(view).showLoading();
     //Then should set the download information
-    verify(view).showDownloadAppModel(downloadAppViewModel);
+    verify(view).showDownloadAppModel(downloadAppViewModel, false);
     //Then should set the download ready to download
     verify(view).readyToDownload();
   }
@@ -197,6 +200,7 @@ public class AppViewPresenterTest {
   @Test public void handleOpenAppViewEventsWithEmptyEditorsChoice() {
     Malware malware = new Malware();
     malware.setRank(Malware.Rank.CRITICAL);
+    List<String> bdsFlags = new ArrayList<>();
 
     AppViewViewModel emptyEditorsChoiceAppViewViewModel =
         new AppViewViewModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(),
@@ -211,7 +215,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
-            false, false);
+            false, false, bdsFlags);
 
     //Given an initialized presenter
     presenter.handleFirstLoad();

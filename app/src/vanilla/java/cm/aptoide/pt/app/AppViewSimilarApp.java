@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.ads.model.ApplicationAd;
-
 import cm.aptoide.pt.view.app.Application;
 
 /**

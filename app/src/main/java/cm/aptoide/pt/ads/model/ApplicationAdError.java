@@ -11,17 +11,17 @@ public class ApplicationAdError {
   private final AppnextError nativeAdError;
   private final AppsList.Error minimalAdError;
 
-  public ApplicationAdError(AppnextError nativeAdError){
+  public ApplicationAdError(AppnextError nativeAdError) {
     this.minimalAdError = null;
     this.nativeAdError = nativeAdError;
   }
 
-  public ApplicationAdError(AppsList.Error minimalAdError){
+  public ApplicationAdError(AppsList.Error minimalAdError) {
     this.minimalAdError = minimalAdError;
     this.nativeAdError = null;
   }
 
-  public boolean hasError(){
+  public boolean hasError() {
     return nativeAdError != null || minimalAdError != null;
   }
 }
