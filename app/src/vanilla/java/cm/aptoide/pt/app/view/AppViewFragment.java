@@ -154,6 +154,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
+  private PublishSubject<Boolean> similarAppsVisibilitySubject;
 
   //Views
   private View noNetworkErrorView;
@@ -257,7 +258,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
-
+    similarAppsVisibilitySubject = PublishSubject.create();
     shareRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
@@ -481,6 +482,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     genericRetryClick = null;
     dialogUtils = null;
     presenter = null;
+    similarAppsVisibilitySubject = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -732,6 +734,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps() {
     return RxNestedScrollView.scrollChangeEvents(scrollView)
         .filter(__ -> isSimilarAppsVisible());
+  }
+
+  @Override public Observable<Boolean> similarAppsVisibility() {
+    return similarAppsVisibilitySubject;
   }
 
   @Override public boolean isSimilarAppsVisible() {
@@ -1096,6 +1102,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       if (isDownloading) {
         similarBottomView.setVisibility(View.GONE);
         similarDownloadView.setVisibility(View.VISIBLE);
+        similarAppsVisibilitySubject.onNext(true);
       } else {
         if (similarDownloadView.getVisibility() != View.VISIBLE) {
           similarBottomView.setVisibility(View.VISIBLE);
