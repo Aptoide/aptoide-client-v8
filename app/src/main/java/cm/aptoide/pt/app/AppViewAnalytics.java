@@ -3,6 +3,7 @@ package cm.aptoide.pt.app;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -31,6 +32,14 @@ public class AppViewAnalytics {
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TYPE = "type";
+  public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
+  private static final String NETWORK = "Network";
+  private static final String IS_AD = "Is_ad";
+  private static final String POSITION = "Position";
+  private static final String PACKAGE_NAME = "Package_name";
+  private static final String IMPRESSION = "impression";
+  private static final String TAP_ON_APP = "tap_on_app";
+
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -320,5 +329,30 @@ public class AppViewAnalytics {
 
   public void sendStoreOpenEvent(Store store) {
     storeAnalytics.sendStoreOpenEvent("App View", store.getName(), true);
+  }
+
+  public void similarAppBundleImpression(ApplicationAd.Network network, boolean isAd) {
+    similarAppInteract(network, IMPRESSION, null, -1, isAd);
+  }
+
+  public void similarAppClick(ApplicationAd.Network network, String packageName, int position,
+      boolean isAd) {
+    similarAppInteract(network, TAP_ON_APP, packageName, position, isAd);
+  }
+
+  private void similarAppInteract(ApplicationAd.Network network, String action, String packageName,
+      int position, boolean isAd) {
+    Map<String, Object> data = new HashMap<>();
+    if (isAd) data.put(NETWORK, network.getName());
+    data.put(ACTION, action);
+    data.put(IS_AD, isAd ? "true" : "false");
+    if (action.equals(TAP_ON_APP)) {
+      data.put(PACKAGE_NAME, packageName);
+      data.put(POSITION, position);
+    }
+
+    analyticsManager.logEvent(data, SIMILAR_APP_INTERACT,
+        action.equals(IMPRESSION) ? AnalyticsManager.Action.IMPRESSION
+            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
 }

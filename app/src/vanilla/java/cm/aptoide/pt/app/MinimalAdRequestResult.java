@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.ads.model.ApplicationAd;
-import cm.aptoide.pt.ads.model.ApplicationAdError;
-import cm.aptoide.pt.ads.model.AptoideNativeAd;
+import cm.aptoide.pt.ads.data.ApplicationAd;
+import cm.aptoide.pt.ads.data.ApplicationAdError;
+import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.view.app.AppsList;
 
