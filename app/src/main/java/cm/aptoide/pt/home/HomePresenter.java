@@ -222,6 +222,10 @@ public class HomePresenter implements Presenter {
           if (ad != null) {
             homeAnalytics.sendAdImpressionEvent(ad.getStars(), ad.getPackageName(), 0, bundleTag,
                 HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
+          } else if (appNextAdResult.getError()
+              .getErrorMessage()
+              .equals(DEFAULT_ASSIGNMENT_ERROR)) {
+            homeAnalytics.sendHighlightedImpressionEvent();
           }
         });
   }
