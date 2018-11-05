@@ -44,9 +44,9 @@ public class LoggedInTermsAndConditionsDialog {
     });
 
     logOutButton.setOnClickListener(__ -> {
-          uiEvents.onNext("logout");
-          dialog.dismiss();
-        });
+      uiEvents.onNext("logout");
+      dialog.dismiss();
+    });
   }
 
   public void showDialog() {
