@@ -10,6 +10,7 @@ import rx.Single;
 
 public class HighlightedAdExperiment {
 
+  public static final String DEFAULT_ASSIGNMENT_ERROR = "Default_AB_Assignment";
   private final String EXPERIMENT_ID = "ASV-1106-AppNext_Highlighted";
 
   private ABTestManager abTestManager;
@@ -37,7 +38,7 @@ public class HighlightedAdExperiment {
             case "default":
             case "no_appnext_ad":
             default:
-              return Single.just(new AppNextAdResult(new AppnextError("No ads")));
+              return Single.just(new AppNextAdResult(new AppnextError(DEFAULT_ASSIGNMENT_ERROR)));
           }
         })
         .toSingle();
