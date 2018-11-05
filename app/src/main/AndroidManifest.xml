@@ -39,7 +39,7 @@
 
   <uses-sdk
       android:minSdkVersion="15"
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform"/>
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy, com.asf.appcoins.sdk.core"/>
 
   <application
       android:allowBackup="false"
@@ -335,12 +335,6 @@
     <service android:name=".install.InstallService"/>
 
     <service android:name=".install.InstalledIntentService"/>
-
-    <activity
-        android:name="com.mopub.common.MoPubBrowser"
-        android:configChanges="keyboardHidden|orientation|screenSize"
-        android:windowSoftInputMode="adjustPan"
-        />
 
     <receiver
         android:name=".widget.SearchWidgetProvider"

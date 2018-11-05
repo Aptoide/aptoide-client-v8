@@ -3,7 +3,7 @@ package cm.aptoide.pt.home;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
@@ -46,6 +46,6 @@ public class GridAppCoinsRewardAppsDisplayable extends DisplayablePojo<Applicati
 
   public void openAppView() {
     appNavigator.navigateWithAppId(getPojo().getAppId(), getPojo().getPackageName(),
-        NewAppViewFragment.OpenType.OPEN_ONLY, tag);
+        AppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 }

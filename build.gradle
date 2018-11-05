@@ -1,9 +1,9 @@
 buildscript {
   repositories {
-    jcenter()
     mavenLocal()
     google()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    jcenter()
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:3.1.3'
@@ -17,12 +17,13 @@ buildscript {
 
 allprojects {
   repositories {
-    jcenter()
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
+    maven { url "https://dl.bintray.com/asf/asf" }
     maven { url "http://dl.appnext.com" }
     google()
+    jcenter()
   }
 }
 

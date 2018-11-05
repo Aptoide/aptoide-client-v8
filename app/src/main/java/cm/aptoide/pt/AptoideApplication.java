@@ -111,7 +111,6 @@ import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-
 import com.appnext.base.Appnext;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;

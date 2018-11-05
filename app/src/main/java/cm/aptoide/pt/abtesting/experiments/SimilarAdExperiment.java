@@ -4,6 +4,7 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.ApplicationAdResult;
 import java.util.List;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 
@@ -18,20 +19,26 @@ public class SimilarAdExperiment {
   private Scheduler scheduler;
   private AdsManager adsManager;
 
-  public SimilarAdExperiment(ABTestManager abTestManager, Scheduler scheduler, AdsManager adsManager) {
+  private boolean isImpressionRecorded;
+
+  public SimilarAdExperiment(ABTestManager abTestManager, Scheduler scheduler,
+      AdsManager adsManager) {
     this.abTestManager = abTestManager;
     this.scheduler = scheduler;
     this.adsManager = adsManager;
+    this.isImpressionRecorded = false;
   }
 
-  public Single<ApplicationAdResult> getSimilarAd(String packageName, List<String> keywords){
+  public Single<ApplicationAdResult> getSimilarAd(String packageName, List<String> keywords) {
     return abTestManager.getExperiment(EXPERIMENT_ID)
+        .observeOn(scheduler)
         .flatMapSingle(experiment -> {
+          this.isImpressionRecorded = false;
           String experimentAssigment = "default";
-          if(!experiment.isExperimentOver() && experiment.isPartOfExperiment()){
+          if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
             experimentAssigment = experiment.getAssignment();
           }
-          switch (experimentAssigment){
+          switch (experimentAssigment) {
             case "appnext_ad":
               return adsManager.loadAppnextAd(keywords);
             case "default":
@@ -40,16 +47,19 @@ public class SimilarAdExperiment {
               return adsManager.loadAd(packageName, keywords);
           }
         })
-        .toSingle()
-        .observeOn(scheduler);
+        .toSingle();
   }
 
-  public void recordAdImpression(){
-    abTestManager.recordImpression(EXPERIMENT_ID);
+  public Observable<Boolean> recordAdImpression() {
+    isImpressionRecorded = true;
+    return abTestManager.recordImpression(EXPERIMENT_ID);
   }
 
-  public void recordAdClick(){
-    abTestManager.recordAction(EXPERIMENT_ID);
+  public Observable<Boolean> recordAdClick() {
+    return abTestManager.recordAction(EXPERIMENT_ID);
   }
 
+  public synchronized boolean isImpressionRecorded() {
+    return isImpressionRecorded;
+  }
 }

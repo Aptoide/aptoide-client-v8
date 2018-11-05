@@ -9,5 +9,6 @@ import cm.aptoide.pt.ads.model.ApplicationAdError;
 
 public interface ApplicationAdResult {
   ApplicationAd getAd();
+
   ApplicationAdError getError();
 }

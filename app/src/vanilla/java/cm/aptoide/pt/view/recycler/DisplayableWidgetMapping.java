@@ -11,29 +11,7 @@ import cm.aptoide.pt.app.view.GridAppListWidget;
 import cm.aptoide.pt.app.view.GridAppWidget;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppWidget;
-import cm.aptoide.pt.app.view.OtherVersionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewOtherVersionsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewRateResultsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAdDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
-import cm.aptoide.pt.app.view.widget.AppViewDescriptionWidget;
-import cm.aptoide.pt.app.view.widget.AppViewFlagThisWidget;
-import cm.aptoide.pt.app.view.widget.AppViewInstallWidget;
-import cm.aptoide.pt.app.view.widget.AppViewOtherVersionsWidget;
-import cm.aptoide.pt.app.view.widget.AppViewRateAndReviewsWidget;
-import cm.aptoide.pt.app.view.widget.AppViewRateResultsWidget;
-import cm.aptoide.pt.app.view.widget.AppViewRewardAppWidget;
-import cm.aptoide.pt.app.view.widget.AppViewStoreWidget;
-import cm.aptoide.pt.app.view.widget.AppViewSuggestedAdWidget;
-import cm.aptoide.pt.app.view.widget.AppViewSuggestedAppWidget;
-import cm.aptoide.pt.app.view.widget.AppViewSuggestedAppsWidget;
+import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
 import cm.aptoide.pt.app.view.widget.OtherVersionWidget;
 import cm.aptoide.pt.comments.view.CommentDisplayable;
 import cm.aptoide.pt.comments.view.CommentWidget;
@@ -52,7 +30,6 @@ import cm.aptoide.pt.reviews.ReviewsLanguageFilterDisplayable;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterWidget;
 import cm.aptoide.pt.reviews.ReviewsRatingDisplayable;
 import cm.aptoide.pt.reviews.ReviewsRatingWidget;
-import cm.aptoide.pt.reviews.RowReviewDisplayable;
 import cm.aptoide.pt.store.view.CreateStoreWidget;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
@@ -97,7 +74,6 @@ import cm.aptoide.pt.view.recycler.widget.GridAppCoinsRewardAppsWidget;
 import cm.aptoide.pt.view.recycler.widget.GridDisplayWidget;
 import cm.aptoide.pt.view.recycler.widget.MessageWhiteBgWidget;
 import cm.aptoide.pt.view.recycler.widget.ProgressBarWidget;
-import cm.aptoide.pt.view.recycler.widget.RowReviewWidget;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.util.Collections;
 import java.util.HashMap;
@@ -186,47 +162,11 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(ProgressBarWidget.class, ProgressBarDisplayable.class));
 
     // appView widgets / displayables
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewDescriptionWidget.class,
-        AppViewDescriptionDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AppViewInstallWidget.class, AppViewInstallDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping((AppViewRewardAppWidget.class),
-        AppViewRewardAppDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewRateAndReviewsWidget.class,
-        AppViewRateAndCommentsDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewFlagThisWidget.class,
-        AppViewFlagThisDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewOtherVersionsWidget.class,
-        AppViewOtherVersionsDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewRateResultsWidget.class,
-        AppViewRateResultsDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AppViewStoreWidget.class, AppViewStoreDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppsWidget.class,
-        AppViewSuggestedAppsDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppWidget.class,
-        AppViewSuggestedAppDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAdWidget.class,
-        AppViewSuggestedAdDisplayable.class));
-
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(OtherVersionWidget.class, OtherVersionDisplayable.class));
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(RateAndReviewCommentWidget.class,
         RateAndReviewCommentDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(RowReviewWidget.class, RowReviewDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(CommentWidget.class, CommentDisplayable.class));

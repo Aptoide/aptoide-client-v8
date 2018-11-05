@@ -14,7 +14,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;
 import cm.aptoide.pt.comments.view.CommentDisplayable;
 import cm.aptoide.pt.comments.view.CommentsReadMoreDisplayable;
@@ -149,7 +149,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<ReviewsAdapter>
     }
     if (itemId == R.id.menu_install) {
       appNavigator.navigateWithPackageAndStoreNames(packageName, storeName,
-          NewAppViewFragment.OpenType.OPEN_AND_INSTALL);
+          AppViewFragment.OpenType.OPEN_AND_INSTALL);
       return true;
     }
     return super.onOptionsItemSelected(item);
@@ -252,9 +252,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<ReviewsAdapter>
                     ((AptoideApplication) getContext().getApplicationContext()
                         .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
                 httpClient, converterFactory, tokenInvalidator,
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-                getFragmentNavigator(),
-                ((AptoideApplication) getContext().getApplicationContext()).getFragmentProvider()),
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
             (throwable) -> throwable.printStackTrace());
 
     endlessRecyclerOnScrollListener.addOnEndlessFinishListener(endlessRecyclerOnScrollListener1 -> {

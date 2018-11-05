@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.app.AppRepository;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -21,7 +20,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.IdsRepository;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
@@ -67,16 +65,6 @@ public final class RepositoryFactory {
   public static cm.aptoide.pt.repository.DownloadRepository getDownloadRepository(Context context) {
     return new cm.aptoide.pt.repository.DownloadRepository(AccessorFactory.getAccessorFor(
         ((AptoideApplication) context.getApplicationContext()).getDatabase(), Download.class));
-  }
-
-  public static AppRepository getAppRepository(Context context,
-      SharedPreferences sharedPreferences) {
-    final AptoideApplication application = (AptoideApplication) context.getApplicationContext();
-    return new AppRepository(getBaseBodyInterceptorV7(context), getBaseBodyInterceptorV3(context),
-        new StoreCredentialsProviderImpl(
-            AccessorFactory.getAccessorFor(application.getDatabase(), Store.class)),
-        getHttpClient(context), WebService.getDefaultConverter(), getTokenInvalidator(context),
-        sharedPreferences, context.getResources(), application.getPartnerId());
   }
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {

@@ -3,7 +3,6 @@ import com.android.builder.model.ProductFlavor
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 buildscript {
@@ -18,10 +17,6 @@ buildscript {
   dependencies {
     classpath 'io.fabric.tools:gradle:1.25.4'
   }
-}
-
-retrolambda {
-  jvmArgs '-noverify'
 }
 
 android {
@@ -41,7 +36,7 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
-    versionName "9.2.0.1"
+    versionName "9.3.0.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true
@@ -174,6 +169,7 @@ android {
     exclude 'META-INF/MANIFEST.MF'
     exclude 'META-INF/LGPL2.1'
     exclude 'META-INF/rxjava.properties'
+    exclude 'version.properties'
   }
 
   testOptions {
@@ -222,10 +218,6 @@ android {
     variant.buildConfigField "String", "SIGNATURE_BACKUP", "\"" + project.SIGNATURE_BACKUP + "\""
     variant.buildConfigField "String", "SIGNATURE_UPLOADER",
         "\"" + project.SIGNATURE_UPLOADER + "\""
-    variant.buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
-    variant.buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
-    variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_SIXPACK_HOST",
-        "\"" + project.APTOIDE_WEB_SERVICES_SIXPACK_HOST + "\""
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
         "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
@@ -270,7 +262,7 @@ android {
     }
 
     variant.buildConfigField "String", "APPNEXT_PLACEMENT_ID",
-            "\"" + project.APPNEXT_PLACEMENT_ID + "\""
+        "\"" + project.APPNEXT_PLACEMENT_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -417,9 +409,6 @@ dependencies {
   implementation 'org.slf4j:slf4j-api:1.7.21'
   implementation 'org.jmdns:jmdns:3.5.1'
 
-  //  Sixpack
-  implementation 'com.seatgeek:sixpack-java:0.4-SNAPSHOT'
-
   // Fabric
   implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
     transitive = true
@@ -433,6 +422,7 @@ dependencies {
   }
 
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
+  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
   // Parceler - https://github.com/johncarl81/parceler
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
@@ -468,6 +458,8 @@ dependencies {
   annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   fairyImplementation "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
+
+  implementation "com.asfoundation:appcoins-contract-proxy:0.4.5.19b"
 }
 
 String getDate() {

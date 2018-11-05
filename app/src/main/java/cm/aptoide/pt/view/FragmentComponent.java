@@ -13,7 +13,6 @@ import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comment.CommentsFragment;
 import cm.aptoide.pt.commentdetail.CommentDetailFragment;
@@ -47,8 +46,6 @@ public interface FragmentComponent {
   void inject(ManageUserFragment manageUserFragment);
 
   void inject(ManageStoreFragment manageStoreFragment);
-
-  void inject(AppViewFragment appViewFragment);
 
   void inject(SearchResultFragment searchResultFragment);
 
@@ -92,7 +89,7 @@ public interface FragmentComponent {
 
   void inject(GetRewardAppCoinsAppsFragment getRewardAppCoinsAppsFragment);
 
-  void inject(NewAppViewFragment newAppViewFragment);
+  void inject(AppViewFragment appViewFragment);
 
   void inject(RateAndReviewsFragment rateAndReviewsFragment);
 
