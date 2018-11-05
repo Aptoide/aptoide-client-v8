@@ -47,6 +47,7 @@ public class DetailedApp {
   private long id;
   private boolean hasBilling;
   private boolean hasAdvertising;
+  private List<String> bdsFlags;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
@@ -55,7 +56,7 @@ public class DetailedApp {
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid, String paidAppPath,
       String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
-      boolean hasAdvertising) {
+      boolean hasAdvertising, List<String> bdsFlags) {
 
     this.id = id;
     this.name = name;
@@ -92,6 +93,7 @@ public class DetailedApp {
     this.uniqueName = uniqueName;
     this.hasBilling = hasBilling;
     this.hasAdvertising = hasAdvertising;
+    this.bdsFlags = bdsFlags;
   }
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
@@ -100,7 +102,7 @@ public class DetailedApp {
       long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean isLatestTrustedVersion,
-      String uniqueName, boolean hasBilling, boolean hasAdvertising) {
+      String uniqueName, boolean hasBilling, boolean hasAdvertising, List<String> bdsFlags) {
 
     this.id = id;
     this.name = name;
@@ -132,6 +134,7 @@ public class DetailedApp {
     this.isPaid = isPaid;
     this.hasBilling = hasBilling;
     this.hasAdvertising = hasAdvertising;
+    this.bdsFlags = bdsFlags;
     this.wasPaid = false;
     this.paidAppPath = "";
     this.paymentStatus = "";
@@ -285,5 +288,13 @@ public class DetailedApp {
 
   public boolean hasAdvertising() {
     return this.hasAdvertising;
+  }
+
+  public List<String> getBdsFlags() {
+    return bdsFlags;
+  }
+
+  public void setBdsFlags(List<String> bdsFlags) {
+    this.bdsFlags = bdsFlags;
   }
 }

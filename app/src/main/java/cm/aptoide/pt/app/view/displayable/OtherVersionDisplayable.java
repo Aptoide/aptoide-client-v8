@@ -3,7 +3,7 @@
  * Modified on 12/08/2016.
  */
 
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.app.view.displayable;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;

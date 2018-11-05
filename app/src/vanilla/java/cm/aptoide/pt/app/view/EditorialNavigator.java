@@ -22,6 +22,6 @@ public class EditorialNavigator {
   }
 
   public void navigateToAppView(long appId, String packageName) {
-    appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, "");
+    appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, "");
   }
 }

@@ -2,6 +2,7 @@ package cm.aptoide.pt.navigator;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -130,5 +131,9 @@ public class FragmentResultNavigator implements FragmentNavigator {
 
   @Override public Fragment getFragment() {
     return fragmentManager.findFragmentById(containerId);
+  }
+
+  @Override public void navigateToDialogFragment(DialogFragment fragment, String tag) {
+    fragment.show(fragmentManager, tag);
   }
 }

@@ -19,11 +19,13 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
+import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import java.util.Locale;
@@ -31,6 +33,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
@@ -55,6 +58,7 @@ public class InstallService extends BaseService implements DownloadsNotification
   @Inject @Named("default") Installer defaultInstaller;
   @Inject InstalledRepository installedRepository;
   @Inject DownloadAnalytics downloadAnalytics;
+  @Inject CacheHelper cacheManager;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private Notification notification;
@@ -130,6 +134,13 @@ public class InstallService extends BaseService implements DownloadsNotification
   private void treatNext(boolean hasNext) {
     if (!hasNext) {
       removeNotificationAndStop();
+      subscriptions.add(cacheManager.cleanCache()
+          .toSingle()
+          .flatMap(cleaned -> downloadManager.invalidateDatabase()
+              .andThen(Single.just(cleaned)))
+          .subscribe(__ -> {
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
     }
   }
 
@@ -176,11 +187,6 @@ public class InstallService extends BaseService implements DownloadsNotification
     return downloadManager.getCurrentActiveDownloads()
         .first()
         .map(downloads -> downloads != null && !downloads.isEmpty());
-  }
-
-  @Override public void removeNotificationAndStop() {
-    stopForeground(true);
-    stopSelf();
   }
 
   private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
@@ -260,6 +266,21 @@ public class InstallService extends BaseService implements DownloadsNotification
         PendingIntent.FLAG_ONE_SHOT);
   }
 
+  @Override public Observable<String> handleOpenAppView() {
+    return openAppViewAction;
+  }
+
+  @Override public Observable<Void> handleOpenDownloadManager() {
+    return openDownloadManagerAction;
+  }
+
+  @Override public void openAppView(String md5) {
+    Intent intent = createDeeplinkingIntent();
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
+    startActivity(intent);
+  }
+
   @Override public void openDownloadManager() {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION, true);
@@ -289,19 +310,9 @@ public class InstallService extends BaseService implements DownloadsNotification
     startForeground(NOTIFICATION_ID, notification);
   }
 
-  @Override public Observable<String> handleOpenAppView() {
-    return openAppViewAction;
-  }
-
-  @Override public Observable<Void> handleOpenDownloadManager() {
-    return openDownloadManagerAction;
-  }
-
-  @Override public void openAppView(String md5) {
-    Intent intent = createDeeplinkingIntent();
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
-    startActivity(intent);
+  @Override public void removeNotificationAndStop() {
+    stopForeground(true);
+    stopSelf();
   }
 
   @NonNull private Intent createDeeplinkingIntent() {

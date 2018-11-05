@@ -1,5 +1,7 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.ads.model.ApplicationAd;
+import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 
 /**
@@ -7,15 +9,20 @@ import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
  */
 
 public class AdClick {
-  private final GetAdsResponse.Ad ad;
+  private final ApplicationAd ad;
   private final String tag;
 
   public AdClick(GetAdsResponse.Ad ad, String tag) {
+    this.ad = new AptoideNativeAd(ad);
+    this.tag = tag;
+  }
+
+  public AdClick(ApplicationAd ad, String tag) {
     this.ad = ad;
     this.tag = tag;
   }
 
-  public GetAdsResponse.Ad getAd() {
+  public ApplicationAd getAd() {
     return ad;
   }
 
