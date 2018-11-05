@@ -44,7 +44,6 @@ public class AppViewPresenterTest {
   @Mock private PermissionManager permissionManager;
   @Mock private PermissionService permissionService;
   @Mock private AppViewAnalytics appViewAnalytics;
-  @Mock private AppViewSimilarAppAnalytics similarAppsAnalytics;
   @Mock private AccountNavigator accountNavigator;
   @Mock private AppViewNavigator appViewNavigator;
   @Mock private AppViewManager appViewManager;
@@ -60,9 +59,9 @@ public class AppViewPresenterTest {
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
-    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, similarAppsAnalytics,
-        appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-        permissionManager, permissionService, similarAdExperiment);
+    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, appViewNavigator,
+        appViewManager, accountManager, Schedulers.immediate(), crashReporter, permissionManager,
+        permissionService, similarAdExperiment);
 
     lifecycleEvent = PublishSubject.create();
 
@@ -214,8 +213,8 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
-            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
-            false, false, bdsFlags);
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
+            false, bdsFlags);
 
     //Given an initialized presenter
     presenter.handleFirstLoad();

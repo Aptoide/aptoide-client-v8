@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.ads.model.AppNextNativeAd;
-import cm.aptoide.pt.ads.model.ApplicationAdError;
+import cm.aptoide.pt.ads.data.AppNextNativeAd;
+import cm.aptoide.pt.ads.data.ApplicationAdError;
 import com.appnext.core.AppnextError;
 import com.appnext.nativeads.NativeAd;
 

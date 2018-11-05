@@ -1,6 +1,6 @@
 package cm.aptoide.pt.search.model;
 
-import cm.aptoide.pt.ads.model.AptoideNativeAd;
+import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import org.parceler.Parcel;
 

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.ads.model;
+package cm.aptoide.pt.ads.data;
 
 import cm.aptoide.pt.view.app.AppsList;
 import com.appnext.core.AppnextError;

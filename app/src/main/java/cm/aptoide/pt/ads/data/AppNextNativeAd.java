@@ -1,4 +1,4 @@
-package cm.aptoide.pt.ads.model;
+package cm.aptoide.pt.ads.data;
 
 import android.view.View;
 import com.appnext.nativeads.NativeAd;
