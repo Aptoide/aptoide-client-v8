@@ -5,6 +5,7 @@ import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.appview.InstallAppView;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -13,6 +14,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -53,6 +55,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps();
 
+  Observable<Boolean> similarAppsVisibility();
+
   boolean isSimilarAppsVisible();
 
   Observable<Void> clickDeveloperWebsite();
@@ -90,6 +94,8 @@ public interface AppViewView extends InstallAppView {
   Observable<Void> clickNoNetworkRetry();
 
   Observable<Void> clickGenericRetry();
+
+  Observable<Void> clickDonateButton();
 
   Observable<ShareDialogs.ShareResponse> shareDialogResponse();
 
@@ -146,4 +152,6 @@ public interface AppViewView extends InstallAppView {
       double appc, float rating, String icon, int downloads);
 
   void showApkfyElement(String appName);
+
+  void showDonations(List<Donation> donations);
 }

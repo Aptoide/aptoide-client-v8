@@ -19,21 +19,26 @@ public class SimilarAdExperiment {
   private Scheduler scheduler;
   private AdsManager adsManager;
 
-  public SimilarAdExperiment(ABTestManager abTestManager, Scheduler scheduler, AdsManager adsManager) {
+  private boolean isImpressionRecorded;
+
+  public SimilarAdExperiment(ABTestManager abTestManager, Scheduler scheduler,
+      AdsManager adsManager) {
     this.abTestManager = abTestManager;
     this.scheduler = scheduler;
     this.adsManager = adsManager;
+    this.isImpressionRecorded = false;
   }
 
-  public Single<ApplicationAdResult> getSimilarAd(String packageName, List<String> keywords){
+  public Single<ApplicationAdResult> getSimilarAd(String packageName, List<String> keywords) {
     return abTestManager.getExperiment(EXPERIMENT_ID)
         .observeOn(scheduler)
         .flatMapSingle(experiment -> {
+          this.isImpressionRecorded = false;
           String experimentAssigment = "default";
-          if(!experiment.isExperimentOver() && experiment.isPartOfExperiment()){
+          if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
             experimentAssigment = experiment.getAssignment();
           }
-          switch (experimentAssigment){
+          switch (experimentAssigment) {
             case "appnext_ad":
               return adsManager.loadAppnextAd(keywords);
             case "default":
@@ -45,12 +50,16 @@ public class SimilarAdExperiment {
         .toSingle();
   }
 
-  public Observable<Boolean> recordAdImpression(){
+  public Observable<Boolean> recordAdImpression() {
+    isImpressionRecorded = true;
     return abTestManager.recordImpression(EXPERIMENT_ID);
   }
 
-  public Observable<Boolean> recordAdClick(){
+  public Observable<Boolean> recordAdClick() {
     return abTestManager.recordAction(EXPERIMENT_ID);
   }
 
+  public synchronized boolean isImpressionRecorded() {
+    return isImpressionRecorded;
+  }
 }

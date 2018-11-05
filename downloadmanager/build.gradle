@@ -1,8 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-retrolambda {
-  jvmArgs '-noverify'
-}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)

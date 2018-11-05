@@ -6,9 +6,9 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.presenter.View;
@@ -17,7 +17,9 @@ import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.AppRating;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,7 +40,7 @@ import static org.mockito.Mockito.when;
 
 public class AppViewPresenterTest {
 
-  @Mock private NewAppViewFragment view;
+  @Mock private AppViewFragment view;
   @Mock private PermissionManager permissionManager;
   @Mock private PermissionService permissionService;
   @Mock private AppViewAnalytics appViewAnalytics;
@@ -66,6 +68,7 @@ public class AppViewPresenterTest {
 
     Malware malware = new Malware();
     malware.setRank(Malware.Rank.CRITICAL);
+    List<String> bdsFlags = new ArrayList<>();
 
     appViewViewModel =
         new AppViewViewModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(),
@@ -79,8 +82,8 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
-            NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false);
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags);
 
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
@@ -114,7 +117,7 @@ public class AppViewPresenterTest {
     //Then the loading should be shown
     verify(view).showLoading();
     //Then should set the download information
-    verify(view).showDownloadAppModel(downloadAppViewModel);
+    verify(view).showDownloadAppModel(downloadAppViewModel, false);
     //Then should set the download ready to download
     verify(view).readyToDownload();
   }
@@ -197,6 +200,7 @@ public class AppViewPresenterTest {
   @Test public void handleOpenAppViewEventsWithEmptyEditorsChoice() {
     Malware malware = new Malware();
     malware.setRank(Malware.Rank.CRITICAL);
+    List<String> bdsFlags = new ArrayList<>();
 
     AppViewViewModel emptyEditorsChoiceAppViewViewModel =
         new AppViewViewModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(),
@@ -210,8 +214,8 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
-            NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
-            false, false);
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
+            false, false, bdsFlags);
 
     //Given an initialized presenter
     presenter.handleFirstLoad();

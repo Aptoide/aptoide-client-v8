@@ -1,15 +1,13 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
-import cm.aptoide.pt.ads.model.ApplicationAd;
-import cm.aptoide.pt.ads.model.ApplicationAdError;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.ads.model.ApplicationAd;
 import cm.aptoide.pt.ads.model.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
+import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -124,13 +122,15 @@ public class AppViewManager {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
-      return similarAdExperiment.getSimilarAd(packageName, keyWords).flatMap(
-          adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
-            cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
-                recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError(), adResult.getError());
-            return cachedSimilarAppsViewModel;
-          }));
+      return similarAdExperiment.getSimilarAd(packageName, keyWords)
+          .flatMap(
+              adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
+                cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
+                    recommendedAppsRequestResult.getList(),
+                    recommendedAppsRequestResult.isLoading(),
+                    recommendedAppsRequestResult.getError(), adResult.getError());
+                return cachedSimilarAppsViewModel;
+              }));
     }
   }
 
@@ -142,10 +142,13 @@ public class AppViewManager {
       return loadAdForSimilarApps(packageName, keyWords).flatMap(
           adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
             ApplicationAd applicationAd = null;
-            if(adResult.getMinimalAd() != null) applicationAd = new AptoideNativeAd(adResult.getMinimalAd());
-            cachedSimilarAppsViewModel = new SimilarAppsViewModel(applicationAd,
-                recommendedAppsRequestResult.getList(), recommendedAppsRequestResult.isLoading(),
-                recommendedAppsRequestResult.getError(), adResult.getError());
+            if (adResult.getMinimalAd() != null) {
+              applicationAd = new AptoideNativeAd(adResult.getMinimalAd());
+            }
+            cachedSimilarAppsViewModel =
+                new SimilarAppsViewModel(applicationAd, recommendedAppsRequestResult.getList(),
+                    recommendedAppsRequestResult.isLoading(),
+                    recommendedAppsRequestResult.getError(), adResult.getError());
             return cachedSimilarAppsViewModel;
           }));
     }
@@ -222,11 +225,15 @@ public class AppViewManager {
     return adsManager.loadAd(packageName, keyWords);
   }
 
+  public SimilarAppsViewModel getCachedSimilarAppsViewModel() {
+    return cachedSimilarAppsViewModel;
+  }
+
   private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
     return adsManager.loadAppnextAd(keywords);
   }
 
-  public PublishSubject<AppNextAdResult> appNextAdClick(){
+  public PublishSubject<AppNextAdResult> appNextAdClick() {
     return adsManager.appNextAdClick();
   }
 
@@ -253,7 +260,8 @@ public class AppViewManager {
             app.isLatestTrustedVersion(), app.getUniqueName(), appViewConfiguration.shouldInstall(),
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
-            isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising()));
+            isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(),
+            app.getBdsFlags()));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {
@@ -405,5 +413,9 @@ public class AppViewManager {
           }));
     }
     return Completable.complete();
+  }
+
+  public Single<List<Donation>> getTopDonations(String packageName) {
+    return appCoinsManager.getDonationsList(packageName);
   }
 }

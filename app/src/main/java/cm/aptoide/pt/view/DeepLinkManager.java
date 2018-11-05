@@ -17,7 +17,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -174,21 +174,20 @@ public class DeepLinkManager {
   }
 
   private void appViewDeepLink(long appId, String packageName, boolean showPopup, boolean isApkfy) {
-    NewAppViewFragment.OpenType openType;
+    AppViewFragment.OpenType openType;
     if (isApkfy) {
-      openType = NewAppViewFragment.OpenType.APK_FY_INSTALL_POPUP;
+      openType = AppViewFragment.OpenType.APK_FY_INSTALL_POPUP;
     } else {
-      openType = showPopup ? NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
-          : NewAppViewFragment.OpenType.OPEN_ONLY;
+      openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
+          : AppViewFragment.OpenType.OPEN_ONLY;
     }
 
     appNavigator.navigateWithAppId(appId, packageName, openType, "");
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
-    NewAppViewFragment.OpenType openType =
-        showPopup ? NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
-            : NewAppViewFragment.OpenType.OPEN_ONLY;
+    AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
+        : AppViewFragment.OpenType.OPEN_ONLY;
     appNavigator.navigateWithPackageAndStoreNames(packageName, storeName, openType);
   }
 
