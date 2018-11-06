@@ -102,11 +102,10 @@ public class HomePresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> home.appNextClick()
             .observeOn(Schedulers.io())
-            .flatMap(result -> {
+            .doOnNext(result -> {
               AppNextNativeAd ad = result.getAd();
               homeAnalytics.sendAdClickEvent(ad.getStars(), ad.getPackageName(), 0,
                   "ads-highlighted", HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
-              return home.recordAppNextClick();
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -218,16 +217,12 @@ public class HomePresenter implements Presenter {
           }
         })
         .observeOn(Schedulers.io())
-        .flatMap(appNextAdResult -> {
+        .doOnSuccess(appNextAdResult -> {
           AppNextNativeAd ad = appNextAdResult.getAd();
           if (ad != null) {
             homeAnalytics.sendAdImpressionEvent(ad.getStars(), ad.getPackageName(), 0, bundleTag,
                 HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
-            return home.recordAppNextImpression()
-                .map(__ -> appNextAdResult)
-                .toSingle();
           }
-          return Single.just(appNextAdResult);
         });
   }
 
