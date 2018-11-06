@@ -125,8 +125,9 @@ public class AppViewPresenter implements Presenter {
           if (similarAppsViewModel != null
               && similarAppsViewModel.hasAd()
               && !similarAdExperiment.isImpressionRecorded()) {
-            appViewAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
-                .getNetwork(), true);
+            appViewAnalytics.
+                similarAppBundleImpression(similarAppsViewModel.getAd()
+                    .getNetwork(), true);
             return similarAdExperiment.recordAdImpression();
           }
           return Observable.empty();

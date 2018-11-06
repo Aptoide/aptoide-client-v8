@@ -24,4 +24,10 @@ public class ApplicationAdError {
   public boolean hasError() {
     return nativeAdError != null || minimalAdError != null;
   }
+
+  public String getErrorMessage() {
+    if (nativeAdError != null) return nativeAdError.getErrorMessage();
+    if (minimalAdError != null) return minimalAdError.name();
+    return null;
+  }
 }
