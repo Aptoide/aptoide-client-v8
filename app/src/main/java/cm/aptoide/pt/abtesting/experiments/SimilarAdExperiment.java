@@ -35,13 +35,13 @@ public class SimilarAdExperiment {
         .observeOn(scheduler)
         .flatMapSingle(experiment -> {
           this.isImpressionRecorded = false;
-          String experimentAssigment = "default";
+          String experimentAssignment = "default";
           if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
-            experimentAssigment = experiment.getAssignment();
+            experimentAssignment = experiment.getAssignment();
           }
-          switch (experimentAssigment) {
+          switch (experimentAssignment) {
             case "appnext_ad":
-              return adsManager.loadAppnextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
+              return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
             case "default":
             case "default_ad":
             default:
