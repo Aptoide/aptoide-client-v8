@@ -20,8 +20,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
   private final AptoideUtils.DateTimeU dateUtils;
   private final Comment progressComment;
   private final PublishSubject<Comment> commentClickEvent;
-  private final int commentViewId;
   private final PublishSubject<Comment> postComment;
+  private final int commentViewId;
   private List<Comment> comments;
 
   public CommentsAdapter(List<Comment> comments, AptoideUtils.DateTimeU dateUtils,
