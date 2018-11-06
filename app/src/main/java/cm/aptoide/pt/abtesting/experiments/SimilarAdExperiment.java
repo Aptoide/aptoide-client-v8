@@ -1,5 +1,6 @@
 package cm.aptoide.pt.abtesting.experiments;
 
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.ApplicationAdResult;
@@ -40,7 +41,7 @@ public class SimilarAdExperiment {
           }
           switch (experimentAssigment) {
             case "appnext_ad":
-              return adsManager.loadAppnextAd(keywords);
+              return adsManager.loadAppnextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
             case "default":
             case "default_ad":
             default:

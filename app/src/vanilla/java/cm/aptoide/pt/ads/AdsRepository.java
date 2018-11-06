@@ -157,8 +157,8 @@ public class AdsRepository {
                 .observe()).subscribeOn(Schedulers.io()));
   }
 
-  public PublishSubject<AppNextAdResult> loadAppNextAd(List<String> keywords) {
-    return appNextAdRepository.loadAd(keywords);
+  public PublishSubject<AppNextAdResult> loadAppNextAd(List<String> keywords, String placementId) {
+    return appNextAdRepository.loadAd(keywords, placementId);
   }
 
   public PublishSubject<AppNextAdResult> appNextAdClick() {

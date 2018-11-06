@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
@@ -230,7 +231,7 @@ public class AppViewManager {
   }
 
   private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
-    return adsManager.loadAppnextAd(keywords);
+    return adsManager.loadAppnextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
   }
 
   public PublishSubject<AppNextAdResult> appNextAdClick() {

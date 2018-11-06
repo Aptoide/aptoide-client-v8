@@ -1,5 +1,6 @@
 package cm.aptoide.pt.abtesting.experiments;
 
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppNextAdResult;
@@ -33,7 +34,7 @@ public class HighlightedAdExperiment {
           }
           switch (experimentAssigment) {
             case "appnext_ad":
-              return adsManager.loadAppnextAd(null);
+              return adsManager.loadAppnextAd(null, BuildConfig.APPNEXT_HIGHLIGHTED_PLACEMENT_ID);
             case "default":
             case "no_appnext_ad":
             default:
