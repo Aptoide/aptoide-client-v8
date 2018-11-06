@@ -6,7 +6,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.model.AppNextNativeAd;
 import cm.aptoide.pt.ads.model.ApplicationAd;
-import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppNextAdResult;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
@@ -222,9 +221,7 @@ public class HomePresenter implements Presenter {
           if (ad != null) {
             homeAnalytics.sendAdImpressionEvent(ad.getStars(), ad.getPackageName(), 0, bundleTag,
                 HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
-          } else if (appNextAdResult.getError()
-              .getErrorMessage()
-              .equals(DEFAULT_ASSIGNMENT_ERROR)) {
+          } else {
             homeAnalytics.sendHighlightedImpressionEvent();
           }
         });
