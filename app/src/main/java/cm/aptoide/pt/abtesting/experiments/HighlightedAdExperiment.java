@@ -1,5 +1,6 @@
 package cm.aptoide.pt.abtesting.experiments;
 
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppNextAdResult;
@@ -28,13 +29,13 @@ public class HighlightedAdExperiment {
     return abTestManager.getExperiment(EXPERIMENT_ID)
         .observeOn(scheduler)
         .flatMapSingle(experiment -> {
-          String experimentAssigment = "default";
+          String experimentAssignment = "default";
           if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
-            experimentAssigment = experiment.getAssignment();
+            experimentAssignment = experiment.getAssignment();
           }
-          switch (experimentAssigment) {
+          switch (experimentAssignment) {
             case "appnext_ad":
-              return adsManager.loadAppnextAd(null);
+              return adsManager.loadAppNextAd(null, BuildConfig.APPNEXT_HIGHLIGHTED_PLACEMENT_ID);
             case "default":
             case "no_appnext_ad":
             default:
