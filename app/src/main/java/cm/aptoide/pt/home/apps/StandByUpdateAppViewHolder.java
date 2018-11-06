@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
@@ -22,6 +23,9 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
   private ImageView resumeButton;
   private PublishSubject<AppClick> cancelUpdate;
   private TextView updateState;
+  private LinearLayout downloadInteractButtonsLayout;
+  private LinearLayout downloadAppInfoLayout;
+  private LinearLayout parentView;
 
   public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> cancelUpdate) {
     super(itemView);
@@ -33,6 +37,9 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     cancelButton = (ImageView) itemView.findViewById(R.id.apps_updates_cancel_button);
     resumeButton = (ImageView) itemView.findViewById(R.id.apps_updates_resume_download);
     updateState = (TextView) itemView.findViewById(R.id.apps_updates_update_state);
+    downloadInteractButtonsLayout = itemView.findViewById(R.id.apps_updates_standby_buttons_layout);
+    downloadAppInfoLayout = itemView.findViewById(R.id.apps_updates_standby_app_info_layout);
+    parentView = itemView.findViewById(R.id.apps_updates_standby_main_layout);
     this.cancelUpdate = cancelUpdate;
   }
 
@@ -43,12 +50,39 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
 
     if (((UpdateApp) app).isIndeterminate()) {
       progressBar.setIndeterminate(true);
+      downloadInteractButtonsLayout.setVisibility(View.GONE);
+
+      LinearLayout.LayoutParams appInfoParams =
+          (LinearLayout.LayoutParams) downloadAppInfoLayout.getLayoutParams();
+      appInfoParams.weight = 3;
+      appInfoParams.rightMargin = 56;
+      downloadAppInfoLayout.setLayoutParams(appInfoParams);
+
+      LinearLayout.LayoutParams buttonsLayoutParams =
+          (LinearLayout.LayoutParams) downloadInteractButtonsLayout.getLayoutParams();
+      buttonsLayoutParams.weight = 0;
+      downloadInteractButtonsLayout.setLayoutParams(buttonsLayoutParams);
+
       cancelButton.setVisibility(View.GONE);
       resumeButton.setVisibility(View.GONE);
       updateProgress.setVisibility(View.GONE);
       updateState.setText(itemView.getResources()
           .getString(R.string.apps_short_updating));
     } else {
+
+      LinearLayout.LayoutParams appInfoParams =
+          (LinearLayout.LayoutParams) downloadAppInfoLayout.getLayoutParams();
+      appInfoParams.weight = 2;
+      appInfoParams.rightMargin = 8;
+      downloadAppInfoLayout.setLayoutParams(appInfoParams);
+
+      LinearLayout.LayoutParams buttonsLayoutParams =
+          (LinearLayout.LayoutParams) downloadInteractButtonsLayout.getLayoutParams();
+      buttonsLayoutParams.weight = 1;
+      downloadInteractButtonsLayout.setLayoutParams(buttonsLayoutParams);
+
+      downloadInteractButtonsLayout.setVisibility(View.VISIBLE);
+
       progressBar.setIndeterminate(false);
       progressBar.setProgress(((UpdateApp) app).getProgress());
       updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
