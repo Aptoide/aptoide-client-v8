@@ -2,6 +2,8 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.model.ApplicationAd;
 import cm.aptoide.pt.ads.model.AptoideNativeAd;
@@ -118,7 +120,7 @@ public class AppViewManager {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
-      return adsManager.loadAppnextAd(keyWords)
+      return adsManager.loadAppnextAd(keyWords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID)
           .flatMap(
               adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
                 cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
@@ -226,7 +228,7 @@ public class AppViewManager {
   }
 
   private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
-    return adsManager.loadAppnextAd(keywords);
+    return adsManager.loadAppnextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
   }
 
   public PublishSubject<AppNextAdResult> appNextAdClick() {
