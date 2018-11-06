@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppNextAdResult;
 import cm.aptoide.pt.impressions.ImpressionManager;
@@ -37,7 +38,7 @@ public class Home {
   }
 
   public Single<AppNextAdResult> loadAppNextAd() {
-    return adsManager.loadAppnextAd(null);
+    return adsManager.loadAppNextAd(null, BuildConfig.APPNEXT_HIGHLIGHTED_PLACEMENT_ID);
   }
 
 
