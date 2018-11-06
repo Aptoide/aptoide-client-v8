@@ -228,7 +228,7 @@ public class AppViewManager {
   }
 
   private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
-    return adsManager.loadAppnextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
+    return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
   }
 
   public PublishSubject<AppNextAdResult> appNextAdClick() {
