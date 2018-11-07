@@ -19,6 +19,8 @@ public interface ApplicationAd {
 
   Network getNetwork();
 
+  void setAdView(View adView);
+
   enum Network {
     SERVER("Server"), APPNEXT("AppNext");
     private String name;
