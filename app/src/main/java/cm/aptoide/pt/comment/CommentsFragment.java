@@ -173,7 +173,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   public void setupToolbar() {
 
-    toolbar.setTitle(getArguments().getString("storeName", ""));
+    toolbar.setTitle("Store comments");
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);
