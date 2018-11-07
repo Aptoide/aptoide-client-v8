@@ -80,6 +80,36 @@ public class UpdateApp implements App {
     return md5.equals(other.getMd5()) && getType().equals(other.getType());
   }
 
+  @Override public String toString() {
+    return "UpdateApp{"
+        + "name='"
+        + name
+        + '\''
+        + ", md5='"
+        + md5
+        + '\''
+        + ", icon='"
+        + icon
+        + '\''
+        + ", packageName='"
+        + packageName
+        + '\''
+        + ", progress="
+        + progress
+        + ", isIndeterminate="
+        + isIndeterminate
+        + ", version='"
+        + version
+        + '\''
+        + ", versionCode="
+        + versionCode
+        + ", updateStatus="
+        + updateStatus
+        + ", appId="
+        + appId
+        + '}';
+  }
+
   public int getVersionCode() {
     return versionCode;
   }
