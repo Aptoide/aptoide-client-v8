@@ -126,8 +126,44 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         if (listOfApps.contains(list.get(i))) {
           //update
           int itemIndex = listOfApps.indexOf(list.get(i));
-          listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
-          notifyItemChanged(itemIndex);
+          App actualApp = listOfApps.get(itemIndex);
+          App newApp = list.get(i);
+
+          if (actualApp instanceof UpdateApp && newApp instanceof UpdateApp) {
+
+            boolean hasSameStatus =
+                ((UpdateApp) actualApp).getUpdateStatus() == ((UpdateApp) newApp).getUpdateStatus();
+            boolean hasSameProgress =
+                ((UpdateApp) actualApp).getProgress() == ((UpdateApp) newApp).getProgress();
+            boolean hasSameIndeterminateStatus = (((UpdateApp) actualApp).isIndeterminate()
+                == ((UpdateApp) newApp).isIndeterminate());
+
+            if (!hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus) {
+              listOfApps.set(itemIndex,
+                  list.get(i));//stores the same item with the new emitted changes
+              notifyItemChanged(itemIndex);
+            }
+          } else if (actualApp instanceof DownloadApp && newApp instanceof DownloadApp) {
+
+            boolean hasSameStatus = ((DownloadApp) actualApp).getDownloadStatus()
+                == ((DownloadApp) newApp).getDownloadStatus();
+            boolean hasSameProgress =
+                ((DownloadApp) actualApp).getProgress() == ((DownloadApp) newApp).getProgress();
+            boolean hasSameIndeterminateStatus = (((DownloadApp) actualApp).isIndeterminate()
+                == ((DownloadApp) newApp).isIndeterminate());
+
+            if (!hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus) {
+              listOfApps.set(itemIndex,
+                  list.get(i));//stores the same item with the new emitted changes
+              notifyItemChanged(itemIndex);
+            }
+          } else {
+            if (list.get(i) != listOfApps.get(itemIndex)) {
+              listOfApps.set(itemIndex,
+                  list.get(i));//stores the same item with the new emitted changes
+              notifyItemChanged(itemIndex);
+            }
+          }
         } else {
           //add new element
           listOfApps.add(offset + 1, list.get(i));
