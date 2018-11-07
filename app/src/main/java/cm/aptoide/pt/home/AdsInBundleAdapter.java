@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.model.ApplicationAd;
+import cm.aptoide.pt.app.view.AppViewSimilarAppViewHolder;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -38,7 +40,12 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
     this.bundlePosition = bundlePosition;
   }
 
-  @Override public AdInBundleViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+  @Override public AdInBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    if (viewType == ApplicationAd.Network.APPNEXT.ordinal()) {
+      return new AdInBundleViewHolder(LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.displayable_grid_ad_appnext, parent, false), adClickedEvents,
+          oneDecimalFormatter);
+    }
     return new AdInBundleViewHolder(LayoutInflater.from(parent.getContext())
         .inflate(R.layout.displayable_grid_ad, parent, false), adClickedEvents,
         oneDecimalFormatter);
@@ -50,5 +57,12 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
 
   @Override public int getItemCount() {
     return ads.size();
+  }
+
+  @Override public int getItemViewType(int position) {
+    return ads.get(position)
+        .getAd()
+        .getNetwork()
+        .ordinal();
   }
 }
