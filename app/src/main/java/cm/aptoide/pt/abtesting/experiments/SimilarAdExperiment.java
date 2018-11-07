@@ -41,7 +41,8 @@ public class SimilarAdExperiment {
           }
           switch (experimentAssignment) {
             case "appnext_ad":
-              return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
+              return adsManager.loadAppNextAd(keywords,
+                  BuildConfig.APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID);
             case "default":
             case "default_ad":
             default:

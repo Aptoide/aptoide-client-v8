@@ -35,7 +35,8 @@ public class HighlightedAdExperiment {
           }
           switch (experimentAssignment) {
             case "appnext_ad":
-              return adsManager.loadAppNextAd(null, BuildConfig.APPNEXT_HIGHLIGHTED_PLACEMENT_ID);
+              return adsManager.loadAppNextAd(null,
+                  BuildConfig.APPNEXT_HIGHLIGHTED_ABTEST_PLACEMENT_ID);
             case "default":
             case "no_appnext_ad":
             default:
