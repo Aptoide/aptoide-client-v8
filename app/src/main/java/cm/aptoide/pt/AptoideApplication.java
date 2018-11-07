@@ -943,11 +943,12 @@ public abstract class AptoideApplication extends Application {
   }
 
   public String getVersionCode() {
-    String version = null;
+    String version = "NaN";
     try {
       PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-      version = pInfo.versionName;
+      version = String.valueOf(pInfo.versionCode);
     } catch (PackageManager.NameNotFoundException e) {
+
     }
     return version;
   }
