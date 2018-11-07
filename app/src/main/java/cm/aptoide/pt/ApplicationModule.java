@@ -172,7 +172,6 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
@@ -441,11 +440,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppEventsLogger provideAppEventsLogger() {
     return AppEventsLogger.newLogger(application);
-  }
-
-  @Singleton @Provides DownloadRepository provideDownloadRepository(
-      DownloadAccessor downloadAccessor) {
-    return new DownloadRepository(downloadAccessor);
   }
 
   @Singleton @Provides Answers provideAnswers(Fabric fabric) {
