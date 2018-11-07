@@ -6,7 +6,10 @@
     android:orientation="vertical"
     >
 
-  <include layout="@layout/action_bar"/>
+  <include
+      layout="@layout/action_bar_comments"
+      android:id="@+id/action_bar"
+      />
 
   <FrameLayout
       android:layout_width="match_parent"

@@ -3,9 +3,14 @@ package cm.aptoide.pt.comment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -37,6 +42,9 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   private View loading;
   private View genericErrorView;
   private LinearLayoutManager layoutManager;
+  private Menu menu;
+  private Toolbar toolbar;
+  private ActionBar actionBar;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -54,6 +62,8 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    toolbar = view.findViewById(R.id.action_bar)
+        .findViewById(R.id.toolbar);
     loading = view.findViewById(R.id.progress_bar);
     genericErrorView = view.findViewById(R.id.generic_error);
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
@@ -67,6 +77,8 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
             postComment);
     commentsList.setAdapter(commentsAdapter);
 
+    setHasOptionsMenu(true);
+    setupToolbar();
     attachPresenter(commentsPresenter);
   }
 
@@ -148,5 +160,41 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     genericErrorView = null;
     loading = null;
     super.onDestroyView();
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        getActivity().onBackPressed();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  public void setupToolbar() {
+
+    toolbar.setTitle(getArguments().getString("storeName", ""));
+
+    final AppCompatActivity activity = (AppCompatActivity) getActivity();
+    activity.setSupportActionBar(toolbar);
+    actionBar = activity.getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+      actionBar.setHomeButtonEnabled(true);
+      actionBar.setTitle(toolbar.getTitle());
+    }
+  }
+
+  private void showHideOptionsMenu(boolean visible) {
+    for (int i = 0; i < menu.size(); i++) {
+      MenuItem item = menu.getItem(i);
+      showHideOptionsMenu(item, visible);
+    }
+  }
+
+  protected void showHideOptionsMenu(@Nullable MenuItem item, boolean visible) {
+    if (item != null) {
+      item.setVisible(visible);
+    }
   }
 }

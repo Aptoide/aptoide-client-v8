@@ -119,6 +119,7 @@ import cm.aptoide.pt.view.wizard.WizardView;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
+import java.util.Date;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
@@ -416,7 +417,7 @@ import rx.schedulers.Schedulers;
             arguments.getString("comment_user_avatar", null),
             arguments.getString("comment_user_name", "")),
         arguments.getInt("comment_replies_number", 0),
-        arguments.getString("comment_timestamp", "0"));
+        ((Date) arguments.getSerializable("comment_timestamp")));
   }
 
   @FragmentScope @Provides CommentDetailPresenter providesCommentDetailPresenter(

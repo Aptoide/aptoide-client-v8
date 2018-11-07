@@ -23,9 +23,8 @@ public class CommentsNavigator {
         .getAvatar());
     args.putString("comment_user_name", comment.getUser()
         .getName());
-    args.putLong("comment_replies_number", comment.getReplies());
-    args.putString("comment_timestamp", comment.getDate()
-        .toString());
+    args.putInt("comment_replies_number", comment.getReplies());
+    args.putSerializable("comment_timestamp", comment.getDate());
     fragment.setArguments(args);
     fragmentNavigator.navigateTo(fragment, true);
   }

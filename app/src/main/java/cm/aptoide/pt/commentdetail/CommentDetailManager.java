@@ -11,10 +11,10 @@ public class CommentDetailManager {
   private final String message;
   private final User user;
   private final int repliesNumber;
-  private final String commentTimestamp;
+  private final Date commentTimestamp;
 
   public CommentDetailManager(Comments comments, long commentId, String message, User user,
-      int repliesNumber, String commentTimestamp) {
+      int repliesNumber, Date commentTimestamp) {
     this.comments = comments;
     this.commentId = commentId;
     this.message = message;
@@ -26,6 +26,6 @@ public class CommentDetailManager {
   public Single<CommentDetailViewModel> loadCommentModel() {
     return comments.loadComment(commentId)
         .map(commentResponseModel -> new CommentDetailViewModel(user.getName(), user.getAvatar(),
-            message, repliesNumber, new Date(commentTimestamp), commentResponseModel.getReplies()));
+            message, repliesNumber, commentTimestamp, commentResponseModel.getReplies()));
   }
 }
