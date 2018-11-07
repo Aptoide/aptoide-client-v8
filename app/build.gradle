@@ -261,12 +261,16 @@ android {
       resValue "string", "TEST_FAIRY_TOKEN", "\"" + project.TEST_FAIRY_TOKEN + "\""
     }
 
-    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_PLACEMENT_ID",
-        "\"" + project.APPNEXT_HIGHLIGHTED_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "APPNEXT_PLACEMENT_ID",
         "\"" + project.APPNEXT_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_PLACEMENT_ID",
+        "\"" + project.APPNEXT_HIGHLIGHTED_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "APPNEXT_SIMILAR_PLACEMENT_ID",
         "\"" + project.APPNEXT_SIMILAR_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_ABTEST_PLACEMENT_ID",
+        "\"" + project.APPNEXT_HIGHLIGHTED_ABTEST_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID",
+        "\"" + project.APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID + "\""
 
 
     variant.outputs.all { output ->
