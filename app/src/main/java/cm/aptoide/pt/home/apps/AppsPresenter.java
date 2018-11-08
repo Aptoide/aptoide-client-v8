@@ -20,7 +20,7 @@ public class AppsPresenter implements Presenter {
   private final AppsFragmentView view;
   private final AppsManager appsManager;
   private final Scheduler viewScheduler;
-  private final Scheduler io;
+  private final Scheduler ioScheduler;
   private final CrashReport crashReport;
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
@@ -28,13 +28,13 @@ public class AppsPresenter implements Presenter {
   private final AppsNavigator appsNavigator;
 
   public AppsPresenter(AppsFragmentView view, AppsManager appsManager, Scheduler viewScheduler,
-      Scheduler io, CrashReport crashReport, PermissionManager permissionManager,
+      Scheduler ioScheduler, CrashReport crashReport, PermissionManager permissionManager,
       PermissionService permissionService, AptoideAccountManager accountManager,
       AppsNavigator appsNavigator) {
     this.view = view;
     this.appsManager = appsManager;
     this.viewScheduler = viewScheduler;
-    this.io = io;
+    this.ioScheduler = ioScheduler;
     this.crashReport = crashReport;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
@@ -91,7 +91,7 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.refreshApps()
-            .observeOn(io)
+            .observeOn(ioScheduler)
             .flatMapCompletable(__ -> appsManager.refreshAllUpdates()
                 .observeOn(viewScheduler)
                 .doOnCompleted(() -> view.hidePullToRefresh())
@@ -112,7 +112,7 @@ public class AppsPresenter implements Presenter {
   private void observeDownloadInstallations() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getInstalledDownloads())
         .observeOn(viewScheduler)
         .doOnNext(installedDownloadsList -> view.removeInstalledDownloads(installedDownloadsList))
@@ -137,7 +137,7 @@ public class AppsPresenter implements Presenter {
   private void observeExcludedUpdates() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getUpdatesList(true))
         .distinctUntilChanged()
         .filter(excludedUpdatesList -> !excludedUpdatesList.isEmpty())
@@ -157,7 +157,7 @@ public class AppsPresenter implements Presenter {
         .flatMap(__ -> view.updateLongClick())
         .doOnNext(app -> view.showIgnoreUpdate())
         .flatMap(app -> view.ignoreUpdate()
-            .observeOn(io)
+            .observeOn(ioScheduler)
             .flatMap(__ -> appsManager.excludeUpdate(app)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -170,7 +170,7 @@ public class AppsPresenter implements Presenter {
   private void observeUpdatesList() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getUpdateDownloadsList())
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showUpdatesDownloadList(list))
@@ -185,7 +185,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> Observable.merge(view.resumeUpdate(), view.retryUpdate()))
         .doOnNext(app -> view.setStandbyState(app))
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.resumeUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -198,7 +198,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelUpdate())
         .doOnNext(app -> view.setStandbyState(app))
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .doOnNext(app -> appsManager.cancelUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -211,7 +211,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseUpdate())
         .doOnNext(app -> view.setStandbyState(app))
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.pauseUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -233,7 +233,7 @@ public class AppsPresenter implements Presenter {
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
                 .doOnNext(__ -> view.setStandbyState(app))
-                .observeOn(io)
+                .observeOn(ioScheduler)
                 .flatMapCompletable(__3 -> appsManager.updateApp(app)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -264,7 +264,7 @@ public class AppsPresenter implements Presenter {
             .flatMap(__ -> permissionManager.requestExternalStoragePermission(permissionService))
             .retry())
         .doOnNext(__ -> view.showIndeterminateAllUpdates())
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.updateAll())
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -277,7 +277,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.installApp())
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.installApp(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -289,7 +289,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelDownload())
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .doOnNext(app -> appsManager.cancelDownload(app))
         .observeOn(viewScheduler)
         .doOnNext(app -> view.removeCanceledDownload(app))
@@ -305,7 +305,7 @@ public class AppsPresenter implements Presenter {
             .observeOn(viewScheduler)
             .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
                 .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
-                .observeOn(io)
+                .observeOn(ioScheduler)
                 .flatMapCompletable(__ -> appsManager.resumeDownload(app)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -318,7 +318,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseDownload())
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.pauseDownload(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -328,7 +328,7 @@ public class AppsPresenter implements Presenter {
   private void getDownloads() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getDownloadApps())
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showDownloadsList(list))
@@ -340,7 +340,7 @@ public class AppsPresenter implements Presenter {
   private void getInstalledApps() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getInstalledApps())
         .observeOn(viewScheduler)
         .doOnNext(installedApps -> view.showInstalledApps(installedApps))
@@ -352,7 +352,7 @@ public class AppsPresenter implements Presenter {
   private void getAvailableUpdatesList() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(io)
+        .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getUpdatesList(false))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showUpdatesList(list))
