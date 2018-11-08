@@ -21,12 +21,12 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
   private TextView updateProgress;
   private ImageView cancelButton;
   private ImageView resumeButton;
-  private PublishSubject<AppClick> cancelUpdate;
+  private PublishSubject<AppClick> updateAction;
   private TextView updateState;
   private LinearLayout downloadInteractButtonsLayout;
   private LinearLayout downloadAppInfoLayout;
 
-  public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> cancelUpdate) {
+  public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> updateAction) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -38,7 +38,7 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     updateState = (TextView) itemView.findViewById(R.id.apps_updates_update_state);
     downloadInteractButtonsLayout = itemView.findViewById(R.id.apps_updates_standby_buttons_layout);
     downloadAppInfoLayout = itemView.findViewById(R.id.apps_updates_standby_app_info_layout);
-    this.cancelUpdate = cancelUpdate;
+    this.updateAction = updateAction;
   }
 
   @Override public void setApp(App app) {
@@ -75,9 +75,9 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
           .getString(R.string.apps_short_update_paused));
     }
     cancelButton.setOnClickListener(
-        cancel -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.CANCEL_UPDATE)));
+        cancel -> updateAction.onNext(new AppClick(app, AppClick.ClickType.CANCEL_UPDATE)));
     resumeButton.setOnClickListener(
-        resume -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.RESUME_UPDATE)));
+        resume -> updateAction.onNext(new AppClick(app, AppClick.ClickType.RESUME_UPDATE)));
   }
 
   private void adjustStandByDownloadAppInfoWeightAndMargin(int weight, int margin) {
