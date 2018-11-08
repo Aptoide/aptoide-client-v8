@@ -8,6 +8,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
@@ -275,10 +276,14 @@ public class AppViewAnalytics {
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
-      AnalyticsManager.Action action) {
-
+      DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
+      String editorsChoice) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.APPVIEW, action);
+    if (downloadAction == DownloadModel.Action.INSTALL) {
+      downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
+          editorsChoice, InstallType.INSTALL, action);
+    }
   }
 
   public void sendTimelineLoggedInInstallRecommendEvents(String packageName) {

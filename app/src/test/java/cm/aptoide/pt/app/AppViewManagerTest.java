@@ -590,7 +590,7 @@ public class AppViewManagerTest {
     when(download.getAction()).thenReturn(3);
 
     //Then the AppViewManager should return a Complete when the download starts
-    appViewManager.downloadApp(DownloadModel.Action.INSTALL, "packageName", 1)
+    appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "aString", null)
         .test()
         .assertCompleted();
 
@@ -599,11 +599,11 @@ public class AppViewManagerTest {
     //And it should ask the installManager to start the download
     verify(installManager).install(download);
     //And it should set the necessary analytics
-    verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString",
-        AnalyticsManager.Action.CLICK);
+    verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
+        AnalyticsManager.Action.CLICK, "aString", null);
     verify(installAnalytics).installStarted("packageName", 1, InstallType.INSTALL,
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
-        downloadStateParser.getOrigin(download.getAction()), 2, "aString");
+        downloadStateParser.getOrigin(download.getAction()), 0, null);
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -658,8 +658,8 @@ public class AppViewManagerTest {
     verify(installManager).getDownload("md5");
     verify(installManager).install(download);
     //And it should set the necessary analytics
-    verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString",
-        AnalyticsManager.Action.CLICK);
+    verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString", null,
+        AnalyticsManager.Action.CLICK, null, null);
     verify(installAnalytics).installStarted("packageName", 1, InstallType.INSTALL,
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), 2, "aString");

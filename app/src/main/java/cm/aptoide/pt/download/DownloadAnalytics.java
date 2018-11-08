@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytics {
-  public static final String DOWNLOAD_EVENT = "Download_99percent";
   public static final String DOWNLOAD_EVENT_NAME = "DOWNLOAD";
   public static final String NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME =
       "Aptoide_Push_Notification_Download_Complete";
@@ -88,13 +87,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
           downloadEvent.getAction(), downloadEvent.getContext());
       cache.remove(downloadCacheKey);
     }
-  }
-
-  public void moveFile(String movetype) {
-    Map<String, Object> map = new HashMap<>();
-    map.put("APK", movetype);
-    analyticsManager.logEvent(map, DOWNLOAD_EVENT, AnalyticsManager.Action.AUTO,
-        navigationTracker.getViewName(false));
   }
 
   public void downloadStartEvent(Download download, AnalyticsManager.Action action,
@@ -188,15 +180,19 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         .setHadProgress(true);
   }
 
-  public void installClicked(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
-      String id, String packageName, String trustedValue, String editorsBrickPosition,
-      InstallType installType, AnalyticsManager.Action action, String previousContext,
-      String currentContext) {
-    editorsChoiceDownloadCompletedEvent(previousScreen, id, packageName, editorsBrickPosition,
+  public void installClicked(String md5, String packageName, String trustedValue,
+      String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action) {
+    ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
+    ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
+    String previousContext = navigationTracker.getCurrentScreen()
+        .getFragment();
+    String currentContext = navigationTracker.getCurrentScreen()
+        .getFragment();
+    editorsChoiceDownloadCompletedEvent(previousScreen, md5, packageName, editorsBrickPosition,
         installType, currentContext, action);
-    pushNotificationDownloadEvent(previousScreen, id, packageName, installType, action,
+    pushNotificationDownloadEvent(previousScreen, md5, packageName, installType, action,
         currentContext);
-    downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
+    downloadCompleteEvent(previousScreen, currentScreen, md5, packageName, trustedValue, action,
         previousContext);
   }
 
@@ -239,7 +235,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   private void editorsChoiceDownloadCompletedEvent(ScreenTagHistory previousScreen, String id,
       String packageName, String editorsBrickPosition, InstallType installType, String context,
       AnalyticsManager.Action action) {
-    if (editorsBrickPosition != null) {
+    if (editorsBrickPosition != null && !editorsBrickPosition.isEmpty()) {
       HashMap<String, Object> map = new HashMap<>();
       map.put("Package Name", packageName);
       if (previousScreen.getFragment() != null) {

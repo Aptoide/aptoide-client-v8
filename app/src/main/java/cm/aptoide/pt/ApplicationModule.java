@@ -328,8 +328,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
-    return new AptoideDownloadManager(downloadAccessor, cacheHelper,
-        new FileUtils(downloadAnalytics::moveFile), downloadAnalytics, FileDownloader.getImpl(),
+    return new AptoideDownloadManager(downloadAccessor, cacheHelper, new FileUtils(),
+        downloadAnalytics, FileDownloader.getImpl(),
         cachePath, apkPath, obbPath);
   }
 
