@@ -50,16 +50,8 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
       progressBar.setIndeterminate(true);
       downloadInteractButtonsLayout.setVisibility(View.GONE);
 
-      LinearLayout.LayoutParams appInfoParams =
-          (LinearLayout.LayoutParams) downloadAppInfoLayout.getLayoutParams();
-      appInfoParams.weight = 3;
-      appInfoParams.rightMargin = 56;
-      downloadAppInfoLayout.setLayoutParams(appInfoParams);
-
-      LinearLayout.LayoutParams buttonsLayoutParams =
-          (LinearLayout.LayoutParams) downloadInteractButtonsLayout.getLayoutParams();
-      buttonsLayoutParams.weight = 0;
-      downloadInteractButtonsLayout.setLayoutParams(buttonsLayoutParams);
+      adjustAppInfoWeightAndMargin(3, 56);
+      adjustStandByDownloadButtonsWeight(0);
 
       cancelButton.setVisibility(View.GONE);
       resumeButton.setVisibility(View.GONE);
@@ -68,16 +60,8 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
           .getString(R.string.apps_short_updating));
     } else {
 
-      LinearLayout.LayoutParams appInfoParams =
-          (LinearLayout.LayoutParams) downloadAppInfoLayout.getLayoutParams();
-      appInfoParams.weight = 2;
-      appInfoParams.rightMargin = 8;
-      downloadAppInfoLayout.setLayoutParams(appInfoParams);
-
-      LinearLayout.LayoutParams buttonsLayoutParams =
-          (LinearLayout.LayoutParams) downloadInteractButtonsLayout.getLayoutParams();
-      buttonsLayoutParams.weight = 1;
-      downloadInteractButtonsLayout.setLayoutParams(buttonsLayoutParams);
+      adjustAppInfoWeightAndMargin(2, 8);
+      adjustStandByDownloadButtonsWeight(1);
 
       downloadInteractButtonsLayout.setVisibility(View.VISIBLE);
 
@@ -94,5 +78,21 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
         cancel -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.CANCEL_UPDATE)));
     resumeButton.setOnClickListener(
         resume -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.RESUME_UPDATE)));
+  }
+
+  private void adjustAppInfoWeightAndMargin(int weight, int margin) {
+    LinearLayout.LayoutParams appInfoParams =
+        (LinearLayout.LayoutParams) downloadAppInfoLayout.getLayoutParams();
+    appInfoParams.weight = weight;
+    appInfoParams.rightMargin = margin;
+    downloadAppInfoLayout.setLayoutParams(appInfoParams);
+  }
+
+  private void adjustStandByDownloadButtonsWeight(int weight) {
+
+    LinearLayout.LayoutParams buttonsLayoutParams =
+        (LinearLayout.LayoutParams) downloadInteractButtonsLayout.getLayoutParams();
+    buttonsLayoutParams.weight = weight;
+    downloadInteractButtonsLayout.setLayoutParams(buttonsLayoutParams);
   }
 }
