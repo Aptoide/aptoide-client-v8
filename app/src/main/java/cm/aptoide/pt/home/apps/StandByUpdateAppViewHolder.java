@@ -50,7 +50,7 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
       progressBar.setIndeterminate(true);
       downloadInteractButtonsLayout.setVisibility(View.GONE);
 
-      adjustAppInfoWeightAndMargin(3, 56);
+      adjustStandByDownloadAppInfoWeightAndMargin(3, 56);
       adjustStandByDownloadButtonsWeight(0);
 
       cancelButton.setVisibility(View.GONE);
@@ -60,7 +60,7 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
           .getString(R.string.apps_short_updating));
     } else {
 
-      adjustAppInfoWeightAndMargin(2, 8);
+      adjustStandByDownloadAppInfoWeightAndMargin(2, 8);
       adjustStandByDownloadButtonsWeight(1);
 
       downloadInteractButtonsLayout.setVisibility(View.VISIBLE);
@@ -80,7 +80,7 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
         resume -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.RESUME_UPDATE)));
   }
 
-  private void adjustAppInfoWeightAndMargin(int weight, int margin) {
+  private void adjustStandByDownloadAppInfoWeightAndMargin(int weight, int margin) {
     LinearLayout.LayoutParams appInfoParams =
         (LinearLayout.LayoutParams) downloadAppInfoLayout.getLayoutParams();
     appInfoParams.weight = weight;
@@ -89,7 +89,6 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
   }
 
   private void adjustStandByDownloadButtonsWeight(int weight) {
-
     LinearLayout.LayoutParams buttonsLayoutParams =
         (LinearLayout.LayoutParams) downloadInteractButtonsLayout.getLayoutParams();
     buttonsLayoutParams.weight = weight;
