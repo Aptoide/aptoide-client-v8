@@ -71,6 +71,31 @@ public class DownloadApp implements App {
     return md5.equals(other.getMd5()) && getType().equals(other.getType());
   }
 
+  @Override public String toString() {
+    return "DownloadApp{"
+        + "appName='"
+        + appName
+        + '\''
+        + ", md5='"
+        + md5
+        + '\''
+        + ", packageName='"
+        + packageName
+        + '\''
+        + ", icon='"
+        + icon
+        + '\''
+        + ", progress="
+        + progress
+        + ", isIndeterminate="
+        + isIndeterminate
+        + ", versionCode="
+        + versionCode
+        + ", downloadStatus="
+        + downloadStatus
+        + '}';
+  }
+
   public enum Status {
     ACTIVE, STANDBY, COMPLETED, ERROR;
   }

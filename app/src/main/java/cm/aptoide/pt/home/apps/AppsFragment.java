@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +104,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     attachPresenter(new AppsPresenter(this,
         new AppsManager(updatesManager, installManager, new AppMapper(), downloadAnalytics,
             installAnalytics, updatesAnalytics, getContext().getPackageManager(), getContext(),
-            downloadFactory), AndroidSchedulers.mainThread(), Schedulers.computation(),
+            downloadFactory), AndroidSchedulers.mainThread(), Schedulers.io(),
         CrashReport.getInstance(), new PermissionManager(), ((PermissionService) getContext()),
         accountManager, appsNavigator));
   }
@@ -141,10 +140,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-    RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
-    if (animator instanceof SimpleItemAnimator) {
-      ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
-    }
+    recyclerView.setItemAnimator(null);
   }
 
   @Nullable @Override

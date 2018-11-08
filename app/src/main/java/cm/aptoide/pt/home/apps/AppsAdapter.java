@@ -13,18 +13,18 @@ import java.util.List;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
-  protected static final int HEADER_DOWNLOADS = 0;
-  protected static final int HEADER_INSTALLED = 1;
-  protected static final int HEADER_UPDATES = 2;
-  protected static final int ACTIVE_DOWNLOAD = 3;
-  protected static final int STANDBY_DOWNLOAD = 4;
-  protected static final int COMPLETED_DOWNLOAD = 5;
-  protected static final int ERROR_DOWNLOAD = 6;
   protected static final int INSTALLED = 7;
   protected static final int UPDATE = 8;
-  protected static final int UPDATING = 9;
-  protected static final int STANDBY_UPDATE = 10;
-  protected static final int ERROR_UPDATE = 11;
+  static final int HEADER_DOWNLOADS = 0;
+  static final int HEADER_INSTALLED = 1;
+  static final int HEADER_UPDATES = 2;
+  static final int ACTIVE_DOWNLOAD = 3;
+  static final int STANDBY_DOWNLOAD = 4;
+  static final int COMPLETED_DOWNLOAD = 5;
+  static final int ERROR_DOWNLOAD = 6;
+  static final int UPDATING = 9;
+  static final int STANDBY_UPDATE = 10;
+  static final int ERROR_UPDATE = 11;
 
   private List<App> listOfApps;
   private AppsCardViewHolderFactory appsCardViewHolderFactory;
@@ -126,8 +126,30 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         if (listOfApps.contains(list.get(i))) {
           //update
           int itemIndex = listOfApps.indexOf(list.get(i));
-          listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
-          notifyItemChanged(itemIndex);
+          App actualApp = listOfApps.get(itemIndex);
+          App newApp = list.get(i);
+
+          if (actualApp instanceof UpdateApp && newApp instanceof UpdateApp) {
+
+            if (shouldUpdateUpdateApp(((UpdateApp) actualApp), ((UpdateApp) newApp))) {
+              listOfApps.set(itemIndex,
+                  list.get(i));//stores the same item with the new emitted changes
+              notifyItemChanged(itemIndex);
+            }
+          } else if (actualApp instanceof DownloadApp && newApp instanceof DownloadApp) {
+
+            if (shouldUpdateDownloadApp(((DownloadApp) actualApp), ((DownloadApp) newApp))) {
+              listOfApps.set(itemIndex,
+                  list.get(i));//stores the same item with the new emitted changes
+              notifyItemChanged(itemIndex);
+            }
+          } else {
+            if (list.get(i) != listOfApps.get(itemIndex)) {
+              listOfApps.set(itemIndex,
+                  list.get(i));//stores the same item with the new emitted changes
+              notifyItemChanged(itemIndex);
+            }
+          }
         } else {
           //add new element
           listOfApps.add(offset + 1, list.get(i));
@@ -141,6 +163,22 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         }
       }
     }
+  }
+
+  private boolean shouldUpdateDownloadApp(DownloadApp actualApp, DownloadApp newApp) {
+    boolean hasSameStatus = actualApp.getDownloadStatus() == newApp.getDownloadStatus();
+    boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
+    boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
+
+    return !hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus;
+  }
+
+  private boolean shouldUpdateUpdateApp(UpdateApp actualApp, UpdateApp newApp) {
+    boolean hasSameStatus = actualApp.getUpdateStatus() == newApp.getUpdateStatus();
+    boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
+    boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
+
+    return !hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus;
   }
 
   public void addUpdateAppsList(List<App> updatesList) {

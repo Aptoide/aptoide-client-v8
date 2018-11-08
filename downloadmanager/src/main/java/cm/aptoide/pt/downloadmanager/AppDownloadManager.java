@@ -64,8 +64,9 @@ public class AppDownloadManager implements AppDownloader {
   }
 
   public void stop() {
-    if (!subscribe.isUnsubscribed()) {
+    if (subscribe != null && !subscribe.isUnsubscribed()) {
       subscribe.unsubscribe();
+      fileDownloadSubject = null;
     }
   }
 
