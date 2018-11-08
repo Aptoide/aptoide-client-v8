@@ -25,7 +25,6 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
   private TextView updateState;
   private LinearLayout downloadInteractButtonsLayout;
   private LinearLayout downloadAppInfoLayout;
-  private LinearLayout parentView;
 
   public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> cancelUpdate) {
     super(itemView);
@@ -39,7 +38,6 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     updateState = (TextView) itemView.findViewById(R.id.apps_updates_update_state);
     downloadInteractButtonsLayout = itemView.findViewById(R.id.apps_updates_standby_buttons_layout);
     downloadAppInfoLayout = itemView.findViewById(R.id.apps_updates_standby_app_info_layout);
-    parentView = itemView.findViewById(R.id.apps_updates_standby_main_layout);
     this.cancelUpdate = cancelUpdate;
   }
 
