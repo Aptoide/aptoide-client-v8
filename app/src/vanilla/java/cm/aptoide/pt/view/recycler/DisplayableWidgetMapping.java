@@ -267,31 +267,4 @@ public class DisplayableWidgetMapping {
     }
     return cachedDisplayables;
   }
-
-  /**
-   * needed in the partners to get the displayableClass
-   *
-   * @return displayableClass
-   */
-  public Class<? extends Displayable> getDisplayableClass() {
-    return displayableClass;
-  }
-
-  /**
-   * needed in the partners to get the widgetClass
-   *
-   * @return widgetClass
-   */
-  public Class<? extends Widget> getWidgetClass() {
-    return widgetClass;
-  }
-
-  /**
-   * needed in partners to add it's own displayables/widgets
-   *
-   * @return Map of widgets and displayables
-   */
-  protected Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
-    return viewTypeMapping;
-  }
 }
