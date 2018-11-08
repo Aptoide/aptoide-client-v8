@@ -237,12 +237,12 @@ public class AppsManager {
     return installManager.fetchInstalled()
         .distinctUntilChanged()
         .flatMapIterable(installedAppsList -> installedAppsList)
-        .flatMap(installedApp -> getDownload(installedApp))
+        .flatMap(installedApp -> getDownloads(installedApp))
         .toList()
         .map(installedApps -> appMapper.getDownloadApps(installedApps));
   }
 
-  private Observable<Install> getDownload(Installed installedApp) {
+  private Observable<Install> getDownloads(Installed installedApp) {
     return installManager.getInstallations()
         .first()
         .flatMap(installations -> {
