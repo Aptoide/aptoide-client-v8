@@ -131,28 +131,14 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
           if (actualApp instanceof UpdateApp && newApp instanceof UpdateApp) {
 
-            boolean hasSameStatus =
-                ((UpdateApp) actualApp).getUpdateStatus() == ((UpdateApp) newApp).getUpdateStatus();
-            boolean hasSameProgress =
-                ((UpdateApp) actualApp).getProgress() == ((UpdateApp) newApp).getProgress();
-            boolean hasSameIndeterminateStatus = (((UpdateApp) actualApp).isIndeterminate()
-                == ((UpdateApp) newApp).isIndeterminate());
-
-            if (!hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus) {
+            if (shouldUpdateUpdateApp(((UpdateApp) actualApp), ((UpdateApp) newApp))) {
               listOfApps.set(itemIndex,
                   list.get(i));//stores the same item with the new emitted changes
               notifyItemChanged(itemIndex);
             }
           } else if (actualApp instanceof DownloadApp && newApp instanceof DownloadApp) {
 
-            boolean hasSameStatus = ((DownloadApp) actualApp).getDownloadStatus()
-                == ((DownloadApp) newApp).getDownloadStatus();
-            boolean hasSameProgress =
-                ((DownloadApp) actualApp).getProgress() == ((DownloadApp) newApp).getProgress();
-            boolean hasSameIndeterminateStatus = (((DownloadApp) actualApp).isIndeterminate()
-                == ((DownloadApp) newApp).isIndeterminate());
-
-            if (!hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus) {
+            if (shouldUpdateDownloadApp(((DownloadApp) actualApp), ((DownloadApp) newApp))) {
               listOfApps.set(itemIndex,
                   list.get(i));//stores the same item with the new emitted changes
               notifyItemChanged(itemIndex);
@@ -177,6 +163,22 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         }
       }
     }
+  }
+
+  private boolean shouldUpdateDownloadApp(DownloadApp actualApp, DownloadApp newApp) {
+    boolean hasSameStatus = actualApp.getDownloadStatus() == newApp.getDownloadStatus();
+    boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
+    boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
+
+    return !hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus;
+  }
+
+  private boolean shouldUpdateUpdateApp(UpdateApp actualApp, UpdateApp newApp) {
+    boolean hasSameStatus = actualApp.getUpdateStatus() == newApp.getUpdateStatus();
+    boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
+    boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
+
+    return !hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus;
   }
 
   public void addUpdateAppsList(List<App> updatesList) {
