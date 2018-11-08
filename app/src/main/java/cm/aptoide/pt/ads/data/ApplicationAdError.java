@@ -1,4 +1,4 @@
-package cm.aptoide.pt.ads.model;
+package cm.aptoide.pt.ads.data;
 
 import cm.aptoide.pt.view.app.AppsList;
 import com.appnext.core.AppnextError;
@@ -23,5 +23,11 @@ public class ApplicationAdError {
 
   public boolean hasError() {
     return nativeAdError != null || minimalAdError != null;
+  }
+
+  public String getErrorMessage() {
+    if (nativeAdError != null) return nativeAdError.getErrorMessage();
+    if (minimalAdError != null) return minimalAdError.name();
+    return null;
   }
 }

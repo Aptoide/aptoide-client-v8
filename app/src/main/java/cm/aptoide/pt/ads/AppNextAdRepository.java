@@ -23,8 +23,12 @@ public class AppNextAdRepository {
   }
 
   public PublishSubject<AppNextAdResult> loadAd(List<String> keywords) {
+    return loadAd(keywords, BuildConfig.APPNEXT_PLACEMENT_ID);
+  }
+
+  public PublishSubject<AppNextAdResult> loadAd(List<String> keywords, String placementId) {
     PublishSubject<AppNextAdResult> subject = PublishSubject.create();
-    NativeAd nativeAd = new NativeAd(context, BuildConfig.APPNEXT_PLACEMENT_ID);
+    NativeAd nativeAd = new NativeAd(context, placementId);
     nativeAd.setAdListener(new NativeAdListener() {
       @Override public void onAdLoaded(final NativeAd nativeAd) {
         super.onAdLoaded(nativeAd);
@@ -47,9 +51,8 @@ public class AppNextAdRepository {
         super.adImpression(nativeAd);
       }
     });
-    nativeAd.loadAd(
-        new NativeAdRequest().setCachingPolicy(NativeAdRequest.CachingPolicy.STATIC_ONLY)
-            .setCategories(getCategory(keywords)));
+    nativeAd.loadAd(new NativeAdRequest().setCachingPolicy(NativeAdRequest.CachingPolicy.STATIC_ONLY)
+        .setCategories(getCategory(keywords)));
     return subject;
   }
 

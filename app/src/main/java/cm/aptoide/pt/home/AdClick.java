@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.ads.model.ApplicationAd;
-import cm.aptoide.pt.ads.model.AptoideNativeAd;
+import cm.aptoide.pt.ads.data.ApplicationAd;
+import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 
 /**

@@ -38,7 +38,6 @@ import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
@@ -290,13 +289,13 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
-      AppViewSimilarAppAnalytics similarAppAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, CrashReport crashReport,
       SimilarAdExperiment similarAdExperiment) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
-        similarAppAnalytics, appViewNavigator, appViewManager, accountManager,
-        AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), similarAdExperiment);
+        appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
+        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()),
+        similarAdExperiment);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {

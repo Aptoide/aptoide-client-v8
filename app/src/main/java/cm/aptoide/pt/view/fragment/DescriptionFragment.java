@@ -259,4 +259,14 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_empty, menu);
   }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (bar != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.DEFAULT);
+      bar.setBackgroundDrawable(getActivity().getResources()
+          .getDrawable(StoreTheme.DEFAULT.getGradientDrawable()));
+    }
+  }
 }
