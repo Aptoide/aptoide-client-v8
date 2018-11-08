@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.ads.model.ApplicationAd;
-import cm.aptoide.pt.ads.model.ApplicationAdError;
+import cm.aptoide.pt.ads.data.ApplicationAd;
+import cm.aptoide.pt.ads.data.ApplicationAdError;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.AppsList;
 import java.util.Collections;

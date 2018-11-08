@@ -23,4 +23,11 @@ public class AptoideApplicationAnalytics {
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
   }
+
+  public void setVersionCodeDimension(String versionCode) {
+    Bundle bundle = new Bundle();
+    bundle.putString("version code", versionCode);
+    AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
+        .d("Facebook Analytics: ", response.toString()));
+  }
 }

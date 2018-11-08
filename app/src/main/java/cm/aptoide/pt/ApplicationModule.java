@@ -75,7 +75,6 @@ import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
@@ -1418,11 +1417,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       StoreAnalytics storeAnalytics) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
         timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
-  }
-
-  @Singleton @Provides AppViewSimilarAppAnalytics providesAppViewSimilarAppsAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
   }
 
   @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(

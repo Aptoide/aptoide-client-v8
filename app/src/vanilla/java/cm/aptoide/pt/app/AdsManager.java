@@ -43,8 +43,8 @@ public class AdsManager {
         .onErrorReturn(throwable -> createMinimalAdRequestResultError(throwable));
   }
 
-  public Single<AppNextAdResult> loadAppnextAd(List<String> keywords) {
-    return adsRepository.loadAppNextAd(keywords)
+  public Single<AppNextAdResult> loadAppNextAd(List<String> keywords, String placementId) {
+    return adsRepository.loadAppNextAd(keywords, placementId)
         .toSingle();
   }
 
