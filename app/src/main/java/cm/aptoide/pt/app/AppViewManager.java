@@ -332,8 +332,6 @@ public class AppViewManager {
     return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
 
-§
-
   public Completable resumeDownload(String md5, long appId) {
     return installManager.getDownload(md5)
         .flatMapCompletable(download -> installManager.install(download)
