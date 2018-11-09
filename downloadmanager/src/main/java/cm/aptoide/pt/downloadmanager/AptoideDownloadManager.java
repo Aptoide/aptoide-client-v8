@@ -61,17 +61,19 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public void stop() {
-    if (!dispatchDownloadsSubscription.isUnsubscribed()) {
+    if (dispatchDownloadsSubscription != null && !dispatchDownloadsSubscription.isUnsubscribed()) {
       dispatchDownloadsSubscription.unsubscribe();
     }
   }
 
   @Override public Completable startDownload(Download download) {
     return Completable.fromAction(() -> {
-      download.setOverallDownloadStatus(Download.IN_QUEUE);
-      download.setTimeStamp(System.currentTimeMillis());
-      downloadsRepository.save(download);
-      appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download));
+      if (download.getOverallDownloadStatus() != Download.COMPLETED) {
+        download.setOverallDownloadStatus(Download.IN_QUEUE);
+        download.setTimeStamp(System.currentTimeMillis());
+        downloadsRepository.save(download);
+        appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download));
+      }
     });
   }
 
@@ -159,7 +161,7 @@ public class AptoideDownloadManager implements DownloadManager {
             appDownloader -> appDownloader.removeAppDownload()
                 .andThen(downloadsRepository.remove(md5))
                 .andThen(Observable.just(download))))
-        .doOnNext(download -> removeDownloadFiles(download))
+        .doOnNext(this::removeDownloadFiles)
         .toCompletable();
   }
 
@@ -217,8 +219,8 @@ public class AptoideDownloadManager implements DownloadManager {
   private void removeAppDownloader(String md5) {
     AppDownloader appDownloader = appDownloaderMap.get(md5);
     if (appDownloader != null) {
+      appDownloader.removeAppDownload();
       appDownloader.stop();
-      appDownloaderMap.remove(md5);
     }
   }
 
@@ -229,7 +231,7 @@ public class AptoideDownloadManager implements DownloadManager {
         downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
     download.setDownloadError(
         downloadStatusMapper.mapDownloadError(appDownloadStatus.getDownloadStatus()));
-    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
       fileToDownload.setStatus(downloadStatusMapper.mapAppDownloadStatus(
           appDownloadStatus.getFileDownloadStatus(fileToDownload.getMd5())));
       fileToDownload.setProgress(
