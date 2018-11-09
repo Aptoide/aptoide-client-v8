@@ -64,8 +64,7 @@ public class DonationsService {
   }
 
   public interface ServiceV8 {
-    @GET("broker/8.20181010/leaderboard/donations")
-    Observable<GetDonations> getDonations(@Query("domain") String packageName,
-        @Query("limit") int limit);
+    @GET("broker/8.20181010/leaderboard/donations") Observable<GetDonations> getDonations(
+        @Query("domain") String packageName, @Query("limit") int limit);
   }
 }
