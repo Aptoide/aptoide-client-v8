@@ -333,8 +333,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
   }
 
-  @Override public void removeCanceledDownload(App app) {
-    adapter.removeCanceledDownload(app);
+  @Override public void removeCanceledAppDownload(App app) {
+    adapter.removeCanceledAppDownload(app);
   }
 
   @Override public void setStandbyState(App app) {
