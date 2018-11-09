@@ -410,14 +410,15 @@ import rx.schedulers.Schedulers;
     return new CommentsNavigator(fragmentNavigator);
   }
 
-  @FragmentScope @Provides CommentDetailManager commentDetailManager(Comments comments) {
-    return new CommentDetailManager(comments, arguments.getLong("comment_id", -1),
+  @FragmentScope @Provides CommentDetailManager commentDetailManager(Comments comments,
+      AptoideAccountManager accountManager) {
+    return new CommentDetailManager(accountManager, comments, arguments.getLong("comment_id", -1),
         arguments.getString("comment_message", ""),
         new User(arguments.getLong("comment_user_id", -1),
             arguments.getString("comment_user_avatar", null),
             arguments.getString("comment_user_name", "")),
         arguments.getInt("comment_replies_number", 0),
-        ((Date) arguments.getSerializable("comment_timestamp")));
+        ((Date) arguments.getSerializable("comment_timestamp")), arguments.getLong("store_id"));
   }
 
   @FragmentScope @Provides CommentDetailPresenter providesCommentDetailPresenter(

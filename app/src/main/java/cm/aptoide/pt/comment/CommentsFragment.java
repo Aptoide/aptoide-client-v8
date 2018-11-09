@@ -1,7 +1,10 @@
 package cm.aptoide.pt.comment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +12,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.data.Comment;
@@ -42,7 +45,6 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   private View loading;
   private View genericErrorView;
   private LinearLayoutManager layoutManager;
-  private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
 
@@ -78,6 +80,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     commentsList.setAdapter(commentsAdapter);
 
     setHasOptionsMenu(true);
+    handleStatusBar();
     setupToolbar();
     attachPresenter(commentsPresenter);
   }
@@ -128,6 +131,15 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     }
   }
 
+  @Override public void showCommentErrorSnack() {
+    hideKeyboard();
+    Snackbar.make(this.getView(), "error", BaseTransientBottomBar.LENGTH_SHORT);
+  }
+
+  @Override public void addLocalComment(Comment comment) {
+    commentsAdapter.addSingleComment(comment);
+  }
+
   @Override public Observable<Void> refreshes() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
@@ -165,10 +177,15 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
+        hideKeyboard();
         getActivity().onBackPressed();
         return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void hideKeyboard() {
+    super.hideKeyboard();
   }
 
   public void setupToolbar() {
@@ -185,16 +202,15 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     }
   }
 
-  private void showHideOptionsMenu(boolean visible) {
-    for (int i = 0; i < menu.size(); i++) {
-      MenuItem item = menu.getItem(i);
-      showHideOptionsMenu(item, visible);
-    }
-  }
-
-  protected void showHideOptionsMenu(@Nullable MenuItem item, boolean visible) {
-    if (item != null) {
-      item.setVisible(visible);
+  private void handleStatusBar() {
+    Window window = getActivity().getWindow();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+        && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      window.setStatusBarColor(getResources().getColor(R.color.grey_medium));
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      window.getDecorView()
+          .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+      window.setStatusBarColor(getResources().getColor(R.color.white));
     }
   }
 }

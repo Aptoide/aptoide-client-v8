@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.comment.CommentMapper;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -45,6 +46,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected StoreAnalytics storeAnalytics;
   protected NavigationTracker navigationTracker;
   @Inject AnalyticsManager analyticsManager;
+  @Inject CommentMapper commentMapper;
   private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,7 +91,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),
-              application.getDefaultSharedPreferences());
+              application.getDefaultSharedPreferences(), commentMapper);
         })
         .toList()
         .first();

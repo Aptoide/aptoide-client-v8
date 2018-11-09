@@ -8,16 +8,18 @@ public class CommentDetailViewModel {
   private final String commentUserName;
   private final String commentAvatar;
   private final String commentMessage;
+  private final String userAvatar;
   private final int repliesNumber;
   private final boolean hasReplies;
   private final List<Comment> replies;
   private final Date date;
 
   public CommentDetailViewModel(String commentUserName, String commentAvatar, String commentMessage,
-      int repliesNumber, Date date, List<Comment> replies) {
+      String userAvatar, int repliesNumber, Date date, List<Comment> replies) {
     this.commentUserName = commentUserName;
     this.commentAvatar = commentAvatar;
     this.commentMessage = commentMessage;
+    this.userAvatar = userAvatar;
     this.repliesNumber = repliesNumber;
     this.replies = replies;
     this.hasReplies = replies.size() > 0;
@@ -50,5 +52,9 @@ public class CommentDetailViewModel {
 
   public Date getDate() {
     return date;
+  }
+
+  public String getUserAvatar() {
+    return userAvatar;
   }
 }

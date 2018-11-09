@@ -556,10 +556,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.setupToolbar();
   }
 
-  protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(title);
     toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
@@ -569,6 +565,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
     } else {
       toolbar.setLogo(R.drawable.ic_store_white);
     }
+  }
+
+  protected boolean displayHomeUpFAsEnabled() {
+    return true;
   }
 
   public enum OpenType {

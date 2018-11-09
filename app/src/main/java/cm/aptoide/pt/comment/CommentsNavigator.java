@@ -12,7 +12,7 @@ public class CommentsNavigator {
     this.fragmentNavigator = fragmentNavigator;
   }
 
-  public void navigateToCommentView(Comment comment) {
+  public void navigateToCommentView(Comment comment, long storeId) {
     CommentDetailFragment fragment = new CommentDetailFragment();
     Bundle args = new Bundle();
     args.putLong("comment_id", comment.getId());
@@ -25,6 +25,7 @@ public class CommentsNavigator {
         .getName());
     args.putInt("comment_replies_number", comment.getReplies());
     args.putSerializable("comment_timestamp", comment.getDate());
+    args.putLong("store_id", storeId);
     fragment.setArguments(args);
     fragmentNavigator.navigateTo(fragment, true);
   }

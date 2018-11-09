@@ -52,7 +52,7 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
       this.replies.setText(repliesText);
       this.replies.setVisibility(View.VISIBLE);
     } else {
-      this.replies.setVisibility(View.INVISIBLE);
+      this.replies.setVisibility(View.GONE);
     }
 
     itemView.setOnClickListener(view -> commentClickEvent.onNext(comment));

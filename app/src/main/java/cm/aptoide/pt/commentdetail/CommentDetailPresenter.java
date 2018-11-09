@@ -21,6 +21,7 @@ public class CommentDetailPresenter implements Presenter {
 
   @Override public void present() {
     showCommentViewModel();
+    postComment();
   }
 
   @VisibleForTesting public void showCommentViewModel() {
@@ -32,6 +33,29 @@ public class CommentDetailPresenter implements Presenter {
         .doOnNext(this::showComment)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(commentDetailViewModel -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void postComment() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.commentClicked()
+            .doOnNext(__ -> view.hideKeyboard())
+            .map(comment -> {
+              if (comment.getMessage()
+                  .trim()
+                  .length() > 2) {
+                return comment;
+              } else {
+                return null;
+              }
+            })
+            .filter(comment -> comment != null)
+            .flatMapCompletable(commentManager::replyComment))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(comment -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });

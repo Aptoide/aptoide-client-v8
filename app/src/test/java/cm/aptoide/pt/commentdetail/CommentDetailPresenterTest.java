@@ -41,7 +41,8 @@ public class CommentDetailPresenterTest {
 
     CommentDetailViewModel viewModel =
         new CommentDetailViewModel("Filipe Gonçalves", "http://via.placeholder.com/350x150",
-            "Eu sou do Benfica", 7, new Date(), dataModelResponse.getReplies());
+            "Eu sou do Benfica", "http://via.placeholder.com/350x150", 7, new Date(),
+            dataModelResponse.getReplies());
 
     when(commentDetailManager.loadCommentModel()).thenReturn(Single.just(viewModel));
 

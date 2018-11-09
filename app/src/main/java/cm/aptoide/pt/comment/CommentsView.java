@@ -23,6 +23,12 @@ public interface CommentsView extends View {
 
   void hideLoadMore();
 
+  void hideKeyboard();
+
+  void showCommentErrorSnack();
+
+  void addLocalComment(Comment comment);
+
   Observable<Void> refreshes();
 
   Observable<Object> reachesBottom();

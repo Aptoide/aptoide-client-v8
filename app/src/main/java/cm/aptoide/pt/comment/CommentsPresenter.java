@@ -39,8 +39,23 @@ public class CommentsPresenter implements Presenter {
   @VisibleForTesting public void postComment() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.commentPost())
-        .flatMapCompletable(commentsListManager::postComment)
+        .flatMap(created -> view.commentPost()
+            .doOnNext(__ -> view.hideKeyboard())
+            .map(comment -> {
+              if (comment.getMessage()
+                  .trim()
+                  .length() > 2) {
+                return comment;
+              } else {
+                view.showCommentErrorSnack();
+                return null;
+              }
+            })
+            .filter(comment -> comment != null)
+            .flatMapCompletable(comment1 -> {
+              view.addLocalComment(comment1);
+              return commentsListManager.postComment(comment1);
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comment -> {
         }, throwable -> {
@@ -106,7 +121,8 @@ public class CommentsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.commentClick())
-        .doOnNext(commentsNavigator::navigateToCommentView)
+        .doOnNext(comment -> commentsNavigator.navigateToCommentView(comment,
+            commentsListManager.getStoreId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(commentId -> {
         }, throwable -> {

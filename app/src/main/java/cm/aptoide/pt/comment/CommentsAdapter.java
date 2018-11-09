@@ -17,6 +17,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
   private static final int COMMENT = 1;
   private static final int LOADING = 2;
   private static final int ADD_COMMENT = 3;
+  private static final int ADD_INNER_COMMENT = 4;
   private final AptoideUtils.DateTimeU dateUtils;
   private final Comment progressComment;
   private final PublishSubject<Comment> commentClickEvent;
@@ -45,7 +46,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
             .inflate(R.layout.progress_item, parent, false));
       case ADD_COMMENT:
         return new SubmitCommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.add_comment_item, parent, false), postComment);
+            .inflate(R.layout.add_comment_item, parent, false), postComment, false);
+      case ADD_INNER_COMMENT:
+        return new SubmitCommentViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.add_comment_inner_item, parent, false), postComment, true);
       default:
         throw new IllegalStateException("Invalid comment view type");
     }
@@ -60,7 +64,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
     if (comment instanceof CommentLoading) {
       return LOADING;
     } else if (comment instanceof SubmitComment) {
-      return ADD_COMMENT;
+      if (comment instanceof SubmitInnerComment) {
+        return ADD_INNER_COMMENT;
+      } else {
+        return ADD_COMMENT;
+      }
     } else {
       return COMMENT;
     }
@@ -94,6 +102,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
       comments.remove(loadingPosition);
       notifyItemRemoved(loadingPosition);
     }
+  }
+
+  public void addSingleComment(Comment comment) {
+    comments.add(1, comment);
   }
 
   private int getLoadingPosition() {
