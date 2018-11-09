@@ -662,7 +662,7 @@ public class AppViewManagerTest {
     when(download.getAction()).thenReturn(3);
 
     //Then the appViewManager should return a Complete when the request is done
-    appViewManager.resumeDownload("md5", "packageName", 1)
+    appViewManager.resumeDownload("md5", 1)
         .test()
         .assertCompleted();
 

@@ -764,8 +764,7 @@ public class AppViewPresenter implements Presenter {
                     permissionService))
                 .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
                 .flatMapCompletable(
-                    app -> appViewManager.resumeDownload(app.getMd5(), app.getPackageName(),
-                        app.getAppId()))
+                    app -> appViewManager.resumeDownload(app.getMd5(), app.getAppId()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

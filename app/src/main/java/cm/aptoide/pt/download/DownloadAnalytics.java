@@ -182,17 +182,14 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public void installClicked(String md5, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action) {
-    ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
-    ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
-    String previousContext = navigationTracker.getCurrentScreen()
-        .getFragment();
-    String currentContext = navigationTracker.getCurrentScreen()
-        .getFragment();
-    editorsChoiceDownloadCompletedEvent(previousScreen, md5, packageName, editorsBrickPosition,
+    String previousContext = navigationTracker.getViewName(false);
+    String currentContext = navigationTracker.getViewName(true);
+    editorsChoiceDownloadCompletedEvent(previousContext, md5, packageName, editorsBrickPosition,
         installType, currentContext, action);
-    pushNotificationDownloadEvent(previousScreen, md5, packageName, installType, action,
+    pushNotificationDownloadEvent(previousContext, md5, packageName, installType, action,
         currentContext);
-    downloadCompleteEvent(previousScreen, currentScreen, md5, packageName, trustedValue, action,
+    downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
         previousContext);
   }
 
@@ -216,11 +213,9 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
   }
 
-  private void pushNotificationDownloadEvent(ScreenTagHistory previousScreen, String id,
-      String packageName, InstallType installType, AnalyticsManager.Action action,
-      String currentContext) {
-    if (previousScreen != null && previousScreen.getFragment()
-        .equals(DeepLinkManager.DEEPLINK_KEY)) {
+  private void pushNotificationDownloadEvent(String previousScreen, String id, String packageName,
+      InstallType installType, AnalyticsManager.Action action, String currentContext) {
+    if (previousScreen.equals(DeepLinkManager.DEEPLINK_KEY)) {
       HashMap<String, Object> data = new HashMap();
       data.put("Package Name", packageName);
       data.put("type", installType.name());
@@ -232,15 +227,13 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     }
   }
 
-  private void editorsChoiceDownloadCompletedEvent(ScreenTagHistory previousScreen, String id,
+  private void editorsChoiceDownloadCompletedEvent(String previousScreen, String id,
       String packageName, String editorsBrickPosition, InstallType installType, String context,
       AnalyticsManager.Action action) {
     if (editorsBrickPosition != null && !editorsBrickPosition.isEmpty()) {
       HashMap<String, Object> map = new HashMap<>();
       map.put("Package Name", packageName);
-      if (previousScreen.getFragment() != null) {
-        map.put("fragment", previousScreen.getFragment());
-      }
+      map.put("fragment", previousScreen);
       map.put("position", editorsBrickPosition);
       map.put("type", installType.name());
       DownloadEvent downloadEvent =
