@@ -48,6 +48,8 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
               .getIconUrl(), 8, iconView, R.drawable.placeholder_square);
       app.getAd()
           .registerClickableView(itemView);
+      app.getAd()
+          .setAdView(itemView.findViewById(R.id.na_view));
       float rating = app.getAd()
           .getStars();
       if (rating == 0) {
