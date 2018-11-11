@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +41,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   private View loading;
   private View genericErrorView;
   private LinearLayoutManager layoutManager;
-  private Menu menu;
   private Toolbar toolbar;
-  private ActionBar actionBar;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -162,6 +159,12 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     super.onDestroyView();
   }
 
+  @Override public void onDestroy() {
+    postComment = null;
+    commentClickEvent = null;
+    super.onDestroy();
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
@@ -177,24 +180,11 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);
-    actionBar = activity.getSupportActionBar();
+    ActionBar actionBar = activity.getSupportActionBar();
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setHomeButtonEnabled(true);
       actionBar.setTitle(toolbar.getTitle());
-    }
-  }
-
-  private void showHideOptionsMenu(boolean visible) {
-    for (int i = 0; i < menu.size(); i++) {
-      MenuItem item = menu.getItem(i);
-      showHideOptionsMenu(item, visible);
-    }
-  }
-
-  protected void showHideOptionsMenu(@Nullable MenuItem item, boolean visible) {
-    if (item != null) {
-      item.setVisible(visible);
     }
   }
 }
