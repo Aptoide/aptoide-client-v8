@@ -288,8 +288,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, cachePath, apkPath, obbPath,
-        new FileUtils(downloadAnalytics::moveFile));
+        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
