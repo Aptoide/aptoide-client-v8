@@ -1,6 +1,7 @@
 package cm.aptoide.pt.commentdetail;
 
 import android.support.annotation.VisibleForTesting;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Scheduler;
@@ -11,12 +12,14 @@ public class CommentDetailPresenter implements Presenter {
   private final CommentDetailView view;
   private final CommentDetailManager commentManager;
   private final Scheduler viewScheduler;
+  private final AptoideAccountManager accountManager;
 
   public CommentDetailPresenter(CommentDetailView view, CommentDetailManager commentManager,
-      Scheduler viewScheduler) {
+      Scheduler viewScheduler, AptoideAccountManager accountManager) {
     this.view = view;
     this.commentManager = commentManager;
     this.viewScheduler = viewScheduler;
+    this.accountManager = accountManager;
   }
 
   @Override public void present() {
@@ -43,17 +46,20 @@ public class CommentDetailPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.commentClicked()
             .doOnNext(__ -> view.hideKeyboard())
-            .map(comment -> {
-              if (comment.getMessage()
-                  .trim()
-                  .length() > 2) {
-                return comment;
-              } else {
-                return null;
-              }
-            })
-            .filter(comment -> comment != null)
-            .flatMapCompletable(commentManager::replyComment))
+            .flatMap(comment -> accountManager.accountStatus()
+                .map(account -> {
+                  if (account.isLoggedIn()) {
+                    return account;
+                  } else {
+                    return null;
+                  }
+                })
+                .filter(account -> account != null)
+                .observeOn(viewScheduler)
+                .flatMapCompletable(account -> {
+                  view.addLocalComment(comment, account);
+                  return commentManager.replyComment(comment);
+                })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comment -> {
         }, throwable -> {

@@ -21,35 +21,37 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
   private final AptoideUtils.DateTimeU dateUtils;
   private final Comment progressComment;
   private final PublishSubject<Comment> commentClickEvent;
-  private final PublishSubject<Comment> postComment;
+  private final PublishSubject<Comment> postCommentClickEvent;
+  private final PublishSubject<Long> userClickEvent;
   private final int commentViewId;
   private List<Comment> comments;
 
   public CommentsAdapter(List<Comment> comments, AptoideUtils.DateTimeU dateUtils,
       PublishSubject<Comment> commentClickEvent, int commentItemId,
-      PublishSubject<Comment> postComment) {
+      PublishSubject<Comment> postComment, PublishSubject<Long> userClickEvent) {
     this.dateUtils = dateUtils;
     this.comments = comments;
+    this.userClickEvent = userClickEvent;
     this.progressComment = new CommentLoading();
     this.commentClickEvent = commentClickEvent;
     this.commentViewId = commentItemId;
-    this.postComment = postComment;
+    this.postCommentClickEvent = postComment;
   }
 
   @Override public AbstractCommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
       case COMMENT:
         return new CommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(commentViewId, parent, false), dateUtils, commentClickEvent);
+            .inflate(commentViewId, parent, false), dateUtils, commentClickEvent, userClickEvent);
       case LOADING:
         return new LoadingCommentViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.progress_item, parent, false));
       case ADD_COMMENT:
         return new SubmitCommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.add_comment_item, parent, false), postComment, false);
+            .inflate(R.layout.add_comment_item, parent, false), postCommentClickEvent, false);
       case ADD_INNER_COMMENT:
         return new SubmitCommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.add_comment_inner_item, parent, false), postComment, true);
+            .inflate(R.layout.add_comment_inner_item, parent, false), postCommentClickEvent, true);
       default:
         throw new IllegalStateException("Invalid comment view type");
     }
@@ -106,6 +108,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
 
   public void addSingleComment(Comment comment) {
     comments.add(1, comment);
+    notifyItemInserted(1);
   }
 
   private int getLoadingPosition() {

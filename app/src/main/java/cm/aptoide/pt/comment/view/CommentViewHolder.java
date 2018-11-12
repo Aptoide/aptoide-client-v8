@@ -19,9 +19,10 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
   private final TextView replies;
   private final AptoideUtils.DateTimeU dateUtils;
   private final PublishSubject<Comment> commentClickEvent;
+  private final PublishSubject<Long> userClickEvent;
 
   public CommentViewHolder(View view, AptoideUtils.DateTimeU dateUtils,
-      PublishSubject<Comment> commentClickEvent) {
+      PublishSubject<Comment> commentClickEvent, PublishSubject<Long> userClickEvent) {
     super(view);
     userAvatar = view.findViewById(R.id.user_icon);
     outerLayout = view.findViewById(R.id.outer_layout);
@@ -31,12 +32,15 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
     replies = view.findViewById(R.id.replies_number);
     this.dateUtils = dateUtils;
     this.commentClickEvent = commentClickEvent;
+    this.userClickEvent = userClickEvent;
   }
 
   public void setComment(Comment comment) {
     ImageLoader.with(itemView.getContext())
         .loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser()
             .getAvatar(), userAvatar, R.drawable.layer_1);
+    userAvatar.setOnClickListener(click -> userClickEvent.onNext(comment.getUser()
+        .getId()));
     userName.setText(comment.getUser()
         .getName());
 

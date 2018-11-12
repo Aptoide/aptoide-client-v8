@@ -1,6 +1,7 @@
 package cm.aptoide.pt.comment;
 
 import android.support.annotation.VisibleForTesting;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -9,6 +10,7 @@ import rx.exceptions.OnErrorNotImplementedException;
 
 public class CommentsPresenter implements Presenter {
 
+  private final AptoideAccountManager accountManager;
   private final CommentsView view;
   private final CommentsListManager commentsListManager;
   private final CommentsNavigator commentsNavigator;
@@ -16,12 +18,14 @@ public class CommentsPresenter implements Presenter {
   private final CrashReport crashReporter;
 
   public CommentsPresenter(CommentsView view, CommentsListManager commentsListManager,
-      CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter) {
+      CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter,
+      AptoideAccountManager accountManager) {
     this.view = view;
     this.commentsListManager = commentsListManager;
     this.commentsNavigator = commentsNavigator;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
+    this.accountManager = accountManager;
   }
 
   @Override public void present() {
@@ -41,21 +45,20 @@ public class CommentsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.commentPost()
             .doOnNext(__ -> view.hideKeyboard())
-            .map(comment -> {
-              if (comment.getMessage()
-                  .trim()
-                  .length() > 2) {
-                return comment;
-              } else {
-                view.showCommentErrorSnack();
-                return null;
-              }
-            })
-            .filter(comment -> comment != null)
-            .flatMapCompletable(comment1 -> {
-              view.addLocalComment(comment1);
-              return commentsListManager.postComment(comment1);
-            }))
+            .flatMap(comment -> accountManager.accountStatus()
+                .map(account -> {
+                  if (account.isLoggedIn()) {
+                    return account;
+                  } else {
+                    return null;
+                  }
+                })
+                .filter(account -> account != null)
+                .observeOn(viewScheduler)
+                .flatMapCompletable(account -> {
+                  view.addLocalComment(comment, account);
+                  return commentsListManager.postComment(comment);
+                })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comment -> {
         }, throwable -> {

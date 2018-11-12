@@ -16,14 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.data.Comment;
+import cm.aptoide.pt.comment.data.User;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -39,6 +42,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Inject AptoideUtils.DateTimeU dateUtils;
   private PublishSubject<Comment> postComment;
   private PublishSubject<Comment> commentClickEvent;
+  private PublishSubject<Long> userClickEvent;
   private RecyclerView commentsList;
   private CommentsAdapter commentsAdapter;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -60,6 +64,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     getFragmentComponent(savedInstanceState).inject(this);
     commentClickEvent = PublishSubject.create();
     postComment = PublishSubject.create();
+    userClickEvent = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -76,7 +81,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     commentsList.setLayoutManager(layoutManager);
     commentsAdapter =
         new CommentsAdapter(new ArrayList<>(), dateUtils, commentClickEvent, R.layout.comment_item,
-            postComment);
+            postComment, userClickEvent);
     commentsList.setAdapter(commentsAdapter);
 
     setHasOptionsMenu(true);
@@ -136,8 +141,9 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     Snackbar.make(this.getView(), "error", BaseTransientBottomBar.LENGTH_SHORT);
   }
 
-  @Override public void addLocalComment(Comment comment) {
-    commentsAdapter.addSingleComment(comment);
+  @Override public void addLocalComment(Comment comment, Account account) {
+    commentsAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(),
+        new User(-1, account.getAvatar(), account.getNickname()), 0, new Date()));
   }
 
   @Override public Observable<Void> refreshes() {

@@ -14,15 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.CommentsAdapter;
 import cm.aptoide.pt.comment.SubmitInnerComment;
 import cm.aptoide.pt.comment.data.Comment;
+import cm.aptoide.pt.comment.data.User;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -41,8 +44,10 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
   private LinearLayoutManager layoutManager;
   private PublishSubject<Comment> commentClickEvent;
   private PublishSubject<Comment> postCommentClickEvent;
+  private PublishSubject<Long> userClickEvent;
   private View loading;
   private View genericErrorView;
+  private View commentView;
   private Toolbar toolbar;
   private ActionBar actionBar;
 
@@ -51,6 +56,7 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
     getFragmentComponent(savedInstanceState).inject(this);
     commentClickEvent = PublishSubject.create();
     postCommentClickEvent = PublishSubject.create();
+    userClickEvent = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -63,13 +69,14 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
     repliesList = view.findViewById(R.id.replies_list);
     loading = view.findViewById(R.id.progress_bar);
     genericErrorView = view.findViewById(R.id.generic_error);
+    commentView = view.findViewById(R.id.comment_view);
     toolbar = view.findViewById(R.id.action_bar)
         .findViewById(R.id.toolbar);
 
     layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
     repliesList.setLayoutManager(layoutManager);
     repliesAdapter = new CommentsAdapter(new ArrayList<>(), dateUtils, commentClickEvent,
-        R.layout.comment_inner_layout, postCommentClickEvent);
+        R.layout.comment_inner_layout, postCommentClickEvent, userClickEvent);
     repliesList.setAdapter(repliesAdapter);
     repliesList.addItemDecoration(new DividerItemDecoration(this.getContext(), 0));
 
@@ -141,13 +148,20 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
   }
 
   @Override public void showLoading() {
+    commentView.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
     loading.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
+    commentView.setVisibility(View.VISIBLE);
     loading.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
+  }
+
+  @Override public void addLocalComment(Comment comment, Account account) {
+    repliesAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(),
+        new User(-1, account.getAvatar(), account.getNickname()), 0, new Date()));
   }
 
   @Override public Observable<Comment> commentClicked() {

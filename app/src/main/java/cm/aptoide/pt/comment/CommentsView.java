@@ -1,5 +1,6 @@
 package cm.aptoide.pt.comment;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
@@ -27,7 +28,7 @@ public interface CommentsView extends View {
 
   void showCommentErrorSnack();
 
-  void addLocalComment(Comment comment);
+  void addLocalComment(Comment comment, Account account);
 
   Observable<Void> refreshes();
 

@@ -1,5 +1,7 @@
 package cm.aptoide.pt.comment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +46,28 @@ public class SubmitCommentViewHolder extends AbstractCommentViewHolder {
         postView.setVisibility(View.GONE);
       }
     });
+    commentArea.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+      }
+
+      @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+      }
+
+      @Override public void afterTextChanged(Editable s) {
+        if (s.toString()
+            .trim()
+            .length() > 2) {
+          postButton.setClickable(true);
+          postButton.setEnabled(true);
+        } else {
+          postButton.setClickable(false);
+          postButton.setEnabled(false);
+        }
+      }
+    });
+
     postButton.setOnClickListener(view -> {
       String message = commentArea.getText()
           .toString();

@@ -55,6 +55,8 @@
         android:layout_width="wrap_content"
         android:layout_gravity="end"
         android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:enabled="false"
         android:text="Post"
         style="@style/Aptoide.Button.Flat.S"
         />

@@ -400,9 +400,10 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides CommentsPresenter providesCommentsPresenter(
-      CommentsListManager commentsListManager, CommentsNavigator commentsNavigator) {
+      CommentsListManager commentsListManager, CommentsNavigator commentsNavigator,
+      AptoideAccountManager accountManager) {
     return new CommentsPresenter((CommentsView) fragment, commentsListManager, commentsNavigator,
-        AndroidSchedulers.mainThread(), CrashReport.getInstance());
+        AndroidSchedulers.mainThread(), CrashReport.getInstance(), accountManager);
   }
 
   @FragmentScope @Provides CommentsNavigator providesCommentsNavigator(
@@ -422,8 +423,8 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides CommentDetailPresenter providesCommentDetailPresenter(
-      CommentDetailManager commentManager) {
+      CommentDetailManager commentManager, AptoideAccountManager accountManager) {
     return new CommentDetailPresenter((CommentDetailView) fragment, commentManager,
-        AndroidSchedulers.mainThread());
+        AndroidSchedulers.mainThread(), accountManager);
   }
 }

@@ -2,6 +2,8 @@ package cm.aptoide.pt.store.view;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.CommentMapper;
+import cm.aptoide.pt.comment.CommentsListManager;
+import cm.aptoide.pt.comment.CommentsNavigator;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.Collections;
@@ -12,6 +14,8 @@ public class StoreLatestCommentsDisplayable extends Displayable {
   private final long storeId;
   private final List<Comment> comments;
   private CommentMapper commentMapper;
+  private CommentsNavigator commentsNavigator;
+  private CommentsListManager commentsListManager;
   private String storeName;
 
   public StoreLatestCommentsDisplayable() {
@@ -20,11 +24,14 @@ public class StoreLatestCommentsDisplayable extends Displayable {
   }
 
   public StoreLatestCommentsDisplayable(long storeId, String storeName, List<Comment> comments,
-      CommentMapper commentMapper) {
+      CommentMapper commentMapper, CommentsNavigator commentsNavigator,
+      CommentsListManager commentsListManager) {
     this.storeId = storeId;
     this.storeName = storeName;
     this.comments = comments;
     this.commentMapper = commentMapper;
+    this.commentsNavigator = commentsNavigator;
+    this.commentsListManager = commentsListManager;
   }
 
   public List<Comment> getComments() {
@@ -49,5 +56,13 @@ public class StoreLatestCommentsDisplayable extends Displayable {
 
   public CommentMapper getCommentMapper() {
     return commentMapper;
+  }
+
+  public CommentsNavigator getCommentsNavigator() {
+    return commentsNavigator;
+  }
+
+  public CommentsListManager getCommentsListManager() {
+    return commentsListManager;
   }
 }
