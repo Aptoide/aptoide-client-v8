@@ -23,6 +23,7 @@ import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.BundlesAdapter;
+import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.home.ProgressBundle;
@@ -52,6 +53,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
    */
   private static final int VISIBLE_THRESHOLD = 1;
   @Inject MoreBundlePresenter presenter;
+  @Inject HomeAnalytics homeAnalytics;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -97,7 +99,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents);
+        oneDecimalFormatter, adClickedEvents, homeAnalytics);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

@@ -793,6 +793,7 @@ public class AppViewPresenter implements Presenter {
                       .flatMapCompletable(
                           appViewModel -> downloadApp(action, appViewModel.getPackageName(),
                               appViewModel.getAppId()).observeOn(viewScheduler)
+                              .doOnSubscribe(subscription -> view.showFullScreenAd())
                               .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
                                   appViewModel.getPackageName(), appViewModel.getDeveloper()
                                       .getName(), action.toString()))

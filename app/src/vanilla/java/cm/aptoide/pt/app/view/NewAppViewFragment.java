@@ -52,6 +52,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadAppViewModel;
@@ -96,6 +97,7 @@ import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
+import com.appnext.ads.interstitial.Interstitial;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
@@ -132,6 +134,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   @Inject ApkFyExperiment apkFyExperiment;
+  @Inject AppViewAnalytics appViewAnalytics;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -745,6 +748,17 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     scrollView.getHitRect(scrollBounds);
     return similarDownloadView.getLocalVisibleRect(scrollBounds)
         || similarBottomView.getLocalVisibleRect(scrollBounds);
+  }
+
+  @Override public void showFullScreenAd() {
+    Interstitial fullAd =
+        new Interstitial(this.getContext(), BuildConfig.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
+    fullAd.setOnAdLoadedCallback(s -> {
+      fullAd.showAd();
+      appViewAnalytics.installInterstitialImpression();
+    });
+    fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
+    fullAd.loadAd();
   }
 
   @Override public Observable<Void> clickDeveloperWebsite() {

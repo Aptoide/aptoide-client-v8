@@ -9,6 +9,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by marcelobenites on 8/19/16.
@@ -26,3 +28,4 @@ public interface View {
     CREATE, START, RESUME, PAUSE, STOP, DESTROY,
   }
 }
+

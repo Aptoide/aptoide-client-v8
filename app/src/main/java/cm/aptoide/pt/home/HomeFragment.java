@@ -44,6 +44,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private static final int VISIBLE_THRESHOLD = 2;
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject HomePresenter presenter;
+  @Inject HomeAnalytics homeAnalytics;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -107,7 +108,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents);
+        oneDecimalFormatter, adClickedEvents, homeAnalytics);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

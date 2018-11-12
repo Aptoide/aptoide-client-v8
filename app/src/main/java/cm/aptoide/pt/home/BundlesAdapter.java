@@ -21,20 +21,24 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int LOADING = R.layout.progress_item;
   private static final int EDITORIAL = R.layout.editorial_action_item;
   private static final int INFO = R.layout.info_action_item;
+  private static final int LARGE_BANNER = R.layout.large_banner_item;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private List<HomeBundle> bundles;
   private PublishSubject<AdHomeEvent> adClickedEvents;
 
+  private final HomeAnalytics homeAnalytics;
+
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<AdHomeEvent> adPublishSubject) {
+      PublishSubject<AdHomeEvent> adPublishSubject, HomeAnalytics homeAnalytics) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adPublishSubject;
+    this.homeAnalytics = homeAnalytics;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -63,6 +67,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(LOADING, parent, false));
+      case LARGE_BANNER:
+        return new LargeBannerBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(LARGE_BANNER, parent, false), homeAnalytics);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -92,6 +99,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return LOADING;
       case EDITORIAL:
         return EDITORIAL;
+      case LARGE_BANNER:
+        return LARGE_BANNER;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)
