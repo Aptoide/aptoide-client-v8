@@ -8,7 +8,7 @@ import cm.aptoide.pt.view.ActivityModule;
 import dagger.Component;
 import javax.inject.Singleton;
 
-@Singleton @Component(modules = { ApplicationModule.class, FlavourApplicationModule.class })
+@Singleton @Component(modules = { ApplicationModule.class })
 public interface ApplicationComponent {
 
   ActivityComponent plus(ActivityModule activityModule);

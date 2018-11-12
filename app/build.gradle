@@ -69,11 +69,6 @@ android {
 
   flavorDimensions "product", "mode"
   productFlavors {
-    partner {
-      dimension "product"
-      applicationId "com.aptoide.partners.dfloureiro"
-      matchingFallbacks = ['internal', 'prod']
-    }
 
     vanilla {
       dimension "product"
@@ -148,14 +143,6 @@ android {
   variantFilter { variant ->
     List<ProductFlavor> flavors = variant.getFlavors()
 
-    String applicationIdBase = flavors[0].applicationId
-    String applicationIdSuffix = flavors[1].applicationIdSuffix
-    boolean hasSuffix = applicationIdSuffix != null
-
-    if (applicationIdBase.contains('partner') && hasSuffix &&
-        (applicationIdSuffix.contains('dev') || applicationIdSuffix.contains('internal'))) {
-      setIgnore(true)
-    }
   }
 
   packagingOptions {
@@ -263,6 +250,15 @@ android {
 
     variant.buildConfigField "String", "APPNEXT_PLACEMENT_ID",
         "\"" + project.APPNEXT_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_PLACEMENT_ID",
+        "\"" + project.APPNEXT_HIGHLIGHTED_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_SIMILAR_PLACEMENT_ID",
+        "\"" + project.APPNEXT_SIMILAR_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_ABTEST_PLACEMENT_ID",
+        "\"" + project.APPNEXT_HIGHLIGHTED_ABTEST_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID",
+        "\"" + project.APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID + "\""
+
 
     variant.outputs.all { output ->
       def SEP = "_"

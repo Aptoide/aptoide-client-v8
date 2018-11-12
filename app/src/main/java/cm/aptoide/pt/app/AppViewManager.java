@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
@@ -230,7 +231,7 @@ public class AppViewManager {
   }
 
   private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
-    return adsManager.loadAppnextAd(keywords);
+    return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
   }
 
   public PublishSubject<AppNextAdResult> appNextAdClick() {
@@ -288,8 +289,8 @@ public class AppViewManager {
     installManager.rootInstallAllowed(answer);
   }
 
-  public Completable downloadApp(DownloadModel.Action downloadAction, String packageName,
-      long appId) {
+  public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
+      String trustedValue, String editorsChoicePosition) {
     increaseInstallClick();
     return Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
@@ -297,15 +298,21 @@ public class AppViewManager {
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
         .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)))
+            .doOnSubscribe(__ -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
+                editorsChoicePosition)))
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, String packageName, long appId) {
-    int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
-    String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
-    appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK);
+  private void setupDownloadEvents(Download download, long appId) {
+    setupDownloadEvents(download, null, appId, null, null);
+  }
+
+  private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
+      long appId, String malwareRank, String editorsChoice) {
+    int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
+    String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
+    appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         downloadStateParser.getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), campaignId,
@@ -325,10 +332,10 @@ public class AppViewManager {
     return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
 
-  public Completable resumeDownload(String md5, String packageName, long appId) {
+  public Completable resumeDownload(String md5, long appId) {
     return installManager.getDownload(md5)
         .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)));
+            .doOnSubscribe(__ -> setupDownloadEvents(download, appId)));
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {

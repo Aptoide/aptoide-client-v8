@@ -28,4 +28,10 @@ public class AppViewSimilarApp {
   public boolean isAd() {
     return app == null && ad != null;
   }
+
+  public int getNetworkAdType() {
+    if (ad == null) return 0;
+    return ad.getNetwork()
+        .ordinal();
+  }
 }

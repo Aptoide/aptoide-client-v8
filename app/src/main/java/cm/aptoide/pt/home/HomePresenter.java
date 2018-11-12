@@ -18,6 +18,7 @@ import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
 
+import static cm.aptoide.pt.abtesting.experiments.HighlightedAdExperiment.DEFAULT_ASSIGNMENT_ERROR;
 import static cm.aptoide.pt.home.HomeBundle.BundleType.ADS;
 import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
 
@@ -222,6 +223,13 @@ public class HomePresenter implements Presenter {
           if (ad != null) {
             homeAnalytics.sendAdImpressionEvent(ad.getStars(), ad.getPackageName(), 0, bundleTag,
                 HomeEvent.Type.AD, ApplicationAd.Network.APPNEXT);
+            return home.recordAppNextImpression()
+                .map(__ -> appNextAdResult)
+                .toSingle();
+          } else if (appNextAdResult.getError()
+              .getErrorMessage()
+              .equals(DEFAULT_ASSIGNMENT_ERROR)) {
+            homeAnalytics.sendHighlightedImpressionEvent();
             return home.recordAppNextImpression()
                 .map(__ -> appNextAdResult)
                 .toSingle();

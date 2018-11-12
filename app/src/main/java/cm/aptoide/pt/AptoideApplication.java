@@ -336,6 +336,7 @@ public abstract class AptoideApplication extends Application {
     getRootInstallationRetryHandler().start();
     AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
     aptoideApplicationAnalytics.setPackageDimension(getPackageName());
+    aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
     accountManager.accountStatus()
         .map(account -> account.isLoggedIn())
         .distinctUntilChanged()
@@ -356,7 +357,6 @@ public abstract class AptoideApplication extends Application {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
           .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
-          .flavourApplicationModule(new FlavourApplicationModule(this))
           .build();
     }
     return applicationComponent;
@@ -939,6 +939,17 @@ public abstract class AptoideApplication extends Application {
       readPostsPersistence = new ReadPostsPersistence(new ArrayList<>());
     }
     return readPostsPersistence;
+  }
+
+  public String getVersionCode() {
+    String version = "NaN";
+    try {
+      PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+      version = String.valueOf(pInfo.versionCode);
+    } catch (PackageManager.NameNotFoundException e) {
+
+    }
+    return version;
   }
 
   private Completable dispatchPostReadEventInterval() {
