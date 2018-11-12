@@ -26,7 +26,6 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.util.CommentOperations;
 import cm.aptoide.pt.view.FragmentProvider;
-import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -74,7 +73,6 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
     recyclerView.setLayoutManager(layoutManager);
-    recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(getContext()));
 
     storeId = displayable.getStoreId();
     storeName = displayable.getStoreName();
@@ -131,7 +129,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
       ArrayList<Displayable> displayables = new ArrayList<>(sortedComments.size());
       for (CommentNode commentNode : sortedComments) {
-        displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
+        displayables.add(new StoreCommentDisplayable(new ComplexComment(commentNode,
             showStoreCommentFragment(storeId, commentNode.getComment(), storeName, fragmentManager,
                 view, reloadComments)), fragmentNavigator, fragmentProvider));
       }

@@ -42,7 +42,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     outerLayout = itemView.findViewById(R.id.outer_layout);
     userName = (TextView) itemView.findViewById(R.id.user_name);
     datePos1 = (TextView) itemView.findViewById(R.id.added_date_pos1);
-    datePos2 = (TextView) itemView.findViewById(R.id.added_date_pos2);
+    datePos2 = (TextView) itemView.findViewById(R.id.date);
     comment = (TextView) itemView.findViewById(R.id.comment);
     replyLayout = itemView.findViewById(R.id.reply_layout);
   }

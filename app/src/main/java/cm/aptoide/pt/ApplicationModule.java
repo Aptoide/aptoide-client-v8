@@ -84,6 +84,9 @@ import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.comment.Comments;
+import cm.aptoide.pt.comment.CommentsRepository;
+import cm.aptoide.pt.comment.network.RemoteCommentsDataSource;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -1446,6 +1449,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides CommentsRepository providesCommentsRepository(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new CommentsRepository(
+        new RemoteCommentsDataSource(bodyInterceptorPoolV7, okHttpClient, converterFactory,
+            tokenInvalidator, sharedPreferences));
+  }
+
+  @Singleton @Provides Comments providesComments(CommentsRepository commentsRepository) {
+    return new Comments(commentsRepository);
+  }
+
+  @Singleton @Provides AptoideUtils.DateTimeU provideDateUtils() {
+    return AptoideUtils.DateTimeU.getInstance(application.getApplicationContext());
   }
 
   @Singleton @Provides DonationsService providesDonationsService(DonationsService.ServiceV8 service,

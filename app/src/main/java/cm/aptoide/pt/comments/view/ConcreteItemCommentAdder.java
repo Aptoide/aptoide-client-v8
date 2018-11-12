@@ -31,7 +31,7 @@ public class ConcreteItemCommentAdder<T> extends CommentAdder {
   }
 
   @Override public void collapseComments() {
-    CommentsAdapter adapter = commentAdderView.getAdapter();
+    ReviewsAdapter adapter = commentAdderView.getAdapter();
     int reviewIndex = adapter.getItemPosition(this.itemIndex);
     int nextReview = adapter.getItemPosition(this.itemIndex + 1);
     nextReview = nextReview == -1 ? commentAdderView.getAdapter()

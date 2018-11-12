@@ -11,12 +11,23 @@ public class StoreGridHeaderDisplayable extends Displayable {
   private final GetStoreWidgets.WSWidget wsWidget;
   private final StoreTabNavigator storeTabNavigator;
   private final Model model;
+  private final Long storeId;
   private NavigationTracker navigationTracker;
 
   // this constructor is necessary due to reflection code that generates displayables. that code
   // needs to go as this.
   public StoreGridHeaderDisplayable() {
-    this(null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null);
+  }
+
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
+      String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker, Long storeId) {
+    this.storeId = storeId;
+    this.model = new Model(storeTheme, tag, storeContext);
+    this.wsWidget = wsWidget;
+    this.storeTabNavigator = storeTabNavigator;
+    this.navigationTracker = navigationTracker;
   }
 
   public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
@@ -26,11 +37,12 @@ public class StoreGridHeaderDisplayable extends Displayable {
     this.wsWidget = wsWidget;
     this.storeTabNavigator = storeTabNavigator;
     this.navigationTracker = navigationTracker;
+    this.storeId = null;
   }
 
   public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget,
       StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker) {
-    this(wsWidget, null, null, null, storeTabNavigator, navigationTracker);
+    this(wsWidget, null, null, null, storeTabNavigator, navigationTracker, null);
   }
 
   @Override protected Displayable.Configs getConfig() {
@@ -55,6 +67,10 @@ public class StoreGridHeaderDisplayable extends Displayable {
 
   public NavigationTracker getNavigationTracker() {
     return navigationTracker;
+  }
+
+  public Long getStoreId() {
+    return storeId;
   }
 
   public static class Model {

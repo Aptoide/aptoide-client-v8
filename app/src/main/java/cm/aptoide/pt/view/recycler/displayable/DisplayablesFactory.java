@@ -411,7 +411,7 @@ public class DisplayablesFactory {
     ListComments comments = data.first;
     displayables.add(
         new StoreGridHeaderDisplayable(wsWidget, storeTheme, tag, storeContext, storeTabNavigator,
-            navigationTracker));
+            navigationTracker, data.second.getId()));
     if (comments != null
         && comments.getDataList() != null
         && comments.getDataList()

@@ -6,15 +6,15 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 /**
  * Created by trinkes on 8/5/16.
  */
-public class CommentsAdapter<T extends Displayable> extends BaseAdapter {
+public class ReviewsAdapter<T extends Displayable> extends BaseAdapter {
 
   private final Class<T> clazz;
 
-  public CommentsAdapter() {
+  public ReviewsAdapter() {
     clazz = null;
   }
 
-  public CommentsAdapter(Class<T> clazz) {
+  public ReviewsAdapter(Class<T> clazz) {
     this.clazz = clazz;
   }
 

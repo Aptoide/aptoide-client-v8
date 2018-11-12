@@ -14,6 +14,8 @@ import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
+import cm.aptoide.pt.comment.CommentsFragment;
+import cm.aptoide.pt.commentdetail.CommentDetailFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeFragment;
@@ -100,4 +102,8 @@ public interface FragmentComponent {
   void inject(AppCoinsInfoFragment appCoinsInfoFragment);
 
   void inject(EditorialFragment editorialFragment);
+
+  void inject(CommentsFragment commentsFragment);
+
+  void inject(CommentDetailFragment commentDetailFragment);
 }

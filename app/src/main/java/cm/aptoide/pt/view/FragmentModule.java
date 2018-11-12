@@ -61,6 +61,15 @@ import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
+import cm.aptoide.pt.comment.Comments;
+import cm.aptoide.pt.comment.CommentsListManager;
+import cm.aptoide.pt.comment.CommentsNavigator;
+import cm.aptoide.pt.comment.CommentsPresenter;
+import cm.aptoide.pt.comment.CommentsView;
+import cm.aptoide.pt.comment.data.User;
+import cm.aptoide.pt.commentdetail.CommentDetailManager;
+import cm.aptoide.pt.commentdetail.CommentDetailPresenter;
+import cm.aptoide.pt.commentdetail.CommentDetailView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -109,6 +118,7 @@ import cm.aptoide.pt.view.wizard.WizardView;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
+import java.util.Date;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
@@ -381,5 +391,37 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides ApkFyExperiment providesApkfyExperiment(ABTestManager abTestManager) {
     return new ApkFyExperiment(abTestManager);
+  }
+
+  @FragmentScope @Provides CommentsListManager providesCommentsListManager(Comments comments,
+      AptoideAccountManager accountManager) {
+    return new CommentsListManager(accountManager, arguments.getLong("storeId", -1), comments, 0);
+  }
+
+  @FragmentScope @Provides CommentsPresenter providesCommentsPresenter(
+      CommentsListManager commentsListManager, CommentsNavigator commentsNavigator) {
+    return new CommentsPresenter((CommentsView) fragment, commentsListManager, commentsNavigator,
+        AndroidSchedulers.mainThread(), CrashReport.getInstance());
+  }
+
+  @FragmentScope @Provides CommentsNavigator providesCommentsNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new CommentsNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides CommentDetailManager commentDetailManager(Comments comments) {
+    return new CommentDetailManager(comments, arguments.getLong("comment_id", -1),
+        arguments.getString("comment_message", ""),
+        new User(arguments.getLong("comment_user_id", -1),
+            arguments.getString("comment_user_avatar", null),
+            arguments.getString("comment_user_name", "")),
+        arguments.getInt("comment_replies_number", 0),
+        ((Date) arguments.getSerializable("comment_timestamp")));
+  }
+
+  @FragmentScope @Provides CommentDetailPresenter providesCommentDetailPresenter(
+      CommentDetailManager commentManager) {
+    return new CommentDetailPresenter((CommentDetailView) fragment, commentManager,
+        AndroidSchedulers.mainThread());
   }
 }

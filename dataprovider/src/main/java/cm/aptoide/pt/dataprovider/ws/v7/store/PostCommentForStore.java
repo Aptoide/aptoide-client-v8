@@ -16,7 +16,7 @@ import rx.Observable;
 
 public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body> {
 
-  private PostCommentForStore(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+  public PostCommentForStore(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
