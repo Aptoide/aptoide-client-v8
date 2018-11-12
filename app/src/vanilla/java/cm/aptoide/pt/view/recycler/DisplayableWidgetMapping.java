@@ -51,12 +51,8 @@ import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreWidget;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
-import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsDisplayable;
-import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowStoreWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowUserWidget;
-import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
-import cm.aptoide.pt.timeline.view.login.TimelineLoginWidget;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateWidget;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -191,16 +187,10 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping((OfficialAppWidget.class), OfficialAppDisplayable.class));
 
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping((TimeLineStatsWidget.class), TimeLineStatsDisplayable.class));
-
-    displayableWidgetMappings.add(
         new DisplayableWidgetMapping((FollowUserWidget.class), FollowUserDisplayable.class));
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((MessageWhiteBgWidget.class),
         MessageWhiteBgDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping((TimelineLoginWidget.class), TimelineLoginDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((FollowStoreWidget.class), FollowStoreDisplayable.class));
