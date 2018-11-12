@@ -167,7 +167,6 @@ public abstract class AptoideApplication extends Application {
       bodyInterceptorV3;
   @Inject L2Cache httpClientCache;
   @Inject QManager qManager;
-  @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   @Inject TokenInvalidator tokenInvalidator;
   @Inject PackageRepository packageRepository;
   @Inject AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
@@ -186,6 +185,7 @@ public abstract class AptoideApplication extends Application {
   @Inject InvalidRefreshTokenLogoutManager invalidRefreshTokenLogoutManager;
   @Inject ABTestService.ServiceV7 abTestService;
   @Inject RealmExperimentPersistence abTestExperimentPersistence;
+  @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
