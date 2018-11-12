@@ -5,7 +5,9 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
@@ -19,6 +21,7 @@ public class AptoideDownloadManager implements DownloadManager {
   private static final String TAG = "AptoideDownloadManager";
   private final String cachePath;
   private final DownloadAppMapper downloadAppMapper;
+  private final Set<String> completedDownloadsSet;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
@@ -34,6 +37,7 @@ public class AptoideDownloadManager implements DownloadManager {
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
     appDownloaderMap = new HashMap<>();
+    completedDownloadsSet = new HashSet<>();
   }
 
   public synchronized void start() {
@@ -216,7 +220,8 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private void removeAppDownloader(String md5) {
-    AppDownloader appDownloader = appDownloaderMap.get(md5);
+    AppDownloader appDownloader = appDownloaderMap.remove(md5);
+    completedDownloadsSet.add(md5);
     if (appDownloader != null) {
       appDownloader.removeAppDownload();
       appDownloader.stop();
@@ -225,8 +230,7 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private Observable<Download> updateDownload(Download download,
       AppDownloadStatus appDownloadStatus) {
-    if (download.getOverallProgress() != 100
-        || appDownloadStatus.getDownloadStatus() == AppDownloadStatus.AppDownloadState.COMPLETED) {
+    if (!completedDownloadsSet.contains(download.getMd5())) {
       download.setOverallProgress(appDownloadStatus.getOverallProgress());
       download.setOverallDownloadStatus(
           downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
@@ -240,6 +244,11 @@ public class AptoideDownloadManager implements DownloadManager {
       }
     } else {
       download.setOverallDownloadStatus(Download.COMPLETED);
+      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+        fileToDownload.setStatus(downloadStatusMapper.mapAppDownloadStatus(
+            appDownloadStatus.getFileDownloadStatus(fileToDownload.getMd5())));
+      }
+      completedDownloadsSet.remove(download.getMd5());
     }
     downloadsRepository.save(download);
     return Observable.just(download);
