@@ -31,6 +31,8 @@ public class AppViewAnalytics {
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TYPE = "type";
+  private static final String NETWORK = "Network";
+  private static final String TAG = "Tag";
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -274,6 +276,7 @@ public class AppViewAnalytics {
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action) {
+
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.APPVIEW, action);
   }
@@ -320,5 +323,24 @@ public class AppViewAnalytics {
 
   public void sendStoreOpenEvent(Store store) {
     storeAnalytics.sendStoreOpenEvent("App View", store.getName(), true);
+  }
+
+  public void installInterstitialImpression() {
+    installInterstitialInteract("impression");
+  }
+
+  public void installInterstitialClick() {
+    installInterstitialInteract("tap_on_app");
+  }
+
+  private void installInterstitialInteract(String action) {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, action);
+    data.put(TAG, "interstitial");
+    data.put(NETWORK, "AppNext");
+
+    analyticsManager.logEvent(data, APP_VIEW_INTERACT,
+        action.equals("impression") ? AnalyticsManager.Action.IMPRESSION
+            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
 }

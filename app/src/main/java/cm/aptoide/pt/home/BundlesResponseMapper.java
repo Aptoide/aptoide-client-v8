@@ -174,7 +174,7 @@ public class BundlesResponseMapper {
       case ADS:
         return HomeBundle.BundleType.ADS;
       case TIMELINE_CARD:
-        return HomeBundle.BundleType.SOCIAL;
+        return HomeBundle.BundleType.UNKNOWN;
       default:
         return HomeBundle.BundleType.APPS;
     }

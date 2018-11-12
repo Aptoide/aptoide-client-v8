@@ -25,6 +25,9 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD = "tap on card";
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String VIEW_CARD = "view card";
+  static final String ACTION = "Action";
+  static final String TAG = "Tag";
+  static final String NETWORK = "Network";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -190,5 +193,24 @@ public class HomeAnalytics {
       return AnalyticsManager.Action.INSTALL;
     }
     throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");
+  }
+
+  public void bannerImpression() {
+    bannerInteract("impression");
+  }
+
+  public void bannerClick() {
+    bannerInteract("tap_on_app");
+  }
+
+  private void bannerInteract(String action) {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, action);
+    data.put(TAG, "banner-large");
+    data.put(NETWORK, "AppNext");
+
+    analyticsManager.logEvent(data, HOME_INTERACT,
+        action.equals("impression") ? AnalyticsManager.Action.IMPRESSION
+            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
 }

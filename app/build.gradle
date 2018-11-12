@@ -65,6 +65,7 @@ android {
         showStandardStreams = true
       }
     }
+
   }
 
   flavorDimensions "product", "mode"
@@ -267,7 +268,12 @@ android {
         "\"" + project.APPNEXT_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "APPNEXT_SIMILAR_PLACEMENT_ID",
         "\"" + project.APPNEXT_SIMILAR_PLACEMENT_ID + "\""
-
+    variant.buildConfigField "String", "APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID",
+        "\"" + project.APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID + "\""
+    variant.resValue "string", "APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID",
+        "\"" + project.APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID",
+        "\"" + project.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -397,6 +403,8 @@ dependencies {
   // AppNext
   implementation "com.appnext.sdk:core:${APPNEXT_VERSION}"
   implementation "com.appnext.sdk:native-ads2:${APPNEXT_VERSION}"
+  implementation "com.appnext.sdk:banners:${APPNEXT_VERSION}"
+  implementation "com.appnext.sdk:ads:${APPNEXT_VERSION}"
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
