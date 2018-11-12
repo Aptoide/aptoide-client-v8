@@ -45,6 +45,7 @@ public class AptoideDownloadManager implements DownloadManager {
         .filter(List::isEmpty)
         .flatMap(__ -> downloadsRepository.getInQueueDownloads()
             .first())
+        .distinctUntilChanged()
         .doOnError(throwable -> throwable.printStackTrace())
         .retry()
         .doOnNext(downloads -> Logger.getInstance()

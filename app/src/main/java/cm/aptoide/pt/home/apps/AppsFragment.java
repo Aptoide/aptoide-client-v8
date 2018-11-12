@@ -319,10 +319,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView.smoothScrollToPosition(0);
   }
 
-  @Override public void removeInstalledUpdates(List<App> installedUpdatesList) {
-    adapter.removeUpdatesList(installedUpdatesList);
-  }
-
   @Override public Observable<Void> refreshApps() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
@@ -333,8 +329,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
   }
 
-  @Override public void removeCanceledDownload(App app) {
-    adapter.removeCanceledDownload(app);
+  @Override public void removeCanceledAppDownload(App app) {
+    adapter.removeCanceledAppDownload(app);
   }
 
   @Override public void setStandbyState(App app) {
