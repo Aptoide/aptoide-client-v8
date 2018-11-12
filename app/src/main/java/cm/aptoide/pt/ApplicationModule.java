@@ -336,8 +336,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
     return new AptoideDownloadManager(downloadAccessor, cacheHelper, new FileUtils(),
-        downloadAnalytics, FileDownloader.getImpl(),
-        cachePath, apkPath, obbPath);
+        downloadAnalytics, FileDownloader.getImpl(), cachePath, apkPath, obbPath);
   }
 
   @Singleton @Provides @Named("default") Installer provideDefaultInstaller(
@@ -1523,14 +1522,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
-        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
-        SearchAnalytics.SEARCH, SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK,
-        SearchAnalytics.SEARCH_START, AppViewAnalytics.EDITORS_CHOICE_CLICKS,
-        AppViewAnalytics.APP_VIEW_OPEN_FROM, AppViewAnalytics.APP_VIEW_INTERACT,
-        NotificationAnalytics.NOTIFICATION_RECEIVED, NotificationAnalytics.NOTIFICATION_IMPRESSION,
-        NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
-        TimelineAnalytics.SOCIAL_CARD_PREVIEW, TimelineAnalytics.CARD_ACTION,
-        TimelineAnalytics.TIMELINE_OPENED, TimelineAnalytics.FOLLOW_FRIENDS,
+        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, SearchAnalytics.SEARCH,
+        SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
+        AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_OPEN_FROM,
+        AppViewAnalytics.APP_VIEW_INTERACT, NotificationAnalytics.NOTIFICATION_RECEIVED,
+        NotificationAnalytics.NOTIFICATION_IMPRESSION, NotificationAnalytics.NOTIFICATION_PRESSED,
+        NotificationAnalytics.NOTIFICATION_RECEIVED, TimelineAnalytics.SOCIAL_CARD_PREVIEW,
+        TimelineAnalytics.CARD_ACTION, TimelineAnalytics.TIMELINE_OPENED,
         StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
         StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
         AccountAnalytics.LOGIN_EVENT_NAME, AccountAnalytics.FOLLOW_FRIENDS,
