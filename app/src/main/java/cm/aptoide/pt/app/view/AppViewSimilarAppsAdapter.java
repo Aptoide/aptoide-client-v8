@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -29,7 +30,13 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
     this.type = type;
   }
 
-  @Override public AppViewSimilarAppViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+  @Override
+  public AppViewSimilarAppViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    if (viewType == ApplicationAd.Network.APPNEXT.ordinal()) {
+      return new AppViewSimilarAppViewHolder(LayoutInflater.from(viewGroup.getContext())
+          .inflate(R.layout.displayable_grid_ad_appnext, viewGroup, false), oneDecimalFormater,
+          appClicked);
+    }
     return new AppViewSimilarAppViewHolder(LayoutInflater.from(viewGroup.getContext())
         .inflate(R.layout.displayable_grid_ad, viewGroup, false), oneDecimalFormater, appClicked);
   }
@@ -41,6 +48,11 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
 
   @Override public int getItemCount() {
     return similarApps.size();
+  }
+
+  @Override public int getItemViewType(int position) {
+    return similarApps.get(position)
+        .getNetworkAdType();
   }
 
   public void update(List<AppViewSimilarApp> apps) {

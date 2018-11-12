@@ -654,7 +654,7 @@ public class AppViewPresenter implements Presenter {
                 .first()
                 .observeOn(viewScheduler)
                 .flatMapCompletable(account -> downloadApp(DownloadModel.Action.INSTALL,
-                    appViewModel.getPackageName(), appViewModel.getAppId()).doOnCompleted(
+                    appViewModel).doOnCompleted(
                     () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                         appViewModel.getDeveloper()
                             .getName(), DownloadModel.Action.INSTALL.toString()))
@@ -669,8 +669,7 @@ public class AppViewPresenter implements Presenter {
                 .observeOn(viewScheduler)
                 .flatMap(account -> view.showOpenAndInstallDialog(appViewModel.getMarketName(),
                     appViewModel.getAppName())
-                    .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
-                        appViewModel.getAppId()).doOnCompleted(
+                    .flatMapCompletable(action -> downloadApp(action, appViewModel).doOnCompleted(
                         () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                             appViewModel.getDeveloper()
                                 .getName(), action.toString()))
@@ -685,14 +684,14 @@ public class AppViewPresenter implements Presenter {
                 .flatMap(account -> view.showOpenAndInstallApkFyDialog(appViewModel.getMarketName(),
                     appViewModel.getAppName(), appViewModel.getAppc(), appViewModel.getRating()
                         .getAverage(), appViewModel.getIcon(), appViewModel.getPackageDownloads())
-                    .flatMapCompletable(action -> downloadApp(action, appViewModel.getPackageName(),
-                        appViewModel.getAppId()).observeOn(viewScheduler)
-                        .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
-                            appViewModel.getPackageName(), appViewModel.getDeveloper()
-                                .getName(), action.toString()))
-                        .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
-                            appViewModel.getPackageName()))
-                        .observeOn(viewScheduler)))
+                    .flatMapCompletable(
+                        action -> downloadApp(action, appViewModel).observeOn(viewScheduler)
+                            .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
+                                appViewModel.getPackageName(), appViewModel.getDeveloper()
+                                    .getName(), action.toString()))
+                            .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
+                                appViewModel.getPackageName()))
+                            .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
           }
           return Observable.just(appViewModel);
@@ -765,8 +764,7 @@ public class AppViewPresenter implements Presenter {
                     permissionService))
                 .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
                 .flatMapCompletable(
-                    app -> appViewManager.resumeDownload(app.getMd5(), app.getPackageName(),
-                        app.getAppId()))
+                    app -> appViewManager.resumeDownload(app.getMd5(), app.getAppId()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -802,8 +800,7 @@ public class AppViewPresenter implements Presenter {
                 case UPDATE:
                   completable = appViewManager.loadAppViewViewModel()
                       .flatMapCompletable(
-                          appViewModel -> downloadApp(action, appViewModel.getPackageName(),
-                              appViewModel.getAppId()).observeOn(viewScheduler)
+                          appViewModel -> downloadApp(action, appViewModel).observeOn(viewScheduler)
                               .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
                                   appViewModel.getPackageName(), appViewModel.getDeveloper()
                                       .getName(), action.toString()))
@@ -819,8 +816,8 @@ public class AppViewPresenter implements Presenter {
                 case DOWNGRADE:
                   completable = appViewManager.loadAppViewViewModel()
                       .observeOn(viewScheduler)
-                      .flatMapCompletable(appViewViewModel -> downgradeApp(action,
-                          appViewViewModel.getPackageName(), appViewViewModel.getAppId()));
+                      .flatMapCompletable(
+                          appViewViewModel -> downgradeApp(action, appViewViewModel));
                   break;
                 case PAY:
                   completable = appViewManager.loadAppViewViewModel()
@@ -859,11 +856,11 @@ public class AppViewPresenter implements Presenter {
     });
   }
 
-  private Completable downgradeApp(DownloadModel.Action action, String packageName, long appId) {
+  private Completable downgradeApp(DownloadModel.Action action, AppViewViewModel appViewModel) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
-        .flatMapCompletable(__ -> downloadApp(action, packageName, appId))
+        .flatMapCompletable(__ -> downloadApp(action, appViewModel))
         .toCompletable();
   }
 
@@ -871,7 +868,7 @@ public class AppViewPresenter implements Presenter {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private Completable downloadApp(DownloadModel.Action action, String packageName, long appId) {
+  private Completable downloadApp(DownloadModel.Action action, AppViewViewModel appViewModel) {
     return Observable.defer(() -> {
       if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -885,7 +882,10 @@ public class AppViewPresenter implements Presenter {
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
             .observeOn(Schedulers.io())
-            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, packageName, appId)))
+            .flatMapCompletable(__1 -> appViewManager.downloadApp(action, appViewModel.getAppId(),
+                appViewModel.getMalware()
+                    .getRank()
+                    .name(), appViewModel.getEditorsChoice())))
         .toCompletable();
   }
 
@@ -997,8 +997,7 @@ public class AppViewPresenter implements Presenter {
             .flatMap(appBoughClickEvent -> appViewManager.loadAppViewViewModel()
                 .flatMapCompletable(
                     appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
-                        .andThen(downloadApp(DownloadModel.Action.INSTALL,
-                            appViewViewModel.getPackageName(), appViewViewModel.getAppId())))
+                        .andThen(downloadApp(DownloadModel.Action.INSTALL, appViewViewModel)))
                 .toObservable())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

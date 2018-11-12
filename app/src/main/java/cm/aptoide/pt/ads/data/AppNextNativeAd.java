@@ -2,6 +2,7 @@ package cm.aptoide.pt.ads.data;
 
 import android.view.View;
 import com.appnext.nativeads.NativeAd;
+import com.appnext.nativeads.NativeAdView;
 
 /**
  * Created by franciscoaleixo on 04/10/2018.
@@ -36,5 +37,9 @@ public class AppNextNativeAd implements ApplicationAd {
 
   @Override public Network getNetwork() {
     return Network.APPNEXT;
+  }
+
+  @Override public void setAdView(View adView) {
+    nativeAd.setNativeAdView((NativeAdView) adView);
   }
 }

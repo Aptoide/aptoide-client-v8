@@ -16,8 +16,8 @@
       android:id="@+id/donations_list_layout"
       android:layout_width="match_parent"
       android:layout_height="170dp"
-      android:visibility="visible"
       android:layout_marginBottom="12dp"
+      android:visibility="visible"
       >
     <ProgressBar
         android:id="@+id/donations_progress"

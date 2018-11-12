@@ -103,6 +103,9 @@ public class AptoideNativeAd implements ApplicationAd {
     return Network.SERVER;
   }
 
+  @Override public void setAdView(View adView) {
+  }
+
   public String getCpdUrl() {
     return cpdUrl;
   }
