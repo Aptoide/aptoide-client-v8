@@ -11,10 +11,7 @@
   <string name="social_timeline_users_private">%d are private</string>
 
   <!-- Followers and following -->
-  <string name="timeline_button_followers">Followers %d</string>
-  <string name="timeline_button_followed">Following %d</string>
   <string name="timeline_stats_followers">Followers</string>
-  <string name="timeline_login_message">What are your friends installing?</string>
   <string name="private_followers_message">%d followers are private</string>
   <string name="private_following_message">you are following %d private users/stores</string>
 
@@ -23,7 +20,6 @@
   <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
   <string name="addressbook_sync">Sync address book</string>
   <string name="not_now">Not now</string>
-  <string name="follow_friends">Follow friends</string>
   <string name="addressbook_data_about"><b>How %1$s uses your data</b>
     \n\n%1$s will search in your address book for friends and family that are using our app store. We\'ll
     only use this information to improve your %1$s experience by connecting you to more people

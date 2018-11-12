@@ -355,7 +355,6 @@ public abstract class AptoideApplication extends Application {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
           .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
-          .flavourApplicationModule(new FlavourApplicationModule(this))
           .build();
     }
     return applicationComponent;
