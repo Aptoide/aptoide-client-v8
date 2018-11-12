@@ -1523,7 +1523,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
-        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, DownloadAnalytics.DOWNLOAD_EVENT,
+        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
         SearchAnalytics.SEARCH, SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK,
         SearchAnalytics.SEARCH_START, AppViewAnalytics.EDITORS_CHOICE_CLICKS,
         AppViewAnalytics.APP_VIEW_OPEN_FROM, AppViewAnalytics.APP_VIEW_INTERACT,
