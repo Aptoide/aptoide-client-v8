@@ -1,5 +1,6 @@
 package cm.aptoide.pt.abtesting.experiments;
 
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.ApplicationAdResult;
@@ -34,13 +35,13 @@ public class SimilarAdExperiment {
         .observeOn(scheduler)
         .flatMapSingle(experiment -> {
           this.isImpressionRecorded = false;
-          String experimentAssigment = "default";
+          String experimentAssignment = "default";
           if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
-            experimentAssigment = experiment.getAssignment();
+            experimentAssignment = experiment.getAssignment();
           }
-          switch (experimentAssigment) {
+          switch (experimentAssignment) {
             case "appnext_ad":
-              return adsManager.loadAppnextAd(keywords);
+              return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
             case "default":
             case "default_ad":
             default:

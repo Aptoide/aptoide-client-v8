@@ -50,7 +50,6 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   private View genericErrorView;
   private LinearLayoutManager layoutManager;
   private Toolbar toolbar;
-  private ActionBar actionBar;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -180,6 +179,12 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     super.onDestroyView();
   }
 
+  @Override public void onDestroy() {
+    postComment = null;
+    commentClickEvent = null;
+    super.onDestroy();
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
@@ -200,7 +205,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);
-    actionBar = activity.getSupportActionBar();
+    ActionBar actionBar = activity.getSupportActionBar();
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setHomeButtonEnabled(true);

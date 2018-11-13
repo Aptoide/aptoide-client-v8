@@ -7,7 +7,6 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.FirstInstallAnalytics;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.download.DownloadAnalytics;

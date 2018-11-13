@@ -8,7 +8,6 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.home.BottomNavigationAnalytics;
@@ -111,8 +110,7 @@ import javax.inject.Singleton;
         AccountAnalytics.LOGIN_EVENT_NAME, AccountAnalytics.FOLLOW_FRIENDS,
         UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
         FirstLaunchAnalytics.FIRST_LAUNCH, InstallFabricEvents.ROOT_V2_COMPLETE,
-        InstallFabricEvents.ROOT_V2_START, AppViewSimilarAppAnalytics.APP_VIEW_SIMILAR_APP_SLIDE_IN,
-        AppViewSimilarAppAnalytics.SIMILAR_APP_INTERACT,
+        InstallFabricEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
         NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
         AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
         AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,

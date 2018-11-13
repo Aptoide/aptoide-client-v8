@@ -1,6 +1,6 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.ads.model.AptoideNativeAd;
+import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import java.util.AbstractMap;
 import rx.functions.Func1;
