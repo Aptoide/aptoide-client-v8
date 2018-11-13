@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.util.Log;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -69,6 +70,7 @@ public class AptoideDownloadManager implements DownloadManager {
     if (dispatchDownloadsSubscription != null && !dispatchDownloadsSubscription.isUnsubscribed()) {
       dispatchDownloadsSubscription.unsubscribe();
     }
+    completedDownloadsSet.clear();
   }
 
   @Override public Completable startDownload(Download download) {
@@ -158,11 +160,13 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Completable removeDownload(String md5) {
+    Log.d("TAG123", "removeDownload: ");
     return downloadsRepository.getDownload(md5)
         .first()
         .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
             appDownloader -> appDownloader.removeAppDownload()
                 .andThen(downloadsRepository.remove(md5))
+                .andThen(Completable.fromAction(() -> completedDownloadsSet.remove(md5)))
                 .andThen(Observable.just(download))))
         .doOnNext(this::removeDownloadFiles)
         .toCompletable();
@@ -244,10 +248,6 @@ public class AptoideDownloadManager implements DownloadManager {
       }
     } else {
       download.setOverallDownloadStatus(Download.COMPLETED);
-      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        fileToDownload.setStatus(downloadStatusMapper.mapAppDownloadStatus(
-            appDownloadStatus.getFileDownloadStatus(fileToDownload.getMd5())));
-      }
       completedDownloadsSet.remove(download.getMd5());
     }
     downloadsRepository.save(download);
