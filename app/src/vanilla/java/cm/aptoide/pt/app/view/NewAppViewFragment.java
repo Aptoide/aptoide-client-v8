@@ -753,20 +753,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         || similarBottomView.getLocalVisibleRect(scrollBounds);
   }
 
-  @Override public synchronized void showFullScreenAd() {
-    fullScreenAdShown = true;
-    Interstitial fullAd =
-        new Interstitial(this.getContext(), BuildConfig.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
-    fullAd.setOnAdLoadedCallback(s -> {
-      fullAd.showAd();
-      appViewAnalytics.installInterstitialImpression();
-    });
-    fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
-
-    Handler handler = new Handler();
-    handler.postDelayed(() -> fullAd.loadAd(), 1000);
-  }
-
   @Override public Observable<Void> clickDeveloperWebsite() {
     return RxView.clicks(infoWebsite);
   }
@@ -1113,6 +1099,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     } else {
       donationsListEmptyState.setVisibility(View.VISIBLE);
     }
+  }
+
+  @Override public synchronized void showFullScreenAd() {
+    fullScreenAdShown = true;
+    Interstitial fullAd =
+        new Interstitial(this.getContext(), BuildConfig.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
+    fullAd.setOnAdLoadedCallback(s -> {
+      fullAd.showAd();
+      appViewAnalytics.installInterstitialImpression();
+    });
+    fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
+
+    Handler handler = new Handler();
+    handler.postDelayed(() -> fullAd.loadAd(), 1000);
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
