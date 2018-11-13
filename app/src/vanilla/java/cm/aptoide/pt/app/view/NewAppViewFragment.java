@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -247,6 +248,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View donateInstallCard;
   private Button installCardDonateButton;
   private Button listDonateButton;
+
+  private boolean fullScreenAdShown = false;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -750,17 +753,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         || similarBottomView.getLocalVisibleRect(scrollBounds);
   }
 
-  @Override public void showFullScreenAd() {
-    Interstitial fullAd =
-        new Interstitial(this.getContext(), BuildConfig.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
-    fullAd.setOnAdLoadedCallback(s -> {
-      fullAd.showAd();
-      appViewAnalytics.installInterstitialImpression();
-    });
-    fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
-    fullAd.loadAd();
-  }
-
   @Override public Observable<Void> clickDeveloperWebsite() {
     return RxView.clicks(infoWebsite);
   }
@@ -1107,6 +1099,20 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     } else {
       donationsListEmptyState.setVisibility(View.VISIBLE);
     }
+  }
+
+  @Override public synchronized void showFullScreenAd() {
+    fullScreenAdShown = true;
+    Interstitial fullAd =
+        new Interstitial(this.getContext(), BuildConfig.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
+    fullAd.setOnAdLoadedCallback(s -> {
+      fullAd.showAd();
+      appViewAnalytics.installInterstitialImpression();
+    });
+    fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
+
+    Handler handler = new Handler();
+    handler.postDelayed(() -> fullAd.loadAd(), 1000);
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
@@ -1503,6 +1509,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+
+        if (progress > 0 && !fullScreenAdShown) {
+          showFullScreenAd();
+        }
         break;
       case INDETERMINATE:
         downloadProgressBar.setIndeterminate(true);
