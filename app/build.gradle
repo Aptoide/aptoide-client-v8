@@ -15,7 +15,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'io.fabric.tools:gradle:1.25.4'
+    classpath "io.fabric.tools:gradle:${FABRIC_VERSION}"
   }
 }
 
@@ -138,11 +138,6 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
-  }
-
-  variantFilter { variant ->
-    List<ProductFlavor> flavors = variant.getFlavors()
-
   }
 
   packagingOptions {
@@ -293,10 +288,9 @@ android {
 dependencies {
 
   implementation project(path: ':crashreports')
-  implementation project(path: ':downloadmanager', configuration: 'default')
-  implementation project(path: ':aptoide-database', configuration: 'default')
+  implementation project(path: ':downloadmanager')
+  implementation project(path: ':aptoide-database')
   implementation project(path: ':aptoidepreferences')
-  implementation project(path: ':downloadmanager', configuration: 'default')
   implementation project(path: ':aptoide-account-manager')
   implementation project(path: ':aptoide-analytics-core')
   implementation project(path: ':aptoide-analytics-default-implementation')
