@@ -441,8 +441,6 @@ public class AppViewInstallWidget extends Widget<AppViewInstallDisplayable> {
   }
 
   private void setupEvents(Download download, InstallType installType, Origin origin) {
-    appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         installType, AnalyticsManager.Action.INSTALL, AppContext.APPVIEW, origin, campaignId,
         abTestGroup);
