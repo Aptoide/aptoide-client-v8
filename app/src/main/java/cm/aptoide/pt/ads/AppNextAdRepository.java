@@ -51,8 +51,9 @@ public class AppNextAdRepository {
         super.adImpression(nativeAd);
       }
     });
-    nativeAd.loadAd(new NativeAdRequest().setCachingPolicy(NativeAdRequest.CachingPolicy.STATIC_ONLY)
-        .setCategories(getCategory(keywords)));
+    nativeAd.loadAd(
+        new NativeAdRequest().setCachingPolicy(NativeAdRequest.CachingPolicy.STATIC_ONLY)
+            .setCategories(getCategory(keywords)));
     return subject;
   }
 
