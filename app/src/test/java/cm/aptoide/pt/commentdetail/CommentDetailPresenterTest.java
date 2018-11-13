@@ -1,5 +1,6 @@
 package cm.aptoide.pt.commentdetail;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.comment.CommentDetailResponseModel;
 import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
 import cm.aptoide.pt.presenter.View;
@@ -19,6 +20,7 @@ public class CommentDetailPresenterTest {
 
   @Mock private CommentDetailFragment view;
   @Mock private CommentDetailManager commentDetailManager;
+  @Mock private AptoideAccountManager accountManager;
 
   private CommentDetailPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -28,7 +30,8 @@ public class CommentDetailPresenterTest {
     MockitoAnnotations.initMocks(this);
     lifecycleEvent = PublishSubject.create();
 
-    presenter = new CommentDetailPresenter(view, commentDetailManager, Schedulers.immediate());
+    presenter = new CommentDetailPresenter(view, commentDetailManager, Schedulers.immediate(),
+        accountManager);
     fakeCommentsDataSource = new FakeCommentsDataSource();
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
