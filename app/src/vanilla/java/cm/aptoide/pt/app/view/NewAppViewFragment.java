@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -250,6 +251,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View donateInstallCard;
   private Button installCardDonateButton;
   private Button listDonateButton;
+
+  private boolean fullScreenAdShown = false;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -792,7 +795,8 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       }
     });
 
-    IronSource.loadInterstitial();
+    Handler handler = new Handler();
+    handler.postDelayed(() -> IronSource.loadInterstitial(), 1000);
   }
 
   @Override public Observable<Void> clickDeveloperWebsite() {
@@ -1537,6 +1541,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+
+        if (progress > 0 && !fullScreenAdShown) {
+          showFullScreenAd();
+        }
         break;
       case INDETERMINATE:
         downloadProgressBar.setIndeterminate(true);
