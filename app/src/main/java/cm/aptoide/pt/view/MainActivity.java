@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
@@ -22,6 +23,8 @@ import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.jakewharton.rxrelay.PublishRelay;
 import javax.inject.Inject;
 import rx.Observable;
@@ -48,6 +51,11 @@ public class MainActivity extends BottomNavigationActivity
     setupUpdatesNotification();
 
     attachPresenter(presenter);
+
+    //IronSource.init(this, BuildConfig.IRONSOURCE_APPLICATION_ID, IronSource.AD_UNIT.INTERSTITIAL);
+    IronSource.init(this, BuildConfig.IRONSOURCE_APPLICATION_ID);
+    IntegrationHelper.validateIntegration(this);
+
   }
 
   private void setupUpdatesNotification() {

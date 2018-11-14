@@ -84,7 +84,7 @@ public class Home {
   }
 
   public Single<AppNextAdResult> loadAppNextAd() {
-    return adsManager.loadAppNextAd(null, BuildConfig.APPNEXT_HIGHLIGHTED_PLACEMENT_ID);
+    return adsManager.loadAppNextAd(null, BuildConfig.APPNEXT_HIGHLIGHTED_PLACEMENT_T3_ID);
   }
 
 

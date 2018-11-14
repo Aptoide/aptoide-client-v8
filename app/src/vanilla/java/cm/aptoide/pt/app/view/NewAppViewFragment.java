@@ -98,6 +98,9 @@ import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import com.appnext.ads.interstitial.Interstitial;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.sdk.InterstitialListener;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
@@ -751,14 +754,45 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void showFullScreenAd() {
-    Interstitial fullAd =
-        new Interstitial(this.getContext(), BuildConfig.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
-    fullAd.setOnAdLoadedCallback(s -> {
-      fullAd.showAd();
-      appViewAnalytics.installInterstitialImpression();
+    //Interstitial fullAd =
+    //    new Interstitial(this.getContext(), BuildConfig.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
+    //fullAd.setOnAdLoadedCallback(s -> {
+    //  fullAd.showAd();
+    //  appViewAnalytics.installInterstitialImpression();
+    //});
+    //fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
+    //fullAd.loadAd();
+    IronSource.setInterstitialListener(new InterstitialListener() {
+      @Override public void onInterstitialAdReady() {
+        IronSource.showInterstitial("AppView_Interstitial_T3");
+      }
+
+      @Override public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
+
+      }
+
+      @Override public void onInterstitialAdOpened() {
+
+      }
+
+      @Override public void onInterstitialAdClosed() {
+
+      }
+
+      @Override public void onInterstitialAdShowSucceeded() {
+        appViewAnalytics.installInterstitialImpression("ironSource");
+      }
+
+      @Override public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
+
+      }
+
+      @Override public void onInterstitialAdClicked() {
+        appViewAnalytics.installInterstitialClick("ironSource");
+      }
     });
-    fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
-    fullAd.loadAd();
+
+    IronSource.loadInterstitial();
   }
 
   @Override public Observable<Void> clickDeveloperWebsite() {

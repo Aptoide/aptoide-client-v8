@@ -15,6 +15,6 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       ads:bannerSize="MEDIUM_RECTANGLE"
-      ads:placementId="@string/APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID"
+      ads:placementId="@string/APPNEXT_HOME_MEDIUM_BANNER_PLACEMENT_T3_ID"
       />
 </LinearLayout>

@@ -13,6 +13,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.permission.PermissionProviderActivity;
+import com.ironsource.mediationsdk.IronSource;
 import javax.inject.Inject;
 
 public abstract class AnalyticsActivity extends PermissionProviderActivity {
@@ -51,11 +52,13 @@ public abstract class AnalyticsActivity extends PermissionProviderActivity {
   @Override protected void onResume() {
     super.onResume();
     _resumed = true;
+    IronSource.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
     _resumed = false;
+    IronSource.onPause(this);
   }
 
   @Override protected void onStop() {

@@ -330,19 +330,19 @@ public class AppViewAnalytics {
     storeAnalytics.sendStoreOpenEvent("App View", store.getName(), true);
   }
 
-  public void installInterstitialImpression() {
-    installInterstitialInteract("impression");
+  public void installInterstitialImpression(String network) {
+    installInterstitialInteract("impression", network);
   }
 
-  public void installInterstitialClick() {
-    installInterstitialInteract("tap_on_app");
+  public void installInterstitialClick(String network) {
+    installInterstitialInteract("tap_on_app", network);
   }
 
-  private void installInterstitialInteract(String action) {
+  private void installInterstitialInteract(String action, String network) {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, action);
     data.put(TAG, "interstitial");
-    data.put(NETWORK, "AppNext");
+    data.put(NETWORK, network);
 
     analyticsManager.logEvent(data, APP_VIEW_INTERACT,
         action.equals("impression") ? AnalyticsManager.Action.IMPRESSION

@@ -275,6 +275,20 @@ android {
     variant.buildConfigField "String", "APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID",
         "\"" + project.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
 
+
+    variant.buildConfigField "String", "APPNEXT_SIMILAR_PLACEMENT_T3_ID",
+        "\"" + project.APPNEXT_SIMILAR_PLACEMENT_T3_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_PLACEMENT_T3_ID",
+        "\"" + project.APPNEXT_HIGHLIGHTED_PLACEMENT_T3_ID + "\""
+    variant.buildConfigField "String", "APPNEXT_HOME_MEDIUM_BANNER_PLACEMENT_T3_ID",
+        "\"" + project.APPNEXT_HOME_MEDIUM_BANNER_PLACEMENT_T3_ID + "\""
+    variant.resValue "string", "APPNEXT_HOME_MEDIUM_BANNER_PLACEMENT_T3_ID",
+        "\"" + project.APPNEXT_HOME_MEDIUM_BANNER_PLACEMENT_T3_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_APPLICATION_ID",
+        "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_PLACEMENT_ID",
+        "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -405,6 +419,9 @@ dependencies {
   implementation "com.appnext.sdk:native-ads2:${APPNEXT_VERSION}"
   implementation "com.appnext.sdk:banners:${APPNEXT_VERSION}"
   implementation "com.appnext.sdk:ads:${APPNEXT_VERSION}"
+
+  // IronSrc
+  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {

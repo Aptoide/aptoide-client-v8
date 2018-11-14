@@ -119,7 +119,7 @@ public class AppViewManager {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
-      return adsManager.loadAppNextAd(keyWords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID)
+      return adsManager.loadAppNextAd(keyWords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_T3_ID)
           .flatMap(
               adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
                 cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
@@ -227,7 +227,7 @@ public class AppViewManager {
   }
 
   private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
-    return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
+    return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_T3_ID);
   }
 
   public PublishSubject<AppNextAdResult> appNextAdClick() {
