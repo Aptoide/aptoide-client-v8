@@ -768,6 +768,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     IronSource.setInterstitialListener(new InterstitialListener() {
       @Override public void onInterstitialAdReady() {
         IronSource.showInterstitial("AppView_Interstitial_T3");
+        appViewAnalytics.installInterstitialImpression("ironSource");
       }
 
       @Override public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
@@ -783,7 +784,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
       }
 
       @Override public void onInterstitialAdShowSucceeded() {
-        appViewAnalytics.installInterstitialImpression("ironSource");
       }
 
       @Override public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
