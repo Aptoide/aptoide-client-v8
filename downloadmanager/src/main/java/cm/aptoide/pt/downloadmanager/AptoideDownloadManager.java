@@ -174,6 +174,7 @@ public class AptoideDownloadManager implements DownloadManager {
     return getDownloadsList().first()
         .flatMapIterable(downloads -> downloads)
         .filter(download -> getStateIfFileExists(download) == Download.FILE_MISSING)
+        .doOnNext(download -> completedDownloadsSet.remove(download.getMd5()))
         .flatMapCompletable(download -> downloadsRepository.remove(download.getMd5()))
         .toList()
         .toCompletable();
