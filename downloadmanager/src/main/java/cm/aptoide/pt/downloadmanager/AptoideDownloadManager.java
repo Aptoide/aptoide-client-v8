@@ -1,6 +1,5 @@
 package cm.aptoide.pt.downloadmanager;
 
-import android.util.Log;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -160,7 +159,6 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Completable removeDownload(String md5) {
-    Log.d("TAG123", "removeDownload: ");
     return downloadsRepository.getDownload(md5)
         .first()
         .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
