@@ -55,7 +55,6 @@ import cm.aptoide.pt.store.view.BadgeDialogFactory;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.GridStoreMetaDisplayable;
-import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
 import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
@@ -419,19 +418,18 @@ public class DisplayablesFactory {
     displayables.add(
         new StoreGridHeaderDisplayable(wsWidget, storeTheme, tag, storeContext, storeTabNavigator,
             navigationTracker, data.second.getId()));
-    if (comments != null
-        && comments.getDataList() != null
-        && comments.getDataList()
-        .getList()
-        .size() > 0) {
-      displayables.add(
-          new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
-              comments.getDataList()
-                  .getList(), commentMapper, commentsNavigator, commentsListManager));
-    } else {
-      displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-          StoreTheme.get(storeTheme)));
-    }
+    //if (comments != null
+    //    && comments.getDataList() != null
+    //    && comments.getDataList()
+    //    .getList()
+    //    .size() > 0) {
+    displayables.add(new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
+        comments.getDataList()
+            .getList(), commentMapper, commentsNavigator, commentsListManager));
+    //} else {
+    //  displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
+    //      StoreTheme.get(storeTheme)));
+    //}
 
     return displayables;
   }

@@ -66,3 +66,4 @@ public class StoreLatestCommentsDisplayable extends Displayable {
     return commentsListManager;
   }
 }
+
