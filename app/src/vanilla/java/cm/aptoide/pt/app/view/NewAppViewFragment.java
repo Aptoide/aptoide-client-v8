@@ -765,6 +765,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     //});
     //fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
     //fullAd.loadAd();
+    fullScreenAdShown = true;
     IronSource.setInterstitialListener(new InterstitialListener() {
       @Override public void onInterstitialAdReady() {
         IronSource.showInterstitial("AppView_Interstitial_T3");
