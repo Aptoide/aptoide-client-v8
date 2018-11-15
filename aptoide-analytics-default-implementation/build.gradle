@@ -11,22 +11,17 @@ buildscript {
   }
 
   dependencies {
-    classpath 'io.fabric.tools:gradle:1.22.0'
+    classpath "io.fabric.tools:gradle:${FABRIC_VERSION}"
   }
 }
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "27.0.3"
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
+  buildToolsVersion BUILD_TOOLS_VERSION
 
 
   defaultConfig {
-    minSdkVersion 15
-    targetSdkVersion 25
-    versionCode 1
-    versionName "1.0"
-
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    minSdkVersion project.MINIMUM_SDK_VERSION
   }
 
   lintOptions {
