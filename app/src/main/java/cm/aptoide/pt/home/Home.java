@@ -1,10 +1,8 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.app.AdsManager;
-import cm.aptoide.pt.app.AppNextAdResult;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import rx.Completable;
-import rx.Observable;
 import rx.Single;
 import rx.subjects.PublishSubject;
 
@@ -35,10 +33,6 @@ public class Home {
 
   public Single<HomeBundlesModel> loadNextHomeBundles() {
     return bundlesRepository.loadNextHomeBundles();
-  }
-
-  public PublishSubject<AppNextAdResult> appNextClick() {
-    return adsManager.appNextAdClick();
   }
 
   public boolean hasMore() {

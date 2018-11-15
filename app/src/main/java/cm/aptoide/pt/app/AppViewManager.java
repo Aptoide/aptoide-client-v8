@@ -226,14 +226,6 @@ public class AppViewManager {
     return cachedSimilarAppsViewModel;
   }
 
-  private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
-    return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
-  }
-
-  public PublishSubject<AppNextAdResult> appNextAdClick() {
-    return adsManager.appNextAdClick();
-  }
-
   private Single<Boolean> isStoreFollowed(long storeId) {
     return storeManager.isSubscribed(storeId)
         .first()

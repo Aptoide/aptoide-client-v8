@@ -63,7 +63,6 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.AppNextAdRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -248,7 +247,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -928,20 +926,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         storeRepository);
   }
 
-  @Singleton @Provides AppNextAdRepository providesAppNextAdRepository() {
-    return new AppNextAdRepository(application.getApplicationContext());
-  }
 
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      ConnectivityManager connectivityManager, AppNextAdRepository appNextAdRepository) {
+      ConnectivityManager connectivityManager) {
     return new AdsRepository(idsRepository, accountManager, okHttpClient,
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
         application.getApplicationContext(), connectivityManager, application.getResources(),
         adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
-        application::getPartnerId, new MinimalAdMapper(), appNextAdRepository);
+        application::getPartnerId, new MinimalAdMapper());
   }
 
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
