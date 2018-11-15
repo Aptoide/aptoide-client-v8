@@ -69,6 +69,11 @@ android {
 
   flavorDimensions "product", "mode"
   productFlavors {
+    cobrand {
+      dimension "product"
+      applicationId "cm.aptoide.pt.cobrand"
+      matchingFallbacks = ['internal', 'prod']
+    }
 
     vanilla {
       dimension "product"
@@ -98,12 +103,13 @@ android {
 
     leak {
       dimension "mode"
+      applicationIdSuffix ".leak"
       matchingFallbacks = ['internal', 'prod']
     }
 
     fairy {
       dimension "mode"
-      applicationIdSuffix "testfairy"
+      applicationIdSuffix ".testfairy"
       versionName "9.3.0." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['internal', 'prod']
@@ -138,6 +144,20 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  variantFilter { variant ->
+    List<ProductFlavor> flavors = variant.getFlavors()
+
+    String applicationIdBase = flavors[0].applicationId
+    String applicationIdSuffix = flavors[1].applicationIdSuffix
+    boolean hasSuffix = applicationIdSuffix != null
+
+    if (applicationIdBase.contains('cobrand') && hasSuffix &&
+        (applicationIdSuffix.contains('internal') || applicationIdSuffix.contains('testfairy') ||
+            applicationIdSuffix.contains('leak'))) {
+      setIgnore(true)
+    }
   }
 
   packagingOptions {

@@ -19,7 +19,7 @@ import cm.aptoide.pt.view.BackButtonFragment;
  */
 public class WizardPageTwoFragment extends BackButtonFragment {
 
-  private BackButton.ClickHandler clickHandler;
+  private ClickHandler clickHandler;
 
   public static Fragment newInstance() {
     return new WizardPageTwoFragment();
@@ -41,7 +41,7 @@ public class WizardPageTwoFragment extends BackButtonFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    clickHandler = new BackButton.ClickHandler() {
+    clickHandler = new ClickHandler() {
       @Override public boolean handle() {
         return false;
       }
