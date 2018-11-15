@@ -108,6 +108,12 @@ android {
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
+
+    monetisation {
+      dimension "mode"
+      versionName defaultConfig.getVersionName() + "A"
+      matchingFallbacks = ['prod']
+    }
   }
 
   buildTypes {
