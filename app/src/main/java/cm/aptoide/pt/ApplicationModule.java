@@ -47,8 +47,6 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
-import cm.aptoide.pt.abtesting.experiments.HighlightedAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -1388,16 +1386,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AdsManager(adsRepository, AccessorFactory.getAccessorFor(
         ((AptoideApplication) application.getApplicationContext()).getDatabase(),
         StoredMinimalAd.class), new MinimalAdMapper());
-  }
-
-  @Singleton @Provides SimilarAdExperiment providesSimilarAdExperiment(ABTestManager abTestManager,
-      AdsManager adsManager) {
-    return new SimilarAdExperiment(abTestManager, AndroidSchedulers.mainThread(), adsManager);
-  }
-
-  @Singleton @Provides HighlightedAdExperiment providesHighlightedAdExperiment(
-      ABTestManager abTestManager, AdsManager adsManager) {
-    return new HighlightedAdExperiment(abTestManager, AndroidSchedulers.mainThread(), adsManager);
   }
 
   @Singleton @Provides BillingAnalytics providesBillingAnalytics(AnalyticsManager analyticsManager,

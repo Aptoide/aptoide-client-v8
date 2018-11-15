@@ -1,7 +1,6 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;

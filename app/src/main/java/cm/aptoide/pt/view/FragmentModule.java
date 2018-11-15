@@ -10,8 +10,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
-import cm.aptoide.pt.abtesting.experiments.HighlightedAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -216,9 +214,8 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, AdsManager adsManager,
-      HighlightedAdExperiment highlightedAdExperiment) {
-    return new Home(bundlesRepository, impressionManager, adsManager, highlightedAdExperiment);
+      ImpressionManager impressionManager, AdsManager adsManager) {
+    return new Home(bundlesRepository, impressionManager, adsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -278,24 +275,22 @@ import rx.schedulers.Schedulers;
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
       SocialRepository socialRepository, @Named("marketName") String marketName,
-      AppCoinsManager appCoinsManager, SimilarAdExperiment similarAdExperiment) {
+      AppCoinsManager appCoinsManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, similarAdExperiment);
+        marketName, appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
-      AptoideAccountManager accountManager, CrashReport crashReport,
-      SimilarAdExperiment similarAdExperiment) {
+      AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
-        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()),
-        similarAdExperiment);
+        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()));
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
