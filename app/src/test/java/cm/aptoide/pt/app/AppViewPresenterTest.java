@@ -48,7 +48,6 @@ public class AppViewPresenterTest {
   @Mock private AppViewManager appViewManager;
   @Mock private AptoideAccountManager accountManager;
   @Mock private CrashReport crashReporter;
-  @Mock private SimilarAdExperiment similarAdExperiment;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -60,7 +59,7 @@ public class AppViewPresenterTest {
     MockitoAnnotations.initMocks(this);
     presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, appViewNavigator,
         appViewManager, accountManager, Schedulers.immediate(), crashReporter, permissionManager,
-        permissionService, similarAdExperiment);
+        permissionService);
 
     lifecycleEvent = PublishSubject.create();
 
