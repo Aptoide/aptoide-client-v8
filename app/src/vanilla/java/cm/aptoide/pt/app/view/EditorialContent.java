@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import java.util.List;
 
 /**
@@ -11,20 +12,16 @@ class EditorialContent {
   private final List<EditorialMedia> media;
   private final String message;
   private final String type;
-  private final String appName;
-  private final String icon;
-  private final float rating;
+  private final App app;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      String appName, String icon, float rating) {
+      App app) {
 
     this.title = title;
     this.media = media;
     this.message = message;
     this.type = type;
-    this.appName = appName;
-    this.icon = icon;
-    this.rating = rating;
+    this.app = app;
   }
 
   public String getMessage() {
@@ -40,7 +37,7 @@ class EditorialContent {
   }
 
   public boolean isPlaceHolderType() {
-    return type != null && type.equals("app_placeholder");
+    return app != null;
   }
 
   public List<EditorialMedia> getMedia() {
@@ -63,18 +60,6 @@ class EditorialContent {
     return title != null && !title.equals("");
   }
 
-  public String getAppName() {
-    return appName;
-  }
-
-  public String getIcon() {
-    return icon;
-  }
-
-  public float getRating() {
-    return rating;
-  }
-
   public boolean hasAnyMediaDescription() {
     for (EditorialMedia editorialMedia : media) {
       if (editorialMedia.hasDescription()) {
@@ -82,5 +67,35 @@ class EditorialContent {
       }
     }
     return false;
+  }
+
+  public App getApp() {
+    return app;
+  }
+
+  public String getAppName() {
+    String name = null;
+    if (app != null) {
+      name = app.getName();
+    }
+    return name;
+  }
+
+  public String getIcon() {
+    String icon = null;
+    if (app != null) {
+      icon = app.getIcon();
+    }
+    return icon;
+  }
+
+  public float getRating() {
+    float rating = 0;
+    if (app != null) {
+      rating = app.getStats()
+          .getRating()
+          .getAvg();
+    }
+    return rating;
   }
 }

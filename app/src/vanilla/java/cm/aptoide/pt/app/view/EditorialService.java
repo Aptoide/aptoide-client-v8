@@ -6,7 +6,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard.Data;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard.Media;
-import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -73,38 +72,31 @@ public class EditorialService {
       Data card = editorialCard.getData();
       String cardType = card.getType();
 
-      App app = card.getApp();
-      long appId = app.getId();
-      String appName = app.getName();
-      String icon = app.getIcon();
-      float rating = app.getStats()
-          .getRating()
-          .getAvg();
       List<Content> contentList = card.getContent();
       List<EditorialContent> editorialContentList = new ArrayList<>();
-      editorialContentList =
-          mapEditorialContent(contentList, editorialContentList, appName, icon, rating);
+      editorialContentList = mapEditorialContent(contentList, editorialContentList);
       int placeHolderPosition = getPlaceHolderPosition(editorialContentList);
-      String packageName = app.getPackageName();
-      long size = app.getSize();
-      String graphic = app.getGraphic();
-      Store store = app.getStore();
-      Obb obb = app.getObb();
-      long storeId = store.getId();
-      String storeName = store.getName();
-      String storeTheme = store.getAppearance()
-          .getTheme();
-      File file = app.getFile();
-      String vername = file.getVername();
-      int vercode = file.getVercode();
-      String path = file.getPath();
-      String pathAlt = file.getPathAlt();
-      String md5 = file.getMd5sum();
-      String backgroundImage = card.getBackgroundImage();
-      return Observable.just(
-          new EditorialViewModel(editorialContentList, cardType, appId, card.getTitle(), appName,
-              rating, packageName, size, icon, graphic, obb, storeId, storeName, storeTheme,
-              vername, vercode, path, backgroundImage, pathAlt, md5, placeHolderPosition));
+      App app = null;
+      if (placeHolderPosition != -1) {
+        app = editorialContentList.get(placeHolderPosition)
+            .getApp();
+      }
+      if (app != null) {
+        Store store = app.getStore();
+        File file = app.getFile();
+        return Observable.just(
+            new EditorialViewModel(editorialContentList, cardType, app.getId(), card.getCaption(),
+                app.getName(), app.getStats()
+                .getRating()
+                .getAvg(), app.getPackageName(), app.getSize(), app.getIcon(), app.getGraphic(),
+                app.getObb(), store.getId(), store.getName(), store.getName(), file.getVername(),
+                file.getVercode(), file.getPath(), card.getBackground(), file.getPathAlt(),
+                file.getMd5sum(), placeHolderPosition));
+      } else {
+        return Observable.just(
+            new EditorialViewModel(editorialContentList, cardType, card.getCaption(),
+                card.getBackground(), placeHolderPosition));
+      }
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
@@ -123,7 +115,7 @@ public class EditorialService {
   }
 
   private List<EditorialContent> mapEditorialContent(List<Content> contentList,
-      List<EditorialContent> editorialContentList, String appName, String icon, float rating) {
+      List<EditorialContent> editorialContentList) {
     if (contentList != null) {
       for (Content content : contentList) {
         List<Media> mediaList = content.getMedia();
@@ -132,13 +124,13 @@ public class EditorialService {
           for (Media media : mediaList) {
             EditorialMedia editorialMedia =
                 new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
-                    media.getUrl());
+                    media.getImage());
             editorialMediaList.add(editorialMedia);
           }
         }
         EditorialContent editorialContent =
             new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-                content.getType(), appName, icon, rating);
+                content.getType(), content.getApp());
         editorialContentList.add(editorialContent);
       }
     }

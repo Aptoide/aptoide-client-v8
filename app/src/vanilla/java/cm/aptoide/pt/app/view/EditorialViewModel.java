@@ -12,8 +12,9 @@ class EditorialViewModel {
 
   private final List<EditorialContent> contentList;
   private final String cardType;
+  private final String caption;
+  private final String background;
   private final long appId;
-  private final String title;
   private final String appName;
   private final float rating;
   private final String packageName;
@@ -27,7 +28,6 @@ class EditorialViewModel {
   private final String vername;
   private final int vercode;
   private final String path;
-  private final String backgroundImage;
   private final String pathAlt;
   private final String md5;
   private final int placeHolderPosition;
@@ -35,14 +35,14 @@ class EditorialViewModel {
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
-      String title, String appName, float rating, String packageName, long size, String icon,
+      String caption, String appName, float rating, String packageName, long size, String icon,
       String graphic, Obb obb, long storeId, String storeName, String storeTheme,
-      String versionName, int versionCode, String path, String backgroundImage, String pathAlt,
+      String versionName, int versionCode, String path, String background, String pathAlt,
       String md5, int placeHolderPosition) {
     this.contentList = contentList;
     this.cardType = cardType;
     this.appId = appId;
-    this.title = title;
+    this.caption = caption;
     this.appName = appName;
     this.rating = rating;
     this.packageName = packageName;
@@ -56,7 +56,7 @@ class EditorialViewModel {
     this.vername = versionName;
     this.vercode = versionCode;
     this.path = path;
-    this.backgroundImage = backgroundImage;
+    this.background = background;
     this.pathAlt = pathAlt;
     this.md5 = md5;
     this.placeHolderPosition = placeHolderPosition;
@@ -70,7 +70,7 @@ class EditorialViewModel {
     this.loading = loading;
     error = null;
     this.appId = -1;
-    this.title = null;
+    this.caption = null;
     this.appName = null;
     this.rating = -1;
     this.packageName = null;
@@ -84,7 +84,7 @@ class EditorialViewModel {
     this.vername = null;
     this.vercode = -1;
     this.path = null;
-    this.backgroundImage = null;
+    this.background = null;
     this.pathAlt = null;
     this.md5 = null;
     this.placeHolderPosition = -1;
@@ -96,7 +96,7 @@ class EditorialViewModel {
     this.loading = false;
     this.error = error;
     this.appId = -1;
-    this.title = null;
+    this.caption = null;
     this.appName = null;
     this.rating = -1;
     this.packageName = null;
@@ -110,10 +110,38 @@ class EditorialViewModel {
     this.vername = null;
     this.vercode = -1;
     this.path = null;
-    this.backgroundImage = null;
+    this.background = null;
     this.pathAlt = null;
     this.md5 = null;
     this.placeHolderPosition = -1;
+  }
+
+  public EditorialViewModel(List<EditorialContent> editorialContentList, String cardType,
+      String caption, String background, int placeHolderPosition) {
+
+    contentList = editorialContentList;
+    this.cardType = cardType;
+    this.caption = caption;
+    this.background = background;
+    this.placeHolderPosition = placeHolderPosition;
+    this.appId = -1;
+    this.appName = null;
+    this.rating = -1;
+    this.packageName = null;
+    this.size = -1;
+    this.icon = null;
+    this.graphic = null;
+    this.obb = null;
+    this.storeId = -1;
+    this.storeName = null;
+    this.storeTheme = null;
+    this.vername = null;
+    this.vercode = -1;
+    this.path = null;
+    this.pathAlt = null;
+    this.md5 = null;
+    this.loading = false;
+    this.error = null;
   }
 
   public boolean hasContent() {
@@ -181,11 +209,11 @@ class EditorialViewModel {
   }
 
   public String getBackgroundImage() {
-    return backgroundImage;
+    return background;
   }
 
   public boolean hasBackgroundImage() {
-    return backgroundImage != null && !backgroundImage.equals("");
+    return background != null && !background.equals("");
   }
 
   public boolean isLoading() {
@@ -216,12 +244,16 @@ class EditorialViewModel {
     return rating;
   }
 
-  public String getTitle() {
-    return title;
-  }
-
   public int getPlaceHolderPosition() {
     return placeHolderPosition;
+  }
+
+  public String getCaption() {
+    return caption;
+  }
+
+  public String getBackground() {
+    return background;
   }
 
   public enum Error {

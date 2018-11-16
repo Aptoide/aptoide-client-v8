@@ -504,7 +504,7 @@ public class EditorialFragment extends NavigationTrackFragment
     } else {
       appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
     }
-    String title = editorialViewModel.getTitle();
+    String title = editorialViewModel.getCaption();
     toolbar.setTitle(title);
     toolbarTitle.setText(title);
     appImage.setVisibility(View.VISIBLE);
