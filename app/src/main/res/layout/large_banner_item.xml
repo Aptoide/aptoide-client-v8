@@ -9,12 +9,11 @@
     android:gravity="center"
     android:orientation="horizontal"
     >
-  <com.appnext.banners.BannerView
-      xmlns:ads="http://schemas.android.com/apk/res-auto"
+
+  <com.mopub.mobileads.MoPubView
       android:id="@+id/banner"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      ads:bannerSize="MEDIUM_RECTANGLE"
-      ads:placementId="@string/APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID"
+      android:layout_width="fill_parent"
+      android:layout_height="50dp"
       />
+
 </LinearLayout>

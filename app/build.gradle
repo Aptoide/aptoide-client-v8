@@ -406,6 +406,12 @@ dependencies {
   implementation "com.appnext.sdk:banners:${APPNEXT_VERSION}"
   implementation "com.appnext.sdk:ads:${APPNEXT_VERSION}"
 
+  // Mopub
+  implementation('com.mopub:mopub-sdk:5.4.0@aar') {
+    transitive = true
+    exclude module: 'moat-mobile-app-kit'
+  }
+
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
