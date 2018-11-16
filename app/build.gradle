@@ -84,7 +84,7 @@ android {
     internal {
       dimension "mode"
       applicationIdSuffix "internal"
-      versionName project.VERSION_NAME_VANILLA + "" + getDate()
+      versionName defaultConfig.getVersionName() + "" + getDate()
       versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
@@ -92,7 +92,7 @@ android {
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
-      versionName project.VERSION_NAME_VANILLA + "" + getDate()
+      versionName defaultConfig.getVersionName() + "" + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['prod', 'internal']
     }
@@ -110,7 +110,7 @@ android {
     fairy {
       dimension "mode"
       applicationIdSuffix ".testfairy"
-      versionName project.VERSION_NAME_VANILLA + "" + getDate()
+      versionName defaultConfig.getVersionName() + "" + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
