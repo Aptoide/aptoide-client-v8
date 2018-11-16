@@ -55,10 +55,9 @@ public class CommentsPresenter implements Presenter {
                 })
                 .filter(account -> account != null)
                 .observeOn(viewScheduler)
-                .flatMapCompletable(account -> {
-                  view.addLocalComment(comment, account);
-                  return commentsListManager.postComment(comment);
-                })))
+                .flatMapCompletable(account -> commentsListManager.postComment(comment)
+
+                    .doOnCompleted(() -> view.addLocalComment(comment, account)))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comment -> {
         }, throwable -> {
@@ -132,6 +131,18 @@ public class CommentsPresenter implements Presenter {
           throw new OnErrorNotImplementedException(throwable);
         });
   }
+
+  private void handleClickOnUser() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.userClickEvent())
+        .doOnNext(id -> commentsNavigator.navigateToStore(id))
+        .subscribe(comment -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
 
   private void showComments(CommentsListViewModel model) {
     if (!model.isLoading()) {

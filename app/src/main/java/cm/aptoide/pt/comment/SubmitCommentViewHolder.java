@@ -20,17 +20,12 @@ public class SubmitCommentViewHolder extends AbstractCommentViewHolder {
   private final Button postButton;
   private final PublishSubject<Comment> postComment;
 
-  public SubmitCommentViewHolder(View view, PublishSubject<Comment> postComment,
-      boolean isInnerComment) {
+  public SubmitCommentViewHolder(View view, PublishSubject<Comment> postComment) {
     super(view);
     userAvatar = view.findViewById(R.id.user_icon);
     commentArea = view.findViewById(R.id.add_comment);
     postView = view.findViewById(R.id.post_layout);
     postButton = view.findViewById(R.id.post_button);
-    if (isInnerComment) {
-      view.findViewById(R.id.inner_comment_separator)
-          .setVisibility(View.VISIBLE);
-    }
     this.postComment = postComment;
   }
 

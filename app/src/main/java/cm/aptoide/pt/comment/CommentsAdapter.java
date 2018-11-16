@@ -9,6 +9,7 @@ import cm.aptoide.pt.comment.data.CommentLoading;
 import cm.aptoide.pt.comment.view.AbstractCommentViewHolder;
 import cm.aptoide.pt.comment.view.CommentViewHolder;
 import cm.aptoide.pt.comment.view.LoadingCommentViewHolder;
+import cm.aptoide.pt.comment.view.SubmitInnerCommentViewHolder;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -48,10 +49,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<AbstractCommentViewHol
             .inflate(R.layout.progress_item, parent, false));
       case ADD_COMMENT:
         return new SubmitCommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.add_comment_item, parent, false), postCommentClickEvent, false);
+            .inflate(R.layout.add_comment_item, parent, false), postCommentClickEvent);
       case ADD_INNER_COMMENT:
-        return new SubmitCommentViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.add_comment_inner_item, parent, false), postCommentClickEvent, true);
+        return new SubmitInnerCommentViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.add_comment_inner_item, parent, false), postCommentClickEvent);
       default:
         throw new IllegalStateException("Invalid comment view type");
     }

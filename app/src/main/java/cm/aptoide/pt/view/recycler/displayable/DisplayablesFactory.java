@@ -418,19 +418,9 @@ public class DisplayablesFactory {
     displayables.add(
         new StoreGridHeaderDisplayable(wsWidget, storeTheme, tag, storeContext, storeTabNavigator,
             navigationTracker, data.second.getId()));
-    //if (comments != null
-    //    && comments.getDataList() != null
-    //    && comments.getDataList()
-    //    .getList()
-    //    .size() > 0) {
     displayables.add(new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
         comments.getDataList()
             .getList(), commentMapper, commentsNavigator, commentsListManager));
-    //} else {
-    //  displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-    //      StoreTheme.get(storeTheme)));
-    //}
-
     return displayables;
   }
 

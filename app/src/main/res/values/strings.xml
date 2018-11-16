@@ -330,6 +330,10 @@
   <string name="out_of_space_dialog_message">Free up some space to continue.</string>
   <string name="create_store_displayable_explore_long_term_button">View store</string>
   <string name="create_store_displayable_empty_description_message">Add a description to your store. A good description helps you to get more followers and interaction.</string>
+  <string name="comment_fragment_title">Store comments</string>
+  <string name="comment_detail_fragment_title">Comment replies</string>
+  <string name="comment_widget_no_comment">No comments in this store yet, be the first! %s</string>
+  <string name="comment_header_hint">Add a comment here…</string>
 
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>

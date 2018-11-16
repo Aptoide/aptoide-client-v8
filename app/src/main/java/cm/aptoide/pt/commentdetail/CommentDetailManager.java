@@ -46,7 +46,7 @@ public class CommentDetailManager {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> Observable.just(
-            new CommentDetailViewModel(user.getName(), user.getAvatar(), message,
+            new CommentDetailViewModel(user.getName(), user.getId(), user.getAvatar(), message,
                 account.getAvatar(), repliesNumber, commentTimestamp, response.getReplies())))
         .toSingle();
   }

@@ -1456,14 +1456,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
   }
 
-  @Singleton @Provides CommentsRepository providesCommentsRepository(@Named("pool-v7")
+  @Singleton @Provides RemoteCommentsDataSource providesRemoteCommentDataSource(@Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       CommentMapper commentMapper) {
-    return new CommentsRepository(
-        new RemoteCommentsDataSource(bodyInterceptorPoolV7, okHttpClient, converterFactory,
-            tokenInvalidator, sharedPreferences, commentMapper));
+    return new RemoteCommentsDataSource(bodyInterceptorPoolV7, okHttpClient, converterFactory,
+        tokenInvalidator, sharedPreferences, commentMapper);
+  }
+
+  @Singleton @Provides CommentsRepository providesCommentsRepository(
+      RemoteCommentsDataSource remoteCommentsDataSource) {
+    return new CommentsRepository(remoteCommentsDataSource);
   }
 
   @Singleton @Provides Comments providesComments(CommentsRepository commentsRepository) {

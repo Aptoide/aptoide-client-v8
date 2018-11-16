@@ -18,5 +18,7 @@ public interface CommentDetailView extends View {
   Observable<Comment> commentClicked();
 
   void hideKeyboard();
+
+  Observable<Long> userClickEvent();
 }
 

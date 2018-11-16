@@ -26,8 +26,6 @@ public interface CommentsView extends View {
 
   void hideKeyboard();
 
-  void showCommentErrorSnack();
-
   void addLocalComment(Comment comment, Account account);
 
   Observable<Void> refreshes();
@@ -37,4 +35,6 @@ public interface CommentsView extends View {
   Observable<Comment> commentClick();
 
   Observable<Comment> commentPost();
+
+  Observable<Long> userClickEvent();
 }

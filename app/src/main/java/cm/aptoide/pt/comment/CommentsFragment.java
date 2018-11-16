@@ -3,8 +3,6 @@ package cm.aptoide.pt.comment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -135,14 +133,10 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     }
   }
 
-  @Override public void showCommentErrorSnack() {
-    hideKeyboard();
-    Snackbar.make(this.getView(), "error", BaseTransientBottomBar.LENGTH_SHORT);
-  }
-
   @Override public void addLocalComment(Comment comment, Account account) {
-    commentsAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(),
-        new User(-1, account.getAvatar(), account.getNickname()), 0, new Date()));
+    commentsAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(), new User(
+        comment.getUser()
+            .getId(), account.getAvatar(), account.getNickname()), 0, new Date()));
   }
 
   @Override public Observable<Void> refreshes() {
@@ -163,6 +157,10 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public Observable<Comment> commentPost() {
     return postComment;
+  }
+
+  @Override public Observable<Long> userClickEvent() {
+    return userClickEvent;
   }
 
   private boolean isEndReached() {
@@ -201,7 +199,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   public void setupToolbar() {
 
-    toolbar.setTitle("Store comments");
+    toolbar.setTitle(getResources().getString(R.string.comment_fragment_title));
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);

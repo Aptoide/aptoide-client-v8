@@ -567,7 +567,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
-  protected boolean displayHomeUpFAsEnabled() {
+  protected boolean displayHomeUpAsEnabled() {
     return true;
   }
 

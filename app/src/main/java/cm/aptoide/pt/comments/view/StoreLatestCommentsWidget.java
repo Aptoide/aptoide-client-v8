@@ -132,8 +132,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   }
 
   private void addLocalComment(Comment comment, Account account) {
-    commentsAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(),
-        new User(-1, account.getAvatar(), account.getNickname()), 0, new Date()));
+    commentsAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(), new User(
+        (account.getStore()
+            .getId()), account.getAvatar(), account.getNickname()), 0, new Date()));
   }
 
   private void setAdapterWithComments(StoreLatestCommentsDisplayable displayable) {
@@ -173,7 +174,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
           }
           showEmptyState();
           recyclerView.setAdapter(commentsAdapter);
-          commentsAdapter.setComments(commentMapper.map(displayable.getComments()), new SubmitComment(avatar));
+          commentsAdapter.setComments(commentMapper.map(displayable.getComments()),
+              new SubmitComment(avatar));
         })
         .subscribe(comment -> {
         }, throwable -> {
@@ -185,7 +187,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private void showEmptyState() {
     int handsEmojiCode = 0x1F64C;
     String handsEmoji = new String(Character.toChars(handsEmojiCode));
-    emptyState.setText("No comments in this store yet, be the first! " + handsEmoji);
+    String text = getContext().getResources()
+        .getString(R.string.comment_widget_no_comment);
+    emptyState.setText(String.format(text, handsEmoji));
     emptyState.setVisibility(View.VISIBLE);
   }
 

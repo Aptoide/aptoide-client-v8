@@ -123,18 +123,13 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
     super.hideKeyboard();
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_comment_detail, container, false);
-  }
-
   @Override public void showCommentModel(CommentDetailViewModel viewModel) {
     userName.setText(viewModel.getCommentUserName());
     ImageLoader.with(this.getContext())
         .loadWithCircleTransformAndPlaceHolderAvatarSize(viewModel.getCommentAvatar(), userAvatar,
             R.drawable.layer_1);
+    userAvatar.setOnClickListener(click -> userClickEvent.onNext(viewModel.getUserId()));
+
     date.setText(dateUtils.getTimeDiffString(this.getContext(), viewModel.getDate()
         .getTime(), this.getContext()
         .getResources()));
@@ -143,8 +138,27 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
       repliesNumber.setText(String.format(this.getContext()
           .getString(R.string.comment_replies_number_short), viewModel.getRepliesNumber()));
     }
-    repliesAdapter.setComments(viewModel.getReplies(),
-        new SubmitInnerComment(viewModel.getUserAvatar()));
+    String avatar;
+    if (viewModel.getUserAvatar() != null && !viewModel.getUserAvatar()
+        .isEmpty()) {
+      avatar = viewModel.getUserAvatar();
+    } else {
+      avatar = null;
+    }
+    repliesAdapter.setComments(viewModel.getReplies(), new SubmitInnerComment(avatar));
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.fragment_comment_detail, container, false);
+  }
+
+  @Override public void addLocalComment(Comment comment, Account account) {
+    repliesAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(), new User(
+        comment.getUser()
+            .getId(), account.getAvatar(), account.getNickname()), 0, new Date()));
   }
 
   @Override public void showLoading() {
@@ -159,9 +173,8 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
     genericErrorView.setVisibility(View.GONE);
   }
 
-  @Override public void addLocalComment(Comment comment, Account account) {
-    repliesAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(),
-        new User(-1, account.getAvatar(), account.getNickname()), 0, new Date()));
+  @Override public Observable<Long> userClickEvent() {
+    return userClickEvent;
   }
 
   @Override public Observable<Comment> commentClicked() {
@@ -170,7 +183,7 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
 
   public void setupToolbar() {
 
-    toolbar.setTitle("Comment replies");
+    toolbar.setTitle(getResources().getString(R.string.comment_detail_fragment_title));
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);

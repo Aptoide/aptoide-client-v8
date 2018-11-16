@@ -422,8 +422,9 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides CommentDetailPresenter providesCommentDetailPresenter(
-      CommentDetailManager commentManager, AptoideAccountManager accountManager) {
+      CommentDetailManager commentManager, AptoideAccountManager accountManager,
+      CommentsNavigator commentsNavigator) {
     return new CommentDetailPresenter((CommentDetailView) fragment, commentManager,
-        AndroidSchedulers.mainThread(), accountManager);
+        AndroidSchedulers.mainThread(), accountManager, commentsNavigator);
   }
 }
