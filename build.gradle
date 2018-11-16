@@ -20,7 +20,6 @@ allprojects {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
-    maven { url "http://dl.appnext.com" }
     google()
     jcenter()
   }
@@ -104,9 +103,6 @@ ext {
   FLURRY_VERSION = '6.4.2'
 
   CRASHLYTICS_VERSION = '2.6.5'
-
-  // AppNext SDK
-  APPNEXT_VERSION = '2.4.2.471'
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'

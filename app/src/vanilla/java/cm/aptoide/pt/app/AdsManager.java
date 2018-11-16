@@ -43,15 +43,6 @@ public class AdsManager {
         .onErrorReturn(throwable -> createMinimalAdRequestResultError(throwable));
   }
 
-  public Single<AppNextAdResult> loadAppNextAd(List<String> keywords, String placementId) {
-    return adsRepository.loadAppNextAd(keywords, placementId)
-        .toSingle();
-  }
-
-  public PublishSubject<AppNextAdResult> appNextAdClick() {
-    return adsRepository.appNextAdClick();
-  }
-
   @NonNull private MinimalAdRequestResult createMinimalAdRequestResultError(Throwable throwable) {
     if (throwable instanceof NoNetworkConnectionException) {
       return new MinimalAdRequestResult(AppsList.Error.NETWORK);
