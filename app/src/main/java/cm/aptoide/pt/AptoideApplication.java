@@ -186,6 +186,7 @@ public abstract class AptoideApplication extends Application {
   @Inject ABTestService.ServiceV7 abTestService;
   @Inject RealmExperimentPersistence abTestExperimentPersistence;
   @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
+  @Inject AptoideShortcutManager shortcutManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -804,7 +805,9 @@ public abstract class AptoideApplication extends Application {
 
   public Completable createShortcut() {
     return Completable.defer(() -> {
-      createAppShortcut();
+      if (shortcutManager.shouldCreateShortcut()) {
+        createAppShortcut();
+      }
       return null;
     });
   }
