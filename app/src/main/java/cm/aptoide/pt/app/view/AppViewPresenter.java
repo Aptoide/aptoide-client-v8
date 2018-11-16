@@ -111,7 +111,8 @@ public class AppViewPresenter implements Presenter {
     handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
-    handleClickOnDonateButton();
+    handleClickOnDonateAfterInstall();
+    handleClickOnTopDonorsDonate();
   }
 
   private void handleOnSimilarAppsVisible() {
@@ -622,8 +623,13 @@ public class AppViewPresenter implements Presenter {
                 appViewViewModel.isPaid(), appViewViewModel.getPay())
                 .first()
                 .observeOn(viewScheduler)
-                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
-                    appViewViewModel.hasDonations()))
+                .doOnNext(downloadAppViewModel -> {
+                  if (appViewViewModel.hasDonations()) {
+                    appViewAnalytics.sendDonateImpressionAfterInstall(
+                        appViewViewModel.getPackageName());
+                  }
+                  view.showDownloadAppModel(downloadAppViewModel, appViewViewModel.hasDonations());
+                })
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
@@ -899,7 +905,12 @@ public class AppViewPresenter implements Presenter {
         .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
             app.getVersionCode(), app.isPaid(), app.getPay())
             .observeOn(viewScheduler)
-            .doOnNext(model -> view.showDownloadAppModel(model, app.hasDonations())))
+            .doOnNext(model -> {
+              if (app.hasDonations()) {
+                appViewAnalytics.sendDonateImpressionAfterInstall(app.getPackageName());
+              }
+              view.showDownloadAppModel(model, app.hasDonations());
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -1019,12 +1030,31 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void handleClickOnDonateButton() {
+  private void handleClickOnDonateAfterInstall() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickDonateButton())
+        .flatMap(__ -> view.clickDonateAfterInstallButton())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .doOnNext(app -> appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG))
+        .doOnNext(app -> {
+          appViewAnalytics.sendDonateClickAfterInstall();
+          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleClickOnTopDonorsDonate() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickTopDonorsDonateButton())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(app -> {
+          appViewAnalytics.sendDonateClickTopDonors();
+          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

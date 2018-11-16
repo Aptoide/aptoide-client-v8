@@ -48,6 +48,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
 
   @Inject DonationsService donationsService;
   @Inject AppNavigator appNavigator;
+  @Inject DonationsAnalytics donationsAnalytics;
   boolean textUpdate;
   boolean sliderUpdate;
   private String packageName;
@@ -86,7 +87,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
         .inject(this);
     packageName = getArguments().getString(PACKAGE_NAME);
     presenter = new DonateDialogPresenter(this, donationsService, new CompositeSubscription(),
-        AndroidSchedulers.mainThread(), appNavigator);
+        AndroidSchedulers.mainThread(), appNavigator, donationsAnalytics);
     textUpdate = true;
     sliderUpdate = true;
     handleValueInputFiltering();
@@ -211,6 +212,13 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
             .toString())));
   }
 
+  @Override public Observable<DonationsDialogResult> cancelClick() {
+    return RxView.clicks(cancelButton)
+        .map(click -> new DonationsDialogResult(packageName, nickname.getText()
+            .toString(), Float.parseFloat(appcValue.getText()
+            .toString())));
+  }
+
   @Override public Observable<Void> noWalletContinueClick() {
     return RxView.clicks(noWalletContinueButton);
   }
@@ -295,7 +303,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     if (hasWallet) {
       setSliderProperties();
       setValueInsertProperties();
-      cancelButton.setOnClickListener(click -> dismiss());
     } else {
       donationsView.setVisibility(View.GONE);
       showNoWalletView();

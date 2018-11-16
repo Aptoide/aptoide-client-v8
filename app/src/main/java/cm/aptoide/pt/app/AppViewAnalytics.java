@@ -28,6 +28,7 @@ public class AppViewAnalytics {
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
   public static final String CLICK_INSTALL = "Clicked on install button";
+  public static final String DONATIONS_IMPRESSION = "donations_impression";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -217,6 +218,21 @@ public class AppViewAnalytics {
 
   public void sendAppcInfoInteractEvent() {
     analyticsManager.logEvent(createMapData(ACTION, "AppCoins Info View"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void sendDonateClickAfterInstall() {
+    analyticsManager.logEvent(createMapData(ACTION, "Donations after install view"),
+        APP_VIEW_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void sendDonateClickTopDonors() {
+    analyticsManager.logEvent(createMapData(ACTION, "Top donors view"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void sendDonateImpressionAfterInstall(String packageName) {
+    analyticsManager.logEvent(createMapData(PACKAGE_NAME, packageName), DONATIONS_IMPRESSION,
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 

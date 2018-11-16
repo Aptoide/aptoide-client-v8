@@ -819,9 +819,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return genericRetryClick;
   }
 
-  @Override public Observable<Void> clickDonateButton() {
-    return Observable.merge(RxView.clicks(installCardDonateButton),
-        RxView.clicks(listDonateButton));
+  @Override public Observable<Void> clickDonateAfterInstallButton() {
+    return RxView.clicks(installCardDonateButton);
+  }
+
+  @Override public Observable<Void> clickTopDonorsDonateButton() {
+    return RxView.clicks(listDonateButton);
   }
 
   @Override public Observable<ShareDialogs.ShareResponse> shareDialogResponse() {
@@ -1350,7 +1353,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), true);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
-      if (hasDonations) {//after getApk webservice is updated
+      if (hasDonations) {
         donateInstallCard.setVisibility(View.GONE);
       }
       appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
