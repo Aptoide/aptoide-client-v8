@@ -19,7 +19,6 @@ import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationState;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
@@ -577,11 +576,6 @@ public class InstallManager {
 
   public void moveCompletedDownloadFiles(Download download) {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      Logger.getInstance()
-          .d("AptoideDownloadManager", "trying to move file : "
-              + fileToDownload.getFileName()
-              + " "
-              + fileToDownload.getPackageName());
       String newFilePath = getFilePathFromFileType(fileToDownload);
       fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
       fileToDownload.setPath(newFilePath);

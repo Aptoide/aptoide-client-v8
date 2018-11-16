@@ -62,7 +62,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public void stop() {
-    if (!dispatchDownloadsSubscription.isUnsubscribed()) {
+    if (dispatchDownloadsSubscription != null && !dispatchDownloadsSubscription.isUnsubscribed()) {
       dispatchDownloadsSubscription.unsubscribe();
     }
   }
@@ -216,10 +216,10 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private void removeAppDownloader(String md5) {
-    AppDownloader appDownloader = appDownloaderMap.get(md5);
+    AppDownloader appDownloader = appDownloaderMap.remove(md5);
     if (appDownloader != null) {
+      appDownloader.removeAppDownload();
       appDownloader.stop();
-      appDownloaderMap.remove(md5);
     }
   }
 

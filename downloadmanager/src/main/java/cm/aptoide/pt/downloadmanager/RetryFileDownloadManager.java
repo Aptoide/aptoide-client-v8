@@ -58,6 +58,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
     if (startDownloadSubscription != null && !startDownloadSubscription.isUnsubscribed()) {
       startDownloadSubscription.unsubscribe();
     }
+    retryFileDownloadSubject = null;
   }
 
   @Override public void stopFailedDownload() {
@@ -74,12 +75,11 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
               == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND) {
             Logger.getInstance()
                 .d(TAG, "File not found error, restarting the download with the alternative link");
-            FileDownloader retryFileDownloader =
+            this.fileDownloader =
                 fileDownloaderProvider.createFileDownloader(md5, alternativeDownloadPath, fileType,
                     packageName, versionCode, fileName, PublishSubject.create());
-            this.fileDownloader = retryFileDownloader;
-            return retryFileDownloader.startFileDownload()
-                .andThen(handleFileDownloadProgress(retryFileDownloader));
+            return this.fileDownloader.startFileDownload()
+                .andThen(handleFileDownloadProgress(this.fileDownloader));
           } else {
             return Observable.just(fileDownloadCallback);
           }
