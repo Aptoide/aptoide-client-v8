@@ -32,11 +32,6 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
 
   @Override
   public AppViewSimilarAppViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-    if (viewType == ApplicationAd.Network.APPNEXT.ordinal()) {
-      return new AppViewSimilarAppViewHolder(LayoutInflater.from(viewGroup.getContext())
-          .inflate(R.layout.displayable_grid_ad_appnext, viewGroup, false), oneDecimalFormater,
-          appClicked);
-    }
     return new AppViewSimilarAppViewHolder(LayoutInflater.from(viewGroup.getContext())
         .inflate(R.layout.displayable_grid_ad, viewGroup, false), oneDecimalFormater, appClicked);
   }
