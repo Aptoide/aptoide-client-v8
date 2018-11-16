@@ -210,6 +210,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseUpdate())
+        .doOnNext(app -> view.setPausingDownloadState(app))
         .doOnNext(app -> view.setStandbyState(app))
         .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.pauseUpdate(app))

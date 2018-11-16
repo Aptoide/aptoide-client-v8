@@ -123,6 +123,6 @@ public class UpdateApp implements App {
   }
 
   public enum UpdateStatus {
-    UPDATE, STANDBY, UPDATING, ERROR
+    UPDATE, STANDBY, UPDATING, ERROR, PAUSING
   }
 }

@@ -25,6 +25,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   static final int UPDATING = 9;
   static final int STANDBY_UPDATE = 10;
   static final int ERROR_UPDATE = 11;
+  static final int PAUSING_UPDATE = 12;
 
   private List<App> listOfApps;
   private AppsCardViewHolderFactory appsCardViewHolderFactory;
@@ -92,6 +93,9 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       case ERROR:
         type = ERROR_UPDATE;
         break;
+      case PAUSING:
+        type = PAUSING_UPDATE;
+        break;
       default:
         throw new IllegalArgumentException("Wrong download status : " + updateStatus.name());
     }
@@ -132,9 +136,18 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
           if (actualApp instanceof UpdateApp && newApp instanceof UpdateApp) {
 
             if (shouldUpdateUpdateApp(((UpdateApp) actualApp), ((UpdateApp) newApp))) {
-              listOfApps.set(itemIndex,
-                  list.get(i));//stores the same item with the new emitted changes
-              notifyItemChanged(itemIndex);
+
+              if (((UpdateApp) actualApp).getUpdateStatus() == UpdateApp.UpdateStatus.PAUSING) {
+                if (shouldUpdatePausingApp(((UpdateApp) newApp))) {
+                  listOfApps.set(itemIndex,
+                      list.get(i));//stores the same item with the new emitted changes
+                  notifyItemChanged(itemIndex);
+                }
+              } else {
+                listOfApps.set(itemIndex,
+                    list.get(i));//stores the same item with the new emitted changes
+                notifyItemChanged(itemIndex);
+              }
             }
           } else if (actualApp instanceof DownloadApp && newApp instanceof DownloadApp) {
 
@@ -163,6 +176,11 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         }
       }
     }
+  }
+
+  private boolean shouldUpdatePausingApp(UpdateApp app) {
+    return app.getUpdateStatus() == UpdateApp.UpdateStatus.STANDBY
+        || app.getUpdateStatus() == UpdateApp.UpdateStatus.ERROR;
   }
 
   private boolean shouldUpdateDownloadApp(DownloadApp actualApp, DownloadApp newApp) {
@@ -381,5 +399,21 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     for (App app : updatesList) {
       setAppStandby(((UpdateApp) app));
     }
+  }
+
+  public void setAppOnPausing(App app) {
+    int indexOfApp = listOfApps.indexOf(app);
+    if (indexOfApp != -1) {
+      App application = listOfApps.get(indexOfApp);
+      if (application.getType() == App.Type.UPDATE) {
+        setAppPausing(indexOfApp, ((UpdateApp) application));
+      }
+    }
+  }
+
+  private void setAppPausing(int indexOfApp, UpdateApp application) {
+    application.setStatus(UpdateApp.UpdateStatus.PAUSING);
+    application.setIndeterminate(true);
+    notifyItemChanged(indexOfApp);
   }
 }
