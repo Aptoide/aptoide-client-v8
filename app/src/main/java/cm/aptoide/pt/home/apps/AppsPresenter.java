@@ -211,7 +211,6 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseUpdate())
         .doOnNext(app -> view.setPausingDownloadState(app))
-        .doOnNext(app -> view.setStandbyState(app))
         .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.pauseUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
