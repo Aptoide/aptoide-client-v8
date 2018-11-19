@@ -42,7 +42,7 @@
         android:layout_marginStart="8dp"
         android:lines="1"
         android:visibility="gone"
-        tools:text="jhopdjghoijhiogfjhiojgiohjgoijiohgjhoigjoihgjoihjgiojhgiojhgiojoihgjoighjhoigjhoigj"
+        tools:text="@string/appc_title_settings_appcoins_wallet"
         tools:visibility="visible"
         style="@style/Aptoide.TextView.Medium.S.Black"
         />
