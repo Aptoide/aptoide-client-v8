@@ -36,7 +36,7 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
-    versionName "9.3.0.1"
+    versionName project.VERSION_NAME_VANILLA
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true
@@ -69,6 +69,11 @@ android {
 
   flavorDimensions "product", "mode"
   productFlavors {
+    cobrand {
+      dimension "product"
+      applicationId "cm.aptoide.pt.cobrand"
+      matchingFallbacks = ['internal', 'prod']
+    }
 
     vanilla {
       dimension "product"
@@ -79,7 +84,7 @@ android {
     internal {
       dimension "mode"
       applicationIdSuffix "internal"
-      versionName "9.3.0." + getDate()
+      versionName defaultConfig.getVersionName() + "." + getDate()
       versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
@@ -87,7 +92,7 @@ android {
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
-      versionName "9.3.0." + getDate()
+      versionName defaultConfig.getVersionName() + "." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['prod', 'internal']
     }
@@ -98,13 +103,14 @@ android {
 
     leak {
       dimension "mode"
+      applicationIdSuffix ".leak"
       matchingFallbacks = ['internal', 'prod']
     }
 
     fairy {
       dimension "mode"
-      applicationIdSuffix "testfairy"
-      versionName "9.3.0." + getDate()
+      applicationIdSuffix ".testfairy"
+      versionName defaultConfig.getVersionName() + "." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
@@ -112,7 +118,7 @@ android {
     monetisation {
       dimension "mode"
       versionName defaultConfig.getVersionName() + "A"
-      matchingFallbacks = ['prod']
+      matchingFallbacks = ['internal', 'prod']
     }
   }
 
@@ -144,6 +150,20 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  variantFilter { variant ->
+    List<ProductFlavor> flavors = variant.getFlavors()
+
+    String applicationIdBase = flavors[0].applicationId
+    String applicationIdSuffix = flavors[1].applicationIdSuffix
+    boolean hasSuffix = applicationIdSuffix != null
+
+    if (applicationIdBase.contains('cobrand') && hasSuffix &&
+        (applicationIdSuffix.contains('internal') || applicationIdSuffix.contains('testfairy') ||
+            applicationIdSuffix.contains('leak'))) {
+      setIgnore(true)
+    }
   }
 
   packagingOptions {
