@@ -62,6 +62,7 @@ public class CommentDetailPresenter implements Presenter {
                 .filter(account -> account != null)
                 .observeOn(viewScheduler)
                 .flatMapCompletable(account -> commentManager.replyComment(comment)
+                    .observeOn(viewScheduler)
                     .doOnCompleted(() -> view.addLocalComment(comment, account)))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comment -> {

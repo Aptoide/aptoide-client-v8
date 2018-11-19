@@ -39,8 +39,6 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
     ImageLoader.with(itemView.getContext())
         .loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser()
             .getAvatar(), userAvatar, R.drawable.layer_1);
-    userAvatar.setOnClickListener(click -> userClickEvent.onNext(comment.getUser()
-        .getId()));
     userName.setText(comment.getUser()
         .getName());
 
@@ -59,6 +57,10 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
       this.replies.setVisibility(View.GONE);
     }
 
-    itemView.setOnClickListener(view -> commentClickEvent.onNext(comment));
+    if (comment.getId() != -1) {
+      itemView.setOnClickListener(view -> commentClickEvent.onNext(comment));
+      userAvatar.setOnClickListener(click -> userClickEvent.onNext(comment.getUser()
+          .getId()));
+    }
   }
 }

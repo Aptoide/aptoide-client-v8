@@ -56,7 +56,7 @@ public class CommentsPresenter implements Presenter {
                 .filter(account -> account != null)
                 .observeOn(viewScheduler)
                 .flatMapCompletable(account -> commentsListManager.postComment(comment)
-
+                    .observeOn(viewScheduler)
                     .doOnCompleted(() -> view.addLocalComment(comment, account)))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comment -> {
@@ -142,7 +142,6 @@ public class CommentsPresenter implements Presenter {
           throw new OnErrorNotImplementedException(throwable);
         });
   }
-
 
   private void showComments(CommentsListViewModel model) {
     if (!model.isLoading()) {
