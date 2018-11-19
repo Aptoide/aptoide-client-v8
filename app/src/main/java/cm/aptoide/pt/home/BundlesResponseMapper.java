@@ -122,7 +122,7 @@ public class BundlesResponseMapper {
         .getList()
         .get(0);
     return new ActionItem(item.getCardId(), item.getLayout(), item.getTitle(), item.getMessage(),
-        item.getIcon(), item.getUrl(), item.getType() != null ? item.getType() : "");
+        item.getIcon(), item.getUrl());
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {
@@ -139,7 +139,7 @@ public class BundlesResponseMapper {
     switch (layout) {
       case "appc_card_info":
         return HomeBundle.BundleType.INFO_BUNDLE;
-      case "curation_1_card":
+      case "CURATION_1":
         return HomeBundle.BundleType.EDITORIAL;
       default:
         return HomeBundle.BundleType.UNKNOWN;

@@ -2,8 +2,7 @@ package cm.aptoide.pt.dataprovider.ws.v7.home;
 
 public class ActionItemData {
   private String layout;
-  private String type;
-  private String cardId;
+  private String card_id;
   private String icon;
   private String title;
   private String message;
@@ -18,11 +17,11 @@ public class ActionItemData {
   }
 
   public String getCardId() {
-    return cardId;
+    return card_id;
   }
 
   public void setCardId(String cardId) {
-    this.cardId = cardId;
+    this.card_id = cardId;
   }
 
   public String getIcon() {
@@ -55,13 +54,5 @@ public class ActionItemData {
 
   public void setUrl(String url) {
     this.url = url;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
   }
 }

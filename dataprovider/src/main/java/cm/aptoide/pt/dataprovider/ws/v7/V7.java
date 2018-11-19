@@ -350,7 +350,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body SetReviewRatingRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("user/action/item/card/get/card_id={cardId}") Observable<EditorialCard> getEditorial(
+    @POST("user/action/item/card/get/id={cardId}") Observable<EditorialCard> getEditorial(
         @Path(value = "cardId") String cardId, @Body BaseBody body);
 
     @POST("user/addEvent/name={name}/action={action}/context={context}")
