@@ -11,7 +11,6 @@ import rx.subjects.PublishSubject;
 
 public class CommentViewHolder extends AbstractCommentViewHolder {
 
-  private final View outerLayout;
   private final ImageView userAvatar;
   private final TextView userName;
   private final TextView date;
@@ -25,7 +24,6 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
       PublishSubject<Comment> commentClickEvent, PublishSubject<Long> userClickEvent) {
     super(view);
     userAvatar = view.findViewById(R.id.user_icon);
-    outerLayout = view.findViewById(R.id.outer_layout);
     userName = view.findViewById(R.id.user_name);
     date = view.findViewById(R.id.date);
     comment = view.findViewById(R.id.comment);
