@@ -2,6 +2,7 @@ package cm.aptoide.pt.commentdetail;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.comment.CommentDetailResponseModel;
+import cm.aptoide.pt.comment.CommentsNavigator;
 import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
 import cm.aptoide.pt.presenter.View;
 import java.util.Date;
@@ -21,6 +22,7 @@ public class CommentDetailPresenterTest {
   @Mock private CommentDetailFragment view;
   @Mock private CommentDetailManager commentDetailManager;
   @Mock private AptoideAccountManager accountManager;
+  @Mock private CommentsNavigator commentsNavigator;
 
   private CommentDetailPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -31,7 +33,7 @@ public class CommentDetailPresenterTest {
     lifecycleEvent = PublishSubject.create();
 
     presenter = new CommentDetailPresenter(view, commentDetailManager, Schedulers.immediate(),
-        accountManager);
+        accountManager, commentsNavigator);
     fakeCommentsDataSource = new FakeCommentsDataSource();
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
@@ -43,7 +45,7 @@ public class CommentDetailPresenterTest {
         .value();
 
     CommentDetailViewModel viewModel =
-        new CommentDetailViewModel("Filipe Gonçalves", "http://via.placeholder.com/350x150",
+        new CommentDetailViewModel("Filipe Gonçalves", -1, "http://via.placeholder.com/350x150",
             "Eu sou do Benfica", "http://via.placeholder.com/350x150", 7, new Date(),
             dataModelResponse.getReplies());
 
