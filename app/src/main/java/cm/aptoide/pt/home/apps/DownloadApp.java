@@ -47,8 +47,16 @@ public class DownloadApp implements StateApp {
     return isIndeterminate;
   }
 
+  @Override public void setIndeterminate(boolean indeterminate) {
+    this.isIndeterminate = indeterminate;
+  }
+
   @Override public StateApp.Status getStatus() {
     return downloadStatus;
+  }
+
+  @Override public void setStatus(Status status) {
+    this.downloadStatus = status;
   }
 
   public int getVersionCode() {

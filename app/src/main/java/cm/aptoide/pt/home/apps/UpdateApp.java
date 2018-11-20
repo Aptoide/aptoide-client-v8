@@ -63,16 +63,16 @@ public class UpdateApp implements StateApp {
     return isIndeterminate;
   }
 
+  @Override public void setIndeterminate(boolean isIndeterminate) {
+    this.isIndeterminate = isIndeterminate;
+  }
+
   @Override public Status getStatus() {
     return updateStatus;
   }
 
-  public void setStatus(Status status) {
+  @Override public void setStatus(Status status) {
     this.updateStatus = status;
-  }
-
-  public void setIndeterminate(boolean isIndeterminate) {
-    this.isIndeterminate = isIndeterminate;
   }
 
   @Override public boolean equals(Object obj) {
