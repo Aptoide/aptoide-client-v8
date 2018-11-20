@@ -302,6 +302,7 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> Observable.merge(view.resumeDownload(), view.retryDownload())
+            .doOnNext(app -> view.setStandbyState(app))
             .observeOn(viewScheduler)
             .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
                 .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
