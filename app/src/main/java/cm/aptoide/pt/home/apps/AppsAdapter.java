@@ -137,21 +137,16 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
           App actualApp = listOfApps.get(itemIndex);
           App newApp = list.get(i);
 
-          if (actualApp instanceof UpdateApp && newApp instanceof UpdateApp) {
+          if (actualApp instanceof StateApp && newApp instanceof StateApp) {
+            if (shouldUpdateStateApp(((StateApp) actualApp), ((StateApp) newApp))) {
 
-            if (shouldUpdateUpdateApp(((UpdateApp) actualApp), ((UpdateApp) newApp))) {
-
-              if (((UpdateApp) actualApp).getStatus() == StateApp.Status.PAUSING) {
-                if (shouldUpdatePausingApp(((UpdateApp) newApp))) {
+              if (((StateApp) actualApp).getStatus() == StateApp.Status.PAUSING) {
+                if (shouldUpdatePausingApp(((StateApp) newApp))) {
                   updateApp(list, i, itemIndex);
                 }
               } else {
                 updateApp(list, i, itemIndex);
               }
-            }
-          } else if (actualApp instanceof DownloadApp && newApp instanceof DownloadApp) {
-            if (shouldUpdateDownloadApp(((DownloadApp) actualApp), ((DownloadApp) newApp))) {
-              updateApp(list, i, itemIndex);
             }
           } else {
             if (list.get(i) != listOfApps.get(itemIndex)) {
@@ -173,29 +168,20 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     }
   }
 
+  private boolean shouldUpdateStateApp(StateApp actualApp, StateApp newApp) {
+    boolean hasSameStatus = actualApp.getStatus() == newApp.getStatus();
+    boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
+    boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
+    return !hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus;
+  }
+
   private void updateApp(List<App> list, int i, int itemIndex) {
     listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
     notifyItemChanged(itemIndex);
   }
 
-  private boolean shouldUpdatePausingApp(UpdateApp app) {
+  private boolean shouldUpdatePausingApp(StateApp app) {
     return app.getStatus() == StateApp.Status.STANDBY || app.getStatus() == StateApp.Status.ERROR;
-  }
-
-  private boolean shouldUpdateDownloadApp(DownloadApp actualApp, DownloadApp newApp) {
-    boolean hasSameStatus = actualApp.getStatus() == newApp.getStatus();
-    boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
-    boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
-
-    return !hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus;
-  }
-
-  private boolean shouldUpdateUpdateApp(UpdateApp actualApp, UpdateApp newApp) {
-    boolean hasSameStatus = actualApp.getStatus() == newApp.getStatus();
-    boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
-    boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
-
-    return !hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus;
   }
 
   public void addUpdateAppsList(List<App> updatesList) {
@@ -381,13 +367,13 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     int indexOfApp = listOfApps.indexOf(app);
     if (indexOfApp != -1) {
       App application = listOfApps.get(indexOfApp);
-      if (application.getType() == App.Type.UPDATE) {
-        setIndeterminate(indexOfApp, (UpdateApp) application);
+      if (application instanceof StateApp) {
+        setIndeterminate(indexOfApp, (StateApp) application);
       }
     }
   }
 
-  private void setIndeterminate(int indexOfApp, UpdateApp application) {
+  private void setIndeterminate(int indexOfApp, StateApp application) {
     application.setIndeterminate(true);
     application.setStatus(StateApp.Status.STANDBY);
     notifyItemChanged(indexOfApp);
