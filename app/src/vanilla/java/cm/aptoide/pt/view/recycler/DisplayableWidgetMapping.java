@@ -28,6 +28,7 @@ import cm.aptoide.pt.reviews.ReviewsLanguageFilterDisplayable;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterWidget;
 import cm.aptoide.pt.reviews.ReviewsRatingDisplayable;
 import cm.aptoide.pt.reviews.ReviewsRatingWidget;
+import cm.aptoide.pt.reviews.RowReviewDisplayable;
 import cm.aptoide.pt.store.view.CreateStoreWidget;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
@@ -68,6 +69,7 @@ import cm.aptoide.pt.view.recycler.widget.GridAppCoinsRewardAppsWidget;
 import cm.aptoide.pt.view.recycler.widget.GridDisplayWidget;
 import cm.aptoide.pt.view.recycler.widget.MessageWhiteBgWidget;
 import cm.aptoide.pt.view.recycler.widget.ProgressBarWidget;
+import cm.aptoide.pt.view.recycler.widget.RowReviewWidget;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 import java.util.Collections;
 import java.util.HashMap;
@@ -154,6 +156,9 @@ public class DisplayableWidgetMapping {
     // Loading
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(ProgressBarWidget.class, ProgressBarDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(RowReviewWidget.class, RowReviewDisplayable.class));
 
     // appView widgets / displayables
     displayableWidgetMappings.add(
