@@ -121,7 +121,7 @@ public class BundlesResponseMapper {
     ActionItemData item = viewObject.getDataList()
         .getList()
         .get(0);
-    return new ActionItem(item.getCardId(), item.getLayout(), item.getTitle(), item.getMessage(),
+    return new ActionItem(item.getId(), item.getType(), item.getTitle(), item.getCaption(),
         item.getIcon(), item.getUrl());
   }
 
@@ -135,9 +135,9 @@ public class BundlesResponseMapper {
     String layout = ((ActionItemResponse) actionItemData).getDataList()
         .getList()
         .get(0)
-        .getLayout();
+        .getType();
     switch (layout) {
-      case "appc_card_info":
+      case "APPC_INFO":
         return HomeBundle.BundleType.INFO_BUNDLE;
       case "CURATION_1":
         return HomeBundle.BundleType.EDITORIAL;

@@ -14,6 +14,7 @@ class EditorialViewModel {
   private final String cardType;
   private final String caption;
   private final String background;
+  private final String title;
   private final long appId;
   private final String appName;
   private final float rating;
@@ -34,13 +35,14 @@ class EditorialViewModel {
   private final boolean loading;
   private final Error error;
 
-  public EditorialViewModel(List<EditorialContent> contentList, String cardType, long appId,
-      String caption, String appName, float rating, String packageName, long size, String icon,
-      String graphic, Obb obb, long storeId, String storeName, String storeTheme,
+  public EditorialViewModel(List<EditorialContent> contentList, String cardType, String title,
+      long appId, String caption, String appName, float rating, String packageName, long size,
+      String icon, String graphic, Obb obb, long storeId, String storeName, String storeTheme,
       String versionName, int versionCode, String path, String background, String pathAlt,
       String md5, int placeHolderPosition) {
     this.contentList = contentList;
     this.cardType = cardType;
+    this.title = title;
     this.appId = appId;
     this.caption = caption;
     this.appName = appName;
@@ -67,6 +69,7 @@ class EditorialViewModel {
   public EditorialViewModel(boolean loading) {
     contentList = Collections.emptyList();
     cardType = null;
+    title = null;
     this.loading = loading;
     error = null;
     this.appId = -1;
@@ -93,6 +96,7 @@ class EditorialViewModel {
   public EditorialViewModel(Error error) {
     contentList = Collections.emptyList();
     cardType = null;
+    title = null;
     this.loading = false;
     this.error = error;
     this.appId = -1;
@@ -117,11 +121,12 @@ class EditorialViewModel {
   }
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String cardType,
-      String caption, String background, int placeHolderPosition) {
+      String title, String caption, String background, int placeHolderPosition) {
 
     contentList = editorialContentList;
     this.cardType = cardType;
     this.caption = caption;
+    this.title = title;
     this.background = background;
     this.placeHolderPosition = placeHolderPosition;
     this.appId = -1;
@@ -254,6 +259,10 @@ class EditorialViewModel {
 
   public String getBackground() {
     return background;
+  }
+
+  public String getTitle() {
+    return title;
   }
 
   public enum Error {

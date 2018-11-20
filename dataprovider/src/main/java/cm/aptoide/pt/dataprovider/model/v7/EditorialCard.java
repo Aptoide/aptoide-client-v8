@@ -29,6 +29,7 @@ public class EditorialCard extends BaseV7Response {
   public static class Data {
     private List<Content> content;
     private String type;
+    private String title;
     private String caption;
     private String background;
 
@@ -66,6 +67,14 @@ public class EditorialCard extends BaseV7Response {
 
     public void setCaption(String caption) {
       this.caption = caption;
+    }
+
+    public String getTitle() {
+      return title;
+    }
+
+    public void setTitle(String title) {
+      this.title = title;
     }
 
     //3rd level

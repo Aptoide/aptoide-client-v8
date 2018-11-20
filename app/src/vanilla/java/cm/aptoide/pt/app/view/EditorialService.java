@@ -85,8 +85,8 @@ public class EditorialService {
         Store store = app.getStore();
         File file = app.getFile();
         return Observable.just(
-            new EditorialViewModel(editorialContentList, cardType, app.getId(), card.getCaption(),
-                app.getName(), app.getStats()
+            new EditorialViewModel(editorialContentList, cardType, card.getTitle(), app.getId(),
+                card.getCaption(), app.getName(), app.getStats()
                 .getRating()
                 .getAvg(), app.getPackageName(), app.getSize(), app.getIcon(), app.getGraphic(),
                 app.getObb(), store.getId(), store.getName(), store.getName(), file.getVername(),
@@ -94,8 +94,8 @@ public class EditorialService {
                 file.getMd5sum(), placeHolderPosition));
       } else {
         return Observable.just(
-            new EditorialViewModel(editorialContentList, cardType, card.getCaption(),
-                card.getBackground(), placeHolderPosition));
+            new EditorialViewModel(editorialContentList, cardType, card.getTitle(),
+                card.getCaption(), card.getBackground(), placeHolderPosition));
       }
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
