@@ -148,19 +148,6 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
     repliesAdapter.setComments(viewModel.getReplies(), new SubmitInnerComment(avatar));
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_comment_detail, container, false);
-  }
-
-  @Override public void addLocalComment(Comment comment, Account account) {
-    repliesAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(), new User(
-        comment.getUser()
-            .getId(), account.getAvatar(), account.getNickname()), 0, new Date()));
-  }
-
   @Override public void showLoading() {
     commentView.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
@@ -173,12 +160,25 @@ public class CommentDetailFragment extends NavigationTrackFragment implements Co
     genericErrorView.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Long> userClickEvent() {
-    return userClickEvent;
+  @Override public void addLocalComment(Comment comment, Account account) {
+    repliesAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(), new User(
+        comment.getUser()
+            .getId(), account.getAvatar(), account.getNickname()), 0, new Date()));
   }
 
   @Override public Observable<Comment> commentClicked() {
     return postCommentClickEvent;
+  }
+
+  @Override public Observable<Long> userClickEvent() {
+    return userClickEvent;
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.fragment_comment_detail, container, false);
   }
 
   public void setupToolbar() {
