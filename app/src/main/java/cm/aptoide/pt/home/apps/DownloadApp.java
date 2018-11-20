@@ -4,7 +4,7 @@ package cm.aptoide.pt.home.apps;
  * Created by filipegoncalves on 3/8/18.
  */
 
-public class DownloadApp implements App {
+public class DownloadApp implements StateApp {
 
   private String appName;
   private String md5;//to identify
@@ -13,10 +13,10 @@ public class DownloadApp implements App {
   private int progress;
   private boolean isIndeterminate;
   private int versionCode;
-  private Status downloadStatus;
+  private StateApp.Status downloadStatus;
 
   public DownloadApp(String appName, String md5, String packageName, String icon, int progress,
-      boolean isIndeterminate, int versionCode, Status downloadStatus) {
+      boolean isIndeterminate, int versionCode, StateApp.Status downloadStatus) {
     this.appName = appName;
     this.md5 = md5;
     this.packageName = packageName;
@@ -47,12 +47,12 @@ public class DownloadApp implements App {
     return isIndeterminate;
   }
 
-  public int getVersionCode() {
-    return versionCode;
+  @Override public StateApp.Status getStatus() {
+    return downloadStatus;
   }
 
-  public Status getDownloadStatus() {
-    return downloadStatus;
+  public int getVersionCode() {
+    return versionCode;
   }
 
   @Override public Type getType() {
@@ -94,9 +94,5 @@ public class DownloadApp implements App {
         + ", downloadStatus="
         + downloadStatus
         + '}';
-  }
-
-  public enum Status {
-    ACTIVE, STANDBY, COMPLETED, ERROR;
   }
 }

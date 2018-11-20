@@ -57,10 +57,10 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         type = HEADER_UPDATES;
         break;
       case DOWNLOAD:
-        type = getDownloadType(((DownloadApp) item).getDownloadStatus());
+        type = getDownloadType(((DownloadApp) item).getStatus());
         break;
       case UPDATE:
-        type = getUpdateType(((UpdateApp) item).getUpdateStatus());
+        type = getUpdateType(((UpdateApp) item).getStatus());
         break;
       case INSTALLED:
         type = INSTALLED;
@@ -78,7 +78,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return listOfApps.size();
   }
 
-  private int getUpdateType(UpdateApp.UpdateStatus updateStatus) {
+  private int getUpdateType(StateApp.Status updateStatus) {
     int type;
     switch (updateStatus) {
       case UPDATE:
@@ -102,7 +102,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return type;
   }
 
-  private int getDownloadType(DownloadApp.Status downloadStatus) {
+  private int getDownloadType(StateApp.Status downloadStatus) {
     int type;
     switch (downloadStatus) {
 
@@ -137,7 +137,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
             if (shouldUpdateUpdateApp(((UpdateApp) actualApp), ((UpdateApp) newApp))) {
 
-              if (((UpdateApp) actualApp).getUpdateStatus() == UpdateApp.UpdateStatus.PAUSING) {
+              if (((UpdateApp) actualApp).getStatus() == StateApp.Status.PAUSING) {
                 if (shouldUpdatePausingApp(((UpdateApp) newApp))) {
                   updateApp(list, i, itemIndex);
                 }
@@ -175,12 +175,11 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   }
 
   private boolean shouldUpdatePausingApp(UpdateApp app) {
-    return app.getUpdateStatus() == UpdateApp.UpdateStatus.STANDBY
-        || app.getUpdateStatus() == UpdateApp.UpdateStatus.ERROR;
+    return app.getStatus() == StateApp.Status.STANDBY || app.getStatus() == StateApp.Status.ERROR;
   }
 
   private boolean shouldUpdateDownloadApp(DownloadApp actualApp, DownloadApp newApp) {
-    boolean hasSameStatus = actualApp.getDownloadStatus() == newApp.getDownloadStatus();
+    boolean hasSameStatus = actualApp.getStatus() == newApp.getStatus();
     boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
     boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
 
@@ -188,7 +187,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   }
 
   private boolean shouldUpdateUpdateApp(UpdateApp actualApp, UpdateApp newApp) {
-    boolean hasSameStatus = actualApp.getUpdateStatus() == newApp.getUpdateStatus();
+    boolean hasSameStatus = actualApp.getStatus() == newApp.getStatus();
     boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
     boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
 
@@ -386,7 +385,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   private void setIndeterminate(int indexOfApp, UpdateApp application) {
     application.setIndeterminate(true);
-    application.setStatus(UpdateApp.UpdateStatus.STANDBY);
+    application.setStatus(StateApp.Status.STANDBY);
     notifyItemChanged(indexOfApp);
   }
 
@@ -408,7 +407,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   }
 
   private void setAppPausing(int indexOfApp, UpdateApp application) {
-    application.setStatus(UpdateApp.UpdateStatus.PAUSING);
+    application.setStatus(StateApp.Status.PAUSING);
     application.setIndeterminate(true);
     notifyItemChanged(indexOfApp);
   }

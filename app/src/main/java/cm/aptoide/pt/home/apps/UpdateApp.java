@@ -4,7 +4,7 @@ package cm.aptoide.pt.home.apps;
  * Created by filipegoncalves on 3/7/18.
  */
 
-public class UpdateApp implements App {
+public class UpdateApp implements StateApp {
 
   private String name;
   private String md5;
@@ -14,12 +14,11 @@ public class UpdateApp implements App {
   private boolean isIndeterminate;
   private String version;
   private int versionCode;
-  private UpdateStatus updateStatus;
+  private Status updateStatus;
   private long appId;
 
   public UpdateApp(String name, String md5, String icon, String packageName, int progress,
-      boolean isIndeterminate, String version, int versionCode, UpdateStatus updateStatus,
-      long appId) {
+      boolean isIndeterminate, String version, int versionCode, Status updateStatus, long appId) {
     this.name = name;
     this.md5 = md5;
     this.icon = icon;
@@ -56,16 +55,20 @@ public class UpdateApp implements App {
     return icon;
   }
 
-  public UpdateStatus getUpdateStatus() {
-    return updateStatus;
-  }
-
   public int getProgress() {
     return progress;
   }
 
   public boolean isIndeterminate() {
     return isIndeterminate;
+  }
+
+  @Override public Status getStatus() {
+    return updateStatus;
+  }
+
+  public void setStatus(Status status) {
+    this.updateStatus = status;
   }
 
   public void setIndeterminate(boolean isIndeterminate) {
@@ -116,13 +119,5 @@ public class UpdateApp implements App {
 
   public long getAppId() {
     return appId;
-  }
-
-  public void setStatus(UpdateStatus status) {
-    this.updateStatus = status;
-  }
-
-  public enum UpdateStatus {
-    UPDATE, STANDBY, UPDATING, ERROR, PAUSING
   }
 }
