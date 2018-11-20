@@ -55,10 +55,6 @@ public class UpdateApp implements StateApp {
     return icon;
   }
 
-  public int getProgress() {
-    return progress;
-  }
-
   public boolean isIndeterminate() {
     return isIndeterminate;
   }
@@ -73,6 +69,10 @@ public class UpdateApp implements StateApp {
 
   @Override public void setStatus(Status status) {
     this.updateStatus = status;
+  }
+
+  @Override public int getProgress() {
+    return progress;
   }
 
   @Override public boolean equals(Object obj) {

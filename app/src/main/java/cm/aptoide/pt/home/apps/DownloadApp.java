@@ -39,10 +39,6 @@ public class DownloadApp implements StateApp {
     return icon;
   }
 
-  public int getProgress() {
-    return progress;
-  }
-
   public boolean isIndeterminate() {
     return isIndeterminate;
   }
@@ -57,6 +53,10 @@ public class DownloadApp implements StateApp {
 
   @Override public void setStatus(Status status) {
     this.downloadStatus = status;
+  }
+
+  @Override public int getProgress() {
+    return progress;
   }
 
   public int getVersionCode() {

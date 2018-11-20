@@ -10,6 +10,8 @@ public interface StateApp extends App {
 
   void setStatus(Status status);
 
+  int getProgress();
+
   enum Status {
     ACTIVE, STANDBY, COMPLETED, ERROR, UPDATE, UPDATING, PAUSING
   }
