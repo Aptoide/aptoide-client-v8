@@ -38,6 +38,8 @@ public class CommentsPresenter implements Presenter {
     clickComment();
 
     postComment();
+    
+    handleClickOnUser();
   }
 
   @VisibleForTesting public void postComment() {
@@ -136,7 +138,7 @@ public class CommentsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.userClickEvent())
-        .doOnNext(id -> commentsNavigator.navigateToStore(id))
+        .doOnNext(commentsNavigator::navigateToStore)
         .subscribe(comment -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
