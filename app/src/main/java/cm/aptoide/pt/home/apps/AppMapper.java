@@ -6,8 +6,6 @@ import cm.aptoide.pt.install.Install;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cm.aptoide.pt.home.apps.StateApp.Status.UPDATE;
-
 /**
  * Created by filipegoncalves on 3/22/18.
  */
@@ -68,7 +66,7 @@ public class AppMapper {
     for (Update update : updates) {
       updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
-          UPDATE, update.getAppId()));
+          StateApp.Status.UPDATE, update.getAppId()));
     }
     return updatesList;
   }

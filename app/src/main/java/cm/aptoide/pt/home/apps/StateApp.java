@@ -10,7 +10,7 @@ public interface StateApp extends App {
 
   void setStatus(Status status);
 
-  public enum Status {
+  enum Status {
     ACTIVE, STANDBY, COMPLETED, ERROR, UPDATE, UPDATING, PAUSING
   }
 }
