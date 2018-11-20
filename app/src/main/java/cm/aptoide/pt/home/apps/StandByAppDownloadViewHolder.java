@@ -30,12 +30,12 @@ class StandByAppDownloadViewHolder extends AppsViewHolder {
   public StandByAppDownloadViewHolder(View itemView, PublishSubject<AppClick> downloadAction) {
     super(itemView);
 
-    appName = (TextView) itemView.findViewById(R.id.apps_downloads_app_name);
-    appIcon = (ImageView) itemView.findViewById(R.id.apps_downloads_icon);
-    progressBar = (ProgressBar) itemView.findViewById(R.id.apps_downloads_progress_bar);
-    downloadProgress = (TextView) itemView.findViewById(R.id.apps_download_progress_number);
-    cancelButton = (ImageView) itemView.findViewById(R.id.apps_download_cancel_button);
-    resumeButton = (ImageView) itemView.findViewById(R.id.apps_download_resume_download);
+    appName = itemView.findViewById(R.id.apps_downloads_app_name);
+    appIcon = itemView.findViewById(R.id.apps_downloads_icon);
+    progressBar = itemView.findViewById(R.id.apps_downloads_progress_bar);
+    downloadProgress = itemView.findViewById(R.id.apps_download_progress_number);
+    cancelButton = itemView.findViewById(R.id.apps_download_cancel_button);
+    resumeButton = itemView.findViewById(R.id.apps_download_resume_download);
 
     downloadInteractButtonsLayout =
         itemView.findViewById(R.id.apps_downloads_standby_buttons_layout);
