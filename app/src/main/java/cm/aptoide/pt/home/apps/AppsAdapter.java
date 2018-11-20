@@ -139,28 +139,19 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
               if (((UpdateApp) actualApp).getUpdateStatus() == UpdateApp.UpdateStatus.PAUSING) {
                 if (shouldUpdatePausingApp(((UpdateApp) newApp))) {
-                  listOfApps.set(itemIndex,
-                      list.get(i));//stores the same item with the new emitted changes
-                  notifyItemChanged(itemIndex);
+                  updateApp(list, i, itemIndex);
                 }
               } else {
-                listOfApps.set(itemIndex,
-                    list.get(i));//stores the same item with the new emitted changes
-                notifyItemChanged(itemIndex);
+                updateApp(list, i, itemIndex);
               }
             }
           } else if (actualApp instanceof DownloadApp && newApp instanceof DownloadApp) {
-
             if (shouldUpdateDownloadApp(((DownloadApp) actualApp), ((DownloadApp) newApp))) {
-              listOfApps.set(itemIndex,
-                  list.get(i));//stores the same item with the new emitted changes
-              notifyItemChanged(itemIndex);
+              updateApp(list, i, itemIndex);
             }
           } else {
             if (list.get(i) != listOfApps.get(itemIndex)) {
-              listOfApps.set(itemIndex,
-                  list.get(i));//stores the same item with the new emitted changes
-              notifyItemChanged(itemIndex);
+              updateApp(list, i, itemIndex);
             }
           }
         } else {
@@ -176,6 +167,11 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         }
       }
     }
+  }
+
+  private void updateApp(List<App> list, int i, int itemIndex) {
+    listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
+    notifyItemChanged(itemIndex);
   }
 
   private boolean shouldUpdatePausingApp(UpdateApp app) {
