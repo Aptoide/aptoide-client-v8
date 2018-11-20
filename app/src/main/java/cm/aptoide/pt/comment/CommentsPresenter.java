@@ -1,6 +1,7 @@
 package cm.aptoide.pt.comment;
 
 import android.support.annotation.VisibleForTesting;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -9,6 +10,7 @@ import rx.exceptions.OnErrorNotImplementedException;
 
 public class CommentsPresenter implements Presenter {
 
+  private final AptoideAccountManager accountManager;
   private final CommentsView view;
   private final CommentsListManager commentsListManager;
   private final CommentsNavigator commentsNavigator;
@@ -16,12 +18,14 @@ public class CommentsPresenter implements Presenter {
   private final CrashReport crashReporter;
 
   public CommentsPresenter(CommentsView view, CommentsListManager commentsListManager,
-      CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter) {
+      CommentsNavigator commentsNavigator, Scheduler viewScheduler, CrashReport crashReporter,
+      AptoideAccountManager accountManager) {
     this.view = view;
     this.commentsListManager = commentsListManager;
     this.commentsNavigator = commentsNavigator;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
+    this.accountManager = accountManager;
   }
 
   @Override public void present() {
@@ -34,13 +38,28 @@ public class CommentsPresenter implements Presenter {
     clickComment();
 
     postComment();
+    
+    handleClickOnUser();
   }
 
   @VisibleForTesting public void postComment() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.commentPost())
-        .flatMapCompletable(commentsListManager::postComment)
+        .flatMap(created -> view.commentPost()
+            .doOnNext(__ -> view.hideKeyboard())
+            .flatMap(comment -> accountManager.accountStatus()
+                .map(account -> {
+                  if (account.isLoggedIn()) {
+                    return account;
+                  } else {
+                    return null;
+                  }
+                })
+                .filter(account -> account != null)
+                .observeOn(viewScheduler)
+                .flatMapCompletable(account -> commentsListManager.postComment(comment)
+                    .observeOn(viewScheduler)
+                    .doOnCompleted(() -> view.addLocalComment(comment, account)))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comment -> {
         }, throwable -> {
@@ -106,9 +125,21 @@ public class CommentsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.commentClick())
-        .doOnNext(commentsNavigator::navigateToCommentView)
+        .doOnNext(comment -> commentsNavigator.navigateToCommentView(comment,
+            commentsListManager.getStoreId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(commentId -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleClickOnUser() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.userClickEvent())
+        .doOnNext(commentsNavigator::navigateToStore)
+        .subscribe(comment -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });

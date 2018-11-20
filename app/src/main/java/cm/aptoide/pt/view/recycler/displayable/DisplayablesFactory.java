@@ -21,6 +21,9 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.app.view.GridAppListDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
+import cm.aptoide.pt.comment.CommentMapper;
+import cm.aptoide.pt.comment.CommentsListManager;
+import cm.aptoide.pt.comment.CommentsNavigator;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -52,7 +55,6 @@ import cm.aptoide.pt.store.view.BadgeDialogFactory;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.GridStoreMetaDisplayable;
-import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
 import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
@@ -82,7 +84,9 @@ public class DisplayablesFactory {
       NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory,
       FragmentNavigator fragmentNavigator, StoreAccessor storeAccessor,
       BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client, Converter.Factory converter,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      CommentMapper commentMapper, CommentsNavigator commentsNavigator,
+      CommentsListManager commentsListManager) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -151,7 +155,8 @@ public class DisplayablesFactory {
         case COMMENTS_GROUP:
           return Observable.from(
               createCommentsGroup(widget, storeTheme, widget.getTag(), storeContext,
-                  storeTabNavigator, navigationTracker));
+                  storeTabNavigator, navigationTracker, commentMapper, commentsNavigator,
+                  commentsListManager));
 
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
@@ -403,7 +408,8 @@ public class DisplayablesFactory {
 
   private static List<Displayable> createCommentsGroup(GetStoreWidgets.WSWidget wsWidget,
       String storeTheme, String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, CommentMapper commentMapper,
+      CommentsNavigator commentsNavigator, CommentsListManager commentsListManager) {
     List<Displayable> displayables = new LinkedList<>();
 
     Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
@@ -412,20 +418,9 @@ public class DisplayablesFactory {
     displayables.add(
         new StoreGridHeaderDisplayable(wsWidget, storeTheme, tag, storeContext, storeTabNavigator,
             navigationTracker, data.second.getId()));
-    if (comments != null
-        && comments.getDataList() != null
-        && comments.getDataList()
-        .getList()
-        .size() > 0) {
-      displayables.add(
-          new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
-              comments.getDataList()
-                  .getList()));
-    } else {
-      displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-          StoreTheme.get(storeTheme)));
-    }
-
+    displayables.add(new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
+        comments.getDataList()
+            .getList(), commentMapper, commentsNavigator, commentsListManager));
     return displayables;
   }
 

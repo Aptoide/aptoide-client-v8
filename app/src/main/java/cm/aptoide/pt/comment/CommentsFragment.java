@@ -1,5 +1,6 @@
 package cm.aptoide.pt.comment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,14 +13,18 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comment.data.Comment;
+import cm.aptoide.pt.comment.data.User;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -35,6 +40,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Inject AptoideUtils.DateTimeU dateUtils;
   private PublishSubject<Comment> postComment;
   private PublishSubject<Comment> commentClickEvent;
+  private PublishSubject<Long> userClickEvent;
   private RecyclerView commentsList;
   private CommentsAdapter commentsAdapter;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -55,6 +61,7 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     getFragmentComponent(savedInstanceState).inject(this);
     commentClickEvent = PublishSubject.create();
     postComment = PublishSubject.create();
+    userClickEvent = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -71,10 +78,11 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     commentsList.setLayoutManager(layoutManager);
     commentsAdapter =
         new CommentsAdapter(new ArrayList<>(), dateUtils, commentClickEvent, R.layout.comment_item,
-            postComment);
+            postComment, userClickEvent);
     commentsList.setAdapter(commentsAdapter);
 
     setHasOptionsMenu(true);
+    handleStatusBar();
     setupToolbar();
     attachPresenter(commentsPresenter);
   }
@@ -125,6 +133,12 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     }
   }
 
+  @Override public void addLocalComment(Comment comment, Account account) {
+    commentsAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(), new User(
+        comment.getUser()
+            .getId(), account.getAvatar(), account.getNickname()), 0, new Date()));
+  }
+
   @Override public Observable<Void> refreshes() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
@@ -143,6 +157,10 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
 
   @Override public Observable<Comment> commentPost() {
     return postComment;
+  }
+
+  @Override public Observable<Long> userClickEvent() {
+    return userClickEvent;
   }
 
   private boolean isEndReached() {
@@ -168,15 +186,20 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
+        hideKeyboard();
         getActivity().onBackPressed();
         return true;
     }
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void hideKeyboard() {
+    super.hideKeyboard();
+  }
+
   public void setupToolbar() {
 
-    toolbar.setTitle(getArguments().getString("storeName", ""));
+    toolbar.setTitle(getResources().getString(R.string.comment_fragment_title));
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
     activity.setSupportActionBar(toolbar);
@@ -185,6 +208,18 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setHomeButtonEnabled(true);
       actionBar.setTitle(toolbar.getTitle());
+    }
+  }
+
+  private void handleStatusBar() {
+    Window window = getActivity().getWindow();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+        && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      window.setStatusBarColor(getResources().getColor(R.color.grey_medium));
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      window.getDecorView()
+          .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+      window.setStatusBarColor(getResources().getColor(R.color.white));
     }
   }
 }

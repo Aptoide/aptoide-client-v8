@@ -1,5 +1,6 @@
 package cm.aptoide.pt.comment;
 
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
@@ -23,6 +24,10 @@ public interface CommentsView extends View {
 
   void hideLoadMore();
 
+  void hideKeyboard();
+
+  void addLocalComment(Comment comment, Account account);
+
   Observable<Void> refreshes();
 
   Observable<Object> reachesBottom();
@@ -30,4 +35,6 @@ public interface CommentsView extends View {
   Observable<Comment> commentClick();
 
   Observable<Comment> commentPost();
+
+  Observable<Long> userClickEvent();
 }

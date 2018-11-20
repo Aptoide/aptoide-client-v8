@@ -52,7 +52,15 @@ public class CommentsListManager {
     return comments.writeComment(storeId, comment.getMessage());
   }
 
+  public Completable postComment(Comment comment, long storeId) {
+    return comments.writeComment(storeId, comment.getMessage());
+  }
+
   public Completable replyComment(Comment comment, long parentId) {
     return comments.writeComment(storeId, comment.getMessage(), parentId);
+  }
+
+  public long getStoreId() {
+    return storeId;
   }
 }

@@ -1,14 +1,21 @@
 package cm.aptoide.pt.comment;
 
+import cm.aptoide.accountmanager.Account;
+import cm.aptoide.accountmanager.AptoideAccount;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.mock.FakeCommentsDataSource;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.View;
+import java.util.ArrayList;
+import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -22,6 +29,7 @@ public class CommentsListManagerPresenterTest {
   @Mock private CommentsListManager commentsListManager;
   @Mock private CrashReport crashReporter;
   @Mock private CommentsNavigator commentsNavigator;
+  @Mock private AptoideAccountManager aptoideAccountManager;
 
   private CommentsPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -29,6 +37,7 @@ public class CommentsListManagerPresenterTest {
   private PublishSubject<Comment> commentClickEvent;
   private PublishSubject<Comment> commentPostEvent;
   private FakeCommentsDataSource fakeCommentsDataSource;
+  private Account mockAccount;
 
   @Before public void setupCommentsPresenter() {
     MockitoAnnotations.initMocks(this);
@@ -38,9 +47,13 @@ public class CommentsListManagerPresenterTest {
     commentClickEvent = PublishSubject.create();
     commentPostEvent = PublishSubject.create();
 
+    mockAccount = new AptoideAccount("id", "email", "nickname", "avatar",
+        new Store(2, "avatar", 11, "name", "theme", "uname", "password", true), false,
+        Account.Access.PUBLIC, true, new ArrayList<>(), true, true, new Date());
+
     presenter =
         new CommentsPresenter(view, commentsListManager, commentsNavigator, Schedulers.immediate(),
-            crashReporter);
+            crashReporter, aptoideAccountManager);
     fakeCommentsDataSource = new FakeCommentsDataSource();
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
@@ -112,7 +125,7 @@ public class CommentsListManagerPresenterTest {
     Comment comment = new Comment();
     commentClickEvent.onNext(comment);
     //Then navigation to the comment detail should start
-    verify(commentsNavigator).navigateToCommentView(comment);
+    verify(commentsNavigator).navigateToCommentView(comment, commentsListManager.getStoreId());
   }
 
   @Test public void postComment() {
@@ -123,8 +136,10 @@ public class CommentsListManagerPresenterTest {
     //And a comment is written
     Comment comment = new Comment();
     when(commentsListManager.postComment(comment)).thenReturn(Completable.complete());
+    when(aptoideAccountManager.accountStatus()).thenReturn(Observable.just(mockAccount));
     //And the send action button is clicked
     commentPostEvent.onNext(comment);
+    verify(view).hideKeyboard();
     //Then the comment should be sent to the repository
     verify(commentsListManager).postComment(comment);
   }

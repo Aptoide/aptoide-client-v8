@@ -11,7 +11,6 @@ import rx.subjects.PublishSubject;
 
 public class CommentViewHolder extends AbstractCommentViewHolder {
 
-  private final View outerLayout;
   private final ImageView userAvatar;
   private final TextView userName;
   private final TextView date;
@@ -19,18 +18,19 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
   private final TextView replies;
   private final AptoideUtils.DateTimeU dateUtils;
   private final PublishSubject<Comment> commentClickEvent;
+  private final PublishSubject<Long> userClickEvent;
 
   public CommentViewHolder(View view, AptoideUtils.DateTimeU dateUtils,
-      PublishSubject<Comment> commentClickEvent) {
+      PublishSubject<Comment> commentClickEvent, PublishSubject<Long> userClickEvent) {
     super(view);
     userAvatar = view.findViewById(R.id.user_icon);
-    outerLayout = view.findViewById(R.id.outer_layout);
     userName = view.findViewById(R.id.user_name);
     date = view.findViewById(R.id.date);
     comment = view.findViewById(R.id.comment);
     replies = view.findViewById(R.id.replies_number);
     this.dateUtils = dateUtils;
     this.commentClickEvent = commentClickEvent;
+    this.userClickEvent = userClickEvent;
   }
 
   public void setComment(Comment comment) {
@@ -52,9 +52,13 @@ public class CommentViewHolder extends AbstractCommentViewHolder {
       this.replies.setText(repliesText);
       this.replies.setVisibility(View.VISIBLE);
     } else {
-      this.replies.setVisibility(View.INVISIBLE);
+      this.replies.setVisibility(View.GONE);
     }
 
-    itemView.setOnClickListener(view -> commentClickEvent.onNext(comment));
+    if (comment.getId() != -1) {
+      itemView.setOnClickListener(view -> commentClickEvent.onNext(comment));
+      userAvatar.setOnClickListener(click -> userClickEvent.onNext(comment.getUser()
+          .getId()));
+    }
   }
 }
