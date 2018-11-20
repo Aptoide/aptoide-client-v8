@@ -121,8 +121,8 @@ public class BundlesResponseMapper {
     ActionItemData item = viewObject.getDataList()
         .getList()
         .get(0);
-    return new ActionItem(item.getId(), item.getType(), item.getTitle(), item.getCaption(),
-        item.getIcon(), item.getUrl());
+    return new ActionItem(item.getId(), item.getType() != null ? item.getType() : "",
+        item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl());
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {
