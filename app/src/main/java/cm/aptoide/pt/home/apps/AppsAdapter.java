@@ -26,6 +26,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   static final int STANDBY_UPDATE = 10;
   static final int ERROR_UPDATE = 11;
   static final int PAUSING_UPDATE = 12;
+  static final int PAUSING_DOWNLOAD = 13;
 
   private List<App> listOfApps;
   private AppsCardViewHolderFactory appsCardViewHolderFactory;
@@ -117,6 +118,9 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         break;
       case ERROR:
         type = ERROR_DOWNLOAD;
+        break;
+      case PAUSING:
+        type = PAUSING_DOWNLOAD;
         break;
       default:
         throw new IllegalArgumentException("Wrong download status : " + downloadStatus.name());
@@ -400,13 +404,13 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     int indexOfApp = listOfApps.indexOf(app);
     if (indexOfApp != -1) {
       App application = listOfApps.get(indexOfApp);
-      if (application.getType() == App.Type.UPDATE) {
-        setAppPausing(indexOfApp, ((UpdateApp) application));
+      if (application instanceof StateApp) {
+        setAppPausing(indexOfApp, ((StateApp) application));
       }
     }
   }
 
-  private void setAppPausing(int indexOfApp, UpdateApp application) {
+  private void setAppPausing(int indexOfApp, StateApp application) {
     application.setStatus(StateApp.Status.PAUSING);
     application.setIndeterminate(true);
     notifyItemChanged(indexOfApp);
