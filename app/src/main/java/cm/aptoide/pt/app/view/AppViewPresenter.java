@@ -905,12 +905,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
             app.getVersionCode(), app.isPaid(), app.getPay())
             .observeOn(viewScheduler)
-            .doOnNext(model -> {
-              if (app.hasDonations()) {
-                appViewAnalytics.sendDonateImpressionAfterInstall(app.getPackageName());
-              }
-              view.showDownloadAppModel(model, app.hasDonations());
-            }))
+            .doOnNext(model -> view.showDownloadAppModel(model, app.hasDonations())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

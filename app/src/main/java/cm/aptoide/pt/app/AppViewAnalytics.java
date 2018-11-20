@@ -222,12 +222,12 @@ public class AppViewAnalytics {
   }
 
   public void sendDonateClickAfterInstall() {
-    analyticsManager.logEvent(createMapData(ACTION, "Donations after install view"),
+    analyticsManager.logEvent(createMapData(ACTION, "donate_click_after_install"),
         APP_VIEW_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   public void sendDonateClickTopDonors() {
-    analyticsManager.logEvent(createMapData(ACTION, "Top donors view"), APP_VIEW_INTERACT,
+    analyticsManager.logEvent(createMapData(ACTION, "donate_click_top"), APP_VIEW_INTERACT,
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
