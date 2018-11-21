@@ -361,4 +361,23 @@ public class AppViewAnalytics {
         action.equals(IMPRESSION) ? AnalyticsManager.Action.IMPRESSION
             : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
+
+  public void installInterstitialImpression(String network) {
+    installInterstitialInteract("impression", network);
+  }
+
+  public void installInterstitialClick(String network) {
+    installInterstitialInteract("tap_on_app", network);
+  }
+
+  private void installInterstitialInteract(String action, String network) {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, action);
+    data.put("bundle_tag", "interstitial");
+    data.put(NETWORK, network);
+
+    analyticsManager.logEvent(data, APP_VIEW_INTERACT,
+        action.equals("impression") ? AnalyticsManager.Action.IMPRESSION
+            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
+  }
 }

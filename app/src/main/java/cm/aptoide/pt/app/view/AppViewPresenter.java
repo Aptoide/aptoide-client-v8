@@ -74,6 +74,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   @Override public void present() {
+    initializeInterstitialAd();
     handleFirstLoad();
     handleReviewAutoScroll();
     handleClickOnScreenshot();
@@ -99,6 +100,8 @@ public class AppViewPresenter implements Presenter {
     handleClickOnRetry();
     handleOnScroll();
     handleOnSimilarAppsVisible();
+    handleInterstitialImpression();
+    handleInterstitialClick();
 
     handleInstallButtonClick();
     pauseDownload();
@@ -112,6 +115,39 @@ public class AppViewPresenter implements Presenter {
     handleAppBought();
     handleApkfyDialogPositiveClick();
     handleClickOnDonateButton();
+  }
+
+  private void handleInterstitialClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.getInterstitialClick())
+        .observeOn(Schedulers.io())
+        .doOnNext(__ -> appViewAnalytics.installInterstitialClick("ironSource"))
+        .flatMap(__ -> appViewManager.recordInterstitialClick())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleInterstitialImpression() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.getInterstitialImpression())
+        .observeOn(Schedulers.io())
+        .doOnNext(__ -> appViewAnalytics.installInterstitialImpression("ironSource"))
+        .flatMap(__ -> appViewManager.recordInterstitialImpression())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void initializeInterstitialAd() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.initializeInterstitialAd())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleOnSimilarAppsVisible() {
@@ -799,6 +835,8 @@ public class AppViewPresenter implements Presenter {
                 case INSTALL:
                 case UPDATE:
                   completable = appViewManager.loadAppViewViewModel()
+                      .flatMap(appViewViewModel -> appViewManager.showInterstitialAd()
+                          .map(__ -> appViewViewModel))
                       .flatMapCompletable(
                           appViewModel -> downloadApp(action, appViewModel).observeOn(viewScheduler)
                               .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(

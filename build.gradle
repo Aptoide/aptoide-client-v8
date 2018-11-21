@@ -21,6 +21,7 @@ allprojects {
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
     maven { url "http://dl.appnext.com" }
+    maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     google()
     jcenter()
   }
@@ -107,6 +108,8 @@ ext {
 
   // AppNext SDK
   APPNEXT_VERSION = '2.4.2.471'
+
+  IRONSOURCE_VERSION = '6.7.12'
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'

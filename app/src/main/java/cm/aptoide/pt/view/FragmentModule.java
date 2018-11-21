@@ -11,6 +11,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
 import cm.aptoide.pt.abtesting.experiments.HighlightedAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
@@ -278,13 +280,16 @@ import rx.schedulers.Schedulers;
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
       SocialRepository socialRepository, @Named("marketName") String marketName,
-      AppCoinsManager appCoinsManager, SimilarAdExperiment similarAdExperiment) {
+      AppCoinsManager appCoinsManager, SimilarAdExperiment similarAdExperiment,
+      IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
+      IronSourceAdRepository ironSourceAdRepository) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, similarAdExperiment);
+        marketName, appCoinsManager, similarAdExperiment, ironSourceInterstitialAdExperiment,
+        ironSourceAdRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -381,5 +386,12 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides ApkFyExperiment providesApkfyExperiment(ABTestManager abTestManager) {
     return new ApkFyExperiment(abTestManager);
+  }
+
+  @FragmentScope @Provides
+  IronSourceInterstitialAdExperiment providesIronSourceInterstitialAdExperiment(
+      ABTestManager abTestManager, IronSourceAdRepository ironSourceAdRepository) {
+    return new IronSourceInterstitialAdExperiment(abTestManager, AndroidSchedulers.mainThread(),
+        ironSourceAdRepository);
   }
 }

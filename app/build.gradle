@@ -260,6 +260,10 @@ android {
     variant.buildConfigField "String", "APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID",
         "\"" + project.APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID + "\""
 
+    variant.buildConfigField "String", "IRONSOURCE_APPLICATION_ID",
+        "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID",
+        "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -388,6 +392,8 @@ dependencies {
   // AppNext
   implementation "com.appnext.sdk:core:${APPNEXT_VERSION}"
   implementation "com.appnext.sdk:native-ads2:${APPNEXT_VERSION}"
+
+  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
