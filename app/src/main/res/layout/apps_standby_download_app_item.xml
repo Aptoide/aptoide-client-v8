@@ -29,6 +29,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/apps_downloads_standby_app_info_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
