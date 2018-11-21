@@ -155,7 +155,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
-  private PublishSubject<Void> donationsImpressionSubject;
+  private PublishSubject<DownloadModel.Action> donationsImpressionSubject;
 
   //Views
   private View noNetworkErrorView;
@@ -643,6 +643,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     showAppViewLayout();
     downloadInfoLayout.setVisibility(View.GONE);
     install.setVisibility(View.VISIBLE);
+    install.setOnClickListener(click -> donationsImpressionSubject.onNext(action));
   }
 
   @Override public void handleError(DetailedAppRequestResult.Error error) {
@@ -1100,10 +1101,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public Observable<Void> sendDonationsImpression() {
-    return donationsImpressionSubject;
-  }
-
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
     if (!hasSimilarApps) {
       hideSimilarApps();
@@ -1331,9 +1328,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public Observable<DownloadModel.Action> installAppClick() {
-    return RxView.clicks(install)
-        .doOnNext(__ -> donationsImpressionSubject.onNext(null))
-        .map(__ -> action);
+    return donationsImpressionSubject;
   }
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {

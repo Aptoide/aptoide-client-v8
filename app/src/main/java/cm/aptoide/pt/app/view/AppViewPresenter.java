@@ -1056,7 +1056,7 @@ public class AppViewPresenter implements Presenter {
   private void handleDonateCardImpressions() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.sendDonationsImpression())
+        .flatMap(__ -> view.installAppClick())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
         .doOnNext(model -> {
           if (model.hasDonations()) {
