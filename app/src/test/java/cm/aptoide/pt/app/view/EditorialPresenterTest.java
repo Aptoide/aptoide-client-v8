@@ -6,6 +6,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.presenter.View;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +36,7 @@ public class EditorialPresenterTest {
   @Mock private PermissionService permissionService;
   @Mock private EditorialAnalytics editorialAnalytics;
   @Mock private EditorialNavigator editorialNavigator;
+  @Mock private App app;
 
   private EditorialPresenter editorialPresenter;
   private EditorialViewModel editorialViewModel;
@@ -51,10 +53,9 @@ public class EditorialPresenterTest {
     lifecycleEvent = PublishSubject.create();
     List<EditorialContent> editorialContent = new ArrayList<>();
     editorialContent.add(
-        new EditorialContent("title", Collections.emptyList(), "message", "type", "appName", "icon",
-            0));
+        new EditorialContent("title", Collections.emptyList(), "message", "type", app));
     editorialViewModel =
-        new EditorialViewModel(editorialContent, "cardType", 1, "title", "appName", 0,
+        new EditorialViewModel(editorialContent, "type", "title", 1, "caption", "appName", 0,
             "packageName", 0, "icon", "graphic", null, 0, "storeName", "storeTheme", "versionName",
             0, "path", "backgroundImage", "pathAlt", "md5", 0);
     downloadModel =
