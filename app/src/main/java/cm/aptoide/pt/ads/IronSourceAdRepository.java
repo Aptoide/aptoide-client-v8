@@ -33,7 +33,6 @@ public class IronSourceAdRepository {
       }
 
       @Override public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-        Log.i("test", ironSourceError.getErrorMessage());
       }
 
       @Override public void onInterstitialAdOpened() {
@@ -44,16 +43,13 @@ public class IronSourceAdRepository {
 
       @Override public void onInterstitialAdShowSucceeded() {
         impressionSubject.onNext(null);
-        //appViewAnalytics.installInterstitialImpression("ironSource");
       }
 
       @Override public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-        Log.i("test", ironSourceError.getErrorMessage());
       }
 
       @Override public void onInterstitialAdClicked() {
         clickSubject.onNext(null);
-        //appViewAnalytics.installInterstitialClick("ironSource");
       }
     });
   }
