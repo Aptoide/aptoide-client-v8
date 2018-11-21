@@ -113,6 +113,7 @@ public class AppViewPresenter implements Presenter {
     handleApkfyDialogPositiveClick();
     handleClickOnDonateAfterInstall();
     handleClickOnTopDonorsDonate();
+    handleDonateCardImpressions();
   }
 
   private void handleOnSimilarAppsVisible() {
@@ -623,13 +624,8 @@ public class AppViewPresenter implements Presenter {
                 appViewViewModel.isPaid(), appViewViewModel.getPay())
                 .first()
                 .observeOn(viewScheduler)
-                .doOnNext(downloadAppViewModel -> {
-                  if (appViewViewModel.hasDonations()) {
-                    appViewAnalytics.sendDonateImpressionAfterInstall(
-                        appViewViewModel.getPackageName());
-                  }
-                  view.showDownloadAppModel(downloadAppViewModel, appViewViewModel.hasDonations());
-                })
+                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
+                    appViewViewModel.hasDonations()))
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
@@ -1049,6 +1045,23 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(app -> {
           appViewAnalytics.sendDonateClickTopDonors();
           appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleDonateCardImpressions() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.sendDonationsImpression())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(model -> {
+          if (model.hasDonations()) {
+            appViewAnalytics.sendDonateImpressionAfterInstall(model.getPackageName());
+          }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

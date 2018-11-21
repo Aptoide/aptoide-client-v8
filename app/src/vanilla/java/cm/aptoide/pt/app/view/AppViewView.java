@@ -156,4 +156,6 @@ public interface AppViewView extends InstallAppView {
   void showApkfyElement(String appName);
 
   void showDonations(List<Donation> donations);
+
+  Observable<Void> sendDonationsImpression();
 }

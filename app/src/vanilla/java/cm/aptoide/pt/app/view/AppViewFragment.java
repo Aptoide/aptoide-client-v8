@@ -155,6 +155,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
+  private PublishSubject<Void> donationsImpressionSubject;
 
   //Views
   private View noNetworkErrorView;
@@ -263,6 +264,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
+    donationsImpressionSubject = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -1098,6 +1100,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
+  @Override public Observable<Void> sendDonationsImpression() {
+    return donationsImpressionSubject;
+  }
+
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
     if (!hasSimilarApps) {
       hideSimilarApps();
@@ -1326,6 +1332,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<DownloadModel.Action> installAppClick() {
     return RxView.clicks(install)
+        .doOnNext(__ -> donationsImpressionSubject.onNext(null))
         .map(__ -> action);
   }
 
