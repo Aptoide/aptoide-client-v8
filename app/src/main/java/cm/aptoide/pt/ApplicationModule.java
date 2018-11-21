@@ -1496,6 +1496,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return cachePath + "icons/";
   }
 
+  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {
+    return new AptoideApplicationAnalytics();
+  }
+
   @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {
     List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
