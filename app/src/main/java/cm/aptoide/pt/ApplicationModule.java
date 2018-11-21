@@ -286,14 +286,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       RootAvailabilityManager rootAvailabilityManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
-      DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
+      DownloadsRepository downloadsRepository, InstalledRepository installedRepository) {
 
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils());
+        downloadsRepository, installedRepository, new FileUtils());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -355,7 +353,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     FileUtils.createDir(obbPath);
 
     return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
-        downloadAppMapper, appDownloaderProvider);
+        downloadAppMapper, appDownloaderProvider, apkPath, obbPath);
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {

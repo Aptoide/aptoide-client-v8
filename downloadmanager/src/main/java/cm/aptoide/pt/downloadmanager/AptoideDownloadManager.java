@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -19,6 +20,8 @@ public class AptoideDownloadManager implements DownloadManager {
   private static final String TAG = "AptoideDownloadManager";
   private final String cachePath;
   private final DownloadAppMapper downloadAppMapper;
+  private final String apkPath;
+  private final String obbPath;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
@@ -27,18 +30,21 @@ public class AptoideDownloadManager implements DownloadManager {
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath,
-      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider) {
+      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
+      String apkPath, String obbPath) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
+    this.apkPath = apkPath;
+    this.obbPath = obbPath;
     appDownloaderMap = new HashMap<>();
   }
 
   public synchronized void start() {
     dispatchDownloadsSubscription = downloadsRepository.getInProgressDownloadsList()
-        .doOnError(throwable -> throwable.printStackTrace())
+        .doOnError(Throwable::printStackTrace)
         .retry()
         .doOnNext(downloads -> Logger.getInstance()
             .d(TAG, "Downloads in Progress " + downloads.size()))
@@ -46,16 +52,17 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(__ -> downloadsRepository.getInQueueDownloads()
             .first())
         .distinctUntilChanged()
-        .doOnError(throwable -> throwable.printStackTrace())
+        .doOnError(Throwable::printStackTrace)
         .retry()
         .doOnNext(downloads -> Logger.getInstance()
             .d(TAG, "Queued downloads " + downloads.size()))
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
-        .flatMap(download -> getAppDownloader(download.getMd5()).doOnNext(
-            AppDownloader::startAppDownload)
-            .flatMap(this::handleDownloadProgress))
-        .doOnError(throwable -> throwable.printStackTrace())
+        .flatMap(download -> getAppDownloader(download).doOnNext(
+            appDownloader -> handleStartDownload(appDownloader, download))
+            .flatMap(appDownloader1 -> handleDownloadProgress(appDownloader1,
+                download.getOverallDownloadStatus(), download.getMd5())))
+        .doOnError(Throwable::printStackTrace)
         .retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
@@ -92,7 +99,7 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Observable<Download> getDownloadsByMd5(String md5) {
     return downloadsRepository.getDownloadListByMd5(md5)
         .flatMap(downloads -> Observable.from(downloads)
-            .filter(download -> download != null || isFileMissingFromCompletedDownload(download))
+            .filter(download -> download != null && !isFileMissingFromCompletedDownload(download))
             .toList())
         .map(downloads -> {
           if (downloads.isEmpty()) {
@@ -121,7 +128,7 @@ public class AptoideDownloadManager implements DownloadManager {
     return downloadsRepository.getDownloadsInProgress()
         .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(downloads -> downloads)
-        .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
+        .flatMap(download -> getAppDownloader(download).flatMapCompletable(
             appDownloader -> appDownloader.pauseAppDownload())
             .map(appDownloader -> download))
         .toCompletable();
@@ -135,7 +142,7 @@ public class AptoideDownloadManager implements DownloadManager {
           downloadsRepository.save(download);
           return download;
         })
-        .flatMap(download -> getAppDownloader(download.getMd5()))
+        .flatMap(download -> getAppDownloader(download))
         .flatMapCompletable(appDownloader -> appDownloader.pauseAppDownload())
         .toCompletable();
   }
@@ -156,7 +163,7 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Completable removeDownload(String md5) {
     return downloadsRepository.getDownload(md5)
         .first()
-        .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
+        .flatMap(download -> getAppDownloader(download).flatMap(
             appDownloader -> appDownloader.removeAppDownload()
                 .andThen(downloadsRepository.remove(md5))
                 .andThen(Observable.just(download))))
@@ -205,7 +212,15 @@ public class AptoideDownloadManager implements DownloadManager {
     return downloadState;
   }
 
-  private Observable<Download> handleDownloadProgress(AppDownloader appDownloader) {
+  private Observable<Download> handleDownloadProgress(AppDownloader appDownloader,
+      int overallDownloadStatus, String md5) {
+    if (overallDownloadStatus == Download.COMPLETED) {
+      appDownloader.stop();
+      removeAppDownloader(md5);
+      return downloadsRepository.getDownload(md5)
+          .first()
+          .takeUntil(download -> download.getOverallProgress() == Download.COMPLETED);
+    }
     return appDownloader.observeDownloadProgress()
         .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
             .first()
@@ -240,7 +255,50 @@ public class AptoideDownloadManager implements DownloadManager {
     return Observable.just(download);
   }
 
-  private Observable<AppDownloader> getAppDownloader(String md5) {
-    return Observable.just(appDownloaderMap.get(md5));
+  private Observable<AppDownloader> getAppDownloader(Download download) {
+    AppDownloader appDownloader = appDownloaderMap.get(download.getMd5());
+    if (appDownloader != null) {
+      return Observable.just(appDownloader);
+    }
+    return Observable.just(createAppDownloadManager(download));
+  }
+
+  private boolean isDownloadCompleted(Download download) {
+    return download.getOverallProgress() == 100 && haveFilesBeenMoved(download);
+  }
+
+  private boolean haveFilesBeenMoved(Download download) {
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+      if (!FileUtils.fileExists(getFilePathFromFileType(fileToDownload))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private void handleStartDownload(AppDownloader appDownloader, Download download) {
+    if (isDownloadCompleted(download)) {
+      download.setOverallDownloadStatus(Download.COMPLETED);
+      downloadsRepository.save(download);
+    } else {
+      appDownloader.startAppDownload();
+    }
+  }
+
+  @NonNull public String getFilePathFromFileType(FileToDownload fileToDownload) {
+    String path;
+    switch (fileToDownload.getFileType()) {
+      case FileToDownload.APK:
+        path = apkPath;
+        break;
+      case FileToDownload.OBB:
+        path = obbPath + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.GENERIC:
+      default:
+        path = cachePath;
+        break;
+    }
+    return path;
   }
 }

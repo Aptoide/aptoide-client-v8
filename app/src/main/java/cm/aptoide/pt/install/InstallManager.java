@@ -42,9 +42,6 @@ public class InstallManager {
   private final Installer installer;
   private final SharedPreferences sharedPreferences;
   private final SharedPreferences securePreferences;
-  private final String cachePath;
-  private final String apkPath;
-  private final String obbPath;
   private final FileUtils fileUtils;
   private final Context context;
   @Inject DownloadsRepository downloadRepository;
@@ -55,7 +52,7 @@ public class InstallManager {
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
-      String cachePath, String apkPath, String obbPath, FileUtils fileUtils) {
+      FileUtils fileUtils) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -64,9 +61,6 @@ public class InstallManager {
     this.installedRepository = installedRepository;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
-    this.cachePath = cachePath;
-    this.apkPath = apkPath;
-    this.obbPath = obbPath;
     this.fileUtils = fileUtils;
   }
 
@@ -574,29 +568,12 @@ public class InstallManager {
         .first();
   }
 
-  public void moveCompletedDownloadFiles(Download download) {
+  void moveCompletedDownloadFiles(Download download) {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      String newFilePath = getFilePathFromFileType(fileToDownload);
+      String newFilePath = aptoideDownloadManager.getFilePathFromFileType(fileToDownload);
       fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
       fileToDownload.setPath(newFilePath);
     }
     downloadRepository.save(download);
-  }
-
-  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
-    String path;
-    switch (fileToDownload.getFileType()) {
-      case FileToDownload.APK:
-        path = apkPath;
-        break;
-      case FileToDownload.OBB:
-        path = obbPath + fileToDownload.getPackageName() + "/";
-        break;
-      case FileToDownload.GENERIC:
-      default:
-        path = cachePath;
-        break;
-    }
-    return path;
   }
 }
