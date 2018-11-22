@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import java.util.List;
 
 /**
@@ -12,16 +11,20 @@ class EditorialContent {
   private final List<EditorialMedia> media;
   private final String message;
   private final String type;
-  private final App app;
+  private final String name;
+  private final String icon;
+  private final float rating;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      App app) {
+      String name, String icon, float rating) {
 
     this.title = title;
     this.media = media;
     this.message = message;
     this.type = type;
-    this.app = app;
+    this.name = name;
+    this.icon = icon;
+    this.rating = rating;
   }
 
   public String getMessage() {
@@ -37,7 +40,7 @@ class EditorialContent {
   }
 
   public boolean isPlaceHolderType() {
-    return app != null;
+    return name != null;
   }
 
   public List<EditorialMedia> getMedia() {
@@ -69,33 +72,15 @@ class EditorialContent {
     return false;
   }
 
-  public App getApp() {
-    return app;
-  }
-
   public String getAppName() {
-    String name = null;
-    if (app != null) {
-      name = app.getName();
-    }
     return name;
   }
 
   public String getIcon() {
-    String icon = null;
-    if (app != null) {
-      icon = app.getIcon();
-    }
     return icon;
   }
 
   public float getRating() {
-    float rating = 0;
-    if (app != null) {
-      rating = app.getStats()
-          .getRating()
-          .getAvg();
-    }
     return rating;
   }
 }

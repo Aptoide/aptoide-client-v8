@@ -78,7 +78,7 @@ public class EditorialService {
       int placeHolderPosition = getPlaceHolderPosition(editorialContentList);
       App app = null;
       if (placeHolderPosition != -1) {
-        app = editorialContentList.get(placeHolderPosition)
+        app = contentList.get(placeHolderPosition)
             .getApp();
       }
       if (app != null) {
@@ -128,9 +128,21 @@ public class EditorialService {
             editorialMediaList.add(editorialMedia);
           }
         }
-        EditorialContent editorialContent =
+        EditorialContent editorialContent;
+        App app = content.getApp();
+        String appName = null;
+        String icon = null;
+        float rating = 0;
+        if (app != null) {
+          appName = app.getName();
+          icon = app.getIcon();
+          rating = app.getStats()
+              .getRating()
+              .getAvg();
+        }
+        editorialContent =
             new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-                content.getType(), content.getApp());
+                content.getType(), appName, icon, rating);
         editorialContentList.add(editorialContent);
       }
     }
