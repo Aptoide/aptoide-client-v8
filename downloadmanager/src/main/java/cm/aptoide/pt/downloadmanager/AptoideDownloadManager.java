@@ -60,7 +60,7 @@ public class AptoideDownloadManager implements DownloadManager {
         .map(downloads -> downloads.get(0))
         .flatMap(download -> getAppDownloader(download).doOnNext(
             appDownloader -> handleStartDownload(appDownloader, download))
-            .flatMap(appDownloader1 -> handleDownloadProgress(appDownloader1,
+            .flatMap(appDownloader -> handleDownloadProgress(appDownloader,
                 download.getOverallDownloadStatus(), download.getMd5())))
         .doOnError(Throwable::printStackTrace)
         .retry()
