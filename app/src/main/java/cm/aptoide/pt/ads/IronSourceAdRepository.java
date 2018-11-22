@@ -9,6 +9,7 @@ import com.ironsource.mediationsdk.sdk.InterstitialListener;
 import rx.subjects.PublishSubject;
 
 public class IronSourceAdRepository {
+  private static final String TAG = "IronSourceAdRepository";
   private final Activity activity;
   private final PublishSubject<Void> impressionSubject;
   private final PublishSubject<Void> clickSubject;
@@ -33,6 +34,7 @@ public class IronSourceAdRepository {
       }
 
       @Override public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
+        Log.i(TAG, "Interstitial Ad failed to load. Reason: " + ironSourceError.getErrorMessage());
       }
 
       @Override public void onInterstitialAdOpened() {
@@ -46,6 +48,7 @@ public class IronSourceAdRepository {
       }
 
       @Override public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
+        Log.i(TAG, "Interstitial Ad failed to show. Reason: " + ironSourceError.getErrorMessage());
       }
 
       @Override public void onInterstitialAdClicked() {
