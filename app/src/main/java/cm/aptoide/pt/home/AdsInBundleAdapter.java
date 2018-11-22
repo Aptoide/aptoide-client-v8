@@ -40,11 +40,6 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   }
 
   @Override public AdInBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    if (viewType == ApplicationAd.Network.APPNEXT.ordinal()) {
-      return new AdInBundleViewHolder(LayoutInflater.from(parent.getContext())
-          .inflate(R.layout.displayable_grid_ad_appnext, parent, false), adClickedEvents,
-          oneDecimalFormatter);
-    }
     return new AdInBundleViewHolder(LayoutInflater.from(parent.getContext())
         .inflate(R.layout.displayable_grid_ad, parent, false), adClickedEvents,
         oneDecimalFormatter);
