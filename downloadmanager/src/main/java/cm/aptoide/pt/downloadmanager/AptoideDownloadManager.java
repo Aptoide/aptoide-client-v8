@@ -217,8 +217,7 @@ public class AptoideDownloadManager implements DownloadManager {
     if (overallDownloadStatus == Download.COMPLETED) {
       return downloadsRepository.getDownload(md5)
           .first()
-          .doOnNext(download -> removeAppDownloader(md5))
-          .takeUntil(download -> download.getOverallProgress() == Download.COMPLETED);
+          .doOnNext(download -> removeAppDownloader(md5));
     }
     return appDownloader.observeDownloadProgress()
         .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
