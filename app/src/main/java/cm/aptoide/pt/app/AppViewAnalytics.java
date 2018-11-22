@@ -28,7 +28,7 @@ public class AppViewAnalytics {
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
   public static final String CLICK_INSTALL = "Clicked on install button";
-  public static final String DONATIONS_IMPRESSION = "donations_impression";
+  public static final String DONATIONS_IMPRESSION = "Donations_Impression";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";

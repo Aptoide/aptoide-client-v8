@@ -8,8 +8,8 @@ public class DonationsAnalytics {
 
   public static final String DONATIONS_INTERACT = "Donations_Dialog_Interact";
   public static final String ACTION = "Action";
-  public static final String PACKAGE_NAME = "Package_Name";
-  public static final String VALUE = "Value";
+  public static final String PACKAGE_NAME = "'package_name";
+  public static final String VALUE = "value";
   public static final String NAME = "name";
 
   private AnalyticsManager analyticsManager;

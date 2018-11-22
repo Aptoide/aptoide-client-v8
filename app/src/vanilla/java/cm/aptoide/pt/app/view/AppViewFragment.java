@@ -155,7 +155,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
-  private PublishSubject<DownloadModel.Action> donationsImpressionSubject;
+  private PublishSubject<DownloadModel.Action> installClickSubject;
 
   //Views
   private View noNetworkErrorView;
@@ -264,7 +264,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
-    donationsImpressionSubject = PublishSubject.create();
+    installClickSubject = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -643,7 +643,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     showAppViewLayout();
     downloadInfoLayout.setVisibility(View.GONE);
     install.setVisibility(View.VISIBLE);
-    install.setOnClickListener(click -> donationsImpressionSubject.onNext(action));
+    install.setOnClickListener(click -> installClickSubject.onNext(action));
   }
 
   @Override public void handleError(DetailedAppRequestResult.Error error) {
@@ -1328,7 +1328,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public Observable<DownloadModel.Action> installAppClick() {
-    return donationsImpressionSubject;
+    return installClickSubject;
   }
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
