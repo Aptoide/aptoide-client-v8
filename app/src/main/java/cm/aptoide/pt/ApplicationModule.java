@@ -156,8 +156,6 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.preferences.AdultContentManager;
-import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -825,16 +823,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides WindowManager provideWindowManager() {
     return ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE));
-  }
-
-  @Singleton @Provides LocalPersistenceAdultContent provideLocalAdultContent(
-      Preferences preferences, @Named("secure") SecurePreferences securePreferences) {
-    return new LocalPersistenceAdultContent(preferences, securePreferences);
-  }
-
-  @Singleton @Provides AdultContent provideAdultContent(
-      LocalPersistenceAdultContent localAdultContent, AccountService accountService) {
-    return new AdultContentManager(localAdultContent, accountService);
   }
 
   @Singleton @Provides Preferences provideDefaultPreferences(
