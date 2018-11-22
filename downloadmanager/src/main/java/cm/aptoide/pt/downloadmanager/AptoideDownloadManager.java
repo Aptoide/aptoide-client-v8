@@ -215,7 +215,6 @@ public class AptoideDownloadManager implements DownloadManager {
   private Observable<Download> handleDownloadProgress(AppDownloader appDownloader,
       int overallDownloadStatus, String md5) {
     if (overallDownloadStatus == Download.COMPLETED) {
-      appDownloader.stop();
       removeAppDownloader(md5);
       return downloadsRepository.getDownload(md5)
           .first()
