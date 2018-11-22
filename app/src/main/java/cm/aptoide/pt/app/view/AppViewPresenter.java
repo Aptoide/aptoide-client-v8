@@ -835,15 +835,17 @@ public class AppViewPresenter implements Presenter {
                 case INSTALL:
                 case UPDATE:
                   completable = appViewManager.loadAppViewViewModel()
-                      .flatMap(appViewViewModel -> appViewManager.showInterstitialAd()
-                          .map(__ -> appViewViewModel))
                       .flatMapCompletable(
                           appViewModel -> downloadApp(action, appViewModel).observeOn(viewScheduler)
                               .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
                                   appViewModel.getPackageName(), appViewModel.getDeveloper()
                                       .getName(), action.toString()))
                               .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
-                                  appViewModel.getPackageName())));
+                                  appViewModel.getPackageName()))
+                              .toSingleDefault(true)
+                              .delay(3, TimeUnit.SECONDS)
+                              .flatMap(__ -> appViewManager.showInterstitialAd())
+                              .toCompletable());
                   break;
                 case OPEN:
                   completable = appViewManager.loadAppViewViewModel()
