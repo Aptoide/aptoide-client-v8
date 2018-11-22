@@ -29,12 +29,12 @@ public class AppViewAnalytics {
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
   public static final String CLICK_INSTALL = "Clicked on install button";
   public static final String DONATIONS_IMPRESSION = "Donations_Impression";
+  public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TYPE = "type";
-  public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   private static final String NETWORK = "Network";
   private static final String IS_AD = "Is_ad";
   private static final String POSITION = "Position";
