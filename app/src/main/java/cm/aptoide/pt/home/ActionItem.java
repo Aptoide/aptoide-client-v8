@@ -4,16 +4,16 @@ public class ActionItem {
   private final String cardId;
   private final String type;
   private final String title;
-  private final String message;
+  private final String subTitle;
   private final String icon;
   private final String url;
 
-  public ActionItem(String cardId, String type, String title, String message, String icon,
+  public ActionItem(String cardId, String type, String title, String subTitle, String icon,
       String url) {
     this.cardId = cardId;
     this.type = type;
     this.title = title;
-    this.message = message;
+    this.subTitle = subTitle;
     this.icon = icon;
     this.url = url;
   }
@@ -31,7 +31,7 @@ public class ActionItem {
   }
 
   public String getSubTitle() {
-    return message;
+    return subTitle;
   }
 
   public String getIcon() {
