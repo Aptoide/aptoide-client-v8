@@ -378,7 +378,10 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
+  // IronSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_VERSION}@jar"
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
