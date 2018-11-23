@@ -12,17 +12,20 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
   private AppDownloadState appDownloadState;
   private int downloadProgress;
   private String md5;
+  private Throwable error;
 
   public FileDownloadTaskStatus(AppDownloadState appDownloadState, int downloadProgress,
       String md5) {
     this.appDownloadState = appDownloadState;
     this.downloadProgress = downloadProgress;
     this.md5 = md5;
+    this.error = null;
   }
 
-  public FileDownloadTaskStatus(AppDownloadState appDownloadState, String md5) {
+  public FileDownloadTaskStatus(AppDownloadState appDownloadState, String md5, Throwable error) {
     this.appDownloadState = appDownloadState;
     this.md5 = md5;
+    this.error = error;
     this.downloadProgress = 0;
   }
 
@@ -36,6 +39,14 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
 
   @Override public String getMd5() {
     return md5;
+  }
+
+  @Override public boolean hasError() {
+    return error != null;
+  }
+
+  @Override public Throwable getError() {
+    return error;
   }
 
   @Override public boolean equals(Object o) {

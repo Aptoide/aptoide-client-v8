@@ -61,7 +61,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
       Logger.getInstance()
           .d(TAG, " Download error");
       fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5);
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5, null);
     }
     downloadStatus.onNext(fileDownloadTaskStatus);
   }
@@ -74,25 +74,27 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
       Logger.getInstance()
           .d(TAG, "File not found error on app: " + md5);
       fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND, md5);
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND, md5,
+              error);
     } else if (error instanceof FileDownloadOutOfSpaceException) {
       Logger.getInstance()
           .d(TAG, "Out of space error for the app: " + md5);
 
       fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE,
-              md5);
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE, md5,
+              error);
     } else {
       Logger.getInstance()
           .d(TAG, "Generic error on app: " + md5);
       fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5);
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5, error);
     }
     downloadStatus.onNext(fileDownloadTaskStatus);
   }
 
   @Override protected void warn(BaseDownloadTask baseDownloadTask) {
-    downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.WARN, md5));
+    downloadStatus.onNext(
+        new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.WARN, md5, null));
   }
 
   public Observable<FileDownloadCallback> onDownloadStateChanged() {
