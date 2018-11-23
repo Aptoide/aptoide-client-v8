@@ -155,7 +155,8 @@ public class AppViewPresenter implements Presenter {
           SimilarAppsViewModel similarAppsViewModel =
               appViewManager.getCachedSimilarAppsViewModel();
           if (similarAppsViewModel != null
-              && similarAppsViewModel.hasAd() && !similarAppsViewModel.hasRecordedAdImpression()) {
+              && similarAppsViewModel.hasAd()
+              && !similarAppsViewModel.hasRecordedAdImpression()) {
             similarAppsViewModel.setHasRecordedAdImpression(true);
             appViewAnalytics.
                 similarAppBundleImpression(similarAppsViewModel.getAd()
