@@ -3,9 +3,7 @@ package cm.aptoide.pt.app;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.ads.data.ApplicationAd;
@@ -69,8 +67,6 @@ public class AppViewManager {
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
 
-  private SimilarAdExperiment similarAdExperiment;
-
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
       StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
@@ -78,7 +74,7 @@ public class AppViewManager {
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
-      String marketName, AppCoinsManager appCoinsManager, SimilarAdExperiment similarAdExperiment,
+      String marketName, AppCoinsManager appCoinsManager,
       IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
       IronSourceAdRepository ironSourceAdRepository) {
     this.installManager = installManager;
@@ -101,7 +97,6 @@ public class AppViewManager {
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
     this.isFirstLoad = true;
-    this.similarAdExperiment = similarAdExperiment;
     this.ironSourceInterstitialAdExperiment = ironSourceInterstitialAdExperiment;
     this.ironSourceAdRepository = ironSourceAdRepository;
   }
@@ -132,7 +127,7 @@ public class AppViewManager {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
-      return similarAdExperiment.getSimilarAd(packageName, keyWords)
+      return adsManager.loadAd(packageName, keyWords)
           .flatMap(
               adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
                 cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
@@ -261,14 +256,6 @@ public class AppViewManager {
 
   public SimilarAppsViewModel getCachedSimilarAppsViewModel() {
     return cachedSimilarAppsViewModel;
-  }
-
-  private Single<AppNextAdResult> loadAppNextAdForSimilarApps(List<String> keywords) {
-    return adsManager.loadAppNextAd(keywords, BuildConfig.APPNEXT_SIMILAR_PLACEMENT_ID);
-  }
-
-  public PublishSubject<AppNextAdResult> appNextAdClick() {
-    return adsManager.appNextAdClick();
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {
