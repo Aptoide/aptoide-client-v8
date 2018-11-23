@@ -187,6 +187,7 @@ public abstract class AptoideApplication extends Application {
   @Inject RealmExperimentPersistence abTestExperimentPersistence;
   @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   @Inject AptoideShortcutManager shortcutManager;
+  @Inject SettingsManager settingsManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -1012,6 +1013,10 @@ public abstract class AptoideApplication extends Application {
 
   public RealmExperimentPersistence getAbTestExperimentPersistence() {
     return abTestExperimentPersistence;
+  }
+
+  public SettingsManager getSettingsManager() {
+    return settingsManager;
   }
 }
 
