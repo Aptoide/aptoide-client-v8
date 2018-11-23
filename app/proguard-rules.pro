@@ -85,3 +85,6 @@
 -keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
     boolean mShiftingMode;
 }
+
+## appc proxy
+-dontwarn com.asf.appcoins.**
