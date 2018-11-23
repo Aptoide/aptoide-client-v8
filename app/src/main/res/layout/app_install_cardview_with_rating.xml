@@ -28,7 +28,7 @@
       android:id="@+id/card_info_install_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:padding="9dp"
+      android:paddingTop="9dp"
       android:visibility="visible"
       >
 
@@ -36,9 +36,9 @@
         android:id="@+id/app_title_textview_with_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="94dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="94dp"
         android:layout_marginStart="8dp"
         android:lines="1"
         android:visibility="gone"

@@ -99,3 +99,6 @@
 }
 -dontwarn com.moat.**
 -keep class com.moat.** { public protected private *; }
+
+## appc proxy
+-dontwarn com.asf.appcoins.**

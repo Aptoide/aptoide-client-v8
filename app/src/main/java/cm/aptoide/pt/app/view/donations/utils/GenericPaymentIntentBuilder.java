@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.net.Uri;
 import com.asf.appcoins.sdk.contractproxy.AppCoinsAddressProxyBuilder;
 import com.asf.appcoins.sdk.contractproxy.AppCoinsAddressProxySdk;
+import com.google.android.gms.common.util.Hex;
 import com.google.gson.Gson;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Formatter;
-import org.spongycastle.util.encoders.Hex;
 
 /**
  * This class contains the help method to build the intent to call the BDS Wallet for generic
@@ -93,7 +93,7 @@ public class GenericPaymentIntentBuilder {
 
   private static String buildUriData(String skuId, String packageName, String paymentType,
       String payload) throws UnsupportedEncodingException {
-    return "0x" + Hex.toHexString(
+    return "0x" + Hex.bytesToStringLowercase(
         new Gson().toJson(new TransactionData(paymentType, packageName, skuId, payload))
             .getBytes("UTF-8"));
   }
