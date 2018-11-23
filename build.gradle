@@ -109,7 +109,8 @@ ext {
 
   IRONSOURCE_VERSION = '6.7.12'
   APPLOVIN_VERSION = '4.3.0'
-  VUNGLE_VERSION = '4.1.4'
+  VUNGLE_ADAPTER_VERSION = '4.1.4'
+  VUNGLE_VERSION = '6.3.17'
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'
