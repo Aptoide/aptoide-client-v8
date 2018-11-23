@@ -22,12 +22,15 @@ public class AppDownloadManager implements AppDownloader {
   private PublishSubject<FileDownloadCallback> fileDownloadSubject;
   private AppDownloadStatus appDownloadStatus;
   private Subscription subscribe;
+  private DownloadErrorAnalytics downloadErrorAnalytics;
 
   public AppDownloadManager(RetryFileDownloaderProvider fileDownloaderProvider, DownloadApp app,
-      HashMap<String, RetryFileDownloader> fileDownloaderPersistence) {
+      HashMap<String, RetryFileDownloader> fileDownloaderPersistence,
+      DownloadErrorAnalytics downloadErrorAnalytics) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
+    this.downloadErrorAnalytics = downloadErrorAnalytics;
     fileDownloadSubject = PublishSubject.create();
     appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
         AppDownloadStatus.AppDownloadState.PENDING);
@@ -109,12 +112,15 @@ public class AppDownloadManager implements AppDownloader {
               || fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
             handleErrorFileDownload();
+            if (fileDownloadCallback.hasError()) {
+              downloadErrorAnalytics.onError(app.getPackageName(), app.getVersionCode(),
+                  fileDownloadCallback.getError());
+            }
           }
         });
   }
 
   private void handleErrorFileDownload() {
-
     for (RetryFileDownloader retryFileDownloader : fileDownloaderPersistence.values()) {
       retryFileDownloader.stopFailedDownload();
     }

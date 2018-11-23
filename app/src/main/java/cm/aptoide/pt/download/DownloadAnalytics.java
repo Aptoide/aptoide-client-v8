@@ -7,6 +7,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.downloadmanager.DownloadErrorAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
 import java.util.ArrayList;
@@ -14,7 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytics {
+public class DownloadAnalytics
+    implements cm.aptoide.pt.downloadmanager.Analytics, DownloadErrorAnalytics {
   public static final String DOWNLOAD_EVENT_NAME = "DOWNLOAD";
   public static final String NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME =
       "Aptoide_Push_Notification_Download_Complete";
@@ -249,6 +251,26 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
     analyticsManager.logEvent(data, DOWNLOAD_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
+  }
+
+  @Override public void onError(String packageName, int versionCode, Throwable throwable) {
+    String key = packageName + versionCode + DOWNLOAD_EVENT_NAME;
+    DownloadEvent downloadEvent = cache.get(key);
+    if (downloadEvent != null) {
+      Map<String, Object> data = downloadEvent.getData();
+      Map<String, Object> result = new HashMap<>();
+      Map<String, Object> error = new HashMap<>();
+
+      result.put("status", "FAIL");
+      error.put("type", throwable.getClass()
+          .getSimpleName());
+      error.put("message", throwable.getMessage());
+      result.put("error", error);
+      data.put("result", result);
+      analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
+          downloadEvent.getContext());
+      cache.remove(key);
+    }
   }
 
   public enum AppContext {

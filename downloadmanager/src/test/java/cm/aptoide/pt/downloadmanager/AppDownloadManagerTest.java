@@ -46,9 +46,9 @@ public class AppDownloadManagerTest {
         new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "", "patchObbMd5", 123,
             "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB);
 
-    DownloadApp appToDownload = new DownloadApp(getFilesListWithApk(), "md5Apk");
-    DownloadApp appToDownloadWithObbs = new DownloadApp(getFilesListWithObbs(), "md5WithObb");
-    DownloadApp appToDownloadEmptyError = new DownloadApp(Collections.emptyList(), "md5Empty");
+    DownloadApp appToDownload = new DownloadApp(packageName, versionCode, getFilesListWithApk(), "md5Apk");
+    DownloadApp appToDownloadWithObbs = new DownloadApp(packageName, versionCode, getFilesListWithObbs(), "md5WithObb");
+    DownloadApp appToDownloadEmptyError = new DownloadApp(packageName, versionCode, Collections.emptyList(), "md5Empty");
     testSubscriber = TestSubscriber.create();
 
     appDownloadManager = new AppDownloadManager(new RetryFileDownloaderProvider() {
@@ -58,7 +58,7 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
-    }, appToDownload, createFileDownloaderPersistence());
+    }, appToDownload, createFileDownloaderPersistence(), downloadErrorAnalytics);
 
     appDownloadManagerWithObbs = new AppDownloadManager(new RetryFileDownloaderProvider() {
       @Override
@@ -67,7 +67,7 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
-    }, appToDownloadWithObbs, createFileDownloaderPersistence());
+    }, appToDownloadWithObbs, createFileDownloaderPersistence(), downloadErrorAnalytics);
 
     appDownloadManagerWithNoFiles = new AppDownloadManager(new RetryFileDownloaderProvider() {
       @Override
@@ -76,7 +76,7 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
-    }, appToDownloadEmptyError, createFileDownloaderPersistence());
+    }, appToDownloadEmptyError, createFileDownloaderPersistence(), downloadErrorAnalytics);
   }
 
   @Test public void startAppDownloadWithOneFile() throws Exception {
