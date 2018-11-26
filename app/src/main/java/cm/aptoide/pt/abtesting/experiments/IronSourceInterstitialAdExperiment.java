@@ -4,6 +4,7 @@ import cm.aptoide.pt.AptoideApplicationAnalytics;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
+import cm.aptoide.pt.ads.IronSourceAnalytics;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -15,20 +16,18 @@ public class IronSourceInterstitialAdExperiment {
   private ABTestManager abTestManager;
   private Scheduler scheduler;
   private IronSourceAdRepository ironSourceAdRepository;
-  private AptoideApplicationAnalytics aptoideApplicationAnalytics;
+  private IronSourceAnalytics ironSourceAnalytics;
 
   public IronSourceInterstitialAdExperiment(ABTestManager abTestManager, Scheduler scheduler,
-      IronSourceAdRepository ironSourceAdRepository,
-      AptoideApplicationAnalytics aptoideApplicationAnalytics) {
+      IronSourceAdRepository ironSourceAdRepository, IronSourceAnalytics ironSourceAnalytics) {
     this.abTestManager = abTestManager;
     this.scheduler = scheduler;
     this.ironSourceAdRepository = ironSourceAdRepository;
-    this.aptoideApplicationAnalytics = aptoideApplicationAnalytics;
+    this.ironSourceAnalytics = ironSourceAnalytics;
   }
 
   public Observable<Experiment> loadInterstitial() {
     return abTestManager.getExperiment(EXPERIMENT_ID)
-        .observeOn(scheduler)
         .doOnNext(experiment -> {
           String experimentAssignment = "default";
           if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
@@ -37,11 +36,11 @@ public class IronSourceInterstitialAdExperiment {
           switch (experimentAssignment) {
             case "default":
             case "control_group":
-              aptoideApplicationAnalytics.setIronSourceAbTestGroup(true);
+              ironSourceAnalytics.setIronSourceAbTestGroup(true);
               break;
             case "ironsource":
               ironSourceAdRepository.loadInterstitialAd();
-              aptoideApplicationAnalytics.setIronSourceAbTestGroup(false);
+              ironSourceAnalytics.setIronSourceAbTestGroup(false);
           }
         });
   }
@@ -57,10 +56,10 @@ public class IronSourceInterstitialAdExperiment {
           switch (experimentAssignment) {
             case "default":
             case "control_group":
-              aptoideApplicationAnalytics.setIronSourceAbTestGroup(true);
+              ironSourceAnalytics.setIronSourceAbTestGroup(true);
               break;
             case "ironsource":
-              aptoideApplicationAnalytics.setIronSourceAbTestGroup(false);
+              ironSourceAnalytics.setIronSourceAbTestGroup(false);
               ironSourceAdRepository.showInterstitialAd();
           }
         })

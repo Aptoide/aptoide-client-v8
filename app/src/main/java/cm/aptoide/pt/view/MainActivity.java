@@ -47,11 +47,11 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
 
+    ironSourceAdRepository.initialize();
+
     setupUpdatesNotification();
 
     attachPresenter(presenter);
-
-    ironSourceAdRepository.initialize();
   }
 
   private void setupUpdatesNotification() {

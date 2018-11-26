@@ -30,12 +30,4 @@ public class AptoideApplicationAnalytics {
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
   }
-
-  public void setIronSourceAbTestGroup(boolean isControlGroup) {
-    Bundle bundle = new Bundle();
-    bundle.putString("ab_test_ironsource",
-        isControlGroup ? "a_without_ironsource" : "b_with_ironsource");
-    AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
-        .d("Facebook Analytics: ", response.toString()));
-  }
 }

@@ -1,28 +1,27 @@
 package cm.aptoide.pt.dataprovider.ws.v7.home;
 
 public class ActionItemData {
-  private String layout;
   private String type;
-  private String cardId;
+  private String id;
   private String icon;
   private String title;
-  private String message;
+  private String caption;
   private String url;
 
-  public String getLayout() {
-    return layout;
+  public String getType() {
+    return type;
   }
 
-  public void setLayout(String layout) {
-    this.layout = layout;
+  public void setType(String layout) {
+    this.type = layout;
   }
 
-  public String getCardId() {
-    return cardId;
+  public String getId() {
+    return id;
   }
 
-  public void setCardId(String cardId) {
-    this.cardId = cardId;
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getIcon() {
@@ -41,12 +40,12 @@ public class ActionItemData {
     this.title = title;
   }
 
-  public String getMessage() {
-    return message;
+  public String getCaption() {
+    return caption;
   }
 
-  public void setMessage(String message) {
-    this.message = message;
+  public void setCaption(String caption) {
+    this.caption = caption;
   }
 
   public String getUrl() {
@@ -55,13 +54,5 @@ public class ActionItemData {
 
   public void setUrl(String url) {
     this.url = url;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
   }
 }

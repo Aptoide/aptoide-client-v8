@@ -155,6 +155,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
+  private PublishSubject<DownloadModel.Action> installClickSubject;
 
   //Views
   private View noNetworkErrorView;
@@ -263,6 +264,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
+    installClickSubject = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -641,6 +643,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     showAppViewLayout();
     downloadInfoLayout.setVisibility(View.GONE);
     install.setVisibility(View.VISIBLE);
+    install.setOnClickListener(click -> installClickSubject.onNext(action));
   }
 
   @Override public void handleError(DetailedAppRequestResult.Error error) {
@@ -819,9 +822,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return genericRetryClick;
   }
 
-  @Override public Observable<Void> clickDonateButton() {
-    return Observable.merge(RxView.clicks(installCardDonateButton),
-        RxView.clicks(listDonateButton));
+  @Override public Observable<Void> clickDonateAfterInstallButton() {
+    return RxView.clicks(installCardDonateButton);
+  }
+
+  @Override public Observable<Void> clickTopDonorsDonateButton() {
+    return RxView.clicks(listDonateButton);
   }
 
   @Override public Observable<ShareDialogs.ShareResponse> shareDialogResponse() {
@@ -1322,8 +1328,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public Observable<DownloadModel.Action> installAppClick() {
-    return RxView.clicks(install)
-        .map(__ -> action);
+    return installClickSubject;
   }
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
@@ -1350,7 +1355,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), true);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
-      if (hasDonations) {//after getApk webservice is updated
+      if (hasDonations) {
         donateInstallCard.setVisibility(View.GONE);
       }
       appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),

@@ -9,6 +9,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.AdEvent;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.AppViewAnalytics;
@@ -96,8 +97,7 @@ public class AppViewPresenter implements Presenter {
     handleClickOnRetry();
     handleOnScroll();
     handleOnSimilarAppsVisible();
-    handleInterstitialImpression();
-    handleInterstitialClick();
+    handleInterstitialEvents();
 
     handleInstallButtonClick();
     pauseDownload();
@@ -110,28 +110,24 @@ public class AppViewPresenter implements Presenter {
     handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
-    handleClickOnDonateButton();
+    handleClickOnDonateAfterInstall();
+    handleClickOnTopDonorsDonate();
+    handleDonateCardImpressions();
   }
 
-  private void handleInterstitialClick() {
+  private void handleInterstitialEvents() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.getInterstitialClick())
+        .flatMap(__ -> appViewManager.getInterstitialEvent())
         .observeOn(Schedulers.io())
-        .doOnNext(__ -> appViewAnalytics.installInterstitialClick("ironSource"))
+        .doOnNext(adEvent -> {
+          if (adEvent == AdEvent.CLICK) {
+            appViewAnalytics.installInterstitialClick("ironSource");
+          } else if (adEvent == AdEvent.IMPRESSION) {
+            appViewAnalytics.installInterstitialImpression("ironSource");
+          }
+        })
         .flatMap(__ -> appViewManager.recordInterstitialClick())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
-  private void handleInterstitialImpression() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.getInterstitialImpression())
-        .observeOn(Schedulers.io())
-        .doOnNext(__ -> appViewAnalytics.installInterstitialImpression("ironSource"))
-        .flatMap(__ -> appViewManager.recordInterstitialImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -1030,12 +1026,48 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void handleClickOnDonateButton() {
+  private void handleClickOnDonateAfterInstall() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickDonateButton())
+        .flatMap(__ -> view.clickDonateAfterInstallButton())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .doOnNext(app -> appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG))
+        .doOnNext(app -> {
+          appViewAnalytics.sendDonateClickAfterInstall();
+          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleClickOnTopDonorsDonate() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickTopDonorsDonateButton())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(app -> {
+          appViewAnalytics.sendDonateClickTopDonors();
+          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleDonateCardImpressions() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.installAppClick())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(model -> {
+          if (model.hasDonations()) {
+            appViewAnalytics.sendDonateImpressionAfterInstall(model.getPackageName());
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
