@@ -110,7 +110,9 @@ public class AppViewPresenter implements Presenter {
     handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
-    handleClickOnDonateButton();
+    handleClickOnDonateAfterInstall();
+    handleClickOnTopDonorsDonate();
+    handleDonateCardImpressions();
   }
 
   private void handleInterstitialEvents() {
@@ -1024,12 +1026,48 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void handleClickOnDonateButton() {
+  private void handleClickOnDonateAfterInstall() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickDonateButton())
+        .flatMap(__ -> view.clickDonateAfterInstallButton())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .doOnNext(app -> appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG))
+        .doOnNext(app -> {
+          appViewAnalytics.sendDonateClickAfterInstall();
+          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleClickOnTopDonorsDonate() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickTopDonorsDonateButton())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(app -> {
+          appViewAnalytics.sendDonateClickTopDonors();
+          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleDonateCardImpressions() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.installAppClick())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(model -> {
+          if (model.hasDonations()) {
+            appViewAnalytics.sendDonateImpressionAfterInstall(model.getPackageName());
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

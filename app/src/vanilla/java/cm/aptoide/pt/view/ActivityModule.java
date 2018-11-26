@@ -27,6 +27,7 @@ import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.EditorialNavigator;
+import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -288,6 +289,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides @Named("screenWidth") float providesScreenWidth(Resources resources) {
     return resources.getDisplayMetrics().widthPixels;
+  }
+
+  @ActivityScope @Provides DonationsAnalytics providesDonationsAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new DonationsAnalytics(analyticsManager, navigationTracker);
   }
 
   @ActivityScope @Provides IronSourceAdRepository providesIronSourceAdRepository() {
