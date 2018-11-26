@@ -21,6 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.widget.Toolbar;
@@ -36,9 +37,9 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.SettingsManager;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.logger.Logger;
@@ -110,12 +111,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
   private String marketName;
-  private Database database;
-  private NavigationTracker navigationTracker;
   private UpdateRepository repository;
   private AdultContentAnalytics adultContentAnalytics;
   private FragmentNavigator fragmentNavigator;
   private AuthenticationPersistence authenticationPersistence;
+  private SettingsManager settingsManager;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -123,52 +123,28 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    adultContentAnalytics = application.getAdultContentAnalytics();
     marketName = application.getMarketName();
     trackAnalytics = true;
-    database = ((AptoideApplication) getContext().getApplicationContext()).getDatabase();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     fragmentNavigator = ((ActivityResultNavigator) getActivity()).getFragmentNavigator();
     authenticationPersistence = application.getAuthenticationPersistence();
-    adultContentConfirmationDialog =
-        new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
-            .setPositiveButton(R.string.yes)
-            .setNegativeButton(R.string.no)
-            .build();
-    enableAdultContentPinDialog =
-        new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-            .setPositiveButton(R.string.all_button_ok)
-            .setNegativeButton(R.string.cancel)
-            .setView(R.layout.dialog_requestpin)
-            .setEditText(R.id.pininput)
-            .build();
-    removePinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-        .setPositiveButton(R.string.all_button_ok)
-        .setNegativeButton(R.string.cancel)
-        .setView(R.layout.dialog_requestpin)
-        .setEditText(R.id.pininput)
-        .build();
-    setPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.asksetadultpinmessage)
-        .setPositiveButton(R.string.all_button_ok)
-        .setNegativeButton(R.string.cancel)
-        .setView(R.layout.dialog_requestpin)
-        .setEditText(R.id.pininput)
-        .build();
-
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
-    navigationTracker =
+    NavigationTracker navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     repository = RepositoryFactory.getUpdateRepository(getContext(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
+    adultContentAnalytics = application.getAdultContentAnalytics();
+    settingsManager =
+        ((AptoideApplication) getContext().getApplicationContext()).getSettingsManager();
+    setAdultContentContent();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -201,27 +177,75 @@ public class SettingsFragment extends PreferenceFragmentCompat
         supportActionBar.setDisplayHomeAsUpEnabled(true);
       }
     }
-
-    adultContentPreferenceView =
-        (SwitchPreferenceCompat) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
-    adultContentWithPinPreferenceView =
-        (SwitchPreferenceCompat) findPreference(ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY);
-    socialCampaignNotifications =
-        (SwitchPreferenceCompat) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
-    pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
-    removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
+    setAdultContentViews();
     excludedUpdates = findPreference(EXCLUDED_UPDATES_PREFERENCE_KEY);
     sendFeedback = findPreference(SEND_FEEDBACK_PREFERENCE_KEY);
     termsAndConditions = findPreference(TERMS_AND_CONDITIONS_PREFERENCE_KEY);
     privacyPolicy = findPreference(PRIVACY_POLICY_PREFERENCE_KEY);
     deleteAccount = findPreference(DELETE_ACCOUNT);
-
+    socialCampaignNotifications =
+        (SwitchPreferenceCompat) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
     setupClickHandlers();
   }
 
   @Override public void onDestroyView() {
     subscriptions.clear();
+    toolbar = null;
+    adultContentPreferenceView = null;
+    adultContentWithPinPreferenceView = null;
+    socialCampaignNotifications = null;
+    pinPreferenceView = null;
+    removePinPreferenceView = null;
+    excludedUpdates = null;
+    sendFeedback = null;
+    termsAndConditions = null;
+    privacyPolicy = null;
+    deleteAccount = null;
+    context = null;
     super.onDestroyView();
+  }
+
+  private void setAdultContentContent() {
+    if (settingsManager.showAdultContent()) {
+      adultContentConfirmationDialog =
+          new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
+              .setPositiveButton(R.string.yes)
+              .setNegativeButton(R.string.no)
+              .build();
+      enableAdultContentPinDialog =
+          new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
+              .setPositiveButton(R.string.all_button_ok)
+              .setNegativeButton(R.string.cancel)
+              .setView(R.layout.dialog_requestpin)
+              .setEditText(R.id.pininput)
+              .build();
+      removePinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
+          .setPositiveButton(R.string.all_button_ok)
+          .setNegativeButton(R.string.cancel)
+          .setView(R.layout.dialog_requestpin)
+          .setEditText(R.id.pininput)
+          .build();
+      setPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.asksetadultpinmessage)
+          .setPositiveButton(R.string.all_button_ok)
+          .setNegativeButton(R.string.cancel)
+          .setView(R.layout.dialog_requestpin)
+          .setEditText(R.id.pininput)
+          .build();
+    }
+  }
+
+  private void setAdultContentViews() {
+    if (settingsManager.showAdultContent()) {
+      adultContentPreferenceView =
+          (SwitchPreferenceCompat) findPreference(ADULT_CONTENT_PREFERENCE_VIEW_KEY);
+      adultContentWithPinPreferenceView =
+          (SwitchPreferenceCompat) findPreference(ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY);
+      pinPreferenceView = findPreference(ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
+      removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
+    } else {
+      PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference("adultContent");
+      getPreferenceScreen().removePreference(preferenceCategory);
+    }
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -246,11 +270,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void setupClickHandlers() {
     handleDeleteAccountVisibility();
-    Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
-    autoUpdatepreference.setTitle(
+    Preference autoUpdatePreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
+    autoUpdatePreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
             getContext().getResources(), marketName));
-    autoUpdatepreference.setSummary(
+    autoUpdatePreference.setSummary(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
             getContext().getResources(), marketName));
 
@@ -280,129 +304,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     subscriptions.add(RxPreference.clicks(privacyPolicy)
         .subscribe(clicked -> CustomTabsHelper.getInstance()
             .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext())));
-
-    subscriptions.add(accountManager.enabled()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(state -> adultContentPreferenceView.setChecked(state))
-        .doOnNext(state -> adultContentWithPinPreferenceView.setChecked(state))
-        .subscribe());
-
-    subscriptions.add(adultContentConfirmationDialog.positiveClicks()
-        .doOnNext(click -> adultContentPreferenceView.setEnabled(false))
-        .flatMap(click -> accountManager.enable()
-            .doOnCompleted(() -> trackUnlock())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
-            .toObservable())
-        .retry()
-        .subscribe());
-
-    subscriptions.add(adultContentConfirmationDialog.negativeClicks()
-        .doOnNext(click -> rollbackCheck(adultContentPreferenceView))
-        .retry()
-        .subscribe());
-
-    subscriptions.add(RxPreference.clicks(adultContentPreferenceView)
-        .flatMap(checked -> {
-          if (((SwitchPreferenceCompat) checked).isChecked()) {
-            adultContentConfirmationDialog.show();
-            return Observable.empty();
-          } else {
-            adultContentPreferenceView.setEnabled(false);
-            return accountManager.disable()
-                .doOnCompleted(() -> trackLock())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
-                .toObservable();
-          }
-        })
-        .retry()
-        .subscribe());
-
-    subscriptions.add(enableAdultContentPinDialog.negativeClicks()
-        .doOnNext(click -> rollbackCheck(adultContentWithPinPreferenceView))
-        .retry()
-        .subscribe());
-
-    subscriptions.add(RxPreference.clicks(adultContentWithPinPreferenceView)
-        .flatMap(checked -> {
-          if (((SwitchPreferenceCompat) checked).isChecked()) {
-            enableAdultContentPinDialog.show();
-            return Observable.empty();
-          } else {
-            adultContentWithPinPreferenceView.setEnabled(false);
-            return accountManager.disable()
-                .doOnCompleted(() -> trackLock())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
-                .toObservable();
-          }
-        })
-        .retry()
-        .subscribe());
-
-    subscriptions.add(accountManager.pinRequired()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(pinRequired -> {
-          if (pinRequired) {
-            pinPreferenceView.setVisible(false);
-            removePinPreferenceView.setVisible(true);
-            adultContentWithPinPreferenceView.setVisible(true);
-            adultContentPreferenceView.setVisible(false);
-          } else {
-            pinPreferenceView.setVisible(true);
-            removePinPreferenceView.setVisible(false);
-            adultContentWithPinPreferenceView.setVisible(false);
-            adultContentPreferenceView.setVisible(true);
-          }
-        })
-        .subscribe());
-
-    subscriptions.add(RxPreference.clicks(pinPreferenceView)
-        .doOnNext(preference -> {
-          setPinDialog.show();
-        })
-        .subscribe());
-
-    subscriptions.add(RxPreference.clicks(removePinPreferenceView)
-        .doOnNext(preference -> {
-          removePinDialog.show();
-        })
-        .subscribe());
-
-    subscriptions.add(setPinDialog.positiveClicks()
-        .filter(pin -> !TextUtils.isEmpty(pin))
-        .flatMap(pin -> accountManager.requirePin(Integer.valueOf(pin.toString()))
-            .toObservable())
-        .retry()
-        .subscribe());
-
-    subscriptions.add(removePinDialog.positiveClicks()
-        .flatMap(pin -> accountManager.removePin(Integer.valueOf(pin.toString()))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(throwable -> {
-              if (throwable instanceof SecurityException) {
-                ShowMessage.asSnack(getActivity(), R.string.adult_pin_wrong);
-              }
-            })
-            .toObservable())
-        .retry()
-        .subscribe());
-
-    subscriptions.add(enableAdultContentPinDialog.positiveClicks()
-        .doOnNext(clock -> adultContentWithPinPreferenceView.setEnabled(false))
-        .flatMap(pin -> accountManager.enable(Integer.valueOf(pin.toString()))
-            .doOnCompleted(() -> trackUnlock())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(throwable -> {
-              if (throwable instanceof SecurityException) {
-                ShowMessage.asSnack(getActivity(), R.string.adult_pin_wrong);
-              }
-            })
-            .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
-            .toObservable())
-        .retry()
-        .subscribe());
 
     findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
       final SwitchPreferenceCompat cb = (SwitchPreferenceCompat) preference;
@@ -548,6 +449,133 @@ public class SettingsFragment extends PreferenceFragmentCompat
         return true;
       }
     });
+    setupAdultContentClickHandlers();
+  }
+
+  private void setupAdultContentClickHandlers() {
+    if (settingsManager.showAdultContent()) {
+      subscriptions.add(adultContentConfirmationDialog.positiveClicks()
+          .doOnNext(click -> adultContentPreferenceView.setEnabled(false))
+          .flatMap(click -> accountManager.enable()
+              .doOnCompleted(() -> trackUnlock())
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
+              .toObservable())
+          .retry()
+          .subscribe());
+
+      subscriptions.add(adultContentConfirmationDialog.negativeClicks()
+          .doOnNext(click -> rollbackCheck(adultContentPreferenceView))
+          .retry()
+          .subscribe());
+
+      subscriptions.add(enableAdultContentPinDialog.negativeClicks()
+          .doOnNext(click -> rollbackCheck(adultContentWithPinPreferenceView))
+          .retry()
+          .subscribe());
+
+      subscriptions.add(RxPreference.clicks(adultContentWithPinPreferenceView)
+          .flatMap(checked -> {
+            if (((SwitchPreferenceCompat) checked).isChecked()) {
+              enableAdultContentPinDialog.show();
+              return Observable.empty();
+            } else {
+              adultContentWithPinPreferenceView.setEnabled(false);
+              return accountManager.disable()
+                  .doOnCompleted(() -> trackLock())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
+                  .toObservable();
+            }
+          })
+          .retry()
+          .subscribe());
+
+      subscriptions.add(removePinDialog.positiveClicks()
+          .flatMap(pin -> accountManager.removePin(Integer.valueOf(pin.toString()))
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnError(throwable -> {
+                if (throwable instanceof SecurityException) {
+                  ShowMessage.asSnack(getActivity(), R.string.adult_pin_wrong);
+                }
+              })
+              .toObservable())
+          .retry()
+          .subscribe());
+
+      subscriptions.add(enableAdultContentPinDialog.positiveClicks()
+          .doOnNext(clock -> adultContentWithPinPreferenceView.setEnabled(false))
+          .flatMap(pin -> accountManager.enable(Integer.valueOf(pin.toString()))
+              .doOnCompleted(() -> trackUnlock())
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnError(throwable -> {
+                if (throwable instanceof SecurityException) {
+                  ShowMessage.asSnack(getActivity(), R.string.adult_pin_wrong);
+                }
+              })
+              .doOnTerminate(() -> adultContentWithPinPreferenceView.setEnabled(true))
+              .toObservable())
+          .retry()
+          .subscribe());
+
+      subscriptions.add(accountManager.enabled()
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnNext(state -> adultContentPreferenceView.setChecked(state))
+          .doOnNext(state -> adultContentWithPinPreferenceView.setChecked(state))
+          .subscribe());
+
+      subscriptions.add(RxPreference.clicks(adultContentPreferenceView)
+          .flatMap(checked -> {
+            if (((SwitchPreferenceCompat) checked).isChecked()) {
+              adultContentConfirmationDialog.show();
+              return Observable.empty();
+            } else {
+              adultContentPreferenceView.setEnabled(false);
+              return accountManager.disable()
+                  .doOnCompleted(() -> trackLock())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .doOnTerminate(() -> adultContentPreferenceView.setEnabled(true))
+                  .toObservable();
+            }
+          })
+          .retry()
+          .subscribe());
+      subscriptions.add(RxPreference.clicks(pinPreferenceView)
+          .doOnNext(preference -> {
+            setPinDialog.show();
+          })
+          .subscribe());
+
+      subscriptions.add(accountManager.pinRequired()
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnNext(pinRequired -> {
+            if (pinRequired) {
+              pinPreferenceView.setVisible(false);
+              removePinPreferenceView.setVisible(true);
+              adultContentWithPinPreferenceView.setVisible(true);
+              adultContentPreferenceView.setVisible(false);
+            } else {
+              pinPreferenceView.setVisible(true);
+              removePinPreferenceView.setVisible(false);
+              adultContentWithPinPreferenceView.setVisible(false);
+              adultContentPreferenceView.setVisible(true);
+            }
+          })
+          .subscribe());
+
+      subscriptions.add(RxPreference.clicks(removePinPreferenceView)
+          .doOnNext(preference -> {
+            removePinDialog.show();
+          })
+          .subscribe());
+
+      subscriptions.add(setPinDialog.positiveClicks()
+          .filter(pin -> !TextUtils.isEmpty(pin))
+          .flatMap(pin -> accountManager.requirePin(Integer.valueOf(pin.toString()))
+              .toObservable())
+          .retry()
+          .subscribe());
+    }
   }
 
   private void openDeleteAccountView(String accessToken) {

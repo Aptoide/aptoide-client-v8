@@ -187,6 +187,7 @@ public abstract class AptoideApplication extends Application {
   @Inject RealmExperimentPersistence abTestExperimentPersistence;
   @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   @Inject AptoideShortcutManager shortcutManager;
+  @Inject SettingsManager settingsManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -358,6 +359,7 @@ public abstract class AptoideApplication extends Application {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
           .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
+          .flavourApplicationModule(new FlavourApplicationModule())
           .build();
     }
     return applicationComponent;
@@ -1011,6 +1013,10 @@ public abstract class AptoideApplication extends Application {
 
   public RealmExperimentPersistence getAbTestExperimentPersistence() {
     return abTestExperimentPersistence;
+  }
+
+  public SettingsManager getSettingsManager() {
+    return settingsManager;
   }
 }
 
