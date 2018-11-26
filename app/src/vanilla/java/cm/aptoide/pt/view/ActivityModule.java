@@ -23,6 +23,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.EditorialNavigator;
@@ -77,6 +78,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -292,5 +294,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides DonationsAnalytics providesDonationsAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     return new DonationsAnalytics(analyticsManager, navigationTracker);
+  }
+
+  @ActivityScope @Provides IronSourceAdRepository providesIronSourceAdRepository() {
+    return new IronSourceAdRepository(activity);
   }
 }
