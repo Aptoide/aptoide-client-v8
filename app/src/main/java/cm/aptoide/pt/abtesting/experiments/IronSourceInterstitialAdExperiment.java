@@ -10,7 +10,7 @@ import rx.Single;
 
 public class IronSourceInterstitialAdExperiment {
 
-  private final String EXPERIMENT_ID = "ASV-1187-IronSource-Video-Interstitial";
+  private final String EXPERIMENT_ID = "ASV-1187-IronSource-Video-Interstitial2";
 
   private ABTestManager abTestManager;
   private Scheduler scheduler;
