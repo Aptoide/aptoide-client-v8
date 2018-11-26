@@ -46,9 +46,12 @@ public class AppDownloadManagerTest {
         new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "", "patchObbMd5", 123,
             "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB);
 
-    DownloadApp appToDownload = new DownloadApp(packageName, versionCode, getFilesListWithApk(), "md5Apk");
-    DownloadApp appToDownloadWithObbs = new DownloadApp(packageName, versionCode, getFilesListWithObbs(), "md5WithObb");
-    DownloadApp appToDownloadEmptyError = new DownloadApp(packageName, versionCode, Collections.emptyList(), "md5Empty");
+    DownloadApp appToDownload =
+        new DownloadApp(packageName, versionCode, getFilesListWithApk(), "md5Apk");
+    DownloadApp appToDownloadWithObbs =
+        new DownloadApp(packageName, versionCode, getFilesListWithObbs(), "md5WithObb");
+    DownloadApp appToDownloadEmptyError =
+        new DownloadApp(packageName, versionCode, Collections.emptyList(), "md5Empty");
     testSubscriber = TestSubscriber.create();
 
     appDownloadManager = new AppDownloadManager(new RetryFileDownloaderProvider() {
@@ -58,7 +61,8 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
-    }, appToDownload, createFileDownloaderPersistence(), downloadErrorAnalytics);
+    }, appToDownload, createFileDownloaderPersistence(), downloadErrorAnalytics,
+        downloadCompleteAnalytics);
 
     appDownloadManagerWithObbs = new AppDownloadManager(new RetryFileDownloaderProvider() {
       @Override
@@ -67,7 +71,8 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
-    }, appToDownloadWithObbs, createFileDownloaderPersistence(), downloadErrorAnalytics);
+    }, appToDownloadWithObbs, createFileDownloaderPersistence(), downloadErrorAnalytics,
+        downloadCompleteAnalytics);
 
     appDownloadManagerWithNoFiles = new AppDownloadManager(new RetryFileDownloaderProvider() {
       @Override
@@ -76,7 +81,8 @@ public class AppDownloadManagerTest {
           PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
         return fileDownloaderApk;
       }
-    }, appToDownloadEmptyError, createFileDownloaderPersistence(), downloadErrorAnalytics);
+    }, appToDownloadEmptyError, createFileDownloaderPersistence(), downloadErrorAnalytics,
+        downloadCompleteAnalytics);
   }
 
   @Test public void startAppDownloadWithOneFile() throws Exception {

@@ -22,15 +22,15 @@ public class AppDownloadManager implements AppDownloader {
   private PublishSubject<FileDownloadCallback> fileDownloadSubject;
   private AppDownloadStatus appDownloadStatus;
   private Subscription subscribe;
-  private DownloadErrorAnalytics downloadErrorAnalytics;
+  private DownloadAnalytics downloadAnalytics;
 
   public AppDownloadManager(RetryFileDownloaderProvider fileDownloaderProvider, DownloadApp app,
       HashMap<String, RetryFileDownloader> fileDownloaderPersistence,
-      DownloadErrorAnalytics downloadErrorAnalytics) {
+      DownloadAnalytics downloadAnalytics) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
-    this.downloadErrorAnalytics = downloadErrorAnalytics;
+    this.downloadAnalytics = downloadAnalytics;
     fileDownloadSubject = PublishSubject.create();
     appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
         AppDownloadStatus.AppDownloadState.PENDING);
@@ -106,6 +106,8 @@ public class AppDownloadManager implements AppDownloader {
           if (fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.COMPLETED) {
             handleCompletedFileDownload(fileDownloader);
+            downloadAnalytics.onDownloadComplete(fileDownloadCallback.getMd5(),
+                app.getPackageName(), app.getVersionCode());
           } else if (fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND
               || fileDownloadCallback.getDownloadState() == AppDownloadStatus.AppDownloadState.ERROR
@@ -113,7 +115,7 @@ public class AppDownloadManager implements AppDownloader {
               == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
             handleErrorFileDownload();
             if (fileDownloadCallback.hasError()) {
-              downloadErrorAnalytics.onError(app.getPackageName(), app.getVersionCode(),
+              downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
                   fileDownloadCallback.getError());
             }
           }
