@@ -5,6 +5,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.ads.AdEvent;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
@@ -181,12 +182,8 @@ public class AppViewManager {
     return ironSourceInterstitialAdExperiment.recordAdClick();
   }
 
-  public PublishSubject<Void> getInterstitialImpression() {
-    return ironSourceAdRepository.getImpressionSubject();
-  }
-
-  public PublishSubject<Void> getInterstitialClick() {
-    return ironSourceAdRepository.getClickSubject();
+  public PublishSubject<AdEvent> getInterstitialEvent() {
+    return ironSourceAdRepository.getAdEventSubject();
   }
 
   public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,

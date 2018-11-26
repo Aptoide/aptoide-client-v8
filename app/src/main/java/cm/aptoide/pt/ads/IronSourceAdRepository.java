@@ -1,8 +1,8 @@
 package cm.aptoide.pt.ads;
 
 import android.app.Activity;
-import android.util.Log;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.logger.Logger;
 import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.sdk.InterstitialListener;
@@ -11,15 +11,13 @@ import rx.subjects.PublishSubject;
 public class IronSourceAdRepository {
   private static final String TAG = "IronSourceAdRepository";
   private final Activity activity;
-  private final PublishSubject<Void> impressionSubject;
-  private final PublishSubject<Void> clickSubject;
+  private final PublishSubject<AdEvent> eventSubject;
 
   private boolean showInterstitial;
 
   public IronSourceAdRepository(Activity activity) {
     this.activity = activity;
-    this.clickSubject = PublishSubject.create();
-    this.impressionSubject = PublishSubject.create();
+    this.eventSubject = PublishSubject.create();
     this.showInterstitial = false;
   }
 
@@ -34,7 +32,8 @@ public class IronSourceAdRepository {
       }
 
       @Override public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-        Log.i(TAG, "Interstitial Ad failed to load. Reason: " + ironSourceError.getErrorMessage());
+        Logger.getInstance()
+            .i(TAG, "Interstitial Ad failed to load. Reason: " + ironSourceError.getErrorMessage());
       }
 
       @Override public void onInterstitialAdOpened() {
@@ -44,15 +43,16 @@ public class IronSourceAdRepository {
       }
 
       @Override public void onInterstitialAdShowSucceeded() {
-        impressionSubject.onNext(null);
+        eventSubject.onNext(AdEvent.IMPRESSION);
       }
 
       @Override public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-        Log.i(TAG, "Interstitial Ad failed to show. Reason: " + ironSourceError.getErrorMessage());
+        Logger.getInstance()
+            .i(TAG, "Interstitial Ad failed to show. Reason: " + ironSourceError.getErrorMessage());
       }
 
       @Override public void onInterstitialAdClicked() {
-        clickSubject.onNext(null);
+        eventSubject.onNext(AdEvent.CLICK);
       }
     });
   }
@@ -69,13 +69,10 @@ public class IronSourceAdRepository {
     }
   }
 
-  public PublishSubject<Void> getImpressionSubject() {
-    return impressionSubject;
+  public PublishSubject<AdEvent> getAdEventSubject() {
+    return eventSubject;
   }
 
-  public PublishSubject<Void> getClickSubject() {
-    return clickSubject;
-  }
 
   public void onPause() {
     IronSource.onPause(activity);
