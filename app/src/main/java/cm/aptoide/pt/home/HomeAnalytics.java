@@ -174,7 +174,7 @@ public class HomeAnalytics {
 
   public void sendEditorialImpressionEvent(String bundleTag, int bundlePosition, String cardId) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", VIEW_CARD);
+    data.put("action", IMPRESSION);
     data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("card_id", cardId);

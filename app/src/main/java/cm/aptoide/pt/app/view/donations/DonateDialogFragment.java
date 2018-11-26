@@ -48,6 +48,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
 
   @Inject DonationsService donationsService;
   @Inject AppNavigator appNavigator;
+  @Inject DonationsAnalytics donationsAnalytics;
   boolean textUpdate;
   boolean sliderUpdate;
   private String packageName;
@@ -86,10 +87,21 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
         .inject(this);
     packageName = getArguments().getString(PACKAGE_NAME);
     presenter = new DonateDialogPresenter(this, donationsService, new CompositeSubscription(),
-        AndroidSchedulers.mainThread(), appNavigator);
+        AndroidSchedulers.mainThread(), appNavigator, donationsAnalytics);
     textUpdate = true;
     sliderUpdate = true;
     handleValueInputFiltering();
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    nickname = null;
+    appcValue = null;
+    appcSlider = null;
+    donateButton = null;
+    cancelButton = null;
+    donationsView = null;
+    donationsProgress = null;
   }
 
   private void handleValueInputFiltering() {
@@ -119,17 +131,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
         return null;
       }
     };
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    nickname = null;
-    appcValue = null;
-    appcSlider = null;
-    donateButton = null;
-    cancelButton = null;
-    donationsView = null;
-    donationsProgress = null;
   }
 
   private void setValueInsertProperties() {
@@ -211,6 +212,13 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
             .toString())));
   }
 
+  @Override public Observable<DonationsDialogResult> cancelClick() {
+    return RxView.clicks(cancelButton)
+        .map(click -> new DonationsDialogResult(packageName, nickname.getText()
+            .toString(), Float.parseFloat(appcValue.getText()
+            .toString())));
+  }
+
   @Override public Observable<Void> noWalletContinueClick() {
     return RxView.clicks(noWalletContinueButton);
   }
@@ -249,6 +257,12 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     errorOkButton.setOnClickListener(click -> dismiss());
   }
 
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == RC_REQUEST && resultCode == Activity.RESULT_CANCELED) {
+      showErrorMessage();
+    } else if (requestCode == RC_REQUEST && resultCode == Activity.RESULT_OK) showThankYouMessage();
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       Bundle savedInstanceState) {
@@ -256,10 +270,26 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     return inflater.inflate(R.layout.appview_donations_dialog, container, false);
   }
 
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == RC_REQUEST && resultCode == Activity.RESULT_CANCELED) {
-      showErrorMessage();
-    } else if (requestCode == RC_REQUEST && resultCode == Activity.RESULT_OK) showThankYouMessage();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    this.nickname = view.findViewById(R.id.nickname);
+    nickname.setImeOptions(EditorInfo.IME_ACTION_DONE);
+    nickname.setSingleLine();
+    this.appcValue = view.findViewById(R.id.appc_value);
+    this.appcSlider = view.findViewById(R.id.appc_slider);
+    this.donateButton = view.findViewById(R.id.donate_button);
+    this.cancelButton = view.findViewById(R.id.cancel_button);
+    this.donationsView = view.findViewById(R.id.donations_view);
+    this.donationsProgress = view.findViewById(R.id.donations_progress);
+    this.noWalletView = view.findViewById(R.id.no_wallet_layout);
+    this.noWalletCancelButton = view.findViewById(R.id.no_wallet_cancel_button);
+    this.noWalletContinueButton = view.findViewById(R.id.no_wallet_continue_button);
+    this.errorView = view.findViewById(R.id.error_layout);
+    this.errorOkButton = view.findViewById(R.id.error_ok_button);
+    this.thankYouView = view.findViewById(R.id.thank_you_layout);
+    this.thankYouOkButton = view.findViewById(R.id.thank_you_ok_button);
+    chooseViewToPresent(getArguments().getBoolean(HAS_WALLET, true));
+    presenter.present();
   }
 
   public void onResume() {
@@ -295,34 +325,11 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     if (hasWallet) {
       setSliderProperties();
       setValueInsertProperties();
-      cancelButton.setOnClickListener(click -> dismiss());
     } else {
       donationsView.setVisibility(View.GONE);
       showNoWalletView();
       noWalletCancelButton.setOnClickListener(click -> dismiss());
     }
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    this.nickname = view.findViewById(R.id.nickname);
-    nickname.setImeOptions(EditorInfo.IME_ACTION_DONE);
-    nickname.setSingleLine();
-    this.appcValue = view.findViewById(R.id.appc_value);
-    this.appcSlider = view.findViewById(R.id.appc_slider);
-    this.donateButton = view.findViewById(R.id.donate_button);
-    this.cancelButton = view.findViewById(R.id.cancel_button);
-    this.donationsView = view.findViewById(R.id.donations_view);
-    this.donationsProgress = view.findViewById(R.id.donations_progress);
-    this.noWalletView = view.findViewById(R.id.no_wallet_layout);
-    this.noWalletCancelButton = view.findViewById(R.id.no_wallet_cancel_button);
-    this.noWalletContinueButton = view.findViewById(R.id.no_wallet_continue_button);
-    this.errorView = view.findViewById(R.id.error_layout);
-    this.errorOkButton = view.findViewById(R.id.error_ok_button);
-    this.thankYouView = view.findViewById(R.id.thank_you_layout);
-    this.thankYouOkButton = view.findViewById(R.id.thank_you_ok_button);
-    chooseViewToPresent(getArguments().getBoolean(HAS_WALLET, true));
-    presenter.present();
   }
 
   private void showThankYouMessage() {

@@ -45,8 +45,6 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
     }
     adClick.getAd()
         .registerClickableView(itemView);
-    adClick.getAd()
-        .setAdView(itemView.findViewById(R.id.na_view));
     itemView.setOnClickListener(v -> adClickedEvents.onNext(
         new AdHomeEvent(adClick, position, homeBundle, bundlePosition, HomeEvent.Type.AD)));
   }
