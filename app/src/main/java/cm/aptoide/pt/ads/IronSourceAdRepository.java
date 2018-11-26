@@ -73,7 +73,6 @@ public class IronSourceAdRepository {
     return eventSubject;
   }
 
-
   public void onPause() {
     IronSource.onPause(activity);
   }

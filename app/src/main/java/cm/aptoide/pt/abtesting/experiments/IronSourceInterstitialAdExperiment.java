@@ -1,6 +1,5 @@
 package cm.aptoide.pt.abtesting.experiments;
 
-import cm.aptoide.pt.AptoideApplicationAnalytics;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.ads.IronSourceAdRepository;

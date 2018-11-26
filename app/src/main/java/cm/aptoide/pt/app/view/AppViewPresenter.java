@@ -127,7 +127,14 @@ public class AppViewPresenter implements Presenter {
             appViewAnalytics.installInterstitialImpression("ironSource");
           }
         })
-        .flatMap(__ -> appViewManager.recordInterstitialClick())
+        .flatMap(adEvent -> {
+          if (adEvent == AdEvent.CLICK) {
+            return appViewManager.recordInterstitialClick();
+          } else if (adEvent == AdEvent.IMPRESSION) {
+            return appViewManager.recordInterstitialImpression();
+          }
+          return Observable.empty();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
