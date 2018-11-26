@@ -388,9 +388,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppDownloaderProvider providesAppDownloaderProvider(
-      RetryFileDownloaderProvider fileDownloaderProvider,
-      DownloadAnalytics downloadErrorAnalytics) {
-    return new AppDownloaderProvider(fileDownloaderProvider, downloadErrorAnalytics);
+      RetryFileDownloaderProvider fileDownloaderProvider, DownloadAnalytics downloadAnalytics) {
+    return new AppDownloaderProvider(fileDownloaderProvider, downloadAnalytics);
   }
 
   @Singleton @Provides RetryFileDownloaderProvider providesRetryFileDownloaderProvider(
@@ -993,7 +992,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper,
         storeRepository);
   }
-
 
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
