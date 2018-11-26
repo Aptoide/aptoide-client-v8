@@ -20,7 +20,6 @@ allprojects {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
-    maven { url "http://dl.appnext.com" }
     google()
     jcenter()
   }
@@ -105,9 +104,6 @@ ext {
 
   CRASHLYTICS_VERSION = '2.6.5'
 
-  // AppNext SDK
-  APPNEXT_VERSION = '2.4.2.471'
-
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'
   OKHTTP_VERSION = '3.6.0'
@@ -124,6 +120,8 @@ ext {
   DAGGER_VERSION = '2.12'
 
   FABRIC_VERSION = '1.25.4'
+
+  APPC_CONTRACT_PROXY_VERSION = '0.4.5.19b'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

@@ -30,8 +30,8 @@ public class EditorialCard extends BaseV7Response {
     private List<Content> content;
     private String type;
     private String title;
-    private App app;
-    private String backgroundImage;
+    private String caption;
+    private String background;
 
     public Data() {
 
@@ -53,20 +53,20 @@ public class EditorialCard extends BaseV7Response {
       this.type = type;
     }
 
-    public App getApp() {
-      return app;
+    public String getBackground() {
+      return background;
     }
 
-    public void setApp(App app) {
-      this.app = app;
+    public void setBackground(String background) {
+      this.background = background;
     }
 
-    public String getBackgroundImage() {
-      return backgroundImage;
+    public String getCaption() {
+      return caption;
     }
 
-    public void setBackgroundImage(String backgroundImage) {
-      this.backgroundImage = backgroundImage;
+    public void setCaption(String caption) {
+      this.caption = caption;
     }
 
     public String getTitle() {
@@ -85,6 +85,7 @@ public class EditorialCard extends BaseV7Response {
     private String message;
     private List<Media> media;
     private String type;
+    private App app;
 
     public Content() {
 
@@ -121,6 +122,14 @@ public class EditorialCard extends BaseV7Response {
     public void setType(String type) {
       this.type = type;
     }
+
+    public App getApp() {
+      return app;
+    }
+
+    public void setApp(App app) {
+      this.app = app;
+    }
   }
 
   //4th level
@@ -128,7 +137,7 @@ public class EditorialCard extends BaseV7Response {
     private String type;
     private String description;
     private String thumbnail;
-    private String url;
+    private String image;
 
     public String getType() {
       return type;
@@ -146,12 +155,12 @@ public class EditorialCard extends BaseV7Response {
       this.description = description;
     }
 
-    public String getUrl() {
-      return url;
+    public String getImage() {
+      return image;
     }
 
-    public void setUrl(String url) {
-      this.url = url;
+    public void setImage(String image) {
+      this.image = image;
     }
 
     public String getThumbnail() {

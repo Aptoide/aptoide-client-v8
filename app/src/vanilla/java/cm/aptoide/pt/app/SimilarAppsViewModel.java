@@ -13,6 +13,7 @@ import java.util.List;
 
 public class SimilarAppsViewModel {
 
+  private boolean hasRecordedAdImpression;
   private final ApplicationAd ad;
   private final List<Application> recommendedApps;
   private final boolean loading;
@@ -26,6 +27,7 @@ public class SimilarAppsViewModel {
     this.loading = loading;
     this.recommendedAppsError = recommendedAppsError;
     this.adError = adResultError;
+    this.hasRecordedAdImpression = false;
   }
 
   public SimilarAppsViewModel() {
@@ -74,5 +76,13 @@ public class SimilarAppsViewModel {
 
   public boolean hasAdError() {
     return (adError != null);
+  }
+
+  public void setHasRecordedAdImpression(boolean recorded) {
+    hasRecordedAdImpression = recorded;
+  }
+
+  public boolean hasRecordedAdImpression() {
+    return hasRecordedAdImpression;
   }
 }
