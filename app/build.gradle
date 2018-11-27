@@ -378,7 +378,18 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
+  // IronSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
+  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
+    transitive = true
+    exclude group: "com.android.support"
+    exclude module: "support-annotations"
+    exclude module: "support-v4"
+  }
+
+
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {

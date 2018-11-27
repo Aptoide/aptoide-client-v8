@@ -33,7 +33,7 @@ public class IronSourceAdRepository {
 
       @Override public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
         Logger.getInstance()
-            .i(TAG, "Interstitial Ad failed to load. Reason: " + ironSourceError.getErrorMessage());
+            .e(TAG, "Interstitial Ad failed to load. Reason: " + ironSourceError.getErrorMessage());
       }
 
       @Override public void onInterstitialAdOpened() {
@@ -48,7 +48,7 @@ public class IronSourceAdRepository {
 
       @Override public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
         Logger.getInstance()
-            .i(TAG, "Interstitial Ad failed to show. Reason: " + ironSourceError.getErrorMessage());
+            .e(TAG, "Interstitial Ad failed to show. Reason: " + ironSourceError.getErrorMessage());
       }
 
       @Override public void onInterstitialAdClicked() {

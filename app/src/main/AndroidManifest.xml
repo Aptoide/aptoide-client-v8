@@ -92,6 +92,12 @@
         android:hardwareAccelerated="true"
         android:theme="@android:style/Theme.Translucent"/>
 
+    <activity
+        android:name="com.applovin.adview.AppLovinInterstitialActivity"/>
+
+    <activity
+        android:name="com.applovin.adview.AppLovinConfirmationActivity"/>
+
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="${fabricApiKey}"/>
