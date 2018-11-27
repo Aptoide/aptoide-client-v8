@@ -8,9 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
+import com.mopub.nativeads.MoPubNativeAdLoadedListener;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
+import com.mopub.nativeads.ViewBinder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +51,27 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
       }
     });
     appsList.setLayoutManager(layoutManager);
-    appsList.setAdapter(appsInBundleAdapter);
+    MoPubRecyclerAdapter moPubRecyclerAdapter =
+        new MoPubRecyclerAdapter((Activity) view.getContext(), appsInBundleAdapter);
+    ViewBinder moPubViewBinder =
+        new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
+            .iconImageId(R.id.icon)
+            .build();
+    MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
+    moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
+    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
+      @Override public void onAdLoaded(int position) {
+
+      }
+
+      @Override public void onAdRemoved(int position) {
+
+      }
+    });
+    appsList.setAdapter(moPubRecyclerAdapter);
+    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_HIGHLIGHTED_PLACEMENT_ID);
   }
+
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
     if (!(homeBundle instanceof AdBundle)) {

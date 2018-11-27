@@ -116,6 +116,9 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.mopub.common.MoPub;
+import com.mopub.common.SdkConfiguration;
+import com.mopub.common.SdkInitializationListener;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -316,6 +319,7 @@ public abstract class AptoideApplication extends Application {
             .log(throwable));
 
     initializeAppNext();
+    initializeMopub();
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -351,6 +355,13 @@ public abstract class AptoideApplication extends Application {
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
+  }
+
+  private void initializeMopub() {
+    SdkConfiguration sdkConfiguration =
+        new SdkConfiguration.Builder(BuildConfig.MOPUB_HOME_BANNER_PLACEMENT_ID).build();
+    MoPub.initializeSdk(this, sdkConfiguration, () -> {
+    });
   }
 
   public ApplicationComponent getApplicationComponent() {

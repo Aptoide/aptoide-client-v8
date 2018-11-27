@@ -31,6 +31,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -98,11 +99,16 @@ import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
-import com.appnext.ads.interstitial.Interstitial;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubInterstitial;
+import com.mopub.nativeads.MoPubNativeAdLoadedListener;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
+import com.mopub.nativeads.ViewBinder;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -144,6 +150,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private DonationsAdapter donationsAdapter;
   private AppViewSimilarAppsAdapter similarAppsAdapter;
   private AppViewSimilarAppsAdapter similarDownloadsAdapter;
+  private MoPubRecyclerAdapter moPubRecyclerAdapter;
   private PublishSubject<ScreenShotClickEvent> screenShotClick;
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
   private PublishSubject<Void> loginSnackClick;
@@ -216,6 +223,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private View similarBottomView;
   private RecyclerView similarApps;
   private View infoWebsite;
+
   private View infoEmail;
   private View infoPrivacy;
   private View infoPermissions;
@@ -250,6 +258,7 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   private Button listDonateButton;
 
   private boolean fullScreenAdShown = false;
+  private MoPubInterstitial moPubInterstitial;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -411,9 +420,34 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
             similarAppClick, "similar_downloads");
 
     similarDownloadApps.setAdapter(similarDownloadsAdapter);
-    similarApps.setAdapter(similarAppsAdapter);
+    //similarApps.setAdapter(similarAppsAdapter);
     similarDownloadApps.setLayoutManager(similarDownloadsLayout);
     similarApps.setLayoutManager(similarLayout);
+
+    //nameTextView = ((TextView) itemView.findViewById(R.id.name));
+    //iconView = ((ImageView) itemView.findViewById(R.id.icon));
+    //rating = (TextView) itemView.findViewById(R.id.rating_label);
+    //adLabel = (TextView) itemView.findViewById(R.id.ad_label);
+
+    moPubRecyclerAdapter = new MoPubRecyclerAdapter(getActivity(), similarAppsAdapter);
+    ViewBinder moPubViewBinder =
+        new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
+            .iconImageId(R.id.icon)
+            .build();
+    MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
+    moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
+    similarApps.setAdapter(moPubRecyclerAdapter);
+    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
+      @Override public void onAdLoaded(int position) {
+
+      }
+
+      @Override public void onAdRemoved(int position) {
+
+      }
+    });
+    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_SIMILAR_PLACEMENT_ID);
+
 
     similarApps.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
@@ -473,7 +507,6 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
   }
 
   @Override public void onDestroy() {
-    super.onDestroy();
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
       errorMessageSubscription.unsubscribe();
     }
@@ -489,6 +522,10 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
     dialogUtils = null;
     presenter = null;
     similarAppsVisibilitySubject = null;
+
+    if (moPubInterstitial != null) moPubInterstitial.destroy();
+    if (moPubRecyclerAdapter != null) moPubRecyclerAdapter.destroy();
+    super.onDestroy();
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -1103,16 +1140,33 @@ public class NewAppViewFragment extends NavigationTrackFragment implements AppVi
 
   @Override public synchronized void showFullScreenAd() {
     fullScreenAdShown = true;
-    Interstitial fullAd =
-        new Interstitial(this.getContext(), BuildConfig.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
-    fullAd.setOnAdLoadedCallback(s -> {
-      fullAd.showAd();
-      appViewAnalytics.installInterstitialImpression();
-    });
-    fullAd.setOnAdClickedCallback(() -> appViewAnalytics.installInterstitialClick());
+    MoPubInterstitial ad =
+        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
+    ad.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
+      @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
+        appViewAnalytics.installInterstitialImpression("MoPub");
+        ad.show();
+      }
 
+      @Override
+      public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
+        Log.i("Mopub_Interstitial", errorCode.toString());
+      }
+
+      @Override public void onInterstitialShown(MoPubInterstitial interstitial) {
+
+      }
+
+      @Override public void onInterstitialClicked(MoPubInterstitial interstitial) {
+        appViewAnalytics.installInterstitialClick("MoPub");
+      }
+
+      @Override public void onInterstitialDismissed(MoPubInterstitial interstitial) {
+
+      }
+    });
     Handler handler = new Handler();
-    handler.postDelayed(() -> fullAd.loadAd(), 1000);
+    handler.postDelayed(() -> ad.load(), 1000);
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {

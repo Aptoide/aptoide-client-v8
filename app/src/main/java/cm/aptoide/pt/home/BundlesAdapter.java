@@ -75,6 +75,13 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     }
   }
 
+  @Override public void onViewDetachedFromWindow(AppBundleViewHolder holder) {
+    if (holder instanceof LargeBannerBundleViewHolder) {
+      ((LargeBannerBundleViewHolder) holder).destroyBanner();
+    }
+    super.onViewDetachedFromWindow(holder);
+  }
+
   @Override public void onBindViewHolder(AppBundleViewHolder appBundleViewHolder, int position) {
     appBundleViewHolder.setBundle(bundles.get(position), position);
   }

@@ -195,19 +195,19 @@ public class HomeAnalytics {
     throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");
   }
 
-  public void bannerImpression() {
-    bannerInteract("impression");
+  public void bannerImpression(String network) {
+    bannerInteract("impression", network);
   }
 
-  public void bannerClick() {
-    bannerInteract("tap_on_app");
+  public void bannerClick(String network) {
+    bannerInteract("tap_on_app", network);
   }
 
-  private void bannerInteract(String action) {
+  private void bannerInteract(String action, String network) {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, action);
-    data.put(TAG, "banner-large");
-    data.put(NETWORK, "AppNext");
+    data.put("bundle_tag", "banner-medium");
+    data.put(NETWORK, network);
 
     analyticsManager.logEvent(data, HOME_INTERACT,
         action.equals("impression") ? AnalyticsManager.Action.IMPRESSION

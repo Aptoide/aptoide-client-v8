@@ -275,6 +275,15 @@ android {
     variant.buildConfigField "String", "APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID",
         "\"" + project.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
 
+    variant.buildConfigField "String", "MOPUB_HIGHLIGHTED_PLACEMENT_ID",
+        "\"" + project.MOPUB_HIGHLIGHTED_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "MOPUB_SIMILAR_PLACEMENT_ID",
+        "\"" + project.MOPUB_SIMILAR_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "MOPUB_HOME_BANNER_PLACEMENT_ID",
+        "\"" + project.MOPUB_HOME_BANNER_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID",
+        "\"" + project.MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -410,6 +419,9 @@ dependencies {
   implementation('com.mopub:mopub-sdk:5.4.0@aar') {
     transitive = true
     exclude module: 'moat-mobile-app-kit'
+    exclude group: "com.android.support"
+    exclude module: "support-annotations"
+    exclude module: "support-v4"
   }
 
   // paypal SDK

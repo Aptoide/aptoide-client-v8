@@ -33,7 +33,6 @@ public class AppViewAnalytics {
   private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TYPE = "type";
   private static final String NETWORK = "Network";
-  private static final String TAG = "Tag";
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -330,19 +329,19 @@ public class AppViewAnalytics {
     storeAnalytics.sendStoreOpenEvent("App View", store.getName(), true);
   }
 
-  public void installInterstitialImpression() {
-    installInterstitialInteract("impression");
+  public void installInterstitialImpression(String network) {
+    installInterstitialInteract("impression", network);
   }
 
-  public void installInterstitialClick() {
-    installInterstitialInteract("tap_on_app");
+  public void installInterstitialClick(String network) {
+    installInterstitialInteract("tap_on_app", network);
   }
 
-  private void installInterstitialInteract(String action) {
+  private void installInterstitialInteract(String action, String network) {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, action);
-    data.put(TAG, "interstitial");
-    data.put(NETWORK, "AppNext");
+    data.put("bundle_tag", "interstitial");
+    data.put(NETWORK, network);
 
     analyticsManager.logEvent(data, APP_VIEW_INTERACT,
         action.equals("impression") ? AnalyticsManager.Action.IMPRESSION
