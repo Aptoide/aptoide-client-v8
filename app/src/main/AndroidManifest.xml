@@ -75,6 +75,29 @@
         android:windowSoftInputMode="adjustPan"
         />
 
+    <activity
+        android:name="com.ironsource.sdk.controller.ControllerActivity"
+        android:configChanges="orientation|screenSize"
+        android:hardwareAccelerated="true"/>
+
+    <activity
+        android:name="com.ironsource.sdk.controller.InterstitialActivity"
+        android:configChanges="orientation|screenSize"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.Translucent"/>
+
+    <activity
+        android:name="com.ironsource.sdk.controller.OpenUrlActivity"
+        android:configChanges="orientation|screenSize"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.Translucent"/>
+
+    <activity
+        android:name="com.applovin.adview.AppLovinInterstitialActivity"/>
+
+    <activity
+        android:name="com.applovin.adview.AppLovinConfirmationActivity"/>
+
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="${fabricApiKey}"/>

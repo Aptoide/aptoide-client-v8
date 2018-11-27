@@ -13,12 +13,12 @@ import java.util.List;
 
 public class SimilarAppsViewModel {
 
-  private boolean hasRecordedAdImpression;
   private final ApplicationAd ad;
   private final List<Application> recommendedApps;
   private final boolean loading;
   private final AppsList.Error recommendedAppsError;
   private final ApplicationAdError adError;
+  private boolean hasRecordedAdImpression;
 
   public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
       AppsList.Error recommendedAppsError, ApplicationAdError adResultError) {

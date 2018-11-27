@@ -311,7 +311,6 @@ public abstract class AptoideApplication extends Application {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
 
-
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     clearFileCache();
