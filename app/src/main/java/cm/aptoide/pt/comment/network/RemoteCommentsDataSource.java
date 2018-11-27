@@ -8,6 +8,7 @@ import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
+import cm.aptoide.pt.dataprovider.model.v7.SetComment;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -98,18 +99,10 @@ public class RemoteCommentsDataSource implements CommentsDataSource {
         .toSingle();
   }
 
-  @Override public Completable writeComment(long storeId, String message) {
+  @Override public Single<SetComment> writeComment(long storeId, String message) {
     return new PostCommentForStore(new PostCommentForStore.Body(storeId, message), bodyInterceptor,
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences).observe()
-        .flatMap(response -> {
-          if (response.isOk()) {
-            return Observable.empty();
-          } else {
-            return Observable.error(new IllegalStateException(response.getError()
-                .getDescription()));
-          }
-        })
-        .toCompletable();
+        .toSingle();
   }
 
   @Override public Completable writeComment(long storeId, String message, long parentId) {

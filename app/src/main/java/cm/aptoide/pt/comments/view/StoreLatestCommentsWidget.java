@@ -90,7 +90,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
             })
             .filter(account -> account != null)
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMapCompletable(account -> {
+            .flatMap(account -> {
               if (emptyState.getVisibility() == View.VISIBLE) {
                 hideEmptyState();
               }

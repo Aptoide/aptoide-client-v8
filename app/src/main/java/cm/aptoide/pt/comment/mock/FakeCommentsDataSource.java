@@ -6,6 +6,7 @@ import cm.aptoide.pt.comment.CommentsDataSource;
 import cm.aptoide.pt.comment.data.Comment;
 import cm.aptoide.pt.comment.data.CommentsResponseModel;
 import cm.aptoide.pt.comment.data.User;
+import cm.aptoide.pt.dataprovider.model.v7.SetComment;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +31,8 @@ public class FakeCommentsDataSource implements CommentsDataSource {
     return Single.just(new CommentDetailResponseModel(getFakeComment(-1), getFakeComments()));
   }
 
-  @Override public Completable writeComment(long storeId, String message) {
-    return Completable.complete();
+  @Override public Single<SetComment> writeComment(long storeId, String message) {
+    return Single.just(null);
   }
 
   @Override public Completable writeComment(long storeId, String message, long parentId) {

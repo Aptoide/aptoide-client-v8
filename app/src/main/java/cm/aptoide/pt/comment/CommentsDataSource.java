@@ -1,6 +1,7 @@
 package cm.aptoide.pt.comment;
 
 import cm.aptoide.pt.comment.data.CommentsResponseModel;
+import cm.aptoide.pt.dataprovider.model.v7.SetComment;
 import rx.Completable;
 import rx.Single;
 
@@ -14,7 +15,7 @@ public interface CommentsDataSource {
 
   Single<CommentDetailResponseModel> loadComment(long commentId);
 
-  Completable writeComment(long storeId, String message);
+  Single<SetComment> writeComment(long storeId, String message);
 
   Completable writeComment(long storeId, String message, long parentId);
 }

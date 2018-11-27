@@ -38,7 +38,7 @@ public class CommentsPresenter implements Presenter {
     clickComment();
 
     postComment();
-    
+
     handleClickOnUser();
   }
 
@@ -57,9 +57,9 @@ public class CommentsPresenter implements Presenter {
                 })
                 .filter(account -> account != null)
                 .observeOn(viewScheduler)
-                .flatMapCompletable(account -> commentsListManager.postComment(comment)
+                .flatMap(account -> commentsListManager.postComment(comment)
                     .observeOn(viewScheduler)
-                    .doOnCompleted(() -> view.addLocalComment(comment, account)))))
+                    .doOnNext(id -> view.addLocalComment(comment, account, id)))))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(comment -> {
         }, throwable -> {

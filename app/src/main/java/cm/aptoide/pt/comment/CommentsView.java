@@ -26,7 +26,7 @@ public interface CommentsView extends View {
 
   void hideKeyboard();
 
-  void addLocalComment(Comment comment, Account account);
+  void addLocalComment(Comment comment, Account account, long id);
 
   Observable<Void> refreshes();
 

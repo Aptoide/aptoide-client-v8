@@ -133,8 +133,8 @@ public class CommentsFragment extends NavigationTrackFragment implements Comment
     }
   }
 
-  @Override public void addLocalComment(Comment comment, Account account) {
-    commentsAdapter.addSingleComment(new Comment(comment.getId(), comment.getMessage(), new User(
+  @Override public void addLocalComment(Comment comment, Account account, long id) {
+    commentsAdapter.addSingleComment(new Comment(id, comment.getMessage(), new User(
         comment.getUser()
             .getId(), account.getAvatar(), account.getNickname()), 0, new Date()));
   }
