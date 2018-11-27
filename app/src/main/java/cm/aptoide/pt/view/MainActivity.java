@@ -138,6 +138,4 @@ public class MainActivity extends BottomNavigationActivity
     super.onPause();
     ironSourceAdRepository.onPause();
   }
-
-
 }

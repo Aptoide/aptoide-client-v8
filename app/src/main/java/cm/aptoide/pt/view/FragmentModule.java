@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.AptoideApplicationAnalytics;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
 import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
@@ -287,8 +286,7 @@ import rx.schedulers.Schedulers;
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, ironSourceInterstitialAdExperiment,
-        ironSourceAdRepository);
+        marketName, appCoinsManager, ironSourceInterstitialAdExperiment, ironSourceAdRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
