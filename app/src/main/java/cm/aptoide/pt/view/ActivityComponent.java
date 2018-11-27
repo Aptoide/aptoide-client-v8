@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import cm.aptoide.pt.analytics.view.AnalyticsActivity;
 import cm.aptoide.pt.app.view.donations.DonateDialogFragment;
+import cm.aptoide.pt.comment.CommentLoginPopupDialogFragment;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
@@ -23,4 +24,6 @@ public interface ActivityComponent {
   void inject(DialogUtils dialogUtils);
 
   void inject(DonateDialogFragment donateDialogFragment);
+
+  void inject(CommentLoginPopupDialogFragment commentLoginPopupDialogFragment);
 }

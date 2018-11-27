@@ -413,7 +413,9 @@ public class AccountAnalytics {
 
   public enum StartupClickOrigin {
     MAIN("Main"), JOIN_UP("Join Aptoide Slide Up"), LOGIN_UP(
-        "Login Slide Up"), NOT_LOGGED_IN_DIALOG("Not logged in Dialog");
+        "Login Slide Up"), NOT_LOGGED_IN_DIALOG(
+        "Not logged in Dialog"), COMMENT_NOT_LOGGED_IN_POPUP_DIALOG(
+        "Comment not logged in Dialog Popup");
 
     private String clickOrigin;
 
