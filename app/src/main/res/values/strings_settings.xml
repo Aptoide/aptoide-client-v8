@@ -20,7 +20,7 @@
   <string name="setting_notifications_sub_section_1">App updates</string>
   <string name="setting_notifications_sub_sub_section_1">Show notifications for app updates</string>
   <string name="setting_notifications_sub_section_2">Social events</string>
-  <string name="setting_notifications_sub_sub_section_2">Show notifications for campaigns and social interactions</string>
+  <string name="setting_notifications_sub_sub_section_2">Show notifications for campaigns</string>
   <string name="setting_category_autoupdate_title">Update Aptoide</string>
   <string name="setting_category_autoupdate_message">Periodically check for new versions of Aptoide</string>
 
