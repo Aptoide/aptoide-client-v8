@@ -887,7 +887,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     final RealmConfiguration realmConfiguration =
         new RealmConfiguration.Builder().name(BuildConfig.REALM_FILE_NAME)
             .schemaVersion(BuildConfig.REALM_SCHEMA_VERSION)
-            .migration(new RealmToRealmDatabaseMigration())
+            .migration(new RealmToRealmDatabaseMigration(application.getApplicationContext()))
             .build();
     Realm.setDefaultConfiguration(realmConfiguration);
     return new Database();
@@ -926,7 +926,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper,
         storeRepository);
   }
-
 
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,

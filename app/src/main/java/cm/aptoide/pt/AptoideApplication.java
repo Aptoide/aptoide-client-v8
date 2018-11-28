@@ -135,7 +135,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
-import static cm.aptoide.pt.preferences.managed.ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY;
 
 public abstract class AptoideApplication extends Application {
 
@@ -682,35 +681,13 @@ public abstract class AptoideApplication extends Application {
           if (SecurePreferences.isFirstRun(
               SecurePreferencesImplementation.getInstance(getApplicationContext(),
                   getDefaultSharedPreferences()))) {
-
             setSharedPreferencesValues();
 
             return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
                 .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
-          } else {
-            setBetaPreferencesDefault();
           }
           return Completable.complete();
         });
-  }
-
-  private void setBetaPreferencesDefault() {
-    PreferencesXmlParser preferencesXmlParser = new PreferencesXmlParser();
-
-    XmlResourceParser parser = getResources().getXml(R.xml.settings);
-    try {
-      List<String[]> parsedPrefsList = preferencesXmlParser.parse(parser);
-      for (String[] keyValue : parsedPrefsList) {
-        if (keyValue[0].equals(UPDATES_FILTER_ALPHA_BETA_KEY)) {
-          getDefaultSharedPreferences().edit()
-              .putBoolean(keyValue[0], Boolean.valueOf(keyValue[1]))
-              .apply();
-          return;
-        }
-      }
-    } catch (IOException | XmlPullParserException e) {
-      e.printStackTrace();
-    }
   }
 
   private void setSharedPreferencesValues() {
