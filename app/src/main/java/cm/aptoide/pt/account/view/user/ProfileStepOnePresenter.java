@@ -2,6 +2,7 @@ package cm.aptoide.pt.account.view.user;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -52,7 +53,7 @@ public class ProfileStepOnePresenter implements Presenter {
                         AccountAnalytics.ProfileAction.CONTINUE))
                     .doOnCompleted(() -> view.dismissWaitDialog())
                     .doOnCompleted(() -> {
-                      if (isExternalLogin) {
+                      if (isExternalLogin || BuildConfig.FLAVOR.contains("cobrand")) {
                         accountNavigator.navigateToHomeView();
                       } else {
                         accountNavigator.navigateToCreateStoreView();
