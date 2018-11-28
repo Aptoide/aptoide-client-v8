@@ -140,14 +140,45 @@ public class InstallAnalytics {
 
   public void installStarted(String packageName, int versionCode, InstallType update,
       AnalyticsManager.Action action, AppContext context, Origin origin) {
-    installStarted(packageName, versionCode, update, Collections.emptyList());
+    createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
+        Collections.emptyList());
+    //installStarted(packageName, versionCode, update, Collections.emptyList());
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
+  }
+
+  private void createApplicationInstallEvent(AnalyticsManager.Action action, AppContext context,
+      Origin origin, String packageName, int installingVersion, int campaignId,
+      String abTestingGroup, List<String> fragmentNameList) {
+    Map<String, Object> data =
+        getInstallEventsBaseBundle(origin, packageName, campaignId, abTestingGroup);
+
+    String applicationInstallEventName = "";
+    ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
+    ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
+    if (currentScreen.getTag() != null && currentScreen.getTag()
+        .contains("apps-group-editors-choice")) {
+      applicationInstallEventName = EDITORS_APPLICATION_INSTALL;
+    } else if (previousScreen == null) {
+      if (!fragmentNameList.isEmpty()) {
+        crashReport.log(NO_PREVIOUS_SCREEN_ERROR, fragmentNameList.toString());
+      }
+    } else if (currentScreen.getTag() != null && previousScreen.getFragment()
+        .equals(DeepLinkManager.DEEPLINK_KEY)) {
+      applicationInstallEventName = NOTIFICATION_APPLICATION_INSTALL;
+    } else {
+      applicationInstallEventName = APPLICATION_INSTALL;
+    }
+    // TODO: 11/28/18 confirmar se o context name e o action sao ou nao para ficar bem
+    cache.put(getKey(packageName, installingVersion, applicationInstallEventName),
+        new InstallEvent(data, applicationInstallEventName, context.name(), action));
   }
 
   public void installStarted(String packageName, int versionCode, InstallType update,
       AnalyticsManager.Action action, AppContext context, Origin origin, int campaignId,
       String abTestingGroup) {
-    installStarted(packageName, versionCode, update, Collections.emptyList());
+    createApplicationInstallEvent(action, context, origin, packageName, versionCode, campaignId,
+        abTestingGroup, Collections.emptyList());
+    //installStarted(packageName, versionCode, update, Collections.emptyList());
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup);
   }
