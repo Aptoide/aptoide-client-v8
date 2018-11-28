@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install;
 
 import android.net.ConnectivityManager;
+import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -153,7 +154,14 @@ public class InstallAnalytics {
 
   private void createInstallEvent(AnalyticsManager.Action action, AppContext context, Origin origin,
       String packageName, int installingVersion, int campaignId, String abTestingGroup) {
+    Map<String, Object> data =
+        getInstallEventsBaseBundle(origin, packageName, campaignId, abTestingGroup);
+    cache.put(getKey(packageName, installingVersion, INSTALL_EVENT_NAME),
+        new InstallEvent(data, INSTALL_EVENT_NAME, context.name(), action));
+  }
 
+  @NonNull private Map<String, Object> getInstallEventsBaseBundle(Origin origin, String packageName,
+      int campaignId, String abTestingGroup) {
     Map<String, Object> data = new HashMap<>();
     data.put("app", createApp(packageName));
     data.put("network", AptoideUtils.SystemU.getConnectionType(connectivityManager)
@@ -172,8 +180,7 @@ public class InstallAnalytics {
     data.put("store", navigationTracker.getCurrentScreen()
         .getStore());
     data.put("teleco", AptoideUtils.SystemU.getCarrierName(telephonyManager));
-    cache.put(getKey(packageName, installingVersion, INSTALL_EVENT_NAME),
-        new InstallEvent(data, INSTALL_EVENT_NAME, context.name(), action));
+    return data;
   }
 
   private Map<String, Object> createRoot(boolean isPhoneRooted, boolean aptoideSettings) {
