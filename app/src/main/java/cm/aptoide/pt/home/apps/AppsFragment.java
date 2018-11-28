@@ -346,6 +346,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
   }
 
+  @Override public void setPausingDownloadState(App app) {
+    adapter.setAppOnPausing(app);
+  }
+
   private void showAppsList() {
     recyclerView.scrollToPosition(0);
     hideLoadingProgressBar();

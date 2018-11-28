@@ -28,13 +28,14 @@ public class AppViewAnalytics {
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
   public static final String CLICK_INSTALL = "Clicked on install button";
+  public static final String DONATIONS_IMPRESSION = "Donations_Impression";
+  public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TYPE = "type";
-  public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
-  private static final String NETWORK = "Network";
+  private static final String NETWORK = "network";
   private static final String IS_AD = "Is_ad";
   private static final String POSITION = "Position";
   private static final String PACKAGE_NAME = "Package_name";
@@ -220,6 +221,21 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
+  public void sendDonateClickAfterInstall() {
+    analyticsManager.logEvent(createMapData(ACTION, "donate_click_after_install"),
+        APP_VIEW_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void sendDonateClickTopDonors() {
+    analyticsManager.logEvent(createMapData(ACTION, "donate_click_top"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void sendDonateImpressionAfterInstall(String packageName) {
+    analyticsManager.logEvent(createMapData(PACKAGE_NAME, packageName), DONATIONS_IMPRESSION,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
   private Map<String, Object> createFlagAppEventData(String action, String flagDetail) {
     Map<String, Object> map = new HashMap<>();
     map.put(ACTION, action);
@@ -359,6 +375,25 @@ public class AppViewAnalytics {
 
     analyticsManager.logEvent(data, SIMILAR_APP_INTERACT,
         action.equals(IMPRESSION) ? AnalyticsManager.Action.IMPRESSION
+            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
+  }
+
+  public void installInterstitialImpression(String network) {
+    installInterstitialInteract("impression", network);
+  }
+
+  public void installInterstitialClick(String network) {
+    installInterstitialInteract("tap_on_app", network);
+  }
+
+  private void installInterstitialInteract(String action, String network) {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, action);
+    data.put("bundle_tag", "interstitial");
+    data.put(NETWORK, network);
+
+    analyticsManager.logEvent(data, APP_VIEW_INTERACT,
+        action.equals("impression") ? AnalyticsManager.Action.IMPRESSION
             : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
 }

@@ -18,6 +18,7 @@ public class SimilarAppsViewModel {
   private final boolean loading;
   private final AppsList.Error recommendedAppsError;
   private final ApplicationAdError adError;
+  private boolean hasRecordedAdImpression;
 
   public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
       AppsList.Error recommendedAppsError, ApplicationAdError adResultError) {
@@ -26,6 +27,7 @@ public class SimilarAppsViewModel {
     this.loading = loading;
     this.recommendedAppsError = recommendedAppsError;
     this.adError = adResultError;
+    this.hasRecordedAdImpression = false;
   }
 
   public SimilarAppsViewModel() {
@@ -74,5 +76,13 @@ public class SimilarAppsViewModel {
 
   public boolean hasAdError() {
     return (adError != null);
+  }
+
+  public void setHasRecordedAdImpression(boolean recorded) {
+    hasRecordedAdImpression = recorded;
+  }
+
+  public boolean hasRecordedAdImpression() {
+    return hasRecordedAdImpression;
   }
 }

@@ -25,25 +25,25 @@ public class AppMapper {
     return downloadsList;
   }
 
-  private DownloadApp.Status mapDownloadStatus(Install.InstallationStatus installationStatus) {
-    DownloadApp.Status status;
+  private StateApp.Status mapDownloadStatus(Install.InstallationStatus installationStatus) {
+    StateApp.Status status;
     switch (installationStatus) {
       case GENERIC_ERROR:
       case INSTALLATION_TIMEOUT:
       case NOT_ENOUGH_SPACE_ERROR:
-        status = DownloadApp.Status.ERROR;
+        status = StateApp.Status.ERROR;
         break;
       case PAUSED:
       case IN_QUEUE:
       case INITIAL_STATE:
-        status = DownloadApp.Status.STANDBY;
+        status = StateApp.Status.STANDBY;
         break;
       case INSTALLING:
-        status = DownloadApp.Status.ACTIVE;
+        status = StateApp.Status.ACTIVE;
         break;
       case INSTALLED:
       case UNINSTALLED:
-        status = DownloadApp.Status.COMPLETED;
+        status = StateApp.Status.COMPLETED;
         break;
       default:
         throw new IllegalStateException("Invalid installation status");
@@ -66,7 +66,7 @@ public class AppMapper {
     for (Update update : updates) {
       updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
-          UpdateApp.UpdateStatus.UPDATE, update.getAppId()));
+          StateApp.Status.UPDATE, update.getAppId()));
     }
     return updatesList;
   }
@@ -82,29 +82,29 @@ public class AppMapper {
     return updatesList;
   }
 
-  private UpdateApp.UpdateStatus mapUpdateStatus(Install.InstallationStatus state) {
-    UpdateApp.UpdateStatus status;
+  private StateApp.Status mapUpdateStatus(Install.InstallationStatus state) {
+    StateApp.Status status;
 
     switch (state) {
       case GENERIC_ERROR:
       case INSTALLATION_TIMEOUT:
       case NOT_ENOUGH_SPACE_ERROR:
-        status = UpdateApp.UpdateStatus.ERROR;
+        status = StateApp.Status.ERROR;
         break;
       case PAUSED:
       case IN_QUEUE:
       case INITIAL_STATE:
-        status = UpdateApp.UpdateStatus.STANDBY;
+        status = StateApp.Status.STANDBY;
         break;
       case INSTALLING:
-        status = UpdateApp.UpdateStatus.UPDATING;
+        status = StateApp.Status.UPDATING;
         break;
       case INSTALLED:
       case UNINSTALLED:
-        status = UpdateApp.UpdateStatus.UPDATE;
+        status = StateApp.Status.UPDATE;
         break;
       default:
-        status = UpdateApp.UpdateStatus.UPDATE;
+        status = StateApp.Status.UPDATE;
         break;
     }
     return status;

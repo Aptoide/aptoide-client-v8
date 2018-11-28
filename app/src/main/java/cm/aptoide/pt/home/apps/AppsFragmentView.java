@@ -75,4 +75,6 @@ public interface AppsFragmentView extends View {
   void showIndeterminateAllUpdates();
 
   void setDefaultUserImage();
+
+  void setPausingDownloadState(App app);
 }
