@@ -5,6 +5,9 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.logger.Logger;
@@ -27,6 +30,12 @@ import io.realm.RealmSchema;
 public class RealmToRealmDatabaseMigration implements RealmMigration {
 
   private static final String TAG = RealmToRealmDatabaseMigration.class.getName();
+  private final Context context;
+
+  public RealmToRealmDatabaseMigration(Context context) {
+
+    this.context = context;
+  }
 
   @Override public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
 
@@ -398,6 +407,14 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("payload", String.class)
           .addField("partOfExperiment", boolean.class)
           .addField("experimentOver", boolean.class);
+
+      oldVersion++;
+    }
+    if (oldVersion == 8095) {
+      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+      sharedPreferences.edit()
+          .putBoolean("updatesFilterAlphaBetaKey", false)
+          .apply();
 
       oldVersion++;
     }
