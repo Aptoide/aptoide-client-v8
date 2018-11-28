@@ -82,6 +82,13 @@ public class InstallAnalytics {
       cache.put(getKey(packageName, installingVersion, NOTIFICATION_APPLICATION_INSTALL),
           new InstallEvent(data, NOTIFICATION_APPLICATION_INSTALL, currentScreen.getFragment(),
               AnalyticsManager.Action.INSTALL));
+    } else {
+      Map<String, Object> data = new HashMap<>();
+      data.put("package_name", packageName);
+      data.put("type", installType.name());
+      cache.put(getKey(packageName, installingVersion, APPLICATION_INSTALL),
+          new InstallEvent(data, APPLICATION_INSTALL, currentScreen.getFragment(),
+              AnalyticsManager.Action.INSTALL));
     }
   }
 
@@ -89,6 +96,7 @@ public class InstallAnalytics {
       boolean aptoideSettings) {
     sendEvent(getKey(packageName, installingVersion, NOTIFICATION_APPLICATION_INSTALL));
     sendEvent(getKey(packageName, installingVersion, EDITORS_APPLICATION_INSTALL));
+    sendEvent(getKey(packageName, installingVersion, APPLICATION_INSTALL));
     sendInstallEvent(packageName, installingVersion, isRoot, aptoideSettings);
   }
 
