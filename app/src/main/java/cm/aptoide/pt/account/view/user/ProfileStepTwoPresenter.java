@@ -2,7 +2,6 @@ package cm.aptoide.pt.account.view.user;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.LoginSignupManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -23,8 +22,8 @@ public class ProfileStepTwoPresenter implements Presenter {
   private LoginSignupManager loginSignupManager;
 
   public ProfileStepTwoPresenter(ProfileStepTwoView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, AccountNavigator accountNavigator,
-      AccountAnalytics accountAnalytics, LoginSignupManager loginSignupManager) {
+      CrashReport crashReport, AccountNavigator accountNavigator, AccountAnalytics accountAnalytics,
+      LoginSignupManager loginSignupManager) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
