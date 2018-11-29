@@ -61,7 +61,7 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(download -> getAppDownloader(download).doOnNext(
             appDownloader -> handleStartDownload(appDownloader, download))
             .flatMap(appDownloader -> handleDownloadProgress(appDownloader,
-                download.getOverallDownloadStatus(), download.getMd5())))
+                download.getOverallDownloadStatus())))
         .doOnError(Throwable::printStackTrace)
         .retry()
         .subscribe(__ -> {
@@ -213,17 +213,12 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private Observable<Download> handleDownloadProgress(AppDownloader appDownloader,
-      int overallDownloadStatus, String md5) {
-    if (overallDownloadStatus == Download.COMPLETED) {
-      return downloadsRepository.getDownload(md5)
-          .first()
-          .doOnNext(download -> removeAppDownloader(md5))
-          .takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED);
-    }
+      int overallDownloadStatus) {
     return appDownloader.observeDownloadProgress()
         .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
             .first()
-            .flatMap(download -> updateDownload(download, appDownloadStatus)))
+            .flatMap(
+                download -> updateDownload(download, appDownloadStatus, overallDownloadStatus)))
         .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED);
@@ -237,19 +232,21 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private Observable<Download> updateDownload(Download download,
-      AppDownloadStatus appDownloadStatus) {
-    download.setOverallProgress(appDownloadStatus.getOverallProgress());
-    download.setOverallDownloadStatus(
-        downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
-    download.setDownloadError(
-        downloadStatusMapper.mapDownloadError(appDownloadStatus.getDownloadStatus()));
-    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      fileToDownload.setStatus(downloadStatusMapper.mapAppDownloadStatus(
-          appDownloadStatus.getFileDownloadStatus(fileToDownload.getMd5())));
-      fileToDownload.setProgress(
-          appDownloadStatus.getFileDownloadProgress(fileToDownload.getMd5()));
+      AppDownloadStatus appDownloadStatus, int overallDownloadStatus) {
+    if (overallDownloadStatus != Download.COMPLETED) {
+      download.setOverallProgress(appDownloadStatus.getOverallProgress());
+      download.setOverallDownloadStatus(
+          downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
+      download.setDownloadError(
+          downloadStatusMapper.mapDownloadError(appDownloadStatus.getDownloadStatus()));
+      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+        fileToDownload.setStatus(downloadStatusMapper.mapAppDownloadStatus(
+            appDownloadStatus.getFileDownloadStatus(fileToDownload.getMd5())));
+        fileToDownload.setProgress(
+            appDownloadStatus.getFileDownloadProgress(fileToDownload.getMd5()));
+      }
+      downloadsRepository.save(download);
     }
-    downloadsRepository.save(download);
     return Observable.just(download);
   }
 
