@@ -2,7 +2,7 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.ads.model.ApplicationAd;
+import cm.aptoide.pt.ads.data.ApplicationAd;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -177,7 +177,7 @@ public class HomeAnalytics {
 
   public void sendEditorialImpressionEvent(String bundleTag, int bundlePosition, String cardId) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", VIEW_CARD);
+    data.put("action", IMPRESSION);
     data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("card_id", cardId);

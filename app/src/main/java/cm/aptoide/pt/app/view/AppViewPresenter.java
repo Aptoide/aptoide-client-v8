@@ -9,12 +9,12 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.ads.model.ApplicationAd;
-import cm.aptoide.pt.ads.model.AptoideNativeAd;
+import cm.aptoide.pt.ads.AdEvent;
+import cm.aptoide.pt.ads.data.ApplicationAd;
+import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewSimilarApp;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
@@ -47,25 +47,20 @@ public class AppViewPresenter implements Presenter {
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
-  private AppViewSimilarAppAnalytics similarAppAnalytics;
   private AppViewNavigator appViewNavigator;
   private AppViewManager appViewManager;
   private AptoideAccountManager accountManager;
   private Scheduler viewScheduler;
   private CrashReport crashReport;
 
-  private boolean isImpressionRecorded = false;
-
-
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
-      AppViewAnalytics appViewAnalytics, AppViewSimilarAppAnalytics similarAppAnalytics,
-      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
-      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
-      PermissionManager permissionManager, PermissionService permissionService) {
+      AppViewAnalytics appViewAnalytics, AppViewNavigator appViewNavigator,
+      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
+      CrashReport crashReport, PermissionManager permissionManager,
+      PermissionService permissionService) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
-    this.similarAppAnalytics = similarAppAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -76,6 +71,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   @Override public void present() {
+    initializeInterstitialAd();
     handleFirstLoad();
     handleReviewAutoScroll();
     handleClickOnScreenshot();
@@ -101,6 +97,7 @@ public class AppViewPresenter implements Presenter {
     handleClickOnRetry();
     handleOnScroll();
     handleOnSimilarAppsVisible();
+    handleInterstitialEvents();
 
     handleInstallButtonClick();
     pauseDownload();
@@ -113,7 +110,43 @@ public class AppViewPresenter implements Presenter {
     handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
-    handleClickOnDonateButton();
+    handleClickOnDonateAfterInstall();
+    handleClickOnTopDonorsDonate();
+    handleDonateCardImpressions();
+  }
+
+  private void handleInterstitialEvents() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.getInterstitialEvent())
+        .observeOn(Schedulers.io())
+        .doOnNext(adEvent -> {
+          if (adEvent == AdEvent.CLICK) {
+            appViewAnalytics.installInterstitialClick("ironSource");
+          } else if (adEvent == AdEvent.IMPRESSION) {
+            appViewAnalytics.installInterstitialImpression("ironSource");
+          }
+        })
+        .flatMap(adEvent -> {
+          if (adEvent == AdEvent.CLICK) {
+            return appViewManager.recordInterstitialClick();
+          } else if (adEvent == AdEvent.IMPRESSION) {
+            return appViewManager.recordInterstitialImpression();
+          }
+          return Observable.empty();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private void initializeInterstitialAd() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.initializeInterstitialAd())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleOnSimilarAppsVisible() {
@@ -125,10 +158,12 @@ public class AppViewPresenter implements Presenter {
           SimilarAppsViewModel similarAppsViewModel =
               appViewManager.getCachedSimilarAppsViewModel();
           if (similarAppsViewModel != null
-              && similarAppsViewModel.hasAd() && !isImpressionRecorded) {
-            isImpressionRecorded = true;
-            similarAppAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
-                .getNetwork(), true);
+              && similarAppsViewModel.hasAd()
+              && !similarAppsViewModel.hasRecordedAdImpression()) {
+            similarAppsViewModel.setHasRecordedAdImpression(true);
+            appViewAnalytics.
+                similarAppBundleImpression(similarAppsViewModel.getAd()
+                    .getNetwork(), true);
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -175,13 +210,13 @@ public class AppViewPresenter implements Presenter {
           SimilarAppsViewModel similarAppsViewModel =
               appViewManager.getCachedSimilarAppsViewModel();
           if (similarAppsViewModel != null
-              && similarAppsViewModel.getAd() != null && !isImpressionRecorded) {
-            isImpressionRecorded = true;
-            similarAppAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
+              && similarAppsViewModel.getAd() != null
+              && !similarAppsViewModel.hasRecordedAdImpression()) {
+            similarAppsViewModel.setHasRecordedAdImpression(true);
+            appViewAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
                 .getNetwork(), true);
-          } else {
-            similarAppAnalytics.similarAppBundleImpression(null, false);
           }
+          appViewAnalytics.similarAppBundleImpression(null, false);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -489,23 +524,10 @@ public class AppViewPresenter implements Presenter {
                 .getAppId(), packageName, similarAppClickEvent.getType());
           }
           appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
-          similarAppAnalytics.similarAppClick(network, packageName,
-              similarAppClickEvent.getPosition(), isAd);
+          appViewAnalytics.similarAppClick(network, packageName, similarAppClickEvent.getPosition(),
+              isAd);
           return Observable.just(isAd);
         })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.appNextAdClick()
-            .observeOn(Schedulers.io())
-            .doOnNext(result -> {
-              similarAppAnalytics.similarAppClick(ApplicationAd.Network.APPNEXT, result.getAd()
-                  .getPackageName(), 0, true);
-            })
-            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
@@ -636,7 +658,7 @@ public class AppViewPresenter implements Presenter {
               .name(), model.hasBilling(), model.hasAdvertising());
         })
         .flatMap(appViewModel -> {
-          if (appViewModel.getOpenType() == NewAppViewFragment.OpenType.OPEN_AND_INSTALL) {
+          if (appViewModel.getOpenType() == AppViewFragment.OpenType.OPEN_AND_INSTALL) {
 
             return accountManager.accountStatus()
                 .first()
@@ -651,7 +673,7 @@ public class AppViewPresenter implements Presenter {
                     .observeOn(viewScheduler))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
-              == NewAppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
+              == AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
             return accountManager.accountStatus()
                 .first()
                 .observeOn(viewScheduler)
@@ -665,8 +687,7 @@ public class AppViewPresenter implements Presenter {
                             appViewModel.getPackageName()))
                         .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
-          } else if (appViewModel.getOpenType()
-              == NewAppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
+          } else if (appViewModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
             return accountManager.accountStatus()
                 .first()
                 .observeOn(viewScheduler)
@@ -753,8 +774,7 @@ public class AppViewPresenter implements Presenter {
                     permissionService))
                 .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
                 .flatMapCompletable(
-                    app -> appViewManager.resumeDownload(app.getMd5(), app.getPackageName(),
-                        app.getAppId()))
+                    app -> appViewManager.resumeDownload(app.getMd5(), app.getAppId()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -795,7 +815,11 @@ public class AppViewPresenter implements Presenter {
                                   appViewModel.getPackageName(), appViewModel.getDeveloper()
                                       .getName(), action.toString()))
                               .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
-                                  appViewModel.getPackageName())));
+                                  appViewModel.getPackageName()))
+                              .toSingleDefault(true)
+                              .delay(3, TimeUnit.SECONDS)
+                              .flatMap(__ -> appViewManager.showInterstitialAd())
+                              .toCompletable());
                   break;
                 case OPEN:
                   completable = appViewManager.loadAppViewViewModel()
@@ -1009,12 +1033,48 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void handleClickOnDonateButton() {
+  private void handleClickOnDonateAfterInstall() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickDonateButton())
+        .flatMap(__ -> view.clickDonateAfterInstallButton())
         .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .doOnNext(app -> appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG))
+        .doOnNext(app -> {
+          appViewAnalytics.sendDonateClickAfterInstall();
+          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleClickOnTopDonorsDonate() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickTopDonorsDonateButton())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(app -> {
+          appViewAnalytics.sendDonateClickTopDonors();
+          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleDonateCardImpressions() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.installAppClick())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .doOnNext(model -> {
+          if (model.hasDonations()) {
+            appViewAnalytics.sendDonateImpressionAfterInstall(model.getPackageName());
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

@@ -111,7 +111,6 @@ import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
-import com.appnext.base.Appnext;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -170,7 +169,6 @@ public abstract class AptoideApplication extends Application {
       bodyInterceptorV3;
   @Inject L2Cache httpClientCache;
   @Inject QManager qManager;
-  @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   @Inject TokenInvalidator tokenInvalidator;
   @Inject PackageRepository packageRepository;
   @Inject AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
@@ -189,6 +187,7 @@ public abstract class AptoideApplication extends Application {
   @Inject InvalidRefreshTokenLogoutManager invalidRefreshTokenLogoutManager;
   @Inject ABTestService.ServiceV7 abTestService;
   @Inject RealmExperimentPersistence abTestExperimentPersistence;
+  @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -368,7 +367,6 @@ public abstract class AptoideApplication extends Application {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
           .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
-          .flavourApplicationModule(new FlavourApplicationModule(this))
           .build();
     }
     return applicationComponent;
@@ -651,10 +649,6 @@ public abstract class AptoideApplication extends Application {
   private void initializeFlurry(Context context, String flurryKey) {
     new FlurryAgent.Builder().withLogEnabled(false)
         .build(context, flurryKey);
-  }
-
-  private void initializeAppNext() {
-    Appnext.init(this);
   }
 
   private Completable sendAppStartToAnalytics() {

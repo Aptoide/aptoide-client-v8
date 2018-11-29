@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.home.BottomNavigationMapper;
@@ -30,7 +30,7 @@ public class AppsNavigator {
   }
 
   public void navigateToAppView(long appId, String packageName) {
-    appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, "");
+    appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, "");
   }
 
   public void navigateToMyAccount() {

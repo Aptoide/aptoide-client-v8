@@ -504,11 +504,11 @@ public class EditorialFragment extends NavigationTrackFragment
     } else {
       appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
     }
-    String title = editorialViewModel.getTitle();
-    toolbar.setTitle(title);
-    toolbarTitle.setText(title);
+    String caption = editorialViewModel.getCaption();
+    toolbar.setTitle(caption);
+    toolbarTitle.setText(caption);
     appImage.setVisibility(View.VISIBLE);
-    itemName.setText(editorialViewModel.getCardType());
+    itemName.setText(editorialViewModel.getTitle());
     itemName.setVisibility(View.VISIBLE);
     appCardTitle.setText(editorialViewModel.getAppName());
     appCardTitle.setVisibility(View.VISIBLE);

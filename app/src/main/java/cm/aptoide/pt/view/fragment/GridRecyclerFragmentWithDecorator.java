@@ -63,20 +63,6 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
           right = offset / 2;
         }
 
-        if (view.getId() == R.id.timeline_stats_layout) {
-          top = 0;
-          left = 0;
-          right = 0;
-          bottom = offset;
-        }
-
-        if (view.getId() == R.id.timeline_login_layout) {
-          top = 0;
-          left = 0;
-          right = 0;
-          bottom = offset;
-        }
-
         if (view.getId() == R.id.message_white_bg) {
           top = 0;
           left = offset;

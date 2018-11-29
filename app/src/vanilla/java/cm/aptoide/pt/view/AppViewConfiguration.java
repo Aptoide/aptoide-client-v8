@@ -1,6 +1,6 @@
 package cm.aptoide.pt.view;
 
-import cm.aptoide.pt.app.view.NewAppViewFragment.OpenType;
+import cm.aptoide.pt.app.view.AppViewFragment.OpenType;
 import cm.aptoide.pt.search.model.SearchAdResult;
 
 /**

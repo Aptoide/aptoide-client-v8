@@ -54,7 +54,7 @@ public class EditorialPresenterTest {
         new EditorialContent("title", Collections.emptyList(), "message", "type", "appName", "icon",
             0));
     editorialViewModel =
-        new EditorialViewModel(editorialContent, "cardType", 1, "title", "appName", 0,
+        new EditorialViewModel(editorialContent, "type", "title", 1, "caption", "appName", 0,
             "packageName", 0, "icon", "graphic", null, 0, "storeName", "storeTheme", "versionName",
             0, "path", "backgroundImage", "pathAlt", "md5", 0);
     downloadModel =

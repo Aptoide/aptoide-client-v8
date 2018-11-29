@@ -2,7 +2,7 @@ package cm.aptoide.pt.view;
 
 import android.os.Bundle;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -31,10 +31,10 @@ public class AppCoinsInfoNavigator {
   }
 
   public void navigateToAppCoinsWallet() {
-    NewAppViewFragment appViewFragment = new NewAppViewFragment();
+    AppViewFragment appViewFragment = new AppViewFragment();
     Bundle bundle = new Bundle();
-    bundle.putString(NewAppViewFragment.BundleKeys.PACKAGE_NAME.name(), APPC_WALLET_PACKAGE_NAME);
-    bundle.putString(NewAppViewFragment.BundleKeys.STORE_NAME.name(), "bds-store");
+    bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), APPC_WALLET_PACKAGE_NAME);
+    bundle.putString(AppViewFragment.BundleKeys.STORE_NAME.name(), "bds-store");
     appViewFragment.setArguments(bundle);
     fragmentNavigator.navigateTo(appViewFragment, true);
   }

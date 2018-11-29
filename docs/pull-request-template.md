@@ -15,11 +15,11 @@
 
 **How should this be manually tested?**
 
-  QA Tickets related to this use-case: [ASV-XXXX](<Jira url>)
+  Flow on how to test this or QA Tickets related to this use-case: [ASV-XXXX](https://aptoide.atlassian.net/browse/ASV-<Jira ticket number>)
 
 **What are the relevant tickets?**
 
-  Tickets related to this pull-request: [ASV-XXXX](<Jira url>)
+  Tickets related to this pull-request: [ASV-XXXX](https://aptoide.atlassian.net/browse/ASV-<Jira ticket number>)
 
 **Questions:**
 
@@ -36,6 +36,5 @@
 - [ ] If yes - Database migration?
 - [ ] Remove comments & unused code & forgotten testing Logs
 - [ ] Codestyle
-- [ ] Partners build
 - [ ] Unit tests pass
 - [ ] Functional QA tests pass

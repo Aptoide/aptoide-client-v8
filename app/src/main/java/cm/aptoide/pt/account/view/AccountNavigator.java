@@ -131,11 +131,6 @@ public class AccountNavigator {
         new Result(requestCode, (success ? Activity.RESULT_OK : Activity.RESULT_CANCELED), null));
   }
 
-  public Observable<Boolean> notLoggedInViewResults(int requestCode) {
-    return fragmentNavigator.results(requestCode)
-        .map(result -> result.getResultCode() == Activity.RESULT_OK);
-  }
-
   public void navigateToHomeView() {
     bottomNavigationNavigator.navigateToHome();
   }

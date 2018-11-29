@@ -3,6 +3,7 @@ package cm.aptoide.pt.app;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -27,12 +28,20 @@ public class AppViewAnalytics {
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
   public static final String CLICK_INSTALL = "Clicked on install button";
+  public static final String DONATIONS_IMPRESSION = "Donations_Impression";
+  public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TYPE = "type";
-  private static final String NETWORK = "Network";
+  private static final String NETWORK = "network";
+  private static final String IS_AD = "Is_ad";
+  private static final String POSITION = "Position";
+  private static final String PACKAGE_NAME = "Package_name";
+  private static final String IMPRESSION = "impression";
+  private static final String TAP_ON_APP = "tap_on_app";
+
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -212,6 +221,21 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
+  public void sendDonateClickAfterInstall() {
+    analyticsManager.logEvent(createMapData(ACTION, "donate_click_after_install"),
+        APP_VIEW_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void sendDonateClickTopDonors() {
+    analyticsManager.logEvent(createMapData(ACTION, "donate_click_top"), APP_VIEW_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void sendDonateImpressionAfterInstall(String packageName) {
+    analyticsManager.logEvent(createMapData(PACKAGE_NAME, packageName), DONATIONS_IMPRESSION,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
   private Map<String, Object> createFlagAppEventData(String action, String flagDetail) {
     Map<String, Object> map = new HashMap<>();
     map.put(ACTION, action);
@@ -327,6 +351,31 @@ public class AppViewAnalytics {
 
   public void sendStoreOpenEvent(Store store) {
     storeAnalytics.sendStoreOpenEvent("App View", store.getName(), true);
+  }
+
+  public void similarAppBundleImpression(ApplicationAd.Network network, boolean isAd) {
+    similarAppInteract(network, IMPRESSION, null, -1, isAd);
+  }
+
+  public void similarAppClick(ApplicationAd.Network network, String packageName, int position,
+      boolean isAd) {
+    similarAppInteract(network, TAP_ON_APP, packageName, position, isAd);
+  }
+
+  private void similarAppInteract(ApplicationAd.Network network, String action, String packageName,
+      int position, boolean isAd) {
+    Map<String, Object> data = new HashMap<>();
+    if (isAd) data.put(NETWORK, network.getName());
+    data.put(ACTION, action);
+    data.put(IS_AD, isAd ? "true" : "false");
+    if (action.equals(TAP_ON_APP)) {
+      data.put(PACKAGE_NAME, packageName);
+      data.put(POSITION, position);
+    }
+
+    analyticsManager.logEvent(data, SIMILAR_APP_INTERACT,
+        action.equals(IMPRESSION) ? AnalyticsManager.Action.IMPRESSION
+            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
 
   public void installInterstitialImpression(String network) {

@@ -11,29 +11,7 @@ import cm.aptoide.pt.app.view.GridAppListWidget;
 import cm.aptoide.pt.app.view.GridAppWidget;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppWidget;
-import cm.aptoide.pt.app.view.OtherVersionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewDescriptionDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewFlagThisDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewInstallDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewOtherVersionsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewRateAndCommentsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewRateResultsDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewRewardAppDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewStoreDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAdDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppDisplayable;
-import cm.aptoide.pt.app.view.displayable.AppViewSuggestedAppsDisplayable;
-import cm.aptoide.pt.app.view.widget.AppViewDescriptionWidget;
-import cm.aptoide.pt.app.view.widget.AppViewFlagThisWidget;
-import cm.aptoide.pt.app.view.widget.AppViewInstallWidget;
-import cm.aptoide.pt.app.view.widget.AppViewOtherVersionsWidget;
-import cm.aptoide.pt.app.view.widget.AppViewRateAndReviewsWidget;
-import cm.aptoide.pt.app.view.widget.AppViewRateResultsWidget;
-import cm.aptoide.pt.app.view.widget.AppViewRewardAppWidget;
-import cm.aptoide.pt.app.view.widget.AppViewStoreWidget;
-import cm.aptoide.pt.app.view.widget.AppViewSuggestedAdWidget;
-import cm.aptoide.pt.app.view.widget.AppViewSuggestedAppWidget;
-import cm.aptoide.pt.app.view.widget.AppViewSuggestedAppsWidget;
+import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
 import cm.aptoide.pt.app.view.widget.OtherVersionWidget;
 import cm.aptoide.pt.comments.view.CommentDisplayable;
 import cm.aptoide.pt.comments.view.CommentWidget;
@@ -74,12 +52,8 @@ import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreWidget;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
-import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsDisplayable;
-import cm.aptoide.pt.timeline.view.displayable.TimeLineStatsWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowStoreWidget;
 import cm.aptoide.pt.timeline.view.follow.FollowUserWidget;
-import cm.aptoide.pt.timeline.view.login.TimelineLoginDisplayable;
-import cm.aptoide.pt.timeline.view.login.TimelineLoginWidget;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdateWidget;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -184,47 +158,14 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(ProgressBarWidget.class, ProgressBarDisplayable.class));
 
     // appView widgets / displayables
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewDescriptionWidget.class,
-        AppViewDescriptionDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AppViewInstallWidget.class, AppViewInstallDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping((AppViewRewardAppWidget.class),
-        AppViewRewardAppDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewRateAndReviewsWidget.class,
-        AppViewRateAndCommentsDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewFlagThisWidget.class,
-        AppViewFlagThisDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewOtherVersionsWidget.class,
-        AppViewOtherVersionsDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewRateResultsWidget.class,
-        AppViewRateResultsDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AppViewStoreWidget.class, AppViewStoreDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppsWidget.class,
-        AppViewSuggestedAppsDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppWidget.class,
-        AppViewSuggestedAppDisplayable.class));
-
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAdWidget.class,
-        AppViewSuggestedAdDisplayable.class));
-
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(OtherVersionWidget.class, OtherVersionDisplayable.class));
 
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(RateAndReviewCommentWidget.class,
-        RateAndReviewCommentDisplayable.class));
-
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RowReviewWidget.class, RowReviewDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(RateAndReviewCommentWidget.class,
+        RateAndReviewCommentDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(CommentWidget.class, CommentDisplayable.class));
@@ -251,16 +192,10 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping((OfficialAppWidget.class), OfficialAppDisplayable.class));
 
     displayableWidgetMappings.add(
-        new DisplayableWidgetMapping((TimeLineStatsWidget.class), TimeLineStatsDisplayable.class));
-
-    displayableWidgetMappings.add(
         new DisplayableWidgetMapping((FollowUserWidget.class), FollowUserDisplayable.class));
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((MessageWhiteBgWidget.class),
         MessageWhiteBgDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping((TimelineLoginWidget.class), TimelineLoginDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((FollowStoreWidget.class), FollowStoreDisplayable.class));
@@ -326,32 +261,5 @@ public class DisplayableWidgetMapping {
       cachedDisplayables = Collections.unmodifiableList(tmp);
     }
     return cachedDisplayables;
-  }
-
-  /**
-   * needed in the partners to get the displayableClass
-   *
-   * @return displayableClass
-   */
-  public Class<? extends Displayable> getDisplayableClass() {
-    return displayableClass;
-  }
-
-  /**
-   * needed in the partners to get the widgetClass
-   *
-   * @return widgetClass
-   */
-  public Class<? extends Widget> getWidgetClass() {
-    return widgetClass;
-  }
-
-  /**
-   * needed in partners to add it's own displayables/widgets
-   *
-   * @return Map of widgets and displayables
-   */
-  protected Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
-    return viewTypeMapping;
   }
 }

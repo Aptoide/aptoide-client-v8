@@ -11,18 +11,18 @@ class EditorialContent {
   private final List<EditorialMedia> media;
   private final String message;
   private final String type;
-  private final String appName;
+  private final String name;
   private final String icon;
   private final float rating;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      String appName, String icon, float rating) {
+      String name, String icon, float rating) {
 
     this.title = title;
     this.media = media;
     this.message = message;
     this.type = type;
-    this.appName = appName;
+    this.name = name;
     this.icon = icon;
     this.rating = rating;
   }
@@ -40,7 +40,7 @@ class EditorialContent {
   }
 
   public boolean isPlaceHolderType() {
-    return type != null && type.equals("app_placeholder");
+    return name != null;
   }
 
   public List<EditorialMedia> getMedia() {
@@ -63,8 +63,17 @@ class EditorialContent {
     return title != null && !title.equals("");
   }
 
+  public boolean hasAnyMediaDescription() {
+    for (EditorialMedia editorialMedia : media) {
+      if (editorialMedia.hasDescription()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public String getAppName() {
-    return appName;
+    return name;
   }
 
   public String getIcon() {
@@ -73,14 +82,5 @@ class EditorialContent {
 
   public float getRating() {
     return rating;
-  }
-
-  public boolean hasAnyMediaDescription() {
-    for (EditorialMedia editorialMedia : media) {
-      if (editorialMedia.hasDescription()) {
-        return true;
-      }
-    }
-    return false;
   }
 }

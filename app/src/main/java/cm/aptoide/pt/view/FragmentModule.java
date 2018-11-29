@@ -10,6 +10,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
+import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -31,17 +32,20 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.IronSourceAdRepository;
+import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
+import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
@@ -55,8 +59,6 @@ import cm.aptoide.pt.app.view.EditorialView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
-import cm.aptoide.pt.app.view.NewAppViewFragment.BundleKeys;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
@@ -276,24 +278,24 @@ import rx.schedulers.Schedulers;
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
       SocialRepository socialRepository, @Named("marketName") String marketName,
-      AppCoinsManager appCoinsManager) {
+      AppCoinsManager appCoinsManager,
+      IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
+      IronSourceAdRepository ironSourceAdRepository) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager);
+        marketName, appCoinsManager, ironSourceInterstitialAdExperiment, ironSourceAdRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
-      AppViewSimilarAppAnalytics similarAppAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, CrashReport crashReport) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
-        similarAppAnalytics, appViewNavigator, appViewManager, accountManager,
-        AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()));
+        appViewNavigator, appViewManager, accountManager, AndroidSchedulers.mainThread(),
+        crashReport, new PermissionManager(), ((PermissionService) fragment.getContext()));
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -302,7 +304,7 @@ import rx.schedulers.Schedulers;
         arguments.getString(BundleKeys.STORE_NAME.name(), null),
         arguments.getString(BundleKeys.STORE_THEME.name(), ""),
         Parcels.unwrap(arguments.getParcelable(BundleKeys.MINIMAL_AD.name())),
-        ((NewAppViewFragment.OpenType) arguments.getSerializable(BundleKeys.SHOULD_INSTALL.name())),
+        ((AppViewFragment.OpenType) arguments.getSerializable(BundleKeys.SHOULD_INSTALL.name())),
         arguments.getString(BundleKeys.MD5.name(), ""),
         arguments.getString(BundleKeys.UNAME.name(), ""),
         arguments.getDouble(BundleKeys.APPC.name(), -1),
@@ -379,5 +381,13 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides ApkFyExperiment providesApkfyExperiment(ABTestManager abTestManager) {
     return new ApkFyExperiment(abTestManager);
+  }
+
+  @FragmentScope @Provides
+  IronSourceInterstitialAdExperiment providesIronSourceInterstitialAdExperiment(
+      ABTestManager abTestManager, IronSourceAdRepository ironSourceAdRepository,
+      IronSourceAnalytics ironSourceAnalytics) {
+    return new IronSourceInterstitialAdExperiment(abTestManager, AndroidSchedulers.mainThread(),
+        ironSourceAdRepository, ironSourceAnalytics);
   }
 }

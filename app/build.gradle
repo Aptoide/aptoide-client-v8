@@ -15,7 +15,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'io.fabric.tools:gradle:1.25.4'
+    classpath "io.fabric.tools:gradle:${FABRIC_VERSION}"
   }
 }
 
@@ -36,7 +36,7 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
-    versionName "9.3.0.0B"
+    versionName "9.4.0.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true
@@ -65,16 +65,10 @@ android {
         showStandardStreams = true
       }
     }
-
   }
 
   flavorDimensions "product", "mode"
   productFlavors {
-    partner {
-      dimension "product"
-      applicationId "com.aptoide.partners.dfloureiro"
-      matchingFallbacks = ['internal', 'prod']
-    }
 
     vanilla {
       dimension "product"
@@ -85,7 +79,7 @@ android {
     internal {
       dimension "mode"
       applicationIdSuffix "internal"
-      versionName "9.2.0." + getDate()
+      versionName "9.4.0." + getDate()
       versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
@@ -93,7 +87,7 @@ android {
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
-      versionName "9.2.0." + getDate()
+      versionName "9.4.0." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['prod', 'internal']
     }
@@ -110,9 +104,15 @@ android {
     fairy {
       dimension "mode"
       applicationIdSuffix "testfairy"
-      versionName "9.2.0." + getDate()
+      versionName "9.4.0." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['internal', 'prod']
+    }
+
+    monetisation {
+      dimension "mode"
+      versionName defaultConfig.getVersionName() + "A"
+      matchingFallbacks = ['prod']
     }
   }
 
@@ -144,19 +144,6 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
-  }
-
-  variantFilter { variant ->
-    List<ProductFlavor> flavors = variant.getFlavors()
-
-    String applicationIdBase = flavors[0].applicationId
-    String applicationIdSuffix = flavors[1].applicationIdSuffix
-    boolean hasSuffix = applicationIdSuffix != null
-
-    if (applicationIdBase.contains('partner') && hasSuffix &&
-        (applicationIdSuffix.contains('dev') || applicationIdSuffix.contains('internal'))) {
-      setIgnore(true)
-    }
   }
 
   packagingOptions {
@@ -262,18 +249,10 @@ android {
       resValue "string", "TEST_FAIRY_TOKEN", "\"" + project.TEST_FAIRY_TOKEN + "\""
     }
 
-    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_PLACEMENT_ID",
-        "\"" + project.APPNEXT_HIGHLIGHTED_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "APPNEXT_PLACEMENT_ID",
-        "\"" + project.APPNEXT_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "APPNEXT_SIMILAR_PLACEMENT_ID",
-        "\"" + project.APPNEXT_SIMILAR_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID",
-        "\"" + project.APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID + "\""
-    variant.resValue "string", "APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID",
-        "\"" + project.APPNEXT_HOME_LARGE_BANNER_ABTEST_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID",
-        "\"" + project.APPNEXT_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_APPLICATION_ID",
+        "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID",
+        "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_HIGHLIGHTED_PLACEMENT_ID",
         "\"" + project.MOPUB_HIGHLIGHTED_PLACEMENT_ID + "\""
@@ -317,10 +296,9 @@ android {
 dependencies {
 
   implementation project(path: ':crashreports')
-  implementation project(path: ':downloadmanager', configuration: 'default')
-  implementation project(path: ':aptoide-database', configuration: 'default')
+  implementation project(path: ':downloadmanager')
+  implementation project(path: ':aptoide-database')
   implementation project(path: ':aptoidepreferences')
-  implementation project(path: ':downloadmanager', configuration: 'default')
   implementation project(path: ':aptoide-account-manager')
   implementation project(path: ':aptoide-analytics-core')
   implementation project(path: ':aptoide-analytics-default-implementation')
@@ -409,11 +387,16 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
-  // AppNext
-  implementation "com.appnext.sdk:core:${APPNEXT_VERSION}"
-  implementation "com.appnext.sdk:native-ads2:${APPNEXT_VERSION}"
-  implementation "com.appnext.sdk:banners:${APPNEXT_VERSION}"
-  implementation "com.appnext.sdk:ads:${APPNEXT_VERSION}"
+  // IronSource
+  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
+  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
+    transitive = true
+    exclude group: "com.android.support"
+    exclude module: "support-annotations"
+    exclude module: "support-v4"
+  }
 
   // Mopub
   implementation('com.mopub:mopub-sdk:5.4.0@aar') {
@@ -487,7 +470,9 @@ dependencies {
 
   fairyImplementation "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 
-  implementation "com.asfoundation:appcoins-contract-proxy:0.4.5.19b"
+  implementation("com.asfoundation:appcoins-contract-proxy:${APPC_CONTRACT_PROXY_VERSION}") {
+    exclude group: 'org.web3j'
+  }
 }
 
 String getDate() {

@@ -32,11 +32,6 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
 
   @Override
   public AppViewSimilarAppViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-    if (viewType == ApplicationAd.Network.APPNEXT.ordinal()) {
-      return new AppViewSimilarAppViewHolder(LayoutInflater.from(viewGroup.getContext())
-          .inflate(R.layout.displayable_grid_ad_appnext, viewGroup, false), oneDecimalFormater,
-          appClicked);
-    }
     return new AppViewSimilarAppViewHolder(LayoutInflater.from(viewGroup.getContext())
         .inflate(R.layout.displayable_grid_ad, viewGroup, false), oneDecimalFormater, appClicked);
   }
@@ -44,6 +39,11 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
   @Override public void onBindViewHolder(AppViewSimilarAppViewHolder appViewSimilarAppViewHolder,
       int position) {
     appViewSimilarAppViewHolder.setSimilarApp(similarApps.get(position), type);
+  }
+
+  @Override public int getItemViewType(int position) {
+    return similarApps.get(position)
+        .getNetworkAdType();
   }
 
   @Override public int getItemCount() {
@@ -55,8 +55,4 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
     notifyDataSetChanged();
   }
 
-  @Override public int getItemViewType(int position) {
-    return similarApps.get(position)
-        .getNetworkAdType();
-  }
 }

@@ -7,17 +7,15 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.ads.model.AptoideNativeAd;
+import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.donations.DonateDialogFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +59,7 @@ public class AppViewNavigator {
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
-    appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, tag);
+    appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
   public void navigateToAd(AptoideNativeAd ad, String tag) {
@@ -74,23 +72,10 @@ public class AppViewNavigator {
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateToSearch(String appName, boolean onlyShowTrustedApps) {
-    Fragment fragment =
-        SearchResultFragment.newInstance(appName, onlyShowTrustedApps, defaultStoreName);
-    fragmentNavigator.navigateTo(fragment, true);
-  }
-
-  public void buyApp(GetAppMeta.App app) {
-    Fragment fragment = fragmentNavigator.peekLast();
-    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
-      ((AppViewFragment) fragment).buyApp(app);
-    }
-  }
-
   public void buyApp(long appId) {
     Fragment fragment = fragmentNavigator.peekLast();
-    if (fragment != null && NewAppViewFragment.class.isAssignableFrom(fragment.getClass())) {
-      ((NewAppViewFragment) fragment).buyApp(appId);
+    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
+      ((AppViewFragment) fragment).buyApp(appId);
     }
   }
 

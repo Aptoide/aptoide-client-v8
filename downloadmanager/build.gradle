@@ -51,7 +51,7 @@ dependencies {
   //noinspection GradleDependency
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  implementation "com.liulishuo.filedownloader:library:${FILE_DOWNLOADER_VERSION}"
+  api "com.liulishuo.filedownloader:library:${FILE_DOWNLOADER_VERSION}"
   implementation "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
 
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"

@@ -4,8 +4,8 @@ import android.os.Bundle;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -38,7 +38,7 @@ public class HomeNavigator {
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
-    appNavigator.navigateWithAppId(appId, packageName, NewAppViewFragment.OpenType.OPEN_ONLY, tag);
+    appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
   public void navigateWithEditorsPosition(long appId, String packageName, String storeTheme,
@@ -73,11 +73,11 @@ public class HomeNavigator {
     fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
 
-  private NewAppViewFragment.OpenType parseAction(HomeEvent.Type type) {
+  private AppViewFragment.OpenType parseAction(HomeEvent.Type type) {
     if (type.equals(HomeEvent.Type.SOCIAL_CLICK)) {
-      return NewAppViewFragment.OpenType.OPEN_ONLY;
+      return AppViewFragment.OpenType.OPEN_ONLY;
     } else if (type.equals(HomeEvent.Type.SOCIAL_INSTALL)) {
-      return NewAppViewFragment.OpenType.OPEN_AND_INSTALL;
+      return AppViewFragment.OpenType.OPEN_AND_INSTALL;
     }
     throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");
   }

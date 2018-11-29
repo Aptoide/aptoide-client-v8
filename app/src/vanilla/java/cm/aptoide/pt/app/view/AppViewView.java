@@ -95,7 +95,9 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickGenericRetry();
 
-  Observable<Void> clickDonateButton();
+  Observable<Void> clickDonateAfterInstallButton();
+
+  Observable<Void> clickTopDonorsDonateButton();
 
   Observable<ShareDialogs.ShareResponse> shareDialogResponse();
 

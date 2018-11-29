@@ -3,7 +3,7 @@ package cm.aptoide.pt.navigation;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.ads.model.ApplicationAd;
+import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -366,7 +366,7 @@ public class HomePresenterTest {
 
   @NonNull private ActionBundle getFakeActionBundle() {
     return new ActionBundle("title", HomeBundle.BundleType.INFO_BUNDLE, null, "tag",
-        new ActionItem("1", "layout", "title", "message", "icon", "url", ""));
+        new ActionItem("1", "type", "title", "message", "icon", "url"));
   }
 
   private AdHomeEvent createAdHomeEvent() {

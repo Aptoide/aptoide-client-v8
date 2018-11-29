@@ -5,9 +5,9 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
-import cm.aptoide.pt.app.view.NewAppViewFragment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.presenter.View;
@@ -39,11 +39,10 @@ import static org.mockito.Mockito.when;
 
 public class AppViewPresenterTest {
 
-  @Mock private NewAppViewFragment view;
+  @Mock private AppViewFragment view;
   @Mock private PermissionManager permissionManager;
   @Mock private PermissionService permissionService;
   @Mock private AppViewAnalytics appViewAnalytics;
-  @Mock private AppViewSimilarAppAnalytics similarAppsAnalytics;
   @Mock private AccountNavigator accountNavigator;
   @Mock private AppViewNavigator appViewNavigator;
   @Mock private AppViewManager appViewManager;
@@ -58,9 +57,9 @@ public class AppViewPresenterTest {
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
-    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, similarAppsAnalytics,
-        appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-        permissionManager, permissionService);
+    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, appViewNavigator,
+        appViewManager, accountManager, Schedulers.immediate(), crashReporter, permissionManager,
+        permissionService);
 
     lifecycleEvent = PublishSubject.create();
 
@@ -80,7 +79,7 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
-            NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
             "marketName", false, false, bdsFlags);
 
     DownloadModel downloadModel =
@@ -212,8 +211,8 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
-            NewAppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName",
-            false, false, bdsFlags);
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
+            false, bdsFlags);
 
     //Given an initialized presenter
     presenter.handleFirstLoad();

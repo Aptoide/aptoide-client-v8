@@ -21,6 +21,8 @@ import rx.subjects.PublishSubject;
 public class LoggedInTermsAndConditionsDialog {
 
   private AlertDialog dialog;
+  private Button continueButton;
+  private Button logOutButton;
   private PublishSubject<String> uiEvents;
 
   public LoggedInTermsAndConditionsDialog(Context context) {
@@ -29,7 +31,8 @@ public class LoggedInTermsAndConditionsDialog {
     dialog = new AlertDialog.Builder(context).create();
     View dialogView = inflater.inflate(R.layout.dialog_logged_in_accept_tos, null);
     dialog.setView(dialogView);
-    Button continueButton = dialogView.findViewById(R.id.accept_continue);
+    continueButton = dialogView.findViewById(R.id.accept_continue);
+    logOutButton = dialogView.findViewById(R.id.log_out);
 
     setPrivacyPolicyLinks(dialogView, context, uiEvents);
     dialog.setCancelable(false);
@@ -40,11 +43,10 @@ public class LoggedInTermsAndConditionsDialog {
       dialog.dismiss();
     });
 
-    dialogView.findViewById(R.id.log_out)
-        .setOnClickListener(__ -> {
-          uiEvents.onNext("logout");
-          dialog.dismiss();
-        });
+    logOutButton.setOnClickListener(__ -> {
+      uiEvents.onNext("logout");
+      dialog.dismiss();
+    });
   }
 
   public void showDialog() {
@@ -53,6 +55,8 @@ public class LoggedInTermsAndConditionsDialog {
 
   public void destroyDialog() {
     dialog = null;
+    continueButton = null;
+    logOutButton = null;
     uiEvents = null;
   }
 

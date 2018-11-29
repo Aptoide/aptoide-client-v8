@@ -6,6 +6,8 @@ public interface DonateDialogView {
 
   Observable<DonationsDialogResult> donateClick();
 
+  Observable<DonationsDialogResult> cancelClick();
+
   Observable<Void> noWalletContinueClick();
 
   void sendWalletIntent(float value, String address, String packageName, String nickname);

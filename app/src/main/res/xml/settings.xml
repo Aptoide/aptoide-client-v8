@@ -23,7 +23,7 @@
       android:title="@string/updates"
       >
     <android.support.v7.preference.SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="updatesFilterAlphaBetaKey"
         android:summary="@string/settings_updates_filter_summary"
         android:title="@string/settings_updates_filter_setting_title"/>

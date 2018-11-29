@@ -12,6 +12,7 @@ import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -60,8 +61,9 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.AppNextAdRepository;
+import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -73,12 +75,12 @@ import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialService;
+import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
@@ -117,9 +119,11 @@ import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
+import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
@@ -203,6 +207,7 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -329,8 +334,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
     return new AptoideDownloadManager(downloadAccessor, cacheHelper, new FileUtils(),
-        downloadAnalytics, FileDownloader.getImpl(),
-        cachePath, apkPath, obbPath);
+        downloadAnalytics, FileDownloader.getImpl(), cachePath, apkPath, obbPath);
   }
 
   @Singleton @Provides @Named("default") Installer provideDefaultInstaller(
@@ -924,20 +928,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         storeRepository);
   }
 
-  @Singleton @Provides AppNextAdRepository providesAppNextAdRepository() {
-    return new AppNextAdRepository(application.getApplicationContext());
-  }
-
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      ConnectivityManager connectivityManager, AppNextAdRepository appNextAdRepository) {
+      ConnectivityManager connectivityManager) {
     return new AdsRepository(idsRepository, accountManager, okHttpClient,
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
         application.getApplicationContext(), connectivityManager, application.getResources(),
         adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
-        application::getPartnerId, new MinimalAdMapper(), appNextAdRepository);
+        application::getPartnerId, new MinimalAdMapper());
   }
 
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
@@ -1351,11 +1351,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
   }
 
-  @Singleton @Provides AppViewSimilarAppAnalytics providesAppViewSimilarAppsAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new AppViewSimilarAppAnalytics(analyticsManager, navigationTracker);
-  }
-
   @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(
       @Named("default") SharedPreferences sharedPreferences) {
     return new UserPreferencesPersister(sharedPreferences);
@@ -1449,5 +1444,102 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       TokenInvalidator tokenInvalidator) {
     return new DonationsService(service, sharedPreferences, v8OkHttpClient, converterFactory,
         bodyInterceptorPoolV7, tokenInvalidator);
+  }
+
+  @Singleton @Provides LoginPreferences provideLoginPreferences() {
+    return new LoginPreferences(application, GoogleApiAvailability.getInstance());
+  }
+
+  @Singleton @Provides @Named("defaultStoreName") String provideStoreName() {
+    return "apps";
+  }
+
+  @Singleton @Provides @Named("extraID") String provideExtraID() {
+    return "";
+  }
+
+  @Singleton @Provides @Named("marketName") String provideMarketName() {
+    return "Aptoide";
+  }
+
+  @Singleton @Provides @Named("partnerID") String providePartnerID() {
+    return "";
+  }
+
+  @Singleton @Provides @Named("accountType") String provideAccountType() {
+    return BuildConfig.APPLICATION_ID;
+  }
+
+  @Singleton @Provides @Named("cachePath") String provideCachePath() {
+    return Environment.getExternalStorageDirectory()
+        .getAbsolutePath() + "/.aptoide/";
+  }
+
+  @Singleton @Provides @Named("imageCachePath") String provideImageCachePatch(
+      @Named("cachePath") String cachePath) {
+    return cachePath + "icons/";
+  }
+
+  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {
+    return new AptoideApplicationAnalytics();
+  }
+
+  @Singleton @Provides IronSourceAnalytics provideIronSourceAnalytics() {
+    return new IronSourceAnalytics();
+  }
+
+  @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {
+    List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
+        DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
+        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, AppViewAnalytics.HOME_PAGE_EDITORS_CHOICE_FLURRY,
+        AppViewAnalytics.APP_VIEW_OPEN_FROM, StoreAnalytics.STORES_TAB_INTERACT,
+        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
+        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
+        FirstLaunchAnalytics.FIRST_LAUNCH, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN,
+        AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.CREATE_YOUR_STORE,
+        AccountAnalytics.PROFILE_SETTINGS, AdultContentAnalytics.ADULT_CONTENT,
+        DeepLinkAnalytics.APP_LAUNCH, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
+        AppViewAnalytics.CLICK_INSTALL));
+    return flurryEvents;
+  }
+
+  @Singleton @Provides @Named("facebookEvents") Collection<String> provideFacebookEvents() {
+    return Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
+        InstallAnalytics.NOTIFICATION_APPLICATION_INSTALL,
+        InstallAnalytics.EDITORS_APPLICATION_INSTALL,
+        AddressBookAnalytics.FOLLOW_FRIENDS_CHOOSE_NETWORK,
+        AddressBookAnalytics.FOLLOW_FRIENDS_HOW_TO,
+        AddressBookAnalytics.FOLLOW_FRIENDS_APTOIDE_ACCESS,
+        AddressBookAnalytics.FOLLOW_FRIENDS_NEW_CONNECTIONS,
+        AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
+        DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
+        DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
+        DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, SearchAnalytics.SEARCH,
+        SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
+        AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_OPEN_FROM,
+        AppViewAnalytics.APP_VIEW_INTERACT, AppViewAnalytics.DONATIONS_IMPRESSION,
+        NotificationAnalytics.NOTIFICATION_RECEIVED, NotificationAnalytics.NOTIFICATION_IMPRESSION,
+        NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
+        TimelineAnalytics.SOCIAL_CARD_PREVIEW, TimelineAnalytics.CARD_ACTION,
+        TimelineAnalytics.TIMELINE_OPENED, StoreAnalytics.STORES_TAB_INTERACT,
+        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
+        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
+        AccountAnalytics.FOLLOW_FRIENDS, UpdatesAnalytics.UPDATE_EVENT,
+        PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
+        InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
+        AppViewAnalytics.SIMILAR_APP_INTERACT, NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
+        AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
+        AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
+        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
+        BillingAnalytics.PAYMENT_AUTH, BillingAnalytics.PAYMENT_LOGIN,
+        BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS,
+        AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
+        AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
+        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
+        TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
+        AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
+        NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
+        DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT);
   }
 }

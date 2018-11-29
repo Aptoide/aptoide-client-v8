@@ -22,7 +22,6 @@ public class TimelineAnalytics {
   public static final String OPEN_APP = "OPEN_APP";
   public static final String OPEN_TIMELINE_EVENT = "OPEN_TIMELINE";
   public static final String UPDATE_APP = "UPDATE_APP";
-  public static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
   public static final String LIKE = "LIKE";
   public static final String COMMENT = "COMMENT";
   public static final String SHARE = "SHARE";
@@ -69,11 +68,6 @@ public class TimelineAnalytics {
     data.put(PUBLISHER, timelineSocialActionData.getPublisher());
     data.put(TITLE, timelineSocialActionData.getTitle());
     return data;
-  }
-
-  public void sendFollowFriendsEvent() {
-    analyticsManager.logEvent(null, FOLLOW_FRIENDS, AnalyticsManager.Action.CLICK,
-        getViewName(true));
   }
 
   private Map<String, Object> createMapData(String key, String value) {
