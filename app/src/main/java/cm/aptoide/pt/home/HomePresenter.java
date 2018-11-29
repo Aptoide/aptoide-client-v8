@@ -88,6 +88,22 @@ public class HomePresenter implements Presenter {
     handleClickOnPrivacyPolicy();
 
     handleEditorialCardClick();
+
+    handlePromotionsClick();
+  }
+
+  private void handlePromotionsClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.promotionsClick()
+            .observeOn(viewScheduler)
+            .doOnNext(account -> homeNavigator.navigateToPromotions())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
