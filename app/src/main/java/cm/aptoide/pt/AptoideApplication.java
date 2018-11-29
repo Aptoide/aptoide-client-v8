@@ -188,6 +188,7 @@ public abstract class AptoideApplication extends Application {
   @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   @Inject AptoideShortcutManager shortcutManager;
   @Inject SettingsManager settingsManager;
+  @Inject LoginSignupManager loginSignupManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;

@@ -2,7 +2,7 @@ package cm.aptoide.pt.account.view.user;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.LoginSignupManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -20,15 +20,17 @@ public class ProfileStepOnePresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
   private final AccountAnalytics accountAnalytics;
+  private LoginSignupManager loginSignupManager;
 
   public ProfileStepOnePresenter(ProfileStepOneView view, CrashReport crashReport,
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
-      AccountAnalytics accountAnalytics) {
+      AccountAnalytics accountAnalytics, LoginSignupManager loginSignupManager) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.accountAnalytics = accountAnalytics;
+    this.loginSignupManager = loginSignupManager;
   }
 
   @Override public void present() {
@@ -53,7 +55,7 @@ public class ProfileStepOnePresenter implements Presenter {
                         AccountAnalytics.ProfileAction.CONTINUE))
                     .doOnCompleted(() -> view.dismissWaitDialog())
                     .doOnCompleted(() -> {
-                      if (isExternalLogin || BuildConfig.FLAVOR.contains("cobrand")) {
+                      if (isExternalLogin || !loginSignupManager.shouldShowCreateStore()) {
                         accountNavigator.navigateToHomeView();
                       } else {
                         accountNavigator.navigateToCreateStoreView();

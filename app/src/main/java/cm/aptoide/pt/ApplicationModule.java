@@ -1546,4 +1546,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SettingsManager providesSettingsManager() {
     return new SettingsManager();
   }
+
+  @Singleton @Provides LoginSignupManager providesLoginSignupManager() {
+    return new LoginSignupManager();
+  }
+
+  @Singleton @Provides MyAccountManager providesMyAccountManager() {
+    return new MyAccountManager();
+  }
 }

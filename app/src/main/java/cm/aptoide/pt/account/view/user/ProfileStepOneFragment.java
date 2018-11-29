@@ -12,6 +12,7 @@ import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.LoginSignupManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -35,6 +36,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment
   @Inject ScreenOrientationManager orientationManager;
   @Inject AccountNavigator accountNavigator;
   @Inject AccountAnalytics accountAnalytics;
+  @Inject LoginSignupManager loginSignupManager;
   private Button continueBtn;
   private Button moreInfoBtn;
   private ProgressDialog waitDialog;
@@ -117,7 +119,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment
     final AptoideAccountManager accountManager =
         ((AptoideApplication) applicationContext).getAccountManager();
     attachPresenter(new ProfileStepOnePresenter(this, CrashReport.getInstance(), accountManager,
-        accountNavigator, accountAnalytics));
+        accountNavigator, accountAnalytics, loginSignupManager));
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
