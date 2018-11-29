@@ -82,7 +82,7 @@ public class ProfileStepTwoPresenter implements Presenter {
   }
 
   private void navigate(boolean externalLogin) {
-    if (externalLogin || loginSignupManager.shouldShowCreateStore()) {
+    if (externalLogin || !loginSignupManager.shouldShowCreateStore()) {
       accountNavigator.navigateToHomeView();
     } else {
       accountNavigator.navigateToCreateStoreView();
