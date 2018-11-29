@@ -59,10 +59,4 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
     return ads.size();
   }
 
-  @Override public int getItemViewType(int position) {
-    return ads.get(position)
-        .getAd()
-        .getNetwork()
-        .ordinal();
-  }
 }

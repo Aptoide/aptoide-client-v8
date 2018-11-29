@@ -71,7 +71,6 @@ public class AppViewPresenter implements Presenter {
   }
 
   @Override public void present() {
-    initializeInterstitialAd();
     handleFirstLoad();
     handleReviewAutoScroll();
     handleClickOnScreenshot();
@@ -97,7 +96,7 @@ public class AppViewPresenter implements Presenter {
     handleClickOnRetry();
     handleOnScroll();
     handleOnSimilarAppsVisible();
-    handleInterstitialEvents();
+    //handleInterstitialEvents();
 
     handleInstallButtonClick();
     pauseDownload();
@@ -120,34 +119,11 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appViewManager.getInterstitialEvent())
         .observeOn(Schedulers.io())
-        .doOnNext(adEvent -> {
-          if (adEvent == AdEvent.CLICK) {
-            appViewAnalytics.installInterstitialClick("ironSource");
-          } else if (adEvent == AdEvent.IMPRESSION) {
-            appViewAnalytics.installInterstitialImpression("ironSource");
-          }
-        })
-        .flatMap(adEvent -> {
-          if (adEvent == AdEvent.CLICK) {
-            return appViewManager.recordInterstitialClick();
-          } else if (adEvent == AdEvent.IMPRESSION) {
-            return appViewManager.recordInterstitialImpression();
-          }
-          return Observable.empty();
-        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void initializeInterstitialAd() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.initializeInterstitialAd())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
 
   private void handleOnSimilarAppsVisible() {
     view.getLifecycleEvent()
@@ -817,8 +793,6 @@ public class AppViewPresenter implements Presenter {
                               .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
                                   appViewModel.getPackageName()))
                               .toSingleDefault(true)
-                              .delay(3, TimeUnit.SECONDS)
-                              .flatMap(__ -> appViewManager.showInterstitialAd())
                               .toCompletable());
                   break;
                 case OPEN:

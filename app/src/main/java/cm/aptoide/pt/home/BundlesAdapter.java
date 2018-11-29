@@ -57,7 +57,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             .inflate(STORE, parent, false));
       case ADS:
         return new AdsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, adClickedEvents);
+            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, adClickedEvents,
+            homeAnalytics);
       case INFO:
         return new InfoBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(INFO, parent, false), uiEventsListener);
@@ -73,13 +74,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
-  }
-
-  @Override public void onViewDetachedFromWindow(AppBundleViewHolder holder) {
-    if (holder instanceof LargeBannerBundleViewHolder) {
-      ((LargeBannerBundleViewHolder) holder).destroyBanner();
-    }
-    super.onViewDetachedFromWindow(holder);
   }
 
   @Override public void onBindViewHolder(AppBundleViewHolder appBundleViewHolder, int position) {

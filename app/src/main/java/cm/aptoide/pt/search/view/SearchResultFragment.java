@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
@@ -54,6 +55,11 @@ import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.mopub.nativeads.MoPubNativeAdLoadedListener;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
+import com.mopub.nativeads.RequestParameters;
+import com.mopub.nativeads.ViewBinder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -117,6 +123,8 @@ public class SearchResultFragment extends BackButtonFragment
   private String unsubmittedQuery;
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
+
+  private MoPubRecyclerAdapter moPubRecyclerAdapter;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -293,7 +301,10 @@ public class SearchResultFragment extends BackButtonFragment
     viewModel.addFollowedStoresSearchAppResults(dataList);
   }
 
-  @Override public void addAllStoresResult(List<SearchAppResult> dataList) {
+  @Override public void addAllStoresResult(List<SearchAppResult> dataList, String query) {
+    RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
+        .build();
+    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_SIMILAR_PLACEMENT_ID, requestParameters);
     allStoresResultAdapter.addResultForSearch(dataList);
     viewModel.addAllStoresSearchAppResults(dataList);
   }
@@ -837,7 +848,22 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void attachAllStoresResultListDependencies() {
-    allStoresResultList.setAdapter(allStoresResultAdapter);
+    moPubRecyclerAdapter = new MoPubRecyclerAdapter(getActivity(), allStoresResultAdapter);
+    ViewBinder moPubViewBinder = new ViewBinder.Builder(R.layout.search_ad).titleId(R.id.app_name)
+        .iconImageId(R.id.app_icon)
+        .build();
+    MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
+    moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
+    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
+      @Override public void onAdLoaded(int position) {
+
+      }
+
+      @Override public void onAdRemoved(int position) {
+
+      }
+    });
+    allStoresResultList.setAdapter(moPubRecyclerAdapter);
     allStoresResultList.setLayoutManager(getDefaultLayoutManager());
     allStoresResultList.addItemDecoration(getDefaultItemDecoration());
   }

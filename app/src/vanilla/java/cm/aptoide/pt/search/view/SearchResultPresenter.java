@@ -331,7 +331,7 @@ import rx.functions.Func2;
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnSuccess(dataList -> view.addAllStoresResult(dataList))
+        .doOnSuccess(dataList -> view.addAllStoresResult(dataList, query))
         .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));

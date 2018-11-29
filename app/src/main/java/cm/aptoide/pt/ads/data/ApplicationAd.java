@@ -22,7 +22,7 @@ public interface ApplicationAd {
   void setAdView(View adView);
 
   enum Network {
-    SERVER("Server");
+    SERVER("Server"), MOPUB("MoPub");
     private String name;
 
     Network(String network) {

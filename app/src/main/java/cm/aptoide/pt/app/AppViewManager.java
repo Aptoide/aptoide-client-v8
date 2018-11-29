@@ -47,7 +47,6 @@ public class AppViewManager {
   private final AppCenter appCenter;
   private final ReviewsManager reviewsManager;
   private final AdsManager adsManager;
-  private final IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment;
   private final IronSourceAdRepository ironSourceAdRepository;
   private final StoreManager storeManager;
   private final FlagManager flagManager;
@@ -77,7 +76,6 @@ public class AppViewManager {
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
       String marketName, AppCoinsManager appCoinsManager,
-      IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
       IronSourceAdRepository ironSourceAdRepository) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -99,7 +97,6 @@ public class AppViewManager {
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
     this.isFirstLoad = true;
-    this.ironSourceInterstitialAdExperiment = ironSourceInterstitialAdExperiment;
     this.ironSourceAdRepository = ironSourceAdRepository;
   }
 
@@ -165,22 +162,6 @@ public class AppViewManager {
     return adsManager.loadAds(cachedApp.getPackageName(), cachedApp.getStore()
         .getName())
         .map(SearchAdResult::new);
-  }
-
-  public Observable<Experiment> initializeInterstitialAd() {
-    return ironSourceInterstitialAdExperiment.loadInterstitial();
-  }
-
-  public Single<Experiment> showInterstitialAd() {
-    return ironSourceInterstitialAdExperiment.showInterstitial();
-  }
-
-  public Observable<Boolean> recordInterstitialImpression() {
-    return ironSourceInterstitialAdExperiment.recordAdImpression();
-  }
-
-  public Observable<Boolean> recordInterstitialClick() {
-    return ironSourceInterstitialAdExperiment.recordAdClick();
   }
 
   public PublishSubject<AdEvent> getInterstitialEvent() {

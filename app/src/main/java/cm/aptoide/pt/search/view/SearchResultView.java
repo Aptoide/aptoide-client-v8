@@ -33,7 +33,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void addFollowedStoresResult(List<SearchAppResult> dataList);
 
-  void addAllStoresResult(List<SearchAppResult> dataList);
+  void addAllStoresResult(List<SearchAppResult> dataList, String query);
 
   Model getViewModel();
 

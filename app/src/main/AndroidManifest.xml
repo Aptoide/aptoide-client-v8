@@ -38,7 +38,7 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
   <uses-sdk
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy, com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner, com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial, com.mopub.mobileads.native_video, com.mopub.mobileads.native_static, com.mopub.mobileads.base"/>
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy, com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner, com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial, com.mopub.mobileads.native_video, com.mopub.mobileads.native_static, com.mopub.mobileads.base, com.flurry.android.ads.sdk, com.flurry.android.analytics.sdk"/>
 
   <application
       android:allowBackup="false"

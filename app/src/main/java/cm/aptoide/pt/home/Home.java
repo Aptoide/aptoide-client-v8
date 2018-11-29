@@ -1,10 +1,12 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.app.AdsManager;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.impressions.ImpressionManager;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Completable;
 import rx.Single;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -24,11 +26,54 @@ public class Home {
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
-    return bundlesRepository.loadHomeBundles();
+    return bundlesRepository.loadHomeBundles()
+        .map(homeBundlesModel -> {
+          if (homeBundlesModel.hasErrors()) {
+            return new HomeBundlesModel(homeBundlesModel.getError());
+          } else {
+            return new HomeBundlesModel(injectLargeBanner(homeBundlesModel.getList()),
+                homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
+          }
+        });
+  }
+
+  private List<HomeBundle> injectLargeBanner(List<HomeBundle> list) {
+    list.add(1, new HomeBundle() {
+      @Override public String getTitle() {
+        return "Advertising";
+      }
+
+      @Override public List<?> getContent() {
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(new BannerAd());
+        return objects;
+      }
+
+      @Override public BundleType getType() {
+        return BundleType.LARGE_BANNER;
+      }
+
+      @Override public Event getEvent() {
+        return null;
+      }
+
+      @Override public String getTag() {
+        return null;
+      }
+    });
+    return list;
   }
 
   public Single<HomeBundlesModel> loadFreshHomeBundles() {
-    return bundlesRepository.loadFreshHomeBundles();
+    return bundlesRepository.loadFreshHomeBundles()
+        .map(homeBundlesModel -> {
+          if (homeBundlesModel.hasErrors()) {
+            return new HomeBundlesModel(homeBundlesModel.getError());
+          } else {
+            return new HomeBundlesModel(injectLargeBanner(homeBundlesModel.getList()),
+                homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
+          }
+        });
   }
 
   public Single<HomeBundlesModel> loadNextHomeBundles() {

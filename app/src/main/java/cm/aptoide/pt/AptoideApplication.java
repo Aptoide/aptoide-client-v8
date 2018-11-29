@@ -317,7 +317,6 @@ public abstract class AptoideApplication extends Application {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
 
-    initializeAppNext();
     initializeMopub();
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);

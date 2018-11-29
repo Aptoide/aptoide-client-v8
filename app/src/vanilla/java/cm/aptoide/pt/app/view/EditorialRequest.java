@@ -31,9 +31,7 @@ public class EditorialRequest extends V7<EditorialCard, BaseBody> {
   public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-        + "/api/7.20181019/";
+        + "://" + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST + "/api/7.20181019/";
   }
 
   public static EditorialRequest of(String cardId, BodyInterceptor<BaseBody> bodyInterceptor,

@@ -55,6 +55,7 @@
         android:layout_toEndOf="@id/star_icon"
         android:layout_toRightOf="@id/star_icon"
         android:textSize="10sp"
+        android:text="@string/appcardview_title_no_stars"
         tools:text="4.2"
         style="@style/Aptoide.TextView.Medium.S.Black"
         />

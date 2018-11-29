@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.model.ApplicationAd;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -54,5 +53,4 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
     similarApps = apps;
     notifyDataSetChanged();
   }
-
 }

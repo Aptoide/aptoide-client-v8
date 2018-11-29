@@ -70,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
+            android:text="@string/appcardview_title_no_stars"
             tools:ignore="SmallSp"
             tools:text="2.3"
             style="@style/Aptoide.TextView.Regular.XXS.Black"

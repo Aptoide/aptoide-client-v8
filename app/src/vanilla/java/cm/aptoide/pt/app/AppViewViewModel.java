@@ -438,9 +438,7 @@ public class AppViewViewModel {
   }
 
   public boolean hasDonations() {
-    return bdsFlags != null
-        && !bdsFlags.isEmpty()
-        && bdsFlags.contains(BDS_STORE_FLAG)
+    return bdsFlags != null && !bdsFlags.isEmpty() && bdsFlags.contains(BDS_STORE_FLAG)
         && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
   }
 }

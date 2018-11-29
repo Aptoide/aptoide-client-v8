@@ -33,7 +33,6 @@ import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
-import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
@@ -278,15 +277,13 @@ import rx.schedulers.Schedulers;
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
       SocialRepository socialRepository, @Named("marketName") String marketName,
-      AppCoinsManager appCoinsManager,
-      IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
-      IronSourceAdRepository ironSourceAdRepository) {
+      AppCoinsManager appCoinsManager, IronSourceAdRepository ironSourceAdRepository) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+        marketName, appCoinsManager, ironSourceAdRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -381,13 +378,5 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides ApkFyExperiment providesApkfyExperiment(ABTestManager abTestManager) {
     return new ApkFyExperiment(abTestManager);
-  }
-
-  @FragmentScope @Provides
-  IronSourceInterstitialAdExperiment providesIronSourceInterstitialAdExperiment(
-      ABTestManager abTestManager, IronSourceAdRepository ironSourceAdRepository,
-      IronSourceAnalytics ironSourceAnalytics) {
-    return new IronSourceInterstitialAdExperiment(abTestManager, AndroidSchedulers.mainThread(),
-        ironSourceAdRepository, ironSourceAnalytics);
   }
 }

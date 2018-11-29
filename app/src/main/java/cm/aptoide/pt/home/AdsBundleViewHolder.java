@@ -10,6 +10,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
 import com.mopub.nativeads.MoPubNativeAdLoadedListener;
@@ -31,11 +32,18 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final AdsInBundleAdapter appsInBundleAdapter;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final RecyclerView appsList;
+  private final MoPubRecyclerAdapter moPubRecyclerAdapter;
+  private final HomeAnalytics homeAnalytics;
+
+  private boolean hasAdLoaded;
 
   public AdsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents,
+      HomeAnalytics homeAnalytics) {
     super(view);
+    this.homeAnalytics = homeAnalytics;
     this.uiEventsListener = uiEventsListener;
+    this.hasAdLoaded = false;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     appsList = (RecyclerView) view.findViewById(R.id.apps_list);
@@ -51,7 +59,8 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
       }
     });
     appsList.setLayoutManager(layoutManager);
-    MoPubRecyclerAdapter moPubRecyclerAdapter =
+    appsList.setAdapter(appsInBundleAdapter);
+    moPubRecyclerAdapter =
         new MoPubRecyclerAdapter((Activity) view.getContext(), appsInBundleAdapter);
     ViewBinder moPubViewBinder =
         new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
@@ -61,7 +70,8 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
       @Override public void onAdLoaded(int position) {
-
+        homeAnalytics.sendAdImpressionEvent(0, "Ad", position, "ads-highlighted", HomeEvent.Type.AD,
+            ApplicationAd.Network.MOPUB);
       }
 
       @Override public void onAdRemoved(int position) {
@@ -69,7 +79,6 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
       }
     });
     appsList.setAdapter(moPubRecyclerAdapter);
-    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_HIGHLIGHTED_PLACEMENT_ID);
   }
 
 
@@ -96,5 +105,11 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
 
     moreButton.setOnClickListener(
         v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
+
+    if (!hasAdLoaded) {
+      hasAdLoaded = true;
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_HIGHLIGHTED_PLACEMENT_ID);
+    }
   }
+
 }
