@@ -3,6 +3,7 @@ package cm.aptoide.pt.account.view.user;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.LoginSignupManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -19,15 +20,17 @@ public class ProfileStepTwoPresenter implements Presenter {
   private final CrashReport crashReport;
   private final AccountNavigator accountNavigator;
   private final AccountAnalytics accountAnalytics;
+  private LoginSignupManager loginSignupManager;
 
   public ProfileStepTwoPresenter(ProfileStepTwoView view, AptoideAccountManager accountManager,
       CrashReport crashReport, AccountNavigator accountNavigator,
-      AccountAnalytics accountAnalytics) {
+      AccountAnalytics accountAnalytics, LoginSignupManager loginSignupManager) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
     this.accountNavigator = accountNavigator;
     this.accountAnalytics = accountAnalytics;
+    this.loginSignupManager = loginSignupManager;
   }
 
   @Override public void present() {
@@ -80,7 +83,7 @@ public class ProfileStepTwoPresenter implements Presenter {
   }
 
   private void navigate(boolean externalLogin) {
-    if (externalLogin || BuildConfig.FLAVOR.contains("cobrand")) {
+    if (externalLogin || loginSignupManager.shouldShowCreateStore()) {
       accountNavigator.navigateToHomeView();
     } else {
       accountNavigator.navigateToCreateStoreView();
