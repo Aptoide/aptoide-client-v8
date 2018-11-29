@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.view.donations.view.DonationListEntryViewHolder;
 import java.text.DecimalFormat;
 import java.util.List;
 
