@@ -269,17 +269,10 @@ android {
       resValue "string", "TEST_FAIRY_TOKEN", "\"" + project.TEST_FAIRY_TOKEN + "\""
     }
 
-    variant.buildConfigField "String", "APPNEXT_PLACEMENT_ID",
-        "\"" + project.APPNEXT_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_PLACEMENT_ID",
-        "\"" + project.APPNEXT_HIGHLIGHTED_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "APPNEXT_SIMILAR_PLACEMENT_ID",
-        "\"" + project.APPNEXT_SIMILAR_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "APPNEXT_HIGHLIGHTED_ABTEST_PLACEMENT_ID",
-        "\"" + project.APPNEXT_HIGHLIGHTED_ABTEST_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID",
-        "\"" + project.APPNEXT_SIMILAR_ABTEST_PLACEMENT_ID + "\""
-
+    variant.buildConfigField "String", "IRONSOURCE_APPLICATION_ID",
+        "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID",
+        "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -405,9 +398,18 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
-  // AppNext
-  implementation "com.appnext.sdk:core:${APPNEXT_VERSION}"
-  implementation "com.appnext.sdk:native-ads2:${APPNEXT_VERSION}"
+  // IronSource
+  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
+  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
+    transitive = true
+    exclude group: "com.android.support"
+    exclude module: "support-annotations"
+    exclude module: "support-v4"
+  }
+
+
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
@@ -472,7 +474,9 @@ dependencies {
 
   fairyImplementation "testfairy:testfairy-android-sdk:${TEST_FAIRY_VERSION}"
 
-  implementation "com.asfoundation:appcoins-contract-proxy:0.4.5.19b"
+  implementation("com.asfoundation:appcoins-contract-proxy:${APPC_CONTRACT_PROXY_VERSION}") {
+    exclude group: 'org.web3j'
+  }
 }
 
 String getDate() {

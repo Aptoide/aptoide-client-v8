@@ -2,38 +2,36 @@ package cm.aptoide.pt.home;
 
 public class ActionItem {
   private final String cardId;
-  private final String layout;
+  private final String type;
   private final String title;
-  private final String message;
+  private final String subTitle;
   private final String icon;
   private final String url;
-  private final String type;
 
-  public ActionItem(String cardId, String layout, String title, String message, String icon,
-      String url, String type) {
+  public ActionItem(String cardId, String type, String title, String subTitle, String icon,
+      String url) {
     this.cardId = cardId;
-    this.layout = layout;
+    this.type = type;
     this.title = title;
-    this.message = message;
+    this.subTitle = subTitle;
     this.icon = icon;
     this.url = url;
-    this.type = type;
   }
 
   public String getCardId() {
     return cardId;
   }
 
-  public String getLayout() {
-    return layout;
+  public String getType() {
+    return type;
   }
 
   public String getTitle() {
     return title;
   }
 
-  public String getMessage() {
-    return message;
+  public String getSubTitle() {
+    return subTitle;
   }
 
   public String getIcon() {
@@ -42,9 +40,5 @@ public class ActionItem {
 
   public String getUrl() {
     return url;
-  }
-
-  public String getType() {
-    return type;
   }
 }

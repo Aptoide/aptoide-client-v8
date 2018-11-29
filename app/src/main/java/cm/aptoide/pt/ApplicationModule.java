@@ -47,8 +47,6 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
-import cm.aptoide.pt.abtesting.experiments.HighlightedAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.SimilarAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -65,7 +63,7 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.AppNextAdRepository;
+import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -82,6 +80,7 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialService;
+import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
@@ -248,7 +247,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import rx.Completable;
 import rx.Single;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -878,7 +876,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     final RealmConfiguration realmConfiguration =
         new RealmConfiguration.Builder().name(BuildConfig.REALM_FILE_NAME)
             .schemaVersion(BuildConfig.REALM_SCHEMA_VERSION)
-            .migration(new RealmToRealmDatabaseMigration())
+            .migration(new RealmToRealmDatabaseMigration(application.getApplicationContext()))
             .build();
     Realm.setDefaultConfiguration(realmConfiguration);
     return new Database();
@@ -918,20 +916,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         storeRepository);
   }
 
-  @Singleton @Provides AppNextAdRepository providesAppNextAdRepository() {
-    return new AppNextAdRepository(application.getApplicationContext());
-  }
-
   @Singleton @Provides AdsRepository provideAdsRepository(IdsRepository idsRepository,
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      ConnectivityManager connectivityManager, AppNextAdRepository appNextAdRepository) {
+      ConnectivityManager connectivityManager) {
     return new AdsRepository(idsRepository, accountManager, okHttpClient,
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
         application.getApplicationContext(), connectivityManager, application.getResources(),
         adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
-        application::getPartnerId, new MinimalAdMapper(), appNextAdRepository);
+        application::getPartnerId, new MinimalAdMapper());
   }
 
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
@@ -1378,16 +1372,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoredMinimalAd.class), new MinimalAdMapper());
   }
 
-  @Singleton @Provides SimilarAdExperiment providesSimilarAdExperiment(ABTestManager abTestManager,
-      AdsManager adsManager) {
-    return new SimilarAdExperiment(abTestManager, AndroidSchedulers.mainThread(), adsManager);
-  }
-
-  @Singleton @Provides HighlightedAdExperiment providesHighlightedAdExperiment(
-      ABTestManager abTestManager, AdsManager adsManager) {
-    return new HighlightedAdExperiment(abTestManager, AndroidSchedulers.mainThread(), adsManager);
-  }
-
   @Singleton @Provides BillingAnalytics providesBillingAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new BillingAnalytics(BuildConfig.APPLICATION_ID, analyticsManager, navigationTracker);
@@ -1484,6 +1468,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return cachePath + "icons/";
   }
 
+  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {
+    return new AptoideApplicationAnalytics();
+  }
+
+  @Singleton @Provides IronSourceAnalytics provideIronSourceAnalytics() {
+    return new IronSourceAnalytics();
+  }
+
   @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {
     List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
@@ -1513,17 +1505,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
         AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_OPEN_FROM,
-        AppViewAnalytics.APP_VIEW_INTERACT, NotificationAnalytics.NOTIFICATION_RECEIVED,
-        NotificationAnalytics.NOTIFICATION_IMPRESSION, NotificationAnalytics.NOTIFICATION_PRESSED,
-        NotificationAnalytics.NOTIFICATION_RECEIVED, TimelineAnalytics.SOCIAL_CARD_PREVIEW,
-        TimelineAnalytics.CARD_ACTION, TimelineAnalytics.TIMELINE_OPENED,
-        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
-        StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
-        AccountAnalytics.LOGIN_EVENT_NAME, AccountAnalytics.FOLLOW_FRIENDS,
-        UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
-        FirstLaunchAnalytics.FIRST_LAUNCH, InstallFabricEvents.ROOT_V2_COMPLETE,
-        InstallFabricEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
-        NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
+        AppViewAnalytics.APP_VIEW_INTERACT, AppViewAnalytics.DONATIONS_IMPRESSION,
+        NotificationAnalytics.NOTIFICATION_RECEIVED, NotificationAnalytics.NOTIFICATION_IMPRESSION,
+        NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
+        TimelineAnalytics.SOCIAL_CARD_PREVIEW, TimelineAnalytics.CARD_ACTION,
+        TimelineAnalytics.TIMELINE_OPENED, StoreAnalytics.STORES_TAB_INTERACT,
+        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
+        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
+        AccountAnalytics.FOLLOW_FRIENDS, UpdatesAnalytics.UPDATE_EVENT,
+        PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
+        InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
+        AppViewAnalytics.SIMILAR_APP_INTERACT, NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
         AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
         AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
@@ -1536,7 +1528,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
         NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
-        DownloadAnalytics.DOWNLOAD_INTERACT);
+        DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

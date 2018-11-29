@@ -101,6 +101,7 @@
   <string name="menu_select_all">Select All</string>
   <string name="menu_select_none">Select None</string>
   <string name="clear">Clear</string>
+  <string name="more_options_button">MORE OPTIONS</string>
 
   <!-- Excluded Updates Fragment -->
   <string name="excluded_updates">Excluded updates</string>
@@ -338,6 +339,8 @@
   <string name="connect_with_google">Connect with Google</string>
   <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
   <string name="recover_password">Recover your password</string>
+  <string name="login_comment_body">Log in or sign up to get the most of Aptoide. We\'ll never post anything without your permission.</string>
+
   <!--<string name="email">Email</string>-->
   <string name="password">Password</string>
   <string name="store_suspended_message">Store suspended</string>
@@ -346,6 +349,7 @@
   <string name="login_separator_text">Or connect using your email</string>
   <!-- Add stores dialog -->
   <string name="add_store_dialog_title">Find exclusive and tailored content in different stores</string>
+
 
   <!-- Login -->
 

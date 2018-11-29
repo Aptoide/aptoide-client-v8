@@ -12,7 +12,6 @@ import cm.aptoide.pt.view.app.AppsList;
 import java.util.List;
 import rx.Observable;
 import rx.Single;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 04/05/18.
@@ -41,15 +40,6 @@ public class AdsManager {
         .flatMap(minimalAds -> Observable.just(new MinimalAdRequestResult(minimalAds.get(0))))
         .toSingle()
         .onErrorReturn(throwable -> createMinimalAdRequestResultError(throwable));
-  }
-
-  public Single<AppNextAdResult> loadAppNextAd(List<String> keywords, String placementId) {
-    return adsRepository.loadAppNextAd(keywords, placementId)
-        .toSingle();
-  }
-
-  public PublishSubject<AppNextAdResult> appNextAdClick() {
-    return adsRepository.appNextAdClick();
   }
 
   @NonNull private MinimalAdRequestResult createMinimalAdRequestResultError(Throwable throwable) {
