@@ -98,21 +98,41 @@ public class InstallAnalytics {
     sendEvent(getKey(packageName, installingVersion, NOTIFICATION_APPLICATION_INSTALL));
     sendEvent(getKey(packageName, installingVersion, EDITORS_APPLICATION_INSTALL));
     sendEvent(getKey(packageName, installingVersion, APPLICATION_INSTALL));
-    sendInstallEvent(packageName, installingVersion, isRoot, aptoideSettings);
+    sendInstallEvents(packageName, installingVersion, isRoot, aptoideSettings);
   }
 
-  private void sendInstallEvent(String packageName, int installingVersion, boolean isPhoneRoot,
+  private void sendInstallEvents(String packageName, int installingVersion, boolean isPhoneRoot,
       boolean aptoideSettings) {
     InstallEvent installEvent =
         cache.get(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
     if (installEvent != null) {
-      Map<String, Object> data = installEvent.getData();
-      data.put("root", createRoot(isPhoneRoot, aptoideSettings));
-      data.put("result", createResult());
-      analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
-          installEvent.getContext());
-      cache.remove(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
+      sendInstallEvent(installEvent, isPhoneRoot, aptoideSettings, packageName, installingVersion);
     }
+    InstallEvent applicationInstallEvent =
+        cache.get(getKey(packageName, installingVersion, APPLICATION_INSTALL));
+    if (applicationInstallEvent != null) {
+      sendApplicationInstallEvent(applicationInstallEvent, isPhoneRoot, aptoideSettings,
+          packageName, installingVersion);
+    }
+  }
+
+  private void sendInstallEvent(InstallEvent installEvent, boolean isPhoneRoot,
+      boolean aptoideSettings, String packageName, int installingVersion) {
+    Map<String, Object> data = installEvent.getData();
+    data.put("root", createRoot(isPhoneRoot, aptoideSettings));
+    data.put("result", createResult());
+    analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
+        installEvent.getContext());
+    cache.remove(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
+  }
+
+  private void sendApplicationInstallEvent(InstallEvent installEvent, boolean isPhoneRoot,
+      boolean aptoideSettings, String packageName, int installingVersion) {
+    Map<String, Object> data = installEvent.getData();
+    data.put("root", createRoot(isPhoneRoot, aptoideSettings));
+    analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
+        installEvent.getContext());
+    cache.remove(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
   }
 
   private Map<String, Object> createResult() {
@@ -178,7 +198,6 @@ public class InstallAnalytics {
       String abTestingGroup) {
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup, Collections.emptyList());
-    //installStarted(packageName, versionCode, update, Collections.emptyList());
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup);
   }
@@ -233,16 +252,18 @@ public class InstallAnalytics {
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
   }
 
-  public void updateInstallEvent(int versionCode, String packageName, int fileType, String url) {
+  public void updateInstallEvents(int versionCode, String packageName, int fileType, String url) {
     InstallEvent installEvent = cache.get(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
+    InstallEvent applicationInstallEvent =
+        cache.get(getKey(packageName, versionCode, APPLICATION_INSTALL));
     if (installEvent != null) {
-      updateApp(versionCode, packageName, fileType, url, installEvent);
-      updateObb(versionCode, packageName, fileType, url, installEvent);
+      updateApp(versionCode, packageName, fileType, url, installEvent, applicationInstallEvent);
+      updateObb(versionCode, packageName, fileType, url, installEvent, applicationInstallEvent);
     }
   }
 
   private void updateObb(int versionCode, String packageName, int fileType, String url,
-      InstallEvent installEvent) {
+      InstallEvent installEvent, InstallEvent applicationInstallEvent) {
     if (fileType == 1 || fileType == 2) {
       Map<String, Object> data = installEvent.getData();
       List<Map<String, Object>> obb = (List<Map<String, Object>>) data.get("obb");
@@ -254,6 +275,9 @@ public class InstallAnalytics {
       cache.put(getKey(packageName, versionCode, INSTALL_EVENT_NAME),
           new InstallEvent(data, installEvent.getEventName(), installEvent.getContext(),
               installEvent.getAction()));
+      cache.put(getKey(packageName, versionCode, APPLICATION_INSTALL),
+          new InstallEvent(data, applicationInstallEvent.getEventName(),
+              applicationInstallEvent.getContext(), applicationInstallEvent.getAction()));
     }
   }
 
@@ -269,7 +293,7 @@ public class InstallAnalytics {
   }
 
   private void updateApp(int versionCode, String packageName, int fileType, String url,
-      InstallEvent installEvent) {
+      InstallEvent installEvent, InstallEvent applicationInstallEvent) {
     if (fileType == 0) {
       Map<String, Object> data = installEvent.getData();
       Map<String, Object> app = (Map<String, Object>) data.get("app");
@@ -278,6 +302,9 @@ public class InstallAnalytics {
       cache.put(getKey(packageName, versionCode, INSTALL_EVENT_NAME),
           new InstallEvent(data, INSTALL_EVENT_NAME, installEvent.getContext(),
               installEvent.getAction()));
+      cache.put(getKey(packageName, versionCode, APPLICATION_INSTALL),
+          new InstallEvent(data, APPLICATION_INSTALL, applicationInstallEvent.getContext(),
+              applicationInstallEvent.getAction()));
     }
   }
 
