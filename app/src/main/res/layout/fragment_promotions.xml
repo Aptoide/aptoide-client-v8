@@ -17,6 +17,7 @@
       >
 
     <TextView
+        android:id="@+id/promotions_app_1_app_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:text="Promotional app 1"
@@ -39,6 +40,7 @@
       >
 
     <TextView
+        android:id="@+id/promotions_app_2_app_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:text="Promotional app 2"
