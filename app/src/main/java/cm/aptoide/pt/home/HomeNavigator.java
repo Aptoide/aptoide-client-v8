@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
@@ -104,5 +105,9 @@ public class HomeNavigator {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
             .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity());
+  }
+
+  public void navigateToPromotions() {
+    fragmentNavigator.navigateTo(new PromotionsFragment(), true);
   }
 }

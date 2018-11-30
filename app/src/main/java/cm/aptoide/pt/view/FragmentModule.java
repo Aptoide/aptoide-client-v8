@@ -90,6 +90,9 @@ import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsPresenter;
+import cm.aptoide.pt.promotions.PromotionsView;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -389,5 +392,14 @@ import rx.schedulers.Schedulers;
       IronSourceAnalytics ironSourceAnalytics) {
     return new IronSourceInterstitialAdExperiment(abTestManager, AndroidSchedulers.mainThread(),
         ironSourceAdRepository, ironSourceAnalytics);
+  }
+
+  @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
+      PromotionsManager promotionsManager) {
+    return new PromotionsPresenter((PromotionsView) fragment, promotionsManager);
+  }
+
+  @FragmentScope @Provides PromotionsManager providePromotionsManager() {
+    return new PromotionsManager();
   }
 }

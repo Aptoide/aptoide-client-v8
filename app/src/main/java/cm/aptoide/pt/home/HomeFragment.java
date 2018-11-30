@@ -58,6 +58,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private View noNetworkRetryButton;
   private View retryButton;
   private ImageView userAvatar;
+  private ImageView promotionsButton;
   private BottomNavigationActivity bottomNavigationActivity;
   private LoggedInTermsAndConditionsDialog gdprDialog;
 
@@ -112,6 +113,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
     gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
+    promotionsButton = view.findViewById(R.id.promotions_button);
     attachPresenter(presenter);
   }
 
@@ -148,6 +150,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
       gdprDialog.destroyDialog();
       gdprDialog = null;
     }
+    promotionsButton = null;
     super.onDestroyView();
   }
 
@@ -330,6 +333,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void showTermsAndConditionsDialog() {
     gdprDialog.showDialog();
+  }
+
+  @Override public Observable<Void> promotionsClick() {
+    return RxView.clicks(promotionsButton);
   }
 
   private boolean isEndReached() {

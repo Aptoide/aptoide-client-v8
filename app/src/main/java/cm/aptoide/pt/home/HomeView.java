@@ -32,4 +32,6 @@ public interface HomeView extends BundleView {
   void setDefaultUserImage();
 
   void showTermsAndConditionsDialog();
+
+  Observable<Void> promotionsClick();
 }
