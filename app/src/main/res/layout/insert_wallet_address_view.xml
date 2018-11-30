@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_marginBottom="15dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="23dp"
+      android:text="Wallet address dialog"
+      android:textColor="@color/black_87_alpha"
+      style="@style/Aptoide.TextView.Regular.L"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_marginBottom="15dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginStart="16dp"
+      android:text="Fill this field with test text. All your bases are belong to us. Give me moneys now! "
+      android:textColor="@color/black_87_alpha"
+      style="@style/Aptoide.TextView.Regular.M"
+      />
+
+  <EditText
+      android:id="@+id/wallet_edit"
+      android:layout_width="match_parent"
+      android:layout_height="48dp"
+      android:layout_marginBottom="15dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_marginStart="16dp"
+      android:background="@color/grey_fog_normal"
+      android:hint="Appcoins wallet address"
+      android:paddingEnd="8dp"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:paddingStart="8dp"
+      android:textColor="@color/black_87_alpha"
+      />
+
+  <Button
+      android:id="@+id/get_wallet_button"
+      android:layout_width="match_parent"
+      android:layout_marginBottom="33dp"
+      android:layout_marginEnd="40dp"
+      android:layout_marginLeft="40dp"
+      android:layout_marginRight="40dp"
+      android:layout_marginStart="40dp"
+      android:background="#7ed321"
+      android:text="Find wallet adress"
+      style="@style/Aptoide.Button"
+      />
+
+  <Button
+      android:id="@+id/continue_button"
+      android:layout_width="match_parent"
+      android:layout_marginBottom="28dp"
+      android:layout_marginEnd="40dp"
+      android:layout_marginLeft="40dp"
+      android:layout_marginRight="40dp"
+      android:layout_marginStart="40dp"
+      android:background="#7ed321"
+      android:clickable="false"
+      android:focusable="false"
+      android:text="next"
+      style="@style/Aptoide.Button"
+      />
+
+
+</LinearLayout>
