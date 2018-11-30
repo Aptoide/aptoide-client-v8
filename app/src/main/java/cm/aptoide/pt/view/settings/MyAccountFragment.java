@@ -22,6 +22,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.MyAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -56,6 +57,7 @@ public class MyAccountFragment extends BackButtonFragment
   protected Toolbar toolbar;
   @Inject MyAccountNavigator myAccountNavigator;
   @Inject AccountAnalytics accountAnalytics;
+  @Inject MyAccountManager myAccountManager;
   private AptoideAccountManager accountManager;
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
@@ -284,8 +286,13 @@ public class MyAccountFragment extends BackButtonFragment
 
     myProfileView.setVisibility(View.VISIBLE);
     myStoreView.setVisibility(View.GONE);
-    createStoreButton.setVisibility(View.VISIBLE);
-    createStoreMessage.setVisibility(View.VISIBLE);
+    if (myAccountManager.shouldShowCreateStore()) {
+      createStoreButton.setVisibility(View.VISIBLE);
+      createStoreMessage.setVisibility(View.VISIBLE);
+    } else {
+      createStoreButton.setVisibility(View.GONE);
+      createStoreMessage.setVisibility(View.GONE);
+    }
   }
 
   private void showAccountAndStoreDisplayable() {
