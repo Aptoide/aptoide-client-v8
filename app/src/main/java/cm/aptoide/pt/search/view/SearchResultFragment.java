@@ -304,7 +304,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void addAllStoresResult(List<SearchAppResult> dataList, String query) {
     RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
         .build();
-    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_SIMILAR_PLACEMENT_ID, requestParameters);
+    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_SEARCH_NATIVE_PLACEMENT_ID, requestParameters);
     allStoresResultAdapter.addResultForSearch(dataList);
     viewModel.addAllStoresSearchAppResults(dataList);
   }

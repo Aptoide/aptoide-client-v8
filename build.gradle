@@ -22,10 +22,9 @@ allprojects {
     maven { url "https://dl.bintray.com/asf/asf" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
-
-    maven { url 'https://maven.google.com'}
     google()
     jcenter()
+    maven { url 'https://maven.google.com'}
     maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
   }
 }
