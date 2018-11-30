@@ -7,14 +7,16 @@ public class PromotionApp {
   private long appId;
   private String downloadPath;
   private String alternativePath;
+  private String appIcon;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
-      String alternativePath) {
+      String alternativePath, String appIcon) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
     this.downloadPath = downloadPath;
     this.alternativePath = alternativePath;
+    this.appIcon = appIcon;
   }
 
   public String getName() {
@@ -35,5 +37,9 @@ public class PromotionApp {
 
   public String getAlternativePath() {
     return alternativePath;
+  }
+
+  public String getAppIcon() {
+    return appIcon;
   }
 }

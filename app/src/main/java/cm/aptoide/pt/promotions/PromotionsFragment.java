@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.List;
 import javax.inject.Inject;
@@ -17,6 +19,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Inject PromotionsPresenter promotionsPresenter;
   private TextView firstAppName;
   private TextView secondAppName;
+  private ImageView firstAppIcon;
+  private ImageView secondAppIcon;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -28,6 +32,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
     firstAppName = view.findViewById(R.id.promotions_app_1_app_name);
     secondAppName = view.findViewById(R.id.promotions_app_2_app_name);
+
+    firstAppIcon = view.findViewById(R.id.promotions_app_1_icon);
+    secondAppIcon = view.findViewById(R.id.promotions_app_2_icon);
 
     attachPresenter(promotionsPresenter);
   }
@@ -46,7 +53,16 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override public void showPromotionApps(List<PromotionApp> appsList) {
     firstAppName.setText(appsList.get(0)
         .getName());
+
     secondAppName.setText(appsList.get(1)
         .getName());
+
+    ImageLoader.with(getContext())
+        .load(appsList.get(0)
+            .getAppIcon(), firstAppIcon);
+
+    ImageLoader.with(getContext())
+        .load(appsList.get(1)
+            .getAppIcon(), secondAppIcon);
   }
 }
