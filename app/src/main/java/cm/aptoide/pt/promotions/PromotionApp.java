@@ -8,6 +8,7 @@ public class PromotionApp {
   private String downloadPath;
   private String alternativePath;
   private String appIcon;
+  private PromotionType type;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
       String alternativePath, String appIcon) {
@@ -41,5 +42,13 @@ public class PromotionApp {
 
   public String getAppIcon() {
     return appIcon;
+  }
+
+  public PromotionType getType() {
+    return type;
+  }
+
+  enum PromotionType {
+    DOWNLOAD, UPDATE, DOWNLOADING, INSTALL, CLAIM, CLAIMED
   }
 }
