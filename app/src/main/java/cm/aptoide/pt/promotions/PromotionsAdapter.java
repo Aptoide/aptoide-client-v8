@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import java.util.List;
 
-public class PromotionsAdapter extends RecyclerView.Adapter<PromotionAppsViewHolder> {
+public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionAppsViewHolder> {
 
   static final int UPDATE = 0;
   static final int DOWNLOAD = 1;
@@ -22,11 +22,12 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionAppsViewHol
     this.viewHolderFactory = viewHolderFactory;
   }
 
-  @Override public PromotionAppsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override
+  public GeneralPromotionAppsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return viewHolderFactory.createViewHolder(parent, viewType);
   }
 
-  @Override public void onBindViewHolder(PromotionAppsViewHolder holder, int position) {
+  @Override public void onBindViewHolder(GeneralPromotionAppsViewHolder holder, int position) {
     holder.setApp(appsList.get(position));
   }
 
