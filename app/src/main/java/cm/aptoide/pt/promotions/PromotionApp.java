@@ -8,16 +8,17 @@ public class PromotionApp {
   private String downloadPath;
   private String alternativePath;
   private String appIcon;
-  private PromotionType type;
+  private PromotionAppState state;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
-      String alternativePath, String appIcon) {
+      String alternativePath, String appIcon, PromotionAppState state) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
     this.downloadPath = downloadPath;
     this.alternativePath = alternativePath;
     this.appIcon = appIcon;
+    this.state = state;
   }
 
   public String getName() {
@@ -44,11 +45,15 @@ public class PromotionApp {
     return appIcon;
   }
 
-  public PromotionType getType() {
-    return type;
+  public PromotionAppState getState() {
+    return state;
   }
 
-  enum PromotionType {
+  public void setState(PromotionAppState state) {
+    this.state = state;
+  }
+
+  enum PromotionAppState {
     DOWNLOAD, UPDATE, DOWNLOADING, INSTALL, CLAIM, CLAIMED
   }
 }
