@@ -29,9 +29,14 @@ public class InstallAnalytics {
   public static final String APPLICATION_INSTALL = "Application Install";
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   public static final String INSTALL_EVENT_NAME = "INSTALL";
-  private static final String TYPE = "Type";
-  private static final String PACKAGE_NAME = "Package Name";
-  private static final String REPLACED = "Replaced";
+  private static final String PACKAGE_NAME = "package_name";
+  private static final String TYPE = "type";
+  private static final String ROOT = "root";
+  private static final String URL = "url";
+  private static final String RESULT = "result";
+  private static final String OBB = "obb";
+  private static final String APP = "app";
+  private static final String EDITORS_CHOICE = "apps-group-editors-choice";
   private static final String NO_PREVIOUS_SCREEN_ERROR = "No_Previous_Screen";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
@@ -51,12 +56,9 @@ public class InstallAnalytics {
     this.telephonyManager = telephonyManager;
   }
 
-  public void sendReplacedEvent(String packageName) {
-    Map<String, Object> data = new HashMap<>();
-    data.put(TYPE, REPLACED);
-    data.put(PACKAGE_NAME, packageName);
-    analyticsManager.logEvent(data, APPLICATION_INSTALL, AnalyticsManager.Action.AUTO,
-        getViewName(true));
+  public void sendReplacedEvent(String packageName, int versionCode, boolean isRoot,
+      boolean aptoideSettings) {
+    installCompleted(packageName, versionCode, isRoot, aptoideSettings);
   }
 
   private void installStarted(String packageName, int installingVersion, InstallType installType,
@@ -64,10 +66,10 @@ public class InstallAnalytics {
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
     ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
     if (currentScreen.getTag() != null && currentScreen.getTag()
-        .contains("apps-group-editors-choice")) {
+        .contains(EDITORS_CHOICE)) {
       Map<String, Object> data = new HashMap<>();
-      data.put("package_name", packageName);
-      data.put("type", installType.name());
+      data.put(PACKAGE_NAME, packageName);
+      data.put(TYPE, installType.name());
       cache.put(getKey(packageName, installingVersion, EDITORS_APPLICATION_INSTALL),
           new InstallEvent(data, EDITORS_APPLICATION_INSTALL, currentScreen.getFragment(),
               AnalyticsManager.Action.INSTALL));
@@ -78,15 +80,15 @@ public class InstallAnalytics {
     } else if (currentScreen.getTag() != null && previousScreen.getFragment()
         .equals(DeepLinkManager.DEEPLINK_KEY)) {
       Map<String, Object> data = new HashMap<>();
-      data.put("package_name", packageName);
-      data.put("type", installType.name());
+      data.put(PACKAGE_NAME, packageName);
+      data.put(TYPE, installType.name());
       cache.put(getKey(packageName, installingVersion, NOTIFICATION_APPLICATION_INSTALL),
           new InstallEvent(data, NOTIFICATION_APPLICATION_INSTALL, currentScreen.getFragment(),
               AnalyticsManager.Action.INSTALL));
     } else {
       Map<String, Object> data = new HashMap<>();
-      data.put("package_name", packageName);
-      data.put("type", installType.name());
+      data.put(PACKAGE_NAME, packageName);
+      data.put(TYPE, installType.name());
       cache.put(getKey(packageName, installingVersion, APPLICATION_INSTALL),
           new InstallEvent(data, APPLICATION_INSTALL, currentScreen.getFragment(),
               AnalyticsManager.Action.INSTALL));
@@ -119,8 +121,8 @@ public class InstallAnalytics {
   private void sendInstallEvent(InstallEvent installEvent, boolean isPhoneRoot,
       boolean aptoideSettings, String packageName, int installingVersion) {
     Map<String, Object> data = installEvent.getData();
-    data.put("root", createRoot(isPhoneRoot, aptoideSettings));
-    data.put("result", createResult());
+    data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
+    data.put(RESULT, createResult());
     analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
         installEvent.getContext());
     cache.remove(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
@@ -129,7 +131,7 @@ public class InstallAnalytics {
   private void sendApplicationInstallEvent(InstallEvent installEvent, boolean isPhoneRoot,
       boolean aptoideSettings, String packageName, int installingVersion) {
     Map<String, Object> data = installEvent.getData();
-    data.put("root", createRoot(isPhoneRoot, aptoideSettings));
+    data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
     analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
         installEvent.getContext());
     cache.remove(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
@@ -154,15 +156,10 @@ public class InstallAnalytics {
     cache.remove(key);
   }
 
-  private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent);
-  }
-
   public void installStarted(String packageName, int versionCode, InstallType update,
       AnalyticsManager.Action action, AppContext context, Origin origin) {
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList());
-    //installStarted(packageName, versionCode, update, Collections.emptyList());
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
   }
 
@@ -176,7 +173,7 @@ public class InstallAnalytics {
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
     ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
     if (currentScreen.getTag() != null && currentScreen.getTag()
-        .contains("apps-group-editors-choice")) {
+        .contains(EDITORS_CHOICE)) {
       applicationInstallEventName = EDITORS_APPLICATION_INSTALL;
     } else if (previousScreen == null) {
       if (!fragmentNameList.isEmpty()) {
@@ -213,7 +210,7 @@ public class InstallAnalytics {
   @NonNull private Map<String, Object> getInstallEventsBaseBundle(Origin origin, String packageName,
       int campaignId, String abTestingGroup) {
     Map<String, Object> data = new HashMap<>();
-    data.put("app", createApp(packageName));
+    data.put(APP, createApp(packageName));
     data.put("network", AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
     data.put("origin", origin);
@@ -271,7 +268,7 @@ public class InstallAnalytics {
         obb = new ArrayList<>();
       }
       obb.add(createObbData(fileType, url));
-      data.put("obb", obb);
+      data.put(OBB, obb);
       cache.put(getKey(packageName, versionCode, INSTALL_EVENT_NAME),
           new InstallEvent(data, installEvent.getEventName(), installEvent.getContext(),
               installEvent.getAction()));
@@ -284,11 +281,11 @@ public class InstallAnalytics {
   private Map<String, Object> createObbData(int fileType, String url) {
     Map<String, Object> obb = new HashMap<>();
     if (fileType == 1) {
-      obb.put("type", "MAIN");
+      obb.put(TYPE, "MAIN");
     } else if (fileType == 2) {
-      obb.put("type", "PATCH");
+      obb.put(TYPE, "PATCH");
     }
-    obb.put("url", url);
+    obb.put(URL, url);
     return obb;
   }
 
@@ -296,9 +293,9 @@ public class InstallAnalytics {
       InstallEvent installEvent, InstallEvent applicationInstallEvent) {
     if (fileType == 0) {
       Map<String, Object> data = installEvent.getData();
-      Map<String, Object> app = (Map<String, Object>) data.get("app");
-      app.put("url", url);
-      data.put("app", app);
+      Map<String, Object> app = (Map<String, Object>) data.get(APP);
+      app.put(URL, url);
+      data.put(APP, app);
       cache.put(getKey(packageName, versionCode, INSTALL_EVENT_NAME),
           new InstallEvent(data, INSTALL_EVENT_NAME, installEvent.getContext(),
               installEvent.getAction()));
@@ -313,8 +310,8 @@ public class InstallAnalytics {
     InstallEvent installEvent = cache.get(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
     if (installEvent != null) {
       Map<String, Object> data = installEvent.getData();
-      data.put("root", createRoot(isPhoneRoot, aptoideSettings));
-      data.put("result", createResult(exception));
+      data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
+      data.put(RESULT, createResult(exception));
       analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
           installEvent.getContext());
       cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
@@ -324,7 +321,7 @@ public class InstallAnalytics {
   private Map<String, Object> createResult(Exception exception) {
     Map<String, Object> result = new HashMap<>();
     result.put("status", "FAIL");
-    result.put("type", exception.getClass()
+    result.put(TYPE, exception.getClass()
         .getSimpleName());
     result.put("message", exception.getMessage());
     return result;

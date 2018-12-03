@@ -185,7 +185,11 @@ public class InstalledIntentService extends IntentService {
         .first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      installAnalytics.sendReplacedEvent(packageName);
+      PackageInfo packageInfo = databaseOnPackageAdded(packageName);
+      installAnalytics.sendReplacedEvent(packageName, packageInfo.versionCode,
+          rootAvailabilityManager.isRootAvailable()
+              .toBlocking()
+              .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
     }
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
