@@ -159,7 +159,14 @@ public class DefaultInstaller implements Installer {
   private Observable<Installation> startInstallation(Context context, Installation installation) {
     return systemInstall(context, installation).onErrorResumeNext(
         throwable -> rootInstall(installation))
-        .onErrorResumeNext(throwable -> defaultInstall(context, installation))
+        .onErrorResumeNext(throwable -> {
+          sendErrorEvent(installation.getPackageName(), installation.getVersionCode(),
+              new InstallationException("Installation with root failed for "
+                  + installation.getPackageName()
+                  + ". Error message: "
+                  + throwable.getMessage()));
+          return defaultInstall(context, installation);
+        })
         .doOnNext(installation1 -> installation1.save());
   }
 
