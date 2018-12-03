@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +70,12 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   }
 
   @Override public void showPromotionApps(List<PromotionApp> appsList) {
+
+    if (!appsList.isEmpty()) {
+      promotionsAdapter.setPromotionApps(appsList);
+    }
+
+    /*
     firstAppName.setText(appsList.get(0)
         .getName());
 
@@ -83,6 +88,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
     ImageLoader.with(getContext())
         .load(appsList.get(1)
-            .getAppIcon(), secondAppIcon);
+            .getAppIcon(), secondAppIcon);*/
   }
 }
