@@ -2,7 +2,9 @@ package cm.aptoide.pt.promotions;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,15 +42,26 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     firstAppIcon = view.findViewById(R.id.promotions_app_1_icon);
     secondAppIcon = view.findViewById(R.id.promotions_app_2_icon);
 
-    promotionsList = view.findViewById(R.id.fragment_apps_recycler_view);
+    promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(), new PromotionsViewHolderFactory());
 
+    setupRecyclerView();
     attachPresenter(promotionsPresenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName(), "");
+  }
+
+  private void setupRecyclerView() {
+    promotionsList.setAdapter(promotionsAdapter);
+    promotionsList.setLayoutManager(
+        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    RecyclerView.ItemAnimator animator = promotionsList.getItemAnimator();
+    if (animator instanceof SimpleItemAnimator) {
+      ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+    }
   }
 
   @Nullable @Override
