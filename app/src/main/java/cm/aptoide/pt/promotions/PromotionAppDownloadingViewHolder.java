@@ -42,6 +42,6 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
     } else {
       rating.setText(new DecimalFormat("0.0").format(app.getRating()));
     }
-    numberOfDownloads.setText(app.getNumberOfDownloads());
+    numberOfDownloads.setText(String.valueOf(app.getNumberOfDownloads()));
   }
 }
