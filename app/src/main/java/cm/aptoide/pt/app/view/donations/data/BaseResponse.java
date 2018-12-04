@@ -3,12 +3,12 @@ package cm.aptoide.pt.app.view.donations.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public class BaseResponse {
+class BaseResponse {
 
   private Info info;
   private List<Error> errors;
 
-  public BaseResponse() {
+  BaseResponse() {
   }
 
   public Error getError() {
@@ -19,23 +19,23 @@ public class BaseResponse {
     }
   }
 
-  public boolean isOk() {
+  boolean isOk() {
     return info != null && info.getStatus() == Info.Status.OK;
   }
 
-  public Info getInfo() {
+  Info getInfo() {
     return this.info;
   }
 
-  public void setInfo(Info info) {
+  void setInfo(Info info) {
     this.info = info;
   }
 
-  public List<Error> getErrors() {
+  List<Error> getErrors() {
     return this.errors;
   }
 
-  public void setErrors(List<Error> errors) {
+  void setErrors(List<Error> errors) {
     this.errors = errors;
   }
 
@@ -53,36 +53,36 @@ public class BaseResponse {
     return other instanceof BaseResponse;
   }
 
-  public enum Type {
+  enum Type {
     FACEBOOK_1, FACEBOOK_2, TWITCH_1, TWITCH_2, TWITTER_1, TWITTER_2, YOUTUBE_1, YOUTUBE_2
   }
 
-  public static class Info {
+  static class Info {
 
     private Status status;
     private Time time;
 
-    public Info() {
+    Info() {
     }
 
-    public Info(Status status, Time time) {
+    Info(Status status, Time time) {
       this.status = status;
       this.time = time;
     }
 
-    public Status getStatus() {
+    Status getStatus() {
       return this.status;
     }
 
-    public void setStatus(Status status) {
+    void setStatus(Status status) {
       this.status = status;
     }
 
-    public Time getTime() {
+    Time getTime() {
       return this.time;
     }
 
-    public void setTime(Time time) {
+    void setTime(Time time) {
       this.time = time;
     }
 
@@ -90,31 +90,31 @@ public class BaseResponse {
       return other instanceof Info;
     }
 
-    public enum Status {
+    enum Status {
       OK, QUEUED, FAIL, Processing
     }
 
-    public static class Time {
+    static class Time {
 
       private double seconds;
       private String human;
 
-      public Time() {
+      Time() {
       }
 
-      public double getSeconds() {
+      double getSeconds() {
         return this.seconds;
       }
 
-      public void setSeconds(double seconds) {
+      void setSeconds(double seconds) {
         this.seconds = seconds;
       }
 
-      public String getHuman() {
+      String getHuman() {
         return this.human;
       }
 
-      public void setHuman(String human) {
+      void setHuman(String human) {
         this.human = human;
       }
 
@@ -186,36 +186,36 @@ public class BaseResponse {
     }
   }
 
-  public static class Error {
+  static class Error {
 
     private String code;
     private String description;
     private Details details;
 
-    public Error() {
+    Error() {
     }
 
-    public String getCode() {
+    String getCode() {
       return this.code;
     }
 
-    public void setCode(String code) {
+    void setCode(String code) {
       this.code = code;
     }
 
-    public String getDescription() {
+    String getDescription() {
       return this.description;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
       this.description = description;
     }
 
-    public Details getDetails() {
+    Details getDetails() {
       return this.details;
     }
 
-    public void setDetails(Details details) {
+    void setDetails(Details details) {
       this.details = details;
     }
 
@@ -268,18 +268,18 @@ public class BaseResponse {
     }
   }
 
-  public static class Details {
+  static class Details {
     //Is only necessary for store/set requests and only appears with a STORE-9 error
     @JsonProperty("store_links") private List<StoreLinks> storeLinks;
 
-    public Details() {
+    Details() {
     }
 
-    public List<StoreLinks> getStoreLinks() {
+    List<StoreLinks> getStoreLinks() {
       return this.storeLinks;
     }
 
-    public void setStoreLinks(List<StoreLinks> storeLinks) {
+    void setStoreLinks(List<StoreLinks> storeLinks) {
       this.storeLinks = storeLinks;
     }
 
@@ -314,35 +314,35 @@ public class BaseResponse {
     }
   }
 
-  public static class StoreLinks {
+  static class StoreLinks {
     private Type type;
     private String url;
     private String error;
 
-    public StoreLinks() {
+    StoreLinks() {
     }
 
-    public Type getType() {
+    Type getType() {
       return this.type;
     }
 
-    public void setType(Type type) {
+    void setType(Type type) {
       this.type = type;
     }
 
-    public String getUrl() {
+    String getUrl() {
       return this.url;
     }
 
-    public void setUrl(String url) {
+    void setUrl(String url) {
       this.url = url;
     }
 
-    public String getError() {
+    String getError() {
       return this.error;
     }
 
-    public void setError(String error) {
+    void setError(String error) {
       this.error = error;
     }
 

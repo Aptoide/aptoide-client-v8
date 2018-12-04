@@ -3,7 +3,6 @@ package cm.aptoide.pt.app.view.donations.view;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
-import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.presenter.Presenter;
 import rx.Scheduler;
@@ -14,16 +13,14 @@ public class DonateDialogPresenter implements Presenter {
   private CompositeSubscription subscriptions;
   private Scheduler viewScheduler;
   private DonateDialogView view;
-  private DonationsService donationsService;
   private WalletService walletService;
   private AppNavigator appNavigator;
   private DonationsAnalytics donationsAnalytics;
 
-  public DonateDialogPresenter(DonateDialogView view, DonationsService donationsService,
-      WalletService walletService, CompositeSubscription subscriptions, Scheduler viewScheduler,
-      AppNavigator appNavigator, DonationsAnalytics donationsAnalytics) {
+  public DonateDialogPresenter(DonateDialogView view, WalletService walletService,
+      CompositeSubscription subscriptions, Scheduler viewScheduler, AppNavigator appNavigator,
+      DonationsAnalytics donationsAnalytics) {
     this.view = view;
-    this.donationsService = donationsService;
     this.walletService = walletService;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;

@@ -1095,8 +1095,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
-  @Singleton @Provides @Named("retrofit-wallet") Retrofit providesV8SecondaryRetrofit(
-      @Named("v8") OkHttpClient httpClient, @Named("base-secondary-host") String baseHost,
+  @Singleton @Provides @Named("retrofit-v7-secondary") Retrofit providesV8SecondaryRetrofit(
+      @Named("default") OkHttpClient httpClient, @Named("base-secondary-host") String baseHost,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
@@ -1126,7 +1126,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides WalletService.ServiceV8 providesWalletServiceV8(
-      @Named("retrofit-wallet") Retrofit retrofit) {
+      @Named("retrofit-v7-secondary") Retrofit retrofit) {
     return retrofit.create(WalletService.ServiceV8.class);
   }
 
