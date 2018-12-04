@@ -155,8 +155,6 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.preferences.AdultContentManager;
-import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -825,16 +823,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE));
   }
 
-  @Singleton @Provides LocalPersistenceAdultContent provideLocalAdultContent(
-      Preferences preferences, @Named("secure") SecurePreferences securePreferences) {
-    return new LocalPersistenceAdultContent(preferences, securePreferences);
-  }
-
-  @Singleton @Provides AdultContent provideAdultContent(
-      LocalPersistenceAdultContent localAdultContent, AccountService accountService) {
-    return new AdultContentManager(localAdultContent, accountService);
-  }
-
   @Singleton @Provides Preferences provideDefaultPreferences(
       @Named("default") SharedPreferences sharedPreferences) {
     return new Preferences(sharedPreferences);
@@ -888,7 +876,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     final RealmConfiguration realmConfiguration =
         new RealmConfiguration.Builder().name(BuildConfig.REALM_FILE_NAME)
             .schemaVersion(BuildConfig.REALM_SCHEMA_VERSION)
-            .migration(new RealmToRealmDatabaseMigration())
+            .migration(new RealmToRealmDatabaseMigration(application.getApplicationContext()))
             .build();
     Realm.setDefaultConfiguration(realmConfiguration);
     return new Database();
@@ -1541,5 +1529,21 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
         NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
         DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT);
+  }
+
+  @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
+    return new AptoideShortcutManager();
+  }
+
+  @Singleton @Provides SettingsManager providesSettingsManager() {
+    return new SettingsManager();
+  }
+
+  @Singleton @Provides LoginSignupManager providesLoginSignupManager() {
+    return new LoginSignupManager();
+  }
+
+  @Singleton @Provides MyAccountManager providesMyAccountManager() {
+    return new MyAccountManager();
   }
 }

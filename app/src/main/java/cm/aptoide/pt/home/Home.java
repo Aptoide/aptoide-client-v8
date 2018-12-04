@@ -4,7 +4,6 @@ import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import rx.Completable;
 import rx.Single;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by jdandrade on 07/03/2018.

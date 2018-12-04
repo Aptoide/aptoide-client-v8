@@ -11,6 +11,7 @@ import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.LoginSignupManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -30,6 +31,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment
 
   @LayoutRes private static final int LAYOUT = R.layout.fragment_profile_step_two;
   @Inject AccountAnalytics accountAnalytics;
+  @Inject LoginSignupManager loginSignupManager;
   private Button continueBtn;
   private Button privateProfileBtn;
   private ProgressDialog waitDialog;
@@ -115,7 +117,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment
         ((AptoideApplication) applicationContext).getAccountManager();
     ProfileStepTwoPresenter presenter =
         new ProfileStepTwoPresenter(this, accountManager, CrashReport.getInstance(),
-            accountNavigator, accountAnalytics);
+            accountNavigator, accountAnalytics, loginSignupManager);
     attachPresenter(presenter);
   }
 
