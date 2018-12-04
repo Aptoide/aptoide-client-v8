@@ -6,5 +6,9 @@ public interface ClaimPromotionDialogView {
 
   Observable<Void> getWalletClick();
 
-  Observable<Void> continueClick();
+  Observable<String> continueClick();
+
+  void sendWalletIntent();
+
+  void showCaptcha();
 }
