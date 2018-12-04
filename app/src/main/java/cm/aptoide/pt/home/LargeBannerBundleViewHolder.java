@@ -1,46 +1,49 @@
 package cm.aptoide.pt.home;
 
-import android.util.Log;
+import android.app.Activity;
 import android.view.View;
-import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.R;
-import com.mopub.mobileads.MoPubErrorCode;
-import com.mopub.mobileads.MoPubView;
+import android.widget.LinearLayout;
+import com.appodeal.ads.Appodeal;
 
 class LargeBannerBundleViewHolder extends AppBundleViewHolder {
-  private final MoPubView bannerView;
+  private final Activity activity;
+  //private final MoPubView bannerView;
   private HomeAnalytics homeAnalytics;
-
   private boolean hasLoaded;
 
-  public LargeBannerBundleViewHolder(View view, HomeAnalytics homeAnalytics) {
+  public LargeBannerBundleViewHolder(View view, HomeAnalytics homeAnalytics, Activity activity) {
     super(view);
-    bannerView = view.findViewById(R.id.banner);
+    //bannerView = view.findViewById(R.id.banner);
     this.homeAnalytics = homeAnalytics;
     hasLoaded = false;
+    this.activity = activity;
 
-    bannerView.setBannerAdListener(new MoPubView.BannerAdListener() {
-      @Override public void onBannerLoaded(MoPubView banner) {
-        homeAnalytics.bannerImpression("MoPub");
-      }
+    ((LinearLayout) view).addView(Appodeal.getMrecView(activity));
+    //((LinearLayout) view).addView(Appodeal.getBannerView(activity));
+    //Appodeal.getBannerView(activity);
 
-      @Override public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-        Log.i("Mopub", errorCode.toString());
-      }
-
-      @Override public void onBannerClicked(MoPubView banner) {
-        homeAnalytics.bannerClick("MoPub");
-      }
-
-      @Override public void onBannerExpanded(MoPubView banner) {
-
-      }
-
-      @Override public void onBannerCollapsed(MoPubView banner) {
-
-      }
-    });
-    bannerView.setAdUnitId(BuildConfig.MOPUB_HOME_BANNER_PLACEMENT_ID);
+    //bannerView.setBannerAdListener(new MoPubView.BannerAdListener() {
+    //  @Override public void onBannerLoaded(MoPubView banner) {
+    //    homeAnalytics.bannerImpression("MoPub");
+    //  }
+    //
+    //  @Override public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
+    //    Log.i("Mopub", errorCode.toString());
+    //  }
+    //
+    //  @Override public void onBannerClicked(MoPubView banner) {
+    //    homeAnalytics.bannerClick("MoPub");
+    //  }
+    //
+    //  @Override public void onBannerExpanded(MoPubView banner) {
+    //
+    //  }
+    //
+    //  @Override public void onBannerCollapsed(MoPubView banner) {
+    //
+    //  }
+    //});
+    //bannerView.setAdUnitId(BuildConfig.MOPUB_HOME_BANNER_PLACEMENT_ID);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -48,7 +51,9 @@ class LargeBannerBundleViewHolder extends AppBundleViewHolder {
     //bannerAdRequest.setCreativeType(BannerAdRequest.TYPE_STATIC);
     if (!hasLoaded) {
       hasLoaded = true;
-      bannerView.loadAd();
+      Appodeal.show(activity, Appodeal.MREC);
+      //Appodeal.show(activity, Appodeal.BANNER_VIEW);
+      //bannerView.loadAd();
     }
     //bannerView.setBannerListener(new BannerListener() {
     //  @Override public void adImpression() {
@@ -65,6 +70,6 @@ class LargeBannerBundleViewHolder extends AppBundleViewHolder {
   }
 
   public void destroyBanner() {
-    bannerView.destroy();
+    //bannerView.destroy();
   }
 }

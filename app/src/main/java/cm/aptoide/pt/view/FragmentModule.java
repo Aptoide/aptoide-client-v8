@@ -10,7 +10,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
-import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -32,7 +31,6 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
@@ -277,13 +275,13 @@ import rx.schedulers.Schedulers;
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
       SocialRepository socialRepository, @Named("marketName") String marketName,
-      AppCoinsManager appCoinsManager, IronSourceAdRepository ironSourceAdRepository) {
+      AppCoinsManager appCoinsManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, ironSourceAdRepository);
+        marketName, appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

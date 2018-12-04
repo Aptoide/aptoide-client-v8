@@ -44,7 +44,7 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
     adClick.getAd()
-        .registerClickableView(itemView);
+        .registerClickableView(itemView.findViewById(R.id.na_view));
     adClick.getAd()
         .setAdView(itemView.findViewById(R.id.na_view));
     itemView.setOnClickListener(v -> adClickedEvents.onNext(

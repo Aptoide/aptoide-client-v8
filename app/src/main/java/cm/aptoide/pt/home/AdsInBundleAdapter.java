@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -28,6 +29,14 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
     this.bundlePosition = -1;
   }
 
+  public void add(AdClick ads) {
+    if (this.ads == null) {
+      this.ads = new ArrayList<AdClick>();
+    }
+    this.ads.add(0, ads);
+    notifyDataSetChanged();
+  }
+
   public void update(List<AdClick> ads) {
     this.ads = ads;
     notifyDataSetChanged();
@@ -40,7 +49,7 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
 
   @Override public AdInBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new AdInBundleViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.displayable_grid_ad, parent, false), adClickedEvents,
+        .inflate(R.layout.displayable_grid_ad_appnext, parent, false), adClickedEvents,
         oneDecimalFormatter);
   }
 

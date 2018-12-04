@@ -108,7 +108,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents, homeAnalytics);
+        oneDecimalFormatter, adClickedEvents, homeAnalytics, getActivity());
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

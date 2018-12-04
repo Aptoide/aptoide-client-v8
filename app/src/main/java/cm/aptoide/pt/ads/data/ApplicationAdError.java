@@ -8,13 +8,20 @@ import cm.aptoide.pt.view.app.AppsList;
 
 public class ApplicationAdError {
   private final AppsList.Error minimalAdError;
+  private final boolean hasOtherNetworkError;
 
   public ApplicationAdError(AppsList.Error minimalAdError) {
     this.minimalAdError = minimalAdError;
+    this.hasOtherNetworkError = false;
+  }
+
+  public ApplicationAdError() {
+    this.minimalAdError = null;
+    this.hasOtherNetworkError = true;
   }
 
   public boolean hasError() {
-    return minimalAdError != null;
+    return minimalAdError != null || hasOtherNetworkError;
   }
 
   public String getErrorMessage() {

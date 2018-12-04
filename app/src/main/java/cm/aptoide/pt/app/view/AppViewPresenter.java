@@ -114,17 +114,6 @@ public class AppViewPresenter implements Presenter {
     handleDonateCardImpressions();
   }
 
-  private void handleInterstitialEvents() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.getInterstitialEvent())
-        .observeOn(Schedulers.io())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
-
   private void handleOnSimilarAppsVisible() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -504,6 +493,19 @@ public class AppViewPresenter implements Presenter {
               isAd);
           return Observable.just(isAd);
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.appodealClick()
+            .observeOn(Schedulers.io())
+            .doOnNext(result -> {
+              appViewAnalytics.similarAppClick(ApplicationAd.Network.APPODEAL, result.getAd()
+                  .getPackageName(), 0, true);
+            })
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));

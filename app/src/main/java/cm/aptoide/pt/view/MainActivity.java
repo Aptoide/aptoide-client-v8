@@ -15,14 +15,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.utils.Log;
 import com.jakewharton.rxrelay.PublishRelay;
 import javax.inject.Inject;
 import rx.Observable;
@@ -31,7 +33,6 @@ public class MainActivity extends BottomNavigationActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
   @Inject Presenter presenter;
-  @Inject IronSourceAdRepository ironSourceAdRepository;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -47,7 +48,15 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
 
-    ironSourceAdRepository.initialize();
+    //Appodeal.setTesting(true);
+    Appodeal.setLogLevel(Log.LogLevel.debug);
+    //Appodeal.setMrecViewId(R.id.appodealMrecView);
+    //Appodeal.setBannerViewId(R.id.appodealBannerView);
+    Appodeal.initialize(this, BuildConfig.APPODEAL_APP_KEY, Appodeal.MREC
+        | Appodeal.BANNER
+        | Appodeal.BANNER_VIEW
+        | Appodeal.INTERSTITIAL
+        | Appodeal.NATIVE);
 
     setupUpdatesNotification();
 
@@ -131,11 +140,10 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onResume() {
     super.onResume();
-    ironSourceAdRepository.onResume();
+    Appodeal.onResume(this, Appodeal.BANNER);
   }
 
   @Override protected void onPause() {
     super.onPause();
-    ironSourceAdRepository.onPause();
   }
 }

@@ -3,6 +3,7 @@ package cm.aptoide.pt.app;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.data.AppodealAdResult;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
@@ -10,6 +11,7 @@ import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppsList;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.subjects.PublishSubject;
@@ -54,5 +56,10 @@ public class AdsManager {
   public void handleAdsLogic(SearchAdResult searchAdResult) {
     storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, null));
     AdNetworkUtils.knockCpc(adMapper.map(searchAdResult));
+  }
+
+  public PublishSubject<AppodealAdResult> getAppodealClick() {
+    //return adsRepository.appodealClick();
+    return null;
   }
 }

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ads.data.AppodealAdResult;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -23,8 +24,10 @@ import java.util.List;
 import java.util.Random;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by marcelobenites on 7/27/16.
@@ -44,6 +47,8 @@ public class AdsRepository {
   private final Resources resources;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final MinimalAdMapper adMapper;
+
+  //private final AppodealAdRepository appodealAdRepository;
 
   public AdsRepository(IdsRepository idsRepository, AptoideAccountManager accountManager,
       OkHttpClient httpClient, Converter.Factory converterFactory, QManager qManager,
@@ -65,6 +70,7 @@ public class AdsRepository {
     this.connectivityManager = connectivityManager;
     this.resources = resources;
     this.adMapper = adMapper;
+    //this.appodealAdRepository = appodealAdRepository;
   }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
@@ -215,4 +221,8 @@ public class AdsRepository {
         })
         .map((ad) -> adMapper.map(ad));
   }
+
+  //public PublishSubject<AppodealAdResult> appodealClick() {
+  //  return appodealAdRepository.clickAd();
+  //}
 }

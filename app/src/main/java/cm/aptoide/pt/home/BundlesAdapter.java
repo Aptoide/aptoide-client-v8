@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -30,15 +31,19 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
 
   private final HomeAnalytics homeAnalytics;
 
+  private final Activity activity;
+
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<AdHomeEvent> adPublishSubject, HomeAnalytics homeAnalytics) {
+      PublishSubject<AdHomeEvent> adPublishSubject, HomeAnalytics homeAnalytics,
+      Activity activity) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adPublishSubject;
     this.homeAnalytics = homeAnalytics;
+    this.activity = activity;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -70,7 +75,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             .inflate(LOADING, parent, false));
       case LARGE_BANNER:
         return new LargeBannerBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(LARGE_BANNER, parent, false), homeAnalytics);
+            .inflate(LARGE_BANNER, parent, false), homeAnalytics, activity);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }

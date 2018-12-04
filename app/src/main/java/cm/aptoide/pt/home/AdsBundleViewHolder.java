@@ -11,12 +11,11 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.data.ApplicationAd;
+import cm.aptoide.pt.ads.data.AppodealNativeAd;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
-import com.mopub.nativeads.MoPubNativeAdLoadedListener;
-import com.mopub.nativeads.MoPubRecyclerAdapter;
-import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
-import com.mopub.nativeads.ViewBinder;
+import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.NativeAd;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final AdsInBundleAdapter appsInBundleAdapter;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final RecyclerView appsList;
-  private final MoPubRecyclerAdapter moPubRecyclerAdapter;
+  //private final MoPubRecyclerAdapter moPubRecyclerAdapter;
   private final HomeAnalytics homeAnalytics;
 
   private boolean hasAdLoaded;
@@ -60,25 +59,26 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     });
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
-    moPubRecyclerAdapter =
-        new MoPubRecyclerAdapter((Activity) view.getContext(), appsInBundleAdapter);
-    ViewBinder moPubViewBinder =
-        new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
-            .iconImageId(R.id.icon)
-            .build();
-    MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
-    moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
-    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
-      @Override public void onAdLoaded(int position) {
-        homeAnalytics.sendAdImpressionEvent(0, "Ad", position, "ads-highlighted", HomeEvent.Type.AD,
-            ApplicationAd.Network.MOPUB);
-      }
 
-      @Override public void onAdRemoved(int position) {
-
-      }
-    });
-    appsList.setAdapter(moPubRecyclerAdapter);
+    //moPubRecyclerAdapter =
+    //    new MoPubRecyclerAdapter((Activity) view.getContext(), appsInBundleAdapter);
+    //ViewBinder moPubViewBinder =
+    //    new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
+    //        .iconImageId(R.id.icon)
+    //        .build();
+    //MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
+    //moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
+    //moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
+    //  @Override public void onAdLoaded(int position) {
+    //    homeAnalytics.sendAdImpressionEvent(0, "Ad", position, "ads-highlighted", HomeEvent.Type.AD,
+    //        ApplicationAd.Network.MOPUB);
+    //  }
+    //
+    //  @Override public void onAdRemoved(int position) {
+    //
+    //  }
+    //});
+    //appsList.setAdapter(moPubRecyclerAdapter);
   }
 
 
@@ -108,7 +108,11 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
 
     if (!hasAdLoaded) {
       hasAdLoaded = true;
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_HIGHLIGHTED_PLACEMENT_ID);
+      List<NativeAd> nativeAds = Appodeal.getNativeAds(3);
+      for (NativeAd nativeAd : nativeAds) {
+        appsInBundleAdapter.add(new AdClick(new AppodealNativeAd(nativeAd), "ads-highlighted"));
+      }
+      //moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_HIGHLIGHTED_PLACEMENT_ID);
     }
   }
 

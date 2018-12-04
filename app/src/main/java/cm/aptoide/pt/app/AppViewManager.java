@@ -2,13 +2,10 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.BuildConfig;
-import cm.aptoide.pt.abtesting.Experiment;
-import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdEvent;
-import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.ads.data.ApplicationAd;
+import cm.aptoide.pt.ads.data.AppodealAdResult;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
@@ -47,7 +44,6 @@ public class AppViewManager {
   private final AppCenter appCenter;
   private final ReviewsManager reviewsManager;
   private final AdsManager adsManager;
-  private final IronSourceAdRepository ironSourceAdRepository;
   private final StoreManager storeManager;
   private final FlagManager flagManager;
   private final StoreUtilsProxy storeUtilsProxy;
@@ -75,8 +71,7 @@ public class AppViewManager {
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
-      String marketName, AppCoinsManager appCoinsManager,
-      IronSourceAdRepository ironSourceAdRepository) {
+      String marketName, AppCoinsManager appCoinsManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -97,7 +92,6 @@ public class AppViewManager {
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
     this.isFirstLoad = true;
-    this.ironSourceAdRepository = ironSourceAdRepository;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -164,9 +158,6 @@ public class AppViewManager {
         .map(SearchAdResult::new);
   }
 
-  public PublishSubject<AdEvent> getInterstitialEvent() {
-    return ironSourceAdRepository.getAdEventSubject();
-  }
 
   public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
       int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
@@ -232,6 +223,7 @@ public class AppViewManager {
       List<String> keyWords) {
     return adsManager.loadAd(packageName, keyWords);
   }
+
 
   public SimilarAppsViewModel getCachedSimilarAppsViewModel() {
     return cachedSimilarAppsViewModel;
@@ -423,5 +415,9 @@ public class AppViewManager {
 
   public Single<List<Donation>> getTopDonations(String packageName) {
     return appCoinsManager.getDonationsList(packageName);
+  }
+
+  public PublishSubject<AppodealAdResult> appodealClick() {
+    return adsManager.getAppodealClick();
   }
 }

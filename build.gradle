@@ -25,7 +25,10 @@ allprojects {
     google()
     jcenter()
     maven { url 'https://maven.google.com'}
-    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+//    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+    flatDir {
+      dirs 'libs'
+    }
   }
 }
 
@@ -73,7 +76,7 @@ ext {
   Rx_lint_version = '1.2'
 
   // Retrofit
-  RETROFIT_VERSION = '2.1.0'
+  RETROFIT_VERSION = '2.2.0'
 
   // Test
   MOCK_WEB_SERVER_VERSION = '3.4.1'
@@ -115,7 +118,7 @@ ext {
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'
-  OKHTTP_VERSION = '3.6.0'
+  OKHTTP_VERSION = '3.7.0'
 
   CONSTRAINT_LAYOUT_VERSION = '1.0.2'
 
