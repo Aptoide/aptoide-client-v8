@@ -17,9 +17,11 @@
         />
 
     <Button
+        android:id="@+id/promotion_app_action_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
         style="@style/Aptoide.Button.Install"
         />
   </LinearLayout>
