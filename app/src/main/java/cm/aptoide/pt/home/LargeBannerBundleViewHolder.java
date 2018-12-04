@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import android.app.Activity;
 import android.view.View;
 import android.widget.LinearLayout;
+import cm.aptoide.pt.BuildConfig;
 import com.appodeal.ads.Appodeal;
 
 class LargeBannerBundleViewHolder extends AppBundleViewHolder {
@@ -51,7 +52,7 @@ class LargeBannerBundleViewHolder extends AppBundleViewHolder {
     //bannerAdRequest.setCreativeType(BannerAdRequest.TYPE_STATIC);
     if (!hasLoaded) {
       hasLoaded = true;
-      Appodeal.show(activity, Appodeal.MREC);
+      Appodeal.show(activity, Appodeal.MREC, BuildConfig.APPODEAL_HOME_BANNER_PLACEMENT_ID);
       //Appodeal.show(activity, Appodeal.BANNER_VIEW);
       //bannerView.loadAd();
     }

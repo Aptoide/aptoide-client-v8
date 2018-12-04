@@ -990,7 +990,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       }
     });
     Handler handler = new Handler();
-    handler.postDelayed(() -> Appodeal.show(getActivity(), Appodeal.INTERSTITIAL), 1000);
+    handler.postDelayed(() -> Appodeal.show(getActivity(), Appodeal.INTERSTITIAL,
+        BuildConfig.APPODEAL_APPVIEW_INTERSTITIAL_PLACEMENT_ID), 1000);
   }
 
   @Override public void showFlagVoteSubmittedMessage() {
