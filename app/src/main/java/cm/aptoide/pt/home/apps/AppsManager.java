@@ -135,15 +135,14 @@ public class AppsManager {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.DOWNLOADS);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL, AppContext.DOWNLOADS,
-        getOrigin(download.getAction()));
+        AnalyticsManager.Action.INSTALL, AppContext.DOWNLOADS, getOrigin(download.getAction()));
   }
 
   private void setupUpdateEvents(Download download, Origin origin) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.UPDATE_TAB);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        InstallType.UPDATE, AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, origin);
+        AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, origin);
   }
 
   private Origin getOrigin(int action) {

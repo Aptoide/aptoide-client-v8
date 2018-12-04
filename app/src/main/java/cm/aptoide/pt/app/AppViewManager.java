@@ -2,7 +2,6 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
@@ -30,7 +29,6 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 04/05/18.
@@ -302,9 +300,8 @@ public class AppViewManager {
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        downloadStateParser.getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), campaignId,
-        abTestGroup);
+        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,

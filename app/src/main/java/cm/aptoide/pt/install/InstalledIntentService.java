@@ -184,14 +184,6 @@ public class InstalledIntentService extends IntentService {
         .toBlocking()
         .first();
 
-    if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      PackageInfo packageInfo = databaseOnPackageAdded(packageName);
-      installAnalytics.sendReplacedEvent(packageName, packageInfo.versionCode,
-          rootAvailabilityManager.isRootAvailable()
-              .toBlocking()
-              .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
-    }
-
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
