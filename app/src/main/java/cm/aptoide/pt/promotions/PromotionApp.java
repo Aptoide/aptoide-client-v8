@@ -9,9 +9,14 @@ public class PromotionApp {
   private String alternativePath;
   private String appIcon;
   private PromotionAppState state;
+  private String description;
+  private long size;
+  private float rating;
+  private int numberOfDownloads;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
-      String alternativePath, String appIcon, PromotionAppState state) {
+      String alternativePath, String appIcon, PromotionAppState state, String description,
+      long size, float rating, int numberOfDownloads) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
@@ -19,6 +24,10 @@ public class PromotionApp {
     this.alternativePath = alternativePath;
     this.appIcon = appIcon;
     this.state = state;
+    this.description = description;
+    this.size = size;
+    this.rating = rating;
+    this.numberOfDownloads = numberOfDownloads;
   }
 
   public String getName() {
@@ -51,6 +60,22 @@ public class PromotionApp {
 
   public void setState(PromotionAppState state) {
     this.state = state;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public long getSize() {
+    return size;
+  }
+
+  public float getRating() {
+    return rating;
+  }
+
+  public int getNumberOfDownloads() {
+    return numberOfDownloads;
   }
 
   enum PromotionAppState {

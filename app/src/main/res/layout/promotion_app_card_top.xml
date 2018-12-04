@@ -34,6 +34,7 @@
         >
 
       <TextView
+          android:id="@+id/app_name"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           tools:text="Snapchat"
@@ -111,6 +112,7 @@
   </RelativeLayout>
 
   <TextView
+      android:id="@+id/app_description"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       tools:text="Snapchat is the easiest way to share a memorable moment with your friends. Snappity snap snapchat!"
