@@ -47,12 +47,13 @@
           >
 
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="12dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:src="@color/amber"
+            android:src="@drawable/ic_appview_download_icon"
+            android:tint="@color/grey"
             />
 
         <TextView
@@ -66,12 +67,13 @@
             />
 
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="12dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:src="@color/amber"
+            android:src="@drawable/ic_dimension"
+            android:tint="@color/grey"
             />
 
         <TextView
@@ -85,12 +87,13 @@
             />
 
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="12dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:src="@color/amber"
+            android:src="@drawable/ic_star_black"
+            android:tint="@color/grey"
             />
 
         <TextView
