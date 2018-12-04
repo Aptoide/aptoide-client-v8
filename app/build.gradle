@@ -73,6 +73,7 @@ android {
       dimension "product"
       applicationId "cm.aptoide.pt"
       applicationIdSuffix project.COBRAND_APPLICATION_ID_SUFFIX.toString()
+      versionNameSuffix ".c" + project.COBRAND_VERSION.toString()
       matchingFallbacks = ['internal', 'prod']
     }
 
