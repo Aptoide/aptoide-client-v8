@@ -89,5 +89,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scrollbars="vertical"
+      tools:itemCount="3"
+      tools:listitem="@layout/promotion_app_inactive"
       />
 </LinearLayout>
