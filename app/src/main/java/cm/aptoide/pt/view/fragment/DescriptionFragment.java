@@ -251,15 +251,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     descriptionContainer = (TextView) view.findViewById(R.id.data_container);
   }
 
-  @Override public int getContentViewId() {
-    return R.layout.fragment_app_view_description;
-  }
-
-  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_empty, menu);
-  }
-
   @Override public void onDestroyView() {
     super.onDestroyView();
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -268,5 +259,14 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
       bar.setBackgroundDrawable(getActivity().getResources()
           .getDrawable(StoreTheme.DEFAULT.getGradientDrawable()));
     }
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.fragment_app_view_description;
+  }
+
+  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_empty, menu);
   }
 }

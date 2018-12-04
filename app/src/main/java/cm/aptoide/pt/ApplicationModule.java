@@ -63,6 +63,7 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -1543,6 +1544,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("imageCachePath") String provideImageCachePatch(
       @Named("cachePath") String cachePath) {
     return cachePath + "icons/";
+  }
+
+  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {
+    return new AptoideApplicationAnalytics();
+  }
+
+  @Singleton @Provides IronSourceAnalytics provideIronSourceAnalytics() {
+    return new IronSourceAnalytics();
   }
 
   @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {

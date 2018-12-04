@@ -20,6 +20,9 @@ allprojects {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
+    maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
+    maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
+
     google()
     jcenter()
   }
@@ -103,6 +106,11 @@ ext {
   FLURRY_VERSION = '6.4.2'
 
   CRASHLYTICS_VERSION = '2.6.5'
+
+  IRONSOURCE_VERSION = '6.7.12'
+  APPLOVIN_VERSION = '4.3.0'
+  VUNGLE_ADAPTER_VERSION = '4.1.4'
+  VUNGLE_VERSION = '6.3.17'
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'

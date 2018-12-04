@@ -35,7 +35,7 @@ public class AppViewAnalytics {
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TYPE = "type";
-  private static final String NETWORK = "Network";
+  private static final String NETWORK = "network";
   private static final String IS_AD = "Is_ad";
   private static final String POSITION = "Position";
   private static final String PACKAGE_NAME = "Package_name";
@@ -375,6 +375,25 @@ public class AppViewAnalytics {
 
     analyticsManager.logEvent(data, SIMILAR_APP_INTERACT,
         action.equals(IMPRESSION) ? AnalyticsManager.Action.IMPRESSION
+            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
+  }
+
+  public void installInterstitialImpression(String network) {
+    installInterstitialInteract("impression", network);
+  }
+
+  public void installInterstitialClick(String network) {
+    installInterstitialInteract("tap_on_app", network);
+  }
+
+  private void installInterstitialInteract(String action, String network) {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, action);
+    data.put("bundle_tag", "interstitial");
+    data.put(NETWORK, network);
+
+    analyticsManager.logEvent(data, APP_VIEW_INTERACT,
+        action.equals("impression") ? AnalyticsManager.Action.IMPRESSION
             : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
 }
