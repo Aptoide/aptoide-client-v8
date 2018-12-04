@@ -8,8 +8,6 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -20,10 +18,6 @@ import javax.inject.Inject;
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
 
   @Inject PromotionsPresenter promotionsPresenter;
-  private TextView firstAppName;
-  private TextView secondAppName;
-  private ImageView firstAppIcon;
-  private ImageView secondAppIcon;
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
 
@@ -34,13 +28,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
-    firstAppName = view.findViewById(R.id.promotions_app_1_app_name);
-    secondAppName = view.findViewById(R.id.promotions_app_2_app_name);
-
-    firstAppIcon = view.findViewById(R.id.promotions_app_1_icon);
-    secondAppIcon = view.findViewById(R.id.promotions_app_2_icon);
-
     promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(), new PromotionsViewHolderFactory());
 
@@ -74,20 +61,5 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     if (!appsList.isEmpty()) {
       promotionsAdapter.setPromotionApps(appsList);
     }
-
-    /*
-    firstAppName.setText(appsList.get(0)
-        .getName());
-
-    secondAppName.setText(appsList.get(1)
-        .getName());
-
-    ImageLoader.with(getContext())
-        .load(appsList.get(0)
-            .getAppIcon(), firstAppIcon);
-
-    ImageLoader.with(getContext())
-        .load(appsList.get(1)
-            .getAppIcon(), secondAppIcon);*/
   }
 }
