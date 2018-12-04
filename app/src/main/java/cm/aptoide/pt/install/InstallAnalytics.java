@@ -28,12 +28,25 @@ public class InstallAnalytics {
   public static final String APPLICATION_INSTALL = "Application Install";
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   public static final String INSTALL_EVENT_NAME = "INSTALL";
+  private static final String PACKAGE = "package";
   private static final String TYPE = "type";
   private static final String ROOT = "root";
   private static final String URL = "url";
   private static final String RESULT = "result";
   private static final String OBB = "obb";
   private static final String APP = "app";
+  private static final String NETWORK = "network";
+  private static final String ORIGIN = "origin";
+  private static final String PREVIOUS_CONTEXT = "previous_context";
+  private static final String PREVIOUS_TAG = "previous_tag";
+  private static final String CAMPAIGN_ID = "campaign_id";
+  private static final String AB_TEST_GROUP = "ab_test_group";
+  private static final String STORE = "store";
+  private static final String TELECO = "teleco";
+  private static final String STATUS = "status";
+  private static final String MESSAGE = "message";
+  private static final String PHONE = "phone";
+  private static final String SETTINGS = "aptoide_settings";
   private static final String EDITORS_CHOICE = "apps-group-editors-choice";
   private static final String NO_PREVIOUS_SCREEN_ERROR = "No_Previous_Screen";
   private final CrashReport crashReport;
@@ -168,35 +181,35 @@ public class InstallAnalytics {
       int campaignId, String abTestingGroup) {
     Map<String, Object> data = new HashMap<>();
     data.put(APP, createApp(packageName));
-    data.put("network", AptoideUtils.SystemU.getConnectionType(connectivityManager)
+    data.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
-    data.put("origin", origin);
-    data.put("previous_context", navigationTracker.getCurrentScreen()
+    data.put(ORIGIN, origin);
+    data.put(PREVIOUS_CONTEXT, navigationTracker.getCurrentScreen()
         .getFragment());
-    data.put("previous_tag", navigationTracker.getCurrentScreen()
+    data.put(PREVIOUS_TAG, navigationTracker.getCurrentScreen()
         .getTag());
     if (campaignId >= 0) {
-      data.put("campaign_id", campaignId);
+      data.put(CAMPAIGN_ID, campaignId);
     }
     if (abTestingGroup != null) {
-      data.put("ab_test_group", abTestingGroup);
+      data.put(AB_TEST_GROUP, abTestingGroup);
     }
-    data.put("store", navigationTracker.getCurrentScreen()
+    data.put(STORE, navigationTracker.getCurrentScreen()
         .getStore());
-    data.put("teleco", AptoideUtils.SystemU.getCarrierName(telephonyManager));
+    data.put(TELECO, AptoideUtils.SystemU.getCarrierName(telephonyManager));
     return data;
   }
 
   private Map<String, Object> createRoot(boolean isPhoneRooted, boolean aptoideSettings) {
     Map<String, Object> root = new HashMap<>();
-    root.put("phone", isPhoneRooted);
-    root.put("aptoide_settings", aptoideSettings);
+    root.put(PHONE, isPhoneRooted);
+    root.put(SETTINGS, aptoideSettings);
     return root;
   }
 
   private Map<String, Object> createApp(String packageName) {
     Map<String, Object> app = new HashMap<>();
-    app.put("package", packageName);
+    app.put(PACKAGE, packageName);
     return app;
   }
 
@@ -271,10 +284,10 @@ public class InstallAnalytics {
 
   private Map<String, Object> createResult(Exception exception) {
     Map<String, Object> result = new HashMap<>();
-    result.put("status", "FAIL");
+    result.put(STATUS, "FAIL");
     result.put(TYPE, exception.getClass()
         .getSimpleName());
-    result.put("message", exception.getMessage());
+    result.put(MESSAGE, exception.getMessage());
     return result;
   }
 
