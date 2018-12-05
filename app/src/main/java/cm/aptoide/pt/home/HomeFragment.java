@@ -15,9 +15,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import com.appodeal.ads.Appodeal;
+import com.appodeal.ads.MrecCallbacks;
+import com.appodeal.ads.NativeAd;
+import com.appodeal.ads.NativeCallbacks;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -84,6 +89,52 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("0.0");
+
+    Appodeal.setMrecCallbacks(new MrecCallbacks() {
+      @Override public void onMrecLoaded(boolean b) {
+        homeAnalytics.bannerImpression(ApplicationAd.Network.APPODEAL.getName());
+      }
+
+      @Override public void onMrecFailedToLoad() {
+
+      }
+
+      @Override public void onMrecShown() {
+
+      }
+
+      @Override public void onMrecClicked() {
+        homeAnalytics.bannerClick(ApplicationAd.Network.APPODEAL.getName());
+      }
+
+      @Override public void onMrecExpired() {
+
+      }
+    });
+
+    Appodeal.setNativeCallbacks(new NativeCallbacks() {
+      @Override public void onNativeLoaded() {
+        homeAnalytics.sendAdImpressionEvent(0, "Unknown", 2, "ads-highlighted", HomeEvent.Type.AD,
+            ApplicationAd.Network.APPODEAL);
+      }
+
+      @Override public void onNativeFailedToLoad() {
+
+      }
+
+      @Override public void onNativeShown(NativeAd nativeAd) {
+
+      }
+
+      @Override public void onNativeClicked(NativeAd nativeAd) {
+        homeAnalytics.sendAdClickEvent(0, "Unknown", 2, "ads-highlighted", HomeEvent.Type.AD,
+            ApplicationAd.Network.APPODEAL);
+      }
+
+      @Override public void onNativeExpired() {
+
+      }
+    });
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

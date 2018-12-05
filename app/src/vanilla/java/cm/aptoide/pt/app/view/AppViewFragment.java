@@ -285,6 +285,33 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     purchaseBundleMapper = application.getPurchaseBundleMapper();
     adsRepository = application.getAdsRepository();
     setHasOptionsMenu(true);
+
+    Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
+      @Override public void onInterstitialLoaded(boolean b) {
+        appViewAnalytics.installInterstitialImpression("Appodeal");
+      }
+
+      @Override public void onInterstitialFailedToLoad() {
+        Log.e("Appodeal_Interstitial", "Failed to load ads.");
+      }
+
+      @Override public void onInterstitialShown() {
+
+      }
+
+      @Override public void onInterstitialClicked() {
+        appViewAnalytics.installInterstitialClick("Appodeal");
+      }
+
+      @Override public void onInterstitialClosed() {
+
+      }
+
+      @Override public void onInterstitialExpired() {
+
+      }
+    });
+
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -964,31 +991,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public synchronized void showFullScreenAd() {
     fullScreenAdShown = true;
-    Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
-      @Override public void onInterstitialLoaded(boolean b) {
-        appViewAnalytics.installInterstitialImpression("Appodeal");
-      }
-
-      @Override public void onInterstitialFailedToLoad() {
-        Log.i("Appodeal_Interstitial", "Failed to load ads.");
-      }
-
-      @Override public void onInterstitialShown() {
-
-      }
-
-      @Override public void onInterstitialClicked() {
-        appViewAnalytics.installInterstitialClick("Appodeal");
-      }
-
-      @Override public void onInterstitialClosed() {
-
-      }
-
-      @Override public void onInterstitialExpired() {
-
-      }
-    });
     Handler handler = new Handler();
     handler.postDelayed(() -> Appodeal.show(getActivity(), Appodeal.INTERSTITIAL,
         BuildConfig.APPODEAL_APPVIEW_INTERSTITIAL_PLACEMENT_ID), 1000);
