@@ -28,27 +28,31 @@ public class InstallAnalytics {
   public static final String APPLICATION_INSTALL = "Application Install";
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   public static final String INSTALL_EVENT_NAME = "INSTALL";
-  private static final String PACKAGE = "package";
-  private static final String TYPE = "type";
-  private static final String ROOT = "root";
-  private static final String URL = "url";
-  private static final String RESULT = "result";
-  private static final String OBB = "obb";
+  private static final String AB_TEST_GROUP = "ab_test_group";
   private static final String APP = "app";
+  private static final String CAMPAIGN_ID = "campaign_id";
+  private static final String EDITORS_CHOICE = "apps-group-editors-choice";
+  private static final String FAIL = "FAIL";
+  private static final String MAIN = "MAIN";
+  private static final String MESSAGE = "message";
   private static final String NETWORK = "network";
+  private static final String NO_PREVIOUS_SCREEN_ERROR = "No_Previous_Screen";
+  private static final String OBB = "obb";
   private static final String ORIGIN = "origin";
+  private static final String PACKAGE = "package";
+  private static final String PATCH = "PATCH";
+  private static final String PHONE = "phone";
   private static final String PREVIOUS_CONTEXT = "previous_context";
   private static final String PREVIOUS_TAG = "previous_tag";
-  private static final String CAMPAIGN_ID = "campaign_id";
-  private static final String AB_TEST_GROUP = "ab_test_group";
-  private static final String STORE = "store";
-  private static final String TELECO = "teleco";
-  private static final String STATUS = "status";
-  private static final String MESSAGE = "message";
-  private static final String PHONE = "phone";
+  private static final String RESULT = "result";
+  private static final String ROOT = "root";
   private static final String SETTINGS = "aptoide_settings";
-  private static final String EDITORS_CHOICE = "apps-group-editors-choice";
-  private static final String NO_PREVIOUS_SCREEN_ERROR = "No_Previous_Screen";
+  private static final String STATUS = "status";
+  private static final String STORE = "store";
+  private static final String SUCCESS = "SUCC";
+  private static final String TELECO = "teleco";
+  private static final String TYPE = "type";
+  private static final String URL = "url";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -111,7 +115,7 @@ public class InstallAnalytics {
 
   private Map<String, Object> createResult() {
     Map<String, Object> result = new HashMap<>();
-    result.put("status", "SUCC");
+    result.put(STATUS, SUCCESS);
     return result;
   }
 
@@ -248,9 +252,9 @@ public class InstallAnalytics {
   private Map<String, Object> createObbData(int fileType, String url) {
     Map<String, Object> obb = new HashMap<>();
     if (fileType == 1) {
-      obb.put(TYPE, "MAIN");
+      obb.put(TYPE, MAIN);
     } else if (fileType == 2) {
-      obb.put(TYPE, "PATCH");
+      obb.put(TYPE, PATCH);
     }
     obb.put(URL, url);
     return obb;
@@ -284,7 +288,7 @@ public class InstallAnalytics {
 
   private Map<String, Object> createResult(Exception exception) {
     Map<String, Object> result = new HashMap<>();
-    result.put(STATUS, "FAIL");
+    result.put(STATUS, FAIL);
     result.put(TYPE, exception.getClass()
         .getSimpleName());
     result.put(MESSAGE, exception.getMessage());
