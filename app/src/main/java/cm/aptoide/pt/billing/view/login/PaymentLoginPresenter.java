@@ -202,8 +202,6 @@ public class PaymentLoginPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.facebookSignUpEvent())
-        .doOnNext(this::showNotCheckedMessage)
-        .filter(event -> event)
         .doOnNext(__ -> view.showLoading())
         .doOnNext(click -> accountAnalytics.sendFacebookLoginButtonPressed())
         .doOnNext(__ -> accountNavigator.navigateToFacebookSignUpForResult(permissions))
@@ -215,8 +213,6 @@ public class PaymentLoginPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.googleSignUpEvent())
-        .doOnNext(this::showNotCheckedMessage)
-        .filter(event -> event)
         .doOnNext(event -> view.showLoading())
         .doOnNext(event -> accountAnalytics.sendGoogleLoginButtonPressed())
         .flatMapSingle(event -> accountNavigator.navigateToGoogleSignUpForResult(
