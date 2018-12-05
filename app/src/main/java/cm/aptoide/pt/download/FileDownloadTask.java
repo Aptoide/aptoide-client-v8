@@ -59,9 +59,10 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
           .d(TAG, " Download completed");
     } else {
       Logger.getInstance()
-          .d(TAG, " Download error");
+          .d(TAG, " Download error in md5");
       fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5, null);
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR, md5,
+              new Md5DownloadComparisionException("md5 does not match"));
     }
     downloadStatus.onNext(fileDownloadTaskStatus);
   }
