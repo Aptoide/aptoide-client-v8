@@ -594,7 +594,9 @@
   <string name="holidayspromotion_title_completed">Done!</string>
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">Done</string>
-
-
+  <string name="holidayspromotion_short_error_captcha">Wrong captcha. Try again!</string>
+  <string name="holidayspromotion_short_errer_claimed">You already claimed this reward!</string>
+  <string name="holidayspromotion_short_errer_wallet_address">Invalid address. Try again!</string>
+  
 </resources>
 
