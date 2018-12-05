@@ -25,6 +25,8 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD = "tap on card";
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String VIEW_CARD = "view card";
+  private static final String CURATION_CARD_IMPRESSION = "CURATION_CARD_IMPRESSION";
+  private static final String CURATION_CARD_CLICK = "CURATION_CARD_CLICK";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -166,20 +168,20 @@ public class HomeAnalytics {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_CARD);
     data.put("bundle_tag", bundleTag);
-    data.put("bundle_position", bundlePosition);
     data.put("card_id", cardId);
+    data.put("bundle_position", bundlePosition);
 
-    analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
+    analyticsManager.logEvent(data, CURATION_CARD_CLICK, OPEN, navigationTracker.getViewName(true));
   }
 
   public void sendEditorialImpressionEvent(String bundleTag, int bundlePosition, String cardId) {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", IMPRESSION);
     data.put("bundle_tag", bundleTag);
-    data.put("bundle_position", bundlePosition);
     data.put("card_id", cardId);
+    data.put("bundle_position", bundlePosition);
 
-    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
+    analyticsManager.logEvent(data, CURATION_CARD_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 

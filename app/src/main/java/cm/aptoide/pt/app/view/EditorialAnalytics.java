@@ -2,7 +2,6 @@ package cm.aptoide.pt.app.view;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import java.util.HashMap;
@@ -13,6 +12,7 @@ import java.util.HashMap;
 
 public class EditorialAnalytics {
   private static final String APPLICATION_NAME = "Application Name";
+  private static final String CURATION_CARD_INSTALL = "CURATION_CARD_INSTALL";
   private static final String TYPE = "type";
 
   private final DownloadAnalytics downloadAnalytics;
@@ -42,9 +42,9 @@ public class EditorialAnalytics {
 
   public void clickOnInstallButton(String packageName, String type) {
     HashMap<String, Object> map = new HashMap<>();
-    map.put(TYPE, type);
     map.put(APPLICATION_NAME, packageName);
-    analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
+    map.put(TYPE, type);
+    analyticsManager.logEvent(map, CURATION_CARD_INSTALL, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 
