@@ -8,9 +8,15 @@ public class ClaimPromotionsManager {
   private CaptchaService captchaService;
   private String walletAddress;
 
-  public ClaimPromotionsManager(PromotionsManager promotionsManager) {
+  public ClaimPromotionsManager(PromotionsManager promotionsManager,
+      CaptchaService captchaService) {
     this.promotionsManager = promotionsManager;
+    this.captchaService = captchaService;
     walletAddress = null;
+  }
+
+  public Single<String> getCaptcha(String userId) {
+    return captchaService.getCaptcha(userId);
   }
 
   public void saveWalletAddres(String walletAddress) {

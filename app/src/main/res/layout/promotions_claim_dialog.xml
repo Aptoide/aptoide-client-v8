@@ -19,4 +19,10 @@
       android:visibility="visible"
       />
 
+  <include
+      layout="@layout/claim_promotion_captcha_view"
+      android:id="@+id/captcha_view"
+      android:visibility="gone"
+      />
+
 </android.support.v7.widget.CardView>

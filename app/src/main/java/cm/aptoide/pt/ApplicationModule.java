@@ -163,6 +163,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import cm.aptoide.pt.promotions.CaptchaService;
 import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
@@ -260,6 +261,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 @Module public class ApplicationModule {
 
   private static final String DONATIONS_URL = "https://api.blockchainds.com/";
+  private static final String TEST = "https://apichain.blockchainds.com/";
 
   private final AptoideApplication application;
   private final String aptoideMd5sum;
@@ -1085,6 +1087,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("apichain-bds") Retrofit providesApiChainBDSRetrofit(
+      @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(
+        TEST)  //"https://"+BuildConfig.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
@@ -1103,6 +1116,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
       @Named("retrofit-donations") Retrofit retrofit) {
     return retrofit.create(DonationsService.ServiceV8.class);
+  }
+
+  @Singleton @Provides CaptchaService.ServiceInterface providesCaptchaServiceInterface(
+      @Named("apichain-bds") Retrofit retrofit) {
+    return retrofit.create(CaptchaService.ServiceInterface.class);
+  }
+
+  @Singleton @Provides CaptchaService providesCaptchaService(
+      CaptchaService.ServiceInterface service) {
+    return new CaptchaService(service);
   }
 
   @Singleton @Provides CrashReport providesCrashReports() {

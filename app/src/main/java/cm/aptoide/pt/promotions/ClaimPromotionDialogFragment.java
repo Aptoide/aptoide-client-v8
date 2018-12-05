@@ -19,10 +19,15 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.networking.IdsRepository;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.MainActivity;
 import com.jakewharton.rxbinding.view.RxView;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -34,18 +39,30 @@ public class ClaimPromotionDialogFragment extends DialogFragment
 
   private static final String WALLET_PACKAGE = "com.appcoins.wallet";
 
+  @Inject ClaimPromotionsManager claimPromotionsManager;
+  @Inject IdsRepository idsRepository;
   private ClipboardManager clipboard;
   private ClaimPromotionDialogPresenter presenter;
+  private ProgressBar loading;
   private EditText walletAddressEdit;
   private Button getWalletAddressButton;
-  private Button nextButton;
-  private Button cancelButton;
+  private Button walletNextButton;
+  private Button walletCancelButton;
   private ImageView walletMessageIcon;
   private TextView walletMessage;
   private View walletMessageView;
+  private ImageView captcha;
+  private EditText captchaEdit;
+  private Button captchaNextButton;
+  private Button captchaCancelButton;
+
+  private View insertWalletView;
+  private View captchaView;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ((MainActivity) getContext()).getActivityComponent()
+        .inject(this);
     clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
   }
 
@@ -53,7 +70,20 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     super.onDestroyView();
     walletAddressEdit = null;
     getWalletAddressButton = null;
-    nextButton = null;
+    walletNextButton = null;
+    walletCancelButton = null;
+    walletMessageIcon = null;
+    walletMessage = null;
+    walletMessageView = null;
+    captcha = null;
+    captchaEdit = null;
+    captchaNextButton = null;
+    captchaCancelButton = null;
+
+    insertWalletView = null;
+    captchaView = null;
+
+    presenter.dispose();
   }
 
   @Nullable @Override
@@ -67,18 +97,28 @@ public class ClaimPromotionDialogFragment extends DialogFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    loading = view.findViewById(R.id.loading);
     walletAddressEdit = view.findViewById(R.id.wallet_edit);
     getWalletAddressButton = view.findViewById(R.id.get_wallet_button);
-    nextButton = view.findViewById(R.id.continue_button);
-    cancelButton = view.findViewById(R.id.cancel_button);
+    walletNextButton = view.findViewById(R.id.wallet_continue_button);
+    walletCancelButton = view.findViewById(R.id.wallet_cancel_button);
     walletMessageIcon = view.findViewById(R.id.wallet_message_icon);
     walletMessage = view.findViewById(R.id.wallet_message);
     walletMessageView = view.findViewById(R.id.wallet_message_view);
+    captcha = view.findViewById(R.id.captcha_container);
+    captchaEdit = view.findViewById(R.id.captcha_edit);
+    captchaNextButton = view.findViewById(R.id.captcha_continue_button);
+    captchaCancelButton = view.findViewById(R.id.captcha_cancel_button);
+
+    insertWalletView = view.findViewById(R.id.insert_address_view);
+    captchaView = view.findViewById(R.id.captcha_view);
+
     presenter = new ClaimPromotionDialogPresenter(this, new CompositeSubscription(),
-        AndroidSchedulers.mainThread(), null);
+        AndroidSchedulers.mainThread(), claimPromotionsManager, idsRepository);
     presenter.present();
-    cancelButton.setOnClickListener(click -> dismiss());
+    walletCancelButton.setOnClickListener(click -> dismiss());
     handleAddressEditRules();
+    captchaCancelButton.setOnClickListener(click -> dismiss());
   }
 
   public void onResume() {
@@ -107,7 +147,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   }
 
   @Override public Observable<String> continueClick() {
-    return RxView.clicks(nextButton)
+    return RxView.clicks(walletNextButton)
         .map(__ -> walletAddressEdit.getText()
             .toString());
   }
@@ -116,7 +156,21 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     AptoideUtils.SystemU.openApp(WALLET_PACKAGE, getContext().getPackageManager(), getContext());
   }
 
-  @Override public void showCaptcha() {
+  @Override public void showCaptchaView(String captchaUrl) {
+    insertWalletView.setVisibility(View.GONE);
+    captchaView.setVisibility(View.VISIBLE);
+    ImageLoader.with(getContext())
+        .loadWithRoundCorners(captchaUrl, 8, captcha, R.drawable.placeholder_square);
+  }
+
+  @Override public void showLoading() {
+    loading.setVisibility(View.VISIBLE);
+    insertWalletView.setVisibility(View.GONE);
+    captchaView.setVisibility(View.GONE);
+  }
+
+  @Override public void hideLoading() {
+    loading.setVisibility(View.GONE);
   }
 
   private void handleAddressEditRules() {
@@ -173,15 +227,15 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   }
 
   private void enableNextButton() {
-    nextButton.setClickable(true);
-    nextButton.setFocusable(true);
-    nextButton.setTextColor(getResources().getColor(R.color.default_orange_gradient_end));
+    walletNextButton.setClickable(true);
+    walletNextButton.setFocusable(true);
+    walletNextButton.setTextColor(getResources().getColor(R.color.default_orange_gradient_end));
   }
 
   private void disableNextButton() {
-    nextButton.setClickable(false);
-    nextButton.setFocusable(false);
-    nextButton.setTextColor(getResources().getColor(R.color.grey_fog_light));
+    walletNextButton.setClickable(false);
+    walletNextButton.setFocusable(false);
+    walletNextButton.setTextColor(getResources().getColor(R.color.grey_fog_light));
   }
 
   private void disableWalletButton() {

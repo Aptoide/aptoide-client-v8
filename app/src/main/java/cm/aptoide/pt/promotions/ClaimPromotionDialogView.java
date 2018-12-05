@@ -10,5 +10,9 @@ public interface ClaimPromotionDialogView {
 
   void sendWalletIntent();
 
-  void showCaptcha();
+  void showCaptchaView(String captchaUrl);
+
+  void showLoading();
+
+  void hideLoading();
 }

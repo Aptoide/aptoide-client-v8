@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.presenter.Presenter;
 import rx.Scheduler;
 import rx.subscriptions.CompositeSubscription;
@@ -10,14 +11,16 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private Scheduler viewScheduler;
   private ClaimPromotionsManager claimPromotionsManager;
   private ClaimPromotionDialogView view;
+  private IdsRepository idsRepository;
 
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
-      ClaimPromotionsManager claimPromotionsManager) {
+      ClaimPromotionsManager claimPromotionsManager, IdsRepository idsRepository) {
     this.view = view;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;
     this.claimPromotionsManager = claimPromotionsManager;
+    this.idsRepository = idsRepository;
   }
 
   @Override public void present() {
@@ -41,8 +44,12 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     subscriptions.add(view.continueClick()
         .doOnNext(address -> {
           claimPromotionsManager.saveWalletAddres(address);
-          view.showCaptcha();
+          view.showLoading();
         })
+        .map(__ -> idsRepository.getUniqueIdentifier())
+        .flatMapSingle(uid -> claimPromotionsManager.getCaptcha(uid))
+        .observeOn(viewScheduler)
+        .doOnNext(captcha -> view.showCaptchaView(captcha))
         .subscribe(__ -> {
         }, throwable -> {
         }));

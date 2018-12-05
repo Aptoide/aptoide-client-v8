@@ -60,6 +60,9 @@ import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.promotions.CaptchaService;
+import cm.aptoide.pt.promotions.ClaimPromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -297,5 +300,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides IronSourceAdRepository providesIronSourceAdRepository() {
     return new IronSourceAdRepository(activity);
+  }
+
+  @ActivityScope @Provides ClaimPromotionsManager providesClaimPromotionsManager(
+      CaptchaService captchaService) {
+    return new ClaimPromotionsManager(new PromotionsManager(), captchaService);
   }
 }
