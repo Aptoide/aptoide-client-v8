@@ -591,6 +591,7 @@
   <string name="holidayspromotion_title_captcha">Verify that You\'re a Human</string>
   <string name="holidayspromotion_message_captcha">This is just a security thing</string>
   <string name="holidayspromotion_short_captcha_field">Type the text here</string>
+  <string name="holidayspromotion_button_captcha">Claim</string>
   <string name="holidayspromotion_title_completed">Done!</string>
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">Done</string>
