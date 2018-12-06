@@ -15,16 +15,16 @@ public class UserAgentInterceptorV8 implements Interceptor {
   private final String aptoidePackage;
   private final String aptoideMd5;
   private final int aptoideVersionCode;
-  private final String release;
+  private final String androidVersion;
   private final String model;
   private final String productCode;
   private final String architecture;
 
-  public UserAgentInterceptorV8(IdsRepository idsRepository, String release, String model,
+  public UserAgentInterceptorV8(IdsRepository idsRepository, String androidVersion, String model,
       String productCode, String architecture, DisplayMetrics displayMetrics, String versionName,
       String aptoidePackage, String aptoideMd5, int aptoideVersionCode) {
     this.idsRepository = idsRepository;
-    this.release = release;
+    this.androidVersion = androidVersion;
     this.model = model;
     this.productCode = productCode;
     this.architecture = architecture;
@@ -72,7 +72,7 @@ public class UserAgentInterceptorV8 implements Interceptor {
     final StringBuilder sb = new StringBuilder("Aptoide/"
         + versionName
         + " (Linux; Android "
-        + release
+        + androidVersion
         + "; "
         + model
         + " Build/"
