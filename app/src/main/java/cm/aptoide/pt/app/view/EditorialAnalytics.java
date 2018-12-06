@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class EditorialAnalytics {
   private static final String APPLICATION_NAME = "Application Name";
-  private static final String CURATION_CARD_INSTALL = "CURATION_CARD_INSTALL";
+  public static final String CURATION_CARD_INSTALL = "CURATION_CARD_INSTALL";
   private static final String TYPE = "type";
 
   private final DownloadAnalytics downloadAnalytics;

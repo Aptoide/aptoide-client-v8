@@ -25,8 +25,8 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD = "tap on card";
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String VIEW_CARD = "view card";
-  private static final String CURATION_CARD_IMPRESSION = "CURATION_CARD_IMPRESSION";
-  private static final String CURATION_CARD_CLICK = "CURATION_CARD_CLICK";
+  public static final String CURATION_CARD_IMPRESSION = "CURATION_CARD_IMPRESSION";
+  public static final String CURATION_CARD_CLICK = "CURATION_CARD_CLICK";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
