@@ -90,6 +90,7 @@ import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
@@ -396,10 +397,17 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager) {
-    return new PromotionsPresenter((PromotionsView) fragment, promotionsManager);
+    return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
+        AndroidSchedulers.mainThread());
   }
 
-  @FragmentScope @Provides PromotionsManager providePromotionsManager() {
-    return new PromotionsManager();
+  @FragmentScope @Provides PromotionsManager providePromotionsManager(InstallManager installManager,
+      PromotionViewAppMapper promotionViewAppMapper) {
+    return new PromotionsManager(promotionViewAppMapper, installManager);
+  }
+
+  @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
+      DownloadStateParser downloadStateParser) {
+    return new PromotionViewAppMapper(downloadStateParser);
   }
 }

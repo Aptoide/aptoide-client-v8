@@ -13,10 +13,14 @@ public class PromotionApp {
   private long size;
   private float rating;
   private int numberOfDownloads;
+  private String md5;
+  private int versionCode;
+  private boolean isClaimed;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
       String alternativePath, String appIcon, PromotionAppState state, String description,
-      long size, float rating, int numberOfDownloads) {
+      long size, float rating, int numberOfDownloads, String md5, int versionCode,
+      boolean isClaimed) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
@@ -28,6 +32,9 @@ public class PromotionApp {
     this.size = size;
     this.rating = rating;
     this.numberOfDownloads = numberOfDownloads;
+    this.md5 = md5;
+    this.versionCode = versionCode;
+    this.isClaimed = isClaimed;
   }
 
   public String getName() {
@@ -76,6 +83,18 @@ public class PromotionApp {
 
   public int getNumberOfDownloads() {
     return numberOfDownloads;
+  }
+
+  public String getMd5() {
+    return this.md5;
+  }
+
+  public int getVersionCode() {
+    return versionCode;
+  }
+
+  public boolean isClaimed() {
+    return isClaimed;
   }
 
   enum PromotionAppState {

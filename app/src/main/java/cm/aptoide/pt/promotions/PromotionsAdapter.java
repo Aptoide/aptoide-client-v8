@@ -2,6 +2,7 @@ package cm.aptoide.pt.promotions;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import cm.aptoide.pt.app.DownloadModel;
 import java.util.List;
 
 public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionAppsViewHolder> {
@@ -12,11 +13,12 @@ public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionApps
   static final int INSTALL = 3;
   static final int CLAIM = 4;
   static final int CLAIMED = 5;
+  static final int DOWNGRADE = 6;
 
-  private List<PromotionApp> appsList;
+  private List<PromotionViewApp> appsList;
   private PromotionsViewHolderFactory viewHolderFactory;
 
-  public PromotionsAdapter(List<PromotionApp> appsList,
+  public PromotionsAdapter(List<PromotionViewApp> appsList,
       PromotionsViewHolderFactory viewHolderFactory) {
     this.appsList = appsList;
     this.viewHolderFactory = viewHolderFactory;
@@ -32,39 +34,44 @@ public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionApps
   }
 
   @Override public int getItemViewType(int position) {
-    PromotionApp app = appsList.get(position);
+    PromotionViewApp app = appsList.get(position);
     int state;
-    switch (app.getState()) {
-      case UPDATE:
-        state = UPDATE;
-        break;
-      case DOWNLOAD:
-        state = DOWNLOAD;
-        break;
-      case DOWNLOADING:
-        state = DOWNLOADING;
-        break;
-      case INSTALL:
-        state = INSTALL;
-        break;
-      case CLAIM:
-        state = CLAIM;
-        break;
-      case CLAIMED:
-        state = CLAIMED;
-        break;
-      default:
-        throw new IllegalArgumentException("Invalid type of app state");
+    if (app.isClaimed()) {
+      return CLAIMED;
+    } else {
+      DownloadModel downloadModel = app.getDownloadModel();
+
+      if (downloadModel.isDownloading()) {
+        // TODO: 12/6/18 parse downloading states;
+        return DOWNLOADING;
+      } else {
+        switch (downloadModel.getAction()) {
+          case DOWNGRADE:
+            state = DOWNGRADE;
+            break;
+          case INSTALL:
+            state = INSTALL;
+            break;
+          case OPEN:
+            state = CLAIM;
+            break;
+          case UPDATE:
+            state = UPDATE;
+            break;
+          default:
+            throw new IllegalArgumentException("Invalid type of download action");
+        }
+        return state;
+      }
     }
-    return state;
   }
 
   @Override public int getItemCount() {
     return appsList.size();
   }
 
-  public void setPromotionApps(List<PromotionApp> appsList) {
-    this.appsList = appsList;
+  public void setPromotionApp(PromotionViewApp promotionViewApp) {
+    this.appsList.add(promotionViewApp);
     notifyDataSetChanged();
   }
 }

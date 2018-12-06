@@ -1,13 +1,17 @@
 package cm.aptoide.pt.promotions;
 
+import cm.aptoide.pt.app.DownloadModel;
+
 public class PromotionViewApp {
+
+  private DownloadModel downloadModel;
   private String name;
   private String packageName;
   private long appId;
   private String downloadPath;
   private String alternativePath;
   private String appIcon;
-  private PromotionAppState state;
+  private boolean isClaimed;
   private String description;
   private long size;
   private float rating;
@@ -15,16 +19,18 @@ public class PromotionViewApp {
   private String md5;
   private int versionCode;
 
-  public PromotionViewApp(String name, String packageName, long appId, String downloadPath,
-      String alternativePath, String appIcon, PromotionAppState state, String description,
-      long size, float rating, int numberOfDownloads, String md5, int versionCode) {
+  public PromotionViewApp(DownloadModel downloadModel, String name, String packageName, long appId,
+      String downloadPath, String alternativePath, String appIcon, boolean isClaimed,
+      String description, long size, float rating, int numberOfDownloads, String md5,
+      int versionCode) {
+    this.downloadModel = downloadModel;
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
     this.downloadPath = downloadPath;
     this.alternativePath = alternativePath;
     this.appIcon = appIcon;
-    this.state = state;
+    this.isClaimed = isClaimed;
     this.description = description;
     this.size = size;
     this.rating = rating;
@@ -57,14 +63,6 @@ public class PromotionViewApp {
     return appIcon;
   }
 
-  public PromotionAppState getState() {
-    return state;
-  }
-
-  public void setState(PromotionAppState state) {
-    this.state = state;
-  }
-
   public String getDescription() {
     return description;
   }
@@ -89,7 +87,15 @@ public class PromotionViewApp {
     return versionCode;
   }
 
-  enum PromotionAppState {
-    DOWNLOAD, UPDATE, DOWNLOADING, INSTALL, CLAIM, CLAIMED
+  public DownloadModel getDownloadModel() {
+    return downloadModel;
+  }
+
+  public void setDownloadModel(DownloadModel downloadModel) {
+    this.downloadModel = downloadModel;
+  }
+
+  public boolean isClaimed() {
+    return isClaimed;
   }
 }

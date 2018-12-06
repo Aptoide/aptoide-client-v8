@@ -12,7 +12,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
@@ -56,10 +55,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return inflater.inflate(R.layout.fragment_promotions, container, false);
   }
 
-  @Override public void showPromotionApps(List<PromotionViewApp> appsList) {
-
-    if (!appsList.isEmpty()) {
-      promotionsAdapter.setPromotionApps(appsList);
-    }
+  @Override public void showPromotionApp(PromotionViewApp promotionViewApp) {
+    promotionsAdapter.setPromotionApp(promotionViewApp);
   }
 }
