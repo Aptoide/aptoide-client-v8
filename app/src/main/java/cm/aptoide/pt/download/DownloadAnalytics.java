@@ -264,6 +264,12 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         previousContext);
   }
 
+  public void installClicked(String md5, String packageName, AnalyticsManager.Action action) {
+    String previousContext = navigationTracker.getViewName(false);
+    downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+        navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext);
+  }
+
   private void downloadCompleteEvent(ScreenTagHistory previousScreen,
       ScreenTagHistory currentScreen, String id, String packageName, String trustedValue,
       AnalyticsManager.Action action, String previousContext) {
