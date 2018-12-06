@@ -56,7 +56,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return inflater.inflate(R.layout.fragment_promotions, container, false);
   }
 
-  @Override public void showPromotionApps(List<PromotionApp> appsList) {
+  @Override public void showPromotionApps(List<PromotionViewApp> appsList) {
 
     if (!appsList.isEmpty()) {
       promotionsAdapter.setPromotionApps(appsList);

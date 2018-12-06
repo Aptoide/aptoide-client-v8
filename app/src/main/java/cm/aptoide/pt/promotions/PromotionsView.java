@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface PromotionsView extends View {
 
-  void showPromotionApps(List<PromotionApp> appsList);
+  void showPromotionApps(List<PromotionViewApp> appsList);
 }
