@@ -323,14 +323,12 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     return upNavigationRelay;
   }
 
-  @Override public Observable<Boolean> facebookSignUpEvent() {
-    return RxView.clicks(facebookButton)
-        .map(event -> termsConditionCheckBox.isChecked());
+  @Override public Observable<Void> facebookSignUpEvent() {
+    return RxView.clicks(facebookButton);
   }
 
-  @Override public Observable<Boolean> googleSignUpEvent() {
-    return RxView.clicks(googleButton)
-        .map(event -> termsConditionCheckBox.isChecked());
+  @Override public Observable<Void> googleSignUpEvent() {
+    return RxView.clicks(googleButton);
   }
 
   @Override public Observable<Void> recoverPasswordEvent() {

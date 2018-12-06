@@ -155,8 +155,6 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.preferences.AdultContentManager;
-import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -826,16 +824,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides WindowManager provideWindowManager() {
     return ((WindowManager) application.getSystemService(Context.WINDOW_SERVICE));
-  }
-
-  @Singleton @Provides LocalPersistenceAdultContent provideLocalAdultContent(
-      Preferences preferences, @Named("secure") SecurePreferences securePreferences) {
-    return new LocalPersistenceAdultContent(preferences, securePreferences);
-  }
-
-  @Singleton @Provides AdultContent provideAdultContent(
-      LocalPersistenceAdultContent localAdultContent, AccountService accountService) {
-    return new AdultContentManager(localAdultContent, accountService);
   }
 
   @Singleton @Provides Preferences provideDefaultPreferences(
@@ -1568,10 +1556,28 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
         AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
         BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
+        HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
         TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
         AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
         NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
-        DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT);
+        DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
+        EditorialAnalytics.CURATION_CARD_INSTALL);
+  }
+
+  @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
+    return new AptoideShortcutManager();
+  }
+
+  @Singleton @Provides SettingsManager providesSettingsManager() {
+    return new SettingsManager();
+  }
+
+  @Singleton @Provides LoginSignupManager providesLoginSignupManager() {
+    return new LoginSignupManager();
+  }
+
+  @Singleton @Provides MyAccountManager providesMyAccountManager() {
+    return new MyAccountManager();
   }
 }
