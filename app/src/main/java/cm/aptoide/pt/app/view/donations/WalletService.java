@@ -9,10 +9,10 @@ import rx.Single;
 
 public class WalletService {
 
-  private ServiceV8 service;
+  private ServiceV7 service;
   private Scheduler viewScheduler;
 
-  public WalletService(ServiceV8 service, Scheduler viewScheduler) {
+  public WalletService(ServiceV7 service, Scheduler viewScheduler) {
     this.service = service;
     this.viewScheduler = viewScheduler;
   }
@@ -25,7 +25,7 @@ public class WalletService {
         .subscribeOn(viewScheduler);
   }
 
-  public interface ServiceV8 {
+  public interface ServiceV7 {
     @GET("bds/apks/package/getOwnerWallet") Observable<GetWalletAddressResponse> getWallet(
         @Query("package_name") String packageName);
   }
