@@ -27,11 +27,11 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
     rating = itemView.findViewById(R.id.rating);
   }
 
-  @Override public void setApp(PromotionApp app) {
+  @Override public void setApp(PromotionViewApp app) {
     setAppCardHeader(app);
   }
 
-  private void setAppCardHeader(PromotionApp app) {
+  private void setAppCardHeader(PromotionViewApp app) {
     ImageLoader.with(itemView.getContext())
         .load(app.getAppIcon(), appIcon);
     appName.setText(app.getName());

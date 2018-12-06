@@ -38,7 +38,7 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
     promotionAction = itemView.findViewById(R.id.promotion_app_action_button);
   }
 
-  @Override public void setApp(PromotionApp app) {
+  @Override public void setApp(PromotionViewApp app) {
     setAppCardHeader(app);
     promotionAction.setText(getButtonMessage(appState));
   }
@@ -67,7 +67,7 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
     return message;
   }
 
-  private void setAppCardHeader(PromotionApp app) {
+  private void setAppCardHeader(PromotionViewApp app) {
     ImageLoader.with(itemView.getContext())
         .load(app.getAppIcon(), appIcon);
     appName.setText(app.getName());
