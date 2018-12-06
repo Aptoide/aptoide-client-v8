@@ -18,10 +18,6 @@ public class PromotionsManager {
   }
 
   public Observable<List<PromotionApp>> getPromotionApps() {
-    return getListOfPromotionApps();
-  }
-
-  private Observable<List<PromotionApp>> getListOfPromotionApps() {
     return Observable.just(getPromotionAppsMocked());
   }
 
