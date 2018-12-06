@@ -6,9 +6,31 @@ public interface ClaimPromotionDialogView {
 
   Observable<Void> getWalletClick();
 
-  Observable<String> continueClick();
+  Observable<String> continueWalletClick();
+
+  Observable<ClaimPromotionsSubmitWrapper> finishClick();
+
+  Observable<Void> refreshCaptchaClick();
+
+  void showLoadingCaptcha();
+
+  void hideLoadingCaptcha(String captcha);
 
   void sendWalletIntent();
 
-  void showCaptcha();
+  void showCaptchaView(String captchaUrl);
+
+  void showGenericError();
+
+  void showLoading();
+
+  void hideLoading();
+
+  void showInvalidWalletAddress();
+
+  void showPromotionAlreadyClaimed();
+
+  void showInvalidCaptcha(String captcha);
+
+  void showClaimSuccess();
 }

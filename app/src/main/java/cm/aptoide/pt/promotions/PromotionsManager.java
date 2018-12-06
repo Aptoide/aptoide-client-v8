@@ -7,6 +7,12 @@ import rx.Single;
 
 public class PromotionsManager {
 
+  private final PromotionsService promotionsService;
+
+  public PromotionsManager(PromotionsService promotionsService) {
+    this.promotionsService = promotionsService;
+  }
+
   public Observable<List<PromotionApp>> getPromotionApps() {
     return Observable.just(getListOfPromotionApps());
   }
@@ -24,12 +30,8 @@ public class PromotionsManager {
     return promotionAppList;
   }
 
-  public Single<ClaimStatus> claimPromotion(String walletAddress, String packageName,
+  public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
       String captcha) {
-    return Single.just(ClaimStatus.ok);
-  }
-
-  public enum ClaimStatus {
-    ok, error
+    return promotionsService.claimPromotion(walletAddress, packageName, captcha);
   }
 }

@@ -61,6 +61,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
@@ -547,6 +548,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @GET("bds/apks/package/getOwnerWallet") Observable<GetWalletAddressResponse> getWallet(
         @Query("package_name") String packageName);
+
+    @POST("appcoins/promotions/claim") Observable<BaseV7Response> claimPromotion(
+        @Body ClaimPromotionRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }
 

@@ -8,17 +8,22 @@ public class ClaimPromotionsManager {
   private CaptchaService captchaService;
   private String walletAddress;
 
-  public ClaimPromotionsManager(PromotionsManager promotionsManager) {
+  public ClaimPromotionsManager(PromotionsManager promotionsManager,
+      CaptchaService captchaService) {
     this.promotionsManager = promotionsManager;
+    this.captchaService = captchaService;
     walletAddress = null;
+  }
+
+  public Single<String> getCaptcha(String userId) {
+    return captchaService.getCaptcha(userId);
   }
 
   public void saveWalletAddres(String walletAddress) {
     this.walletAddress = walletAddress;
   }
 
-  public Single<PromotionsManager.ClaimStatus> claimPromotion(String walletAddress,
-      String packageName, String captcha) {
+  public Single<ClaimStatusWrapper> claimPromotion(String packageName, String captcha) {
     return promotionsManager.claimPromotion(walletAddress, packageName, captcha);
   }
 }

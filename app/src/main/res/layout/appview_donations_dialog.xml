@@ -82,7 +82,30 @@
 
           />
 
-
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:layout_marginBottom="8dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginRight="8dp"
+          android:orientation="horizontal"
+          >
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="78dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/cancel"
+            style="@style/Aptoide.Button.Flat"
+            />
+        <Button
+            android:id="@+id/donate_button"
+            android:layout_width="78dp"
+            android:text="@string/appview_button_donations"
+            style="@style/Aptoide.Button.Flat"
+            />
+      </LinearLayout>
     </LinearLayout>
   </ScrollView>
   <ProgressBar
