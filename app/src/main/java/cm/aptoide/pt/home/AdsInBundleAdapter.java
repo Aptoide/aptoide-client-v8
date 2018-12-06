@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.data.ApplicationAd;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,8 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
     this.ads = ads;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adClickedEvents;
-    this.homeBundle = null;
+    this.
+        homeBundle = null;
     this.bundlePosition = -1;
     this.appodealCount = 0;
   }
@@ -43,7 +45,14 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   }
 
   public int getAppodealCount() {
-    return appodealCount;
+    int i = 0;
+    for (AdClick adClick : ads) {
+      if (adClick.getAd()
+          .getNetwork() == ApplicationAd.Network.APPODEAL) {
+        i++;
+      }
+    }
+    return i;
   }
 
   public void update(List<AdClick> ads) {
