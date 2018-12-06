@@ -12,20 +12,27 @@ public class UserAgentInterceptorV8 implements Interceptor {
   private final IdsRepository idsRepository;
   private final DisplayMetrics displayMetrics;
   private final String versionName;
-  private final String versionCode;
+  private final String aptoidePackage;
+  private final String aptoideMd5;
+  private final int aptoideVersionCode;
+  private final String release;
   private final String model;
   private final String productCode;
   private final String architecture;
 
-  public UserAgentInterceptorV8(IdsRepository idsRepository, String versionCode, String model,
-      String productCode, String architecture, DisplayMetrics displayMetrics, String versionName) {
+  public UserAgentInterceptorV8(IdsRepository idsRepository, String release, String model,
+      String productCode, String architecture, DisplayMetrics displayMetrics, String versionName,
+      String aptoidePackage, String aptoideMd5, int aptoideVersionCode) {
     this.idsRepository = idsRepository;
-    this.versionCode = versionCode;
+    this.release = release;
     this.model = model;
     this.productCode = productCode;
     this.architecture = architecture;
     this.displayMetrics = displayMetrics;
     this.versionName = versionName;
+    this.aptoidePackage = aptoidePackage;
+    this.aptoideMd5 = aptoideMd5;
+    this.aptoideVersionCode = aptoideVersionCode;
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
@@ -65,13 +72,19 @@ public class UserAgentInterceptorV8 implements Interceptor {
     final StringBuilder sb = new StringBuilder("Aptoide/"
         + versionName
         + " (Linux; Android "
-        + versionCode
+        + release
         + "; "
         + model
         + " Build/"
         + productCode
         + "; "
         + architecture
+        + "; "
+        + aptoidePackage
+        + "; "
+        + aptoideVersionCode
+        + "; "
+        + aptoideMd5
         + "; "
         + myscr
         + "; ");
