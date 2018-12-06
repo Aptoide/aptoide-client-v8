@@ -20,6 +20,8 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
   private HomeBundle homeBundle;
   private int bundlePosition;
 
+  private int appodealCount;
+
   public AdsInBundleAdapter(List<AdClick> ads, DecimalFormat oneDecimalFormatter,
       PublishSubject<AdHomeEvent> adClickedEvents) {
     this.ads = ads;
@@ -27,14 +29,21 @@ class AdsInBundleAdapter extends RecyclerView.Adapter<AdInBundleViewHolder> {
     this.adClickedEvents = adClickedEvents;
     this.homeBundle = null;
     this.bundlePosition = -1;
+    this.appodealCount = 0;
   }
 
   public void add(AdClick ads) {
     if (this.ads == null) {
       this.ads = new ArrayList<AdClick>();
+      appodealCount = 0;
     }
     this.ads.add(0, ads);
+    appodealCount++;
     notifyDataSetChanged();
+  }
+
+  public int getAppodealCount() {
+    return appodealCount;
   }
 
   public void update(List<AdClick> ads) {

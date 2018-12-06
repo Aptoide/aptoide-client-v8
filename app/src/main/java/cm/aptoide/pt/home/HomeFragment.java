@@ -111,30 +111,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
       }
     });
-
-    Appodeal.setNativeCallbacks(new NativeCallbacks() {
-      @Override public void onNativeLoaded() {
-        homeAnalytics.sendAdImpressionEvent(0, "Unknown", 2, "ads-highlighted", HomeEvent.Type.AD,
-            ApplicationAd.Network.APPODEAL);
-      }
-
-      @Override public void onNativeFailedToLoad() {
-
-      }
-
-      @Override public void onNativeShown(NativeAd nativeAd) {
-
-      }
-
-      @Override public void onNativeClicked(NativeAd nativeAd) {
-        homeAnalytics.sendAdClickEvent(0, "Unknown", 2, "ads-highlighted", HomeEvent.Type.AD,
-            ApplicationAd.Network.APPODEAL);
-      }
-
-      @Override public void onNativeExpired() {
-
-      }
-    });
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

@@ -16,6 +16,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
 import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.NativeAd;
+import com.appodeal.ads.NativeCallbacks;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,37 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
 
+    Appodeal.setNativeCallbacks(new NativeCallbacks() {
+      @Override public void onNativeLoaded() {
+        if (appsInBundleAdapter.getAppodealCount() < 3) {
+          List<NativeAd> nativeAds = Appodeal.getNativeAds(3);
+          for (NativeAd nativeAd : nativeAds) {
+            if (appsInBundleAdapter.getAppodealCount() < 3) {
+              appsInBundleAdapter.add(
+                  new AdClick(new AppodealNativeAd(nativeAd), "ads-highlighted"));
+            }
+          }
+        }
+      }
+
+      @Override public void onNativeFailedToLoad() {
+
+      }
+
+      @Override public void onNativeShown(NativeAd nativeAd) {
+        homeAnalytics.sendAdImpressionEvent(0, "Unknown", 2, "ads-highlighted", HomeEvent.Type.AD,
+            ApplicationAd.Network.APPODEAL);
+      }
+
+      @Override public void onNativeClicked(NativeAd nativeAd) {
+        homeAnalytics.sendAdClickEvent(0, "Unknown", 2, "ads-highlighted", HomeEvent.Type.AD,
+            ApplicationAd.Network.APPODEAL);
+      }
+
+      @Override public void onNativeExpired() {
+
+      }
+    });
     //moPubRecyclerAdapter =
     //    new MoPubRecyclerAdapter((Activity) view.getContext(), appsInBundleAdapter);
     //ViewBinder moPubViewBinder =
@@ -106,14 +138,13 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     moreButton.setOnClickListener(
         v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
 
-    if (!hasAdLoaded) {
-      hasAdLoaded = true;
-      List<NativeAd> nativeAds = Appodeal.getNativeAds(3);
+    List<NativeAd> nativeAds = Appodeal.getNativeAds(3);
+    if (nativeAds != null && appsInBundleAdapter.getAppodealCount() < 3) {
       for (NativeAd nativeAd : nativeAds) {
         appsInBundleAdapter.add(new AdClick(new AppodealNativeAd(nativeAd), "ads-highlighted"));
       }
-      //moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_HIGHLIGHTED_PLACEMENT_ID);
     }
-  }
 
+      //moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_HIGHLIGHTED_PLACEMENT_ID);
+  }
 }

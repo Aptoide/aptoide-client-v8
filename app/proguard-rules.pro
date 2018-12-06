@@ -41,6 +41,9 @@
 -dontwarn okhttp3.**
 -dontwarn okio.**
 
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
 # Jackson
 -keepattributes *Annotation*,EnclosingMethod,Signature
 -keepnames class com.fasterxml.jackson.** { *; }
@@ -99,12 +102,6 @@
 }
 -dontwarn com.moat.**
 -keep class com.moat.** { public protected private *; }
-
-# Vungle
--dontwarn com.vungle.**
--dontnote com.vungle.**
--keep class com.vungle.** { *; }
--keep class javax.inject.*
 
 # GreenRobot
 -dontwarn de.greenrobot.event.util.**
@@ -339,7 +336,7 @@
 -keep class android.support.v4.app.FragmentManager { *; }
 -keep class android.support.v4.app.FragmentTransaction { *; }
 -keep class android.support.v4.content.ContextCompat { *; }
--keep class android.support.v4.content.LocalBroadcastManager { *; }
+-keep class android.support.v4.content.LocalBroadcastMqanager { *; }
 -keep class android.support.v4.util.LruCache { *; }
 -keep class android.support.v4.view.PagerAdapter { *; }
 -keep class android.support.v4.view.ViewPager { *; }

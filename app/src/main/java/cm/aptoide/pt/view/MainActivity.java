@@ -52,6 +52,7 @@ public class MainActivity extends BottomNavigationActivity
     Appodeal.setLogLevel(Log.LogLevel.debug);
     //Appodeal.setMrecViewId(R.id.appodealMrecView);
     //Appodeal.setBannerViewId(R.id.appodealBannerView);
+    Appodeal.disableNetwork(this, "vungle");
     Appodeal.initialize(this, BuildConfig.APPODEAL_APP_KEY, Appodeal.MREC
         | Appodeal.BANNER
         | Appodeal.BANNER_VIEW
