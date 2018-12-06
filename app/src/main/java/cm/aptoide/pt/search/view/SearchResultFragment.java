@@ -295,10 +295,7 @@ public class SearchResultFragment extends BackButtonFragment
     viewModel.addFollowedStoresSearchAppResults(dataList);
   }
 
-  @Override public void addAllStoresResult(List<SearchAppResult> dataList, String query) {
-    //RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
-    //    .build();
-    //moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_SEARCH_NATIVE_PLACEMENT_ID, requestParameters);
+  @Override public void addAllStoresResult(List<SearchAppResult> dataList) {
     allStoresResultAdapter.addResultForSearch(dataList);
     viewModel.addAllStoresSearchAppResults(dataList);
   }
@@ -857,7 +854,7 @@ public class SearchResultFragment extends BackButtonFragment
     //
     //  }
     //});
-    //allStoresResultList.setAdapter(moPubRecyclerAdapter);
+    allStoresResultList.setAdapter(allStoresResultAdapter);
     allStoresResultList.setLayoutManager(getDefaultLayoutManager());
     allStoresResultList.addItemDecoration(getDefaultItemDecoration());
   }

@@ -54,8 +54,6 @@ public class MainActivity extends BottomNavigationActivity
     //Appodeal.setBannerViewId(R.id.appodealBannerView);
     Appodeal.disableNetwork(this, "vungle");
     Appodeal.initialize(this, BuildConfig.APPODEAL_APP_KEY, Appodeal.MREC
-        | Appodeal.BANNER
-        | Appodeal.BANNER_VIEW
         | Appodeal.INTERSTITIAL
         | Appodeal.NATIVE);
 
