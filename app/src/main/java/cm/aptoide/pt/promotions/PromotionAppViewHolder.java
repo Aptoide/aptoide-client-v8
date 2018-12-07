@@ -8,6 +8,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
+import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIM;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIMED;
@@ -17,6 +18,7 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 
 public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
 
+  private final PublishSubject<PromotionAppClick> promotionAppClick;
   private int appState;
   private TextView appName;
   private TextView appDescription;
@@ -26,7 +28,8 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
   private TextView rating;
   private Button promotionAction;
 
-  public PromotionAppViewHolder(View itemView, int appState) {
+  public PromotionAppViewHolder(View itemView, int appState,
+      PublishSubject<PromotionAppClick> promotionAppClick) {
     super(itemView);
     this.appState = appState;
     appIcon = itemView.findViewById(R.id.app_icon);
@@ -36,6 +39,7 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
     appSize = itemView.findViewById(R.id.app_size);
     rating = itemView.findViewById(R.id.rating);
     promotionAction = itemView.findViewById(R.id.promotion_app_action_button);
+    this.promotionAppClick = promotionAppClick;
   }
 
   @Override public void setApp(PromotionViewApp app) {

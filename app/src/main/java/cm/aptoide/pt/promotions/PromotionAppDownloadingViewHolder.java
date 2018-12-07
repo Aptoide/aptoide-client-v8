@@ -7,9 +7,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
+import rx.subjects.PublishSubject;
 
 class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
 
+  private final PublishSubject<PromotionAppClick> promotionAppClick;
   private TextView appName;
   private TextView appDescription;
   private ImageView appIcon;
@@ -17,7 +19,8 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
   private TextView numberOfDownloads;
   private TextView rating;
 
-  public PromotionAppDownloadingViewHolder(View itemView) {
+  public PromotionAppDownloadingViewHolder(View itemView,
+      PublishSubject<PromotionAppClick> promotionAppClick) {
     super(itemView);
     appIcon = itemView.findViewById(R.id.app_icon);
     appName = itemView.findViewById(R.id.app_name);
@@ -25,6 +28,7 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
     numberOfDownloads = itemView.findViewById(R.id.number_of_downloads);
     appSize = itemView.findViewById(R.id.app_size);
     rating = itemView.findViewById(R.id.rating);
+    this.promotionAppClick = promotionAppClick;
   }
 
   @Override public void setApp(PromotionViewApp app) {

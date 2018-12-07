@@ -13,12 +13,14 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import javax.inject.Inject;
+import rx.subjects.PublishSubject;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
 
   @Inject PromotionsPresenter promotionsPresenter;
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
+  private PublishSubject<PromotionAppClick> promotionAppClick;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -28,7 +30,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
-    promotionsAdapter = new PromotionsAdapter(new ArrayList<>(), new PromotionsViewHolderFactory());
+    promotionAppClick = PublishSubject.create();
+    promotionsAdapter = new PromotionsAdapter(new ArrayList<>(), new PromotionsViewHolderFactory(promotionAppClick),
+        promotionAppClick);
 
     setupRecyclerView();
     attachPresenter(promotionsPresenter);
