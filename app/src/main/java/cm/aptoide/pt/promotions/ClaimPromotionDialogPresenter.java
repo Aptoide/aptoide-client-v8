@@ -48,13 +48,15 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private void handleContinueClick() {
     subscriptions.add(view.continueWalletClick()
         .doOnNext(address -> {
-          claimPromotionsManager.saveWalletAddres(address);
+          claimPromotionsManager.saveWalletAddress(address);
           view.showLoading();
         })
         .map(__ -> idsRepository.getUniqueIdentifier())
         .flatMapSingle(uid -> claimPromotionsManager.getCaptcha(uid))
         .observeOn(viewScheduler)
-        .doOnNext(captcha -> view.showCaptchaView(captcha))
+        .doOnNext(captcha -> {
+          view.showCaptchaView(captcha);
+        })
         .subscribe(__ -> {
         }, throwable -> {
           view.showGenericError();

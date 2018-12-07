@@ -19,11 +19,19 @@ public class ClaimPromotionsManager {
     return captchaService.getCaptcha(userId);
   }
 
-  public void saveWalletAddres(String walletAddress) {
+  public void saveWalletAddress(String walletAddress) {
     this.walletAddress = walletAddress;
   }
 
   public Single<ClaimStatusWrapper> claimPromotion(String packageName, String captcha) {
     return promotionsManager.claimPromotion(walletAddress, packageName, captcha);
+  }
+
+  public void saveCaptchaUrl(String captchaUrl) {
+    promotionsManager.saveCaptchaUrl(captchaUrl);
+  }
+
+  public String getCaptchaUrl() {
+    return promotionsManager.getCaptchaUrl();
   }
 }

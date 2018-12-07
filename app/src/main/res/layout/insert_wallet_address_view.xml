@@ -12,7 +12,7 @@
       android:layout_marginLeft="16dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="23dp"
-      android:text="Wallet address dialog"
+      android:text="@string/holidayspromotion_title_wallet"
       android:textColor="@color/black_87_alpha"
       style="@style/Aptoide.TextView.Regular.L"
       />
@@ -22,7 +22,7 @@
       android:layout_marginBottom="15dp"
       android:layout_marginLeft="16dp"
       android:layout_marginStart="16dp"
-      android:text="Fill this field with test text. All your bases are belong to us. Give me moneys now! "
+      android:text="@string/holidayspromotion_message_wallet"
       android:textColor="@color/black_87_alpha"
       style="@style/Aptoide.TextView.Regular.M"
       />
@@ -43,11 +43,12 @@
         android:layout_height="56dp"
         android:background="@drawable/edit_text_background"
         android:ellipsize="middle"
-        android:hint="Appcoins wallet address"
+        android:hint="@string/holidayspromotion_short_wallet_field"
         android:paddingEnd="16dp"
         android:paddingLeft="28dp"
         android:paddingRight="16dp"
         android:paddingStart="28dp"
+        android:scrollHorizontally="true"
         android:singleLine="true"
         android:textColor="@color/black_87_alpha"
         />
@@ -87,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="Invalid address. Try again"
+        android:text="@string/holidayspromotion_short_wallet_invalid"
         style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
         />
   </LinearLayout>
@@ -99,7 +100,7 @@
       android:layout_marginLeft="16dp"
       android:layout_marginRight="16dp"
       android:layout_marginStart="16dp"
-      android:text="Find wallet adress"
+      android:text="@string/holidayspromotion_button_wallet_open"
       style="@style/Aptoide.Button"
       />
 

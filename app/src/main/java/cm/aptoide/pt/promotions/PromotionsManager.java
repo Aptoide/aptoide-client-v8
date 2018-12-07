@@ -34,4 +34,12 @@ public class PromotionsManager {
       String captcha) {
     return promotionsService.claimPromotion(walletAddress, packageName, captcha);
   }
+
+  public void saveCaptchaUrl(String captchaUrl) {
+    promotionsService.saveCaptchaUrl(captchaUrl);
+  }
+
+  public String getCaptchaUrl() {
+    return promotionsService.getCaptchaUrl();
+  }
 }

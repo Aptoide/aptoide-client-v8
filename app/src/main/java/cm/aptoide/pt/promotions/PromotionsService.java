@@ -19,6 +19,9 @@ public class PromotionsService {
   private final Converter.Factory converterFactory;
   private final SharedPreferences sharedPreferences;
 
+  //Use ONLY to restore view state
+  private String captchaUrl;
+
   public PromotionsService(BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, SharedPreferences sharedPreferences) {
@@ -57,5 +60,13 @@ public class PromotionsService {
     } else {
       return ClaimStatusWrapper.Status.fail;
     }
+  }
+
+  public void saveCaptchaUrl(String captchaUrl) {
+    this.captchaUrl = captchaUrl;
+  }
+
+  public String getCaptchaUrl() {
+    return captchaUrl;
   }
 }

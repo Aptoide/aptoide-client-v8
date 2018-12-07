@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -38,6 +38,12 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     implements ClaimPromotionDialogView {
 
   private static final String WALLET_PACKAGE = "com.appcoins.wallet";
+  private static final String VIEW = "view";
+  private static final String WALLET = "wallet";
+  private static final String CAPTCHA = "captcha";
+  private static final String CLAIMED = "claimed";
+  private static final String SUCCESS = "success";
+  private static final String GENERIC_ERROR = "error";
 
   @Inject ClaimPromotionsManager claimPromotionsManager;
   @Inject IdsRepository idsRepository;
@@ -57,15 +63,38 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   private Button captchaNextButton;
   private Button captchaCancelButton;
   private View captchaErrorView;
+  private TextView genericMessageTitle;
+  private TextView genericMessageBody;
+  private TextView genericMessageButton;
+  private Button genericErrorOkButton;
 
   private View insertWalletView;
   private View captchaView;
+  private View genericMessageView;
+  private View genericErrorView;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ((MainActivity) getContext()).getActivityComponent()
         .inject(this);
     clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (insertWalletView.getVisibility() == View.VISIBLE) {
+      outState.putString(VIEW, WALLET);
+    } else if (captchaView.getVisibility() == View.VISIBLE) {
+      outState.putString(VIEW, CAPTCHA);
+    } else if (genericMessageView.getVisibility() == View.VISIBLE && genericMessageTitle.getText()
+        .equals(getResources().getString(R.string.holidayspromotion_title_completed))) {
+      outState.putString(VIEW, SUCCESS);
+    } else if (genericMessageView.getVisibility() == View.VISIBLE && genericMessageTitle.getText()
+        .equals("Sorry")) {
+      outState.putString(VIEW, CLAIMED);
+    } else if (genericErrorView.getVisibility() == View.VISIBLE) {
+      outState.putString(VIEW, GENERIC_ERROR);
+    }
   }
 
   @Override public void onDestroyView() {
@@ -85,6 +114,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     captchaView = null;
 
     presenter.dispose();
+    presenter = null;
   }
 
   @Nullable @Override
@@ -112,9 +142,15 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     captchaNextButton = view.findViewById(R.id.captcha_continue_button);
     captchaCancelButton = view.findViewById(R.id.captcha_cancel_button);
     captchaErrorView = view.findViewById(R.id.captcha_error_view);
+    genericMessageTitle = view.findViewById(R.id.generic_message_title);
+    genericMessageBody = view.findViewById(R.id.generic_message_body);
+    genericMessageButton = view.findViewById(R.id.generic_message_button);
+    genericErrorOkButton = view.findViewById(R.id.error_ok_button);
 
     insertWalletView = view.findViewById(R.id.insert_address_view);
     captchaView = view.findViewById(R.id.captcha_view);
+    genericMessageView = view.findViewById(R.id.generic_message_view);
+    genericErrorView = view.findViewById(R.id.generic_error);
 
     presenter = new ClaimPromotionDialogPresenter(this, new CompositeSubscription(),
         AndroidSchedulers.mainThread(), claimPromotionsManager, idsRepository);
@@ -122,6 +158,9 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     walletCancelButton.setOnClickListener(click -> dismiss());
     handleAddressEditRules();
     captchaCancelButton.setOnClickListener(click -> dismiss());
+    genericMessageButton.setOnClickListener(click -> dismiss());
+    genericErrorOkButton.setOnClickListener(click -> dismiss());
+    handleRestoreViewState(savedInstanceState);
   }
 
   public void onResume() {
@@ -182,21 +221,28 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   }
 
   @Override public void showCaptchaView(String captchaUrl) {
+    claimPromotionsManager.saveCaptchaUrl(captchaUrl);
     captchaErrorView.setVisibility(View.GONE);
     loading.setVisibility(View.GONE);
     insertWalletView.setVisibility(View.GONE);
     captchaView.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
-        .loadWithRoundCornersWithoutCache(captchaUrl, 8, captcha, R.drawable.placeholder_square);
+        .loadWithRoundCornersWithoutCache(captchaUrl, 8, captcha, -1);
   }
 
   @Override public void showGenericError() {
+    hideLoading();
+    genericErrorView.setVisibility(View.VISIBLE);
+    captchaView.setVisibility(View.GONE);
+    insertWalletView.setVisibility(View.GONE);
+    genericMessageView.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
+    captchaView.setVisibility(View.INVISIBLE);
     loading.setVisibility(View.VISIBLE);
     insertWalletView.setVisibility(View.GONE);
-    captchaView.setVisibility(View.INVISIBLE);
+    genericMessageView.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -206,27 +252,28 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   @Override public void showInvalidWalletAddress() {
     hideLoading();
     showWalletView();
-    walletMessageIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_info_red));
+    clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
+    walletAddressEdit.setText("");
+    walletMessageIcon.setVisibility(View.GONE);
     walletErrorView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showPromotionAlreadyClaimed() {
     hideLoading();
-    showWalletView();
-    Snackbar.make(this.getView(), "ALREADY_CLAIMED", Snackbar.LENGTH_LONG);
+    showGenericMessageView("Sorry",
+        getResources().getString(R.string.holidayspromotion_short_errer_claimed));
   }
 
   @Override public void showInvalidCaptcha(String captcha) {
     hideLoading();
     showCaptchaView(captcha);
     captchaErrorView.setVisibility(View.VISIBLE);
-    Snackbar.make(this.getView(), "INVALID_CAPTCHA", Snackbar.LENGTH_LONG);
   }
 
   @Override public void showClaimSuccess() {
     hideLoading();
-    showWalletView();
-    Snackbar.make(this.getView(), "SUCCESS", Snackbar.LENGTH_LONG);
+    showGenericMessageView(getResources().getString(R.string.holidayspromotion_title_completed),
+        getResources().getString(R.string.holidayspromotion_message_completed));
   }
 
   private void handleAddressEditRules() {
@@ -255,6 +302,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
           enableWalletButton();
           setInvalidWalletMessage();
         }
+        walletErrorView.setVisibility(View.GONE);
       }
     });
   }
@@ -317,7 +365,42 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   private void showWalletView() {
     walletErrorView.setVisibility(View.GONE);
     loading.setVisibility(View.GONE);
-    insertWalletView.setVisibility(View.VISIBLE);
+    genericMessageView.setVisibility(View.GONE);
     captchaView.setVisibility(View.GONE);
+    insertWalletView.setVisibility(View.VISIBLE);
+  }
+
+  private void showGenericMessageView(String title, String body) {
+    walletErrorView.setVisibility(View.GONE);
+    loading.setVisibility(View.GONE);
+    captchaView.setVisibility(View.GONE);
+    insertWalletView.setVisibility(View.GONE);
+    genericMessageTitle.setText(title);
+    genericMessageBody.setText(body);
+    genericMessageView.setVisibility(View.VISIBLE);
+  }
+
+  private void handleRestoreViewState(Bundle savedInstanceState) {
+    if (savedInstanceState != null && savedInstanceState.getString(VIEW) != null) {
+      String show = savedInstanceState.getString(VIEW);
+      switch (show) {
+        default:
+        case WALLET:
+          showWalletView();
+          break;
+        case CAPTCHA:
+          showCaptchaView(claimPromotionsManager.getCaptchaUrl());
+          break;
+        case CLAIMED:
+          showPromotionAlreadyClaimed();
+          break;
+        case SUCCESS:
+          showClaimSuccess();
+          break;
+        case GENERIC_ERROR:
+          showGenericError();
+          break;
+      }
+    }
   }
 }

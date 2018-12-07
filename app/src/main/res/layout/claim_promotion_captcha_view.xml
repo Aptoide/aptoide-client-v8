@@ -11,7 +11,7 @@
       android:layout_marginLeft="16dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="20dp"
-      android:text="Verify that you're a human"
+      android:text="@string/holidayspromotion_title_captcha"
       style="@style/Aptoide.TextView.Regular.L"
       />
 
@@ -21,7 +21,7 @@
       android:layout_marginLeft="16dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="16dp"
-      android:text="This is just for security"
+      android:text="@string/holidayspromotion_message_captcha"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
@@ -55,6 +55,7 @@
         android:layout_weight="1"
         android:padding="12dp"
         android:src="@drawable/ic_refresh_orange"
+        android:tint="@color/default_orange_gradient_end"
         android:visibility="visible"
         />
     <ProgressBar
@@ -66,7 +67,6 @@
         android:layout_marginStart="8dp"
         android:layout_weight="1"
         android:padding="12dp"
-        android:src="@drawable/ic_refresh_orange"
         android:visibility="gone"
         />
   </LinearLayout>
@@ -80,7 +80,8 @@
       android:layout_marginRight="16dp"
       android:layout_marginStart="16dp"
       android:background="@drawable/edit_text_background"
-      android:hint="Answer"
+      android:hint="@string/holidayspromotion_short_captcha_field"
+      android:imeOptions="actionDone"
       android:paddingEnd="16dp"
       android:paddingLeft="16dp"
       android:paddingRight="16dp"
@@ -113,7 +114,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="Wrong captcha. Try again!"
+        android:text="@string/holidayspromotion_short_error_captcha"
         style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
         />
   </LinearLayout>
