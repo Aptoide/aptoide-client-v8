@@ -31,8 +31,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     super.onViewCreated(view, savedInstanceState);
     promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
     promotionAppClick = PublishSubject.create();
-    promotionsAdapter = new PromotionsAdapter(new ArrayList<>(), new PromotionsViewHolderFactory(promotionAppClick),
-        promotionAppClick);
+    promotionsAdapter = new PromotionsAdapter(new ArrayList<>(),
+        new PromotionsViewHolderFactory(promotionAppClick));
 
     setupRecyclerView();
     attachPresenter(promotionsPresenter);
