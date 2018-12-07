@@ -47,7 +47,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.donations.GetWalletAddressResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;

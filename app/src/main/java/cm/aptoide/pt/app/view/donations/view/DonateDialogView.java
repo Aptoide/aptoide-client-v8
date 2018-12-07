@@ -1,5 +1,6 @@
-package cm.aptoide.pt.app.view.donations;
+package cm.aptoide.pt.app.view.donations.view;
 
+import cm.aptoide.pt.app.view.donations.model.DonationsDialogResult;
 import rx.Observable;
 
 public interface DonateDialogView {

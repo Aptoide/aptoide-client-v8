@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view.donations;
+package cm.aptoide.pt.app.view.donations.model;
 
 public class DonationsDialogResult {
 

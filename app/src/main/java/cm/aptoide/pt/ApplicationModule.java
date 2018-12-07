@@ -82,6 +82,7 @@ import cm.aptoide.pt.app.view.EditorialAnalytics;
 import cm.aptoide.pt.app.view.EditorialService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
+import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.UserPreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -434,12 +435,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
-      IdsRepository idsRepository) {
+      IdsRepository idsRepository, @Named("aptoidePackage") String aptoidePackage) {
     return new UserAgentInterceptorV8(idsRepository, AptoideUtils.SystemU.getRelease(),
         AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
         System.getProperty("os.arch"), new DisplayMetrics(),
         AptoideUtils.Core.getDefaultVername(application)
-            .replace("aptoide-", ""));
+            .replace("aptoide-", ""), aptoidePackage, aptoideMd5sum, BuildConfig.VERSION_CODE);
   }
 
   @Singleton @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
@@ -1037,6 +1038,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         + "/api/7/";
   }
 
+  @Singleton @Provides @Named("base-secondary-host") String providesBaseSecondaryHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_READ_V7_HOST
+        + "/api/7/";
+  }
+
   @Singleton @Provides @Named("retrofit-v7") Retrofit providesV7Retrofit(
       @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
@@ -1087,6 +1097,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("retrofit-v7-secondary") Retrofit providesV7SecondaryRetrofit(
+      @Named("default") OkHttpClient httpClient, @Named("base-secondary-host") String baseHost,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
@@ -1123,6 +1143,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides CaptchaService providesCaptchaService(
       CaptchaService.ServiceInterface service) {
     return new CaptchaService(service);
+  }
+
+  @Singleton @Provides WalletService.ServiceV7 providesWalletServiceV8(
+      @Named("retrofit-v7-secondary") Retrofit retrofit) {
+    return retrofit.create(WalletService.ServiceV7.class);
   }
 
   @Singleton @Provides CrashReport providesCrashReports() {
@@ -1456,14 +1481,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
   }
 
-  @Singleton @Provides DonationsService providesDonationsService(DonationsService.ServiceV8 service,
-      @Named("default") SharedPreferences sharedPreferences,
-      @Named("default") OkHttpClient v8OkHttpClient, Converter.Factory converterFactory,
-      @Named("pool-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      TokenInvalidator tokenInvalidator) {
-    return new DonationsService(service, sharedPreferences, v8OkHttpClient, converterFactory,
-        bodyInterceptorPoolV7, tokenInvalidator);
+  @Singleton @Provides DonationsService providesDonationsService(
+      DonationsService.ServiceV8 service) {
+    return new DonationsService(service, Schedulers.io());
+  }
+
+  @Singleton @Provides WalletService providesWalletService(WalletService.ServiceV7 service) {
+    return new WalletService(service, Schedulers.io());
   }
 
   @Singleton @Provides LoginPreferences provideLoginPreferences() {

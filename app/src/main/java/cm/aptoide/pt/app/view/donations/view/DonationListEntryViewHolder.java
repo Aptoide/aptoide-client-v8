@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view.donations;
+package cm.aptoide.pt.app.view.donations.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
