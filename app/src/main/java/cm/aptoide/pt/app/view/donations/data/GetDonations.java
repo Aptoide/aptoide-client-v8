@@ -1,15 +1,11 @@
-package cm.aptoide.pt.dataprovider.model.v7;
+package cm.aptoide.pt.app.view.donations.data;
 
 import java.util.List;
 
-/**
- * Created by franciscocalado on 11/10/2018.
- */
-
-public class GetDonations extends BaseV7Response {
+public class GetDonations extends BaseResponse {
 
   private String next;
-  private List<Donor> items;
+  private List<GetDonations.Donor> items;
 
   public GetDonations() {
   }
@@ -22,11 +18,11 @@ public class GetDonations extends BaseV7Response {
     this.next = next;
   }
 
-  public List<Donor> getItems() {
+  public List<GetDonations.Donor> getItems() {
     return items;
   }
 
-  public void setItems(List<Donor> items) {
+  public void setItems(List<GetDonations.Donor> items) {
     this.items = items;
   }
 

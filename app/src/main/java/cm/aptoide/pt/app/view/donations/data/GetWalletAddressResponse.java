@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dataprovider.ws.v7.donations;
+package cm.aptoide.pt.app.view.donations.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view.donations;
+package cm.aptoide.pt.app.view.donations.view;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -29,6 +29,9 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
+import cm.aptoide.pt.app.view.donations.WalletService;
+import cm.aptoide.pt.app.view.donations.model.DonationsDialogResult;
 import cm.aptoide.pt.app.view.donations.utils.GenericPaymentIntentBuilder;
 import cm.aptoide.pt.view.MainActivity;
 import com.jakewharton.rxbinding.view.RxView;
@@ -46,7 +49,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
   private static final String PACKAGE_NAME = "package_name";
   private static final String HAS_WALLET = "wallet";
 
-  @Inject DonationsService donationsService;
+  @Inject WalletService walletService;
   @Inject AppNavigator appNavigator;
   @Inject DonationsAnalytics donationsAnalytics;
   boolean textUpdate;
@@ -86,7 +89,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     ((MainActivity) getContext()).getActivityComponent()
         .inject(this);
     packageName = getArguments().getString(PACKAGE_NAME);
-    presenter = new DonateDialogPresenter(this, donationsService, new CompositeSubscription(),
+    presenter = new DonateDialogPresenter(this, walletService, new CompositeSubscription(),
         AndroidSchedulers.mainThread(), appNavigator, donationsAnalytics);
     textUpdate = true;
     sliderUpdate = true;
