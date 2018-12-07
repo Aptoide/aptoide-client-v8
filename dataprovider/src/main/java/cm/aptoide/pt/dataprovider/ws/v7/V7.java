@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.accounts.NetworkErrorException;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.app.view.donations.data.GetWalletAddressResponse;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;

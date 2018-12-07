@@ -261,7 +261,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   @Override public void showPromotionAlreadyClaimed() {
     hideLoading();
     showGenericMessageView("Sorry",
-        getResources().getString(R.string.holidayspromotion_short_errer_claimed));
+        getResources().getString(R.string.holidayspromotion_short_error_claimed));
   }
 
   @Override public void showInvalidCaptcha(String captcha) {
