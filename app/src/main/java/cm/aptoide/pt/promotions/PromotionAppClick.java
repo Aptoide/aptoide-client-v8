@@ -2,15 +2,15 @@ package cm.aptoide.pt.promotions;
 
 public class PromotionAppClick {
 
-  private PromotionApp app;
+  private PromotionViewApp app;
   private ClickType clickType;
 
-  public PromotionAppClick(PromotionApp app, ClickType clickType) {
+  public PromotionAppClick(PromotionViewApp app, ClickType clickType) {
     this.app = app;
     this.clickType = clickType;
   }
 
-  public PromotionApp getApp() {
+  public PromotionViewApp getApp() {
     return app;
   }
 
@@ -19,6 +19,6 @@ public class PromotionAppClick {
   }
 
   enum ClickType {
-    PAUSE_DOWNLOAD, CANCEL_DOWNLOAD, RESUME_DOWNLOAD, INSTALL_APP, DOWNLOAD, RETRY_DOWNLOAD, CLAIM
+    PAUSE_DOWNLOAD, CANCEL_DOWNLOAD, RESUME_DOWNLOAD, INSTALL_APP, DOWNLOAD, RETRY_DOWNLOAD, CLAIM, UPDATE
   }
 }

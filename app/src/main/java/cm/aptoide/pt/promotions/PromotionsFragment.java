@@ -13,6 +13,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import javax.inject.Inject;
+import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
@@ -61,5 +62,13 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void showPromotionApp(PromotionViewApp promotionViewApp) {
     promotionsAdapter.setPromotionApp(promotionViewApp);
+  }
+
+  @Override public Observable<PromotionViewApp> installButtonClick() {
+    return promotionAppClick.filter(
+        promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.UPDATE
+            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.INSTALL_APP
+            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
   }
 }

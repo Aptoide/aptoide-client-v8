@@ -45,6 +45,33 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
   @Override public void setApp(PromotionViewApp app) {
     setAppCardHeader(app);
     promotionAction.setText(getButtonMessage(appState));
+    if (appState == CLAIMED) {
+      // TODO: 12/7/18 set button disabled state
+    } else {
+      promotionAction.setOnClickListener(
+          __ -> promotionAppClick.onNext(new PromotionAppClick(app, getClickType(appState))));
+    }
+  }
+
+  private PromotionAppClick.ClickType getClickType(int appState) {
+    PromotionAppClick.ClickType clickType;
+    switch (appState) {
+      case UPDATE:
+        clickType = PromotionAppClick.ClickType.UPDATE;
+        break;
+      case DOWNLOAD:
+        clickType = PromotionAppClick.ClickType.DOWNLOAD;
+        break;
+      case INSTALL:
+        clickType = PromotionAppClick.ClickType.INSTALL_APP;
+        break;
+      case CLAIM:
+        clickType = PromotionAppClick.ClickType.CLAIM;
+        break;
+      default:
+        throw new IllegalArgumentException("Wrong view type of promotion app");
+    }
+    return clickType;
   }
 
   private String getButtonMessage(int appState) {

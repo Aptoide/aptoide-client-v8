@@ -2,6 +2,7 @@ package cm.aptoide.pt.promotions;
 
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import rx.Completable;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -20,6 +21,29 @@ public class PromotionsPresenter implements Presenter {
 
   @Override public void present() {
     getPromotionApps();
+
+    installButtonClick();
+  }
+
+  private void installButtonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.installButtonClick())
+        .filter(promotionViewApp -> promotionViewApp.getDownloadModel()
+            .isDownloadable())
+        .flatMapCompletable(promotionViewApp -> downloadApp())
+        .observeOn(viewScheduler)
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new IllegalStateException(error);
+        });
+  }
+
+  private Completable downloadApp() {
+    return Completable.complete();
   }
 
   private void getPromotionApps() {
