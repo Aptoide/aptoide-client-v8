@@ -18,7 +18,7 @@
 
 
     <LinearLayout
-        android:id="@+id/appview_transfer_info"
+        android:id="@+id/promotions_transfer_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -39,7 +39,7 @@
 
 
         <ProgressBar
-            android:id="@+id/appview_download_progress_bar"
+            android:id="@+id/promotions_download_progress_bar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:indeterminate="false"
@@ -47,14 +47,14 @@
             />
 
         <RelativeLayout
-            android:id="@+id/appview_download_info_layout"
+            android:id="@+id/promotions_download_info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             >
 
           <TextView
-              android:id="@+id/appview_download_download_state"
+              android:id="@+id/promotions_download_download_state"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:ellipsize="end"
@@ -64,7 +64,7 @@
               />
 
           <TextView
-              android:id="@+id/appview_download_progress_number"
+              android:id="@+id/promotions_download_progress_number"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentEnd="true"
@@ -90,7 +90,7 @@
           >
 
         <ImageView
-            android:id="@+id/appview_download_cancel_button"
+            android:id="@+id/promotions_download_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -102,7 +102,7 @@
             />
 
         <ImageView
-            android:id="@+id/appview_download_resume_download"
+            android:id="@+id/promotions_download_resume_download"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
@@ -114,7 +114,7 @@
             />
 
         <ImageView
-            android:id="@+id/appview_download_pause_download"
+            android:id="@+id/promotions_download_pause_download"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
