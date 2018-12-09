@@ -397,7 +397,8 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager) {
-    return new PromotionsPresenter(permissionManager, permissionService, (PromotionsView) fragment, promotionsManager,
+    return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
+        new PermissionManager(), ((PermissionService) fragment.getContext()),
         AndroidSchedulers.mainThread());
   }
 

@@ -18,13 +18,13 @@ public class PromotionsPresenter implements Presenter {
   private PromotionsManager promotionsManager;
   private Scheduler viewScheduler;
 
-  public PromotionsPresenter(PermissionManager permissionManager,
-      PermissionService permissionService, PromotionsView view, PromotionsManager promotionsManager,
+  public PromotionsPresenter(PromotionsView view, PromotionsManager promotionsManager,
+      PermissionManager permissionManager, PermissionService permissionService,
       Scheduler viewScheduler) {
-    this.permissionManager = permissionManager;
-    this.permissionService = permissionService;
     this.view = view;
     this.promotionsManager = promotionsManager;
+    this.permissionManager = permissionManager;
+    this.permissionService = permissionService;
     this.viewScheduler = viewScheduler;
   }
 
