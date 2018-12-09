@@ -91,6 +91,7 @@ import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
+import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
@@ -403,12 +404,21 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides PromotionsManager providePromotionsManager(InstallManager installManager,
-      PromotionViewAppMapper promotionViewAppMapper) {
-    return new PromotionsManager(promotionViewAppMapper, installManager);
+      PromotionViewAppMapper promotionViewAppMapper, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      PreferencesManager preferencesManager) {
+    return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
+        downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
+        preferencesManager);
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
       DownloadStateParser downloadStateParser) {
     return new PromotionViewAppMapper(downloadStateParser);
+  }
+
+  @FragmentScope @Provides PromotionsAnalytics promotionsAnalytics() {
+    return new PromotionsAnalytics();
   }
 }

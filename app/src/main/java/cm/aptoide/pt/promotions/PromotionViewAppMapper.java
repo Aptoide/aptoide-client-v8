@@ -19,7 +19,8 @@ public class PromotionViewAppMapper {
         promotionApp.getDownloadPath(), promotionApp.getAlternativePath(),
         promotionApp.getAppIcon(), promotionApp.isClaimed(), promotionApp.getDescription(),
         promotionApp.getSize(), promotionApp.getRating(), promotionApp.getNumberOfDownloads(),
-        promotionApp.getMd5(), promotionApp.getVersionCode());
+        promotionApp.getMd5(), promotionApp.getVersionCode(), promotionApp.getVersionName(),
+        promotionApp.getObb());
   }
 
   private DownloadModel getDownloadModel(Install.InstallationType type, int progress,

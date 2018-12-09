@@ -1,5 +1,7 @@
 package cm.aptoide.pt.promotions;
 
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
+
 public class PromotionApp {
 
   private String name;
@@ -16,11 +18,13 @@ public class PromotionApp {
   private String md5;
   private int versionCode;
   private boolean isClaimed;
+  private String versionName;
+  private Obb obb;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
       String alternativePath, String appIcon, PromotionAppState state, String description,
       long size, float rating, int numberOfDownloads, String md5, int versionCode,
-      boolean isClaimed) {
+      boolean isClaimed, String versionName, Obb obb) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
@@ -35,6 +39,8 @@ public class PromotionApp {
     this.md5 = md5;
     this.versionCode = versionCode;
     this.isClaimed = isClaimed;
+    this.versionName = versionName;
+    this.obb = obb;
   }
 
   public String getName() {
@@ -95,6 +101,14 @@ public class PromotionApp {
 
   public boolean isClaimed() {
     return isClaimed;
+  }
+
+  public Obb getObb() {
+    return obb;
+  }
+
+  public String getVersionName() {
+    return versionName;
   }
 
   enum PromotionAppState {
