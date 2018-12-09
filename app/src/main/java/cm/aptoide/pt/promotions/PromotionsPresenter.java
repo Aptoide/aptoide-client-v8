@@ -1,19 +1,28 @@
 package cm.aptoide.pt.promotions;
 
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Completable;
+import rx.Observable;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
+import rx.schedulers.Schedulers;
 
 public class PromotionsPresenter implements Presenter {
 
+  private final PermissionManager permissionManager;
+  private final PermissionService permissionService;
   private PromotionsView view;
   private PromotionsManager promotionsManager;
   private Scheduler viewScheduler;
 
-  public PromotionsPresenter(PromotionsView view, PromotionsManager promotionsManager,
+  public PromotionsPresenter(PermissionManager permissionManager,
+      PermissionService permissionService, PromotionsView view, PromotionsManager promotionsManager,
       Scheduler viewScheduler) {
+    this.permissionManager = permissionManager;
+    this.permissionService = permissionService;
     this.view = view;
     this.promotionsManager = promotionsManager;
     this.viewScheduler = viewScheduler;
@@ -31,7 +40,7 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(__ -> view.installButtonClick())
         .filter(promotionViewApp -> promotionViewApp.getDownloadModel()
             .isDownloadable())
-        .flatMapCompletable(promotionViewApp -> downloadApp())
+        .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
         .observeOn(viewScheduler)
         .doOnError(throwable -> throwable.printStackTrace())
         .retry()
@@ -42,8 +51,20 @@ public class PromotionsPresenter implements Presenter {
         });
   }
 
-  private Completable downloadApp() {
-    return Completable.complete();
+  private Completable downloadApp(PromotionViewApp promotionViewApp) {
+    return Observable.defer(() -> {
+      if (promotionsManager.shouldShowRootInstallWarningPopup()) {
+        return view.showRootInstallWarningPopup()
+            .doOnNext(answer -> promotionsManager.allowRootInstall(answer));
+      }
+      return Observable.just(null);
+    })
+        .observeOn(viewScheduler)
+        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
+        .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
+        .observeOn(Schedulers.io())
+        .flatMapCompletable(__1 -> promotionsManager.downloadApp(promotionViewApp))
+        .toCompletable();
   }
 
   private void getPromotionApps() {

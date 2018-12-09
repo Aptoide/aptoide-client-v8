@@ -8,4 +8,6 @@ public interface PromotionsView extends View {
   void showPromotionApp(PromotionViewApp promotionViewApp);
 
   Observable<PromotionViewApp> installButtonClick();
+
+  Observable<Boolean> showRootInstallWarningPopup();
 }

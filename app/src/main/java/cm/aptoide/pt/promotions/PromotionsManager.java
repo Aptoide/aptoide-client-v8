@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.install.InstallManager;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 
 public class PromotionsManager {
@@ -44,5 +45,17 @@ public class PromotionsManager {
     return installManager.getInstall(promotionApp.getMd5(), promotionApp.getPackageName(),
         promotionApp.getVersionCode())
         .map(install -> promotionViewAppMapper.mapInstallToPromotionApp(install, promotionApp));
+  }
+
+  public boolean shouldShowRootInstallWarningPopup() {
+    return installManager.showWarning();
+  }
+
+  public void allowRootInstall(Boolean answer) {
+    installManager.rootInstallAllowed(answer);
+  }
+
+  public Completable downloadApp(PromotionViewApp promotionViewApp) {
+    return Completable.complete();
   }
 }

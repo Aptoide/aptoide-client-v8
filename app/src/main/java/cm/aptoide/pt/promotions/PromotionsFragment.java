@@ -10,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
+
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
 
@@ -70,5 +73,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
             || promotionAppClick.getClickType() == PromotionAppClick.ClickType.INSTALL_APP
             || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public Observable<Boolean> showRootInstallWarningPopup() {
+    return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
+        getResources().getString(R.string.root_access_dialog))
+        .map(response -> (response.equals(YES)));
   }
 }
