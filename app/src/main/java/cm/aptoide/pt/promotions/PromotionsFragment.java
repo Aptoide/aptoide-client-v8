@@ -8,16 +8,27 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIM;
+import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIMED;
+import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNLOAD;
+import static cm.aptoide.pt.promotions.PromotionsAdapter.INSTALL;
+import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
@@ -124,7 +135,91 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     } else {
       walletActiveView.setVisibility(View.GONE);
       walletInactiveView.setVisibility(View.VISIBLE);
+      ImageView appIcon = walletInactiveView.findViewById(R.id.app_icon);
+      TextView appName = walletInactiveView.findViewById(R.id.app_name);
+      TextView appDescription = walletInactiveView.findViewById(R.id.app_description);
+      TextView numberOfDownloads = walletInactiveView.findViewById(R.id.number_of_downloads);
+      TextView appSize = walletInactiveView.findViewById(R.id.app_size);
+      TextView rating = walletInactiveView.findViewById(R.id.rating);
+      Button promotionAction = walletInactiveView.findViewById(R.id.promotion_app_action_button);
+
+      ImageLoader.with(getContext())
+          .load(promotionViewApp.getAppIcon(), appIcon);
+      appName.setText(promotionViewApp.getName());
+      appDescription.setText(promotionViewApp.getDescription());
+      appSize.setText(AptoideUtils.StringU.formatBytes(promotionViewApp.getSize(), false));
+      if (promotionViewApp.getRating() == 0) {
+        rating.setText(R.string.appcardview_title_no_stars);
+      } else {
+        rating.setText(new DecimalFormat("0.0").format(promotionViewApp.getRating()));
+      }
+      numberOfDownloads.setText(String.valueOf(promotionViewApp.getNumberOfDownloads()));
+
+      promotionAction.setText(getContext().getString(getButtonMessage(getState(
+          promotionViewApp.getDownloadModel()
+              .getAction())), promotionViewApp.getAppcValue()));
+      if (getState(promotionViewApp.getDownloadModel()
+          .getAction()) == CLAIMED) {
+        // TODO: 12/7/18 set button disabled state
+      } else {
+        promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionAppClick(promotionViewApp, getClickType(getState(
+                promotionViewApp.getDownloadModel()
+                    .getAction())))));
+      }
+
+      promotionAction.setOnClickListener(view -> promotionAppClick.onNext(
+          new PromotionAppClick(promotionViewApp, getClickType(getState(
+              promotionViewApp.getDownloadModel()
+                  .getAction())))));
     }
+  }
+
+  private int getButtonMessage(int appState) {
+    int message;
+    switch (appState) {
+      case UPDATE:
+        message = R.string.holidayspromotion_button_update;
+        break;
+      case DOWNLOAD:
+      case INSTALL:
+        message = R.string.holidayspromotion_button_install;
+        break;
+      case CLAIM:
+        message = R.string.holidayspromotion_button_claim;
+        break;
+      case CLAIMED:
+        message = R.string.holidayspromotion_button_claimed;
+        break;
+      default:
+        throw new IllegalArgumentException("Wrong view type of promotion app");
+    }
+    return message;
+  }
+
+  private int getState(DownloadModel.Action action) {
+    return 3;
+  }
+
+  private PromotionAppClick.ClickType getClickType(int appState) {
+    PromotionAppClick.ClickType clickType;
+    switch (appState) {
+      case UPDATE:
+        clickType = PromotionAppClick.ClickType.UPDATE;
+        break;
+      case DOWNLOAD:
+        clickType = PromotionAppClick.ClickType.DOWNLOAD;
+        break;
+      case INSTALL:
+        clickType = PromotionAppClick.ClickType.INSTALL_APP;
+        break;
+      case CLAIM:
+        clickType = PromotionAppClick.ClickType.CLAIM;
+        break;
+      default:
+        throw new IllegalArgumentException("Wrong view type of promotion app");
+    }
+    return clickType;
   }
 
   @Override public void onDestroyView() {
