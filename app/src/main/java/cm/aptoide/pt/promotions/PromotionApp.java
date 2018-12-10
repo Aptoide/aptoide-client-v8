@@ -20,11 +20,12 @@ public class PromotionApp {
   private boolean isClaimed;
   private String versionName;
   private Obb obb;
+  private int appcValue;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
       String alternativePath, String appIcon, PromotionAppState state, String description,
       long size, float rating, int numberOfDownloads, String md5, int versionCode,
-      boolean isClaimed, String versionName, Obb obb) {
+      boolean isClaimed, String versionName, Obb obb, int appcValue) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
@@ -41,6 +42,7 @@ public class PromotionApp {
     this.isClaimed = isClaimed;
     this.versionName = versionName;
     this.obb = obb;
+    this.appcValue = appcValue;
   }
 
   public String getName() {
@@ -109,6 +111,10 @@ public class PromotionApp {
 
   public String getVersionName() {
     return versionName;
+  }
+
+  public int getAppcValue() {
+    return appcValue;
   }
 
   enum PromotionAppState {

@@ -44,7 +44,8 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
 
   @Override public void setApp(PromotionViewApp app) {
     setAppCardHeader(app);
-    promotionAction.setText(getButtonMessage(appState));
+    promotionAction.setText(itemView.getContext()
+        .getString(getButtonMessage(appState), app.getAppcValue()));
     if (appState == CLAIMED) {
       // TODO: 12/7/18 set button disabled state
     } else {
@@ -74,23 +75,22 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
     return clickType;
   }
 
-  private String getButtonMessage(int appState) {
-    String message = "";
+  private int getButtonMessage(int appState) {
+    int message = -1;
     switch (appState) {
       case UPDATE:
-        message = "Update to get 25 APPC";
+        message = R.string.holidayspromotion_button_install;
+        // TODO: 12/10/18 change this string to update
         break;
       case DOWNLOAD:
-        message = "Install to get 25 APPC";
-        break;
       case INSTALL:
-        message = "Install to get 25 APPC";
+        message = R.string.holidayspromotion_button_install;
         break;
       case CLAIM:
-        message = "Claim your 25 appc";
+        message = R.string.holidayspromotion_button_claim;
         break;
       case CLAIMED:
-        message = "Claimed";
+        message = R.string.holidayspromotion_button_claimed;
         break;
       default:
         throw new IllegalArgumentException("Wrong view type of promotion app");
