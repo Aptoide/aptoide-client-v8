@@ -993,7 +993,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     fullScreenAdShown = true;
     Handler handler = new Handler();
     handler.postDelayed(() -> Appodeal.show(getActivity(), Appodeal.INTERSTITIAL,
-        BuildConfig.APPODEAL_APPVIEW_INTERSTITIAL_PLACEMENT_ID), 1000);
+        BuildConfig.APPODEAL_APPVIEW_INTERSTITIAL_PLACEMENT_T6_ID), 1000);
   }
 
   @Override public void showFlagVoteSubmittedMessage() {

@@ -274,6 +274,12 @@ android {
         "\"" + project.APPODEAL_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "APPODEAL_HOME_BANNER_PLACEMENT_ID",
         "\"" + project.APPODEAL_HOME_BANNER_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "APPODEAL_HOME_BANNER_PLACEMENT_T6_ID",
+        "\"" + project.APPODEAL_HOME_BANNER_PLACEMENT_T6_ID + "\""
+    variant.buildConfigField "String", "APPODEAL_HIGHLIGHTED_PLACEMENT_T6_ID",
+        "\"" + project.APPODEAL_HIGHLIGHTED_PLACEMENT_T6_ID + "\""
+    variant.buildConfigField "String", "APPODEAL_APPVIEW_INTERSTITIAL_PLACEMENT_T6_ID",
+        "\"" + project.APPODEAL_APPVIEW_INTERSTITIAL_PLACEMENT_T6_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"

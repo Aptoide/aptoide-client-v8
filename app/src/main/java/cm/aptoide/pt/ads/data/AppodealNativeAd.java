@@ -25,7 +25,7 @@ public class AppodealNativeAd implements ApplicationAd {
   }
 
   @Override public void registerClickableView(View view) {
-    ((NativeAdView) view).registerView(nativeAd, BuildConfig.APPODEAL_HIGHLIGHTED_PLACEMENT_ID);
+    ((NativeAdView) view).registerView(nativeAd, BuildConfig.APPODEAL_HIGHLIGHTED_PLACEMENT_T6_ID);
   }
 
   @Override public String getPackageName() {

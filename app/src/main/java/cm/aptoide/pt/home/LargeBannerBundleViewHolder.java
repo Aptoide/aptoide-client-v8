@@ -19,7 +19,7 @@ class LargeBannerBundleViewHolder extends AppBundleViewHolder {
     hasLoaded = false;
     this.activity = activity;
 
-    ((LinearLayout) view).addView(Appodeal.getMrecView(activity));
+    ((LinearLayout) view).addView(Appodeal.getBannerView(activity));
     //((LinearLayout) view).addView(Appodeal.getBannerView(activity));
     //Appodeal.getBannerView(activity);
 
@@ -52,7 +52,8 @@ class LargeBannerBundleViewHolder extends AppBundleViewHolder {
     //bannerAdRequest.setCreativeType(BannerAdRequest.TYPE_STATIC);
     if (!hasLoaded) {
       hasLoaded = true;
-      Appodeal.show(activity, Appodeal.MREC, BuildConfig.APPODEAL_HOME_BANNER_PLACEMENT_ID);
+      Appodeal.show(activity, Appodeal.BANNER_VIEW,
+          BuildConfig.APPODEAL_HOME_BANNER_PLACEMENT_T6_ID);
       //Appodeal.show(activity, Appodeal.BANNER_VIEW);
       //bannerView.loadAd();
     }

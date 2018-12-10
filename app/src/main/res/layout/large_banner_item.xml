@@ -18,14 +18,6 @@
       android:visibility="gone"
       />
 
-  <com.appodeal.ads.MrecView
-      android:id="@+id/appodealMrecView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_centerInParent="true"
-      android:visibility="gone"
-      />
-
   <!--<com.mopub.mobileads.MoPubView-->
   <!--android:id="@+id/banner"-->
   <!--android:layout_width="fill_parent"-->
