@@ -369,13 +369,12 @@ public abstract class AptoideApplication extends Application {
    * @return Returns a new Activity Module for the Activity Component
    */
   public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated,
+      NotificationSyncScheduler notificationSyncScheduler, String marketName, View view,
+      String defaultThemeName, String defaultStoreName, boolean firstCreated,
       String fileProviderAuthority) {
 
-    return new ActivityModule(activity, intent, notificationSyncScheduler, marketName,
-        autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated,
-        fileProviderAuthority);
+    return new ActivityModule(activity, intent, notificationSyncScheduler, marketName, view,
+        defaultThemeName, defaultStoreName, firstCreated, fileProviderAuthority);
   }
 
   /**
@@ -435,8 +434,6 @@ public abstract class AptoideApplication extends Application {
   public abstract String getImageCachePath();
 
   public abstract String getAccountType();
-
-  public abstract String getAutoUpdateUrl();
 
   public abstract String getPartnerId();
 

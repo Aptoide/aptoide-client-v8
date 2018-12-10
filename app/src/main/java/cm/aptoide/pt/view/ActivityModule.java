@@ -91,7 +91,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final Intent intent;
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final String marketName;
-  private final String autoUpdateUrl;
   private final View view;
   private final String defaultTheme;
   private final String defaultStoreName;
@@ -99,14 +98,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultTheme, String defaultStoreName, boolean firstCreated,
+      NotificationSyncScheduler notificationSyncScheduler, String marketName, View view,
+      String defaultTheme, String defaultStoreName, boolean firstCreated,
       String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.marketName = marketName;
-    this.autoUpdateUrl = autoUpdateUrl;
     this.view = view;
     this.firstCreated = firstCreated;
     this.defaultTheme = defaultTheme;
@@ -120,8 +118,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides AutoUpdate provideAutoUpdate(DownloadFactory downloadFactory,
-      PermissionManager permissionManager, Resources resources,
-      DownloadAnalytics downloadAnalytics) {
+      PermissionManager permissionManager, Resources resources, DownloadAnalytics downloadAnalytics,
+      @Named("autoUpdateUrl") String autoUpdateUrl) {
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     return new AutoUpdate((ActivityView) activity, downloadFactory, permissionManager,
         application.getInstallManager(), resources, autoUpdateUrl, R.mipmap.ic_launcher, false,

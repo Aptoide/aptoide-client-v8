@@ -14,4 +14,8 @@ import javax.inject.Singleton;
   @Singleton @Provides AdultContent provideAdultContent() {
     return new AdultContentManager();
   }
+
+  @Singleton @Provides @Named("autoUpdateUrl") String provideAutoUpdateUrl() {
+    return "http://imgs.aptoide.com/latest_version_v8.xml";
+  }
 }
