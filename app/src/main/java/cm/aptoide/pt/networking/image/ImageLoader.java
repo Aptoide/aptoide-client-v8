@@ -539,6 +539,21 @@ public class ImageLoader {
     }
   }
 
+  public void loadWithRoundCornersWithoutCache(String image, int radius, ImageView previewImage,
+      @DrawableRes int placeHolderDrawableId) {
+    Context context = weakContext.get();
+    if (context != null) {
+      Glide.with(context)
+          .load(image)
+          .apply(getRequestOptions().centerCrop()
+              .diskCacheStrategy(DiskCacheStrategy.NONE)
+              .placeholder(placeHolderDrawableId)
+              .transforms(new CenterCrop(), new RoundedCornersTransform(context, radius, 0,
+                  RoundedCornersTransform.CornerType.ALL)))
+          .into(previewImage);
+    }
+  }
+
   public void loadIntoTarget(String imageUrl, SimpleTarget<Drawable> simpleTarget) {
     Context context = weakContext.get();
     if (context != null) {
