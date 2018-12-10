@@ -158,10 +158,12 @@ public class InstallAnalytics {
     } else if (currentScreen.getTag() != null && previousScreen.getFragment()
         .equals(DeepLinkManager.DEEPLINK_KEY)) {
       applicationInstallEventName = NOTIFICATION_APPLICATION_INSTALL;
-    } else {
-      applicationInstallEventName = APPLICATION_INSTALL;
     }
-    cache.put(getKey(packageName, installingVersion, applicationInstallEventName),
+    if (!applicationInstallEventName.equals("")) {
+      cache.put(getKey(packageName, installingVersion, applicationInstallEventName),
+          new InstallEvent(data, applicationInstallEventName, context.name(), action));
+    }
+    cache.put(getKey(packageName, installingVersion, APPLICATION_INSTALL),
         new InstallEvent(data, applicationInstallEventName, context.name(), action));
   }
 
