@@ -56,6 +56,12 @@ public class PromotionsManager {
 
   @NonNull private List<PromotionApp> getPromotionAppsMocked() {
     List<PromotionApp> promotionAppList = new ArrayList<>();
+    promotionAppList.add(new PromotionApp("Wallet", "com.appcoins.wallet", 123,
+        "http://pool.apk.aptoide.com/lordballiwns/com-facebook-orca-132958908-42161891-bfb0e8f4a51fcbaa16f1840322eb232a.apk",
+        "http://pool.apk.aptoide.com/lordballiwns/alt/Y29tLWZhY2Vib29rLW9yY2EtMTMyOTU4OTA4LTQyMTYxODkxLWJmYjBlOGY0YTUxZmNiYWExNmYxODQwMzIyZWIyMzJh.apk",
+        "http://pool.img.aptoide.com/lordballiwns/76e0376928b8393227a150fbed5d6b4a_icon.png",
+        "This app belongs to wallet. It is an app.", 123133, 0.2f, 123012, "walletmd5", 12314,
+        false, "wallet version", null, 25));
 
     promotionAppList.add(new PromotionApp("Ana's app", "cm.aptoide.pt.ana", 123,
         "http://pool.apk.aptoide.com/lordballiwns/com-facebook-orca-132958908-42161891-bfb0e8f4a51fcbaa16f1840322eb232a.apk",

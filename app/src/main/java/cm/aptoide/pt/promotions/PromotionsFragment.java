@@ -27,6 +27,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private PromotionsAdapter promotionsAdapter;
   private PublishSubject<PromotionAppClick> promotionAppClick;
   private TextView promotionFirstMessage;
+  private View walletActiveView;
+  private View walletInactiveView;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -41,6 +43,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         new PromotionsViewHolderFactory(promotionAppClick));
 
     promotionFirstMessage = view.findViewById(R.id.promotions_message_1);
+    walletActiveView = view.findViewById(R.id.promotion_wallet_active);
+    walletInactiveView = view.findViewById(R.id.promotion_wallet_inactive);
     setupRecyclerView();
     attachPresenter(promotionsPresenter);
   }
@@ -67,7 +71,12 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   }
 
   @Override public void showPromotionApp(PromotionViewApp promotionViewApp) {
-    promotionsAdapter.setPromotionApp(promotionViewApp);
+    if (promotionViewApp.getPackageName()
+        .equals("com.appcoins.wallet")) {
+      showWallet(promotionViewApp);
+    } else {
+      promotionsAdapter.setPromotionApp(promotionViewApp);
+    }
   }
 
   @Override public Observable<PromotionViewApp> installButtonClick() {
@@ -107,10 +116,23 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         getString(R.string.holidayspromotion_message_1, String.valueOf(totalAppcValue)));
   }
 
+  private void showWallet(PromotionViewApp promotionViewApp) {
+    if (promotionViewApp.getDownloadModel()
+        .isDownloading()) {
+      walletActiveView.setVisibility(View.VISIBLE);
+      walletInactiveView.setVisibility(View.GONE);
+    } else {
+      walletActiveView.setVisibility(View.GONE);
+      walletInactiveView.setVisibility(View.VISIBLE);
+    }
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
     promotionsList = null;
     promotionsAdapter = null;
+    walletActiveView = null;
+    walletInactiveView = null;
   }
 
   @Override public void onDestroy() {
