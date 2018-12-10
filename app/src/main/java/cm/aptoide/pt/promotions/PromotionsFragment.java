@@ -86,4 +86,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         == PromotionAppClick.ClickType.PAUSE_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
+
+  @Override public Observable<PromotionViewApp> cancelDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionAppClick.ClickType.CANCEL_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
 }

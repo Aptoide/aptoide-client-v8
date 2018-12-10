@@ -34,6 +34,21 @@ public class PromotionsPresenter implements Presenter {
     installButtonClick();
 
     pauseDownload();
+    cancelDownload();
+  }
+
+  private void cancelDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.cancelDownload()
+            .flatMapCompletable(
+                app -> promotionsManager.cancelDownload(app.getMd5(), app.getPackageName(),
+                    app.getVersionCode()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
   }
 
   private void pauseDownload() {
