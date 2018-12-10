@@ -42,7 +42,6 @@ public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionApps
       DownloadModel downloadModel = app.getDownloadModel();
 
       if (downloadModel.isDownloading()) {
-        // TODO: 12/6/18 parse downloading states;
         return DOWNLOADING;
       } else {
         switch (downloadModel.getAction()) {
@@ -71,7 +70,13 @@ public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionApps
   }
 
   public void setPromotionApp(PromotionViewApp promotionViewApp) {
-    this.appsList.add(promotionViewApp);
-    notifyDataSetChanged();
+    int index = this.appsList.indexOf(promotionViewApp);
+    if (index != -1) {
+      this.appsList.set(index, promotionViewApp);
+      notifyItemChanged(index);
+    } else {
+      this.appsList.add(promotionViewApp);
+      notifyDataSetChanged();
+    }
   }
 }

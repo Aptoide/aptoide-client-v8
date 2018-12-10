@@ -111,4 +111,32 @@ public class PromotionViewApp {
   public Obb getObb() {
     return obb;
   }
+
+  @Override public int hashCode() {
+    int result = downloadModel != null ? downloadModel.hashCode() : 0;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    result = 31 * result + (packageName != null ? packageName.hashCode() : 0);
+    result = 31 * result + (int) (appId ^ (appId >>> 32));
+    result = 31 * result + (downloadPath != null ? downloadPath.hashCode() : 0);
+    result = 31 * result + (alternativePath != null ? alternativePath.hashCode() : 0);
+    result = 31 * result + (appIcon != null ? appIcon.hashCode() : 0);
+    result = 31 * result + (isClaimed ? 1 : 0);
+    result = 31 * result + (description != null ? description.hashCode() : 0);
+    result = 31 * result + (int) (size ^ (size >>> 32));
+    result = 31 * result + (rating != +0.0f ? Float.floatToIntBits(rating) : 0);
+    result = 31 * result + numberOfDownloads;
+    result = 31 * result + (md5 != null ? md5.hashCode() : 0);
+    result = 31 * result + versionCode;
+    result = 31 * result + (versionName != null ? versionName.hashCode() : 0);
+    result = 31 * result + (obb != null ? obb.hashCode() : 0);
+    return result;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    PromotionViewApp that = (PromotionViewApp) o;
+    if (md5 != null ? !md5.equals(that.md5) : that.md5 != null) return false;
+    return true;
+  }
 }
