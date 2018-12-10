@@ -79,8 +79,7 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
     int message = -1;
     switch (appState) {
       case UPDATE:
-        message = R.string.holidayspromotion_button_install;
-        // TODO: 12/10/18 change this string to update
+        message = R.string.holidayspromotion_button_update;
         break;
       case DOWNLOAD:
       case INSTALL:
