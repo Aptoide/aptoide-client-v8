@@ -115,4 +115,10 @@ public class PromotionsManager {
     return Completable.fromAction(
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
   }
+
+  public Completable resumeDownload(String md5, String packageName, long appId) {
+    return installManager.getDownload(md5)
+        .flatMapCompletable(download -> installManager.install(download)
+            .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)));
+  }
 }

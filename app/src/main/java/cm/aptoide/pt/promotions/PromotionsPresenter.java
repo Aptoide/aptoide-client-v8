@@ -35,6 +35,24 @@ public class PromotionsPresenter implements Presenter {
 
     pauseDownload();
     cancelDownload();
+    resumeDownload();
+  }
+
+  private void resumeDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.resumeDownload()
+            .flatMap(promotionViewApp -> permissionManager.requestDownloadAccess(permissionService)
+                .flatMap(success -> permissionManager.requestExternalStoragePermission(
+                    permissionService))
+                .flatMapCompletable(
+                    __ -> promotionsManager.resumeDownload(promotionViewApp.getMd5(),
+                        promotionViewApp.getPackageName(), promotionViewApp.getAppId()))
+                .retry()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
   }
 
   private void cancelDownload() {

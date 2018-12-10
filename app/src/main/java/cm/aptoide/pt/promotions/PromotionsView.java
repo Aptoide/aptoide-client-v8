@@ -14,4 +14,6 @@ public interface PromotionsView extends View {
   Observable<PromotionViewApp> pauseDownload();
 
   Observable<PromotionViewApp> cancelDownload();
+
+  Observable<PromotionViewApp> resumeDownload();
 }

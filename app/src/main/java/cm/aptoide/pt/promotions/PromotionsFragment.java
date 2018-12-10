@@ -92,4 +92,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         == PromotionAppClick.ClickType.CANCEL_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
+
+  @Override public Observable<PromotionViewApp> resumeDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionAppClick.ClickType.RESUME_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
 }
