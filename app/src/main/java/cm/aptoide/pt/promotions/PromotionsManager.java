@@ -103,7 +103,7 @@ public class PromotionsManager {
         AnalyticsManager.Action.CLICK);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         downloadStateParser.getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
-        AppContext.EDITORIAL, downloadStateParser.getOrigin(download.getAction()), campaignId,
+        AppContext.PROMOTIONS, downloadStateParser.getOrigin(download.getAction()), campaignId,
         abTestGroup);
   }
 

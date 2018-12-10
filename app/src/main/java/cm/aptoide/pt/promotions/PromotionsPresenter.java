@@ -30,9 +30,7 @@ public class PromotionsPresenter implements Presenter {
 
   @Override public void present() {
     getPromotionApps();
-
     installButtonClick();
-
     pauseDownload();
     cancelDownload();
     resumeDownload();
@@ -120,7 +118,6 @@ public class PromotionsPresenter implements Presenter {
   }
 
   private void getPromotionApps() {
-
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> promotionsManager.getPromotionApps())
