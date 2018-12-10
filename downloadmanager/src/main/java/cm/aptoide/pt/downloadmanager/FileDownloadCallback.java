@@ -10,4 +10,8 @@ public interface FileDownloadCallback {
   AppDownloadStatus.AppDownloadState getDownloadState();
 
   String getMd5();
+
+  boolean hasError();
+
+  Throwable getError();
 }

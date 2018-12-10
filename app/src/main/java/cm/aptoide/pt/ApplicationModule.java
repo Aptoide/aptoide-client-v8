@@ -389,8 +389,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppDownloaderProvider providesAppDownloaderProvider(
-      RetryFileDownloaderProvider fileDownloaderProvider) {
-    return new AppDownloaderProvider(fileDownloaderProvider);
+      RetryFileDownloaderProvider fileDownloaderProvider, DownloadAnalytics downloadAnalytics) {
+    return new AppDownloaderProvider(fileDownloaderProvider, downloadAnalytics);
   }
 
   @Singleton @Provides RetryFileDownloaderProvider providesRetryFileDownloaderProvider(

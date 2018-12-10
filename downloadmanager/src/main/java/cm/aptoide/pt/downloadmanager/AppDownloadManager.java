@@ -22,12 +22,15 @@ public class AppDownloadManager implements AppDownloader {
   private PublishSubject<FileDownloadCallback> fileDownloadSubject;
   private AppDownloadStatus appDownloadStatus;
   private Subscription subscribe;
+  private DownloadAnalytics downloadAnalytics;
 
   public AppDownloadManager(RetryFileDownloaderProvider fileDownloaderProvider, DownloadApp app,
-      HashMap<String, RetryFileDownloader> fileDownloaderPersistence) {
+      HashMap<String, RetryFileDownloader> fileDownloaderPersistence,
+      DownloadAnalytics downloadAnalytics) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
+    this.downloadAnalytics = downloadAnalytics;
     fileDownloadSubject = PublishSubject.create();
     appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
         AppDownloadStatus.AppDownloadState.PENDING);
@@ -103,18 +106,23 @@ public class AppDownloadManager implements AppDownloader {
           if (fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.COMPLETED) {
             handleCompletedFileDownload(fileDownloader);
+            downloadAnalytics.onDownloadComplete(fileDownloadCallback.getMd5(),
+                app.getPackageName(), app.getVersionCode());
           } else if (fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND
               || fileDownloadCallback.getDownloadState() == AppDownloadStatus.AppDownloadState.ERROR
               || fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
             handleErrorFileDownload();
+            if (fileDownloadCallback.hasError()) {
+              downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
+                  fileDownloadCallback.getError());
+            }
           }
         });
   }
 
   private void handleErrorFileDownload() {
-
     for (RetryFileDownloader retryFileDownloader : fileDownloaderPersistence.values()) {
       retryFileDownloader.stopFailedDownload();
     }
