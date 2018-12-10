@@ -21,8 +21,10 @@ import android.view.Window;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -212,6 +214,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       window.getDecorView()
           .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
