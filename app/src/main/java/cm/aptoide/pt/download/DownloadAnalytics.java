@@ -168,14 +168,13 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
       AppContext context, AnalyticsManager.Action action) {
     Map<String, Object> event = new HashMap<>();
+    ScreenTagHistory screenTagHistory = navigationTracker.getPreviousScreen();
     event.put(APP, createAppData(download));
     event.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
     event.put(ORIGIN, getOrigin(download));
-    event.put(PREVIOUS_CONTEXT, navigationTracker.getPreviousScreen()
-        .getFragment());
-    event.put(PREVIOUS_TAG, navigationTracker.getCurrentScreen()
-        .getTag());
+    event.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
+    event.put(PREVIOUS_TAG, screenTagHistory.getTag());
     event.put(STORE, navigationTracker.getPreviousScreen()
         .getStore());
     event.put(TELECO, AptoideUtils.SystemU.getCarrierName(telephonyManager));
@@ -329,7 +328,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public enum AppContext {
-    TIMELINE, APPVIEW, UPDATE_TAB, AUTO_UPDATE, DOWNLOADS, EDITORIAL
+    APPVIEW, APPS_FRAGMENT, AUTO_UPDATE, EDITORIAL
   }
 
   public enum Origin {

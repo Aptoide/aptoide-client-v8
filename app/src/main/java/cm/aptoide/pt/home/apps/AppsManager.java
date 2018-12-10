@@ -132,20 +132,20 @@ public class AppsManager {
 
   private void setupDownloadEvents(Download download) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.DOWNLOADS);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.DOWNLOADS, getOrigin(download.getAction()));
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()));
   }
 
   private void setupUpdateEvents(Download download, Origin origin) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.UPDATE_TAB);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, origin);
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin);
   }
 
   private Origin getOrigin(int action) {
