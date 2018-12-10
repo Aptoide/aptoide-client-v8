@@ -51,8 +51,7 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
   @Override public void setApp(PromotionViewApp app) {
     setAppCardHeader(app);
     setDownloadState(app.getDownloadModel()
-        .getProgress(), app.getDownloadModel()
-        .getDownloadState());
+        .getProgress(), app);
   }
 
   private void setAppCardHeader(PromotionViewApp app) {
@@ -69,7 +68,10 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
     numberOfDownloads.setText(String.valueOf(app.getNumberOfDownloads()));
   }
 
-  private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
+  private void setDownloadState(int progress, PromotionViewApp promotionViewApp) {
+
+    DownloadModel.DownloadState downloadState = promotionViewApp.getDownloadModel()
+        .getDownloadState();
 
     LinearLayout.LayoutParams pauseShowing =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -83,6 +85,8 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
         downloadProgressBar.setProgress(progress);
         downloadProgressValue.setText(String.valueOf(progress) + "%");
         pauseDownload.setVisibility(View.VISIBLE);
+        pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
@@ -90,6 +94,8 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
       case INDETERMINATE:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.VISIBLE);
+        pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
@@ -100,12 +106,18 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
         downloadProgressValue.setText(String.valueOf(progress) + "%");
         pauseDownload.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.CANCEL_DOWNLOAD)));
         resumeDownload.setVisibility(View.VISIBLE);
+        resumeDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.RESUME_DOWNLOAD)));
         downloadControlsLayout.setLayoutParams(pauseHidden);
         break;
       case COMPLETE:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.VISIBLE);
+        pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);

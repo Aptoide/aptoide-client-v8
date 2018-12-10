@@ -32,6 +32,25 @@ public class PromotionsPresenter implements Presenter {
     getPromotionApps();
 
     installButtonClick();
+
+    pauseDownload();
+  }
+
+  private void pauseDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.pauseDownload()
+            .flatMapCompletable(
+                promotionViewApp -> promotionsManager.pauseDownload(promotionViewApp.getMd5()))
+            .retry())
+        .observeOn(viewScheduler)
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new IllegalStateException(error);
+        });
   }
 
   private void installButtonClick() {

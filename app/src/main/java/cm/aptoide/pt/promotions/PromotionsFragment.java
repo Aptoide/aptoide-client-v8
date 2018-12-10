@@ -80,4 +80,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         getResources().getString(R.string.root_access_dialog))
         .map(response -> (response.equals(YES)));
   }
+
+  @Override public Observable<PromotionViewApp> pauseDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionAppClick.ClickType.PAUSE_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
 }

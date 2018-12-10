@@ -10,4 +10,6 @@ public interface PromotionsView extends View {
   Observable<PromotionViewApp> installButtonClick();
 
   Observable<Boolean> showRootInstallWarningPopup();
+
+  Observable<PromotionViewApp> pauseDownload();
 }

@@ -106,4 +106,8 @@ public class PromotionsManager {
         AppContext.EDITORIAL, downloadStateParser.getOrigin(download.getAction()), campaignId,
         abTestGroup);
   }
+
+  public Completable pauseDownload(String md5) {
+    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+  }
 }
