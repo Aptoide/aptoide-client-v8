@@ -76,7 +76,7 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
   }
 
   private int getButtonMessage(int appState) {
-    int message = -1;
+    int message;
     switch (appState) {
       case UPDATE:
         message = R.string.holidayspromotion_button_update;

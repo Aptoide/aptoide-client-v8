@@ -10,7 +10,6 @@ public class PromotionApp {
   private String downloadPath;
   private String alternativePath;
   private String appIcon;
-  private PromotionAppState state;
   private String description;
   private long size;
   private float rating;
@@ -23,16 +22,15 @@ public class PromotionApp {
   private int appcValue;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
-      String alternativePath, String appIcon, PromotionAppState state, String description,
-      long size, float rating, int numberOfDownloads, String md5, int versionCode,
-      boolean isClaimed, String versionName, Obb obb, int appcValue) {
+      String alternativePath, String appIcon, String description, long size, float rating,
+      int numberOfDownloads, String md5, int versionCode, boolean isClaimed, String versionName,
+      Obb obb, int appcValue) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
     this.downloadPath = downloadPath;
     this.alternativePath = alternativePath;
     this.appIcon = appIcon;
-    this.state = state;
     this.description = description;
     this.size = size;
     this.rating = rating;
@@ -67,14 +65,6 @@ public class PromotionApp {
 
   public String getAppIcon() {
     return appIcon;
-  }
-
-  public PromotionAppState getState() {
-    return state;
-  }
-
-  public void setState(PromotionAppState state) {
-    this.state = state;
   }
 
   public String getDescription() {
@@ -115,9 +105,5 @@ public class PromotionApp {
 
   public int getAppcValue() {
     return appcValue;
-  }
-
-  enum PromotionAppState {
-    DOWNLOAD, UPDATE, DOWNLOADING, INSTALL, CLAIM, CLAIMED
   }
 }
