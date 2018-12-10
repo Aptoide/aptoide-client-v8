@@ -16,4 +16,6 @@ public interface PromotionsView extends View {
   Observable<PromotionViewApp> cancelDownload();
 
   Observable<PromotionViewApp> resumeDownload();
+
+  void showAppCoinsAmmount(int totalAppcValue);
 }

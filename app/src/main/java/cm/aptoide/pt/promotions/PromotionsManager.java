@@ -41,8 +41,17 @@ public class PromotionsManager {
     this.preferencesManager = preferencesManager;
   }
 
-  public Observable<List<PromotionApp>> getPromotionApps() {
-    return Observable.just(getPromotionAppsMocked());
+  public Observable<PromotionsModel> getPromotionsModel() {
+    return Observable.just(getPromotionAppsMocked())
+        .map(appsList -> new PromotionsModel(appsList, getTotalAppc(appsList)));
+  }
+
+  private int getTotalAppc(List<PromotionApp> appsList) {
+    int total = 0;
+    for (PromotionApp promotionApp : appsList) {
+      total += promotionApp.getAppcValue();
+    }
+    return total;
   }
 
   @NonNull private List<PromotionApp> getPromotionAppsMocked() {

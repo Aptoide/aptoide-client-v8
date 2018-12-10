@@ -8,6 +8,7 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -25,6 +26,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
   private PublishSubject<PromotionAppClick> promotionAppClick;
+  private TextView promotionFirstMessage;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(),
         new PromotionsViewHolderFactory(promotionAppClick));
 
+    promotionFirstMessage = view.findViewById(R.id.promotions_message_1);
     setupRecyclerView();
     attachPresenter(promotionsPresenter);
   }
@@ -97,5 +100,21 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
         == PromotionAppClick.ClickType.RESUME_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public void showAppCoinsAmmount(int totalAppcValue) {
+    promotionFirstMessage.setText(
+        getString(R.string.holidayspromotion_message_1, String.valueOf(totalAppcValue)));
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    promotionsList = null;
+    promotionsAdapter = null;
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    promotionAppClick = null;
   }
 }

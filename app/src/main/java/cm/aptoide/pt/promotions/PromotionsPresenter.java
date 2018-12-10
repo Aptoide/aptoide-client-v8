@@ -120,8 +120,10 @@ public class PromotionsPresenter implements Presenter {
   private void getPromotionApps() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> promotionsManager.getPromotionApps())
-        .flatMapIterable(promotionsList -> promotionsList)
+        .flatMap(__ -> promotionsManager.getPromotionsModel())
+        .doOnNext(
+            promotionsModel -> view.showAppCoinsAmmount((promotionsModel.getTotalAppcValue())))
+        .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())
         .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
         .observeOn(viewScheduler)
         .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp))
