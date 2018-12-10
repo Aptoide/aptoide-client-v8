@@ -571,12 +571,12 @@
    <!--Holidays AppCoins Craze-->
   <string name="holidayspromotion_title_holidays">Holidays AppCoins Craze</string>
   <string name="holidayspromotion_message_1">Earn up to 100 AppCoins Credits to spend on in-app purchases! Install the apps below and get diamonds, gems or lives in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the AppCoins BDS Wallet to receive your AppCoins Credits.</string>
+  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>
   <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
   <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
   <string name="holidayspromotion_button_claimed">Claimed</string>
-  <string name="holidayspromotion_message_wallet_description">The AppCoins BDS Wallet is your tool not only for receiving your APPC but also to process payments.</string>
+  <string name="holidayspromotion_message_wallet_description">The AppCoins Wallet is your tool not only for receiving your APPC but also to process payments.</string>
   <string name="holidayspromotion_message_legacy_description">Intense real-time combat in a huge fantasy world! Join friends to clash rivals in the Arena.</string>
   <string name="holidayspromotion_message_era_description">Fight for the glory in a world of Elysians! It offers quality multiplayer brawls and 1v1 combats.</string>
   <string name="holidayspromotion_message_shark_description">Take control of a Hungry Shark and go on a frantic ocean rampage to survive as long as possible.</string>
@@ -585,18 +585,21 @@
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
   <string name="holidayspromotion_message_wallet">Tell us your AppCoins wallet address. Once you create a wallet, you\'ll find the address when pressing on \'Receive\'.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
-  <string name="holidayspromotion_button_wallet_open">Open the AppCoins BDS Wallet</string>
+  <string name="holidayspromotion_button_wallet_open">Open the AppCoins Wallet</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
   <string name="holidayspromotion_title_captcha">Verify that You\'re a Human</string>
   <string name="holidayspromotion_message_captcha">This is just a security thing</string>
   <string name="holidayspromotion_short_captcha_field">Type the text here</string>
+  <string name="holidayspromotion_button_captcha">Claim</string>
   <string name="holidayspromotion_title_completed">Done!</string>
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">Done</string>
   <string name="holidayspromotion_short_error_captcha">Wrong captcha. Try again!</string>
-  <string name="holidayspromotion_short_errer_claimed">You already claimed this reward!</string>
-  <string name="holidayspromotion_short_errer_wallet_address">Invalid address. Try again!</string>
-  
+  <string name="holidayspromotion_title_error_claimed">Oops...</string>
+  <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
+  <string name="holidayspromotion_message_popup">Earn 100 APPC Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_button_popup">Check it out!</string>
 </resources>
 

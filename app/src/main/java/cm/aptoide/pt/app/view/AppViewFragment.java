@@ -47,7 +47,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -131,7 +130,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
-  @Inject ApkFyExperiment apkFyExperiment;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -1069,18 +1067,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
       String appName, double appc, float rating, String icon, int downloads) {
-    return apkFyExperiment.performAbTest()
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(result -> {
-          if (result) {
-            return GenericDialogs.createGenericOkCancelMessageWithCustomView(getContext(), title,
-                getContext().getString(R.string.installapp_alrt, appName),
-                R.layout.apkfy_onboard_message);
-          } else {
-            return createCustomDialogForApkfy(appName, appc, rating, icon, downloads);
-          }
-        })
-        .filter(response -> response.equals(YES))
+    return createCustomDialogForApkfy(appName, appc, rating, icon, downloads).filter(
+        response -> response.equals(YES))
         .map(__ -> action);
   }
 
