@@ -521,7 +521,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences);
   }
 
-  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler() {
+  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
+      InstallManager installManager) {
 
     Intent retryActionIntent = new Intent(application, RootInstallNotificationEventReceiver.class);
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
@@ -541,11 +542,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
     int notificationId = 230498;
     return new RootInstallationRetryHandler(notificationId,
-        application.getSystemNotificationShower(), application.getInstallManager(),
-        PublishRelay.create(), 0, application,
-        new RootInstallErrorNotificationFactory(notificationId,
-            BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
-            deleteAction));
+        application.getSystemNotificationShower(), installManager, PublishRelay.create(), 0,
+        application, new RootInstallErrorNotificationFactory(notificationId,
+        BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
+        deleteAction));
   }
 
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
@@ -932,10 +932,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
       @Named("default") OkHttpClient okHttpClient, @Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      InstallManager installManager) {
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
-        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences,
-        application.getInstallManager());
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
   }
 
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
@@ -1330,9 +1330,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
-      @Named("marketName") String marketName, PackageRepository packageRepository) {
-    return new BundlesResponseMapper(marketName, application.getInstallManager(),
-        packageRepository);
+      @Named("marketName") String marketName, InstallManager installManager,
+      PackageRepository packageRepository) {
+    return new BundlesResponseMapper(marketName, installManager, packageRepository);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {

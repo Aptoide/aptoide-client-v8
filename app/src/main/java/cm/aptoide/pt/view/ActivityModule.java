@@ -118,12 +118,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides AutoUpdate provideAutoUpdate(DownloadFactory downloadFactory,
-      PermissionManager permissionManager, Resources resources, DownloadAnalytics downloadAnalytics,
-      @Named("autoUpdateUrl") String autoUpdateUrl) {
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
+      PermissionManager permissionManager, InstallManager installManager, Resources resources,
+      DownloadAnalytics downloadAnalytics, @Named("autoUpdateUrl") String autoUpdateUrl) {
     return new AutoUpdate((ActivityView) activity, downloadFactory, permissionManager,
-        application.getInstallManager(), resources, autoUpdateUrl, R.mipmap.ic_launcher, false,
-        marketName, downloadAnalytics);
+        installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
+        downloadAnalytics);
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(
@@ -160,12 +159,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides Presenter provideMainPresenter(
       RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy, AutoUpdate autoUpdate,
-      @Named("default") SharedPreferences sharedPreferences,
+      InstallManager installManager, @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager) {
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    InstallManager installManager = application.getInstallManager();
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(activity),
         notificationSyncScheduler,
