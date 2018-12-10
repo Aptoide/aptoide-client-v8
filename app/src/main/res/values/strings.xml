@@ -570,7 +570,7 @@
 
   <!--Holidays AppCoins Craze-->
   <string name="holidayspromotion_title_holidays">Holidays AppCoins Craze</string>
-  <string name="holidayspromotion_message_1">Earn up to 100 AppCoins Credits to spend on in-app purchases! Install the apps below and get diamonds, gems or lives in your favorite games!</string>
+  <string name="holidayspromotion_message_1">Earn up to %s AppCoins Credits to spend on in-app purchases! Install the apps below and get diamonds, gems or lives in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>
   <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
@@ -597,10 +597,10 @@
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">Done</string>
   <string name="holidayspromotion_short_error_captcha">Wrong captcha. Try again!</string>
-  <string name="holidayspromotion_title_error_claimed">Oops...</string>
+  <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
   <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
-  <string name="holidayspromotion_message_popup">Earn 100 APPC Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Check it out!</string>
 </resources>
 
