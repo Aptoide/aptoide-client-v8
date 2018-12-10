@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     >
+
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:scaleType="fitXY"
+      android:src="@drawable/ic_winter_promo_divider"
+      />
 
   <LinearLayout
       android:layout_width="match_parent"
