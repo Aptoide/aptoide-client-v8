@@ -183,15 +183,14 @@ public class InstallAnalytics {
 
   @NonNull private Map<String, Object> getInstallEventsBaseBundle(Origin origin, String packageName,
       int campaignId, String abTestingGroup) {
+    ScreenTagHistory screenTagHistory = navigationTracker.getPreviousScreen();
     Map<String, Object> data = new HashMap<>();
     data.put(APP, createApp(packageName));
     data.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
     data.put(ORIGIN, origin);
-    data.put(PREVIOUS_CONTEXT, navigationTracker.getCurrentScreen()
-        .getFragment());
-    data.put(PREVIOUS_TAG, navigationTracker.getCurrentScreen()
-        .getTag());
+    data.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
+    data.put(PREVIOUS_TAG, screenTagHistory.getTag());
     if (campaignId >= 0) {
       data.put(CAMPAIGN_ID, campaignId);
     }
