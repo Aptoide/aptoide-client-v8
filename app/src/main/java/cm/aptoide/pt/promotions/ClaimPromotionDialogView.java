@@ -1,5 +1,7 @@
 package cm.aptoide.pt.promotions;
 
+import android.text.Editable;
+import com.jakewharton.rxbinding.widget.TextViewAfterTextChangeEvent;
 import rx.Observable;
 
 public interface ClaimPromotionDialogView {
@@ -24,8 +26,6 @@ public interface ClaimPromotionDialogView {
 
   void showLoading();
 
-  void hideLoading();
-
   void showInvalidWalletAddress();
 
   void showPromotionAlreadyClaimed();
@@ -33,4 +33,12 @@ public interface ClaimPromotionDialogView {
   void showInvalidCaptcha(String captcha);
 
   void showClaimSuccess();
+
+  Observable<TextViewAfterTextChangeEvent> editTextChanges();
+
+  void handleEmptyEditText(Editable s);
+
+  Observable<Void> dismissClicks();
+
+  void dismissDialog();
 }

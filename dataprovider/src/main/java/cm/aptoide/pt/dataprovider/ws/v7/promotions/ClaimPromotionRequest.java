@@ -26,7 +26,7 @@ public class ClaimPromotionRequest extends V7<BaseV7Response, ClaimPromotionRequ
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    final BaseBody body = new BaseBody();
+
     return new ClaimPromotionRequest(new Body(walletAddress, packageName, captcha), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }

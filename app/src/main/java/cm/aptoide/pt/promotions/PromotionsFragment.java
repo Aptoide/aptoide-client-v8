@@ -13,7 +13,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
-
+  private static final String TAG = PromotionsFragment.class.getSimpleName();
   @Inject PromotionsPresenter promotionsPresenter;
   private TextView firstAppName;
   private TextView secondAppName;
@@ -34,7 +34,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), "");
+        .getSimpleName(), TAG);
   }
 
   @Nullable @Override

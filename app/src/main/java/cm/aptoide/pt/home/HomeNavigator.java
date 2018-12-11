@@ -22,6 +22,7 @@ import rx.Observable;
  */
 
 public class HomeNavigator {
+  private static final String TAG = HomeNavigator.class.getSimpleName();
   private final FragmentNavigator fragmentNavigator;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final BottomNavigationMapper bottomNavigationMapper;
@@ -108,6 +109,7 @@ public class HomeNavigator {
   }
 
   public void navigateToPromotions() {
-    fragmentNavigator.navigateToDialogFragment(new ClaimPromotionDialogFragment(), "");
+    fragmentNavigator.navigateToDialogFragment(
+        ClaimPromotionDialogFragment.newInstance("this.is.package"), TAG);
   }
 }

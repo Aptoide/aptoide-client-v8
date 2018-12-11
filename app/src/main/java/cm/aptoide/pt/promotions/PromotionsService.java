@@ -7,11 +7,16 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
+import java.util.ArrayList;
+import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
 
 public class PromotionsService {
+  private static final String WRONG_CAPTCHA = "PROMOTION-1";
+  private static final String WRONG_ADDRESS = "PROMOTION-2";
+  private static final String ALREADY_CLAIMED = "PROMOTION-3";
 
   private final BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   private final OkHttpClient okHttpClient;
@@ -20,7 +25,7 @@ public class PromotionsService {
   private final SharedPreferences sharedPreferences;
 
   //Use ONLY to restore view state
-  private String captchaUrl;
+  private String walletAddress;
 
   public PromotionsService(BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
@@ -51,7 +56,7 @@ public class PromotionsService {
 
   private ClaimStatusWrapper map(BaseV7Response response) {
     return new ClaimStatusWrapper(mapStatus(response.getInfo()
-        .getStatus()), response.getErrors());
+        .getStatus()), mapError(response.getErrors()));
   }
 
   private ClaimStatusWrapper.Status mapStatus(BaseV7Response.Info.Status status) {
@@ -62,11 +67,32 @@ public class PromotionsService {
     }
   }
 
-  public void saveCaptchaUrl(String captchaUrl) {
-    this.captchaUrl = captchaUrl;
+  public void saveWalletAddress(String walletAddress) {
+    this.walletAddress = walletAddress;
   }
 
-  public String getCaptchaUrl() {
-    return captchaUrl;
+  public String getWalletAddress() {
+    return walletAddress;
+  }
+
+  private List<ClaimStatusWrapper.Error> mapError(List<BaseV7Response.Error> errors) {
+    List<ClaimStatusWrapper.Error> result = new ArrayList<>();
+    if (errors != null) {
+      for (BaseV7Response.Error error : errors) {
+        if (error.getCode()
+            .equals(WRONG_CAPTCHA)) {
+          result.add(ClaimStatusWrapper.Error.wrongCaptcha);
+        } else if (error.getCode()
+            .equals(WRONG_ADDRESS)) {
+          result.add(ClaimStatusWrapper.Error.wrongAddress);
+        } else if (error.getCode()
+            .equals(ALREADY_CLAIMED)) {
+          result.add(ClaimStatusWrapper.Error.promotionClaimed);
+        } else {
+          result.add(ClaimStatusWrapper.Error.generic);
+        }
+      }
+    }
+    return result;
   }
 }

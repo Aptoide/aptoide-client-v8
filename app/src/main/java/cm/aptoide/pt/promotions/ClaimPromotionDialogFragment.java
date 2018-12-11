@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,6 +26,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.MainActivity;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding.widget.TextViewAfterTextChangeEvent;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,6 +42,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   private static final String VIEW = "view";
   private static final String WALLET = "wallet";
   private static final String CAPTCHA = "captcha";
+  private static final String CAPTCHA_ERROR = "captcha_error";
   private static final String CLAIMED = "claimed";
   private static final String SUCCESS = "success";
   private static final String GENERIC_ERROR = "error";
@@ -73,6 +75,14 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   private View genericMessageView;
   private View genericErrorView;
 
+  public static ClaimPromotionDialogFragment newInstance(String packageName) {
+    Bundle args = new Bundle();
+    ClaimPromotionDialogFragment fragment = new ClaimPromotionDialogFragment();
+    args.putString("package_name", packageName);
+    fragment.setArguments(args);
+    return fragment;
+  }
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ((MainActivity) getContext()).getActivityComponent()
@@ -84,13 +94,17 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     super.onSaveInstanceState(outState);
     if (insertWalletView.getVisibility() == View.VISIBLE) {
       outState.putString(VIEW, WALLET);
-    } else if (captchaView.getVisibility() == View.VISIBLE) {
+    } else if (captchaView.getVisibility() == View.VISIBLE
+        && walletErrorView.getVisibility() != View.VISIBLE) {
       outState.putString(VIEW, CAPTCHA);
+    } else if (captchaView.getVisibility() == View.VISIBLE
+        && walletErrorView.getVisibility() == View.VISIBLE) {
+      outState.putString(VIEW, CAPTCHA_ERROR);
     } else if (genericMessageView.getVisibility() == View.VISIBLE && genericMessageTitle.getText()
         .equals(getResources().getString(R.string.holidayspromotion_title_completed))) {
       outState.putString(VIEW, SUCCESS);
     } else if (genericMessageView.getVisibility() == View.VISIBLE && genericMessageTitle.getText()
-        .equals("Sorry")) {
+        .equals(getResources().getString(R.string.holidayspromotion_title_error_claimed))) {
       outState.putString(VIEW, CLAIMED);
     } else if (genericErrorView.getVisibility() == View.VISIBLE) {
       outState.putString(VIEW, GENERIC_ERROR);
@@ -109,9 +123,16 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     captchaEdit = null;
     captchaNextButton = null;
     captchaCancelButton = null;
+    captchaErrorView = null;
+    genericMessageTitle = null;
+    genericMessageBody = null;
+    genericMessageButton = null;
+    genericErrorOkButton = null;
 
     insertWalletView = null;
     captchaView = null;
+    genericMessageView = null;
+    genericErrorView = null;
 
     presenter.dispose();
     presenter = null;
@@ -153,19 +174,16 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     genericErrorView = view.findViewById(R.id.generic_error);
 
     presenter = new ClaimPromotionDialogPresenter(this, new CompositeSubscription(),
-        AndroidSchedulers.mainThread(), claimPromotionsManager, idsRepository);
+        AndroidSchedulers.mainThread(), claimPromotionsManager);
     presenter.present();
-    walletCancelButton.setOnClickListener(click -> dismiss());
-    handleAddressEditRules();
-    captchaCancelButton.setOnClickListener(click -> dismiss());
-    genericMessageButton.setOnClickListener(click -> dismiss());
-    genericErrorOkButton.setOnClickListener(click -> dismiss());
     handleRestoreViewState(savedInstanceState);
   }
 
   public void onResume() {
     super.onResume();
-    handleClipboardPaste();
+    if (walletErrorView.getVisibility() != View.VISIBLE) {
+      handleClipboardPaste();
+    }
 
     Window window = getDialog().getWindow();
     Point size = new Point();
@@ -196,8 +214,8 @@ public class ClaimPromotionDialogFragment extends DialogFragment
 
   @Override public Observable<ClaimPromotionsSubmitWrapper> finishClick() {
     return RxView.clicks(captchaNextButton)
-        .map(__ -> new ClaimPromotionsSubmitWrapper("this.is.package", captchaEdit.getText()
-            .toString()));
+        .map(__ -> new ClaimPromotionsSubmitWrapper(captchaEdit.getText()
+            .toString(), getArguments().getString("package_name")));
   }
 
   @Override public Observable<Void> refreshCaptchaClick() {
@@ -213,7 +231,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     refreshCaptchaButton.setVisibility(View.VISIBLE);
     captchaLoading.setVisibility(View.GONE);
     ImageLoader.with(getContext())
-        .loadWithRoundCornersWithoutCache(captchaUrl, 8, captcha, -1);
+        .loadWithRoundCornersWithoutCacheAndPlaceholder(captchaUrl, 8, captcha);
   }
 
   @Override public void sendWalletIntent() {
@@ -227,11 +245,11 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     insertWalletView.setVisibility(View.GONE);
     captchaView.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
-        .loadWithRoundCornersWithoutCache(captchaUrl, 8, captcha, -1);
+        .loadWithRoundCornersWithoutCacheAndPlaceholder(captchaUrl, 8, captcha);
   }
 
   @Override public void showGenericError() {
-    hideLoading();
+    loading.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.VISIBLE);
     captchaView.setVisibility(View.GONE);
     insertWalletView.setVisibility(View.GONE);
@@ -245,66 +263,63 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     genericMessageView.setVisibility(View.GONE);
   }
 
-  @Override public void hideLoading() {
-    loading.setVisibility(View.GONE);
-  }
-
   @Override public void showInvalidWalletAddress() {
-    hideLoading();
+    loading.setVisibility(View.GONE);
     showWalletView();
-    clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
+    //clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
     walletAddressEdit.setText("");
     walletMessageIcon.setVisibility(View.GONE);
     walletErrorView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showPromotionAlreadyClaimed() {
-    hideLoading();
-    showGenericMessageView("Sorry",
+    loading.setVisibility(View.GONE);
+    showGenericMessageView(getResources().getString(R.string.holidayspromotion_title_error_claimed),
         getResources().getString(R.string.holidayspromotion_short_error_claimed));
   }
 
   @Override public void showInvalidCaptcha(String captcha) {
-    hideLoading();
+    loading.setVisibility(View.GONE);
     showCaptchaView(captcha);
     captchaErrorView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showClaimSuccess() {
-    hideLoading();
+    loading.setVisibility(View.GONE);
     showGenericMessageView(getResources().getString(R.string.holidayspromotion_title_completed),
         getResources().getString(R.string.holidayspromotion_message_completed));
   }
 
-  private void handleAddressEditRules() {
-    walletAddressEdit.addTextChangedListener(new TextWatcher() {
-      @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+  @Override public Observable<TextViewAfterTextChangeEvent> editTextChanges() {
+    return RxTextView.afterTextChangeEvents(walletAddressEdit);
+  }
 
-      }
+  @Override public void handleEmptyEditText(Editable address) {
+    if (address.toString()
+        .equals("")) {
+      walletMessageIcon.setVisibility(View.GONE);
+    } else {
+      walletMessageIcon.setVisibility(View.VISIBLE);
+    }
+    if (validateAddress(address.toString())) {
+      enableNextButton();
+      disableWalletButton();
+      setValidWalletMessage();
+    } else {
+      disableNextButton();
+      enableWalletButton();
+      setInvalidWalletMessage();
+    }
+    walletErrorView.setVisibility(View.GONE);
+  }
 
-      @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+  @Override public Observable<Void> dismissClicks() {
+    return Observable.merge(RxView.clicks(walletCancelButton), RxView.clicks(captchaCancelButton),
+        RxView.clicks(genericMessageButton), RxView.clicks(genericErrorOkButton));
+  }
 
-      }
-
-      @Override public void afterTextChanged(Editable s) {
-        if (s.toString()
-            .equals("")) {
-          walletMessageIcon.setVisibility(View.GONE);
-        } else {
-          walletMessageIcon.setVisibility(View.VISIBLE);
-        }
-        if (validateAddress(s.toString())) {
-          enableNextButton();
-          disableWalletButton();
-          setValidWalletMessage();
-        } else {
-          disableNextButton();
-          enableWalletButton();
-          setInvalidWalletMessage();
-        }
-        walletErrorView.setVisibility(View.GONE);
-      }
-    });
+  @Override public void dismissDialog() {
+    this.dismiss();
   }
 
   private void handleClipboardPaste() {
@@ -388,6 +403,8 @@ public class ClaimPromotionDialogFragment extends DialogFragment
         case WALLET:
           showWalletView();
           break;
+        case CAPTCHA_ERROR:
+          showInvalidCaptcha(claimPromotionsManager.getCaptchaUrl());
         case CAPTCHA:
           showCaptchaView(claimPromotionsManager.getCaptchaUrl());
           break;

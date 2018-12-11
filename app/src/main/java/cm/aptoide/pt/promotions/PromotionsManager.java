@@ -35,11 +35,11 @@ public class PromotionsManager {
     return promotionsService.claimPromotion(walletAddress, packageName, captcha);
   }
 
-  public void saveCaptchaUrl(String captchaUrl) {
-    promotionsService.saveCaptchaUrl(captchaUrl);
+  public void saveWalletAddress(String walletAddress) {
+    promotionsService.saveWalletAddress(walletAddress);
   }
 
-  public String getCaptchaUrl() {
-    return promotionsService.getCaptchaUrl();
+  public String getWalletAddress() {
+    return promotionsService.getWalletAddress();
   }
 }

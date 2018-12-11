@@ -1,6 +1,5 @@
 package cm.aptoide.pt.promotions;
 
-import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.presenter.Presenter;
 import java.util.List;
 import rx.Scheduler;
@@ -13,16 +12,14 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private Scheduler viewScheduler;
   private ClaimPromotionsManager claimPromotionsManager;
   private ClaimPromotionDialogView view;
-  private IdsRepository idsRepository;
 
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
-      ClaimPromotionsManager claimPromotionsManager, IdsRepository idsRepository) {
+      ClaimPromotionsManager claimPromotionsManager) {
     this.view = view;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;
     this.claimPromotionsManager = claimPromotionsManager;
-    this.idsRepository = idsRepository;
   }
 
   @Override public void present() {
@@ -30,6 +27,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     handleContinueClick();
     handleRefreshCaptcha();
     handleSubmitClick();
+    handleOnEditTextChanged();
+    handleDismissEvents();
   }
 
   public void dispose() {
@@ -51,10 +50,10 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           claimPromotionsManager.saveWalletAddress(address);
           view.showLoading();
         })
-        .map(__ -> idsRepository.getUniqueIdentifier())
-        .flatMapSingle(uid -> claimPromotionsManager.getCaptcha(uid))
+        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
         .observeOn(viewScheduler)
         .doOnNext(captcha -> {
+          claimPromotionsManager.saveCaptchaUrl(captcha);
           view.showCaptchaView(captcha);
         })
         .subscribe(__ -> {
@@ -66,8 +65,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private void handleRefreshCaptcha() {
     subscriptions.add(view.refreshCaptchaClick()
         .doOnNext(__ -> view.showLoadingCaptcha())
-        .map(__ -> idsRepository.getUniqueIdentifier())
-        .flatMapSingle(uid -> claimPromotionsManager.getCaptcha(uid))
+        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
         .observeOn(viewScheduler)
         .doOnNext(captcha -> view.hideLoadingCaptcha(captcha))
         .subscribe(__ -> {
@@ -78,10 +76,9 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   private void handleSubmitClick() {
     subscriptions.add(view.finishClick()
-        .doOnNext(submission -> view.showLoading())
-        .flatMapSingle(
-            submission -> claimPromotionsManager.claimPromotion(submission.getPackageName(),
-                submission.getCaptcha()))
+        .doOnNext(wrapper -> view.showLoading())
+        .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(),
+            wrapper.getCaptcha()))
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()
@@ -93,10 +90,29 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           }
         })
         .filter(error -> error.equals("captcha"))
-        .doOnNext(__ -> idsRepository.getUniqueIdentifier())
-        .flatMapSingle(uid -> claimPromotionsManager.getCaptcha(uid))
+        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
         .observeOn(viewScheduler)
         .doOnNext(captcha -> view.showInvalidCaptcha(captcha))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.showGenericError();
+        }));
+  }
+
+  private void handleOnEditTextChanged() {
+    subscriptions.add(view.editTextChanges()
+        .doOnNext(change -> {
+          view.handleEmptyEditText(change.editable());
+        })
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.showGenericError();
+        }));
+  }
+
+  private void handleDismissEvents() {
+    subscriptions.add(view.dismissClicks()
+        .doOnNext(__ -> view.dismissDialog())
         .subscribe(__ -> {
         }, throwable -> {
           view.showGenericError();
