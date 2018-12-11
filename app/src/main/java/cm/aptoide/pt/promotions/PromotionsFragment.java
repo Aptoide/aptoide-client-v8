@@ -236,6 +236,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         getString(R.string.holidayspromotion_message_1, String.valueOf(totalAppcValue)));
   }
 
+  @Override public void lockPromotionApps(boolean walletInstalled) {
+    promotionsAdapter.isWalletInstalled(walletInstalled);
+  }
+
   private void showWallet(PromotionViewApp promotionViewApp) {
     if (promotionViewApp.getDownloadModel()
         .isDownloading()) {
@@ -364,6 +368,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           promotionViewApp.getAppcValue()));
       if (getState(promotionViewApp) == CLAIMED) {
         // TODO: 12/7/18 set button disabled state
+        promotionsAdapter.isWalletInstalled(true);
+      } else if (getState(promotionViewApp) == CLAIM) {
+        promotionsAdapter.isWalletInstalled(true);
+        promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
       } else {
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,7 +13,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
 
-class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
+class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
 
   private final PublishSubject<PromotionAppClick> promotionAppClick;
   private TextView appName;
@@ -48,7 +49,7 @@ class PromotionAppDownloadingViewHolder extends GeneralPromotionAppsViewHolder {
     downloadControlsLayout = itemView.findViewById(R.id.install_controls_layout);
   }
 
-  @Override public void setApp(PromotionViewApp app) {
+  public void setApp(PromotionViewApp app) {
     setAppCardHeader(app);
     setDownloadState(app.getDownloadModel()
         .getProgress(), app);

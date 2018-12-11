@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
@@ -20,8 +21,8 @@ public class PromotionsViewHolderFactory {
     this.promotionAppClick = promotionAppClick;
   }
 
-  public GeneralPromotionAppsViewHolder createViewHolder(ViewGroup parent, int viewType) {
-    GeneralPromotionAppsViewHolder promotionAppViewHolder;
+  public RecyclerView.ViewHolder createViewHolder(ViewGroup parent, int viewType) {
+    RecyclerView.ViewHolder promotionAppViewHolder;
 
     switch (viewType) {
       case UPDATE:

@@ -123,6 +123,7 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(__ -> promotionsManager.getPromotionsModel())
         .doOnNext(
             promotionsModel -> view.showAppCoinsAmmount((promotionsModel.getTotalAppcValue())))
+        .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
         .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())
         .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
         .observeOn(viewScheduler)

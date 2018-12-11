@@ -406,7 +406,8 @@ import rx.schedulers.Schedulers;
       PreferencesManager preferencesManager) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
-        preferencesManager);
+        preferencesManager, fragment.getContext()
+        .getPackageManager());
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(

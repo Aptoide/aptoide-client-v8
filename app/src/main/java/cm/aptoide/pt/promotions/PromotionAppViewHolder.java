@@ -1,5 +1,7 @@
 package cm.aptoide.pt.promotions;
 
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,7 +18,7 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNLOAD;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.INSTALL;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 
-public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
+public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
 
   private final PublishSubject<PromotionAppClick> promotionAppClick;
   private int appState;
@@ -42,15 +44,45 @@ public class PromotionAppViewHolder extends GeneralPromotionAppsViewHolder {
     this.promotionAppClick = promotionAppClick;
   }
 
-  @Override public void setApp(PromotionViewApp app) {
+  public void setApp(PromotionViewApp app, boolean isWalletInstalled) {
     setAppCardHeader(app);
     promotionAction.setText(itemView.getContext()
         .getString(getButtonMessage(appState), app.getAppcValue()));
-    if (appState == CLAIMED) {
-      // TODO: 12/7/18 set button disabled state
+
+    if (!isWalletInstalled) {
+      lockButton(true);
     } else {
-      promotionAction.setOnClickListener(
-          __ -> promotionAppClick.onNext(new PromotionAppClick(app, getClickType(appState))));
+
+      if (appState == CLAIMED) {
+        // TODO: 12/7/18 set button disabled state
+      } else {
+        lockButton(false);
+        promotionAction.setOnClickListener(
+            __ -> promotionAppClick.onNext(new PromotionAppClick(app, getClickType(appState))));
+      }
+    }
+  }
+
+  private void lockButton(boolean lock) {
+    if (lock) {
+      promotionAction.setEnabled(false);
+      promotionAction.setBackgroundColor(itemView.getContext()
+          .getResources()
+          .getColor(R.color.grey_fog_light));
+    } else {
+      TypedValue resultValue = new TypedValue();
+      itemView.getContext()
+          .getTheme()
+          .resolveAttribute(R.attr.installButtonBackground, resultValue, true);
+
+      promotionAction.setEnabled(true);
+      if (resultValue.resourceId != 0) {
+        promotionAction.setBackgroundResource(resultValue.resourceId);
+      } else {
+        promotionAction.setBackgroundColor(itemView.getContext()
+            .getResources()
+            .getColor(R.color.orange));
+      }
     }
   }
 

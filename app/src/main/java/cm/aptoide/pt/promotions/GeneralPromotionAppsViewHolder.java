@@ -8,5 +8,5 @@ public abstract class GeneralPromotionAppsViewHolder extends RecyclerView.ViewHo
     super(itemView);
   }
 
-  public abstract void setApp(PromotionViewApp app);
+  public abstract void setApp(PromotionViewApp app, boolean isWalletInstalled);
 }

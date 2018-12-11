@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.app.DownloadModel;
 import java.util.List;
 
-public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionAppsViewHolder> {
+public class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
   static final int UPDATE = 0;
   static final int DOWNLOAD = 1;
@@ -17,6 +17,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionApps
 
   private List<PromotionViewApp> appsList;
   private PromotionsViewHolderFactory viewHolderFactory;
+  private boolean isWalletInstalled;
 
   public PromotionsAdapter(List<PromotionViewApp> appsList,
       PromotionsViewHolderFactory viewHolderFactory) {
@@ -24,13 +25,18 @@ public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionApps
     this.viewHolderFactory = viewHolderFactory;
   }
 
-  @Override
-  public GeneralPromotionAppsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return viewHolderFactory.createViewHolder(parent, viewType);
   }
 
-  @Override public void onBindViewHolder(GeneralPromotionAppsViewHolder holder, int position) {
-    holder.setApp(appsList.get(position));
+  @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    if (holder instanceof PromotionAppDownloadingViewHolder) {
+      ((PromotionAppDownloadingViewHolder) holder).setApp(appsList.get(position));
+    } else if (holder instanceof PromotionAppViewHolder) {
+      ((PromotionAppViewHolder) holder).setApp(appsList.get(position), isWalletInstalled);
+    } else {
+      throw new IllegalStateException("Invalid type of ViewHolder");
+    }
   }
 
   @Override public int getItemViewType(int position) {
@@ -78,5 +84,10 @@ public class PromotionsAdapter extends RecyclerView.Adapter<GeneralPromotionApps
       this.appsList.add(promotionViewApp);
       notifyDataSetChanged();
     }
+  }
+
+  public void isWalletInstalled(boolean isWalletInstalled) {
+    this.isWalletInstalled = isWalletInstalled;
+    notifyDataSetChanged();
   }
 }
