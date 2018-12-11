@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
@@ -125,6 +126,45 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         downloadAnalytics);
   }
 
+  @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
+      DownloadFactory downloadFactory, PermissionManager permissionManager,
+      InstallManager installManager, Resources resources, DownloadAnalytics downloadAnalytics,
+      @Named("autoUpdateUrl") String autoUpdateUrl, AutoUpdateViewModel autoUpdateViewModel,
+      AutoUpdateService autoUpdateService) {
+    return new AutoUpdateManager((ActivityView) activity, downloadFactory, permissionManager,
+        installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
+        downloadAnalytics, autoUpdateViewModel, autoUpdateService);
+  }
+
+  @ActivityScope @Provides AutoUpdateViewModel provideAutoUpdateViewModel(
+      @Named("packageName") String packageName, @Named("localVersionCode") int localVersionCode) {
+    return new AutoUpdateViewModel(packageName, localVersionCode);
+  }
+
+  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
+      AutoUpdateService.Service service) {
+    return new AutoUpdateService(service);
+  }
+
+  @ActivityScope @Provides AutoUpdateHandler provideAutoUpdateHandler(
+      @Named("packageName") String packageName, AutoUpdateViewModel autoUpdateViewModel) {
+    return new AutoUpdateHandler(packageName, new StringBuilder(), autoUpdateViewModel);
+  }
+
+  @ActivityScope @Provides @Named("packageName") String providePackageName() {
+    return activity.getPackageName();
+  }
+
+  @ActivityScope @Provides @Named("localVersionCode") int provideLocalVersionCode(
+      @Named("packageName") String packageName) {
+    try {
+      return activity.getPackageManager()
+          .getPackageInfo(packageName, 0).versionCode;
+    } catch (PackageManager.NameNotFoundException e) {
+      return -1;
+    }
+  }
+
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(
       Map<Integer, Result> fragmentResultMap,
       BehaviorRelay<Map<Integer, Result>> fragmentResultRelay, FragmentManager fragmentManager) {
@@ -162,14 +202,16 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       InstallManager installManager, @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager,
-      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager) {
+      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
+      AutoUpdateManager autoUpdateManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(activity),
         notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
-        AndroidSchedulers.mainThread(), bottomNavigationNavigator, updatesManager);
+        AndroidSchedulers.mainThread(), bottomNavigationNavigator, updatesManager,
+        autoUpdateManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(

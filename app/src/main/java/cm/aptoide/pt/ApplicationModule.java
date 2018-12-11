@@ -190,6 +190,7 @@ import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.AutoUpdateService;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
@@ -1093,6 +1094,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("retrofit-autoUpdate") Retrofit providesAutoUpdateRetrofit(
+      @Named("default") OkHttpClient httpClient, @Named("autoUpdateBaseHost") String baseHost,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("autoUpdateBaseHost") String providesAutoUpdateBaseHost() {
+    return "http://imgs.aptoide.com/";
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
@@ -1101,6 +1116,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides RetrofitAptoideBiService.ServiceV7 providesAptoideBiService(
       @Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
+  }
+
+  @Singleton @Provides AutoUpdateService.Service providesAutoUpdateService(
+      @Named("retrofit-autoUpdate") Retrofit retrofit) {
+    return retrofit.create(AutoUpdateService.Service.class);
   }
 
   @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(

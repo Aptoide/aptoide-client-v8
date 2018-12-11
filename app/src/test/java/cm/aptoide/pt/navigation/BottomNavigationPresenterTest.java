@@ -15,6 +15,7 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ApkFy;
+import cm.aptoide.pt.view.AutoUpdateManager;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Before;
@@ -48,6 +49,7 @@ public class BottomNavigationPresenterTest {
   @Mock private MainActivity mainView;
   @Mock private BottomNavigationNavigator bottomNavigationNavigator;
   @Mock private UpdatesManager updatesManager;
+  @Mock private AutoUpdateManager autoUpdateManager;
   private MainPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Integer> navigationEvent;
@@ -62,7 +64,7 @@ public class BottomNavigationPresenterTest {
         CrashReport.getInstance(), apkFy, autoUpdate, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(),
-        bottomNavigationNavigator, updatesManager);
+        bottomNavigationNavigator, updatesManager, autoUpdateManager);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);

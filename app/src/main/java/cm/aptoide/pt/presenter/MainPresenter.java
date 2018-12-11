@@ -22,6 +22,7 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.util.ApkFy;
+import cm.aptoide.pt.view.AutoUpdateManager;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
@@ -49,6 +50,7 @@ public class MainPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final UpdatesManager updatesManager;
+  private final AutoUpdateManager autoUpdateManager;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -58,7 +60,8 @@ public class MainPresenter implements Presenter {
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, boolean firstCreated,
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler,
-      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager) {
+      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
+      AutoUpdateManager autoUpdateManager) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -77,6 +80,7 @@ public class MainPresenter implements Presenter {
     this.viewScheduler = viewScheduler;
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.updatesManager = updatesManager;
+    this.autoUpdateManager = autoUpdateManager;
   }
 
   @Override public void present() {
