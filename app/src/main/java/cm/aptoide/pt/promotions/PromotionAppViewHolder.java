@@ -54,7 +54,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
     } else {
 
       if (appState == CLAIMED) {
-        // TODO: 12/7/18 set button disabled state
+        lockButton(true);
       } else {
         lockButton(false);
         promotionAction.setOnClickListener(

@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -367,9 +368,24 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       promotionAction.setText(getContext().getString(getButtonMessage(getState(promotionViewApp)),
           promotionViewApp.getAppcValue()));
       if (getState(promotionViewApp) == CLAIMED) {
-        // TODO: 12/7/18 set button disabled state
+        promotionAction.setEnabled(false);
+        promotionAction.setBackgroundColor(getContext().getResources()
+            .getColor(R.color.grey_fog_light));
+
         promotionsAdapter.isWalletInstalled(true);
       } else {
+
+        promotionAction.setEnabled(true);
+        TypedValue resultValue = new TypedValue();
+        getContext().getTheme()
+            .resolveAttribute(R.attr.installButtonBackground, resultValue, true);
+        if (resultValue.resourceId != 0) {
+          promotionAction.setBackgroundResource(resultValue.resourceId);
+        } else {
+          promotionAction.setBackgroundColor(getContext().getResources()
+              .getColor(R.color.orange));
+        }
+
         if (getState(promotionViewApp) == CLAIM) {
           promotionsAdapter.isWalletInstalled(true);
         }
