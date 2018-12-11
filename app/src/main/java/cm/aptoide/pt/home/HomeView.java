@@ -9,6 +9,8 @@ import rx.Observable;
 
 public interface HomeView extends BundleView {
 
+  Observable<Void> promotionsDialogContinueClicked();
+
   Observable<AppHomeEvent> recommendedAppClicked();
 
   Observable<EditorialHomeEvent> editorialCardClicked();
@@ -34,4 +36,8 @@ public interface HomeView extends BundleView {
   void showTermsAndConditionsDialog();
 
   Observable<Void> promotionsClick();
+
+  void showPromotionsHomeDialog();
+
+  void showPromotionsHomeIcon(HomePromotionsWrapper apps);
 }

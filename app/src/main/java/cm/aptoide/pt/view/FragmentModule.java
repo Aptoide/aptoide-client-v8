@@ -220,8 +220,9 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, AdsManager adsManager) {
-    return new Home(bundlesRepository, impressionManager, adsManager);
+      ImpressionManager impressionManager, AdsManager adsManager,
+      PromotionsManager promotionsManager) {
+    return new Home(bundlesRepository, impressionManager, adsManager, promotionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(

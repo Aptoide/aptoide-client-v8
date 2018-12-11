@@ -30,14 +30,29 @@
 
       <ImageView
           android:id="@+id/promotions_button"
-          android:layout_width="30dp"
-          android:layout_height="30dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
           android:layout_alignParentLeft="true"
           android:layout_alignParentStart="true"
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
           android:layout_gravity="center"
-          android:src="@color/colorPrimary"
+          android:src="@drawable/ic_promotions_home"
+          />
+
+      <TextView
+          android:id="@+id/promotions_ticker"
+          android:layout_width="wrap_content"
+          android:layout_height="16dp"
+          android:layout_marginLeft="26dp"
+          android:layout_marginStart="26dp"
+          android:layout_marginTop="12dp"
+          android:background="@drawable/updates_badge_circle"
+          android:gravity="center"
+          android:textColor="@color/white"
+          android:textStyle="bold"
+          tools:text="9+"
+          style="@style/Aptoide.TextView.Medium.XXS"
           />
 
       <ImageView

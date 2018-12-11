@@ -6,13 +6,16 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -48,6 +51,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
   private PublishSubject<AdHomeEvent> adClickedEvents;
+  private PublishSubject<Void> promotionsDialogClickEvent;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericErrorView;
@@ -59,6 +63,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private View retryButton;
   private ImageView userAvatar;
   private ImageView promotionsButton;
+  private TextView promotionsTicker;
   private BottomNavigationActivity bottomNavigationActivity;
   private LoggedInTermsAndConditionsDialog gdprDialog;
 
@@ -73,6 +78,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     uiEventsListener = null;
     oneDecimalFormatter = null;
     adClickedEvents = null;
+    promotionsDialogClickEvent = null;
     userAvatar = null;
     super.onDestroy();
   }
@@ -83,6 +89,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
+    promotionsDialogClickEvent = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
@@ -114,6 +121,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     bundlesList.setAdapter(adapter);
     gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
     promotionsButton = view.findViewById(R.id.promotions_button);
+    promotionsTicker = view.findViewById(R.id.promotions_ticker);
     attachPresenter(presenter);
   }
 
@@ -272,6 +280,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
 
+  @Override public Observable<Void> promotionsDialogContinueClicked() {
+    return promotionsDialogClickEvent;
+  }
+
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
@@ -337,6 +349,36 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<Void> promotionsClick() {
     return RxView.clicks(promotionsButton);
+  }
+
+  @Override public void showPromotionsHomeDialog() {
+    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+    // ...Irrelevant code for customizing the buttons and title
+    LayoutInflater inflater = this.getLayoutInflater();
+    View dialogView = inflater.inflate(R.layout.promotions_home_dialog, null);
+    dialogBuilder.setView(dialogView);
+
+    AlertDialog alertDialog = dialogBuilder.create();
+    Button cancel = dialogView.findViewById(R.id.cancel_button);
+    Button navigate = dialogView.findViewById(R.id.navigate_button);
+    cancel.setOnClickListener(click -> alertDialog.dismiss());
+    navigate.setOnClickListener(click -> {
+      promotionsDialogClickEvent.onNext(null);
+      alertDialog.dismiss();
+    });
+    alertDialog.show();
+  }
+
+  @Override public void showPromotionsHomeIcon(HomePromotionsWrapper homeWrapper) {
+    promotionsButton.setVisibility(View.VISIBLE);
+    if (homeWrapper.getPromotions() > 0) {
+      if (homeWrapper.getPromotions() < 10) {
+        promotionsTicker.setText(Integer.toString(homeWrapper.getPromotions()));
+      } else {
+        promotionsTicker.setText("9+");
+      }
+      promotionsTicker.setVisibility(View.VISIBLE);
+    }
   }
 
   private boolean isEndReached() {

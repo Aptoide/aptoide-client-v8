@@ -90,6 +90,10 @@ public class HomePresenter implements Presenter {
     handleEditorialCardClick();
 
     handlePromotionsClick();
+
+    checkForPromotionApps();
+
+    handleClickOnPromotionsDialogContinue();
   }
 
   private void handlePromotionsClick() {
@@ -526,6 +530,35 @@ public class HomePresenter implements Presenter {
         .flatMap(__ -> view.gdprDialogClicked())
         .filter(action -> action.equals("privacy"))
         .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void checkForPromotionApps() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(__ -> home.hasPromotionApps())
+        .filter(HomePromotionsWrapper::hasPromotions)
+        .observeOn(viewScheduler)
+        .doOnNext(apps -> {
+          view.showPromotionsHomeIcon(apps);
+          view.showPromotionsHomeDialog();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void handleClickOnPromotionsDialogContinue() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.promotionsDialogContinueClicked())
+        .doOnNext(__ -> homeNavigator.navigateToPromotions())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {

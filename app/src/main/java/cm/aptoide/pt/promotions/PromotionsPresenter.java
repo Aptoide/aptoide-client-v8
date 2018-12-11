@@ -22,7 +22,7 @@ public class PromotionsPresenter implements Presenter {
 
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> promotionsManager.getPromotionApps())
+        .flatMapSingle(__ -> promotionsManager.getPromotionApps())
         .doOnNext(appsList -> view.showPromotionApps(appsList))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
