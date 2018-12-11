@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.view.Window;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -237,6 +239,102 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .isDownloading()) {
       walletActiveView.setVisibility(View.VISIBLE);
       walletInactiveView.setVisibility(View.GONE);
+      ImageView appIcon = walletActiveView.findViewById(R.id.app_icon);
+      TextView appName = walletActiveView.findViewById(R.id.app_name);
+      TextView appDescription = walletActiveView.findViewById(R.id.app_description);
+      TextView numberOfDownloads = walletActiveView.findViewById(R.id.number_of_downloads);
+      TextView appSize = walletActiveView.findViewById(R.id.app_size);
+      TextView rating = walletActiveView.findViewById(R.id.rating);
+      ProgressBar downloadProgressBar =
+          walletActiveView.findViewById(R.id.promotions_download_progress_bar);
+      TextView downloadProgressValue =
+          walletActiveView.findViewById(R.id.promotions_download_progress_number);
+      ImageView pauseDownload =
+          walletActiveView.findViewById(R.id.promotions_download_pause_download);
+      ImageView cancelDownload =
+          walletActiveView.findViewById(R.id.promotions_download_cancel_button);
+      ImageView resumeDownload =
+          walletActiveView.findViewById(R.id.promotions_download_resume_download);
+      LinearLayout downloadControlsLayout =
+          walletActiveView.findViewById(R.id.install_controls_layout);
+      ImageLoader.with(getContext())
+          .load(promotionViewApp.getAppIcon(), appIcon);
+      appName.setText(promotionViewApp.getName());
+      appDescription.setText(promotionViewApp.getDescription());
+      appSize.setText(AptoideUtils.StringU.formatBytes(promotionViewApp.getSize(), false));
+      DownloadModel.DownloadState downloadState = promotionViewApp.getDownloadModel()
+          .getDownloadState();
+
+      LinearLayout.LayoutParams pauseShowing =
+          new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+              LinearLayout.LayoutParams.MATCH_PARENT, 4f);
+      LinearLayout.LayoutParams pauseHidden =
+          new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+              LinearLayout.LayoutParams.MATCH_PARENT, 2f);
+      switch (downloadState) {
+        case ACTIVE:
+          downloadProgressBar.setIndeterminate(false);
+          downloadProgressBar.setProgress(promotionViewApp.getDownloadModel()
+              .getProgress());
+          downloadProgressValue.setText(String.valueOf(promotionViewApp.getDownloadModel()
+              .getProgress()) + "%");
+          pauseDownload.setVisibility(View.VISIBLE);
+          pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+              new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
+          cancelDownload.setVisibility(View.GONE);
+          resumeDownload.setVisibility(View.GONE);
+          downloadControlsLayout.setLayoutParams(pauseShowing);
+          break;
+        case INDETERMINATE:
+          downloadProgressBar.setIndeterminate(true);
+          pauseDownload.setVisibility(View.VISIBLE);
+          pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+              new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
+          cancelDownload.setVisibility(View.GONE);
+          resumeDownload.setVisibility(View.GONE);
+          downloadControlsLayout.setLayoutParams(pauseShowing);
+          break;
+        case PAUSE:
+          downloadProgressBar.setIndeterminate(false);
+          downloadProgressBar.setProgress(promotionViewApp.getDownloadModel()
+              .getProgress());
+          downloadProgressValue.setText(String.valueOf(promotionViewApp.getDownloadModel()
+              .getProgress()) + "%");
+          pauseDownload.setVisibility(View.GONE);
+          cancelDownload.setVisibility(View.VISIBLE);
+          cancelDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+              new PromotionAppClick(promotionViewApp,
+                  PromotionAppClick.ClickType.CANCEL_DOWNLOAD)));
+          resumeDownload.setVisibility(View.VISIBLE);
+          resumeDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+              new PromotionAppClick(promotionViewApp,
+                  PromotionAppClick.ClickType.RESUME_DOWNLOAD)));
+          downloadControlsLayout.setLayoutParams(pauseHidden);
+          break;
+        case COMPLETE:
+          downloadProgressBar.setIndeterminate(true);
+          pauseDownload.setVisibility(View.VISIBLE);
+          pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+              new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
+          cancelDownload.setVisibility(View.GONE);
+          resumeDownload.setVisibility(View.GONE);
+          downloadControlsLayout.setLayoutParams(pauseShowing);
+          break;
+        case ERROR:
+          //showErrorDialog("", getContext().getString(R.string.error_occured));
+          break;
+        case NOT_ENOUGH_STORAGE_ERROR:
+          //showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+          //getContext().getString(R.string.out_of_space_dialog_message));
+          break;
+      }
+
+      if (promotionViewApp.getRating() == 0) {
+        rating.setText(R.string.appcardview_title_no_stars);
+      } else {
+        rating.setText(new DecimalFormat("0.0").format(promotionViewApp.getRating()));
+      }
+      numberOfDownloads.setText(String.valueOf(promotionViewApp.getNumberOfDownloads()));
     } else {
       walletActiveView.setVisibility(View.GONE);
       walletInactiveView.setVisibility(View.VISIBLE);
