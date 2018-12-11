@@ -369,11 +369,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       if (getState(promotionViewApp) == CLAIMED) {
         // TODO: 12/7/18 set button disabled state
         promotionsAdapter.isWalletInstalled(true);
-      } else if (getState(promotionViewApp) == CLAIM) {
-        promotionsAdapter.isWalletInstalled(true);
-        promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
-            new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
       } else {
+        if (getState(promotionViewApp) == CLAIM) {
+          promotionsAdapter.isWalletInstalled(true);
+        }
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
       }
