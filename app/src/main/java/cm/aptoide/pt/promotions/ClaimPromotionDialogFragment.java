@@ -46,9 +46,11 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   private static final String CLAIMED = "claimed";
   private static final String SUCCESS = "success";
   private static final String GENERIC_ERROR = "error";
+  private static final String PACKAGE_NAME = "package_name";
 
   @Inject ClaimPromotionsManager claimPromotionsManager;
   @Inject IdsRepository idsRepository;
+  @Inject PromotionsAnalytics promotionsAnalytics;
   private ClipboardManager clipboard;
   private ClaimPromotionDialogPresenter presenter;
   private ProgressBar loading;
@@ -78,7 +80,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   public static ClaimPromotionDialogFragment newInstance(String packageName) {
     Bundle args = new Bundle();
     ClaimPromotionDialogFragment fragment = new ClaimPromotionDialogFragment();
-    args.putString("package_name", packageName);
+    args.putString(PACKAGE_NAME, packageName);
     fragment.setArguments(args);
     return fragment;
   }
@@ -174,7 +176,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     genericErrorView = view.findViewById(R.id.generic_error);
 
     presenter = new ClaimPromotionDialogPresenter(this, new CompositeSubscription(),
-        AndroidSchedulers.mainThread(), claimPromotionsManager);
+        AndroidSchedulers.mainThread(), claimPromotionsManager, promotionsAnalytics);
     presenter.present();
     handleRestoreViewState(savedInstanceState);
   }
@@ -202,24 +204,26 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     super.onDestroy();
   }
 
-  @Override public Observable<Void> getWalletClick() {
-    return RxView.clicks(getWalletAddressButton);
+  @Override public Observable<String> getWalletClick() {
+    return RxView.clicks(getWalletAddressButton)
+        .map(__ -> getArguments().getString(PACKAGE_NAME));
   }
 
-  @Override public Observable<String> continueWalletClick() {
+  @Override public Observable<ClaimPromotionsClickWrapper> continueWalletClick() {
     return RxView.clicks(walletNextButton)
-        .map(__ -> walletAddressEdit.getText()
-            .toString());
+        .map(__ -> new ClaimPromotionsClickWrapper(walletAddressEdit.getText()
+            .toString(), getArguments().getString(PACKAGE_NAME)));
   }
 
   @Override public Observable<ClaimPromotionsSubmitWrapper> finishClick() {
     return RxView.clicks(captchaNextButton)
         .map(__ -> new ClaimPromotionsSubmitWrapper(captchaEdit.getText()
-            .toString(), getArguments().getString("package_name")));
+            .toString(), getArguments().getString(PACKAGE_NAME)));
   }
 
-  @Override public Observable<Void> refreshCaptchaClick() {
-    return RxView.clicks(refreshCaptchaButton);
+  @Override public Observable<String> refreshCaptchaClick() {
+    return RxView.clicks(refreshCaptchaButton)
+        .map(__ -> getArguments().getString(PACKAGE_NAME));
   }
 
   @Override public void showLoadingCaptcha() {
@@ -313,8 +317,18 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   }
 
   @Override public Observable<Void> dismissClicks() {
-    return Observable.merge(RxView.clicks(walletCancelButton), RxView.clicks(captchaCancelButton),
-        RxView.clicks(genericMessageButton), RxView.clicks(genericErrorOkButton));
+    return Observable.merge(RxView.clicks(genericMessageButton),
+        RxView.clicks(genericErrorOkButton));
+  }
+
+  @Override public Observable<String> walletCancelClick() {
+    return RxView.clicks(walletCancelButton)
+        .map(__ -> getArguments().getString(PACKAGE_NAME));
+  }
+
+  @Override public Observable<String> captchaCancelClick() {
+    return RxView.clicks(captchaCancelButton)
+        .map(__ -> getArguments().getString(PACKAGE_NAME));
   }
 
   @Override public void dismissDialog() {

@@ -6,13 +6,13 @@ import rx.Observable;
 
 public interface ClaimPromotionDialogView {
 
-  Observable<Void> getWalletClick();
+  Observable<String> getWalletClick();
 
-  Observable<String> continueWalletClick();
+  Observable<ClaimPromotionsClickWrapper> continueWalletClick();
 
   Observable<ClaimPromotionsSubmitWrapper> finishClick();
 
-  Observable<Void> refreshCaptchaClick();
+  Observable<String> refreshCaptchaClick();
 
   void showLoadingCaptcha();
 
@@ -39,6 +39,10 @@ public interface ClaimPromotionDialogView {
   void handleEmptyEditText(Editable s);
 
   Observable<Void> dismissClicks();
+
+  Observable<String> walletCancelClick();
+
+  Observable<String> captchaCancelClick();
 
   void dismissDialog();
 }
