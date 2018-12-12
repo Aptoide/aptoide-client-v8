@@ -306,12 +306,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
       DownloadFactory downloadFactory, PermissionManager permissionManager,
-      InstallManager installManager, Resources resources, DownloadAnalytics downloadAnalytics,
-      @Named("autoUpdateUrl") String autoUpdateUrl, @Named("localVersionCode") int localVersionCode,
-      AutoUpdateService autoUpdateService) {
-    return new AutoUpdateManager((ActivityView) activity, downloadFactory, permissionManager,
-        installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
-        downloadAnalytics, localVersionCode, autoUpdateService);
+      InstallManager installManager, DownloadAnalytics downloadAnalytics,
+      @Named("localVersionCode") int localVersionCode, AutoUpdateService autoUpdateService) {
+    return new AutoUpdateManager(downloadFactory, permissionManager, installManager, false,
+        marketName, downloadAnalytics, localVersionCode, autoUpdateService);
   }
 
   @ActivityScope @Provides @Named("packageName") String providePackageName() {
