@@ -21,14 +21,12 @@ public class AutoUpdateManager {
   private final boolean alwaysUpdate;
   private final String marketName;
   private final DownloadAnalytics downloadAnalytics;
-  private final AutoUpdateViewModel autoUpdateViewModel;
   private final AutoUpdateService autoUpdateService;
 
   public AutoUpdateManager(ActivityView activity, DownloadFactory downloadFactory,
       PermissionManager permissionManager, InstallManager installManager, Resources resources,
       String autoUpdateUrl, @DrawableRes int updateDialogIcon, boolean alwaysUpdate,
-      String marketName, DownloadAnalytics downloadAnalytics,
-      AutoUpdateViewModel autoUpdateViewModel, AutoUpdateService autoUpdateService) {
+      String marketName, DownloadAnalytics downloadAnalytics, AutoUpdateService autoUpdateService) {
     this.activity = activity;
     this.downloadFactory = downloadFactory;
     this.permissionManager = permissionManager;
@@ -39,11 +37,10 @@ public class AutoUpdateManager {
     this.alwaysUpdate = alwaysUpdate;
     this.marketName = marketName;
     this.downloadAnalytics = downloadAnalytics;
-    this.autoUpdateViewModel = autoUpdateViewModel;
     this.autoUpdateService = autoUpdateService;
   }
 
-  public Single<AutoUpdateModel> getAutoUpdateModel() {
+  public Single<AutoUpdateViewModel> getAutoUpdateModel() {
     return autoUpdateService.loadAutoUpdateModel();
   }
 }

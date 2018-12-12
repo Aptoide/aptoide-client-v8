@@ -29,10 +29,8 @@ import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.EditorialNavigator;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
-import cm.aptoide.pt.autoupdate.AutoUpdateHandler;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
-import cm.aptoide.pt.autoupdate.AutoUpdateViewModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -311,16 +309,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
       DownloadFactory downloadFactory, PermissionManager permissionManager,
       InstallManager installManager, Resources resources, DownloadAnalytics downloadAnalytics,
-      @Named("autoUpdateUrl") String autoUpdateUrl, AutoUpdateViewModel autoUpdateViewModel,
-      AutoUpdateService autoUpdateService) {
+      @Named("autoUpdateUrl") String autoUpdateUrl, AutoUpdateService autoUpdateService) {
     return new AutoUpdateManager((ActivityView) activity, downloadFactory, permissionManager,
         installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
-        downloadAnalytics, autoUpdateViewModel, autoUpdateService);
-  }
-
-  @ActivityScope @Provides AutoUpdateViewModel provideAutoUpdateViewModel(
-      @Named("packageName") String packageName, @Named("localVersionCode") int localVersionCode) {
-    return new AutoUpdateViewModel(packageName, localVersionCode);
+        downloadAnalytics, autoUpdateService);
   }
 
   @ActivityScope @Provides @Named("retrofit-autoUpdate") Retrofit providesAutoUpdateRetrofit(
@@ -335,11 +327,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides @Named("autoUpdateBaseHost") String providesAutoUpdateBaseHost() {
     return "http://imgs.aptoide.com/";
-  }
-
-  @ActivityScope @Provides AutoUpdateHandler provideAutoUpdateHandler(
-      @Named("packageName") String packageName, AutoUpdateViewModel autoUpdateViewModel) {
-    return new AutoUpdateHandler(packageName, new StringBuilder(), autoUpdateViewModel);
   }
 
   @ActivityScope @Provides @Named("packageName") String providePackageName() {
