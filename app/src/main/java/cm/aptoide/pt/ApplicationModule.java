@@ -1578,4 +1578,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides MyAccountManager providesMyAccountManager() {
     return new MyAccountManager();
   }
+
+  @Singleton @Provides @Named("retrofit-autoUpdate") Retrofit providesAutoUpdateRetrofit(
+      @Named("default") OkHttpClient httpClient, @Named("autoUpdateBaseHost") String baseHost,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("autoUpdateBaseHost") String providesAutoUpdateBaseHost() {
+    return "http://imgs.aptoide.com/";
+  }
 }

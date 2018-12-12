@@ -2,7 +2,6 @@ package cm.aptoide.pt.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
@@ -82,9 +81,7 @@ import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
-import retrofit2.CallAdapter;
 import retrofit2.Converter;
-import retrofit2.Retrofit;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
@@ -313,33 +310,5 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new AutoUpdateManager((ActivityView) activity, downloadFactory, permissionManager,
         installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
         downloadAnalytics, autoUpdateService);
-  }
-
-  @ActivityScope @Provides @Named("retrofit-autoUpdate") Retrofit providesAutoUpdateRetrofit(
-      @Named("default") OkHttpClient httpClient, @Named("autoUpdateBaseHost") String baseHost,
-      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
-    return new Retrofit.Builder().baseUrl(baseHost)
-        .client(httpClient)
-        .addCallAdapterFactory(rxCallAdapterFactory)
-        .addConverterFactory(converterFactory)
-        .build();
-  }
-
-  @ActivityScope @Provides @Named("autoUpdateBaseHost") String providesAutoUpdateBaseHost() {
-    return "http://imgs.aptoide.com/";
-  }
-
-  @ActivityScope @Provides @Named("packageName") String providePackageName() {
-    return activity.getPackageName();
-  }
-
-  @ActivityScope @Provides @Named("localVersionCode") int provideLocalVersionCode(
-      @Named("packageName") String packageName) {
-    try {
-      return activity.getPackageManager()
-          .getPackageInfo(packageName, 0).versionCode;
-    } catch (PackageManager.NameNotFoundException e) {
-      return -1;
-    }
   }
 }
