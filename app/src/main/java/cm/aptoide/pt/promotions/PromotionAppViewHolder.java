@@ -50,11 +50,11 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
         .getString(getButtonMessage(appState), app.getAppcValue()));
 
     if (!isWalletInstalled) {
-      lockButton(true);
+      lockInstallButton(true);
     } else {
 
       if (appState == CLAIMED) {
-        lockButton(true);
+        lockInstallButton(true);
       } else if (appState == CLAIM) {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundColor(itemView.getContext()
@@ -63,14 +63,14 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
         promotionAction.setOnClickListener(
             __ -> promotionAppClick.onNext(new PromotionAppClick(app, getClickType(appState))));
       } else {
-        lockButton(false);
+        lockInstallButton(false);
         promotionAction.setOnClickListener(
             __ -> promotionAppClick.onNext(new PromotionAppClick(app, getClickType(appState))));
       }
     }
   }
 
-  private void lockButton(boolean lock) {
+  private void lockInstallButton(boolean lock) {
     if (lock) {
       promotionAction.setEnabled(false);
       promotionAction.setBackgroundColor(itemView.getContext()
