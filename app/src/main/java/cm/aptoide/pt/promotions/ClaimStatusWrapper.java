@@ -22,10 +22,10 @@ public class ClaimStatusWrapper {
   }
 
   public enum Status {
-    ok, fail
+    OK, FAIL
   }
 
   public enum Error {
-    promotionClaimed, wrongAddress, wrongCaptcha, generic
+    PROMOTION_CLAIMED, WRONG_ADDRESS, WRONG_CAPTCHA, GENERIC
   }
 }

@@ -61,9 +61,9 @@ public class PromotionsService {
 
   private ClaimStatusWrapper.Status mapStatus(BaseV7Response.Info.Status status) {
     if (status.equals(BaseV7Response.Info.Status.OK)) {
-      return ClaimStatusWrapper.Status.ok;
+      return ClaimStatusWrapper.Status.OK;
     } else {
-      return ClaimStatusWrapper.Status.fail;
+      return ClaimStatusWrapper.Status.FAIL;
     }
   }
 
@@ -81,15 +81,15 @@ public class PromotionsService {
       for (BaseV7Response.Error error : errors) {
         if (error.getCode()
             .equals(WRONG_CAPTCHA)) {
-          result.add(ClaimStatusWrapper.Error.wrongCaptcha);
+          result.add(ClaimStatusWrapper.Error.WRONG_CAPTCHA);
         } else if (error.getCode()
             .equals(WRONG_ADDRESS)) {
-          result.add(ClaimStatusWrapper.Error.wrongAddress);
+          result.add(ClaimStatusWrapper.Error.WRONG_ADDRESS);
         } else if (error.getCode()
             .equals(ALREADY_CLAIMED)) {
-          result.add(ClaimStatusWrapper.Error.promotionClaimed);
+          result.add(ClaimStatusWrapper.Error.PROMOTION_CLAIMED);
         } else {
-          result.add(ClaimStatusWrapper.Error.generic);
+          result.add(ClaimStatusWrapper.Error.GENERIC);
         }
       }
     }

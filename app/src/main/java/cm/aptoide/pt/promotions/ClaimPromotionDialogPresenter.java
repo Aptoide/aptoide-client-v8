@@ -82,7 +82,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()
-              .equals(ClaimStatusWrapper.Status.ok)) {
+              .equals(ClaimStatusWrapper.Status.OK)) {
             view.showClaimSuccess();
             return Single.just("success");
           } else {
@@ -120,11 +120,11 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   }
 
   private String handleErrors(List<ClaimStatusWrapper.Error> errors) {
-    if (errors.contains(ClaimStatusWrapper.Error.promotionClaimed)) {
+    if (errors.contains(ClaimStatusWrapper.Error.PROMOTION_CLAIMED)) {
       view.showPromotionAlreadyClaimed();
-    } else if (errors.contains(ClaimStatusWrapper.Error.wrongAddress)) {
+    } else if (errors.contains(ClaimStatusWrapper.Error.WRONG_ADDRESS)) {
       view.showInvalidWalletAddress();
-    } else if (errors.contains(ClaimStatusWrapper.Error.wrongCaptcha)) {
+    } else if (errors.contains(ClaimStatusWrapper.Error.WRONG_CAPTCHA)) {
       return "captcha";
     } else {
       view.showGenericError();

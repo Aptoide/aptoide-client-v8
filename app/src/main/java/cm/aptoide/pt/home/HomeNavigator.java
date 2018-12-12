@@ -110,6 +110,6 @@ public class HomeNavigator {
 
   public void navigateToPromotions() {
     fragmentNavigator.navigateToDialogFragment(
-        ClaimPromotionDialogFragment.newInstance("this.is.package"), TAG);
+        ClaimPromotionDialogFragment.newInstance("this.is.package"));
   }
 }

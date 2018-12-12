@@ -266,7 +266,6 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   @Override public void showInvalidWalletAddress() {
     loading.setVisibility(View.GONE);
     showWalletView();
-    //clipboard.setPrimaryClip(ClipData.newPlainText("", ""));
     walletAddressEdit.setText("");
     walletMessageIcon.setVisibility(View.GONE);
     walletErrorView.setVisibility(View.VISIBLE);

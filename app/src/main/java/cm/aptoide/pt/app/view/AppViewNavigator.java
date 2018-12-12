@@ -109,7 +109,7 @@ public class AppViewNavigator {
   public void navigateToDonationsDialog(String packageName, String tag) {
     boolean hasWallet = hasWallet();
     fragmentNavigator.navigateToDialogFragment(
-        DonateDialogFragment.newInstance(packageName, hasWallet), tag);
+        DonateDialogFragment.newInstance(packageName, hasWallet));
   }
 
   private boolean hasWallet() {
