@@ -12,14 +12,16 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private Scheduler viewScheduler;
   private ClaimPromotionsManager claimPromotionsManager;
   private ClaimPromotionDialogView view;
+  private PromotionsAnalytics promotionsAnalytics;
 
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
-      ClaimPromotionsManager claimPromotionsManager) {
+      ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics) {
     this.view = view;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;
     this.claimPromotionsManager = claimPromotionsManager;
+    this.promotionsAnalytics = promotionsAnalytics;
   }
 
   @Override public void present() {
@@ -29,6 +31,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     handleSubmitClick();
     handleOnEditTextChanged();
     handleDismissEvents();
+    handleWalletCancelClick();
+    handleCaptchaCancelClick();
   }
 
   public void dispose() {
@@ -37,7 +41,10 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   private void handleFindAddressClick() {
     subscriptions.add(view.getWalletClick()
-        .doOnNext(__ -> view.sendWalletIntent())
+        .doOnNext(packageName -> {
+          promotionsAnalytics.sendClickOnWalletDialogFindWallet(packageName);
+          view.sendWalletIntent();
+        })
         .subscribe(__ -> {
         }, throwable -> {
           view.showGenericError();
@@ -46,8 +53,9 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   private void handleContinueClick() {
     subscriptions.add(view.continueWalletClick()
-        .doOnNext(address -> {
-          claimPromotionsManager.saveWalletAddress(address);
+        .doOnNext(wrapper -> {
+          promotionsAnalytics.sendClickOnWalletDialogNext(wrapper.getPackageName());
+          claimPromotionsManager.saveWalletAddress(wrapper.getWalletAddress());
           view.showLoading();
         })
         .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
@@ -76,7 +84,10 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   private void handleSubmitClick() {
     subscriptions.add(view.finishClick()
-        .doOnNext(wrapper -> view.showLoading())
+        .doOnNext(wrapper -> {
+          promotionsAnalytics.sendClickOnCaptchaDialogClaim(wrapper.getPackageName());
+          view.showLoading();
+        })
         .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(),
             wrapper.getCaptcha()))
         .observeOn(viewScheduler)
@@ -113,6 +124,30 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private void handleDismissEvents() {
     subscriptions.add(view.dismissClicks()
         .doOnNext(__ -> view.dismissDialog())
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.showGenericError();
+        }));
+  }
+
+  private void handleWalletCancelClick() {
+    subscriptions.add(view.walletCancelClick()
+        .doOnNext(packageName -> {
+          promotionsAnalytics.sendClickOnWalletDialogCancel(packageName);
+          view.dismissDialog();
+        })
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.showGenericError();
+        }));
+  }
+
+  private void handleCaptchaCancelClick() {
+    subscriptions.add(view.captchaCancelClick()
+        .doOnNext(packageName -> {
+          promotionsAnalytics.sendClickOnCaptchaDialogCancel(packageName);
+          view.dismissDialog();
+        })
         .subscribe(__ -> {
         }, throwable -> {
           view.showGenericError();

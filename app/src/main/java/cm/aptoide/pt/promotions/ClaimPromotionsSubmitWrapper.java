@@ -1,16 +1,11 @@
 package cm.aptoide.pt.promotions;
 
-public class ClaimPromotionsSubmitWrapper {
-  private String packageName;
+public class ClaimPromotionsSubmitWrapper extends ClaimPromotionsWrapper {
   private String captcha;
 
-  public ClaimPromotionsSubmitWrapper(String packageName, String captcha) {
-    this.packageName = packageName;
+  public ClaimPromotionsSubmitWrapper(String captcha, String packageName) {
+    super(packageName);
     this.captcha = captcha;
-  }
-
-  public String getPackageName() {
-    return packageName;
   }
 
   public String getCaptcha() {

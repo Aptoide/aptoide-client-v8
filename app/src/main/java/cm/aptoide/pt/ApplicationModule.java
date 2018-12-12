@@ -163,6 +163,7 @@ import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.promotions.CaptchaService;
+import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsService;
 import cm.aptoide.pt.repository.DownloadRepository;
@@ -1599,7 +1600,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
         NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
         DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
-        EditorialAnalytics.CURATION_CARD_INSTALL);
+        EditorialAnalytics.CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
