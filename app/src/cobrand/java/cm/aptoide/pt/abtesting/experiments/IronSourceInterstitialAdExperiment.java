@@ -8,21 +8,13 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 
+/**
+ * Dummy class
+ */
 public class IronSourceInterstitialAdExperiment {
-
-  private final String EXPERIMENT_ID = "ASV-1187-IronSource-Video-Interstitial2";
-
-  private ABTestManager abTestManager;
-  private Scheduler scheduler;
-  private IronSourceAdRepository ironSourceAdRepository;
-  private IronSourceAnalytics ironSourceAnalytics;
 
   public IronSourceInterstitialAdExperiment(ABTestManager abTestManager, Scheduler scheduler,
       IronSourceAdRepository ironSourceAdRepository, IronSourceAnalytics ironSourceAnalytics) {
-    this.abTestManager = abTestManager;
-    this.scheduler = scheduler;
-    this.ironSourceAdRepository = ironSourceAdRepository;
-    this.ironSourceAnalytics = ironSourceAnalytics;
   }
 
   public Observable<Experiment> loadInterstitial() {
@@ -34,10 +26,10 @@ public class IronSourceInterstitialAdExperiment {
   }
 
   public Observable<Boolean> recordAdImpression() {
-    return abTestManager.recordImpression(EXPERIMENT_ID);
+    return Observable.just(false);
   }
 
   public Observable<Boolean> recordAdClick() {
-    return abTestManager.recordAction(EXPERIMENT_ID);
+    return Observable.just(false);
   }
 }
