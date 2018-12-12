@@ -20,4 +20,8 @@ public interface PromotionsView extends View {
   void showAppCoinsAmount(int totalAppcValue);
 
   void lockPromotionApps(boolean walletInstalled);
+
+  Observable<PromotionViewApp> claimAppClick();
+
+  void navigateToClaimDialog(String packageName);
 }

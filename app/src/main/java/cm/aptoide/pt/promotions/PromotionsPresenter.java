@@ -34,6 +34,20 @@ public class PromotionsPresenter implements Presenter {
     pauseDownload();
     cancelDownload();
     resumeDownload();
+    claimApp();
+  }
+
+  private void claimApp() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.claimAppClick()
+            .doOnNext(
+                promotionViewApp -> view.navigateToClaimDialog(promotionViewApp.getPackageName()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
   }
 
   private void resumeDownload() {
@@ -121,8 +135,7 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> promotionsManager.getPromotionsModel())
-        .doOnNext(
-            promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
+        .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
         .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
         .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())
         .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))

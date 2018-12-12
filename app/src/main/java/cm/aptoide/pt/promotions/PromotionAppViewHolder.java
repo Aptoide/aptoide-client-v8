@@ -60,6 +60,8 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
         promotionAction.setBackgroundColor(itemView.getContext()
             .getResources()
             .getColor(R.color.green));
+        promotionAction.setOnClickListener(
+            __ -> promotionAppClick.onNext(new PromotionAppClick(app, getClickType(appState))));
       } else {
         lockButton(false);
         promotionAction.setOnClickListener(

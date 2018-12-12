@@ -27,6 +27,7 @@ import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
@@ -239,6 +240,16 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void lockPromotionApps(boolean walletInstalled) {
     promotionsAdapter.isWalletInstalled(walletInstalled);
+  }
+
+  @Override public Observable<PromotionViewApp> claimAppClick() {
+    return promotionAppClick.filter(
+        promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.CLAIM)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public void navigateToClaimDialog(String packageName) {
+    // TODO: 12/12/18 navigate to claim dialog
   }
 
   private void showWallet(PromotionViewApp promotionViewApp) {
