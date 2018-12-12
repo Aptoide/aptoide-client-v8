@@ -3,8 +3,15 @@ package cm.aptoide.pt.promotions;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
+import rx.Single;
 
 public class PromotionsManager {
+
+  private final PromotionsService promotionsService;
+
+  public PromotionsManager(PromotionsService promotionsService) {
+    this.promotionsService = promotionsService;
+  }
 
   public Observable<List<PromotionApp>> getPromotionApps() {
     return Observable.just(getListOfPromotionApps());
@@ -21,5 +28,18 @@ public class PromotionsManager {
         "http://pool.apk.aptoide.com/bds-store/alt/bnp0LW1ldGFsLXNob290ZXItY29tbWFuZG8tNDctNDEyMDA5NjQtMGUxM2M4N2ZjMTcyZDNmYTdhYzAzOTJlYzEyZTcyZGY.apk"));
 
     return promotionAppList;
+  }
+
+  public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
+      String captcha) {
+    return promotionsService.claimPromotion(walletAddress, packageName, captcha);
+  }
+
+  public void saveWalletAddress(String walletAddress) {
+    promotionsService.saveWalletAddress(walletAddress);
+  }
+
+  public String getWalletAddress() {
+    return promotionsService.getWalletAddress();
   }
 }

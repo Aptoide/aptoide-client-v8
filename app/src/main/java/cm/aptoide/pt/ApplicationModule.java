@@ -162,6 +162,9 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import cm.aptoide.pt.promotions.CaptchaService;
+import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsService;
 import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
@@ -1063,6 +1066,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         + "/api/v1/";
   }
 
+  @Singleton @Provides @Named("apichain-bds-base-host") String providesApichainBdsBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST;
+  }
+
   @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
       @Named("ab-testing-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
@@ -1077,6 +1088,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(DONATIONS_URL)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("retrofit-apichain-bds") Retrofit providesApiChainBDSRetrofit(
+      @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
+      @Named("apichain-bds-base-host") String baseHost) {
+    return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
         .addCallAdapterFactory(rxCallAdapterFactory)
         .addConverterFactory(converterFactory)
@@ -1111,6 +1133,24 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
       @Named("retrofit-donations") Retrofit retrofit) {
     return retrofit.create(DonationsService.ServiceV8.class);
+  }
+
+  @Singleton @Provides CaptchaService.ServiceInterface providesCaptchaServiceInterface(
+      @Named("retrofit-apichain-bds") Retrofit retrofit) {
+    return retrofit.create(CaptchaService.ServiceInterface.class);
+  }
+
+  @Singleton @Provides PromotionsService providesPromotionsService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
+    return new PromotionsService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        converterFactory, sharedPreferences);
+  }
+
+  @Singleton @Provides CaptchaService providesCaptchaService(
+      CaptchaService.ServiceInterface service, IdsRepository idsRepository) {
+    return new CaptchaService(service, idsRepository);
   }
 
   @Singleton @Provides WalletService.ServiceV7 providesWalletServiceV8(
@@ -1420,6 +1460,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides ABTestManager providesABTestManager(
       ABTestCenterRepository abTestCenterRepository) {
     return new ABTestManager(abTestCenterRepository);
+  }
+
+  @Singleton @Provides PromotionsManager providePromotionsManager(
+      PromotionsService promotionsService) {
+    return new PromotionsManager(promotionsService);
   }
 
   @Singleton @Provides ImpressionManager providesImpressionManager(

@@ -10,7 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.promotions.PromotionsFragment;
+import cm.aptoide.pt.promotions.ClaimPromotionDialogFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
@@ -22,6 +22,7 @@ import rx.Observable;
  */
 
 public class HomeNavigator {
+  private static final String TAG = HomeNavigator.class.getSimpleName();
   private final FragmentNavigator fragmentNavigator;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final BottomNavigationMapper bottomNavigationMapper;
@@ -108,6 +109,7 @@ public class HomeNavigator {
   }
 
   public void navigateToPromotions() {
-    fragmentNavigator.navigateTo(new PromotionsFragment(), true);
+    fragmentNavigator.navigateToDialogFragment(
+        ClaimPromotionDialogFragment.newInstance("this.is.package"));
   }
 }

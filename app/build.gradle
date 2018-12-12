@@ -255,6 +255,9 @@ android {
         project.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS
     variant.buildConfigField "long", "ANALYTICS_SESSION_INTERVAL_IN_MILLIS",
         project.ANALYTICS_SESSION_INTERVAL_IN_MILLIS
+    variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
+
 
     if (flavors[1].name.contains('internal')) {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",

@@ -393,8 +393,4 @@ import rx.schedulers.Schedulers;
       PromotionsManager promotionsManager) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager);
   }
-
-  @FragmentScope @Provides PromotionsManager providePromotionsManager() {
-    return new PromotionsManager();
-  }
 }
