@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view;
+package cm.aptoide.pt.autoupdate;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

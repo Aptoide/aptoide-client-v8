@@ -1,6 +1,7 @@
 package cm.aptoide.pt.navigation;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
@@ -15,7 +16,6 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.util.ApkFy;
-import cm.aptoide.pt.view.AutoUpdateManager;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Before;

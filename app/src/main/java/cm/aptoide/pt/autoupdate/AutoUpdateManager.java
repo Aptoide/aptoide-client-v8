@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view;
+package cm.aptoide.pt.autoupdate;
 
 import android.content.res.Resources;
 import android.support.annotation.DrawableRes;
@@ -6,6 +6,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.view.ActivityView;
 import rx.Single;
 
 public class AutoUpdateManager {

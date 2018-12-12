@@ -7,6 +7,7 @@ package cm.aptoide.pt.presenter;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
@@ -22,7 +23,6 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.util.ApkFy;
-import cm.aptoide.pt.view.AutoUpdateManager;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view;
+package cm.aptoide.pt.autoupdate;
 
 public class AutoUpdateViewModel {
   private final String packageName;

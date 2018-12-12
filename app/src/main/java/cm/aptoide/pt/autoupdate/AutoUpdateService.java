@@ -1,4 +1,4 @@
-package cm.aptoide.pt.view;
+package cm.aptoide.pt.autoupdate;
 
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import retrofit2.http.GET;
