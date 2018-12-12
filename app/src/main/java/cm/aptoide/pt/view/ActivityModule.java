@@ -80,7 +80,9 @@ import dagger.Provides;
 import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
+import retrofit2.CallAdapter;
 import retrofit2.Converter;
+import retrofit2.Retrofit;
 import rx.android.schedulers.AndroidSchedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
@@ -126,43 +128,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         downloadAnalytics);
   }
 
-  @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
-      DownloadFactory downloadFactory, PermissionManager permissionManager,
-      InstallManager installManager, Resources resources, DownloadAnalytics downloadAnalytics,
-      @Named("autoUpdateUrl") String autoUpdateUrl, AutoUpdateViewModel autoUpdateViewModel,
-      AutoUpdateService autoUpdateService) {
-    return new AutoUpdateManager((ActivityView) activity, downloadFactory, permissionManager,
-        installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
-        downloadAnalytics, autoUpdateViewModel, autoUpdateService);
-  }
-
-  @ActivityScope @Provides AutoUpdateViewModel provideAutoUpdateViewModel(
-      @Named("packageName") String packageName, @Named("localVersionCode") int localVersionCode) {
-    return new AutoUpdateViewModel(packageName, localVersionCode);
-  }
-
   @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
       AutoUpdateService.Service service) {
     return new AutoUpdateService(service);
-  }
-
-  @ActivityScope @Provides AutoUpdateHandler provideAutoUpdateHandler(
-      @Named("packageName") String packageName, AutoUpdateViewModel autoUpdateViewModel) {
-    return new AutoUpdateHandler(packageName, new StringBuilder(), autoUpdateViewModel);
-  }
-
-  @ActivityScope @Provides @Named("packageName") String providePackageName() {
-    return activity.getPackageName();
-  }
-
-  @ActivityScope @Provides @Named("localVersionCode") int provideLocalVersionCode(
-      @Named("packageName") String packageName) {
-    try {
-      return activity.getPackageManager()
-          .getPackageInfo(packageName, 0).versionCode;
-    } catch (PackageManager.NameNotFoundException e) {
-      return -1;
-    }
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(
@@ -334,5 +302,53 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides IronSourceAdRepository providesIronSourceAdRepository() {
     return new IronSourceAdRepository(activity);
+  }
+
+  @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
+      DownloadFactory downloadFactory, PermissionManager permissionManager,
+      InstallManager installManager, Resources resources, DownloadAnalytics downloadAnalytics,
+      @Named("autoUpdateUrl") String autoUpdateUrl, AutoUpdateViewModel autoUpdateViewModel,
+      AutoUpdateService autoUpdateService) {
+    return new AutoUpdateManager((ActivityView) activity, downloadFactory, permissionManager,
+        installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
+        downloadAnalytics, autoUpdateViewModel, autoUpdateService);
+  }
+
+  @ActivityScope @Provides AutoUpdateViewModel provideAutoUpdateViewModel(
+      @Named("packageName") String packageName, @Named("localVersionCode") int localVersionCode) {
+    return new AutoUpdateViewModel(packageName, localVersionCode);
+  }
+
+  @ActivityScope @Provides @Named("retrofit-autoUpdate") Retrofit providesAutoUpdateRetrofit(
+      @Named("default") OkHttpClient httpClient, @Named("autoUpdateBaseHost") String baseHost,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @ActivityScope @Provides @Named("autoUpdateBaseHost") String providesAutoUpdateBaseHost() {
+    return "http://imgs.aptoide.com/";
+  }
+
+  @ActivityScope @Provides AutoUpdateHandler provideAutoUpdateHandler(
+      @Named("packageName") String packageName, AutoUpdateViewModel autoUpdateViewModel) {
+    return new AutoUpdateHandler(packageName, new StringBuilder(), autoUpdateViewModel);
+  }
+
+  @ActivityScope @Provides @Named("packageName") String providePackageName() {
+    return activity.getPackageName();
+  }
+
+  @ActivityScope @Provides @Named("localVersionCode") int provideLocalVersionCode(
+      @Named("packageName") String packageName) {
+    try {
+      return activity.getPackageManager()
+          .getPackageInfo(packageName, 0).versionCode;
+    } catch (PackageManager.NameNotFoundException e) {
+      return -1;
+    }
   }
 }
