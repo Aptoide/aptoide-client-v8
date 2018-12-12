@@ -351,22 +351,26 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return RxView.clicks(promotionsButton);
   }
 
-  @Override public void showPromotionsHomeDialog() {
-    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-    // ...Irrelevant code for customizing the buttons and title
-    LayoutInflater inflater = this.getLayoutInflater();
-    View dialogView = inflater.inflate(R.layout.promotions_home_dialog, null);
-    dialogBuilder.setView(dialogView);
+  @Override public void showPromotionsHomeDialog(HomePromotionsWrapper wrapper) {
+    if (wrapper.shouldShowDialog()) {
+      AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+      LayoutInflater inflater = this.getLayoutInflater();
+      View dialogView = inflater.inflate(R.layout.promotions_home_dialog, null);
+      dialogBuilder.setView(dialogView);
 
-    AlertDialog alertDialog = dialogBuilder.create();
-    Button cancel = dialogView.findViewById(R.id.cancel_button);
-    Button navigate = dialogView.findViewById(R.id.navigate_button);
-    cancel.setOnClickListener(click -> alertDialog.dismiss());
-    navigate.setOnClickListener(click -> {
-      promotionsDialogClickEvent.onNext(null);
-      alertDialog.dismiss();
-    });
-    alertDialog.show();
+      AlertDialog alertDialog = dialogBuilder.create();
+      Button cancel = dialogView.findViewById(R.id.cancel_button);
+      Button navigate = dialogView.findViewById(R.id.navigate_button);
+      TextView description = dialogView.findViewById(R.id.description);
+      description.setText(getContext().getString(R.string.holidayspromotion_message_popup,
+          String.valueOf(wrapper.getTotalAppcValue())));
+      cancel.setOnClickListener(click -> alertDialog.dismiss());
+      navigate.setOnClickListener(click -> {
+        promotionsDialogClickEvent.onNext(null);
+        alertDialog.dismiss();
+      });
+      alertDialog.show();
+    }
   }
 
   @Override public void showPromotionsHomeIcon(HomePromotionsWrapper homeWrapper) {

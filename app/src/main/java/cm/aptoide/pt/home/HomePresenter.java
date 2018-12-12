@@ -545,7 +545,7 @@ public class HomePresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(apps -> {
           view.showPromotionsHomeIcon(apps);
-          view.showPromotionsHomeDialog();
+          view.showPromotionsHomeDialog(apps);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

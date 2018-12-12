@@ -14,11 +14,8 @@ public class GetPromotionAppsRequest extends V7<GetPromotionAppsResponse, BaseBo
   public GetPromotionAppsRequest(BaseBody body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
-  }
-
-  public static String getHost() {
-    return "http://dev.ws75.aptoide.com/api/7/";
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static GetPromotionAppsRequest of(BodyInterceptor<BaseBody> bodyInterceptor,

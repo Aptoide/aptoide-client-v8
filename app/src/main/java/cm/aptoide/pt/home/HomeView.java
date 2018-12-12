@@ -37,7 +37,7 @@ public interface HomeView extends BundleView {
 
   Observable<Void> promotionsClick();
 
-  void showPromotionsHomeDialog();
+  void showPromotionsHomeDialog(HomePromotionsWrapper wrapper);
 
   void showPromotionsHomeIcon(HomePromotionsWrapper apps);
 }

@@ -4,6 +4,7 @@ import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -18,13 +19,16 @@ public class Home {
   private final ImpressionManager impressionManager;
   private final PromotionsManager promotionsManager;
   private final AdsManager adsManager;
+  private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
-      AdsManager adsManager, PromotionsManager promotionsManager) {
+      AdsManager adsManager, PromotionsManager promotionsManager,
+      PromotionsPreferencesManager promotionsPreferencesManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.adsManager = adsManager;
     this.promotionsManager = promotionsManager;
+    this.promotionsPreferencesManager = promotionsPreferencesManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -62,7 +66,8 @@ public class Home {
   private HomePromotionsWrapper mapPromotions(List<PromotionApp> apps) {
     boolean hasPromotions = false;
     int promotions = 0;
-    int appcValue = 0;
+    float appcValue = 0;
+    boolean showDialog;
     if (apps.size() > 0) {
       hasPromotions = true;
       for (PromotionApp app : apps) {
@@ -72,6 +77,12 @@ public class Home {
         }
       }
     }
-    return new HomePromotionsWrapper(hasPromotions, promotions, appcValue);
+    if (promotionsPreferencesManager.shouldShowPromotionsDialog()) {
+      showDialog = true;
+      promotionsPreferencesManager.dontShowPromotionsDialog();
+    } else {
+      showDialog = false;
+    }
+    return new HomePromotionsWrapper(hasPromotions, promotions, appcValue, showDialog);
   }
 }
