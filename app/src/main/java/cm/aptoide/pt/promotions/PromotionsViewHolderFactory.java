@@ -8,6 +8,7 @@ import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIM;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIMED;
+import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNGRADE;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNLOAD;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNLOADING;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.INSTALL;
@@ -25,6 +26,7 @@ public class PromotionsViewHolderFactory {
     RecyclerView.ViewHolder promotionAppViewHolder;
 
     switch (viewType) {
+      case DOWNGRADE:
       case UPDATE:
         promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.promotion_app_inactive, parent, false), UPDATE, promotionAppClick);

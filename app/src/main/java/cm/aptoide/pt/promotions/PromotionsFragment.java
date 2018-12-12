@@ -27,7 +27,6 @@ import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
@@ -411,6 +410,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private int getButtonMessage(int appState) {
     int message;
     switch (appState) {
+      case DOWNGRADE:
       case UPDATE:
         message = R.string.holidayspromotion_button_update;
         break;
