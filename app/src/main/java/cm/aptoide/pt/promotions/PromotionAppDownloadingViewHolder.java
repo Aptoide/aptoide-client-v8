@@ -114,6 +114,8 @@ class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
             new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.RESUME_DOWNLOAD)));
         downloadControlsLayout.setLayoutParams(pauseHidden);
         break;
+      case ERROR:
+      case NOT_ENOUGH_STORAGE_ERROR:
       case COMPLETE:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.VISIBLE);
@@ -122,13 +124,6 @@ class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
-        break;
-      case ERROR:
-        //showErrorDialog("", getContext().getString(R.string.error_occured));
-        break;
-      case NOT_ENOUGH_STORAGE_ERROR:
-        //showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
-        //getContext().getString(R.string.out_of_space_dialog_message));
         break;
     }
   }
