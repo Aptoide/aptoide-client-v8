@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import cm.aptoide.pt.networking.IdsRepository;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -10,18 +11,35 @@ import rx.schedulers.Schedulers;
 public class CaptchaService {
 
   private ServiceInterface service;
+  private IdsRepository idsRepository;
 
-  public CaptchaService(ServiceInterface service) {
+  private String captchaUrl;
+
+  public CaptchaService(ServiceInterface service, IdsRepository idsRepository) {
     this.service = service;
+    this.idsRepository = idsRepository;
   }
 
-  public Single<String> getCaptcha(String userId) {
-    return service.getCaptcha(userId)
+  public Single<String> getCaptcha() {
+    return service.getCaptcha(idsRepository.getUniqueIdentifier())
         .subscribeOn(Schedulers.io())
-        .doOnError(error -> error.printStackTrace())
-        .map(response -> response.body()
-            .getCaptchaUrl())
+        .map(response -> {
+          if (response.isSuccessful() && response.body() != null) {
+            return response.body()
+                .getCaptchaUrl();
+          } else {
+            return "";
+          }
+        })
         .toSingle();
+  }
+
+  public String getCaptchaUrl() {
+    return captchaUrl;
+  }
+
+  public void saveCaptchaUrl(String captchaUrl) {
+    this.captchaUrl = captchaUrl;
   }
 
   public interface ServiceInterface {

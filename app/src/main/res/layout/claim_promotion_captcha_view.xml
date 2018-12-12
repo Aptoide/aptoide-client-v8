@@ -142,7 +142,7 @@
     <Button
         android:id="@+id/captcha_continue_button"
         android:layout_width="78dp"
-        android:text="Finish"
+        android:text="@string/holidayspromotion_button_captcha"
         style="@style/Aptoide.Button.Flat"
         />
 

@@ -13,8 +13,7 @@
       android:layout_marginStart="16dp"
       android:layout_marginTop="23dp"
       android:text="@string/holidayspromotion_title_wallet"
-      android:textColor="@color/black_87_alpha"
-      style="@style/Aptoide.TextView.Regular.L"
+      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
 
   <TextView
@@ -22,9 +21,10 @@
       android:layout_marginBottom="15dp"
       android:layout_marginLeft="16dp"
       android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
       android:text="@string/holidayspromotion_message_wallet"
-      android:textColor="@color/black_87_alpha"
-      style="@style/Aptoide.TextView.Regular.M"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
   <RelativeLayout
       android:layout_width="match_parent"
@@ -49,6 +49,7 @@
         android:paddingRight="16dp"
         android:paddingStart="28dp"
         android:scrollHorizontally="true"
+        android:inputType="text"
         android:singleLine="true"
         android:textColor="@color/black_87_alpha"
         />

@@ -91,7 +91,6 @@ import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
-import cm.aptoide.pt.promotions.PromotionsService;
 import cm.aptoide.pt.promotions.PromotionsView;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
@@ -394,10 +393,5 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager);
-  }
-
-  @FragmentScope @Provides PromotionsManager providePromotionsManager(
-      PromotionsService promotionsService) {
-    return new PromotionsManager(promotionsService);
   }
 }
