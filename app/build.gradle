@@ -219,7 +219,11 @@ android {
     variant.resValue "string", "store_suggestion_provider_authority",
         storeSuggestionProviderAuthority
 
-    variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
+    if (flavors[0].name.contains("cobrand")){
+      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
+    } else {
+      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
+    }
 
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
         "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
