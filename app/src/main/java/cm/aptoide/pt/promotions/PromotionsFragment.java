@@ -199,12 +199,12 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     if (promotionViewApp.getPackageName()
         .equals("com.appcoins.wallet")) {
       showWallet(promotionViewApp);
-    } else if (promotionViewApp.getDownloadModel()
-        .hasError()) {
-      handleDownloadError(promotionViewApp.getDownloadModel()
-          .getDownloadState());
-
     } else {
+      if (promotionViewApp.getDownloadModel()
+          .hasError()) {
+        handleDownloadError(promotionViewApp.getDownloadModel()
+            .getDownloadState());
+      }
       promotionsAdapter.setPromotionApp(promotionViewApp);
     }
   }
