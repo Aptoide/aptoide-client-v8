@@ -219,7 +219,7 @@ android {
     variant.resValue "string", "store_suggestion_provider_authority",
         storeSuggestionProviderAuthority
 
-    if (applicationIdBase.contains("cobrand")){
+    if (applicationIdBase.contains("cobrand")) {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
     } else {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
