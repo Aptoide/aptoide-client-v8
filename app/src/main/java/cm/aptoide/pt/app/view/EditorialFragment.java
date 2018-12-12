@@ -325,6 +325,11 @@ public class EditorialFragment extends NavigationTrackFragment
             .equals(EditorialEvent.Type.APPCARD)));
   }
 
+  @Override public Observable<EditorialEvent> actionButtonClicked() {
+    return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+        .equals(EditorialEvent.Type.ACTION));
+  }
+
   @Override public void populateView(EditorialViewModel editorialViewModel) {
     populateAppContent(editorialViewModel);
     populateCardContent(editorialViewModel);
@@ -514,7 +519,9 @@ public class EditorialFragment extends NavigationTrackFragment
     appCardTitle.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
         .load(editorialViewModel.getIcon(), appCardImage);
-    appCardView.setVisibility(View.VISIBLE);
+    if (editorialViewModel.hasApp()) {
+      appCardView.setVisibility(View.VISIBLE);
+    }
   }
 
   private void populateCardContent(EditorialViewModel editorialViewModel) {
