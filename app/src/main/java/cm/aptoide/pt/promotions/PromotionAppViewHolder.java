@@ -55,6 +55,11 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
 
       if (appState == CLAIMED) {
         lockButton(true);
+      } else if (appState == CLAIM) {
+        promotionAction.setEnabled(true);
+        promotionAction.setBackgroundColor(itemView.getContext()
+            .getResources()
+            .getColor(R.color.green));
       } else {
         lockButton(false);
         promotionAction.setOnClickListener(

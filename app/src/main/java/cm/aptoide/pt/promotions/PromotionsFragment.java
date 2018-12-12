@@ -373,8 +373,14 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
             .getColor(R.color.grey_fog_light));
 
         promotionsAdapter.isWalletInstalled(true);
+      } else if (getState(promotionViewApp) == CLAIM) {
+        promotionAction.setEnabled(true);
+        promotionAction.setBackgroundColor(getContext().getResources()
+            .getColor(R.color.green));
+        promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
+        promotionsAdapter.isWalletInstalled(true);
       } else {
-
         promotionAction.setEnabled(true);
         TypedValue resultValue = new TypedValue();
         getContext().getTheme()
@@ -384,10 +390,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         } else {
           promotionAction.setBackgroundColor(getContext().getResources()
               .getColor(R.color.orange));
-        }
-
-        if (getState(promotionViewApp) == CLAIM) {
-          promotionsAdapter.isWalletInstalled(true);
         }
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));

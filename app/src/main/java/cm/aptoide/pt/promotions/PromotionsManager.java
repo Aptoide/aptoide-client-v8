@@ -82,7 +82,7 @@ public class PromotionsManager {
         "http://pool.apk.aptoide.com/lordballiwns/com-facebook-orca-132958908-42161891-bfb0e8f4a51fcbaa16f1840322eb232a.apk",
         "http://pool.apk.aptoide.com/lordballiwns/alt/Y29tLWZhY2Vib29rLW9yY2EtMTMyOTU4OTA4LTQyMTYxODkxLWJmYjBlOGY0YTUxZmNiYWExNmYxODQwMzIyZWIyMzJh.apk",
         "http://pool.img.aptoide.com/lordballiwns/76e0376928b8393227a150fbed5d6b4a_icon.png",
-        "This app belongs to ana. It is an app.", 123133, 4.2f, 123012, "anamd5", 12314, true,
+        "This app belongs to ana. It is an app.", 123133, 4.2f, 123012, "anamd5", 12314, false,
         "ana version", null, 25));
     promotionAppList.add(new PromotionApp("Joao's app", "cm.aptoide.pt.joao", 123,
         "http://pool.apk.aptoide.com/bds-store/nzt-metal-shooter-commando-47-41200964-0e13c87fc172d3fa7ac0392ec12e72df.apk",
