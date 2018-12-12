@@ -5,7 +5,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
-import rx.Observable;
+import rx.Single;
 
 public class AutoUpdateManager {
   //TODO 11/12/18 This class is incomplete
@@ -32,10 +32,15 @@ public class AutoUpdateManager {
     this.autoUpdateService = autoUpdateService;
   }
 
-  public Observable<AutoUpdateViewModel> getAutoUpdateModel() {
+  public Single<AutoUpdateViewModel> getAutoUpdateModel() {
     return autoUpdateService.loadAutoUpdateViewModel()
-        .filter(autoUpdateViewModel -> autoUpdateViewModel.getVersionCode() > localVersionCode
-            && Build.VERSION.SDK_INT >= Integer.parseInt(autoUpdateViewModel.getMinSdk())
-            || alwaysUpdate);
+        .flatMap(autoUpdateViewModel -> {
+          if (autoUpdateViewModel.getVersionCode() > localVersionCode
+              && Build.VERSION.SDK_INT >= Integer.parseInt(autoUpdateViewModel.getMinSdk())
+              || alwaysUpdate) {
+            autoUpdateViewModel.setShouldUpdate(true);
+          }
+          return Single.just(autoUpdateViewModel);
+        });
   }
 }

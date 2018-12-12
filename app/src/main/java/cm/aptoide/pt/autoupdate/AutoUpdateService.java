@@ -3,6 +3,7 @@ package cm.aptoide.pt.autoupdate;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import retrofit2.http.GET;
 import rx.Observable;
+import rx.Single;
 
 public class AutoUpdateService {
 
@@ -13,9 +14,9 @@ public class AutoUpdateService {
     this.retrofit = retrofit;
   }
 
-  public Observable<AutoUpdateViewModel> loadAutoUpdateViewModel() {
+  public Single<AutoUpdateViewModel> loadAutoUpdateViewModel() {
     if (loading) {
-      return Observable.just(new AutoUpdateViewModel(true));
+      return Single.just(new AutoUpdateViewModel(true));
     }
     return retrofit.getJsonResponse()
         .doOnSubscribe(() -> loading = true)
@@ -24,7 +25,8 @@ public class AutoUpdateService {
         .flatMap(jsonResponse -> Observable.just(
             new AutoUpdateViewModel(jsonResponse.getVersioncode(), jsonResponse.getUri(),
                 jsonResponse.getMd5(), jsonResponse.getMinSdk())))
-        .onErrorReturn(throwable -> createErrorAutoUpdateViewModel(throwable));
+        .onErrorReturn(throwable -> createErrorAutoUpdateViewModel(throwable))
+        .toSingle();
   }
 
   private AutoUpdateViewModel createErrorAutoUpdateViewModel(Throwable throwable) {

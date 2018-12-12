@@ -8,12 +8,14 @@ public class AutoUpdateViewModel {
   private final String minSdk;
   private final boolean loading;
   private final Error error;
+  private boolean shouldUpdate;
 
   public AutoUpdateViewModel(long versionCode, String uri, String md5, String minSdk) {
     this.versionCode = versionCode;
     this.uri = uri;
     this.md5 = md5;
     this.minSdk = minSdk;
+    shouldUpdate = false;
     loading = false;
     error = null;
   }
@@ -24,6 +26,7 @@ public class AutoUpdateViewModel {
     uri = null;
     md5 = null;
     minSdk = null;
+    shouldUpdate = false;
     loading = false;
   }
 
@@ -33,6 +36,7 @@ public class AutoUpdateViewModel {
     uri = null;
     md5 = null;
     minSdk = null;
+    shouldUpdate = false;
     error = null;
   }
 
@@ -58,6 +62,14 @@ public class AutoUpdateViewModel {
 
   public Error getError() {
     return error;
+  }
+
+  public boolean shouldUpdate() {
+    return shouldUpdate;
+  }
+
+  public void setShouldUpdate(boolean shouldUpdate) {
+    this.shouldUpdate = shouldUpdate;
   }
 
   public enum Error {

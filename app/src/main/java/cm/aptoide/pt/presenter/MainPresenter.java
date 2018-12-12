@@ -199,7 +199,8 @@ public class MainPresenter implements Presenter {
   private void handleAutoUpdate() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
-        .flatMap(lifecycleEvent -> autoUpdateManager.getAutoUpdateModel())
+        .flatMapSingle(lifecycleEvent -> autoUpdateManager.getAutoUpdateModel())
+        .filter(autoUpdateViewModel -> autoUpdateViewModel.shouldUpdate())
         .doOnNext(autoUpdateViewModel -> AptoideApplication.setAutoUpdateWasCalled(true))
         .doOnNext(autoUpdateViewModel -> view.requestAutoUpdate())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
