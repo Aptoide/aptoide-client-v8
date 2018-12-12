@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
@@ -306,9 +307,24 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
       DownloadFactory downloadFactory, PermissionManager permissionManager,
       InstallManager installManager, Resources resources, DownloadAnalytics downloadAnalytics,
-      @Named("autoUpdateUrl") String autoUpdateUrl, AutoUpdateService autoUpdateService) {
+      @Named("autoUpdateUrl") String autoUpdateUrl, @Named("localVersionCode") int localVersionCode,
+      AutoUpdateService autoUpdateService) {
     return new AutoUpdateManager((ActivityView) activity, downloadFactory, permissionManager,
         installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
-        downloadAnalytics, autoUpdateService);
+        downloadAnalytics, localVersionCode, autoUpdateService);
+  }
+
+  @ActivityScope @Provides @Named("packageName") String providePackageName() {
+    return activity.getPackageName();
+  }
+
+  @ActivityScope @Provides @Named("localVersionCode") int provideLocalVersionCode(
+      @Named("packageName") String packageName) {
+    try {
+      return activity.getPackageManager()
+          .getPackageInfo(packageName, 0).versionCode;
+    } catch (PackageManager.NameNotFoundException e) {
+      return -1;
+    }
   }
 }

@@ -119,6 +119,10 @@ public class MainActivity extends BottomNavigationActivity
     updatesBadge.setVisibility(View.GONE);
   }
 
+  @Override public void requestAutoUpdate() {
+    //TODO add AutoUpdate requestUpdateSelf logic here
+  }
+
   @Override public void showStoreAlreadyAdded() {
     ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
   }

@@ -184,7 +184,7 @@ public class MainPresenter implements Presenter {
     if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences)
         && !AptoideApplication.isAutoUpdateWasCalled()) {
       // only call auto update when the app was not on the background
-      autoUpdate.execute();
+      handleAutoUpdate();
     }
     if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
       SecurePreferences.setWizardAvailable(false, securePreferences);
@@ -194,6 +194,17 @@ public class MainPresenter implements Presenter {
         SecurePreferences.setWizardAvailable(false, securePreferences);
       }
     }
+  }
+
+  private void handleAutoUpdate() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .flatMap(lifecycleEvent -> autoUpdateManager.getAutoUpdateModel())
+        .doOnNext(autoUpdateViewModel -> AptoideApplication.setAutoUpdateWasCalled(true))
+        .doOnNext(autoUpdateViewModel -> view.requestAutoUpdate())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(timeoutErrorsCleaned -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void showWizard() {
