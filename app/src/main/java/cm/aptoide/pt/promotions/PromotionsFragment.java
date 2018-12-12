@@ -232,7 +232,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
-  @Override public void showAppCoinsAmmount(int totalAppcValue) {
+  @Override public void showAppCoinsAmount(int totalAppcValue) {
     promotionFirstMessage.setText(
         getString(R.string.holidayspromotion_message_1, String.valueOf(totalAppcValue)));
   }

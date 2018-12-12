@@ -122,7 +122,7 @@ public class PromotionsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> promotionsManager.getPromotionsModel())
         .doOnNext(
-            promotionsModel -> view.showAppCoinsAmmount((promotionsModel.getTotalAppcValue())))
+            promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
         .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
         .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())
         .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))

@@ -17,7 +17,7 @@ public interface PromotionsView extends View {
 
   Observable<PromotionViewApp> resumeDownload();
 
-  void showAppCoinsAmmount(int totalAppcValue);
+  void showAppCoinsAmount(int totalAppcValue);
 
   void lockPromotionApps(boolean walletInstalled);
 }
