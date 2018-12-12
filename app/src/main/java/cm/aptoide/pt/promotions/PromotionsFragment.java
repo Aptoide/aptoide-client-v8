@@ -38,6 +38,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIM;
@@ -64,6 +67,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private AppBarLayout appBarLayout;
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private TextView toolbarTitle;
+  private Subscription errorMessageSubscription;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -195,6 +199,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     if (promotionViewApp.getPackageName()
         .equals("com.appcoins.wallet")) {
       showWallet(promotionViewApp);
+    } else if (promotionViewApp.getDownloadModel()
+        .hasError()) {
+      handleDownloadError(promotionViewApp.getDownloadModel()
+          .getDownloadState());
+
     } else {
       promotionsAdapter.setPromotionApp(promotionViewApp);
     }
@@ -338,11 +347,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           downloadControlsLayout.setLayoutParams(pauseShowing);
           break;
         case ERROR:
-          //showErrorDialog("", getContext().getString(R.string.error_occured));
+          showErrorDialog("", getContext().getString(R.string.error_occured));
           break;
         case NOT_ENOUGH_STORAGE_ERROR:
-          //showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
-          //getContext().getString(R.string.out_of_space_dialog_message));
+          showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+              getContext().getString(R.string.out_of_space_dialog_message));
           break;
       }
 
@@ -353,6 +362,12 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       }
       numberOfDownloads.setText(String.valueOf(promotionViewApp.getNumberOfDownloads()));
     } else {
+      if (promotionViewApp.getDownloadModel()
+          .hasError()) {
+        handleDownloadError(promotionViewApp.getDownloadModel()
+            .getDownloadState());
+      }
+
       walletActiveView.setVisibility(View.GONE);
       walletInactiveView.setVisibility(View.VISIBLE);
       ImageView appIcon = walletInactiveView.findViewById(R.id.app_icon);
@@ -405,6 +420,27 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
       }
     }
+  }
+
+  private void handleDownloadError(DownloadModel.DownloadState downloadState) {
+    switch (downloadState) {
+      case ERROR:
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_STORAGE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
+        break;
+      default:
+        throw new IllegalStateException("Invalid Download State " + downloadState);
+    }
+  }
+
+  private void showErrorDialog(String title, String message) {
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(eResponse -> {
+        }, error -> new OnErrorNotImplementedException(error));
   }
 
   private int getButtonMessage(int appState) {
@@ -504,5 +540,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override public void onDestroy() {
     super.onDestroy();
     promotionAppClick = null;
+    if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
+      errorMessageSubscription.unsubscribe();
+    }
   }
 }
