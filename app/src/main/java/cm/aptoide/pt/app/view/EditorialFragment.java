@@ -325,6 +325,11 @@ public class EditorialFragment extends NavigationTrackFragment
             .equals(EditorialEvent.Type.APPCARD)));
   }
 
+  @Override public Observable<EditorialEvent> actionButtonClicked() {
+    return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+        .equals(EditorialEvent.Type.ACTION));
+  }
+
   @Override public void populateView(EditorialViewModel editorialViewModel) {
     populateAppContent(editorialViewModel);
     populateCardContent(editorialViewModel);
