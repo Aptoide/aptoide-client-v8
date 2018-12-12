@@ -138,16 +138,18 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       appCardLayout.setVisibility(View.INVISIBLE);
       appCardLayout.setScaleX(0.1f);
       appCardLayout.setScaleY(0.1f);
+      setPlaceHolderListeners();
     }
     if (editorialItem.hasAction()) {
       manageActionVisibility(editorialItem);
     }
-    setListeners(editorialItem);
   }
 
   private void manageActionVisibility(EditorialContent editorialItem) {
     actionButton.setText(editorialItem.getActionTitle());
     actionButton.setVisibility(View.VISIBLE);
+    actionButton.setOnClickListener(click -> uiEventListener.onNext(
+        new EditorialEvent(EditorialEvent.Type.ACTION, editorialItem.getActionUrl())));
   }
 
   private void manageTitleVisibility(EditorialContent editorialItem, int position) {
@@ -341,7 +343,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  private void setListeners(EditorialContent editorialItem) {
+  private void setPlaceHolderListeners() {
     cancelDownload.setOnClickListener(
         click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.CANCEL)));
     resumeDownload.setOnClickListener(
@@ -352,7 +354,5 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.APPCARD)));
     appCardButton.setOnClickListener(
         click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.BUTTON)));
-    actionButton.setOnClickListener(click -> uiEventListener.onNext(
-        new EditorialEvent(EditorialEvent.Type.ACTION, editorialItem.getActionUrl())));
   }
 }
