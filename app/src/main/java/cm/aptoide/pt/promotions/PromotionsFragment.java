@@ -434,7 +434,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
-        }, error -> new OnErrorNotImplementedException(error));
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
   }
 
   private int getButtonMessage(int appState) {
