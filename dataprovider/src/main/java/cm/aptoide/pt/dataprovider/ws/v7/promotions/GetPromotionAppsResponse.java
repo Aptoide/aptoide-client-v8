@@ -1,46 +1,12 @@
 package cm.aptoide.pt.dataprovider.ws.v7.promotions;
 
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import java.util.List;
 
-public class GetPromotionAppsResponse extends BaseV7Response {
-
-  private Datalist datalist;
+public class GetPromotionAppsResponse
+    extends BaseV7EndlessDataListResponse<GetPromotionAppsResponse.PromotionAppModel> {
 
   public GetPromotionAppsResponse() {
-  }
-
-  public Datalist getDatalist() {
-    return datalist;
-  }
-
-  public void setDatalist(Datalist datalist) {
-    this.datalist = datalist;
-  }
-
-  public static class Datalist {
-    private int total;
-    private List<PromotionAppModel> list;
-
-    public Datalist() {
-    }
-
-    public int getTotal() {
-      return total;
-    }
-
-    public void setTotal(int total) {
-      this.total = total;
-    }
-
-    public List<PromotionAppModel> getList() {
-      return list;
-    }
-
-    public void setList(List<PromotionAppModel> list) {
-      this.list = list;
-    }
   }
 
   public static class PromotionAppModel {

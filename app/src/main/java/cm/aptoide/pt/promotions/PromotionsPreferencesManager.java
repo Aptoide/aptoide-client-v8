@@ -16,7 +16,7 @@ public class PromotionsPreferencesManager {
     return preferencesPersister.get(SHOW_PROMOTIONS_DIALOG, true);
   }
 
-  public void dontShowPromotionsDialog() {
+  public void setPromotionsDialogShown() {
     preferencesPersister.save(SHOW_PROMOTIONS_DIALOG, false);
   }
 }

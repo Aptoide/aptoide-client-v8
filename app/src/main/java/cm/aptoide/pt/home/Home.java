@@ -63,8 +63,8 @@ public class Home {
         .map(this::mapPromotions);
   }
 
-  public void dontShowPromotionsDialog() {
-    promotionsPreferencesManager.dontShowPromotionsDialog();
+  public void setPromotionsDialogShown() {
+    promotionsPreferencesManager.setPromotionsDialogShown();
   }
 
   private HomePromotionsWrapper mapPromotions(List<PromotionApp> apps) {

@@ -380,6 +380,16 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     promotionsHomeDialog.dismissDialog();
   }
 
+  @Override public void setPromotionsTickerWithValue(int value) {
+    promotionsTicker.setText(Integer.toString(value));
+    promotionsTicker.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void setEllipsizedPromotionsTicker() {
+    promotionsTicker.setText("9+");
+    promotionsTicker.setVisibility(View.VISIBLE);
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;

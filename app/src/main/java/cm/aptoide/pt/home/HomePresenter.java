@@ -547,10 +547,18 @@ public class HomePresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(apps -> {
           view.showPromotionsHomeIcon(apps);
-          if (apps.shouldShowDialog()) {
-            home.dontShowPromotionsDialog();
-            view.showPromotionsHomeDialog(apps);
+          if (apps.getPromotions() > 0) {
+            if (apps.getPromotions() < 10) {
+              view.setPromotionsTickerWithValue(apps.getPromotions());
+            } else {
+              view.setEllipsizedPromotionsTicker();
+            }
           }
+        })
+        .filter(HomePromotionsWrapper::shouldShowDialog)
+        .doOnNext(apps -> {
+          home.setPromotionsDialogShown();
+          view.showPromotionsHomeDialog(apps);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

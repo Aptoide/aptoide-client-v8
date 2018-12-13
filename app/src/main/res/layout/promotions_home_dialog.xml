@@ -64,8 +64,8 @@
             />
         <Button
             android:id="@+id/navigate_button"
-            android:layout_width="116dp"
-            android:text="check it out"
+            android:layout_width="wrap_content"
+            android:text="@string/holidayspromotion_button_popup"
             style="@style/Aptoide.Button.Flat"
             />
       </LinearLayout>

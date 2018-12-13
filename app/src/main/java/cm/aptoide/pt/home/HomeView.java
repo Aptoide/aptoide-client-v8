@@ -44,4 +44,8 @@ public interface HomeView extends BundleView {
   void showPromotionsHomeIcon(HomePromotionsWrapper apps);
 
   void dismissPromotionsDialog();
+
+  void setPromotionsTickerWithValue(int value);
+
+  void setEllipsizedPromotionsTicker();
 }
