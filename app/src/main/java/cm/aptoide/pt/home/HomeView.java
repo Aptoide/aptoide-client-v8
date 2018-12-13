@@ -46,4 +46,6 @@ public interface HomeView extends BundleView {
   void setPromotionsTickerWithValue(int value);
 
   void setEllipsizedPromotionsTicker();
+
+  void hidePromotionsIcon();
 }

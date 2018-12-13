@@ -90,6 +90,7 @@ import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
@@ -223,7 +224,7 @@ import rx.schedulers.Schedulers;
       ImpressionManager impressionManager, AdsManager adsManager,
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager) {
-    return new Home(bundlesRepository, impressionManager, adsManager, promotionsManager,
+    return new Home(bundlesRepository, impressionManager, promotionsManager,
         promotionsPreferencesManager);
   }
 
@@ -259,10 +260,6 @@ import rx.schedulers.Schedulers;
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
-  }
-
-  @FragmentScope @Provides DownloadStateParser providesDownloadStateParser() {
-    return new DownloadStateParser();
   }
 
   @FragmentScope @Provides SocialRepository providesSocialRepository(
@@ -394,7 +391,14 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
-      PromotionsManager promotionsManager) {
-    return new PromotionsPresenter((PromotionsView) fragment, promotionsManager);
+      PromotionsManager promotionsManager, PromotionsNavigator promotionsNavigator) {
+    return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
+        new PermissionManager(), ((PermissionService) fragment.getContext()),
+        AndroidSchedulers.mainThread(), promotionsNavigator);
+  }
+
+  @FragmentScope @Provides PromotionsNavigator providesPromotionsNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new PromotionsNavigator(fragmentNavigator);
   }
 }

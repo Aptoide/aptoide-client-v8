@@ -77,14 +77,6 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   private View genericMessageView;
   private View genericErrorView;
 
-  public static ClaimPromotionDialogFragment newInstance(String packageName) {
-    Bundle args = new Bundle();
-    ClaimPromotionDialogFragment fragment = new ClaimPromotionDialogFragment();
-    args.putString(PACKAGE_NAME, packageName);
-    fragment.setArguments(args);
-    return fragment;
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ((MainActivity) getContext()).getActivityComponent()

@@ -75,6 +75,7 @@ import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
@@ -163,6 +164,7 @@ import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.promotions.CaptchaService;
+import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
@@ -1464,14 +1466,29 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new ABTestManager(abTestCenterRepository);
   }
 
-  @Singleton @Provides PromotionsManager providePromotionsManager(
-      PromotionsService promotionsService) {
-    return new PromotionsManager(promotionsService);
+  @Singleton @Provides PromotionsManager providePromotionsManager(InstallManager installManager,
+      PromotionViewAppMapper promotionViewAppMapper, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      PreferencesManager preferencesManager, PromotionsService promotionsService) {
+    return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
+        downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
+        preferencesManager, application.getApplicationContext()
+        .getPackageManager(), promotionsService);
+  }
+
+  @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
+      DownloadStateParser downloadStateParser) {
+    return new PromotionViewAppMapper(downloadStateParser);
   }
 
   @Singleton @Provides ImpressionManager providesImpressionManager(
       ImpressionService impressionService) {
     return new ImpressionManager(impressionService);
+  }
+
+  @Singleton @Provides DownloadStateParser providesDownloadStateParser() {
+    return new DownloadStateParser();
   }
 
   @Singleton @Provides ImpressionService providesImpressionService(@Named("pool-v7")
@@ -1623,5 +1640,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides PromotionsPreferencesManager providesPromotionsPreferencesManager(
       PreferencesPersister persister) {
     return new PromotionsPreferencesManager(persister);
+  }
+
+  @Singleton @Provides PromotionsAnalytics providesPromotionsAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
+      DownloadAnalytics downloadAnalytics) {
+    return new PromotionsAnalytics(analyticsManager, navigationTracker, downloadAnalytics);
   }
 }
