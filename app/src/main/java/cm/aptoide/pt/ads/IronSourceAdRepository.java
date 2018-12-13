@@ -58,6 +58,7 @@ public class IronSourceAdRepository {
   }
 
   public void loadInterstitialAd() {
+    showInterstitial = false;
     IronSource.loadInterstitial();
   }
 
