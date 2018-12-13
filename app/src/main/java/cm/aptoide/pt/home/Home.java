@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -18,15 +17,13 @@ public class Home {
   private final BundlesRepository bundlesRepository;
   private final ImpressionManager impressionManager;
   private final PromotionsManager promotionsManager;
-  private final AdsManager adsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
-      AdsManager adsManager, PromotionsManager promotionsManager,
+      PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
-    this.adsManager = adsManager;
     this.promotionsManager = promotionsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
   }

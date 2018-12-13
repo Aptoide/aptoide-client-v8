@@ -135,6 +135,7 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> promotionsManager.getPromotionsModel())
+        .observeOn(viewScheduler)
         .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
         .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
         .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())

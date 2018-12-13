@@ -67,7 +67,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -90,8 +89,6 @@ import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
-import cm.aptoide.pt.promotions.PromotionViewAppMapper;
-import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
@@ -226,7 +223,7 @@ import rx.schedulers.Schedulers;
       ImpressionManager impressionManager, AdsManager adsManager,
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager) {
-    return new Home(bundlesRepository, impressionManager, adsManager, promotionsManager,
+    return new Home(bundlesRepository, impressionManager, promotionsManager,
         promotionsPreferencesManager);
   }
 
@@ -262,10 +259,6 @@ import rx.schedulers.Schedulers;
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
-  }
-
-  @FragmentScope @Provides DownloadStateParser providesDownloadStateParser() {
-    return new DownloadStateParser();
   }
 
   @FragmentScope @Provides SocialRepository providesSocialRepository(
@@ -401,26 +394,5 @@ import rx.schedulers.Schedulers;
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
         AndroidSchedulers.mainThread());
-  }
-
-  @FragmentScope @Provides PromotionsManager providePromotionsManager(InstallManager installManager,
-      PromotionViewAppMapper promotionViewAppMapper, DownloadFactory downloadFactory,
-      DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      PreferencesManager preferencesManager) {
-    return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
-        downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
-        preferencesManager, fragment.getContext()
-        .getPackageManager());
-  }
-
-  @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
-      DownloadStateParser downloadStateParser) {
-    return new PromotionViewAppMapper(downloadStateParser);
-  }
-
-  @FragmentScope @Provides PromotionsAnalytics promotionsAnalytics(
-      DownloadAnalytics downloadAnalytics) {
-    return new PromotionsAnalytics(downloadAnalytics);
   }
 }

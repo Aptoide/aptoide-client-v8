@@ -30,7 +30,6 @@ public class PromotionsManager {
   private final PackageManager packageManager;
   private final PromotionsService promotionsService;
 
-
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
@@ -49,8 +48,12 @@ public class PromotionsManager {
     this.promotionsService = promotionsService;
   }
 
+  public Single<List<PromotionApp>> getPromotionApps() {
+    return promotionsService.getPromotionApps();
+  }
+
   public Observable<PromotionsModel> getPromotionsModel() {
-    return promotionsService.getPromotionApps().toObservable()
+    return getPromotionApps().toObservable()
         .map(
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }
@@ -71,8 +74,6 @@ public class PromotionsManager {
     }
     return total;
   }
-
-
 
   public Observable<PromotionViewApp> getDownload(PromotionApp promotionApp) {
     return installManager.getInstall(promotionApp.getMd5(), promotionApp.getPackageName(),

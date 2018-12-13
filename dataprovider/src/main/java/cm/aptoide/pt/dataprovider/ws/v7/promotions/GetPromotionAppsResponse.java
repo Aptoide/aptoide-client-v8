@@ -12,7 +12,7 @@ public class GetPromotionAppsResponse
   public static class PromotionAppModel {
     private boolean claimed;
     private float appc;
-    private String description;
+    private String promotionDescription;
     private App app;
 
     public PromotionAppModel() {
@@ -42,12 +42,12 @@ public class GetPromotionAppsResponse
       this.app = app;
     }
 
-    public String getDescription() {
-      return description;
+    public String getPromotionDescription() {
+      return promotionDescription;
     }
 
-    public void setDescription(String description) {
-      this.description = description;
+    public void setPromotionDescription(String description) {
+      this.promotionDescription = description;
     }
   }
 }
