@@ -189,7 +189,7 @@ public class HomeAnalytics {
   public void sendPromotionsIconClickEvent() {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP);
-    data.put("bundle_tag", "promotions-icon");
+    data.put("bundle_tag", "promotion-icon");
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -198,7 +198,7 @@ public class HomeAnalytics {
   public void sendPromotionsDialogImpressionEvent() {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", IMPRESSION);
-    data.put("bundle_tag", "promotions-dialog");
+    data.put("bundle_tag", "promotion-dialog");
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
@@ -207,7 +207,7 @@ public class HomeAnalytics {
   public void sendPromotionsDialogDismissEvent() {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_CARD_DISMISS);
-    data.put("bundle_tag", "promotions-dialog");
+    data.put("bundle_tag", "promotion-dialog");
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.DISMISS,
         navigationTracker.getViewName(true));
@@ -216,7 +216,7 @@ public class HomeAnalytics {
   public void sendPromotionsDialogNavigateEvent() {
     final Map<String, Object> data = new HashMap<>();
     data.put("action", TAP_ON_CARD);
-    data.put("bundle_tag", "promotions-dialog");
+    data.put("bundle_tag", "promotion-dialog");
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
