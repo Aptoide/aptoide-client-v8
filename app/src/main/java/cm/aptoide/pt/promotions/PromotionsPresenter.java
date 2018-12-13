@@ -2,6 +2,7 @@ package cm.aptoide.pt.promotions;
 
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
 public class PromotionsPresenter implements Presenter {
@@ -22,7 +23,8 @@ public class PromotionsPresenter implements Presenter {
 
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> promotionsManager.getPromotionApps())
+        .flatMapSingle(__ -> promotionsManager.getPromotionApps())
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(appsList -> view.showPromotionApps(appsList))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

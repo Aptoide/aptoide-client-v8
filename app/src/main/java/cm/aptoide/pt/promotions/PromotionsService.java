@@ -7,6 +7,8 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsResponse;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -43,10 +45,10 @@ public class PromotionsService {
     return ClaimPromotionRequest.of(walletAddress, packageName, captcha, bodyInterceptorPoolV7,
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
-        .map(this::map)
+        .map(this::mapClaim)
         .onErrorReturn(throwable -> {
           if (throwable instanceof AptoideWsV7Exception) {
-            return map(((AptoideWsV7Exception) throwable).getBaseResponse());
+            return mapClaim(((AptoideWsV7Exception) throwable).getBaseResponse());
           } else {
             throw new RuntimeException(throwable);
           }
@@ -54,7 +56,7 @@ public class PromotionsService {
         .toSingle();
   }
 
-  private ClaimStatusWrapper map(BaseV7Response response) {
+  private ClaimStatusWrapper mapClaim(BaseV7Response response) {
     return new ClaimStatusWrapper(mapStatus(response.getInfo()
         .getStatus()), mapError(response.getErrors()));
   }
@@ -93,6 +95,48 @@ public class PromotionsService {
         }
       }
     }
+    return result;
+  }
+
+  public Single<List<PromotionApp>> getPromotionApps() {
+    return GetPromotionAppsRequest.of(bodyInterceptorPoolV7, okHttpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe(true)
+        .map(this::mapGet)
+        .toSingle();
+  }
+
+  private List<PromotionApp> mapGet(GetPromotionAppsResponse response) {
+    List<PromotionApp> result = new ArrayList<>();
+    if (response != null && response.getDataList() != null && response.getDataList()
+        .getList() != null) {
+      for (GetPromotionAppsResponse.PromotionAppModel app : response.getDataList()
+          .getList()) {
+        result.add(new PromotionApp(app.getApp()
+            .getName(), app.getApp()
+            .getPackageName(), app.getApp()
+            .getId(), app.getApp()
+            .getFile()
+            .getPath(), app.getApp()
+            .getFile()
+            .getPathAlt(), app.getApp()
+            .getIcon(), app.getDescription(), app.getApp()
+            .getSize(), app.getApp()
+            .getStats()
+            .getRating()
+            .getAvg(), app.getApp()
+            .getStats()
+            .getDownloads(), app.getApp()
+            .getFile()
+            .getMd5sum(), app.getApp()
+            .getFile()
+            .getVercode(), app.isClaimed(), app.getApp()
+            .getFile()
+            .getVername(), app.getApp()
+            .getObb(), app.getAppc()));
+      }
+    }
+
     return result;
   }
 }

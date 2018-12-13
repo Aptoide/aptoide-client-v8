@@ -84,7 +84,7 @@ import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.appview.PreferencesManager;
-import cm.aptoide.pt.appview.UserPreferencesPersister;
+import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -165,6 +165,7 @@ import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.promotions.CaptchaService;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsService;
 import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -1405,14 +1406,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
   }
 
-  @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(
+  @Singleton @Provides PreferencesPersister providesUserPreferencesPersister(
       @Named("default") SharedPreferences sharedPreferences) {
-    return new UserPreferencesPersister(sharedPreferences);
+    return new PreferencesPersister(sharedPreferences);
   }
 
   @Singleton @Provides PreferencesManager providesPreferencesManager(
-      UserPreferencesPersister userPreferencesPersister) {
-    return new PreferencesManager(userPreferencesPersister);
+      PreferencesPersister preferencesPersister) {
+    return new PreferencesManager(preferencesPersister);
   }
 
   @Singleton @Provides ReviewsManager providesReviewsManager(ReviewsRepository reviewsRepository) {
@@ -1617,5 +1618,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides MyAccountManager providesMyAccountManager() {
     return new MyAccountManager();
+  }
+
+  @Singleton @Provides PromotionsPreferencesManager providesPromotionsPreferencesManager(
+      PreferencesPersister persister) {
+    return new PromotionsPreferencesManager(persister);
   }
 }

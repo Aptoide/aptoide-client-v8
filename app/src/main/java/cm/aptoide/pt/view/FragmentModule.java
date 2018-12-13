@@ -90,6 +90,7 @@ import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
 import cm.aptoide.pt.search.SearchManager;
@@ -219,8 +220,11 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, AdsManager adsManager) {
-    return new Home(bundlesRepository, impressionManager, adsManager);
+      ImpressionManager impressionManager, AdsManager adsManager,
+      PromotionsManager promotionsManager,
+      PromotionsPreferencesManager promotionsPreferencesManager) {
+    return new Home(bundlesRepository, impressionManager, adsManager, promotionsManager,
+        promotionsPreferencesManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(

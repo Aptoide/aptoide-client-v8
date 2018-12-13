@@ -90,6 +90,12 @@ public class HomePresenter implements Presenter {
     handleEditorialCardClick();
 
     handlePromotionsClick();
+
+    checkForPromotionApps();
+
+    handleClickOnPromotionsDialogContinue();
+
+    handleClickOnPromotionsDialogCancel();
   }
 
   private void handlePromotionsClick() {
@@ -530,6 +536,63 @@ public class HomePresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> {
           throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void checkForPromotionApps() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(__ -> home.hasPromotionApps())
+        .filter(HomePromotionsWrapper::hasPromotions)
+        .observeOn(viewScheduler)
+        .doOnNext(apps -> {
+          view.showPromotionsHomeIcon(apps);
+          if (apps.getPromotions() > 0) {
+            if (apps.getPromotions() < 10) {
+              view.setPromotionsTickerWithValue(apps.getPromotions());
+            } else {
+              view.setEllipsizedPromotionsTicker();
+            }
+          }
+        })
+        .filter(HomePromotionsWrapper::shouldShowDialog)
+        .doOnNext(apps -> {
+          home.setPromotionsDialogShown();
+          view.showPromotionsHomeDialog(apps);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void handleClickOnPromotionsDialogContinue() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.promotionsHomeDialogClicked())
+        .filter(action -> action.equals("navigate"))
+        .doOnNext(__ -> {
+          view.dismissPromotionsDialog();
+          homeNavigator.navigateToPromotions();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleClickOnPromotionsDialogCancel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.promotionsHomeDialogClicked())
+        .filter(action -> action.equals("cancel"))
+        .doOnNext(__ -> view.dismissPromotionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 

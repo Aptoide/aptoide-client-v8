@@ -15,11 +15,8 @@ public class ClaimPromotionRequest extends V7<BaseV7Response, ClaimPromotionRequ
   public ClaimPromotionRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(body, getHost(), httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
-  }
-
-  public static String getHost() {
-    return "http://dev.ws75.aptoide.com/api/7/";
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
   }
 
   public static ClaimPromotionRequest of(String walletAddress, String packageName, String captcha,
