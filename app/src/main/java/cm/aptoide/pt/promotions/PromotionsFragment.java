@@ -382,7 +382,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       if (promotionViewApp.getRating() == 0) {
         rating.setText(R.string.appcardview_title_no_stars);
       } else {
-        rating.setText(new DecimalFormat("0.0").format(promotionViewApp.getRating()));
+        rating.setText(decimalFormat.format(promotionViewApp.getRating()));
       }
       numberOfDownloads.setText(String.valueOf(promotionViewApp.getNumberOfDownloads()));
 
