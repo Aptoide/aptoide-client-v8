@@ -50,7 +50,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
   private PublishSubject<AdHomeEvent> adClickedEvents;
-  private PublishSubject<Void> promotionsDialogClickEvent;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
   private View genericErrorView;
@@ -78,7 +77,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     uiEventsListener = null;
     oneDecimalFormatter = null;
     adClickedEvents = null;
-    promotionsDialogClickEvent = null;
     userAvatar = null;
     super.onDestroy();
   }
@@ -89,7 +87,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
-    promotionsDialogClickEvent = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
@@ -283,10 +280,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .filter(position -> position != RecyclerView.NO_POSITION)
         .distinctUntilChanged()
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
-  }
-
-  @Override public Observable<Void> promotionsDialogContinueClicked() {
-    return promotionsDialogClickEvent;
   }
 
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {
