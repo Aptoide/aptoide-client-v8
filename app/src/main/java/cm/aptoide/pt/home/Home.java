@@ -63,13 +63,14 @@ public class Home {
         .map(this::mapPromotions);
   }
 
+  public void dontShowPromotionsDialog() {
+    promotionsPreferencesManager.dontShowPromotionsDialog();
+  }
+
   private HomePromotionsWrapper mapPromotions(List<PromotionApp> apps) {
-    boolean hasPromotions = false;
     int promotions = 0;
     float appcValue = 0;
-    boolean showDialog;
     if (apps.size() > 0) {
-      hasPromotions = true;
       for (PromotionApp app : apps) {
         if (!app.isClaimed()) {
           promotions++;
@@ -77,12 +78,8 @@ public class Home {
         }
       }
     }
-    if (promotionsPreferencesManager.shouldShowPromotionsDialog()) {
-      showDialog = true;
-      promotionsPreferencesManager.dontShowPromotionsDialog();
-    } else {
-      showDialog = false;
-    }
-    return new HomePromotionsWrapper(hasPromotions, promotions, appcValue, showDialog);
+
+    return new HomePromotionsWrapper(!apps.isEmpty(), promotions, appcValue,
+        promotionsPreferencesManager.shouldShowPromotionsDialog());
   }
 }

@@ -6,13 +6,11 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +18,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.promotions.PromotionsHomeDialog;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -66,6 +65,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private TextView promotionsTicker;
   private BottomNavigationActivity bottomNavigationActivity;
   private LoggedInTermsAndConditionsDialog gdprDialog;
+  private PromotionsHomeDialog promotionsHomeDialog;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -104,14 +104,14 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         savedInstanceState.putParcelable(LIST_STATE_KEY, null);
       }
     }
-    userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
-    bundlesList = (RecyclerView) view.findViewById(R.id.bundles_list);
+    userAvatar = view.findViewById(R.id.user_actionbar_icon);
+    bundlesList = view.findViewById(R.id.bundles_list);
     genericErrorView = view.findViewById(R.id.generic_error);
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
     retryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
+    progressBar = view.findViewById(R.id.progress_bar);
+    swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
@@ -120,6 +120,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
     gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
+    promotionsHomeDialog = new PromotionsHomeDialog(getContext());
     promotionsButton = view.findViewById(R.id.promotions_button);
     promotionsTicker = view.findViewById(R.id.promotions_ticker);
     attachPresenter(presenter);
@@ -157,6 +158,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     if (gdprDialog != null) {
       gdprDialog.destroyDialog();
       gdprDialog = null;
+    }
+    if (promotionsHomeDialog != null) {
+      promotionsHomeDialog.destroyDialog();
+      promotionsHomeDialog = null;
     }
     promotionsButton = null;
     super.onDestroyView();
@@ -301,6 +306,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return gdprDialog.dialogClicked();
   }
 
+  @Override public Observable<String> promotionsHomeDialogClicked() {
+    return promotionsHomeDialog.dialogClicked();
+  }
+
   @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.KNOW_MORE));
@@ -352,25 +361,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   }
 
   @Override public void showPromotionsHomeDialog(HomePromotionsWrapper wrapper) {
-    if (wrapper.shouldShowDialog()) {
-      AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-      LayoutInflater inflater = this.getLayoutInflater();
-      View dialogView = inflater.inflate(R.layout.promotions_home_dialog, null);
-      dialogBuilder.setView(dialogView);
-
-      AlertDialog alertDialog = dialogBuilder.create();
-      Button cancel = dialogView.findViewById(R.id.cancel_button);
-      Button navigate = dialogView.findViewById(R.id.navigate_button);
-      TextView description = dialogView.findViewById(R.id.description);
-      description.setText(getContext().getString(R.string.holidayspromotion_message_popup,
-          String.valueOf(wrapper.getTotalAppcValue())));
-      cancel.setOnClickListener(click -> alertDialog.dismiss());
-      navigate.setOnClickListener(click -> {
-        promotionsDialogClickEvent.onNext(null);
-        alertDialog.dismiss();
-      });
-      alertDialog.show();
-    }
+    promotionsHomeDialog.showDialog(getContext(), wrapper);
   }
 
   @Override public void showPromotionsHomeIcon(HomePromotionsWrapper homeWrapper) {
@@ -383,6 +374,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
       }
       promotionsTicker.setVisibility(View.VISIBLE);
     }
+  }
+
+  @Override public void dismissPromotionsDialog() {
+    promotionsHomeDialog.dismissDialog();
   }
 
   private boolean isEndReached() {

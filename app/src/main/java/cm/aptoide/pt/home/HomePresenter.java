@@ -94,6 +94,8 @@ public class HomePresenter implements Presenter {
     checkForPromotionApps();
 
     handleClickOnPromotionsDialogContinue();
+
+    handleClickOnPromotionsDialogCancel();
   }
 
   private void handlePromotionsClick() {
@@ -545,7 +547,10 @@ public class HomePresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(apps -> {
           view.showPromotionsHomeIcon(apps);
-          view.showPromotionsHomeDialog(apps);
+          if (apps.shouldShowDialog()) {
+            home.dontShowPromotionsDialog();
+            view.showPromotionsHomeDialog(apps);
+          }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -556,13 +561,30 @@ public class HomePresenter implements Presenter {
 
   private void handleClickOnPromotionsDialogContinue() {
     view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.promotionsDialogContinueClicked())
-        .doOnNext(__ -> homeNavigator.navigateToPromotions())
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.promotionsHomeDialogClicked())
+        .filter(action -> action.equals("navigate"))
+        .doOnNext(__ -> {
+          view.dismissPromotionsDialog();
+          homeNavigator.navigateToPromotions();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> {
-          throw new OnErrorNotImplementedException(err);
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handleClickOnPromotionsDialogCancel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.promotionsHomeDialogClicked())
+        .filter(action -> action.equals("cancel"))
+        .doOnNext(__ -> view.dismissPromotionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 
