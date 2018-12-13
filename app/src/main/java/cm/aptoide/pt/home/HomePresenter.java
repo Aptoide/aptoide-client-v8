@@ -563,7 +563,7 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
-          throw new OnErrorNotImplementedException(err);
+          view.hidePromotionsIcon();
         });
   }
 
