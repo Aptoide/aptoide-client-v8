@@ -22,7 +22,8 @@ public class PromotionsPresenter implements Presenter {
 
   public PromotionsPresenter(PromotionsView view, PromotionsManager promotionsManager,
       PermissionManager permissionManager, PermissionService permissionService,
-      Scheduler viewScheduler, PromotionsAnalytics promotionsAnalytics, PromotionsNavigator promotionsNavigator) {
+      Scheduler viewScheduler, PromotionsAnalytics promotionsAnalytics,
+      PromotionsNavigator promotionsNavigator) {
     this.view = view;
     this.promotionsManager = promotionsManager;
     this.permissionManager = permissionManager;
@@ -45,6 +46,8 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.claimAppClick()
+            .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractClaimEvent(
+                promotionViewApp.getPackageName(), promotionViewApp.getAppcValue()))
             .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
                 promotionViewApp.getPackageName()))
             .retry())
@@ -108,6 +111,10 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(__ -> view.installButtonClick())
         .filter(promotionViewApp -> promotionViewApp.getDownloadModel()
             .isDownloadable())
+        .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractInstallEvent(
+            promotionViewApp.getPackageName(), promotionViewApp.getAppcValue(),
+            promotionViewApp.getDownloadModel()
+                .getAction()))
         .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
         .observeOn(viewScheduler)
         .doOnError(throwable -> throwable.printStackTrace())
