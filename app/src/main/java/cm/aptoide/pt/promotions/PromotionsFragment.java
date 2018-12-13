@@ -53,7 +53,6 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
-  private static final String TAG = PromotionsFragment.class.getSimpleName();
   @Inject PromotionsPresenter promotionsPresenter;
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
@@ -152,7 +151,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName(), TAG);
+        .getSimpleName());
   }
 
   private void handleStatusBar(boolean collapseState) {
