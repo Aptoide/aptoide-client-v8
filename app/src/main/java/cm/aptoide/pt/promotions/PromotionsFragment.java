@@ -67,6 +67,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private TextView toolbarTitle;
   private Subscription errorMessageSubscription;
+  private DecimalFormat decimalFormat;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -77,10 +78,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    decimalFormat = new DecimalFormat("0.0");
     promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
     promotionAppClick = PublishSubject.create();
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(),
-        new PromotionsViewHolderFactory(promotionAppClick, new DecimalFormat("0.0")));
+        new PromotionsViewHolderFactory(promotionAppClick, decimalFormat));
 
     promotionFirstMessage = view.findViewById(R.id.promotions_message_1);
     walletActiveView = view.findViewById(R.id.promotion_wallet_active);
@@ -352,7 +354,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       if (promotionViewApp.getRating() == 0) {
         rating.setText(R.string.appcardview_title_no_stars);
       } else {
-        rating.setText(new DecimalFormat("0.0").format(promotionViewApp.getRating()));
+        rating.setText(decimalFormat.format(promotionViewApp.getRating()));
       }
       numberOfDownloads.setText(String.valueOf(promotionViewApp.getNumberOfDownloads()));
     } else {
