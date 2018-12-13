@@ -9,17 +9,16 @@ import java.util.Map;
 
 public class PromotionsAnalytics {
   public static final String PROMOTION_DIALOG = "Promotion_Dialog";
-  final String NEXT = "next";
-  final String CANCEL = "cancel";
-  final String OPEN_WALLET = "open wallet";
-  final String CLAIM = "claim";
-  final String WALLET_DIALOG = "wallet dialog";
-  final String CAPTCHA_DIALOG = "captcha dialog";
+  private final String NEXT = "next";
+  private final String CANCEL = "cancel";
+  private final String OPEN_WALLET = "open wallet";
+  private final String CLAIM = "claim";
+  private final String WALLET_DIALOG = "wallet dialog";
+  private final String CAPTCHA_DIALOG = "captcha dialog";
 
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final DownloadAnalytics downloadAnalytics;
-
 
   public PromotionsAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
       DownloadAnalytics downloadAnalytics) {
