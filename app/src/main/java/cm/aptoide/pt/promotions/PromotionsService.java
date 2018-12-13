@@ -108,11 +108,9 @@ public class PromotionsService {
 
   private List<PromotionApp> mapGet(GetPromotionAppsResponse response) {
     List<PromotionApp> result = new ArrayList<>();
-    if (response != null
-        && response.getDatalist() != null
-        && response.getDatalist()
+    if (response != null && response.getDataList() != null && response.getDataList()
         .getList() != null) {
-      for (GetPromotionAppsResponse.PromotionAppModel app : response.getDatalist()
+      for (GetPromotionAppsResponse.PromotionAppModel app : response.getDataList()
           .getList()) {
         result.add(new PromotionApp(app.getApp()
             .getName(), app.getApp()
