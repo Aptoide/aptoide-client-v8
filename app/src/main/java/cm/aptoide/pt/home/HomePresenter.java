@@ -103,7 +103,10 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.promotionsClick()
             .observeOn(viewScheduler)
-            .doOnNext(account -> homeNavigator.navigateToPromotions())
+            .doOnNext(account -> {
+              homeAnalytics.sendPromotionsIconClickEvent();
+              homeNavigator.navigateToPromotions();
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -557,6 +560,7 @@ public class HomePresenter implements Presenter {
         })
         .filter(HomePromotionsWrapper::shouldShowDialog)
         .doOnNext(apps -> {
+          homeAnalytics.sendPromotionsDialogImpressionEvent();
           home.setPromotionsDialogShown();
           view.showPromotionsHomeDialog(apps);
         })
@@ -573,6 +577,7 @@ public class HomePresenter implements Presenter {
         .flatMap(__ -> view.promotionsHomeDialogClicked())
         .filter(action -> action.equals("navigate"))
         .doOnNext(__ -> {
+          homeAnalytics.sendPromotionsDialogNavigateEvent();
           view.dismissPromotionsDialog();
           homeNavigator.navigateToPromotions();
         })
@@ -588,7 +593,10 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.promotionsHomeDialogClicked())
         .filter(action -> action.equals("cancel"))
-        .doOnNext(__ -> view.dismissPromotionsDialog())
+        .doOnNext(__ -> {
+          homeAnalytics.sendPromotionsDialogDismissEvent();
+          view.dismissPromotionsDialog();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
