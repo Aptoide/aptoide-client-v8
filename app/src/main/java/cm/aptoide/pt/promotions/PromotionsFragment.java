@@ -81,7 +81,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
     promotionAppClick = PublishSubject.create();
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(),
-        new PromotionsViewHolderFactory(promotionAppClick));
+        new PromotionsViewHolderFactory(promotionAppClick, new DecimalFormat("0.0")));
 
     promotionFirstMessage = view.findViewById(R.id.promotions_message_1);
     walletActiveView = view.findViewById(R.id.promotion_wallet_active);

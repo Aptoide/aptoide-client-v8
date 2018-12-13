@@ -16,13 +16,13 @@ import rx.subjects.PublishSubject;
 class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
 
   private final PublishSubject<PromotionAppClick> promotionAppClick;
+  private final DecimalFormat decimalFormat;
   private TextView appName;
   private TextView appDescription;
   private ImageView appIcon;
   private TextView appSize;
   private TextView numberOfDownloads;
   private TextView rating;
-
   private ProgressBar downloadProgressBar;
   private TextView downloadProgressValue;
   private ImageView pauseDownload;
@@ -31,7 +31,7 @@ class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
   private LinearLayout downloadControlsLayout;
 
   public PromotionAppDownloadingViewHolder(View itemView,
-      PublishSubject<PromotionAppClick> promotionAppClick) {
+      PublishSubject<PromotionAppClick> promotionAppClick, DecimalFormat decimalFormat) {
     super(itemView);
     this.appIcon = itemView.findViewById(R.id.app_icon);
     this.appName = itemView.findViewById(R.id.app_name);
@@ -46,6 +46,7 @@ class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
     this.resumeDownload = itemView.findViewById(R.id.promotions_download_resume_download);
     this.downloadControlsLayout = itemView.findViewById(R.id.install_controls_layout);
     this.promotionAppClick = promotionAppClick;
+    this.decimalFormat = decimalFormat;
   }
 
   public void setApp(PromotionViewApp app) {
@@ -63,7 +64,7 @@ class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
     if (app.getRating() == 0) {
       rating.setText(R.string.appcardview_title_no_stars);
     } else {
-      rating.setText(new DecimalFormat("0.0").format(app.getRating()));
+      rating.setText(decimalFormat.format(app.getRating()));
     }
     numberOfDownloads.setText(String.valueOf(app.getNumberOfDownloads()));
   }

@@ -21,6 +21,7 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
 
   private final PublishSubject<PromotionAppClick> promotionAppClick;
+  private final DecimalFormat decimalFormat;
   private int appState;
   private TextView appName;
   private TextView appDescription;
@@ -31,7 +32,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
   private Button promotionAction;
 
   public PromotionAppViewHolder(View itemView, int appState,
-      PublishSubject<PromotionAppClick> promotionAppClick) {
+      PublishSubject<PromotionAppClick> promotionAppClick, DecimalFormat decimalFormat) {
     super(itemView);
     this.appState = appState;
     appIcon = itemView.findViewById(R.id.app_icon);
@@ -42,6 +43,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
     rating = itemView.findViewById(R.id.rating);
     promotionAction = itemView.findViewById(R.id.promotion_app_action_button);
     this.promotionAppClick = promotionAppClick;
+    this.decimalFormat = decimalFormat;
   }
 
   public void setApp(PromotionViewApp app, boolean isWalletInstalled) {
@@ -145,7 +147,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
     if (app.getRating() == 0) {
       rating.setText(R.string.appcardview_title_no_stars);
     } else {
-      rating.setText(new DecimalFormat("0.0").format(app.getRating()));
+      rating.setText(decimalFormat.format(app.getRating()));
     }
     numberOfDownloads.setText(String.valueOf(app.getNumberOfDownloads()));
   }
