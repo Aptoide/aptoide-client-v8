@@ -33,20 +33,19 @@ class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
   public PromotionAppDownloadingViewHolder(View itemView,
       PublishSubject<PromotionAppClick> promotionAppClick) {
     super(itemView);
-    appIcon = itemView.findViewById(R.id.app_icon);
-    appName = itemView.findViewById(R.id.app_name);
-    appDescription = itemView.findViewById(R.id.app_description);
-    numberOfDownloads = itemView.findViewById(R.id.number_of_downloads);
-    appSize = itemView.findViewById(R.id.app_size);
-    rating = itemView.findViewById(R.id.rating);
+    this.appIcon = itemView.findViewById(R.id.app_icon);
+    this.appName = itemView.findViewById(R.id.app_name);
+    this.appDescription = itemView.findViewById(R.id.app_description);
+    this.numberOfDownloads = itemView.findViewById(R.id.number_of_downloads);
+    this.appSize = itemView.findViewById(R.id.app_size);
+    this.rating = itemView.findViewById(R.id.rating);
+    this.downloadProgressBar = itemView.findViewById(R.id.promotions_download_progress_bar);
+    this.downloadProgressValue = itemView.findViewById(R.id.promotions_download_progress_number);
+    this.pauseDownload = itemView.findViewById(R.id.promotions_download_pause_download);
+    this.cancelDownload = itemView.findViewById(R.id.promotions_download_cancel_button);
+    this.resumeDownload = itemView.findViewById(R.id.promotions_download_resume_download);
+    this.downloadControlsLayout = itemView.findViewById(R.id.install_controls_layout);
     this.promotionAppClick = promotionAppClick;
-
-    downloadProgressBar = itemView.findViewById(R.id.promotions_download_progress_bar);
-    downloadProgressValue = itemView.findViewById(R.id.promotions_download_progress_number);
-    pauseDownload = itemView.findViewById(R.id.promotions_download_pause_download);
-    cancelDownload = itemView.findViewById(R.id.promotions_download_cancel_button);
-    resumeDownload = itemView.findViewById(R.id.promotions_download_resume_download);
-    downloadControlsLayout = itemView.findViewById(R.id.install_controls_layout);
   }
 
   public void setApp(PromotionViewApp app) {
