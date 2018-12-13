@@ -90,7 +90,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
     }
     toolbarTitle = view.findViewById(R.id.toolbar_title);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar = view.findViewById(R.id.toolbar);
     toolbar.setTitle("");
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
     appCompatActivity.setSupportActionBar(toolbar);
@@ -99,10 +99,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
     backArrow = toolbar.getNavigationIcon();
-    appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar_layout);
+    appBarLayout = view.findViewById(R.id.app_bar_layout);
 
-    collapsingToolbarLayout =
-        ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
+    collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar_layout);
     collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.tw__transparent));
     collapsingToolbarLayout.setCollapsedTitleTextColor(
         getResources().getColor(R.color.tw__transparent));
