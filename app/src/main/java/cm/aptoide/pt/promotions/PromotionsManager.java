@@ -2,7 +2,6 @@ package cm.aptoide.pt.promotions;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.appview.PreferencesManager;
@@ -12,10 +11,10 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public class PromotionsManager {
 
@@ -29,12 +28,15 @@ public class PromotionsManager {
   private final InstallAnalytics installAnalytics;
   private final PreferencesManager preferencesManager;
   private final PackageManager packageManager;
+  private final PromotionsService promotionsService;
+
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      PreferencesManager preferencesManager, PackageManager packageManager) {
+      PreferencesManager preferencesManager, PackageManager packageManager,
+      PromotionsService promotionsService) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -44,10 +46,11 @@ public class PromotionsManager {
     this.installAnalytics = installAnalytics;
     this.preferencesManager = preferencesManager;
     this.packageManager = packageManager;
+    this.promotionsService = promotionsService;
   }
 
   public Observable<PromotionsModel> getPromotionsModel() {
-    return Observable.just(getPromotionAppsMocked())
+    return promotionsService.getPromotionApps().toObservable()
         .map(
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }
@@ -69,30 +72,7 @@ public class PromotionsManager {
     return total;
   }
 
-  @NonNull private List<PromotionApp> getPromotionAppsMocked() {
-    List<PromotionApp> promotionAppList = new ArrayList<>();
-    promotionAppList.add(new PromotionApp("AppCoins BDS Wallet", "com.appcoins.wallet", 123,
-        "http://pool.apk.aptoide.com/bds-store/com-appcoins-wallet-49-42442511-8fb27f9653e7632d136dba69ca371eb6.apk",
-        "http://pool.apk.aptoide.com/bds-store/alt/Y29tLWFwcGNvaW5zLXdhbGxldC00OS00MjQ0MjUxMS04ZmIyN2Y5NjUzZTc2MzJkMTM2ZGJhNjljYTM3MWViNg.apk",
-        "http://pool.img.aptoide.com/bds-store/ccf6877713a2eecd8bea902bdc900273_icon.png",
-        "Appcoins BDS Wallet description", 15844591, 4.54f, 123012,
-        "8fb27f9653e7632d136dba69ca371eb6", 49, false, "1.3.0.2", null, 25));
 
-    promotionAppList.add(new PromotionApp("Ana's app", "cm.aptoide.pt.ana", 123,
-        "http://pool.apk.aptoide.com/lordballiwns/com-facebook-orca-132958908-42161891-bfb0e8f4a51fcbaa16f1840322eb232a.apk",
-        "http://pool.apk.aptoide.com/lordballiwns/alt/Y29tLWZhY2Vib29rLW9yY2EtMTMyOTU4OTA4LTQyMTYxODkxLWJmYjBlOGY0YTUxZmNiYWExNmYxODQwMzIyZWIyMzJh.apk",
-        "http://pool.img.aptoide.com/lordballiwns/76e0376928b8393227a150fbed5d6b4a_icon.png",
-        "This app belongs to ana. It is an app.", 123133, 4.2f, 123012, "anamd5", 12314, false,
-        "ana version", null, 25));
-    promotionAppList.add(new PromotionApp("Joao's app", "cm.aptoide.pt.joao", 123,
-        "http://pool.apk.aptoide.com/bds-store/nzt-metal-shooter-commando-47-41200964-0e13c87fc172d3fa7ac0392ec12e72df.apk",
-        "http://pool.apk.aptoide.com/bds-store/alt/bnp0LW1ldGFsLXNob290ZXItY29tbWFuZG8tNDctNDEyMDA5NjQtMGUxM2M4N2ZjMTcyZDNmYTdhYzAzOTJlYzEyZTcyZGY.apk",
-        "http://pool.img.aptoide.com/bds-store/8335ae2d104ce4dcbfec66fc07c1e7ce_icon.png",
-        "This app belongs to Joao. It is an app.", 12323, 4.2f, 123123, "joaomd5", 123122, false,
-        "joao version", null, 25));
-
-    return promotionAppList;
-  }
 
   public Observable<PromotionViewApp> getDownload(PromotionApp promotionApp) {
     return installManager.getInstall(promotionApp.getMd5(), promotionApp.getPackageName(),
@@ -150,5 +130,18 @@ public class PromotionsManager {
     return installManager.getDownload(md5)
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)));
+  }
+
+  public void saveWalletAddress(String walletAddress) {
+    promotionsService.saveWalletAddress(walletAddress);
+  }
+
+  public String getWalletAddress() {
+    return promotionsService.getWalletAddress();
+  }
+
+  public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
+      String captcha) {
+    return promotionsService.claimPromotion(walletAddress, packageName, captcha);
   }
 }

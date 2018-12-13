@@ -22,6 +22,7 @@ import rx.Observable;
  */
 
 public class HomeNavigator {
+  private static final String TAG = HomeNavigator.class.getSimpleName();
   private final FragmentNavigator fragmentNavigator;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final BottomNavigationMapper bottomNavigationMapper;
