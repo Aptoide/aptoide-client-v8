@@ -256,10 +256,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
-  @Override public void navigateToClaimDialog(String packageName) {
-    // TODO: 12/12/18 navigate to claim dialog
-  }
-
   private void showWallet(PromotionViewApp promotionViewApp) {
     if (promotionViewApp.getDownloadModel()
         .isDownloading()) {

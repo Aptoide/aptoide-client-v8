@@ -90,6 +90,7 @@ import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
@@ -390,9 +391,14 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
-      PromotionsManager promotionsManager) {
+      PromotionsManager promotionsManager, PromotionsNavigator promotionsNavigator) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
-        AndroidSchedulers.mainThread());
+        AndroidSchedulers.mainThread(), promotionsNavigator);
+  }
+
+  @FragmentScope @Provides PromotionsNavigator providesPromotionsNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new PromotionsNavigator(fragmentNavigator);
   }
 }

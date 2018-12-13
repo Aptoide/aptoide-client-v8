@@ -14,18 +14,20 @@ public class PromotionsPresenter implements Presenter {
 
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
-  private PromotionsView view;
-  private PromotionsManager promotionsManager;
-  private Scheduler viewScheduler;
+  private final PromotionsView view;
+  private final PromotionsManager promotionsManager;
+  private final Scheduler viewScheduler;
+  private final PromotionsNavigator promotionsNavigator;
 
   public PromotionsPresenter(PromotionsView view, PromotionsManager promotionsManager,
       PermissionManager permissionManager, PermissionService permissionService,
-      Scheduler viewScheduler) {
+      Scheduler viewScheduler, PromotionsNavigator promotionsNavigator) {
     this.view = view;
     this.promotionsManager = promotionsManager;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.viewScheduler = viewScheduler;
+    this.promotionsNavigator = promotionsNavigator;
   }
 
   @Override public void present() {
@@ -41,8 +43,8 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.claimAppClick()
-            .doOnNext(
-                promotionViewApp -> view.navigateToClaimDialog(promotionViewApp.getPackageName()))
+            .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
+                promotionViewApp.getPackageName()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
