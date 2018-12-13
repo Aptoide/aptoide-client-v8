@@ -158,11 +158,10 @@ android {
   variantFilter { variant ->
     List<ProductFlavor> flavors = variant.getFlavors()
 
-    String applicationIdBase = flavors[0].applicationId
     String applicationIdSuffix = flavors[1].applicationIdSuffix
     boolean hasSuffix = applicationIdSuffix != null
 
-    if (applicationIdBase.contains('cobrand') && hasSuffix &&
+    if (flavors[0].name.contains('cobrand') && hasSuffix &&
         (applicationIdSuffix.contains('internal') || applicationIdSuffix.contains('testfairy') ||
             applicationIdSuffix.contains('leak'))) {
       setIgnore(true)
@@ -219,7 +218,7 @@ android {
     variant.resValue "string", "store_suggestion_provider_authority",
         storeSuggestionProviderAuthority
 
-    if (applicationIdBase.contains("cobrand")) {
+    if (flavors[0].name.contains("cobrand")) {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
     } else {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
