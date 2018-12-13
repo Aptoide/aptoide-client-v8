@@ -9,16 +9,18 @@ import java.util.Map;
 
 public class PromotionsAnalytics {
   public static final String PROMOTION_DIALOG = "Promotion_Dialog";
+  public static final String PROMOTIONS_INTERACT = "Promotions_Interact";
   private final String NEXT = "next";
   private final String CANCEL = "cancel";
   private final String OPEN_WALLET = "open wallet";
   private final String CLAIM = "claim";
   private final String WALLET_DIALOG = "wallet dialog";
   private final String CAPTCHA_DIALOG = "captcha dialog";
-
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final DownloadAnalytics downloadAnalytics;
+  private final String ACTION = "action";
+  private final String ACTION_OPEN = "open";
 
   public PromotionsAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
       DownloadAnalytics downloadAnalytics) {
@@ -31,6 +33,21 @@ public class PromotionsAnalytics {
       AnalyticsManager.Action action) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.PROMOTIONS, action);
+  }
+
+  public void sendOpenPromotionsFragmentEvent() {
+    analyticsManager.logEvent(createPromotionsInteractMap(), PROMOTIONS_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(false));
+  }
+
+  private String getViewName(boolean isCurrent) {
+    return navigationTracker.getViewName(isCurrent);
+  }
+
+  private HashMap<String, Object> createPromotionsInteractMap() {
+    HashMap<String, Object> map = new HashMap<>();
+    map.put(ACTION, ACTION_OPEN);
+    return map;
   }
 
   public void sendClickOnWalletDialogNext(String packageName) {

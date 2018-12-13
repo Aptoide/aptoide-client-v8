@@ -169,6 +169,7 @@ import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsService;
+import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.repository.DownloadRepository;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
