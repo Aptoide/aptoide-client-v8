@@ -60,7 +60,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private View noNetworkRetryButton;
   private View retryButton;
   private ImageView userAvatar;
-  private ImageView promotionsButton;
+  private ImageView promotionsIcon;
   private TextView promotionsTicker;
   private BottomNavigationActivity bottomNavigationActivity;
   private LoggedInTermsAndConditionsDialog gdprDialog;
@@ -118,7 +118,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     bundlesList.setAdapter(adapter);
     gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
-    promotionsButton = view.findViewById(R.id.promotions_button);
+    promotionsIcon = view.findViewById(R.id.promotions_icon);
     promotionsTicker = view.findViewById(R.id.promotions_ticker);
     attachPresenter(presenter);
   }
@@ -160,7 +160,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
       promotionsHomeDialog.destroyDialog();
       promotionsHomeDialog = null;
     }
-    promotionsButton = null;
+    promotionsIcon = null;
     super.onDestroyView();
   }
 
@@ -350,7 +350,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   }
 
   @Override public Observable<Void> promotionsClick() {
-    return RxView.clicks(promotionsButton);
+    return RxView.clicks(promotionsIcon);
   }
 
   @Override public void showPromotionsHomeDialog(HomePromotionsWrapper wrapper) {
@@ -358,7 +358,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   }
 
   @Override public void showPromotionsHomeIcon(HomePromotionsWrapper homeWrapper) {
-    promotionsButton.setVisibility(View.VISIBLE);
+    promotionsIcon.setVisibility(View.VISIBLE);
     if (homeWrapper.getPromotions() > 0) {
       if (homeWrapper.getPromotions() < 10) {
         promotionsTicker.setText(Integer.toString(homeWrapper.getPromotions()));

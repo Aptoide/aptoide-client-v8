@@ -29,7 +29,7 @@
         >
 
       <ImageView
-          android:id="@+id/promotions_button"
+          android:id="@+id/promotions_icon"
           android:layout_width="32dp"
           android:layout_height="32dp"
           android:layout_alignParentLeft="true"
