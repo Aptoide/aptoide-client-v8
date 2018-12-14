@@ -108,17 +108,17 @@ public class PromotionsPresenter implements Presenter {
   private void installButtonClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.installButtonClick())
-        .filter(promotionViewApp -> promotionViewApp.getDownloadModel()
-            .isDownloadable())
-        .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractInstallEvent(
-            promotionViewApp.getPackageName(), promotionViewApp.getAppcValue(),
-            promotionViewApp.getDownloadModel()
-                .getAction()))
-        .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
-        .observeOn(viewScheduler)
-        .doOnError(throwable -> throwable.printStackTrace())
-        .retry()
+        .flatMap(__ -> view.installButtonClick()
+            .filter(promotionViewApp -> promotionViewApp.getDownloadModel()
+                .isDownloadable())
+            .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractInstallEvent(
+                promotionViewApp.getPackageName(), promotionViewApp.getAppcValue(),
+                promotionViewApp.getDownloadModel()
+                    .getAction()))
+            .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
+            .observeOn(viewScheduler)
+            .doOnError(throwable -> throwable.printStackTrace())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
