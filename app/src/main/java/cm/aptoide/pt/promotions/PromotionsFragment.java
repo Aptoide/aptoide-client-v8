@@ -450,6 +450,12 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       case PromotionsAdapter.CLAIMED_INSTALL:
         message = R.string.appview_button_install;
         break;
+      case PromotionsAdapter.CLAIMED_UPDATE:
+        message = R.string.appview_button_update;
+        break;
+      case PromotionsAdapter.CLAIMED_DOWNGRADE:
+        message = R.string.appview_button_downgrade;
+        break;
       default:
         throw new IllegalArgumentException("Wrong view type of promotion app");
     }
