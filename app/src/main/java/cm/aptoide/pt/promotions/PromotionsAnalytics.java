@@ -11,9 +11,9 @@ import java.util.Map;
 public class PromotionsAnalytics {
   public static final String PROMOTION_DIALOG = "Promotion_Dialog";
   public static final String PROMOTIONS_INTERACT = "Promotions_Interact";
-  private static final String ACTION_CLAIM = "CLAIM";
-  private static final String ACTION_UPDATE = "UPDATE";
-  private static final String ACTION_INSTALL = "INSTALL";
+  private static final String ACTION_CLAIM = "claim";
+  private static final String ACTION_UPDATE = "update";
+  private static final String ACTION_INSTALL = "install";
   private static final String PACKAGE = "package";
   private static final String AMOUNT = "amount";
   private final String NEXT = "next";
