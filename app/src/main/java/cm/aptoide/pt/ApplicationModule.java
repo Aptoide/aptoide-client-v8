@@ -1618,7 +1618,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
         NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
         DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
-        EditorialAnalytics.CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG);
+        EditorialAnalytics.CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
+        PromotionsAnalytics.PROMOTIONS_INTERACT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

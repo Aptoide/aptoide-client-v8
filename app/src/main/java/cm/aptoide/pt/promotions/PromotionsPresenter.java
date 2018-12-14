@@ -18,15 +18,18 @@ public class PromotionsPresenter implements Presenter {
   private final PromotionsManager promotionsManager;
   private final Scheduler viewScheduler;
   private final PromotionsNavigator promotionsNavigator;
+  private final PromotionsAnalytics promotionsAnalytics;
 
   public PromotionsPresenter(PromotionsView view, PromotionsManager promotionsManager,
       PermissionManager permissionManager, PermissionService permissionService,
-      Scheduler viewScheduler, PromotionsNavigator promotionsNavigator) {
+      Scheduler viewScheduler, PromotionsAnalytics promotionsAnalytics,
+      PromotionsNavigator promotionsNavigator) {
     this.view = view;
     this.promotionsManager = promotionsManager;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.viewScheduler = viewScheduler;
+    this.promotionsAnalytics = promotionsAnalytics;
     this.promotionsNavigator = promotionsNavigator;
   }
 
@@ -43,6 +46,8 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.claimAppClick()
+            .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractClaimEvent(
+                promotionViewApp.getPackageName(), promotionViewApp.getAppcValue()))
             .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
                 promotionViewApp.getPackageName()))
             .retry())
@@ -106,6 +111,10 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(__ -> view.installButtonClick())
         .filter(promotionViewApp -> promotionViewApp.getDownloadModel()
             .isDownloadable())
+        .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractInstallEvent(
+            promotionViewApp.getPackageName(), promotionViewApp.getAppcValue(),
+            promotionViewApp.getDownloadModel()
+                .getAction()))
         .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
         .observeOn(viewScheduler)
         .doOnError(throwable -> throwable.printStackTrace())
@@ -137,6 +146,7 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> promotionsManager.getPromotionsModel())
+        .doOnNext(promotionsModel -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
         .observeOn(viewScheduler)
         .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
         .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
