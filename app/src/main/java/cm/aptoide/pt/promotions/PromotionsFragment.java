@@ -392,8 +392,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionAction.setEnabled(false);
         promotionAction.setBackgroundColor(getContext().getResources()
             .getColor(R.color.grey_fog_light));
-
-        promotionsAdapter.isWalletInstalled(true);
       } else if (getState(promotionViewApp) == CLAIM) {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundColor(getContext().getResources()
