@@ -30,5 +30,5 @@ public interface FragmentNavigator {
 
   Fragment getFragment();
 
-  void navigateToDialogFragment(DialogFragment fragment, String tag);
+  void navigateToDialogFragment(DialogFragment fragment);
 }

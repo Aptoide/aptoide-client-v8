@@ -133,7 +133,9 @@ public class FragmentResultNavigator implements FragmentNavigator {
     return fragmentManager.findFragmentById(containerId);
   }
 
-  @Override public void navigateToDialogFragment(DialogFragment fragment, String tag) {
+  @Override public void navigateToDialogFragment(DialogFragment fragment) {
+    final String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
+
     fragment.show(fragmentManager, tag);
   }
 }
