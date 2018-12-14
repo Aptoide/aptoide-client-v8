@@ -15,8 +15,8 @@ import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
 public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
-  public static final String CURATION_CARD_IMPRESSION = "CURATION_CARD_IMPRESSION";
-  public static final String CURATION_CARD_CLICK = "CURATION_CARD_CLICK";
+  public static final String CURATION_CARD_IMPRESSION = "Curation_Card_Impression";
+  public static final String CURATION_CARD_CLICK = "Curation_Card_Click";
   static final String SCROLL_RIGHT = "scroll right";
   static final String TAP_ON_APP = "tap on app";
   static final String IMPRESSION = "impression";
