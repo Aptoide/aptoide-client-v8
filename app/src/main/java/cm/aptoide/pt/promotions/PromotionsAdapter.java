@@ -14,6 +14,9 @@ public class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   static final int CLAIM = 4;
   static final int CLAIMED = 5;
   static final int DOWNGRADE = 6;
+  static final int CLAIMED_INSTALL = 7;
+  static final int CLAIMED_DOWNGRADE = 8;
+  static final int CLAIMED_UPDATE = 9;
 
   private List<PromotionViewApp> appsList;
   private PromotionsViewHolderFactory viewHolderFactory;

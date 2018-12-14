@@ -29,6 +29,7 @@ public class PromotionsManager {
   private final PreferencesManager preferencesManager;
   private final PackageManager packageManager;
   private final PromotionsService promotionsService;
+  private boolean isWalletInstalled;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
@@ -61,9 +62,11 @@ public class PromotionsManager {
   private boolean isWalletInstalled() {
     for (ApplicationInfo applicationInfo : packageManager.getInstalledApplications(0)) {
       if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
+        this.isWalletInstalled = true;
         return true;
       }
     }
+    this.isWalletInstalled = false;
     return false;
   }
 
@@ -78,7 +81,8 @@ public class PromotionsManager {
   public Observable<PromotionViewApp> getDownload(PromotionApp promotionApp) {
     return installManager.getInstall(promotionApp.getMd5(), promotionApp.getPackageName(),
         promotionApp.getVersionCode())
-        .map(install -> promotionViewAppMapper.mapInstallToPromotionApp(install, promotionApp));
+        .map(install -> promotionViewAppMapper.mapInstallToPromotionApp(install, promotionApp,
+            isWalletInstalled));
   }
 
   public boolean shouldShowRootInstallWarningPopup() {

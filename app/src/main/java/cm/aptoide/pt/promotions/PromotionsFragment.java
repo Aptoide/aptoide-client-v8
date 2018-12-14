@@ -43,15 +43,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
-import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIM;
-import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIMED;
-import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNGRADE;
-import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNLOAD;
-import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNLOADING;
-import static cm.aptoide.pt.promotions.PromotionsAdapter.INSTALL;
-import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
-import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
-
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
   @Inject PromotionsPresenter promotionsPresenter;
   private RecyclerView promotionsList;
@@ -220,7 +211,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
         getResources().getString(R.string.root_access_dialog))
-        .map(response -> (response.equals(YES)));
+        .map(response -> (response.equals(GenericDialogs.EResponse.YES)));
   }
 
   @Override public Observable<PromotionViewApp> pauseDownload() {
@@ -388,17 +379,17 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
       promotionAction.setText(getContext().getString(getButtonMessage(getState(promotionViewApp)),
           promotionViewApp.getAppcValue()));
-      if (getState(promotionViewApp) == CLAIMED) {
+      if (getState(promotionViewApp) == PromotionsAdapter.CLAIMED) {
         promotionAction.setEnabled(false);
         promotionAction.setBackgroundColor(getContext().getResources()
             .getColor(R.color.grey_fog_light));
-      } else if (getState(promotionViewApp) == CLAIM) {
+      } else if (getState(promotionViewApp) == PromotionsAdapter.CLAIM) {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundColor(getContext().getResources()
             .getColor(R.color.green));
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
-        promotionsAdapter.isWalletInstalled(true);
+        promotionsAdapter.isWalletInstalled(promotionViewApp.isWalletInstalled());
       } else {
         promotionAction.setEnabled(true);
         TypedValue resultValue = new TypedValue();
@@ -442,19 +433,22 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private int getButtonMessage(int appState) {
     int message;
     switch (appState) {
-      case DOWNGRADE:
-      case UPDATE:
+      case PromotionsAdapter.DOWNGRADE:
+      case PromotionsAdapter.UPDATE:
         message = R.string.holidayspromotion_button_update;
         break;
-      case DOWNLOAD:
-      case INSTALL:
+      case PromotionsAdapter.DOWNLOAD:
+      case PromotionsAdapter.INSTALL:
         message = R.string.holidayspromotion_button_install;
         break;
-      case CLAIM:
+      case PromotionsAdapter.CLAIM:
         message = R.string.holidayspromotion_button_claim;
         break;
-      case CLAIMED:
+      case PromotionsAdapter.CLAIMED:
         message = R.string.holidayspromotion_button_claimed;
+        break;
+      case PromotionsAdapter.CLAIMED_INSTALL:
+        message = R.string.appview_button_install;
         break;
       default:
         throw new IllegalArgumentException("Wrong view type of promotion app");
@@ -464,26 +458,54 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   private int getState(PromotionViewApp app) {
     int state;
-    if (app.isClaimed()) {
-      return CLAIMED;
+    if (app.isClaimed() && app.isWalletInstalled()) {
+      return PromotionsAdapter.CLAIMED;
+    } else if (app.isClaimed() && !app.isWalletInstalled()) {
+      DownloadModel downloadModel = app.getDownloadModel();
+      if (downloadModel.isDownloading()) {
+        return PromotionsAdapter.DOWNLOADING;
+      } else {
+        switch (downloadModel.getAction()) {
+          case DOWNGRADE:
+            state = PromotionsAdapter.CLAIMED_DOWNGRADE;
+            break;
+          case INSTALL:
+            state = PromotionsAdapter.CLAIMED_INSTALL;
+            break;
+          case OPEN:
+            if (app.isClaimed()) {
+              state = PromotionsAdapter.CLAIMED;
+            } else {
+              state = PromotionsAdapter.CLAIM;
+            }
+            promotionsAdapter.isWalletInstalled(true);
+            break;
+          case UPDATE:
+            state = PromotionsAdapter.CLAIMED_UPDATE;
+            break;
+          default:
+            throw new IllegalArgumentException("Invalid type of download action");
+        }
+        return state;
+      }
     } else {
       DownloadModel downloadModel = app.getDownloadModel();
 
       if (downloadModel.isDownloading()) {
-        return DOWNLOADING;
+        return PromotionsAdapter.DOWNLOADING;
       } else {
         switch (downloadModel.getAction()) {
           case DOWNGRADE:
-            state = DOWNGRADE;
+            state = PromotionsAdapter.DOWNGRADE;
             break;
           case INSTALL:
-            state = INSTALL;
+            state = PromotionsAdapter.INSTALL;
             break;
           case OPEN:
-            state = CLAIM;
+            state = PromotionsAdapter.CLAIM;
             break;
           case UPDATE:
-            state = UPDATE;
+            state = PromotionsAdapter.UPDATE;
             break;
           default:
             throw new IllegalArgumentException("Invalid type of download action");
@@ -496,17 +518,23 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private PromotionAppClick.ClickType getClickType(int appState) {
     PromotionAppClick.ClickType clickType;
     switch (appState) {
-      case UPDATE:
+      case PromotionsAdapter.UPDATE:
         clickType = PromotionAppClick.ClickType.UPDATE;
         break;
-      case DOWNLOAD:
+      case PromotionsAdapter.DOWNLOAD:
         clickType = PromotionAppClick.ClickType.DOWNLOAD;
         break;
-      case INSTALL:
+      case PromotionsAdapter.INSTALL:
         clickType = PromotionAppClick.ClickType.INSTALL_APP;
         break;
-      case CLAIM:
+      case PromotionsAdapter.CLAIM:
         clickType = PromotionAppClick.ClickType.CLAIM;
+        break;
+      case PromotionsAdapter.CLAIMED_INSTALL:
+        clickType = PromotionAppClick.ClickType.INSTALL_APP;
+        break;
+      case PromotionsAdapter.CLAIMED_UPDATE:
+        clickType = PromotionAppClick.ClickType.UPDATE;
         break;
       default:
         throw new IllegalArgumentException("Wrong view type of promotion app");

@@ -12,7 +12,8 @@ public class PromotionViewAppMapper {
     this.downloadStateParser = downloadStateParser;
   }
 
-  public PromotionViewApp mapInstallToPromotionApp(Install install, PromotionApp promotionApp) {
+  public PromotionViewApp mapInstallToPromotionApp(Install install, PromotionApp promotionApp,
+      boolean walletInstalled) {
     return new PromotionViewApp(
         getDownloadModel(install.getType(), install.getProgress(), install.getState()),
         promotionApp.getName(), promotionApp.getPackageName(), promotionApp.getAppId(),
@@ -20,7 +21,7 @@ public class PromotionViewAppMapper {
         promotionApp.getAppIcon(), promotionApp.isClaimed(), promotionApp.getDescription(),
         promotionApp.getSize(), promotionApp.getRating(), promotionApp.getNumberOfDownloads(),
         promotionApp.getMd5(), promotionApp.getVersionCode(), promotionApp.getVersionName(),
-        promotionApp.getObb(), promotionApp.getAppcValue());
+        promotionApp.getObb(), promotionApp.getAppcValue(), walletInstalled);
   }
 
   private DownloadModel getDownloadModel(Install.InstallationType type, int progress,
