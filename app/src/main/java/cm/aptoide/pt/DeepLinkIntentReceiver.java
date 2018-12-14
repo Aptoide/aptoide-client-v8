@@ -56,7 +56,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import static cm.aptoide.pt.DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK;
 
 public class DeepLinkIntentReceiver extends ActivityView {
 
@@ -596,7 +595,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   private Intent startFromPromotions() {
     Intent intent = new Intent(this, startClass);
-    intent.putExtra(PROMOTIONS_DEEPLINK, true);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK, true);
     return intent;
   }
 
