@@ -118,7 +118,7 @@
       >
     <Button
         android:id="@+id/wallet_cancel_button"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/cancel"
@@ -126,7 +126,7 @@
         />
     <Button
         android:id="@+id/wallet_continue_button"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:text="@string/iab_button_next"
         style="@style/Aptoide.Button.Flat"
         />
