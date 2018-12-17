@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -52,7 +51,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   @Inject ClaimPromotionsManager claimPromotionsManager;
   @Inject IdsRepository idsRepository;
   @Inject PromotionsAnalytics promotionsAnalytics;
-  @Inject FragmentNavigator fragmentNavigator;
+  @Inject ClaimPromotionsNavigator navigator;
   private ClipboardManager clipboard;
   private ClaimPromotionDialogPresenter presenter;
   private ProgressBar loading;
@@ -170,8 +169,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     genericErrorView = view.findViewById(R.id.generic_error);
 
     presenter = new ClaimPromotionDialogPresenter(this, new CompositeSubscription(),
-        AndroidSchedulers.mainThread(), claimPromotionsManager, promotionsAnalytics,
-        fragmentNavigator);
+        AndroidSchedulers.mainThread(), claimPromotionsManager, promotionsAnalytics, navigator);
     presenter.present();
     handleRestoreViewState(savedInstanceState);
   }
@@ -324,10 +322,6 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   @Override public Observable<String> captchaCancelClick() {
     return RxView.clicks(captchaCancelButton)
         .map(__ -> getArguments().getString(PACKAGE_NAME));
-  }
-
-  @Override public void dismissDialog() {
-    this.dismiss();
   }
 
   @Override public Observable<ClaimDialogResultWrapper> dismissGenericMessage() {

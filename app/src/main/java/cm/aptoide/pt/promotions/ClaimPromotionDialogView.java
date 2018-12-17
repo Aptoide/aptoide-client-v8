@@ -44,7 +44,5 @@ public interface ClaimPromotionDialogView {
 
   Observable<String> captchaCancelClick();
 
-  void dismissDialog();
-
   Observable<ClaimDialogResultWrapper> dismissGenericMessage();
 }
