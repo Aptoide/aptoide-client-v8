@@ -90,4 +90,14 @@ public class PromotionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     this.isWalletInstalled = isWalletInstalled;
     notifyDataSetChanged();
   }
+
+  public void updateClaimStatus(String packageName) {
+    for (PromotionViewApp promotionViewApp : appsList) {
+      if (promotionViewApp.getPackageName()
+          .equals(packageName)) {
+        promotionViewApp.setClaimed();
+        notifyDataSetChanged();
+      }
+    }
+  }
 }

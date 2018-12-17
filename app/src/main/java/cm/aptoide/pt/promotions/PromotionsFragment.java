@@ -53,6 +53,8 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
+  private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
+
   @Inject PromotionsPresenter promotionsPresenter;
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
@@ -60,6 +62,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private TextView promotionFirstMessage;
   private View walletActiveView;
   private View walletInactiveView;
+  private Button promotionAction;
+
   private Window window;
   private Toolbar toolbar;
   private Drawable backArrow;
@@ -87,6 +91,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     promotionFirstMessage = view.findViewById(R.id.promotions_message_1);
     walletActiveView = view.findViewById(R.id.promotion_wallet_active);
     walletInactiveView = view.findViewById(R.id.promotion_wallet_inactive);
+    promotionAction = walletInactiveView.findViewById(R.id.promotion_app_action_button);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
@@ -256,6 +261,18 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
+  @Override public void updateClaimStatus(String packageName) {
+    if (packageName.equals(WALLET_PACKAGE_NAME)) {
+      promotionAction.setEnabled(false);
+      promotionAction.setBackgroundColor(getContext().getResources()
+          .getColor(R.color.grey_fog_light));
+      promotionsAdapter.isWalletInstalled(true);
+      promotionAction.setText(getContext().getString(R.string.holidayspromotion_button_claimed));
+    } else {
+      promotionsAdapter.updateClaimStatus(packageName);
+    }
+  }
+
   private void showWallet(PromotionViewApp promotionViewApp) {
     if (promotionViewApp.getDownloadModel()
         .isDownloading()) {
@@ -372,7 +389,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       TextView numberOfDownloads = walletInactiveView.findViewById(R.id.number_of_downloads);
       TextView appSize = walletInactiveView.findViewById(R.id.app_size);
       TextView rating = walletInactiveView.findViewById(R.id.rating);
-      Button promotionAction = walletInactiveView.findViewById(R.id.promotion_app_action_button);
 
       ImageLoader.with(getContext())
           .load(promotionViewApp.getAppIcon(), appIcon);

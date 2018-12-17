@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.app.Activity;
 import cm.aptoide.pt.presenter.Presenter;
 import java.util.List;
 import rx.Scheduler;
@@ -13,15 +14,18 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private ClaimPromotionsManager claimPromotionsManager;
   private ClaimPromotionDialogView view;
   private PromotionsAnalytics promotionsAnalytics;
+  private ClaimPromotionsNavigator navigator;
 
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
-      ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics) {
+      ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
+      ClaimPromotionsNavigator navigator) {
     this.view = view;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;
     this.claimPromotionsManager = claimPromotionsManager;
     this.promotionsAnalytics = promotionsAnalytics;
+    this.navigator = navigator;
   }
 
   @Override public void present() {
@@ -30,9 +34,10 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     handleRefreshCaptcha();
     handleSubmitClick();
     handleOnEditTextChanged();
-    handleDismissEvents();
+    handleDismissGenericError();
     handleWalletCancelClick();
     handleCaptchaCancelClick();
+    handleDismissGenericMessage();
   }
 
   public void dispose() {
@@ -121,9 +126,9 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         }));
   }
 
-  private void handleDismissEvents() {
-    subscriptions.add(view.dismissClicks()
-        .doOnNext(__ -> view.dismissDialog())
+  private void handleDismissGenericError() {
+    subscriptions.add(view.dismissGenericErrorClick()
+        .doOnNext(__ -> navigator.popDialogWithResult("", Activity.RESULT_CANCELED))
         .subscribe(__ -> {
         }, throwable -> {
           view.showGenericError();
@@ -134,7 +139,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     subscriptions.add(view.walletCancelClick()
         .doOnNext(packageName -> {
           promotionsAnalytics.sendClickOnWalletDialogCancel(packageName);
-          view.dismissDialog();
+          navigator.popDialogWithResult("", Activity.RESULT_CANCELED);
         })
         .subscribe(__ -> {
         }, throwable -> {
@@ -146,12 +151,22 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     subscriptions.add(view.captchaCancelClick()
         .doOnNext(packageName -> {
           promotionsAnalytics.sendClickOnCaptchaDialogCancel(packageName);
-          view.dismissDialog();
+          navigator.popDialogWithResult("", Activity.RESULT_CANCELED);
         })
         .subscribe(__ -> {
         }, throwable -> {
           view.showGenericError();
         }));
+  }
+
+  private void handleDismissGenericMessage() {
+    subscriptions.add(view.dismissGenericMessage()
+        .doOnNext(message -> {
+          navigator.popDialogWithResult(message.getPackageName(),
+              message.isOk() ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
+        })
+        .subscribe(__ -> {
+        }, throwable -> view.showGenericError()));
   }
 
   private String handleErrors(List<ClaimStatusWrapper.Error> errors) {
