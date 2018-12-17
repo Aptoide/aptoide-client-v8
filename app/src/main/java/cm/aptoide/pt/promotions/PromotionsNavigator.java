@@ -6,7 +6,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import rx.Observable;
 
 public class PromotionsNavigator {
-  static final int REQUEST_CODE = 6666;
+  static final int CLAIM_REQUEST_CODE = 6666;
 
   private final FragmentNavigator fragmentNavigator;
   private ClaimPromotionDialogFragment fragment;
@@ -20,11 +20,11 @@ public class PromotionsNavigator {
     Bundle args = new Bundle();
     args.putString("package_name", packageName);
     fragment.setArguments(args);
-    fragmentNavigator.navigateToDialogForResult(fragment, REQUEST_CODE);
+    fragmentNavigator.navigateToDialogForResult(fragment, CLAIM_REQUEST_CODE);
   }
 
   public Observable<ClaimDialogResultWrapper> claimDialogResults() {
-    return fragmentNavigator.results(REQUEST_CODE)
+    return fragmentNavigator.results(CLAIM_REQUEST_CODE)
         .map(result -> new ClaimDialogResultWrapper(result.getData() != null ? result.getData()
             .getPackage() : "", result.getResultCode() == Activity.RESULT_OK));
   }

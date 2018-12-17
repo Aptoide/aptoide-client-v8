@@ -31,12 +31,7 @@ public class FragmentResultNavigator implements FragmentNavigator {
   }
 
   @Override public void navigateForResult(Fragment fragment, int requestCode, boolean replace) {
-    Bundle extras = fragment.getArguments();
-    if (extras == null) {
-      extras = new Bundle();
-    }
-    extras.putInt(FragmentNavigator.REQUEST_CODE_EXTRA, requestCode);
-    fragment.setArguments(extras);
+    setUpNavigationForResult(fragment, requestCode);
     navigateTo(fragment, replace);
   }
 
@@ -85,8 +80,7 @@ public class FragmentResultNavigator implements FragmentNavigator {
   }
 
   @Override public void popWithResult(Result result) {
-    results.put(result.getRequestCode(), result);
-    resultRelay.call(results);
+    handleNavigationResult(result);
     popBackStack();
   }
 
@@ -140,16 +134,24 @@ public class FragmentResultNavigator implements FragmentNavigator {
   }
 
   @Override public void navigateToDialogForResult(DialogFragment fragment, int requestCode) {
+    setUpNavigationForResult(fragment, requestCode);
+    navigateToDialogFragment(fragment);
+  }
+
+  @Override public void popDialogWithResult(Result result) {
+    handleNavigationResult(result);
+  }
+
+  private void setUpNavigationForResult(Fragment fragment, int requestCode) {
     Bundle extras = fragment.getArguments();
     if (extras == null) {
       extras = new Bundle();
     }
     extras.putInt(FragmentNavigator.REQUEST_CODE_EXTRA, requestCode);
     fragment.setArguments(extras);
-    navigateToDialogFragment(fragment);
   }
 
-  @Override public void popDialogWithResult(Result result) {
+  private void handleNavigationResult(Result result) {
     results.put(result.getRequestCode(), result);
     resultRelay.call(results);
   }
