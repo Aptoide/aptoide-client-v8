@@ -56,6 +56,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+
 public class DeepLinkIntentReceiver extends ActivityView {
 
   public static final String AUTHORITY = "cm.aptoide.pt";
@@ -174,6 +175,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromMyStore();
     } else if ("pickApp".equals(u.getQueryParameter("name"))) {
       return startFromPickApp();
+    } else if ("promotions".equals(u.getQueryParameter("name"))) {
+      return startFromPromotions();
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
     }
@@ -590,6 +593,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
+  private Intent startFromPromotions() {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK, true);
+    return intent;
+  }
+
   private void downloadMyAppFile(String myappUri) throws Exception {
     try {
       URL url = new URL(myappUri);
@@ -666,6 +675,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String HOME_DEEPLINK = "home_tab";
     public static final String MY_STORE_DEEPLINK = "my_store";
     public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
+    public static final String PROMOTIONS_DEEPLINK = "promotions";
   }
 
   public static class DeepLinksKeys {

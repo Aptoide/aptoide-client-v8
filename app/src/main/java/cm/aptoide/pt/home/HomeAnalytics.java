@@ -6,7 +6,6 @@ import cm.aptoide.pt.ads.data.ApplicationAd;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cm.aptoide.analytics.AnalyticsManager.Action.DISMISS;
 import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
 
 /**
@@ -16,6 +15,8 @@ import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
 public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
+  public static final String CURATION_CARD_IMPRESSION = "Curation_Card_Impression";
+  public static final String CURATION_CARD_CLICK = "Curation_Card_Click";
   static final String SCROLL_RIGHT = "scroll right";
   static final String TAP_ON_APP = "tap on app";
   static final String IMPRESSION = "impression";
@@ -24,9 +25,8 @@ public class HomeAnalytics {
   static final String TAP_ON_MORE = "tap on more";
   static final String TAP_ON_CARD = "tap on card";
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
+  static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
-  public static final String CURATION_CARD_IMPRESSION = "CURATION_CARD_IMPRESSION";
-  public static final String CURATION_CARD_CLICK = "CURATION_CARD_CLICK";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -151,7 +151,8 @@ public class HomeAnalytics {
     data.put("bundle_tag", bundleTag);
     data.put("bundle_position", bundlePosition);
 
-    analyticsManager.logEvent(data, HOME_INTERACT, DISMISS, navigationTracker.getViewName(true));
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.DISMISS,
+        navigationTracker.getViewName(true));
   }
 
   public void sendAppcImpressionEvent(String bundleTag, int bundlePosition) {
@@ -182,6 +183,42 @@ public class HomeAnalytics {
     data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, CURATION_CARD_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionsIconClickEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP);
+    data.put("bundle_tag", "promotion-icon");
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionsDialogImpressionEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", IMPRESSION);
+    data.put("bundle_tag", "promotion-dialog");
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionsDialogDismissEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP_ON_CARD_DISMISS);
+    data.put("bundle_tag", "promotion-dialog");
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.DISMISS,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionsDialogNavigateEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put("action", TAP_ON_CARD);
+    data.put("bundle_tag", "promotion-dialog");
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 

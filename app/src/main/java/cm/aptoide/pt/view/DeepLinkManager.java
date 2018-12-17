@@ -30,6 +30,7 @@ import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -143,6 +144,8 @@ public class DeepLinkManager {
       myStoreDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.PICK_APP_DEEPLINK)) {
       pickAppDeeplink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK)) {
+      promotionsDeepLink();
     } else {
       deepLinkAnalytics.launcher();
       return false;
@@ -335,6 +338,10 @@ public class DeepLinkManager {
         .subscribe(ad -> appViewDeepLink(ad.getAppId(), ad.getPackageName(), false, false),
             throwable -> Logger.getInstance()
                 .e(TAG, "pickAppDeepLink: " + throwable)));
+  }
+
+  private void promotionsDeepLink() {
+    fragmentNavigator.navigateTo(new PromotionsFragment(), true);
   }
 
   private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,

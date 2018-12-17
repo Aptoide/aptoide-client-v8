@@ -2,6 +2,11 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 
+import static cm.aptoide.pt.app.DownloadModel.Action.DOWNGRADE;
+import static cm.aptoide.pt.app.DownloadModel.Action.INSTALL;
+import static cm.aptoide.pt.app.DownloadModel.Action.PAY;
+import static cm.aptoide.pt.app.DownloadModel.Action.UPDATE;
+
 /**
  * Created by filipegoncalves on 5/9/18.
  */
@@ -46,6 +51,13 @@ public class DownloadModel {
   public boolean hasError() {
     return downloadState.equals(DownloadState.ERROR) || downloadState.equals(
         DownloadState.NOT_ENOUGH_STORAGE_ERROR);
+  }
+
+  public boolean isDownloadable() {
+    return action.equals(INSTALL)
+        || action.equals(UPDATE)
+        || action.equals(DOWNGRADE)
+        || action.equals(PAY);
   }
 
   public enum Error {
