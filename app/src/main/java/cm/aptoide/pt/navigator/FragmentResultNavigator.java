@@ -138,4 +138,19 @@ public class FragmentResultNavigator implements FragmentNavigator {
 
     fragment.show(fragmentManager, tag);
   }
+
+  @Override public void navigateToDialogForResult(DialogFragment fragment, int requestCode) {
+    Bundle extras = fragment.getArguments();
+    if (extras == null) {
+      extras = new Bundle();
+    }
+    extras.putInt(FragmentNavigator.REQUEST_CODE_EXTRA, requestCode);
+    fragment.setArguments(extras);
+    navigateToDialogFragment(fragment);
+  }
+
+  @Override public void popDialogWithResult(Result result) {
+    results.put(result.getRequestCode(), result);
+    resultRelay.call(results);
+  }
 }
