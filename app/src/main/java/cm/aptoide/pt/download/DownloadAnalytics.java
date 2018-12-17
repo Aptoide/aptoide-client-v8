@@ -269,7 +269,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext);
   }
 
-
   public void downloadCompleteEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
       String id, String packageName, String trustedValue, AnalyticsManager.Action action,
       String previousContext) {
@@ -340,7 +339,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public enum AppContext {
-    TIMELINE, APPVIEW, UPDATE_TAB, AUTO_UPDATE, DOWNLOADS, EDITORIAL, PROMOTIONS
+    TIMELINE, APPVIEW, UPDATE_TAB, APPS_FRAGMENT, AUTO_UPDATE, DOWNLOADS, EDITORIAL, PROMOTIONS
   }
 
   public enum Origin {
