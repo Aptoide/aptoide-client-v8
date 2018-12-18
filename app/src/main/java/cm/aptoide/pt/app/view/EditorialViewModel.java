@@ -265,6 +265,15 @@ class EditorialViewModel {
     return title;
   }
 
+  public boolean hasApp() {
+    for (EditorialContent content : contentList) {
+      if (content.isPlaceHolderType()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public enum Error {
     NETWORK, GENERIC
   }

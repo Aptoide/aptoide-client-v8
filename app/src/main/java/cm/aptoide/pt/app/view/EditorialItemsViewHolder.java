@@ -38,6 +38,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private final DecimalFormat oneDecimalFormat;
   private final Button appCardButton;
   private final LinearLayoutManager layoutManager;
+  private final Button actionButton;
   private TextSwitcher descriptionSwitcher;
   private View itemText;
   private View title;
@@ -79,6 +80,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         (TextSwitcher) view.findViewById(R.id.editorial_image_description_switcher);
     mediaList = (RecyclerView) view.findViewById(R.id.editoral_image_list);
     appCardLayout = view.findViewById(R.id.app_cardview);
+    actionButton = (Button) view.findViewById(R.id.action_button);
     this.oneDecimalFormat = oneDecimalFormat;
     this.uiEventListener = uiEventListener;
     appCardButton = (Button) appCardLayout.findViewById(R.id.appview_install_button);
@@ -136,8 +138,18 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       appCardLayout.setVisibility(View.INVISIBLE);
       appCardLayout.setScaleX(0.1f);
       appCardLayout.setScaleY(0.1f);
-      setListeners();
+      setPlaceHolderListeners();
     }
+    if (editorialItem.hasAction()) {
+      manageActionVisibility(editorialItem);
+    }
+  }
+
+  private void manageActionVisibility(EditorialContent editorialItem) {
+    actionButton.setText(editorialItem.getActionTitle());
+    actionButton.setVisibility(View.VISIBLE);
+    actionButton.setOnClickListener(click -> uiEventListener.onNext(
+        new EditorialEvent(EditorialEvent.Type.ACTION, editorialItem.getActionUrl())));
   }
 
   private void manageTitleVisibility(EditorialContent editorialItem, int position) {
@@ -331,7 +343,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  private void setListeners() {
+  private void setPlaceHolderListeners() {
     cancelDownload.setOnClickListener(
         click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.CANCEL)));
     resumeDownload.setOnClickListener(

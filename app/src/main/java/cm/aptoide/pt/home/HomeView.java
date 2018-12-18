@@ -15,6 +15,8 @@ public interface HomeView extends BundleView {
 
   Observable<String> gdprDialogClicked();
 
+  Observable<String> promotionsHomeDialogClicked();
+
   Observable<HomeEvent> infoBundleKnowMoreClicked();
 
   void scrollToTop();
@@ -32,4 +34,18 @@ public interface HomeView extends BundleView {
   void setDefaultUserImage();
 
   void showTermsAndConditionsDialog();
+
+  Observable<Void> promotionsClick();
+
+  void showPromotionsHomeDialog(HomePromotionsWrapper wrapper);
+
+  void showPromotionsHomeIcon(HomePromotionsWrapper apps);
+
+  void dismissPromotionsDialog();
+
+  void setPromotionsTickerWithValue(int value);
+
+  void setEllipsizedPromotionsTicker();
+
+  void hidePromotionsIcon();
 }

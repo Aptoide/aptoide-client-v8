@@ -567,10 +567,10 @@
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
   <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
-  
-   <!--Holidays AppCoins Craze-->
+
+  <!--Holidays AppCoins Craze-->
   <string name="holidayspromotion_title_holidays">Holidays AppCoins Craze</string>
-  <string name="holidayspromotion_message_1">Earn up to 100 AppCoins Credits to spend on in-app purchases! Install the apps below and get diamonds, gems or lives in your favorite games!</string>
+  <string name="holidayspromotion_message_1">Earn up to %s AppCoins Credits to spend on in-app purchases! Install the apps below and get diamonds, gems or lives in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>
   <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
@@ -583,6 +583,8 @@
   <string name="holidayspromotion_message_shark_description">Take control of a Hungry Shark and go on a frantic ocean rampage to survive as long as possible.</string>
   <string name="holidayspromotion_message_creative_description">A new sandbox survival mobile game that features the utmost fun of building and firing.</string>
   <string name="holidayspromotion_message_lords_description">Driven by their ambition and greed, Lords seek power and shatter the peace that once reigned.</string>
+  <string name="holidayspromotion_message_metal_description">A 2D mobile shooter centered around an army of mercenaries trying to save the world.</string>
+  <string name="holidayspromotion_message_maximum_description">An explosion-laden, arcade racing game that will have you feeling like a badass in seconds.</string>
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
   <string name="holidayspromotion_message_wallet">Tell us your AppCoins wallet address. Once you create a wallet, you\'ll find the address when pressing on \'Receive\'.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
@@ -597,10 +599,10 @@
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">Done</string>
   <string name="holidayspromotion_short_error_captcha">Wrong captcha. Try again!</string>
-  <string name="holidayspromotion_title_error_claimed">Oops...</string>
+  <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
   <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
-  <string name="holidayspromotion_message_popup">Earn 100 APPC Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Check it out!</string>
 </resources>
 

@@ -52,7 +52,7 @@ public class EditorialPresenterTest {
     List<EditorialContent> editorialContent = new ArrayList<>();
     editorialContent.add(
         new EditorialContent("title", Collections.emptyList(), "message", "type", "appName", "icon",
-            0));
+            0, "actionTitle", "actionUrl"));
     editorialViewModel =
         new EditorialViewModel(editorialContent, "type", "title", 1, "caption", "appName", 0,
             "packageName", 0, "icon", "graphic", null, 0, "storeName", "storeTheme", "versionName",
@@ -143,6 +143,20 @@ public class EditorialPresenterTest {
     //When the user clicks on a media
     when(view.mediaContentClicked()).thenReturn(
         Observable.just(new EditorialEvent(EditorialEvent.Type.MEDIA, "url")));
+
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then it should navigate to the url of the media
+    verify(editorialNavigator).navigateToUri("url");
+  }
+
+  @Test public void handleClickActionButtonTest() {
+    //Given an initialized presenter
+    editorialPresenter.handleClickActionButtonCard();
+
+    //When the user clicks on a media
+    when(view.actionButtonClicked()).thenReturn(
+        Observable.just(new EditorialEvent(EditorialEvent.Type.ACTION, "url")));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

@@ -58,12 +58,13 @@ public class IronSourceAdRepository {
   }
 
   public void loadInterstitialAd() {
+    showInterstitial = false;
     IronSource.loadInterstitial();
   }
 
   public void showInterstitialAd() {
     if (IronSource.isInterstitialReady()) {
-      IronSource.showInterstitial(BuildConfig.IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID);
+      IronSource.showInterstitial(BuildConfig.IRONSOURCE_APPVIEW_INTERSTITIAL_9500_PLACEMENT_ID);
     } else {
       showInterstitial = true;
     }

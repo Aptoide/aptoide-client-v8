@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
  * Created by filipegoncalves on 5/7/18.
  */
 
-public class UserPreferencesPersister {
+public class PreferencesPersister {
 
   private SharedPreferences sharedPreferences;
 
-  public UserPreferencesPersister(SharedPreferences sharedPreferences) {
+  public PreferencesPersister(SharedPreferences sharedPreferences) {
     this.sharedPreferences = sharedPreferences;
   }
 

@@ -8,9 +8,9 @@ import cm.aptoide.pt.preferences.managed.ManagedKeys;
 
 public class PreferencesManager {
 
-  private UserPreferencesPersister persister;
+  private PreferencesPersister persister;
 
-  public PreferencesManager(UserPreferencesPersister persister) {
+  public PreferencesManager(PreferencesPersister persister) {
     this.persister = persister;
   }
 

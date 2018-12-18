@@ -22,6 +22,7 @@ allprojects {
     maven { url "https://dl.bintray.com/asf/asf" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
+    maven { url "https://adcolony.bintray.com/AdColony" }
 
     google()
     jcenter()
@@ -111,6 +112,11 @@ ext {
   APPLOVIN_VERSION = '4.3.0'
   VUNGLE_ADAPTER_VERSION = '4.1.4'
   VUNGLE_VERSION = '6.3.17'
+  ADCOLONY_VERSION = '3.3.5'
+  ADCOLONY_ADAPTER_VERSION = '4.1.5'
+  TAPJOY_ADAPTER_VERSION = '4.1.3'
+  CHARTBOOST_ADAPTER_VERSION = '4.1.7'
+  UNITYADS_ADAPTER_VERSION = '4.1.3'
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'
