@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -80,6 +81,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setRetainInstance(true);
     ((MainActivity) getContext()).getActivityComponent()
         .inject(this);
     clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -107,6 +109,11 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   }
 
   @Override public void onDestroyView() {
+    Dialog dialog = getDialog();
+    // handles https://code.google.com/p/android/issues/detail?id=17423
+    if (dialog != null && getRetainInstance()) {
+      dialog.setDismissMessage(null);
+    }
     super.onDestroyView();
     walletAddressEdit = null;
     getWalletAddressButton = null;
@@ -334,6 +341,10 @@ public class ClaimPromotionDialogFragment extends DialogFragment
             return new ClaimDialogResultWrapper(getArguments().getString(PACKAGE_NAME), false);
           }
         });
+  }
+
+  @Override public void dismissDialog() {
+    dismiss();
   }
 
   private void handleClipboardPaste() {

@@ -396,9 +396,4 @@ import rx.schedulers.Schedulers;
         new PermissionManager(), ((PermissionService) fragment.getContext()),
         AndroidSchedulers.mainThread(), promotionsNavigator);
   }
-
-  @FragmentScope @Provides PromotionsNavigator providesPromotionsNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new PromotionsNavigator(fragmentNavigator);
-  }
 }
