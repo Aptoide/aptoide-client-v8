@@ -8,10 +8,12 @@ import rx.Single;
 public class AutoUpdateService {
 
   private final Service retrofit;
+  private final String packageName;
   private boolean loading;
 
-  public AutoUpdateService(Service retrofit) {
+  public AutoUpdateService(Service retrofit, String packageName) {
     this.retrofit = retrofit;
+    this.packageName = packageName;
   }
 
   public Single<AutoUpdateViewModel> loadAutoUpdateViewModel() {
@@ -23,8 +25,8 @@ public class AutoUpdateService {
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
         .flatMap(jsonResponse -> Observable.just(
-            new AutoUpdateViewModel(jsonResponse.getVersioncode(), jsonResponse.getUri(),
-                jsonResponse.getMd5(), jsonResponse.getMinSdk())))
+            new AutoUpdateViewModel((int) jsonResponse.getVersioncode(), jsonResponse.getUri(),
+                jsonResponse.getMd5(), jsonResponse.getMinSdk(), packageName)))
         .onErrorReturn(throwable -> createErrorAutoUpdateViewModel(throwable))
         .toSingle();
   }

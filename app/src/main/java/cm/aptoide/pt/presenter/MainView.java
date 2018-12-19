@@ -6,6 +6,7 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.Intent;
+import cm.aptoide.pt.actions.PermissionService;
 import rx.Observable;
 
 /**
@@ -28,5 +29,9 @@ public interface MainView extends View {
 
   void hideUpdatesBadge();
 
+  Observable<PermissionService> autoUpdateDialogCreated();
+
   void requestAutoUpdate();
+
+  void handlePermissionRequestResult(boolean installFailed);
 }

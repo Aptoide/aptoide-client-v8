@@ -12,7 +12,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
@@ -29,6 +28,7 @@ import java.util.List;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
+import rx.schedulers.Schedulers;
 
 public class MainPresenter implements Presenter {
 
@@ -44,7 +44,6 @@ public class MainPresenter implements Presenter {
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final InstallCompletedNotifier installCompletedNotifier;
   private final ApkFy apkFy;
-  private final AutoUpdate autoUpdate;
   private final boolean firstCreated;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final Scheduler viewScheduler;
@@ -54,8 +53,7 @@ public class MainPresenter implements Presenter {
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
-      ApkFy apkFy, AutoUpdate autoUpdate, ContentPuller contentPuller,
-      NotificationSyncScheduler notificationSyncScheduler,
+      ApkFy apkFy, ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler,
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, boolean firstCreated,
@@ -67,7 +65,6 @@ public class MainPresenter implements Presenter {
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
     this.crashReport = crashReport;
     this.apkFy = apkFy;
-    this.autoUpdate = autoUpdate;
     this.contentPuller = contentPuller;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.installCompletedNotifier = installCompletedNotifier;
@@ -107,6 +104,7 @@ public class MainPresenter implements Presenter {
           throw new OnErrorNotImplementedException(throwable);
         });
 
+    handleAutoUpdateDialogAccepted();
     setupInstallErrorsDisplay();
     shortcutManagement();
     setupUpdatesNumber();
@@ -178,6 +176,7 @@ public class MainPresenter implements Presenter {
   }
 
   // FIXME we are showing home by default when we should decide were to go here and provide
+
   // proper up/back navigation to home if needed
   private void navigate() {
     showHome();
@@ -199,7 +198,9 @@ public class MainPresenter implements Presenter {
   private void handleAutoUpdate() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .observeOn(Schedulers.io())
         .flatMapSingle(lifecycleEvent -> autoUpdateManager.getAutoUpdateModel())
+        .observeOn(viewScheduler)
         .filter(autoUpdateViewModel -> autoUpdateViewModel.shouldUpdate())
         .doOnNext(autoUpdateViewModel -> AptoideApplication.setAutoUpdateWasCalled(true))
         .doOnNext(autoUpdateViewModel -> view.requestAutoUpdate())
@@ -214,6 +215,20 @@ public class MainPresenter implements Presenter {
 
   private void showHome() {
     bottomNavigationNavigator.navigateToHome();
+  }
+
+  private void handleAutoUpdateDialogAccepted() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(lifecycleEvent -> view.autoUpdateDialogCreated())
+        .observeOn(viewScheduler)
+        .flatMap(permissionService -> autoUpdateManager.requestPermissions(permissionService))
+        .flatMap(success -> autoUpdateManager.startUpdate())
+        .doOnNext(install -> view.handlePermissionRequestResult(install.isFailed()))
+        .doOnError(throwable -> view.handlePermissionRequestResult(true))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(timeoutErrorsCleaned -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void watchInstalls(List<Install> installs) {

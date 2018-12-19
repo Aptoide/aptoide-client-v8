@@ -30,6 +30,7 @@ import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.EditorialNavigator;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
+import cm.aptoide.pt.autoupdate.AutoUpdateRepository;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -43,7 +44,6 @@ import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -124,17 +124,14 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new ApkFy(activity, intent, securePreferences);
   }
 
-  @ActivityScope @Provides AutoUpdate provideAutoUpdate(DownloadFactory downloadFactory,
-      PermissionManager permissionManager, InstallManager installManager, Resources resources,
-      DownloadAnalytics downloadAnalytics, @Named("autoUpdateUrl") String autoUpdateUrl) {
-    return new AutoUpdate((ActivityView) activity, downloadFactory, permissionManager,
-        installManager, resources, autoUpdateUrl, R.mipmap.ic_launcher, false, marketName,
-        downloadAnalytics);
+  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
+      AutoUpdateService.Service service, @Named("packageName") String packageName) {
+    return new AutoUpdateService(service, packageName);
   }
 
-  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
-      AutoUpdateService.Service service) {
-    return new AutoUpdateService(service);
+  @ActivityScope @Provides AutoUpdateRepository providesAutoUpdateRepository(
+      AutoUpdateService autoUpdateService) {
+    return new AutoUpdateRepository(autoUpdateService);
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(
@@ -170,15 +167,14 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
-      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy, AutoUpdate autoUpdate,
+      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy,
       InstallManager installManager, @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
-        CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(activity),
-        notificationSyncScheduler,
+        CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
@@ -311,9 +307,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
       DownloadFactory downloadFactory, PermissionManager permissionManager,
       InstallManager installManager, DownloadAnalytics downloadAnalytics,
-      @Named("localVersionCode") int localVersionCode, AutoUpdateService autoUpdateService) {
+      @Named("localVersionCode") int localVersionCode, AutoUpdateRepository autoUpdateRepository) {
     return new AutoUpdateManager(downloadFactory, permissionManager, installManager, false,
-        marketName, downloadAnalytics, localVersionCode, autoUpdateService);
+        marketName, downloadAnalytics, localVersionCode, autoUpdateRepository);
   }
 
   @ActivityScope @Provides @Named("packageName") String providePackageName() {
@@ -339,5 +335,4 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       FragmentNavigator fragmentNavigator) {
     return new ClaimPromotionsNavigator(fragmentNavigator);
   }
-
 }

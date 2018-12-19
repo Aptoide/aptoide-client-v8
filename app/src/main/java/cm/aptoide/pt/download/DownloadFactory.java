@@ -7,12 +7,12 @@ package cm.aptoide.pt.download;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.pt.autoupdate.AutoUpdateViewModel;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
-import cm.aptoide.pt.install.AutoUpdate;
 import io.realm.RealmList;
 
 /**
@@ -174,17 +174,18 @@ public class DownloadFactory {
     return download;
   }
 
-  public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
+  public Download create(AutoUpdateViewModel autoUpdateViewModel) {
     Download download = new Download();
     download.setAppName(marketName);
-    download.setMd5(autoUpdateInfo.md5);
-    download.setVersionCode(autoUpdateInfo.vercode);
-    //download.setVersionName(null); // no info available
-    download.setPackageName(autoUpdateInfo.packageName);
+    download.setMd5(autoUpdateViewModel.getMd5());
+    download.setVersionCode(autoUpdateViewModel.getVersionCode());
+    download.setPackageName(autoUpdateViewModel.getPackageName());
     download.setAction(Download.ACTION_UPDATE);
+    download.setVersionName("aptoide");
     download.setFilesToDownload(
-        createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path + UPDATE_ACTION,
-            autoUpdateInfo.md5, null, null, autoUpdateInfo.vercode, null));
+        createFileList(autoUpdateViewModel.getMd5(), autoUpdateViewModel.getPackageName(),
+            autoUpdateViewModel.getUri() + UPDATE_ACTION, autoUpdateViewModel.getMd5(), null, null,
+            autoUpdateViewModel.getVersionCode(), "aptoide"));
     return download;
   }
 
