@@ -51,6 +51,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
   @Inject ClaimPromotionsManager claimPromotionsManager;
   @Inject IdsRepository idsRepository;
   @Inject PromotionsAnalytics promotionsAnalytics;
+  @Inject ClaimPromotionsNavigator navigator;
   private ClipboardManager clipboard;
   private ClaimPromotionDialogPresenter presenter;
   private ProgressBar loading;
@@ -168,7 +169,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     genericErrorView = view.findViewById(R.id.generic_error);
 
     presenter = new ClaimPromotionDialogPresenter(this, new CompositeSubscription(),
-        AndroidSchedulers.mainThread(), claimPromotionsManager, promotionsAnalytics);
+        AndroidSchedulers.mainThread(), claimPromotionsManager, promotionsAnalytics, navigator);
     presenter.present();
     handleRestoreViewState(savedInstanceState);
   }
@@ -275,6 +276,7 @@ public class ClaimPromotionDialogFragment extends DialogFragment
 
   @Override public void showInvalidCaptcha(String captcha) {
     loading.setVisibility(View.GONE);
+    captchaEdit.setText("");
     showCaptchaView(captcha);
     captchaErrorView.setVisibility(View.VISIBLE);
   }
@@ -308,9 +310,8 @@ public class ClaimPromotionDialogFragment extends DialogFragment
     walletErrorView.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Void> dismissClicks() {
-    return Observable.merge(RxView.clicks(genericMessageButton),
-        RxView.clicks(genericErrorOkButton));
+  @Override public Observable<Void> dismissGenericErrorClick() {
+    return RxView.clicks(genericErrorOkButton);
   }
 
   @Override public Observable<String> walletCancelClick() {
@@ -323,8 +324,20 @@ public class ClaimPromotionDialogFragment extends DialogFragment
         .map(__ -> getArguments().getString(PACKAGE_NAME));
   }
 
+  @Override public Observable<ClaimDialogResultWrapper> dismissGenericMessage() {
+    return RxView.clicks(genericMessageButton)
+        .map(__ -> {
+          if (genericMessageTitle.getText()
+              .equals(getResources().getString(R.string.holidayspromotion_title_completed))) {
+            return new ClaimDialogResultWrapper(getArguments().getString(PACKAGE_NAME), true);
+          } else {
+            return new ClaimDialogResultWrapper(getArguments().getString(PACKAGE_NAME), false);
+          }
+        });
+  }
+
   @Override public void dismissDialog() {
-    this.dismiss();
+    dismiss();
   }
 
   private void handleClipboardPaste() {

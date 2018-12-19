@@ -404,9 +404,4 @@ import rx.schedulers.Schedulers;
       DownloadStateParser downloadStateParser) {
     return new PromotionViewAppMapper(downloadStateParser);
   }
-
-  @FragmentScope @Provides PromotionsNavigator providesPromotionsNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new PromotionsNavigator(fragmentNavigator);
-  }
 }

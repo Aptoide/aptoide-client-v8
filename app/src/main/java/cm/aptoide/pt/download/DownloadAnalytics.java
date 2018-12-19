@@ -193,9 +193,9 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         previousContext);
   }
 
-  private void downloadCompleteEvent(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String id, String packageName, String trustedValue,
-      AnalyticsManager.Action action, String previousContext) {
+  public void downloadCompleteEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
+      String id, String packageName, String trustedValue, AnalyticsManager.Action action,
+      String previousContext) {
     HashMap<String, Object> downloadMap = new HashMap<>();
     downloadMap.put("Package Name", packageName);
     downloadMap.put("Trusted Badge", trustedValue);
@@ -249,6 +249,17 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
     analyticsManager.logEvent(data, DOWNLOAD_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
+  }
+
+  public void downloadCompleteEvent(String id, String packageName, String trustedValue,
+      AnalyticsManager.Action action) {
+
+    String previousContext = navigationTracker.getViewName(false);
+    ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
+    ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
+
+    downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
+        previousContext);
   }
 
   public enum AppContext {

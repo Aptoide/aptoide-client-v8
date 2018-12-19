@@ -104,6 +104,10 @@ public class PromotionViewApp {
     return isClaimed;
   }
 
+  public void setClaimed() {
+    isClaimed = true;
+  }
+
   public String getVersionName() {
     return versionName;
   }

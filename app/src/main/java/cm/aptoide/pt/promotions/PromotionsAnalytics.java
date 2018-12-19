@@ -39,6 +39,8 @@ public class PromotionsAnalytics {
       AnalyticsManager.Action action) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.PROMOTIONS, action);
+    downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
+        action);
   }
 
   public void sendOpenPromotionsFragmentEvent() {
