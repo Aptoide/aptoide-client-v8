@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -99,6 +100,8 @@ import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
+import com.tapdaq.sdk.Tapdaq;
+import com.tapdaq.sdk.listeners.TMAdListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -243,6 +246,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View donateInstallCard;
   private Button installCardDonateButton;
   private Button listDonateButton;
+  private boolean fullScreenAdShown;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -564,6 +568,18 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     donationsAdapter = null;
     donationsElement = null;
     donationsList = null;
+  }
+
+  public void showFullScreenAd() {
+    fullScreenAdShown = true;
+    Handler handler = new Handler();
+    handler.postDelayed(() -> Tapdaq.getInstance()
+        .loadInterstitial(getActivity(), "my_interstitial_tag", new TMAdListener() {
+          @Override public void didLoad() {
+            Tapdaq.getInstance()
+                .showInterstitial(getActivity(), "my_interstitial_tag", new TMAdListener());
+          }
+        }), 1000);
   }
 
   @Override public void showLoading() {
@@ -1482,6 +1498,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+        if (progress > 0 && !fullScreenAdShown) {
+          showFullScreenAd();
+        }
         break;
       case INDETERMINATE:
         downloadProgressBar.setIndeterminate(true);

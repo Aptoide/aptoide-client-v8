@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.TapdaqInitListener;
 import cm.aptoide.pt.home.BottomNavigationActivity;
@@ -65,7 +66,7 @@ public class MainActivity extends BottomNavigationActivity
     List<TapdaqPlacement> enabledPlacements = new ArrayList<TapdaqPlacement>();
     enabledPlacements.add(TapdaqPlacement.createPlacement(
         Arrays.asList(CreativeType.INTERSTITIAL_PORTRAIT, CreativeType.INTERSTITIAL_LANDSCAPE),
-        "my_interstitial_tag"));
+        BuildConfig.TAPDAQ_APPVIEW_INTERSTITIAL_PLACEMENT_T8_ID));
 
     TapdaqConfig config = new TapdaqConfig();
     config.withPlacementTagSupport(enabledPlacements.toArray(new TapdaqPlacement[0]));
@@ -74,7 +75,8 @@ public class MainActivity extends BottomNavigationActivity
     config.setIsAgeRestrictedUser(false); //Is user under 16 (Used by AppLovin & YouAppi)
 
     Tapdaq.getInstance()
-        .initialize(this, "<APP_ID>", "<CLIENT_KEY>", config, new TapdaqInitListener());
+        .initialize(this, BuildConfig.TAPDAQ_APP_KEY_T8_ID,
+            BuildConfig.TAPDAQ_CLIENT_KEY_PLACEMENT_T8_ID, config, new TapdaqInitListener());
   }
 
   private void setupUpdatesNotification() {
