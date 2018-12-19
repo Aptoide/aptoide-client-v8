@@ -3,10 +3,8 @@ package cm.aptoide.pt.app;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.Experiment;
-import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdEvent;
-import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
@@ -46,8 +44,6 @@ public class AppViewManager {
   private final AppCenter appCenter;
   private final ReviewsManager reviewsManager;
   private final AdsManager adsManager;
-  private final IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment;
-  private final IronSourceAdRepository ironSourceAdRepository;
   private final StoreManager storeManager;
   private final FlagManager flagManager;
   private final StoreUtilsProxy storeUtilsProxy;
@@ -75,9 +71,7 @@ public class AppViewManager {
       PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
-      String marketName, AppCoinsManager appCoinsManager,
-      IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
-      IronSourceAdRepository ironSourceAdRepository) {
+      String marketName, AppCoinsManager appCoinsManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -98,8 +92,6 @@ public class AppViewManager {
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
     this.isFirstLoad = true;
-    this.ironSourceInterstitialAdExperiment = ironSourceInterstitialAdExperiment;
-    this.ironSourceAdRepository = ironSourceAdRepository;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -166,25 +158,6 @@ public class AppViewManager {
         .map(SearchAdResult::new);
   }
 
-  public Observable<Experiment> initializeInterstitialAd() {
-    return ironSourceInterstitialAdExperiment.loadInterstitial();
-  }
-
-  public Single<Experiment> showInterstitialAd() {
-    return ironSourceInterstitialAdExperiment.showInterstitial();
-  }
-
-  public Observable<Boolean> recordInterstitialImpression() {
-    return ironSourceInterstitialAdExperiment.recordAdImpression();
-  }
-
-  public Observable<Boolean> recordInterstitialClick() {
-    return ironSourceInterstitialAdExperiment.recordAdClick();
-  }
-
-  public PublishSubject<AdEvent> getInterstitialEvent() {
-    return ironSourceAdRepository.getAdEventSubject();
-  }
 
   public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
       int versionCode, boolean paidApp, GetAppMeta.Pay pay) {

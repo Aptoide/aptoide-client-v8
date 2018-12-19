@@ -20,9 +20,14 @@ allprojects {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
+
+    maven { url "http://android-sdk.tapdaq.com" }
+    maven { url  "https://adcolony.bintray.com/AdColony" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
-    maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
-    maven { url "https://adcolony.bintray.com/AdColony" }
+    maven {
+      name "Tapjoy's maven repo"
+      url "https://tapjoy.bintray.com/maven"
+    }
 
     google()
     jcenter()

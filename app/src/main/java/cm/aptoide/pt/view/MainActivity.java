@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.IronSourceAdRepository;
+import cm.aptoide.pt.ads.TapdaqInitListener;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
@@ -24,6 +24,14 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.tapdaq.sdk.CreativeType;
+import com.tapdaq.sdk.STATUS;
+import com.tapdaq.sdk.Tapdaq;
+import com.tapdaq.sdk.TapdaqConfig;
+import com.tapdaq.sdk.TapdaqPlacement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -31,7 +39,6 @@ public class MainActivity extends BottomNavigationActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
   @Inject Presenter presenter;
-  @Inject IronSourceAdRepository ironSourceAdRepository;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -47,11 +54,27 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
 
-    ironSourceAdRepository.initialize();
+    initializeTapDaq();
 
     setupUpdatesNotification();
 
     attachPresenter(presenter);
+  }
+
+  private void initializeTapDaq() {
+    List<TapdaqPlacement> enabledPlacements = new ArrayList<TapdaqPlacement>();
+    enabledPlacements.add(TapdaqPlacement.createPlacement(
+        Arrays.asList(CreativeType.INTERSTITIAL_PORTRAIT, CreativeType.INTERSTITIAL_LANDSCAPE),
+        "my_interstitial_tag"));
+
+    TapdaqConfig config = new TapdaqConfig();
+    config.withPlacementTagSupport(enabledPlacements.toArray(new TapdaqPlacement[0]));
+    config.setUserSubjectToGDPR(STATUS.TRUE); //GDPR declare if user is in EU
+    config.setConsentGiven(true); //GDPR consent must be obtained from the user
+    config.setIsAgeRestrictedUser(false); //Is user under 16 (Used by AppLovin & YouAppi)
+
+    Tapdaq.getInstance()
+        .initialize(this, "<APP_ID>", "<CLIENT_KEY>", config, new TapdaqInitListener());
   }
 
   private void setupUpdatesNotification() {
@@ -131,11 +154,13 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onResume() {
     super.onResume();
-    ironSourceAdRepository.onResume();
+    Tapdaq.getInstance()
+        .onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
-    ironSourceAdRepository.onPause();
+    Tapdaq.getInstance()
+        .onPause(this);
   }
 }

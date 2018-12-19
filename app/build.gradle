@@ -409,27 +409,26 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
-  // IronSource
-  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
-  // Applovin (IronSource mediation)
-  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
-  // Vungle (IronSource mediation)
-  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
-  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
-    transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
-  // Adcolony (IronSource mediation)
-  implementation "com.ironsource.adapters:adcolonyadapter:${ADCOLONY_ADAPTER_VERSION}@jar"
-  implementation "com.adcolony:sdk:${ADCOLONY_VERSION}"
-  // Tapjoy (IronSource mediation)
-  implementation "com.ironsource.adapters:tapjoyadapter:${TAPJOY_ADAPTER_VERSION}@jar"
-  // Chartboost (IronSource mediation)
-  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
-  // UnityAds (IronSource mediation)
-  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
+
+  //Tapdaq
+  implementation 'com.tapdaq.sdk:Tapdaq-BaseSDK:6.4.0'
+//
+//  Adapters - These will automatically pull ad network dependencies
+//  implementation 'com.tapdaq.sdk:TapdaqAdColonyAdapter:6.4.0'
+//  implementation 'com.tapdaq.sdk:TapdaqAdMobAdapter:6.4.0'
+//  implementation 'com.tapdaq.sdk:TapdaqAppLovinAdapter:6.4.0'
+//
+//  Ironsource dependency requires explicit reference
+//  implementation('com.tapdaq.sdk:TapdaqIronsourceAdapter:6.4.0') {
+//    transitive false
+//  }
+//
+//  implementation 'com.ironsource.sdk:mediationsdk:6.7.12@jar'
+//
+//  implementation 'com.tapdaq.sdk:TapdaqTapjoyAdapter:6.4.0'
+//  implementation 'com.tapdaq.sdk:TapdaqVungleAdapter:6.4.0'
+//  implementation 'com.tapdaq.sdk:TapdaqZPlayAdapter:6.4.0'
+
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
