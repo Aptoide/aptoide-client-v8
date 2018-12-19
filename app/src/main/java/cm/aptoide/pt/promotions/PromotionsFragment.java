@@ -218,7 +218,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.UPDATE
             || promotionAppClick.getClickType() == PromotionAppClick.ClickType.INSTALL_APP
-            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD)
+            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD
+            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNGRADE)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
