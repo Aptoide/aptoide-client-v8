@@ -31,6 +31,10 @@ public class PromotionsViewHolderFactory {
 
     switch (viewType) {
       case DOWNGRADE:
+        promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.promotion_app_inactive, parent, false), DOWNGRADE, promotionAppClick,
+            decimalFormat);
+        break;
       case UPDATE:
         promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.promotion_app_inactive, parent, false), UPDATE, promotionAppClick,

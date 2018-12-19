@@ -14,6 +14,7 @@ import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIM;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIMED;
+import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNGRADE;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNLOAD;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.INSTALL;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
@@ -98,6 +99,9 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
   private PromotionAppClick.ClickType getClickType(int appState) {
     PromotionAppClick.ClickType clickType;
     switch (appState) {
+      case DOWNGRADE:
+        clickType = PromotionAppClick.ClickType.DOWNGRADE;
+        break;
       case UPDATE:
         clickType = PromotionAppClick.ClickType.UPDATE;
         break;
@@ -124,6 +128,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
         break;
       case DOWNLOAD:
       case INSTALL:
+      case DOWNGRADE:
         message = R.string.holidayspromotion_button_install;
         break;
       case CLAIM:
