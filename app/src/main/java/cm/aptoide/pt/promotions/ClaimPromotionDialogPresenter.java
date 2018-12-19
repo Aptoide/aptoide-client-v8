@@ -128,7 +128,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   private void handleDismissGenericError() {
     subscriptions.add(view.dismissGenericErrorClick()
-        .doOnNext(__ -> navigator.popDialogWithResult("", Activity.RESULT_CANCELED))
+        .doOnNext(__ -> view.dismissDialog())
         .subscribe(__ -> {
         }, throwable -> {
           view.showGenericError();
@@ -139,7 +139,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     subscriptions.add(view.walletCancelClick()
         .doOnNext(packageName -> {
           promotionsAnalytics.sendClickOnWalletDialogCancel(packageName);
-          navigator.popDialogWithResult("", Activity.RESULT_CANCELED);
+          view.dismissDialog();
         })
         .subscribe(__ -> {
         }, throwable -> {
@@ -151,7 +151,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     subscriptions.add(view.captchaCancelClick()
         .doOnNext(packageName -> {
           promotionsAnalytics.sendClickOnCaptchaDialogCancel(packageName);
-          navigator.popDialogWithResult("", Activity.RESULT_CANCELED);
+          view.dismissDialog();
         })
         .subscribe(__ -> {
         }, throwable -> {
@@ -164,6 +164,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .doOnNext(message -> {
           navigator.popDialogWithResult(message.getPackageName(),
               message.isOk() ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
+          view.dismissDialog();
         })
         .subscribe(__ -> {
         }, throwable -> view.showGenericError()));

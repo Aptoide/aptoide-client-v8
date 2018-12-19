@@ -166,7 +166,6 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> promotionsNavigator.claimDialogResults())
-        .doOnNext(__ -> promotionsNavigator.dismissClaimDialog())
         .filter(ClaimDialogResultWrapper::isOk)
         .doOnNext(result -> view.updateClaimStatus(result.getPackageName()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

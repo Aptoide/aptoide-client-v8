@@ -28,9 +28,5 @@ public class PromotionsNavigator {
         .map(result -> new ClaimDialogResultWrapper(result.getData() != null ? result.getData()
             .getPackage() : "", result.getResultCode() == Activity.RESULT_OK));
   }
-
-  public void dismissClaimDialog() {
-    fragment.dismiss();
-  }
 }
 

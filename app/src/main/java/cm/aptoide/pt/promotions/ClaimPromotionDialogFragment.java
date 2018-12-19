@@ -336,6 +336,10 @@ public class ClaimPromotionDialogFragment extends DialogFragment
         });
   }
 
+  @Override public void dismissDialog() {
+    dismiss();
+  }
+
   private void handleClipboardPaste() {
     String address;
 
