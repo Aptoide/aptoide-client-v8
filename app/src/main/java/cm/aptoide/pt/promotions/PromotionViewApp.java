@@ -13,7 +13,6 @@ public class PromotionViewApp {
   private final String downloadPath;
   private final String alternativePath;
   private final String appIcon;
-  private final boolean isClaimed;
   private final String description;
   private final long size;
   private final float rating;
@@ -23,6 +22,7 @@ public class PromotionViewApp {
   private final String versionName;
   private final Obb obb;
   private final float appcValue;
+  private boolean isClaimed;
 
   public PromotionViewApp(DownloadModel downloadModel, String name, String packageName, long appId,
       String downloadPath, String alternativePath, String appIcon, boolean isClaimed,
