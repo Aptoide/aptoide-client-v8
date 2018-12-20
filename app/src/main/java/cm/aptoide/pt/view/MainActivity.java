@@ -170,7 +170,8 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override public void handlePermissionRequestResult(boolean installFailed) {
     if (installFailed) {
-      Snackbar.make(findViewById(R.id.content), R.string.unknown_error, Snackbar.LENGTH_SHORT)
+      Snackbar.make(findViewById(android.R.id.content), R.string.unknown_error,
+          Snackbar.LENGTH_SHORT)
           .show();
     }
     dismissDialog();
