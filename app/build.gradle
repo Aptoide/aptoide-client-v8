@@ -449,31 +449,31 @@ dependencies {
     exclude module: "support-v4"
     exclude module: "design"
   }
-//
-//  Ironsource dependency requires explicit reference
+////
+////  Ironsource dependency requires explicit reference
   implementation('com.tapdaq.sdk:TapdaqIronsourceAdapter:6.4.0') {
     transitive false
   }
-
+//
   implementation("com.ironsource.sdk:mediationsdk:6.7.12@jar") {
     exclude group: "com.android.support"
     exclude module: "support-annotations"
     exclude module: "support-v4"
     exclude module: "design"
   }
-
+//
   implementation ('com.tapdaq.sdk:TapdaqTapjoyAdapter:6.4.0'){
     exclude group: "com.android.support"
     exclude module: "support-annotations"
     exclude module: "support-v4"
     exclude module: "design"
   }
-  implementation ('com.tapdaq.sdk:TapdaqVungleAdapter:6.4.0'){
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-    exclude module: "design"
-  }
+//  implementation ('com.tapdaq.sdk:TapdaqVungleAdapter:6.4.0'){
+//    exclude group: "com.android.support"
+//    exclude module: "support-annotations"
+//    exclude module: "support-v4"
+//    exclude module: "design"
+//  }
   implementation ('com.tapdaq.sdk:TapdaqZPlayAdapter:6.4.0'){
     exclude group: "com.android.support"
     exclude module: "support-annotations"

@@ -31,6 +31,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,6 +102,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
 import com.tapdaq.sdk.Tapdaq;
+import com.tapdaq.sdk.common.TMAdError;
 import com.tapdaq.sdk.listeners.TMAdListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -574,11 +576,17 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     fullScreenAdShown = true;
     Handler handler = new Handler();
     handler.postDelayed(() -> Tapdaq.getInstance()
-        .loadInterstitial(getActivity(), "my_interstitial_tag", new TMAdListener() {
+        .loadInterstitial(getActivity(), BuildConfig.TAPDAQ_APPVIEW_INTERSTITIAL_PLACEMENT_T8_ID,
+            new TMAdListener() {
           @Override public void didLoad() {
             Tapdaq.getInstance()
-                .showInterstitial(getActivity(), "my_interstitial_tag", new TMAdListener());
+                .showInterstitial(getActivity(),
+                    BuildConfig.TAPDAQ_APPVIEW_INTERSTITIAL_PLACEMENT_T8_ID, new TMAdListener());
           }
+
+              @Override public void didFailToLoad(TMAdError error) {
+                Log.e("Tapdaq_Error", error.getErrorMessage());
+              }
         }), 1000);
   }
 

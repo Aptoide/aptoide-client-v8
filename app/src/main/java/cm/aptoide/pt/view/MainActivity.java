@@ -77,6 +77,10 @@ public class MainActivity extends BottomNavigationActivity
     Tapdaq.getInstance()
         .initialize(this, BuildConfig.TAPDAQ_APP_KEY_T8_ID,
             BuildConfig.TAPDAQ_CLIENT_KEY_PLACEMENT_T8_ID, config, new TapdaqInitListener());
+
+    // Test
+    Tapdaq.getInstance()
+        .startTestActivity(this);
   }
 
   private void setupUpdatesNotification() {
@@ -156,13 +160,13 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onResume() {
     super.onResume();
-    Tapdaq.getInstance()
-        .onResume(this);
+    //Tapdaq.getInstance()
+    //    .onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
-    Tapdaq.getInstance()
-        .onPause(this);
+    //Tapdaq.getInstance()
+    //    .onPause(this);
   }
 }
