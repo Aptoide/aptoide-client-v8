@@ -540,7 +540,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
     toolbarTitle = null;
-    window = null;
     toolbar = null;
     promotionsList = null;
     promotionsAdapter = null;
@@ -553,6 +552,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onDestroy() {
     super.onDestroy();
+    window = null;
     promotionAppClick = null;
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
       errorMessageSubscription.unsubscribe();
