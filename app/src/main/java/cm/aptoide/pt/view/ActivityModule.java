@@ -310,7 +310,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       DownloadFactory downloadFactory, PermissionManager permissionManager,
       InstallManager installManager, DownloadAnalytics downloadAnalytics,
       @Named("localVersionCode") int localVersionCode, AutoUpdateRepository autoUpdateRepository) {
-    return new AutoUpdateManager(downloadFactory, permissionManager, installManager, false,
+    return new AutoUpdateManager(downloadFactory, permissionManager, installManager,
         downloadAnalytics, localVersionCode, autoUpdateRepository);
   }
 

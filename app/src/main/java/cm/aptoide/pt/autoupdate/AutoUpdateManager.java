@@ -15,18 +15,16 @@ public class AutoUpdateManager {
   private final DownloadFactory downloadFactory;
   private final PermissionManager permissionManager;
   private final InstallManager installManager;
-  private final boolean alwaysUpdate;
   private final DownloadAnalytics downloadAnalytics;
   private final int localVersionCode;
   private final AutoUpdateRepository autoUpdateRepository;
 
   public AutoUpdateManager(DownloadFactory downloadFactory, PermissionManager permissionManager,
-      InstallManager installManager, boolean alwaysUpdate, DownloadAnalytics downloadAnalytics,
-      int localVersionCode, AutoUpdateRepository autoUpdateRepository) {
+      InstallManager installManager, DownloadAnalytics downloadAnalytics, int localVersionCode,
+      AutoUpdateRepository autoUpdateRepository) {
     this.downloadFactory = downloadFactory;
     this.permissionManager = permissionManager;
     this.installManager = installManager;
-    this.alwaysUpdate = alwaysUpdate;
     this.downloadAnalytics = downloadAnalytics;
     this.localVersionCode = localVersionCode;
     this.autoUpdateRepository = autoUpdateRepository;
@@ -36,8 +34,7 @@ public class AutoUpdateManager {
     return autoUpdateRepository.loadFreshAutoUpdateViewModel()
         .flatMap(autoUpdateViewModel -> {
           if (autoUpdateViewModel.getVersionCode() > localVersionCode
-              && Build.VERSION.SDK_INT >= Integer.parseInt(autoUpdateViewModel.getMinSdk())
-              || alwaysUpdate) {
+              && Build.VERSION.SDK_INT >= Integer.parseInt(autoUpdateViewModel.getMinSdk())) {
             autoUpdateViewModel.setShouldUpdate(true);
           }
           return Single.just(autoUpdateViewModel);
