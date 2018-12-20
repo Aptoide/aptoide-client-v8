@@ -165,9 +165,7 @@ public class MainActivity extends BottomNavigationActivity
         (dialog, arg1) -> {
           dialog.dismiss();
         });
-    if (is_resumed()) {
-      updateSelfDialog.show();
-    }
+    updateSelfDialog.show();
   }
 
   @Override public void handlePermissionRequestResult(boolean installFailed) {
@@ -179,8 +177,8 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   private void dismissDialog() {
-    if (this.autoUpdateDialog.isShowing()) {
-      this.autoUpdateDialog.dismiss();
+    if (autoUpdateDialog != null && autoUpdateDialog.isShowing()) {
+      autoUpdateDialog.dismiss();
     }
   }
 

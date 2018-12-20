@@ -199,13 +199,12 @@ public class MainPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
         .observeOn(Schedulers.io())
-        .flatMapSingle(lifecycleEvent -> autoUpdateManager.getAutoUpdateModel())
+        .flatMapSingle(lifecycleEvent -> autoUpdateManager.loadAutoUpdateModel())
         .observeOn(viewScheduler)
         .filter(autoUpdateViewModel -> autoUpdateViewModel.shouldUpdate())
-        .doOnNext(autoUpdateViewModel -> AptoideApplication.setAutoUpdateWasCalled(true))
         .doOnNext(autoUpdateViewModel -> view.requestAutoUpdate())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(timeoutErrorsCleaned -> {
+        .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
 
@@ -223,7 +222,12 @@ public class MainPresenter implements Presenter {
         .flatMap(lifecycleEvent -> view.autoUpdateDialogCreated())
         .observeOn(viewScheduler)
         .flatMap(permissionService -> autoUpdateManager.requestPermissions(permissionService))
-        .flatMap(success -> autoUpdateManager.startUpdate())
+        .doOnNext(autoUpdateViewModel -> AptoideApplication.setAutoUpdateWasCalled(true))
+        .observeOn(Schedulers.io())
+        .flatMap(success -> autoUpdateManager.getAutoUpdateModel()
+            .toObservable())
+        .observeOn(viewScheduler)
+        .flatMap(autoUpdateViewModel -> autoUpdateManager.startUpdate(autoUpdateViewModel))
         .doOnNext(install -> view.handlePermissionRequestResult(install.isFailed()))
         .doOnError(throwable -> view.handlePermissionRequestResult(true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

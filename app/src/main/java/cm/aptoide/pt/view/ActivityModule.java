@@ -309,7 +309,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       InstallManager installManager, DownloadAnalytics downloadAnalytics,
       @Named("localVersionCode") int localVersionCode, AutoUpdateRepository autoUpdateRepository) {
     return new AutoUpdateManager(downloadFactory, permissionManager, installManager, false,
-        marketName, downloadAnalytics, localVersionCode, autoUpdateRepository);
+        downloadAnalytics, localVersionCode, autoUpdateRepository);
   }
 
   @ActivityScope @Provides @Named("packageName") String providePackageName() {

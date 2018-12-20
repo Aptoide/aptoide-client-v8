@@ -12,35 +12,29 @@ import rx.Observable;
 import rx.Single;
 
 public class AutoUpdateManager {
-  //TODO 11/12/18 This class is incomplete
   private final DownloadFactory downloadFactory;
   private final PermissionManager permissionManager;
   private final InstallManager installManager;
   private final boolean alwaysUpdate;
-  private final String marketName; //Probably doesn't need to be here
   private final DownloadAnalytics downloadAnalytics;
   private final int localVersionCode;
   private final AutoUpdateRepository autoUpdateRepository;
-  private AutoUpdateViewModel autoUpdateViewModel;
 
   public AutoUpdateManager(DownloadFactory downloadFactory, PermissionManager permissionManager,
-      InstallManager installManager, boolean alwaysUpdate, String marketName,
-      DownloadAnalytics downloadAnalytics, int localVersionCode,
-      AutoUpdateRepository autoUpdateRepository) {
+      InstallManager installManager, boolean alwaysUpdate, DownloadAnalytics downloadAnalytics,
+      int localVersionCode, AutoUpdateRepository autoUpdateRepository) {
     this.downloadFactory = downloadFactory;
     this.permissionManager = permissionManager;
     this.installManager = installManager;
     this.alwaysUpdate = alwaysUpdate;
-    this.marketName = marketName;
     this.downloadAnalytics = downloadAnalytics;
     this.localVersionCode = localVersionCode;
     this.autoUpdateRepository = autoUpdateRepository;
   }
 
-  public Single<AutoUpdateViewModel> getAutoUpdateModel() {
+  public Single<AutoUpdateViewModel> loadAutoUpdateModel() {
     return autoUpdateRepository.loadFreshAutoUpdateViewModel()
         .flatMap(autoUpdateViewModel -> {
-          this.autoUpdateViewModel = autoUpdateViewModel;
           if (autoUpdateViewModel.getVersionCode() > localVersionCode
               && Build.VERSION.SDK_INT >= Integer.parseInt(autoUpdateViewModel.getMinSdk())
               || alwaysUpdate) {
@@ -56,7 +50,7 @@ public class AutoUpdateManager {
             permissionService));
   }
 
-  public Observable<Install> startUpdate() {
+  public Observable<Install> startUpdate(AutoUpdateViewModel autoUpdateViewModel) {
     return Observable.just(downloadFactory.create(autoUpdateViewModel))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(
@@ -67,5 +61,9 @@ public class AutoUpdateManager {
         .skipWhile(installationProgress -> installationProgress.getState()
             != Install.InstallationStatus.INSTALLING)
         .first(progress -> progress.getState() != Install.InstallationStatus.INSTALLING);
+  }
+
+  public Single<AutoUpdateViewModel> getAutoUpdateModel() {
+    return autoUpdateRepository.loadAutoUpdateViewModel();
   }
 }
