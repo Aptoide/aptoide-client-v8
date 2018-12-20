@@ -2,6 +2,7 @@ package cm.aptoide.pt.autoupdate;
 
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import rx.Observable;
 import rx.Single;
 
@@ -9,18 +10,20 @@ public class AutoUpdateService {
 
   private final Service retrofit;
   private final String packageName;
+  private final String autoUpdateStoreName;
   private boolean loading;
 
-  public AutoUpdateService(Service retrofit, String packageName) {
+  public AutoUpdateService(Service retrofit, String packageName, String autoUpdateStoreName) {
     this.retrofit = retrofit;
     this.packageName = packageName;
+    this.autoUpdateStoreName = autoUpdateStoreName;
   }
 
   public Single<AutoUpdateViewModel> loadAutoUpdateViewModel() {
     if (loading) {
       return Single.just(new AutoUpdateViewModel(true));
     }
-    return retrofit.getJsonResponse()
+    return retrofit.getJsonResponse(autoUpdateStoreName)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
@@ -40,6 +43,7 @@ public class AutoUpdateService {
   }
 
   public interface Service {
-    @GET("latest_version_v9.json") Observable<AutoUpdateJsonResponse> getJsonResponse();
+    @GET("latest_version_{storeName}.json") Observable<AutoUpdateJsonResponse> getJsonResponse(
+        @Path(value = "storeName") String storeName);
   }
 }

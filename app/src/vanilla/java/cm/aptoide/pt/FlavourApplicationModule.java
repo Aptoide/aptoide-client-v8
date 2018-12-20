@@ -26,7 +26,7 @@ import javax.inject.Singleton;
     return new LocalPersistenceAdultContent(preferences, securePreferences);
   }
 
-  @Singleton @Provides @Named("autoUpdateUrl") String provideAutoUpdateUrl() {
-    return "http://imgs.aptoide.com/latest_version_v8.xml";
+  @Singleton @Provides @Named("autoUpdateStoreName") String provideAutoUpdateStoreName() {
+    return "v9";
   }
 }

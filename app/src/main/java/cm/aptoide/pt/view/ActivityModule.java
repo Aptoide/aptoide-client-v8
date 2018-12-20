@@ -125,8 +125,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
-      AutoUpdateService.Service service, @Named("packageName") String packageName) {
-    return new AutoUpdateService(service, packageName);
+      AutoUpdateService.Service service, @Named("packageName") String packageName,
+      @Named("autoUpdateStoreName") String storeName) {
+    return new AutoUpdateService(service, packageName, storeName);
   }
 
   @ActivityScope @Provides AutoUpdateRepository providesAutoUpdateRepository(
