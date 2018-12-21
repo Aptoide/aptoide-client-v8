@@ -53,6 +53,8 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
+  private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
+
   @Inject PromotionsPresenter promotionsPresenter;
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
@@ -60,6 +62,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private TextView promotionFirstMessage;
   private View walletActiveView;
   private View walletInactiveView;
+  private Button promotionAction;
+
   private Window window;
   private Toolbar toolbar;
   private Drawable backArrow;
@@ -87,6 +91,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     promotionFirstMessage = view.findViewById(R.id.promotions_message_1);
     walletActiveView = view.findViewById(R.id.promotion_wallet_active);
     walletInactiveView = view.findViewById(R.id.promotion_wallet_inactive);
+    promotionAction = walletInactiveView.findViewById(R.id.promotion_app_action_button);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
@@ -213,7 +218,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.UPDATE
             || promotionAppClick.getClickType() == PromotionAppClick.ClickType.INSTALL_APP
-            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD)
+            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD
+            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNGRADE)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
@@ -254,6 +260,18 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.CLAIM)
         .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public void updateClaimStatus(String packageName) {
+    if (packageName.equals(WALLET_PACKAGE_NAME)) {
+      promotionAction.setEnabled(false);
+      promotionAction.setBackgroundColor(getContext().getResources()
+          .getColor(R.color.grey_fog_light));
+      promotionsAdapter.isWalletInstalled(true);
+      promotionAction.setText(getContext().getString(R.string.holidayspromotion_button_claimed));
+    } else {
+      promotionsAdapter.updateClaimStatus(packageName);
+    }
   }
 
   private void showWallet(PromotionViewApp promotionViewApp) {
@@ -372,7 +390,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       TextView numberOfDownloads = walletInactiveView.findViewById(R.id.number_of_downloads);
       TextView appSize = walletInactiveView.findViewById(R.id.app_size);
       TextView rating = walletInactiveView.findViewById(R.id.rating);
-      Button promotionAction = walletInactiveView.findViewById(R.id.promotion_app_action_button);
 
       ImageLoader.with(getContext())
           .load(promotionViewApp.getAppIcon(), appIcon);
@@ -444,10 +461,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private int getButtonMessage(int appState) {
     int message;
     switch (appState) {
-      case DOWNGRADE:
       case UPDATE:
         message = R.string.holidayspromotion_button_update;
         break;
+      case DOWNGRADE:
       case DOWNLOAD:
       case INSTALL:
         message = R.string.holidayspromotion_button_install;
@@ -498,6 +515,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private PromotionAppClick.ClickType getClickType(int appState) {
     PromotionAppClick.ClickType clickType;
     switch (appState) {
+      case DOWNGRADE:
+        clickType = PromotionAppClick.ClickType.DOWNGRADE;
+        break;
       case UPDATE:
         clickType = PromotionAppClick.ClickType.UPDATE;
         break;
@@ -524,7 +544,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
     toolbarTitle = null;
-    window = null;
     toolbar = null;
     promotionsList = null;
     promotionsAdapter = null;
@@ -537,6 +556,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onDestroy() {
     super.onDestroy();
+    window = null;
     promotionAppClick = null;
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
       errorMessageSubscription.unsubscribe();

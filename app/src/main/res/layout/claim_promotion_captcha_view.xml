@@ -8,7 +8,9 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginEnd="16dp"
       android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="20dp"
       android:text="@string/holidayspromotion_title_captcha"
@@ -132,7 +134,7 @@
 
     <Button
         android:id="@+id/captcha_cancel_button"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/cancel"
@@ -141,7 +143,7 @@
 
     <Button
         android:id="@+id/captcha_continue_button"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:text="@string/holidayspromotion_button_captcha"
         style="@style/Aptoide.Button.Flat"
         />

@@ -38,11 +38,13 @@ public interface ClaimPromotionDialogView {
 
   void handleEmptyEditText(Editable s);
 
-  Observable<Void> dismissClicks();
+  Observable<Void> dismissGenericErrorClick();
 
   Observable<String> walletCancelClick();
 
   Observable<String> captchaCancelClick();
+
+  Observable<ClaimDialogResultWrapper> dismissGenericMessage();
 
   void dismissDialog();
 }

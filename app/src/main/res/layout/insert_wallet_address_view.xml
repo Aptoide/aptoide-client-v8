@@ -9,7 +9,9 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_marginBottom="15dp"
+      android:layout_marginEnd="16dp"
       android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
       android:layout_marginStart="16dp"
       android:layout_marginTop="23dp"
       android:text="@string/holidayspromotion_title_wallet"
@@ -19,10 +21,10 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_marginBottom="15dp"
-      android:layout_marginLeft="16dp"
-      android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
+      android:layout_marginLeft="16dp"
       android:layout_marginRight="16dp"
+      android:layout_marginStart="16dp"
       android:text="@string/holidayspromotion_message_wallet"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
@@ -44,12 +46,12 @@
         android:background="@drawable/edit_text_background"
         android:ellipsize="middle"
         android:hint="@string/holidayspromotion_short_wallet_field"
+        android:inputType="text"
         android:paddingEnd="16dp"
         android:paddingLeft="28dp"
         android:paddingRight="16dp"
         android:paddingStart="28dp"
         android:scrollHorizontally="true"
-        android:inputType="text"
         android:singleLine="true"
         android:textColor="@color/black_87_alpha"
         />
@@ -116,7 +118,7 @@
       >
     <Button
         android:id="@+id/wallet_cancel_button"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/cancel"
@@ -124,7 +126,7 @@
         />
     <Button
         android:id="@+id/wallet_continue_button"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:text="@string/iab_button_next"
         style="@style/Aptoide.Button.Flat"
         />

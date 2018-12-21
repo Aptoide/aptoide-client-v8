@@ -22,4 +22,6 @@ public interface PromotionsView extends View {
   void lockPromotionApps(boolean walletInstalled);
 
   Observable<PromotionViewApp> claimAppClick();
+
+  void updateClaimStatus(String packageName);
 }

@@ -40,6 +40,7 @@ public class PromotionsPresenter implements Presenter {
     cancelDownload();
     resumeDownload();
     claimApp();
+    handlePromotionClaimResult();
   }
 
   private void claimApp() {
@@ -154,6 +155,19 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
         .observeOn(viewScheduler)
         .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private void handlePromotionClaimResult() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> promotionsNavigator.claimDialogResults())
+        .filter(ClaimDialogResultWrapper::isOk)
+        .doOnNext(result -> view.updateClaimStatus(result.getPackageName()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
