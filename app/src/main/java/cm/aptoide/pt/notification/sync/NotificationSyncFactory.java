@@ -34,10 +34,10 @@ public class NotificationSyncFactory {
       case CAMPAIGN_NOTIFICATION_SYNC_PERIODIC:
         return new CampaignNotificationSync(type, notificationService, notificationPersistence,
             true, false, BuildConfig.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS, 0);
-      case CAMPAIGN_NOTIFICATION_SYNC_IMMEDIATE:
+      case SOCIAL_NOTIFICATION_SYNC_IMMEDIATE:
         return new SocialNotificationSync(type, notificationService, notificationPersistence, false,
             false, 0, 0);
-      case SOCIAL_NOTIFICATION_SYNC_IMMEDIATE:
+      case CAMPAIGN_NOTIFICATION_SYNC_IMMEDIATE:
         return new CampaignNotificationSync(type, notificationService, notificationPersistence,
             false, false, 0, 0);
       default:
