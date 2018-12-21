@@ -197,7 +197,7 @@ public class MainPresenter implements Presenter {
 
   private void handleAutoUpdate() {
     view.getLifecycleEvent()
-        .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .observeOn(Schedulers.io())
         .flatMapSingle(lifecycleEvent -> autoUpdateManager.loadAutoUpdateModel())
         .observeOn(viewScheduler)

@@ -37,6 +37,10 @@ public class AutoUpdateManager {
               && Build.VERSION.SDK_INT >= Integer.parseInt(autoUpdateViewModel.getMinSdk())) {
             autoUpdateViewModel.setShouldUpdate(true);
           }
+          if (autoUpdateViewModel.hasError()) {
+            return Single.error(new Throwable(autoUpdateViewModel.getError()
+                .toString()));
+          }
           return Single.just(autoUpdateViewModel);
         });
   }

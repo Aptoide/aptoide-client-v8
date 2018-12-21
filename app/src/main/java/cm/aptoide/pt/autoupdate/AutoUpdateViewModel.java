@@ -73,6 +73,10 @@ public class AutoUpdateViewModel {
     return shouldUpdate;
   }
 
+  public boolean hasError() {
+    return error != null;
+  }
+
   public void setShouldUpdate(boolean shouldUpdate) {
     this.shouldUpdate = shouldUpdate;
   }
