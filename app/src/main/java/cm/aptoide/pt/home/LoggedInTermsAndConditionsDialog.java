@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.analytics.implementation.CrashLogger;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -19,14 +21,18 @@ import rx.subjects.PublishSubject;
  */
 
 public class LoggedInTermsAndConditionsDialog {
+  private static final String GDPR_DIALOG_EVENT_LISTENER_IS_NULL =
+      "GDPR_DIALOG_EVENT_LISTENER_IS_NULL";
 
   private AlertDialog dialog;
   private Button continueButton;
   private Button logOutButton;
   private PublishSubject<String> uiEvents;
+  private CrashLogger crashReport;
 
   public LoggedInTermsAndConditionsDialog(Context context) {
     uiEvents = PublishSubject.create();
+    crashReport = CrashReport.getInstance();
     LayoutInflater inflater = LayoutInflater.from(context);
     dialog = new AlertDialog.Builder(context).create();
     View dialogView = inflater.inflate(R.layout.dialog_logged_in_accept_tos, null);
@@ -39,12 +45,20 @@ public class LoggedInTermsAndConditionsDialog {
     dialog.setCanceledOnTouchOutside(false);
 
     continueButton.setOnClickListener(__ -> {
-      uiEvents.onNext("continue");
-      dialog.dismiss();
+      if (uiEvents != null) {
+        uiEvents.onNext("continue");
+        dialog.dismiss();
+      } else {
+        crashReport.log(GDPR_DIALOG_EVENT_LISTENER_IS_NULL, "");
+      }
     });
 
     logOutButton.setOnClickListener(__ -> {
-      uiEvents.onNext("logout");
+      if (uiEvents != null) {
+        uiEvents.onNext("logout");
+      } else {
+        crashReport.log(GDPR_DIALOG_EVENT_LISTENER_IS_NULL, "");
+      }
       dialog.dismiss();
     });
   }
@@ -70,6 +84,8 @@ public class LoggedInTermsAndConditionsDialog {
       @Override public void onClick(View view) {
         if (uiEvents != null) {
           uiEvents.onNext("terms");
+        } else {
+          crashReport.log(GDPR_DIALOG_EVENT_LISTENER_IS_NULL, "");
         }
       }
     };
@@ -78,6 +94,8 @@ public class LoggedInTermsAndConditionsDialog {
       @Override public void onClick(View view) {
         if (uiEvents != null) {
           uiEvents.onNext("privacy");
+        } else {
+          crashReport.log(GDPR_DIALOG_EVENT_LISTENER_IS_NULL, "");
         }
       }
     };
