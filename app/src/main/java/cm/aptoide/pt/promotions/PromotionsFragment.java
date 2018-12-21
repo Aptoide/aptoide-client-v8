@@ -218,7 +218,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.UPDATE
             || promotionAppClick.getClickType() == PromotionAppClick.ClickType.INSTALL_APP
-            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD)
+            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD
+            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNGRADE)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
@@ -460,10 +461,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private int getButtonMessage(int appState) {
     int message;
     switch (appState) {
-      case DOWNGRADE:
       case UPDATE:
         message = R.string.holidayspromotion_button_update;
         break;
+      case DOWNGRADE:
       case DOWNLOAD:
       case INSTALL:
         message = R.string.holidayspromotion_button_install;
@@ -514,6 +515,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private PromotionAppClick.ClickType getClickType(int appState) {
     PromotionAppClick.ClickType clickType;
     switch (appState) {
+      case DOWNGRADE:
+        clickType = PromotionAppClick.ClickType.DOWNGRADE;
+        break;
       case UPDATE:
         clickType = PromotionAppClick.ClickType.UPDATE;
         break;
