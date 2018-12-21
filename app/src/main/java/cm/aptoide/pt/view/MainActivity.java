@@ -11,10 +11,12 @@ import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.home.BottomNavigationActivity;
@@ -23,7 +25,11 @@ import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import com.applovin.sdk.AppLovinSdk;
+import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.vungle.warren.InitCallback;
+import com.vungle.warren.Vungle;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -48,10 +54,34 @@ public class MainActivity extends BottomNavigationActivity
     installErrorsDismissEvent = PublishRelay.create();
 
     ironSourceAdRepository.initialize();
+    setupMediation();
 
     setupUpdatesNotification();
 
     attachPresenter(presenter);
+  }
+
+  private void setupMediation() {
+    AppLovinSdk.initializeSdk(this);
+    Vungle.init(BuildConfig.VUNGLE_APPLICATION_ID, getApplicationContext(), new InitCallback() {
+      @Override public void onSuccess() {
+
+      }
+
+      @Override public void onError(Throwable throwable) {
+
+      }
+
+      @Override public void onAutoCacheAdAvailable(String s) {
+
+      }
+    });
+    //new FlurryAgent.Builder()
+    //    .withLogEnabled(true)
+    //    .withCaptureUncaughtExceptions(true)
+    //    .withContinueSessionMillis(10000)
+    //    .withLogLevel(Log.DEBUG)
+    //    .build(this, FLURRY_API_KEY);
   }
 
   private void setupUpdatesNotification() {

@@ -188,6 +188,7 @@ android {
         [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
+         appLovinApiKey                  : "${project.APPLOVIN_SDK_KEY}",
          fabricApiKey                    : "${project.FABRIC_API_KEY}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
@@ -262,8 +263,10 @@ android {
         "\"" + project.MOPUB_HOME_BANNER_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID",
         "\"" + project.MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
-      variant.buildConfigField "String", "MOPUB_SEARCH_NATIVE_PLACEMENT_ID",
+    variant.buildConfigField "String", "MOPUB_SEARCH_NATIVE_PLACEMENT_ID",
               "\"" + project.MOPUB_SEARCH_NATIVE_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "VUNGLE_APPLICATION_ID",
+              "\"" + project.VUNGLE_APPLICATION_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
