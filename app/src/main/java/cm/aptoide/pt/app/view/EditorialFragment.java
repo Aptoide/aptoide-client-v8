@@ -206,7 +206,6 @@ public class EditorialFragment extends NavigationTrackFragment
         }
       }
     });
-    editorialItems.setNestedScrollingEnabled(false);
     attachPresenter(presenter);
   }
 
