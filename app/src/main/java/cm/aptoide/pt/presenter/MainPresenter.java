@@ -225,9 +225,10 @@ public class MainPresenter implements Presenter {
         .flatMap(permissionService -> autoUpdateManager.requestPermissions(permissionService))
         .observeOn(Schedulers.io())
         .flatMapSingle(success -> autoUpdateManager.getAutoUpdateModel())
-        .observeOn(viewScheduler)
-        .flatMap(autoUpdateViewModel -> autoUpdateManager.startUpdate(autoUpdateViewModel))
-        .doOnNext(install -> view.handlePermissionRequestResult(install.isFailed()))
+        .flatMap(autoUpdateViewModel -> autoUpdateManager.startUpdate(autoUpdateViewModel)
+            .andThen(autoUpdateManager.getInstall(autoUpdateViewModel))
+            .observeOn(viewScheduler)
+            .doOnNext(install -> view.handlePermissionRequestResult(install.isFailed())))
         .doOnError(throwable -> view.handlePermissionRequestResult(true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(timeoutErrorsCleaned -> {
