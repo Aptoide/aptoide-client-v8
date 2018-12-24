@@ -28,7 +28,7 @@ public class AutoUpdateService {
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
         .flatMap(jsonResponse -> Observable.just(
-            new AutoUpdateViewModel((int) jsonResponse.getVersioncode(), jsonResponse.getUri(),
+            new AutoUpdateViewModel(jsonResponse.getVersioncode(), jsonResponse.getUri(),
                 jsonResponse.getMd5(), jsonResponse.getMinSdk(), packageName)))
         .onErrorReturn(throwable -> createErrorAutoUpdateViewModel(throwable))
         .toSingle();
