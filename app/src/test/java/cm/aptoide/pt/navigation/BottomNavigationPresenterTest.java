@@ -6,7 +6,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
@@ -38,7 +37,6 @@ public class BottomNavigationPresenterTest {
   @Mock private InstallManager installManager;
   @Mock private RootInstallationRetryHandler rootInstallationRetryHandler;
   @Mock private ApkFy apkFy;
-  @Mock private AutoUpdate autoUpdate;
   @Mock private ContentPuller contentPuller;
   @Mock private NotificationSyncScheduler notificationSyncScheduler;
   @Mock private InstallCompletedNotifier installCompletedNotifier;
@@ -61,7 +59,7 @@ public class BottomNavigationPresenterTest {
     navigationEvent = PublishSubject.create();
 
     presenter = new MainPresenter(mainView, installManager, rootInstallationRetryHandler,
-        CrashReport.getInstance(), apkFy, autoUpdate, contentPuller, notificationSyncScheduler,
+        CrashReport.getInstance(), apkFy, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(),
         bottomNavigationNavigator, updatesManager, autoUpdateManager);
