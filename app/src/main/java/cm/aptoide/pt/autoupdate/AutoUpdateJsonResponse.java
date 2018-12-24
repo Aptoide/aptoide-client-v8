@@ -1,21 +1,23 @@
 package cm.aptoide.pt.autoupdate;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AutoUpdateJsonResponse {
 
-  private long versioncode;
+  private int versioncode;
   private String uri;
   private String md5;
-  private String minSdk;
+  @JsonProperty("minSdk") private String minSdk;
 
   public AutoUpdateJsonResponse() {
 
   }
 
-  public long getVersioncode() {
+  public int getVersioncode() {
     return versioncode;
   }
 
-  public void setVersioncode(long versioncode) {
+  public void setVersioncode(int versioncode) {
     this.versioncode = versioncode;
   }
 
