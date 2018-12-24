@@ -33,5 +33,5 @@ public interface MainView extends View {
 
   void requestAutoUpdate();
 
-  void handlePermissionRequestResult(boolean installFailed);
+  void handleAutoUpdateResult(boolean installFailed);
 }

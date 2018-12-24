@@ -228,12 +228,11 @@ public class MainPresenter implements Presenter {
         .flatMap(autoUpdateViewModel -> autoUpdateManager.startUpdate(autoUpdateViewModel)
             .andThen(autoUpdateManager.getInstall(autoUpdateViewModel)))
         .observeOn(viewScheduler)
-        .doOnNext(
-            install -> view.handlePermissionRequestResult(hasAutoUpdateInstallationFailed(install)))
+        .doOnNext(install -> view.handleAutoUpdateResult(hasAutoUpdateInstallationFailed(install)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(timeoutErrorsCleaned -> {
         }, throwable -> {
-          view.handlePermissionRequestResult(true);
+          handleErrorResult(throwable);
           crashReport.log(throwable);
         });
   }
@@ -242,6 +241,14 @@ public class MainPresenter implements Presenter {
     for (Install install : installs) {
       installCompletedNotifier.add(install.getPackageName(), install.getVersionCode(),
           install.getMd5());
+    }
+  }
+
+  private void handleErrorResult(Throwable throwable) {
+    if (throwable instanceof SecurityException) {
+      view.handleAutoUpdateResult(false);
+    } else {
+      view.handleAutoUpdateResult(true);
     }
   }
 
