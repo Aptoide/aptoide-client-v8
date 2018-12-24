@@ -68,8 +68,6 @@ public class AutoUpdateManager {
   public Observable<Install> getInstall(AutoUpdateViewModel autoUpdateViewModel) {
     return installManager.getInstall(autoUpdateViewModel.getMd5(),
         autoUpdateViewModel.getPackageName(), autoUpdateViewModel.getVersionCode())
-        .skipWhile(installationProgress -> installationProgress.getState()
-            != Install.InstallationStatus.INSTALLING)
-        .first(progress -> progress.getState() != Install.InstallationStatus.INSTALLING);
+        .first(install -> install.getState() != Install.InstallationStatus.INSTALLING);
   }
 }

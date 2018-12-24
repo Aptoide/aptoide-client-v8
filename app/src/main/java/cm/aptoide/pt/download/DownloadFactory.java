@@ -181,12 +181,10 @@ public class DownloadFactory {
     download.setVersionCode(autoUpdateViewModel.getVersionCode());
     download.setPackageName(autoUpdateViewModel.getPackageName());
     download.setAction(Download.ACTION_UPDATE);
-    download.setVersionName(
-        "aptoide"); // is not used, but can't be null because of an equals in the chain
     download.setFilesToDownload(
         createFileList(autoUpdateViewModel.getMd5(), autoUpdateViewModel.getPackageName(),
             autoUpdateViewModel.getUri() + UPDATE_ACTION, autoUpdateViewModel.getMd5(), null, null,
-            autoUpdateViewModel.getVersionCode(), "aptoide"));
+            autoUpdateViewModel.getVersionCode(), null));
     return download;
   }
 

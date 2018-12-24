@@ -226,13 +226,16 @@ public class MainPresenter implements Presenter {
         .observeOn(Schedulers.io())
         .flatMapSingle(success -> autoUpdateManager.getAutoUpdateModel())
         .flatMap(autoUpdateViewModel -> autoUpdateManager.startUpdate(autoUpdateViewModel)
-            .andThen(autoUpdateManager.getInstall(autoUpdateViewModel))
-            .observeOn(viewScheduler)
-            .doOnNext(install -> view.handlePermissionRequestResult(install.isFailed())))
-        .doOnError(throwable -> view.handlePermissionRequestResult(true))
+            .andThen(autoUpdateManager.getInstall(autoUpdateViewModel)))
+        .observeOn(viewScheduler)
+        .doOnNext(
+            install -> view.handlePermissionRequestResult(hasAutoUpdateInstallationFailed(install)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(timeoutErrorsCleaned -> {
-        }, throwable -> crashReport.log(throwable));
+        }, throwable -> {
+          view.handlePermissionRequestResult(true);
+          crashReport.log(throwable);
+        });
   }
 
   private void watchInstalls(List<Install> installs) {
@@ -240,5 +243,9 @@ public class MainPresenter implements Presenter {
       installCompletedNotifier.add(install.getPackageName(), install.getVersionCode(),
           install.getMd5());
     }
+  }
+
+  private boolean hasAutoUpdateInstallationFailed(Install install) {
+    return install.isFailed() || install.getState() == Install.InstallationStatus.UNINSTALLED;
   }
 }
