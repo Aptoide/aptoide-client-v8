@@ -23,11 +23,15 @@ allprojects {
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
     maven { url "https://adcolony.bintray.com/AdColony" }
+    maven { url 'https://tapjoy.bintray.com/maven' }
 
     google()
     jcenter()
     maven { url 'https://maven.google.com'}
     maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+    flatDir {
+      dirs 'libs'
+    }
   }
 }
 

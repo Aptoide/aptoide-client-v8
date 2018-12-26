@@ -298,6 +298,14 @@ android {
               "\"" + project.MOPUB_SEARCH_NATIVE_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "VUNGLE_APPLICATION_ID",
               "\"" + project.VUNGLE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
+              "\"" + project.ADCOLONY_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "ADCOLONY_ZONE_ID",
+              "\"" + project.ADCOLONY_ZONE_ID + "\""
+    variant.buildConfigField "String", "TAPJOY_SDK_KEY",
+              "\"" + project.TAPJOY_SDK_KEY + "\""
+    variant.buildConfigField "String", "UNITYADS_GAME_ID",
+              "\"" + project.UNITYADS_GAME_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -424,12 +432,12 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
   // IronSource
-  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+//  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
   // Applovin (IronSource mediation)
-  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+//  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
   // Vungle (IronSource mediation)
-  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
-  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
+//  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
+//  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
 //  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
 //  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
 //  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
@@ -473,7 +481,6 @@ dependencies {
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:6.7.12@jar"
-//  implementation("com.ironsource.sdk:mediationsdk:6.7.12@jar")
   implementation 'com.mopub.mediation:ironsource:6.7.12.0'
 
   // Vungle
@@ -483,16 +490,29 @@ dependencies {
     exclude module: "support-annotations"
     exclude module: "support-v4"
   }
+
+  // Adcolony
+  implementation 'com.mopub.mediation:adcolony:3.3.7.0'
+  implementation 'com.adcolony:sdk:3.3.7'
+
+  // Tapjoy
+  implementation 'com.tapjoy:tapjoy-android-sdk:12.2.0@aar'
+  implementation 'com.mopub.mediation:tapjoy:12.2.0.0'
+
+  // UnityAds
+  implementation fileTree(include: ['*.aar'], dir: 'libs')
+
+
   // Adcolony (IronSource mediation)
-  implementation "com.ironsource.adapters:adcolonyadapter:${ADCOLONY_ADAPTER_VERSION}@jar"
-  implementation "com.adcolony:sdk:${ADCOLONY_VERSION}"
+//  implementation "com.ironsource.adapters:adcolonyadapter:${ADCOLONY_ADAPTER_VERSION}@jar"
+//  implementation "com.adcolony:sdk:${ADCOLONY_VERSION}"
   // Tapjoy (IronSource mediation)
-  implementation "com.ironsource.adapters:tapjoyadapter:${TAPJOY_ADAPTER_VERSION}@jar"
+//  implementation "com.ironsource.adapters:tapjoyadapter:${TAPJOY_ADAPTER_VERSION}@jar"
   // Chartboost (IronSource mediation)
-  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
+//  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
   // UnityAds (IronSource mediation)
-  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
-  implementation 'com.mopub.mediation:vungle:6.3.24.0'
+//  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
+//  implementation 'com.mopub.mediation:vungle:6.3.24.0'
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {

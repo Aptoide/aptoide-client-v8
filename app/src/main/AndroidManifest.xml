@@ -145,11 +145,11 @@
 
     <activity
         android:name=".view.OpenGLES20Activity"
-        android:theme="@style/Theme.AppCompat.Translucent"></activity>
+        android:theme="@style/Theme.AppCompat.Translucent"/>
 
     <activity
         android:name=".view.MainActivity"
-        android:windowSoftInputMode="adjustPan"></activity>
+        android:windowSoftInputMode="adjustPan"/>
 
     <activity
         android:name=".view.FairyMainActivity"

@@ -364,15 +364,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     + AptoideUtils.ScreenU.getScreenSize(getContext().getResources())
                     + "\n"
                     + getString(R.string.setting_esgl_version)
-                    + ": "
-                    + AptoideUtils.SystemU.getGlEsVer(
+                    + ": " + AptoideUtils.SystemU.getGlEsVer(
                 ((ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE)))
                     + "\n"
                     + getString(R.string.screenCode)
                     + ": "
                     + AptoideUtils.ScreenU.getNumericScreenSize(getContext().getResources())
-                    + "/"
-                    + AptoideUtils.ScreenU.getDensityDpi(
+                    + "/" + AptoideUtils.ScreenU.getDensityDpi(
                 ((WindowManager) getContext().getSystemService(Service.WINDOW_SERVICE)))
                     + "\n"
                     + getString(R.string.cpuAbi)

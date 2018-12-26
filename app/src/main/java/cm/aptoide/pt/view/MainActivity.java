@@ -25,11 +25,17 @@ import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import com.adcolony.sdk.AdColony;
 import com.applovin.sdk.AppLovinSdk;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.tapjoy.TJConnectListener;
+import com.tapjoy.Tapjoy;
+import com.unity3d.ads.IUnityAdsListener;
+import com.unity3d.ads.UnityAds;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.Vungle;
+import java.util.Hashtable;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -76,12 +82,38 @@ public class MainActivity extends BottomNavigationActivity
 
       }
     });
-    //new FlurryAgent.Builder()
-    //    .withLogEnabled(true)
-    //    .withCaptureUncaughtExceptions(true)
-    //    .withContinueSessionMillis(10000)
-    //    .withLogLevel(Log.DEBUG)
-    //    .build(this, FLURRY_API_KEY);
+    AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID);
+
+    Hashtable<String, Object> connectFlags = new Hashtable<String, Object>();
+    //connectFlags.put(TapjoyConnectFlag.ENABLE_LOGGING, "true");      // remember to turn this off for your production builds!
+    Tapjoy.connect(getApplicationContext(), BuildConfig.TAPJOY_SDK_KEY, connectFlags,
+        new TJConnectListener() {
+          @Override public void onConnectSuccess() {
+
+          }
+
+          @Override public void onConnectFailure() {
+
+          }
+        });
+
+    UnityAds.initialize(this, BuildConfig.UNITYADS_GAME_ID, new IUnityAdsListener() {
+      @Override public void onUnityAdsReady(String s) {
+
+      }
+
+      @Override public void onUnityAdsStart(String s) {
+
+      }
+
+      @Override public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
+
+      }
+
+      @Override public void onUnityAdsError(UnityAds.UnityAdsError unityAdsError, String s) {
+
+      }
+    });
   }
 
   private void setupUpdatesNotification() {
@@ -167,5 +199,15 @@ public class MainActivity extends BottomNavigationActivity
   @Override protected void onPause() {
     super.onPause();
     ironSourceAdRepository.onPause();
+  }
+
+  @Override protected void onStart() {
+    super.onStart();
+    Tapjoy.onActivityStart(this);
+  }
+
+  @Override protected void onStop() {
+    Tapjoy.onActivityStop(this);
+    super.onStop();
   }
 }
