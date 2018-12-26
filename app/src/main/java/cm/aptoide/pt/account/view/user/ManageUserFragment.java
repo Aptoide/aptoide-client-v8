@@ -160,8 +160,10 @@ public class ManageUserFragment extends BackButtonFragment
     DatePickerDialog.OnDateSetListener datePickerDialogListener =
         new DatePickerDialog.OnDateSetListener() {
           @Override public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            setupCalendar(calendar, year, month, day);
-            setupCalendarDateString(year, month, day);
+            int monthNumber = month
+                + 1; //Android starts counting months on 0 to better count time. e.g 22 jan is 0 months and 22 days
+            setupCalendar(calendar, year, monthNumber, day);
+            setupCalendarDateString(year, monthNumber, day);
           }
         };
     datePickerDialog =
