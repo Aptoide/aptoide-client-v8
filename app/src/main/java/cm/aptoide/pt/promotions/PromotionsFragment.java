@@ -62,6 +62,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private TextView promotionFirstMessage;
   private View walletActiveView;
   private View walletInactiveView;
+  private View promotionsView;
+  private ProgressBar loading;
   private Button promotionAction;
 
   private Window window;
@@ -92,6 +94,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     walletActiveView = view.findViewById(R.id.promotion_wallet_active);
     walletInactiveView = view.findViewById(R.id.promotion_wallet_inactive);
     promotionAction = walletInactiveView.findViewById(R.id.promotion_app_action_button);
+    loading = view.findViewById(R.id.progress_bar);
+    promotionsView = view.findViewById(R.id.promotions_view);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
@@ -212,6 +216,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       }
       promotionsAdapter.setPromotionApp(promotionViewApp);
     }
+    loading.setVisibility(View.GONE);
+    promotionsView.setVisibility(View.VISIBLE);
   }
 
   @Override public Observable<PromotionViewApp> installButtonClick() {

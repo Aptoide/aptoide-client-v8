@@ -60,10 +60,19 @@
     </android.support.design.widget.CollapsingToolbarLayout>
   </android.support.design.widget.AppBarLayout>
 
+  <ProgressBar
+      android:id="@+id/progress_bar"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_gravity="bottom|center_horizontal"
+      android:layout_marginBottom="140dp"
+      />
 
   <android.support.v4.widget.NestedScrollView
+      android:id="@+id/promotions_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:visibility="gone"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
