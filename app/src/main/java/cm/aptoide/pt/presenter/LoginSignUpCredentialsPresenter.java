@@ -223,8 +223,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideGoogleSignUp())
         .flatMap(__ -> view.googleSignUpEvent())
-        .doOnNext(this::showNotCheckedMessage)
-        .filter(event -> event)
         .doOnNext(event -> {
           view.showLoading();
           accountAnalytics.sendGoogleLoginButtonPressed();
@@ -274,8 +272,6 @@ public class LoginSignUpCredentialsPresenter implements Presenter, BackButton.Cl
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideFacebookSignUp())
         .flatMap(__ -> view.facebookSignUpEvent())
-        .doOnNext(this::showNotCheckedMessage)
-        .filter(event -> event)
         .doOnNext(event -> {
           view.showLoading();
           accountAnalytics.sendFacebookLoginButtonPressed();

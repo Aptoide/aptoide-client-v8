@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.donations.DonateDialogFragment;
+import cm.aptoide.pt.app.view.donations.view.DonateDialogFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -109,7 +109,7 @@ public class AppViewNavigator {
   public void navigateToDonationsDialog(String packageName, String tag) {
     boolean hasWallet = hasWallet();
     fragmentNavigator.navigateToDialogFragment(
-        DonateDialogFragment.newInstance(packageName, hasWallet), tag);
+        DonateDialogFragment.newInstance(packageName, hasWallet));
   }
 
   private boolean hasWallet() {

@@ -35,8 +35,9 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
+    applicationId "cm.aptoide.pt"
     versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
-    versionName "9.4.0.0"
+    versionName project.VERSION_NAME_VANILLA
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true
@@ -69,17 +70,24 @@ android {
 
   flavorDimensions "product", "mode"
   productFlavors {
+    cobrand {
+      dimension "product"
+      applicationId defaultConfig.getApplicationId()
+      applicationIdSuffix project.COBRAND_APPLICATION_ID_SUFFIX.toString()
+      versionNameSuffix ".c" + project.COBRAND_VERSION.toString()
+      matchingFallbacks = ['internal', 'prod']
+    }
 
     vanilla {
       dimension "product"
-      applicationId "cm.aptoide.pt"
+      applicationId defaultConfig.getApplicationId()
       matchingFallbacks = ['internal', 'prod']
     }
 
     internal {
       dimension "mode"
       applicationIdSuffix "internal"
-      versionName "9.4.0." + getDate()
+      versionName defaultConfig.getVersionName() + "." + getDate()
       versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
@@ -87,7 +95,7 @@ android {
     dev {
       dimension "mode"
       applicationIdSuffix "dev"
-      versionName "9.4.0." + getDate()
+      versionName defaultConfig.getVersionName() + "." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['prod', 'internal']
     }
@@ -98,21 +106,22 @@ android {
 
     leak {
       dimension "mode"
+      applicationIdSuffix ".leak"
       matchingFallbacks = ['internal', 'prod']
     }
 
     fairy {
       dimension "mode"
-      applicationIdSuffix "testfairy"
-      versionName "9.4.0." + getDate()
+      applicationIdSuffix ".testfairy"
+      versionName defaultConfig.getVersionName() + "." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
       matchingFallbacks = ['internal', 'prod']
     }
 
     monetisation {
       dimension "mode"
-      versionName defaultConfig.getVersionName() + "D"
-      matchingFallbacks = ['prod']
+      versionName defaultConfig.getVersionName() + "F"
+      matchingFallbacks = ['internal', 'prod']
     }
   }
 
@@ -144,6 +153,19 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  variantFilter { variant ->
+    List<ProductFlavor> flavors = variant.getFlavors()
+
+    String applicationIdSuffix = flavors[1].applicationIdSuffix
+    boolean hasSuffix = applicationIdSuffix != null
+
+    if (flavors[0].name.contains('cobrand') && hasSuffix &&
+        (applicationIdSuffix.contains('internal') || applicationIdSuffix.contains('testfairy') ||
+            applicationIdSuffix.contains('leak'))) {
+      setIgnore(true)
+    }
   }
 
   packagingOptions {
@@ -197,7 +219,11 @@ android {
     variant.resValue "string", "store_suggestion_provider_authority",
         storeSuggestionProviderAuthority
 
-    variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
+    if (flavors[0].name.contains("cobrand")) {
+      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
+    } else {
+      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
+    }
 
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
         "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
@@ -233,6 +259,9 @@ android {
         project.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS
     variant.buildConfigField "long", "ANALYTICS_SESSION_INTERVAL_IN_MILLIS",
         project.ANALYTICS_SESSION_INTERVAL_IN_MILLIS
+    variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
+
 
     if (flavors[1].name.contains('internal')) {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
@@ -254,6 +283,8 @@ android {
         "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID",
         "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_9500_PLACEMENT_ID",
+        "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_9500_PLACEMENT_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_HIGHLIGHTED_PLACEMENT_ID",
         "\"" + project.MOPUB_HIGHLIGHTED_PLACEMENT_ID + "\""
@@ -393,6 +424,12 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
   // IronSource
+  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+  // Applovin (IronSource mediation)
+  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+  // Vungle (IronSource mediation)
+  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
+  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
 //  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
 //  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
 //  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
@@ -446,6 +483,15 @@ dependencies {
     exclude module: "support-annotations"
     exclude module: "support-v4"
   }
+  // Adcolony (IronSource mediation)
+  implementation "com.ironsource.adapters:adcolonyadapter:${ADCOLONY_ADAPTER_VERSION}@jar"
+  implementation "com.adcolony:sdk:${ADCOLONY_VERSION}"
+  // Tapjoy (IronSource mediation)
+  implementation "com.ironsource.adapters:tapjoyadapter:${TAPJOY_ADAPTER_VERSION}@jar"
+  // Chartboost (IronSource mediation)
+  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
+  // UnityAds (IronSource mediation)
+  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
   implementation 'com.mopub.mediation:vungle:6.3.24.0'
 
   // paypal SDK

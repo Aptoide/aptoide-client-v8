@@ -161,6 +161,23 @@
       android:layout_marginRight="8dp"
       android:layout_marginTop="32dp"
       android:visibility="gone"
+      tools:visibility="gone"
+      />
+  <Button
+      android:id="@+id/action_button"
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_below="@id/app_cardview"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginTop="16dp"
+      android:background="@drawable/aptoide_gradient_rounded"
+      android:textAlignment="center"
+      android:textSize="12sp"
+      android:visibility="gone"
+      tools:text="@string/install"
       tools:visibility="visible"
+      style="@style/Aptoide.Button.S"
       />
 </RelativeLayout>

@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.MyStoreManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginDisplayable;
 import cm.aptoide.pt.account.view.user.CreateStoreDisplayable;
@@ -361,7 +362,9 @@ public class DisplayablesFactory {
       if (!store.isCreateStore()) {
         displayables.add(new MyStoreDisplayable(store, storeContext));
       } else if (accountManager.isLoggedIn()) {
-        displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
+        if (MyStoreManager.shouldShowCreateStore()) {
+          displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
+        }
       } else {
         displayables.add(new LoginDisplayable());
       }

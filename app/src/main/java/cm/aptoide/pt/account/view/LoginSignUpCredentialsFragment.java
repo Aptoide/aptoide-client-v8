@@ -149,11 +149,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .map(event -> termsConditionCheckBox.isChecked());
   }
 
-  @Override public Observable<Boolean> googleSignUpEvent() {
+  @Override public Observable<Void> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_GOOGLE,
-            getStartupClickOrigin()))
-        .map(event -> termsConditionCheckBox.isChecked());
+            getStartupClickOrigin()));
   }
 
   @Override public Observable<Void> showHidePasswordClick() {
@@ -169,11 +168,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .map(dialog -> null);
   }
 
-  @Override public Observable<Boolean> facebookSignUpEvent() {
+  @Override public Observable<Void> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
-            getStartupClickOrigin()))
-        .map(event -> termsConditionCheckBox.isChecked());
+            getStartupClickOrigin()));
   }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {

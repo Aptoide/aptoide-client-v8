@@ -9,7 +9,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
 import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
@@ -89,6 +88,13 @@ import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.promotions.PromotionViewAppMapper;
+import cm.aptoide.pt.promotions.PromotionsAnalytics;
+import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsNavigator;
+import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import cm.aptoide.pt.promotions.PromotionsPresenter;
+import cm.aptoide.pt.promotions.PromotionsView;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -216,8 +222,11 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, AdsManager adsManager) {
-    return new Home(bundlesRepository, impressionManager, adsManager);
+      ImpressionManager impressionManager, AdsManager adsManager,
+      PromotionsManager promotionsManager,
+      PromotionsPreferencesManager promotionsPreferencesManager) {
+    return new Home(bundlesRepository, impressionManager, promotionsManager,
+        promotionsPreferencesManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -252,10 +261,6 @@ import rx.schedulers.Schedulers;
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
-  }
-
-  @FragmentScope @Provides DownloadStateParser providesDownloadStateParser() {
-    return new DownloadStateParser();
   }
 
   @FragmentScope @Provides SocialRepository providesSocialRepository(
@@ -376,7 +381,29 @@ import rx.schedulers.Schedulers;
         ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator);
   }
 
-  @FragmentScope @Provides ApkFyExperiment providesApkfyExperiment(ABTestManager abTestManager) {
-    return new ApkFyExperiment(abTestManager);
+  @FragmentScope @Provides
+  IronSourceInterstitialAdExperiment providesIronSourceInterstitialAdExperiment(
+      ABTestManager abTestManager, IronSourceAdRepository ironSourceAdRepository,
+      IronSourceAnalytics ironSourceAnalytics) {
+    return new IronSourceInterstitialAdExperiment(abTestManager, AndroidSchedulers.mainThread(),
+        ironSourceAdRepository, ironSourceAnalytics);
+  }
+
+  @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
+      PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
+      PromotionsNavigator promotionsNavigator) {
+    return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
+        new PermissionManager(), ((PermissionService) fragment.getContext()),
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator);
+  }
+
+  @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
+      DownloadStateParser downloadStateParser) {
+    return new PromotionViewAppMapper(downloadStateParser);
+  }
+
+  @FragmentScope @Provides PromotionsNavigator providesPromotionsNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new PromotionsNavigator(fragmentNavigator);
   }
 }

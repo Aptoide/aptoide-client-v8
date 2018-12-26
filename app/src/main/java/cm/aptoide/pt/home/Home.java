@@ -5,6 +5,10 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import java.util.ArrayList;
 import java.util.List;
+import cm.aptoide.pt.promotions.PromotionApp;
+import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import java.util.List;
 import rx.Completable;
 import rx.Single;
 
@@ -16,13 +20,16 @@ public class Home {
 
   private final BundlesRepository bundlesRepository;
   private final ImpressionManager impressionManager;
-  private final AdsManager adsManager;
+  private final PromotionsManager promotionsManager;
+  private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
-      AdsManager adsManager) {
+      PromotionsManager promotionsManager,
+      PromotionsPreferencesManager promotionsPreferencesManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
-    this.adsManager = adsManager;
+    this.promotionsManager = promotionsManager;
+    this.promotionsPreferencesManager = promotionsPreferencesManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -93,5 +100,30 @@ public class Home {
   public Completable actionBundleImpression(ActionBundle bundle) {
     return impressionManager.markAsRead(bundle.getActionItem()
         .getCardId(), false);
+  }
+
+  public Single<HomePromotionsWrapper> hasPromotionApps() {
+    return promotionsManager.getPromotionApps()
+        .map(this::mapPromotions);
+  }
+
+  public void setPromotionsDialogShown() {
+    promotionsPreferencesManager.setPromotionsDialogShown();
+  }
+
+  private HomePromotionsWrapper mapPromotions(List<PromotionApp> apps) {
+    int promotions = 0;
+    float appcValue = 0;
+    if (apps.size() > 0) {
+      for (PromotionApp app : apps) {
+        if (!app.isClaimed()) {
+          promotions++;
+          appcValue += app.getAppcValue();
+        }
+      }
+    }
+
+    return new HomePromotionsWrapper(!apps.isEmpty(), promotions, appcValue,
+        promotionsPreferencesManager.shouldShowPromotionsDialog());
   }
 }
