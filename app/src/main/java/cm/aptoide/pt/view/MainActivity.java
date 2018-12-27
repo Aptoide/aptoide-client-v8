@@ -6,12 +6,12 @@
 package cm.aptoide.pt.view;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -82,7 +82,7 @@ public class MainActivity extends BottomNavigationActivity
 
       }
     });
-    AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID);
+    AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
 
     Hashtable<String, Object> connectFlags = new Hashtable<String, Object>();
     //connectFlags.put(TapjoyConnectFlag.ENABLE_LOGGING, "true");      // remember to turn this off for your production builds!
@@ -114,6 +114,9 @@ public class MainActivity extends BottomNavigationActivity
 
       }
     });
+
+    //Chartboost.startWithAppId(this, BuildConfig.CHARTBOOST_APPLICATION_ID, BuildConfig.CHARTBOOST_APPLICATION_SIGNATURE);
+    //Chartboost.onCreate(this);
   }
 
   private void setupUpdatesNotification() {
@@ -191,19 +194,19 @@ public class MainActivity extends BottomNavigationActivity
             storeName));
   }
 
+  @Override protected void onStart() {
+    super.onStart();
+    Tapjoy.onActivityStart(this);
+  }
+
   @Override protected void onResume() {
     super.onResume();
     ironSourceAdRepository.onResume();
   }
 
   @Override protected void onPause() {
-    super.onPause();
     ironSourceAdRepository.onPause();
-  }
-
-  @Override protected void onStart() {
-    super.onStart();
-    Tapjoy.onActivityStart(this);
+    super.onPause();
   }
 
   @Override protected void onStop() {

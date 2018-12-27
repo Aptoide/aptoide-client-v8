@@ -300,12 +300,16 @@ android {
               "\"" + project.VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
               "\"" + project.ADCOLONY_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "ADCOLONY_ZONE_ID",
-              "\"" + project.ADCOLONY_ZONE_ID + "\""
     variant.buildConfigField "String", "TAPJOY_SDK_KEY",
               "\"" + project.TAPJOY_SDK_KEY + "\""
     variant.buildConfigField "String", "UNITYADS_GAME_ID",
               "\"" + project.UNITYADS_GAME_ID + "\""
+    variant.buildConfigField "String", "CHARTBOOST_APPLICATION_ID",
+              "\"" + project.CHARTBOOST_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "CHARTBOOST_APPLICATION_SIGNATURE",
+              "\"" + project.CHARTBOOST_APPLICATION_SIGNATURE + "\""
+    variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
+              "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -499,8 +503,10 @@ dependencies {
   implementation 'com.tapjoy:tapjoy-android-sdk:12.2.0@aar'
   implementation 'com.mopub.mediation:tapjoy:12.2.0.0'
 
-  // UnityAds
-  implementation fileTree(include: ['*.aar'], dir: 'libs')
+  // UnityAds, Chartboost & One by AOL
+  implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+//  implementation 'com.mopub.mediation:chartboost:7.3.1.0'
+//  implementation 'com.mopub.mediation:onebyaol:6.8.2.0'
 
 
   // Adcolony (IronSource mediation)
