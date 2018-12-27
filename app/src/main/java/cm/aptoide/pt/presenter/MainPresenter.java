@@ -28,7 +28,6 @@ import java.util.List;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
-import rx.schedulers.Schedulers;
 
 public class MainPresenter implements Presenter {
 
@@ -47,6 +46,7 @@ public class MainPresenter implements Presenter {
   private final boolean firstCreated;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final Scheduler viewScheduler;
+  private final Scheduler ioScheduler;
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final UpdatesManager updatesManager;
   private final AutoUpdateManager autoUpdateManager;
@@ -57,7 +57,7 @@ public class MainPresenter implements Presenter {
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, boolean firstCreated,
-      AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler,
+      AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager) {
     this.view = view;
@@ -75,6 +75,7 @@ public class MainPresenter implements Presenter {
     this.securePreferences = securePreferences;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.viewScheduler = viewScheduler;
+    this.ioScheduler = ioScheduler;
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.updatesManager = updatesManager;
     this.autoUpdateManager = autoUpdateManager;
@@ -198,7 +199,7 @@ public class MainPresenter implements Presenter {
   private void handleAutoUpdate() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .observeOn(Schedulers.io())
+        .observeOn(ioScheduler)
         .flatMapSingle(lifecycleEvent -> autoUpdateManager.loadAutoUpdateModel())
         .observeOn(viewScheduler)
         .filter(autoUpdateViewModel -> autoUpdateViewModel.shouldUpdate())
@@ -223,7 +224,7 @@ public class MainPresenter implements Presenter {
         .flatMap(lifecycleEvent -> view.autoUpdateDialogCreated())
         .observeOn(viewScheduler)
         .flatMap(permissionService -> autoUpdateManager.requestPermissions(permissionService))
-        .observeOn(Schedulers.io())
+        .observeOn(ioScheduler)
         .flatMapSingle(success -> autoUpdateManager.getAutoUpdateModel())
         .flatMap(autoUpdateViewModel -> autoUpdateManager.startUpdate(autoUpdateViewModel)
             .andThen(autoUpdateManager.getInstall(autoUpdateViewModel)))

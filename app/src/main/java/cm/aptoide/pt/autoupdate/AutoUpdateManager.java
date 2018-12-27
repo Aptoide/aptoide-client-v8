@@ -1,6 +1,5 @@
 package cm.aptoide.pt.autoupdate;
 
-import android.os.Build;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -19,23 +18,25 @@ public class AutoUpdateManager {
   private final DownloadAnalytics downloadAnalytics;
   private final int localVersionCode;
   private final AutoUpdateRepository autoUpdateRepository;
+  private final int localVersionSdk;
 
   public AutoUpdateManager(DownloadFactory downloadFactory, PermissionManager permissionManager,
       InstallManager installManager, DownloadAnalytics downloadAnalytics, int localVersionCode,
-      AutoUpdateRepository autoUpdateRepository) {
+      AutoUpdateRepository autoUpdateRepository, int localVersionSdk) {
     this.downloadFactory = downloadFactory;
     this.permissionManager = permissionManager;
     this.installManager = installManager;
     this.downloadAnalytics = downloadAnalytics;
     this.localVersionCode = localVersionCode;
     this.autoUpdateRepository = autoUpdateRepository;
+    this.localVersionSdk = localVersionSdk;
   }
 
   public Single<AutoUpdateViewModel> loadAutoUpdateModel() {
     return autoUpdateRepository.loadFreshAutoUpdateViewModel()
         .flatMap(autoUpdateViewModel -> {
           if (autoUpdateViewModel.getVersionCode() > localVersionCode
-              && Build.VERSION.SDK_INT >= Integer.parseInt(autoUpdateViewModel.getMinSdk())) {
+              && localVersionSdk >= Integer.parseInt(autoUpdateViewModel.getMinSdk())) {
             autoUpdateViewModel.setShouldUpdate(true);
           }
           if (autoUpdateViewModel.hasError()) {

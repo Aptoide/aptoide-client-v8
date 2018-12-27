@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -89,6 +90,7 @@ import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -177,7 +179,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
-        AndroidSchedulers.mainThread(), bottomNavigationNavigator, updatesManager,
+        AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
         autoUpdateManager);
   }
 
@@ -309,7 +311,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       @Named("local-version-code") int localVersionCode,
       AutoUpdateRepository autoUpdateRepository) {
     return new AutoUpdateManager(downloadFactory, permissionManager, installManager,
-        downloadAnalytics, localVersionCode, autoUpdateRepository);
+        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT);
   }
 
   @ActivityScope @Provides @Named("package-name") String providePackageName() {

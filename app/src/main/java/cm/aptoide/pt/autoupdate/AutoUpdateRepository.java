@@ -8,7 +8,6 @@ public class AutoUpdateRepository {
   private AutoUpdateViewModel autoUpdateViewModel;
 
   public AutoUpdateRepository(AutoUpdateService autoUpdateService) {
-
     this.autoUpdateService = autoUpdateService;
   }
 

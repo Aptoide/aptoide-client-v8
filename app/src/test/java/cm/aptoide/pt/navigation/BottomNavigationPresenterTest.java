@@ -61,7 +61,7 @@ public class BottomNavigationPresenterTest {
     presenter = new MainPresenter(mainView, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
-        deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(),
+        deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
         bottomNavigationNavigator, updatesManager, autoUpdateManager);
 
     //simulate view lifecycle event
