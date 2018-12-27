@@ -174,14 +174,18 @@ public class DownloadFactory {
   }
 
   public Download create(String md5, int versionCode, String packageName, String uri) {
+    String versionName =
+        "Auto-Update"; //This is needed since we're using the version name to compare installs
     Download download = new Download();
     download.setAppName(marketName);
     download.setMd5(md5);
     download.setVersionCode(versionCode);
     download.setPackageName(packageName);
+    download.setVersionName(versionName);
     download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
-        createFileList(md5, packageName, uri + UPDATE_ACTION, md5, null, null, versionCode, null));
+        createFileList(md5, packageName, uri + UPDATE_ACTION, md5, null, null, versionCode,
+            versionName));
     return download;
   }
 

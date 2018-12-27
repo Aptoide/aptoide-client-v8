@@ -97,7 +97,7 @@ public class Install {
 
     final Install that = (Install) o;
 
-    if (versionName != null && !versionName.equals(that.versionName)) return false;
+    if (!versionName.equals(that.versionName)) return false;
     if (versionCode != that.versionCode) return false;
     if (state != that.state) return false;
     if (!md5.equals(that.md5)) return false;
