@@ -33,5 +33,7 @@ public interface MainView extends View {
 
   void requestAutoUpdate();
 
-  void handleAutoUpdateResult(boolean installFailed);
+  void showUnknownErrorMessage();
+
+  void dismissAutoUpdateDialog();
 }

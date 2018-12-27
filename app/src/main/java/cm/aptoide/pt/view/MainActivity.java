@@ -170,16 +170,12 @@ public class MainActivity extends BottomNavigationActivity
     }
   }
 
-  @Override public void handleAutoUpdateResult(boolean installFailed) {
-    if (installFailed) {
-      Snackbar.make(findViewById(android.R.id.content), R.string.unknown_error,
-          Snackbar.LENGTH_SHORT)
-          .show();
-    }
-    dismissDialog();
+  @Override public void showUnknownErrorMessage() {
+    Snackbar.make(findViewById(android.R.id.content), R.string.unknown_error, Snackbar.LENGTH_SHORT)
+        .show();
   }
 
-  private void dismissDialog() {
+  @Override public void dismissAutoUpdateDialog() {
     if (autoUpdateDialog != null && autoUpdateDialog.isShowing()) {
       autoUpdateDialog.dismiss();
     }

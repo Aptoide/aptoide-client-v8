@@ -228,7 +228,7 @@ public class MainPresenter implements Presenter {
         .flatMapSingle(success -> autoUpdateManager.getAutoUpdateModel())
         .flatMap(autoUpdateViewModel -> autoUpdateManager.startUpdate(autoUpdateViewModel))
         .observeOn(viewScheduler)
-        .doOnNext(install -> view.handleAutoUpdateResult(hasAutoUpdateInstallationFailed(install)))
+        .doOnNext(install -> handleAutoUpdateResult(hasAutoUpdateInstallationFailed(install)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(timeoutErrorsCleaned -> {
         }, throwable -> {
@@ -244,11 +244,17 @@ public class MainPresenter implements Presenter {
     }
   }
 
+  private void handleAutoUpdateResult(boolean installFailed) {
+    view.dismissAutoUpdateDialog();
+    if (installFailed) {
+      view.showUnknownErrorMessage();
+    }
+  }
+
   private void handleErrorResult(Throwable throwable) {
-    if (throwable instanceof SecurityException) {
-      view.handleAutoUpdateResult(false);
-    } else {
-      view.handleAutoUpdateResult(true);
+    view.dismissAutoUpdateDialog();
+    if (!(throwable instanceof SecurityException)) {
+      view.showUnknownErrorMessage();
     }
   }
 
