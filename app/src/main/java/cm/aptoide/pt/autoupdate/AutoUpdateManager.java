@@ -54,7 +54,9 @@ public class AutoUpdateManager {
   }
 
   public Completable startUpdate(AutoUpdateViewModel autoUpdateViewModel) {
-    return Observable.just(downloadFactory.create(autoUpdateViewModel))
+    return Observable.just(
+        downloadFactory.create(autoUpdateViewModel.getMd5(), autoUpdateViewModel.getVersionCode(),
+            autoUpdateViewModel.getPackageName(), autoUpdateViewModel.getUri()))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(
                 __ -> downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,

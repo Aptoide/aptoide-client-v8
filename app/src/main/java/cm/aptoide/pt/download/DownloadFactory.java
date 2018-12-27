@@ -7,7 +7,6 @@ package cm.aptoide.pt.download;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import cm.aptoide.pt.autoupdate.AutoUpdateViewModel;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
@@ -174,17 +173,15 @@ public class DownloadFactory {
     return download;
   }
 
-  public Download create(AutoUpdateViewModel autoUpdateViewModel) {
+  public Download create(String md5, int versionCode, String packageName, String uri) {
     Download download = new Download();
     download.setAppName(marketName);
-    download.setMd5(autoUpdateViewModel.getMd5());
-    download.setVersionCode(autoUpdateViewModel.getVersionCode());
-    download.setPackageName(autoUpdateViewModel.getPackageName());
+    download.setMd5(md5);
+    download.setVersionCode(versionCode);
+    download.setPackageName(packageName);
     download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
-        createFileList(autoUpdateViewModel.getMd5(), autoUpdateViewModel.getPackageName(),
-            autoUpdateViewModel.getUri() + UPDATE_ACTION, autoUpdateViewModel.getMd5(), null, null,
-            autoUpdateViewModel.getVersionCode(), null));
+        createFileList(md5, packageName, uri + UPDATE_ACTION, md5, null, null, versionCode, null));
     return download;
   }
 
