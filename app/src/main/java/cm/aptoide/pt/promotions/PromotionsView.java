@@ -24,4 +24,10 @@ public interface PromotionsView extends View {
   Observable<PromotionViewApp> claimAppClick();
 
   void updateClaimStatus(String packageName);
+
+  void showLoading();
+
+  void showErrorView();
+
+  Observable<Void> retryClicked();
 }
