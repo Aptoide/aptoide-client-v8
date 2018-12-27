@@ -26,7 +26,7 @@ import javax.inject.Singleton;
     return new LocalPersistenceAdultContent(preferences, securePreferences);
   }
 
-  @Singleton @Provides @Named("autoUpdateStoreName") String provideAutoUpdateStoreName() {
+  @Singleton @Provides @Named("auto-update-store-name") String provideAutoUpdateStoreName() {
     return "v9";
   }
 }

@@ -98,7 +98,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final AppCompatActivity activity;
   private final Intent intent;
   private final NotificationSyncScheduler notificationSyncScheduler;
-  private final String marketName;
   private final View view;
   private final String defaultTheme;
   private final String defaultStoreName;
@@ -106,13 +105,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, String marketName, View view,
-      String defaultTheme, String defaultStoreName, boolean firstCreated,
-      String fileProviderAuthority) {
+      NotificationSyncScheduler notificationSyncScheduler, View view, String defaultTheme,
+      String defaultStoreName, boolean firstCreated, String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
-    this.marketName = marketName;
     this.view = view;
     this.firstCreated = firstCreated;
     this.defaultTheme = defaultTheme;
@@ -126,8 +123,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
-      AutoUpdateService.Service service, @Named("packageName") String packageName,
-      @Named("autoUpdateStoreName") String storeName) {
+      AutoUpdateService.Service service, @Named("package-name") String packageName,
+      @Named("auto-update-store-name") String storeName) {
     return new AutoUpdateService(service, packageName, storeName);
   }
 
@@ -309,17 +306,18 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
       DownloadFactory downloadFactory, PermissionManager permissionManager,
       InstallManager installManager, DownloadAnalytics downloadAnalytics,
-      @Named("localVersionCode") int localVersionCode, AutoUpdateRepository autoUpdateRepository) {
+      @Named("local-version-code") int localVersionCode,
+      AutoUpdateRepository autoUpdateRepository) {
     return new AutoUpdateManager(downloadFactory, permissionManager, installManager,
         downloadAnalytics, localVersionCode, autoUpdateRepository);
   }
 
-  @ActivityScope @Provides @Named("packageName") String providePackageName() {
+  @ActivityScope @Provides @Named("package-name") String providePackageName() {
     return activity.getPackageName();
   }
 
-  @ActivityScope @Provides @Named("localVersionCode") int provideLocalVersionCode(
-      @Named("packageName") String packageName) {
+  @ActivityScope @Provides @Named("local-version-code") int provideLocalVersionCode(
+      @Named("package-name") String packageName) {
     try {
       return activity.getPackageManager()
           .getPackageInfo(packageName, 0).versionCode;

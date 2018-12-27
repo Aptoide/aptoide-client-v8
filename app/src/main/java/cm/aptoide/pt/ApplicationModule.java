@@ -1131,7 +1131,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AutoUpdateService.Service providesAutoUpdateService(
-      @Named("retrofit-autoUpdate") Retrofit retrofit) {
+      @Named("retrofit-auto-update") Retrofit retrofit) {
     return retrofit.create(AutoUpdateService.Service.class);
   }
 
@@ -1655,8 +1655,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PromotionsAnalytics(analyticsManager, navigationTracker, downloadAnalytics);
   }
 
-  @Singleton @Provides @Named("retrofit-autoUpdate") Retrofit providesAutoUpdateRetrofit(
-      @Named("default") OkHttpClient httpClient, @Named("autoUpdateBaseHost") String baseHost,
+  @Singleton @Provides @Named("retrofit-auto-update") Retrofit providesAutoUpdateRetrofit(
+      @Named("default") OkHttpClient httpClient, @Named("auto-update-base-host") String baseHost,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
@@ -1665,7 +1665,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
-  @Singleton @Provides @Named("autoUpdateBaseHost") String providesAutoUpdateBaseHost() {
+  @Singleton @Provides @Named("auto-update-base-host") String providesAutoUpdateBaseHost() {
     return "http://imgs.aptoide.com/";
   }
 }

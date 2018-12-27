@@ -16,7 +16,7 @@ import javax.inject.Singleton;
     return new AdultContentManager();
   }
 
-  @Singleton @Provides @Named("autoUpdateStoreName") String provideAutoUpdateStoreName() {
+  @Singleton @Provides @Named("auto-update-store-name") String provideAutoUpdateStoreName() {
     return BuildConfig.COBRAND_APPLICATION_ID_SUFFIX;
   }
 }

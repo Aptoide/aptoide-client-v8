@@ -27,10 +27,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
       AptoideApplication aptoideApplication = ((AptoideApplication) getApplication());
       activityComponent = aptoideApplication.getApplicationComponent()
           .plus(aptoideApplication.getActivityModule(this, getIntent(),
-              aptoideApplication.getNotificationSyncScheduler(), aptoideApplication.getMarketName(),
-              (View) this, aptoideApplication.getDefaultThemeName(),
-              aptoideApplication.getDefaultStoreName(), firstCreated,
-              BuildConfig.APPLICATION_ID + ".provider"));
+              aptoideApplication.getNotificationSyncScheduler(), (View) this,
+              aptoideApplication.getDefaultThemeName(), aptoideApplication.getDefaultStoreName(),
+              firstCreated, BuildConfig.APPLICATION_ID + ".provider"));
     }
     return activityComponent;
   }
