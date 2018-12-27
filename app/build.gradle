@@ -261,7 +261,7 @@ android {
     variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
         "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
-        "\"" + project.project.COBRAND_APPLICATION_ID_SUFFIX + "\""
+        "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
 
 
     if (flavors[1].name.contains('internal')) {
