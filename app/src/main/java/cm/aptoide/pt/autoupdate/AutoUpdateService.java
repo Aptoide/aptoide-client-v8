@@ -29,7 +29,7 @@ public class AutoUpdateService {
         .doOnTerminate(() -> loading = false)
         .flatMap(jsonResponse -> Observable.just(
             new AutoUpdateViewModel(jsonResponse.getVersioncode(), jsonResponse.getUri(),
-                jsonResponse.getMd5(), jsonResponse.getMinSdk(), packageName)))
+                jsonResponse.getMd5(), jsonResponse.getMinSdk(), packageName, false)))
         .onErrorReturn(throwable -> createErrorAutoUpdateViewModel(throwable))
         .toSingle();
   }

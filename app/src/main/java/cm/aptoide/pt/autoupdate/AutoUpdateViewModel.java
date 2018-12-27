@@ -9,16 +9,27 @@ public class AutoUpdateViewModel {
   private final String packageName;
   private final boolean loading;
   private final Error error;
-  private boolean shouldUpdate;
+  private final boolean shouldUpdate;
 
   public AutoUpdateViewModel(int versionCode, String uri, String md5, String minSdk,
-      String packageName) {
+      String packageName, boolean shouldUpdate) {
     this.versionCode = versionCode;
     this.uri = uri;
     this.md5 = md5;
     this.minSdk = minSdk;
     this.packageName = packageName;
-    shouldUpdate = false;
+    this.shouldUpdate = shouldUpdate;
+    loading = false;
+    error = null;
+  }
+
+  public AutoUpdateViewModel(AutoUpdateViewModel autoUpdateViewModel, boolean shouldUpdate) {
+    this.versionCode = autoUpdateViewModel.getVersionCode();
+    this.uri = autoUpdateViewModel.getUri();
+    this.md5 = autoUpdateViewModel.getMd5();
+    this.minSdk = autoUpdateViewModel.getMinSdk();
+    this.packageName = autoUpdateViewModel.getPackageName();
+    this.shouldUpdate = shouldUpdate;
     loading = false;
     error = null;
   }
@@ -75,10 +86,6 @@ public class AutoUpdateViewModel {
 
   public boolean hasError() {
     return error != null;
-  }
-
-  public void setShouldUpdate(boolean shouldUpdate) {
-    this.shouldUpdate = shouldUpdate;
   }
 
   public String getPackageName() {

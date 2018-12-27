@@ -35,13 +35,13 @@ public class AutoUpdateManager {
   public Single<AutoUpdateViewModel> loadAutoUpdateModel() {
     return autoUpdateRepository.loadFreshAutoUpdateViewModel()
         .flatMap(autoUpdateViewModel -> {
-          if (autoUpdateViewModel.getVersionCode() > localVersionCode
-              && localVersionSdk >= Integer.parseInt(autoUpdateViewModel.getMinSdk())) {
-            autoUpdateViewModel.setShouldUpdate(true);
-          }
           if (autoUpdateViewModel.hasError()) {
             return Single.error(new Throwable(autoUpdateViewModel.getError()
                 .toString()));
+          }
+          if (autoUpdateViewModel.getVersionCode() > localVersionCode
+              && localVersionSdk >= Integer.parseInt(autoUpdateViewModel.getMinSdk())) {
+            autoUpdateViewModel = new AutoUpdateViewModel(autoUpdateViewModel, true);
           }
           return Single.just(autoUpdateViewModel);
         });
