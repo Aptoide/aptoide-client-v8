@@ -120,7 +120,7 @@ android {
 
     monetisation {
       dimension "mode"
-      versionName defaultConfig.getVersionName() + "F"
+      versionName defaultConfig.getVersionName() + "G"
       matchingFallbacks = ['internal', 'prod']
     }
   }
