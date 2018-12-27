@@ -19,7 +19,7 @@ public class AutoUpdateRepository {
     if (autoUpdateViewModel != null) {
       return Single.just(autoUpdateViewModel);
     }
-    return autoUpdateService.loadAutoUpdateViewModel();
+    return loadAndSaveAutoUpdateViewModel();
   }
 
   private Single<AutoUpdateViewModel> loadAndSaveAutoUpdateViewModel() {
