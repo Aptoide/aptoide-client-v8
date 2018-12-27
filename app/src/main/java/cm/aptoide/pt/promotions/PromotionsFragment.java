@@ -34,6 +34,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -65,6 +66,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private View promotionsView;
   private ProgressBar loading;
   private Button promotionAction;
+  private View genericErrorView;
+  private View genericErrorViewRetry;
+  private ImageView toolbarImage;
+  private ImageView toolbarImagePlaceholder;
 
   private Window window;
   private Toolbar toolbar;
@@ -90,12 +95,17 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(),
         new PromotionsViewHolderFactory(promotionAppClick, decimalFormat));
 
+    toolbarImage = view.findViewById(R.id.app_graphic);
+    toolbarImagePlaceholder = view.findViewById(R.id.app_graphic_placeholder);
+
     promotionFirstMessage = view.findViewById(R.id.promotions_message_1);
     walletActiveView = view.findViewById(R.id.promotion_wallet_active);
     walletInactiveView = view.findViewById(R.id.promotion_wallet_inactive);
     promotionAction = walletInactiveView.findViewById(R.id.promotion_app_action_button);
     loading = view.findViewById(R.id.progress_bar);
     promotionsView = view.findViewById(R.id.promotions_view);
+    genericErrorView = view.findViewById(R.id.generic_error);
+    genericErrorViewRetry = genericErrorView.findViewById(R.id.retry);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
@@ -217,6 +227,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       promotionsAdapter.setPromotionApp(promotionViewApp);
     }
     loading.setVisibility(View.GONE);
+    toolbarImagePlaceholder.setVisibility(View.GONE);
+    toolbarImage.setVisibility(View.VISIBLE);
     promotionsView.setVisibility(View.VISIBLE);
   }
 
@@ -278,6 +290,25 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     } else {
       promotionsAdapter.updateClaimStatus(packageName);
     }
+  }
+
+  @Override public void showLoading() {
+    toolbarImagePlaceholder.setVisibility(View.VISIBLE);
+    toolbarImage.setVisibility(View.GONE);
+    promotionsView.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
+    loading.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void showErrorView() {
+    toolbarImage.setVisibility(View.GONE);
+    loading.setVisibility(View.GONE);
+    promotionsView.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<Void> retryClicked() {
+    return RxView.clicks(genericErrorViewRetry);
   }
 
   private void showWallet(PromotionViewApp promotionViewApp) {
