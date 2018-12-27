@@ -550,7 +550,7 @@ public class HomePresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(apps -> {
           view.showPromotionsHomeIcon(apps);
-          if (apps.getPromotions() > 0) {
+          if (apps.getPromotions() > 0 && apps.getTotalUnclaimedAppcValue() > 0) {
             if (apps.getPromotions() < 10) {
               view.setPromotionsTickerWithValue(apps.getPromotions());
             } else {

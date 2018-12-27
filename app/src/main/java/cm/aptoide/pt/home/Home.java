@@ -66,17 +66,21 @@ public class Home {
 
   private HomePromotionsWrapper mapPromotions(List<PromotionApp> apps) {
     int promotions = 0;
-    float appcValue = 0;
+    float unclaimedAppcValue = 0;
+    float totalAppcValue = 0;
     if (apps.size() > 0) {
       for (PromotionApp app : apps) {
+        totalAppcValue += app.getAppcValue();
+
         if (!app.isClaimed()) {
           promotions++;
-          appcValue += app.getAppcValue();
+          unclaimedAppcValue += app.getAppcValue();
         }
       }
     }
 
-    return new HomePromotionsWrapper(!apps.isEmpty(), promotions, appcValue,
-        promotionsPreferencesManager.shouldShowPromotionsDialog());
+    return new HomePromotionsWrapper(!apps.isEmpty(), promotions, unclaimedAppcValue,
+        (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0),
+        totalAppcValue);
   }
 }
