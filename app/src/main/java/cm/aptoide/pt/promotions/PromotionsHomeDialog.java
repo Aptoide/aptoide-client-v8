@@ -56,7 +56,7 @@ public class PromotionsHomeDialog {
     dialog.show();
     TextView description = dialogView.findViewById(R.id.description);
     description.setText(context.getString(R.string.holidayspromotion_message_popup,
-        String.valueOf(wrapper.getTotalUnclaimedAppcValue())));
+        String.valueOf(wrapper.getTotalAppcValue())));
   }
 
   public void dismissDialog() {

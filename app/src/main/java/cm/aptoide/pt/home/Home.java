@@ -67,8 +67,11 @@ public class Home {
   private HomePromotionsWrapper mapPromotions(List<PromotionApp> apps) {
     int promotions = 0;
     float unclaimedAppcValue = 0;
+    float totalAppcValue = 0;
     if (apps.size() > 0) {
       for (PromotionApp app : apps) {
+        totalAppcValue += app.getAppcValue();
+
         if (!app.isClaimed()) {
           promotions++;
           unclaimedAppcValue += app.getAppcValue();
@@ -77,6 +80,7 @@ public class Home {
     }
 
     return new HomePromotionsWrapper(!apps.isEmpty(), promotions, unclaimedAppcValue,
-        (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0));
+        (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0),
+        totalAppcValue);
   }
 }
