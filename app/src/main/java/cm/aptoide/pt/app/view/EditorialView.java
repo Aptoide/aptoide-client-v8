@@ -62,4 +62,6 @@ public interface EditorialView extends View {
   void manageMediaListDescriptionAnimationVisibility(EditorialEvent editorialEvent);
 
   void setMediaListDescriptionsVisible(EditorialEvent editorialEvent);
+
+  Observable<Boolean> handleMovingCollapse();
 }

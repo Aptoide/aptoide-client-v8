@@ -59,6 +59,7 @@ public class EditorialPresenter implements Presenter {
     handlePlaceHolderVisibility();
     handleMediaListDescriptionVisibility();
     handleClickActionButtonCard();
+    handleMovingCollapse();
   }
 
   @VisibleForTesting public void onCreateLoadAppOfTheWeek() {
@@ -309,6 +310,25 @@ public class EditorialPresenter implements Presenter {
             view.manageMediaListDescriptionAnimationVisibility(editorialEvent);
           } else {
             view.setMediaListDescriptionsVisible(editorialEvent);
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleMovingCollapse() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.handleMovingCollapse())
+        .observeOn(viewScheduler)
+        .doOnNext(isItemShown -> {
+          if (isItemShown) {
+            view.removeBottomCardAnimation();
+          } else {
+            view.addBottomCardAnimation();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
