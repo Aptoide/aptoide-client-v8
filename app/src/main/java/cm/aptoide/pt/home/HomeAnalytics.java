@@ -118,22 +118,6 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendAdImpressionEvent(int appRating, String packageName, int bundlePosition,
-      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
-    sendAdInteractEvent(IMPRESSION, appRating, packageName, bundlePosition, bundleTag, type,
-        network);
-  }
-
-  public void sendHighlightedImpressionEvent() {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, IMPRESSION);
-    data.put(BUNDLE_TAG, "ads-highlighted");
-    data.put("network", ApplicationAd.Network.SERVER.getName());
-
-    analyticsManager.logEvent(data, HOME_INTERACT, parseAction(HomeEvent.Type.AD),
-        navigationTracker.getViewName(true));
-  }
-
   public void sendAdClickEvent(int appRating, String packageName, int bundlePosition,
       String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
     sendAdInteractEvent(TAP_ON_APP, appRating, packageName, bundlePosition, bundleTag, type,

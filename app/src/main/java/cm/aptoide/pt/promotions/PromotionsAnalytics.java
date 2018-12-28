@@ -15,8 +15,9 @@ public class PromotionsAnalytics {
   private static final String ACTION_CLAIM = "claim";
   private static final String ACTION_UPDATE = "update";
   private static final String ACTION_INSTALL = "install";
-  private static final String PACKAGE = "package";
   private static final String AMOUNT = "amount";
+  private static final String PACKAGE = "package";
+  private static final String RELOAD = "reload";
   private static final String VIEW = "view";
   private final String NEXT = "next";
   private final String CANCEL = "cancel";
@@ -136,7 +137,7 @@ public class PromotionsAnalytics {
 
   public void sendRefreshCaptchaEvent(String packageName) {
     final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, "reload");
+    data.put(ACTION, RELOAD);
     data.put(PACKAGE, packageName);
     data.put(VIEW, CAPTCHA_DIALOG);
 
