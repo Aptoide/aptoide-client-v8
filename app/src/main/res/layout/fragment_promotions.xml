@@ -24,12 +24,24 @@
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         >
       <ImageView
+          android:id="@+id/app_graphic_placeholder"
+          android:layout_width="match_parent"
+          android:layout_height="216dp"
+          android:adjustViewBounds="true"
+          android:scaleType="fitXY"
+          android:visibility="visible"
+          app:layout_collapseMode="parallax"
+          tools:background="@color/background_light_grey"
+          />
+
+      <ImageView
           android:id="@+id/app_graphic"
           android:layout_width="match_parent"
           android:layout_height="216dp"
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
           android:src="@drawable/ic_winter_bundle_illustration"
+          android:visibility="gone"
           app:layout_collapseMode="parallax"
           tools:background="@color/grey_fog_normal"
           />
@@ -60,10 +72,11 @@
     </android.support.design.widget.CollapsingToolbarLayout>
   </android.support.design.widget.AppBarLayout>
 
-
   <android.support.v4.widget.NestedScrollView
+      android:id="@+id/promotions_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:visibility="gone"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
@@ -216,4 +229,21 @@
 
     </LinearLayout>
   </android.support.v4.widget.NestedScrollView>
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      >
+    <include
+        layout="@layout/partial_view_error"
+        tools:visibility="gone"
+        />
+
+    <include
+        layout="@layout/partial_view_progress_bar"
+        tools:visibility="gone"
+        />
+  </FrameLayout>
+
 </android.support.design.widget.CoordinatorLayout>
