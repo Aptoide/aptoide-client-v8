@@ -77,7 +77,10 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   private void handleRefreshCaptcha() {
     subscriptions.add(view.refreshCaptchaClick()
-        .doOnNext(__ -> view.showLoadingCaptcha())
+        .doOnNext(packageName -> {
+          promotionsAnalytics.sendRefreshCaptchaEvent(packageName);
+          view.showLoadingCaptcha();
+        })
         .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
         .observeOn(viewScheduler)
         .doOnNext(captcha -> view.hideLoadingCaptcha(captcha))
