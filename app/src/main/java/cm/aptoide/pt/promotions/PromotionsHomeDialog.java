@@ -64,6 +64,7 @@ public class PromotionsHomeDialog {
   }
 
   public void destroyDialog() {
+    dismissDialog();
     dialog = null;
     navigate = null;
     cancel = null;
