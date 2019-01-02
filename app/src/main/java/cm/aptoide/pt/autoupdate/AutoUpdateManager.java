@@ -31,7 +31,7 @@ public class AutoUpdateManager {
     this.localVersionSdk = localVersionSdk;
   }
 
-  public Single<AutoUpdateViewModel> loadAutoUpdateModel() {
+  private Single<AutoUpdateViewModel> loadAutoUpdateModel() {
     return autoUpdateRepository.loadFreshAutoUpdateViewModel()
         .flatMap(autoUpdateViewModel -> {
           if (autoUpdateViewModel.hasError()) {
@@ -44,6 +44,11 @@ public class AutoUpdateManager {
           }
           return Single.just(autoUpdateViewModel);
         });
+  }
+
+  public Observable<Boolean> shouldUpdate() {
+    return loadAutoUpdateModel().toObservable()
+        .map(AutoUpdateViewModel::shouldUpdate);
   }
 
   public Observable<Void> requestPermissions(PermissionService permissionService) {
