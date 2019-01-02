@@ -1,5 +1,7 @@
 package cm.aptoide.pt.view;
 
+import cm.aptoide.pt.FlavourActivityModule;
+import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.analytics.view.AnalyticsActivity;
 import cm.aptoide.pt.app.view.donations.view.DonateDialogFragment;
 import cm.aptoide.pt.home.BottomNavigationActivity;
@@ -8,7 +10,7 @@ import cm.aptoide.pt.promotions.ClaimPromotionDialogFragment;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = { ActivityModule.class })
+@ActivityScope @Subcomponent(modules = { ActivityModule.class, FlavourActivityModule.class })
 public interface ActivityComponent {
 
   void inject(MainActivity activity);
@@ -19,7 +21,8 @@ public interface ActivityComponent {
 
   void inject(BottomNavigationActivity bottomNavigationActivity);
 
-  FragmentComponent plus(FragmentModule fragmentModule);
+  FragmentComponent plus(FragmentModule fragmentModule,
+      FlavourFragmentModule flavourFragmentModule);
 
   void inject(DialogUtils dialogUtils);
 

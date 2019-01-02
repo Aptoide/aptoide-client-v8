@@ -32,7 +32,6 @@ import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
-import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
@@ -382,14 +381,6 @@ import rx.schedulers.Schedulers;
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator);
-  }
-
-  @FragmentScope @Provides
-  IronSourceInterstitialAdExperiment providesIronSourceInterstitialAdExperiment(
-      ABTestManager abTestManager, IronSourceAdRepository ironSourceAdRepository,
-      IronSourceAnalytics ironSourceAnalytics) {
-    return new IronSourceInterstitialAdExperiment(abTestManager, AndroidSchedulers.mainThread(),
-        ironSourceAdRepository, ironSourceAnalytics);
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(

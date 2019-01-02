@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view;
 
+import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
@@ -35,7 +36,7 @@ import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = { FragmentModule.class })
+@FragmentScope @Subcomponent(modules = { FragmentModule.class, FlavourFragmentModule.class })
 public interface FragmentComponent {
 
   void inject(AddressBookFragment addressBookFragment);
