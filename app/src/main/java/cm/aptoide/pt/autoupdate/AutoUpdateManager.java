@@ -52,25 +52,27 @@ public class AutoUpdateManager {
             permissionService));
   }
 
-  public Observable<Install> startUpdate(AutoUpdateViewModel autoUpdateViewModel) {
-    return Observable.just(
+  public Observable<Install> startUpdate() {
+    return getAutoUpdateModel().flatMap(autoUpdateViewModel -> Observable.just(
         downloadFactory.create(autoUpdateViewModel.getMd5(), autoUpdateViewModel.getVersionCode(),
             autoUpdateViewModel.getPackageName(), autoUpdateViewModel.getUri()))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(
                 __ -> downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-                    DownloadAnalytics.AppContext.AUTO_UPDATE)))
+                    DownloadAnalytics.AppContext.AUTO_UPDATE))))
         .toCompletable()
-        .andThen(getInstall(autoUpdateViewModel));
+        .andThen(getInstall());
   }
 
-  public Single<AutoUpdateViewModel> getAutoUpdateModel() {
-    return autoUpdateRepository.loadAutoUpdateViewModel();
+  private Observable<AutoUpdateViewModel> getAutoUpdateModel() {
+    return autoUpdateRepository.loadAutoUpdateViewModel()
+        .toObservable();
   }
 
-  private Observable<Install> getInstall(AutoUpdateViewModel autoUpdateViewModel) {
-    return installManager.getInstall(autoUpdateViewModel.getMd5(),
-        autoUpdateViewModel.getPackageName(), autoUpdateViewModel.getVersionCode())
-        .first(install -> install.getState() != Install.InstallationStatus.INSTALLING);
+  private Observable<Install> getInstall() {
+    return getAutoUpdateModel().flatMap(
+        autoUpdateViewModel -> installManager.getInstall(autoUpdateViewModel.getMd5(),
+            autoUpdateViewModel.getPackageName(), autoUpdateViewModel.getVersionCode())
+            .first(install -> install.getState() != Install.InstallationStatus.INSTALLING));
   }
 }
