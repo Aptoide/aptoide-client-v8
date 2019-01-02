@@ -31,8 +31,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
               aptoideApplication.getNotificationSyncScheduler(), aptoideApplication.getMarketName(),
               aptoideApplication.getAutoUpdateUrl(), (View) this,
               aptoideApplication.getDefaultThemeName(), aptoideApplication.getDefaultStoreName(),
-              firstCreated, BuildConfig.APPLICATION_ID + ".provider"),
-              new FlavourActivityModule(this));
+              firstCreated, BuildConfig.APPLICATION_ID + ".provider"), new FlavourActivityModule());
     }
     return activityComponent;
   }

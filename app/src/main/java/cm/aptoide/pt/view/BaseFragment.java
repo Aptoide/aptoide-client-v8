@@ -46,7 +46,7 @@ public abstract class BaseFragment extends RxFragment {
           .plus(aptoideApplication.getFragmentModule(this, savedInstanceState, getArguments(),
               aptoideApplication.isCreateStoreUserPrivacyEnabled(),
               (getActivity().getApplicationContext()).getPackageName()),
-              new FlavourFragmentModule(this));
+              new FlavourFragmentModule());
     }
     return fragmentComponent;
   }
