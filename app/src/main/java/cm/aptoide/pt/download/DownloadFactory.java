@@ -57,9 +57,10 @@ public class DownloadFactory {
         .getVername());
 
     download.setFilesToDownload(
-        createFileList(appToDownload.getMd5(), appToDownload.getPackageName(), downloadPaths.path,
+        createFileList(appToDownload.getMd5(), appToDownload.getPackageName(),
+            downloadPaths.getPath(), appToDownload.getFile()
+                .getMd5sum(), appToDownload.getObb(), downloadPaths.getAltPath(),
             appToDownload.getFile()
-                .getMd5sum(), appToDownload.getObb(), downloadPaths.altPath, appToDownload.getFile()
                 .getVercode(), appToDownload.getFile()
                 .getVername()));
 
@@ -204,20 +205,9 @@ public class DownloadFactory {
     download.setVersionCode(versionCode);
     download.setVersionName(versionName);
 
-    download.setFilesToDownload(
-        createFileList(md5, packageName, downloadPaths.path, md5, obb, downloadPaths.altPath,
-            versionCode, versionName));
+    download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
+        downloadPaths.getAltPath(), versionCode, versionName));
 
     return download;
-  }
-
-  private class ApkPaths {
-    String path;
-    String altPath;
-
-    public ApkPaths(String path, String altPath) {
-      this.path = path;
-      this.altPath = altPath;
-    }
   }
 }
