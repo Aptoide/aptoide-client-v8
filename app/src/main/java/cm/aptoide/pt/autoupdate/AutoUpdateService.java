@@ -19,26 +19,26 @@ public class AutoUpdateService {
     this.autoUpdateStoreName = autoUpdateStoreName;
   }
 
-  public Single<AutoUpdateViewModel> loadAutoUpdateViewModel() {
+  public Single<AutoUpdateModel> loadAutoUpdateViewModel() {
     if (loading) {
-      return Single.just(new AutoUpdateViewModel(true));
+      return Single.just(new AutoUpdateModel(true));
     }
     return retrofit.getJsonResponse(autoUpdateStoreName)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
         .flatMap(jsonResponse -> Observable.just(
-            new AutoUpdateViewModel(jsonResponse.getVersioncode(), jsonResponse.getUri(),
+            new AutoUpdateModel(jsonResponse.getVersioncode(), jsonResponse.getUri(),
                 jsonResponse.getMd5(), jsonResponse.getMinSdk(), packageName, false)))
         .onErrorReturn(throwable -> createErrorAutoUpdateViewModel(throwable))
         .toSingle();
   }
 
-  private AutoUpdateViewModel createErrorAutoUpdateViewModel(Throwable throwable) {
+  private AutoUpdateModel createErrorAutoUpdateViewModel(Throwable throwable) {
     if (throwable instanceof NoNetworkConnectionException) {
-      return new AutoUpdateViewModel(AutoUpdateViewModel.Error.NETWORK);
+      return new AutoUpdateModel(AutoUpdateModel.Error.NETWORK);
     } else {
-      return new AutoUpdateViewModel(AutoUpdateViewModel.Error.GENERIC);
+      return new AutoUpdateModel(AutoUpdateModel.Error.GENERIC);
     }
   }
 

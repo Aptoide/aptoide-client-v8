@@ -5,24 +5,24 @@ import rx.Single;
 public class AutoUpdateRepository {
 
   private final AutoUpdateService autoUpdateService;
-  private AutoUpdateViewModel autoUpdateViewModel;
+  private AutoUpdateModel autoUpdateViewModel;
 
   public AutoUpdateRepository(AutoUpdateService autoUpdateService) {
     this.autoUpdateService = autoUpdateService;
   }
 
-  public Single<AutoUpdateViewModel> loadFreshAutoUpdateViewModel() {
+  public Single<AutoUpdateModel> loadFreshAutoUpdateViewModel() {
     return loadAndSaveAutoUpdateViewModel();
   }
 
-  public Single<AutoUpdateViewModel> loadAutoUpdateViewModel() {
+  public Single<AutoUpdateModel> loadAutoUpdateViewModel() {
     if (autoUpdateViewModel != null) {
       return Single.just(autoUpdateViewModel);
     }
     return loadAndSaveAutoUpdateViewModel();
   }
 
-  private Single<AutoUpdateViewModel> loadAndSaveAutoUpdateViewModel() {
+  private Single<AutoUpdateModel> loadAndSaveAutoUpdateViewModel() {
     return autoUpdateService.loadAutoUpdateViewModel()
         .doOnSuccess(autoUpdateViewModel -> this.autoUpdateViewModel = autoUpdateViewModel);
   }

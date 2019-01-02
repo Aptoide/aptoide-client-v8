@@ -1,6 +1,6 @@
 package cm.aptoide.pt.autoupdate;
 
-public class AutoUpdateViewModel {
+public class AutoUpdateModel {
 
   private final int versionCode;
   private final String uri;
@@ -11,8 +11,8 @@ public class AutoUpdateViewModel {
   private final Error error;
   private final boolean shouldUpdate;
 
-  public AutoUpdateViewModel(int versionCode, String uri, String md5, String minSdk,
-      String packageName, boolean shouldUpdate) {
+  public AutoUpdateModel(int versionCode, String uri, String md5, String minSdk, String packageName,
+      boolean shouldUpdate) {
     this.versionCode = versionCode;
     this.uri = uri;
     this.md5 = md5;
@@ -23,7 +23,7 @@ public class AutoUpdateViewModel {
     error = null;
   }
 
-  public AutoUpdateViewModel(AutoUpdateViewModel autoUpdateViewModel, boolean shouldUpdate) {
+  public AutoUpdateModel(AutoUpdateModel autoUpdateViewModel, boolean shouldUpdate) {
     this.versionCode = autoUpdateViewModel.getVersionCode();
     this.uri = autoUpdateViewModel.getUri();
     this.md5 = autoUpdateViewModel.getMd5();
@@ -34,7 +34,7 @@ public class AutoUpdateViewModel {
     error = null;
   }
 
-  public AutoUpdateViewModel(Error error) {
+  public AutoUpdateModel(Error error) {
     this.error = error;
     versionCode = -1;
     uri = null;
@@ -45,7 +45,7 @@ public class AutoUpdateViewModel {
     loading = false;
   }
 
-  public AutoUpdateViewModel(boolean loading) {
+  public AutoUpdateModel(boolean loading) {
     this.loading = loading;
     versionCode = -1;
     uri = null;

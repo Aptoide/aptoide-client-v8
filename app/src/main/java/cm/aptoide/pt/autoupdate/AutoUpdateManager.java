@@ -31,7 +31,7 @@ public class AutoUpdateManager {
     this.localVersionSdk = localVersionSdk;
   }
 
-  private Single<AutoUpdateViewModel> loadAutoUpdateModel() {
+  private Single<AutoUpdateModel> loadAutoUpdateModel() {
     return autoUpdateRepository.loadFreshAutoUpdateViewModel()
         .flatMap(autoUpdateViewModel -> {
           if (autoUpdateViewModel.hasError()) {
@@ -40,7 +40,7 @@ public class AutoUpdateManager {
           }
           if (autoUpdateViewModel.getVersionCode() > localVersionCode
               && localVersionSdk >= Integer.parseInt(autoUpdateViewModel.getMinSdk())) {
-            autoUpdateViewModel = new AutoUpdateViewModel(autoUpdateViewModel, true);
+            autoUpdateViewModel = new AutoUpdateModel(autoUpdateViewModel, true);
           }
           return Single.just(autoUpdateViewModel);
         });
@@ -48,7 +48,7 @@ public class AutoUpdateManager {
 
   public Observable<Boolean> shouldUpdate() {
     return loadAutoUpdateModel().toObservable()
-        .map(AutoUpdateViewModel::shouldUpdate);
+        .map(AutoUpdateModel::shouldUpdate);
   }
 
   public Observable<Void> requestPermissions(PermissionService permissionService) {
@@ -69,7 +69,7 @@ public class AutoUpdateManager {
         .andThen(getInstall());
   }
 
-  private Observable<AutoUpdateViewModel> getAutoUpdateModel() {
+  private Observable<AutoUpdateModel> getAutoUpdateModel() {
     return autoUpdateRepository.loadAutoUpdateViewModel()
         .toObservable();
   }
