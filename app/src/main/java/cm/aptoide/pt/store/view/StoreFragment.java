@@ -70,6 +70,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -87,6 +88,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject AppNavigator appNavigator;
+  @Inject @Named("aptoide-theme") String theme;
   private AptoideAccountManager accountManager;
   private String storeName;
   private String title;
@@ -116,7 +118,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String storeUrl;
   private String iconPath;
   private String marketName;
-  private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
   private SharedPreferences sharedPreferences;
   private AppSearchSuggestionsView appSearchSuggestionsView;
@@ -182,7 +183,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onDestroy() {
     super.onDestroy();
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(theme));
     }
   }
 
@@ -212,7 +213,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    defaultTheme = application.getDefaultThemeName();
     tokenInvalidator = application.getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(application.getDatabase(),
@@ -259,9 +259,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
     // reset to default theme in the toolbar
     // TODO re-do this ThemeUtils methods and avoid loading resources using
     // execution-time generated ids for the desired resource
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
-    ThemeUtils.setAptoideTheme(getActivity(), defaultTheme);
-    ThemeUtils.setStoreTheme(getActivity(), defaultTheme);
+    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(theme));
+    ThemeUtils.setAptoideTheme(getActivity(), theme);
+    ThemeUtils.setStoreTheme(getActivity(), theme);
 
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
