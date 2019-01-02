@@ -218,12 +218,6 @@ android {
     variant.resValue "string", "store_suggestion_provider_authority",
         storeSuggestionProviderAuthority
 
-    if (flavors[0].name.contains("cobrand")) {
-      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
-    } else {
-      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
-    }
-
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
         "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
     variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
@@ -262,6 +256,13 @@ android {
         "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
     variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.APTOIDE_THEME + "\""
 
+    if (flavors[0].name.contains("cobrand")) {
+      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
+      variant.buildConfigField "String", "MARKET_NAME", "\"" + project.COBRAND_STORE_NAME + "\""
+    } else {
+      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
+      variant.buildConfigField "String", "MARKET_NAME", "\"" + project.VANILLA_STORE_NAME + "\""
+    }
 
     if (flavors[1].name.contains('internal')) {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
