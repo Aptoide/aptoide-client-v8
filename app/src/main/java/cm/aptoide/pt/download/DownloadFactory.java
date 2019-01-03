@@ -159,6 +159,10 @@ public class DownloadFactory {
   public Download create(Update update) {
     validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
         update.getApkPath(), update.getAlternativeApkPath());
+
+    ApkPaths downloadPaths = getDownloadPaths(Download.ACTION_UPDATE, update.getApkPath(),
+        update.getAlternativeApkPath());
+
     Download download = new Download();
     download.setMd5(update.getMd5());
     download.setIcon(update.getIcon());
@@ -167,15 +171,18 @@ public class DownloadFactory {
     download.setPackageName(update.getPackageName());
     download.setVersionCode(update.getUpdateVersionCode());
     download.setVersionName(update.getUpdateVersionName());
-    download.setFilesToDownload(createFileList(update.getMd5(), update.getPackageName(),
-        update.getApkPath() + UPDATE_ACTION, update.getAlternativeApkPath() + UPDATE_ACTION,
-        update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
-        update.getPatchObbMd5(), update.getVersionCode(), update.getUpdateVersionName(),
-        update.getMainObbName(), update.getPatchObbName()));
+    download.setFilesToDownload(
+        createFileList(update.getMd5(), update.getPackageName(), downloadPaths.getPath(),
+            downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
+            update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
+            update.getVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
+            update.getPatchObbName()));
     return download;
   }
 
   public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
+    ApkPaths downloadPaths = getDownloadPaths(Download.ACTION_UPDATE, autoUpdateInfo.path, null);
+
     Download download = new Download();
     download.setAppName(marketName);
     download.setMd5(autoUpdateInfo.md5);
@@ -184,8 +191,8 @@ public class DownloadFactory {
     download.setPackageName(autoUpdateInfo.packageName);
     download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
-        createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path + UPDATE_ACTION,
-            autoUpdateInfo.md5, null, null, autoUpdateInfo.vercode, null));
+        createFileList(autoUpdateInfo.md5, null, downloadPaths.getPath(), autoUpdateInfo.md5, null,
+            null, autoUpdateInfo.vercode, null));
     return download;
   }
 
