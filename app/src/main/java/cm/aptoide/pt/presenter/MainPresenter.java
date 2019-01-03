@@ -227,7 +227,7 @@ public class MainPresenter implements Presenter {
         .observeOn(ioScheduler)
         .flatMap(success -> autoUpdateManager.startUpdate())
         .observeOn(viewScheduler)
-        .doOnNext(install -> handleAutoUpdateResult(hasAutoUpdateInstallationFailed(install)))
+        .doOnNext(install -> handleAutoUpdateResult(install.isFailed()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(timeoutErrorsCleaned -> {
         }, throwable -> {
@@ -255,9 +255,5 @@ public class MainPresenter implements Presenter {
     if (!(throwable instanceof SecurityException)) {
       view.showUnknownErrorMessage();
     }
-  }
-
-  private boolean hasAutoUpdateInstallationFailed(Install install) {
-    return install.isFailed() || install.getState() == Install.InstallationStatus.UNINSTALLED;
   }
 }
