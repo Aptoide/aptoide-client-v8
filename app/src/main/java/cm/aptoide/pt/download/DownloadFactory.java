@@ -20,9 +20,6 @@ import io.realm.RealmList;
  */
 public class DownloadFactory {
 
-  private static final String UPDATE_ACTION = "?action=update";
-  private static final String INSTALL_ACTION = "?action=install";
-  private static final String DOWNGRADE_ACTION = "?action=downgrade";
   private final String marketName;
   private final DownloadApkPathsProvider downloadApkPathsProvider;
 
