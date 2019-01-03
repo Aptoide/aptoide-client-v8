@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -59,6 +58,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Inject AppsNavigator appsNavigator;
   @Inject UpdatesManager updatesManager;
   @Inject InstallManager installManager;
+  @Inject DownloadFactory downloadFactory;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
@@ -105,11 +105,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     attachPresenter(new AppsPresenter(this,
         new AppsManager(updatesManager, installManager, new AppMapper(), downloadAnalytics,
             installAnalytics, updatesAnalytics, getContext().getPackageManager(), getContext(),
-            new DownloadFactory(
-                ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
-        AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
-        new PermissionManager(), ((PermissionService) getContext()), accountManager,
-        appsNavigator));
+            downloadFactory), AndroidSchedulers.mainThread(), Schedulers.computation(),
+        CrashReport.getInstance(), new PermissionManager(), ((PermissionService) getContext()),
+        accountManager, appsNavigator));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

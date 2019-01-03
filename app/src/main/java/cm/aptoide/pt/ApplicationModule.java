@@ -114,6 +114,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
@@ -412,9 +413,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new InstalledRepository(installedAccessor);
   }
 
+  @Singleton @Provides DownloadApkPathsProvider downloadApkPathsProvider() {
+    return new DownloadApkPathsProvider();
+  }
+
   @Singleton @Provides DownloadFactory provideDownloadFactory(
-      @Named("marketName") String marketName) {
-    return new DownloadFactory(marketName);
+      @Named("marketName") String marketName, DownloadApkPathsProvider downloadApkPathsProvider) {
+    return new DownloadFactory(marketName, downloadApkPathsProvider);
   }
 
   @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,
