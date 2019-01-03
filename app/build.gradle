@@ -258,10 +258,10 @@ android {
 
     if (flavors[0].name.contains("cobrand")) {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
-      variant.buildConfigField "String", "MARKET_NAME", "\"" + project.COBRAND_STORE_NAME + "\""
+      variant.buildConfigField "String", "MARKET_NAME", "\"" + project.COBRAND_MARKET_NAME + "\""
     } else {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
-      variant.buildConfigField "String", "MARKET_NAME", "\"" + project.VANILLA_STORE_NAME + "\""
+      variant.buildConfigField "String", "MARKET_NAME", "\"" + project.VANILLA_MARKET_NAME + "\""
     }
 
     if (flavors[1].name.contains('internal')) {
