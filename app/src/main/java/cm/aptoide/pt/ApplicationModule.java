@@ -118,6 +118,7 @@ import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
+import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
@@ -413,8 +414,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new InstalledRepository(installedAccessor);
   }
 
-  @Singleton @Provides DownloadApkPathsProvider downloadApkPathsProvider() {
-    return new DownloadApkPathsProvider();
+  @Singleton @Provides OemidProvider providesOemidProvider() {
+    return new OemidProvider();
+  }
+
+  @Singleton @Provides DownloadApkPathsProvider downloadApkPathsProvider(
+      OemidProvider oemidProvider) {
+    return new DownloadApkPathsProvider(oemidProvider);
   }
 
   @Singleton @Provides DownloadFactory provideDownloadFactory(

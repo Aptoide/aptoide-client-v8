@@ -20,6 +20,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -147,9 +148,8 @@ public class PullingContentService extends Service {
                 .map(updates -> {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
-                    downloadList.add(
-                        new DownloadFactory(marketName, new DownloadApkPathsProvider()).create(
-                            update));
+                    downloadList.add(new DownloadFactory(marketName,
+                        new DownloadApkPathsProvider(new OemidProvider())).create(update));
                   }
                   return downloadList;
                 })
