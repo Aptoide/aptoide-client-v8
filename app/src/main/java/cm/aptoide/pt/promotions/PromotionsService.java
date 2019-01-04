@@ -101,14 +101,16 @@ public class PromotionsService {
   public Single<List<PromotionApp>> getPromotionApps() {
     return GetPromotionAppsRequest.of(bodyInterceptorPoolV7, okHttpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
-        .observe(true)
+        .observe(false, false)
         .map(this::mapGet)
         .toSingle();
   }
 
   private List<PromotionApp> mapGet(GetPromotionAppsResponse response) {
     List<PromotionApp> result = new ArrayList<>();
-    if (response != null && response.getDataList() != null && response.getDataList()
+    if (response != null
+        && response.getDataList() != null
+        && response.getDataList()
         .getList() != null) {
       for (GetPromotionAppsResponse.PromotionAppModel app : response.getDataList()
           .getList()) {

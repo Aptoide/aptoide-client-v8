@@ -72,7 +72,7 @@ android {
   productFlavors {
     cobrand {
       dimension "product"
-      applicationId defaultConfig.getApplicationId()
+      applicationId "com.aptoide.partners"
       applicationIdSuffix project.COBRAND_APPLICATION_ID_SUFFIX.toString()
       versionNameSuffix ".c" + project.COBRAND_VERSION.toString()
       matchingFallbacks = ['internal', 'prod']
