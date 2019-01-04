@@ -120,7 +120,7 @@ android {
 
     monetisation {
       dimension "mode"
-      versionName defaultConfig.getVersionName() + "G"
+      versionName defaultConfig.getVersionName() + "I"
       matchingFallbacks = ['prod']
     }
   }
@@ -505,7 +505,8 @@ dependencies {
 
   // UnityAds, Chartboost & One by AOL
   implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
-//  implementation 'com.mopub.mediation:chartboost:7.3.1.0'
+  implementation 'com.mopub.mediation:unityads:3.0.0.0'
+  //  implementation 'com.mopub.mediation:chartboost:7.3.1.0'
 //  implementation 'com.mopub.mediation:onebyaol:6.8.2.0'
 
 

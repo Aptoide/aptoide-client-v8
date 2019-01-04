@@ -22,39 +22,50 @@ public class IronSourceAdRepository {
   }
 
   public void initialize() {
-    IronSource.init(activity, BuildConfig.IRONSOURCE_APPLICATION_ID);
-    IronSource.setInterstitialListener(new InterstitialListener() {
-      @Override public void onInterstitialAdReady() {
-        if (showInterstitial) {
-          showInterstitialAd();
-          showInterstitial = false;
-        }
-      }
+    //IronSource.init(activity, BuildConfig.IRONSOURCE_APPLICATION_ID);
+    //IronSource.init(activity, BuildConfig.IRONSOURCE_APPLICATION_ID,
+    //    IronSource.AD_UNIT.REWARDED_VIDEO);
+    //Init Interstitial
+    //IronSource.init(activity, BuildConfig.IRONSOURCE_APPLICATION_ID,
+    //    IronSource.AD_UNIT.INTERSTITIAL);
+    //Init Offerwall
+    //IronSource.init(activity, BuildConfig.IRONSOURCE_APPLICATION_ID, IronSource.AD_UNIT.OFFERWALL);
+    //Init Banner
+    //IronSource.init(activity, BuildConfig.IRONSOURCE_APPLICATION_ID, IronSource.AD_UNIT.BANNER);
+    //IronSource.initISDemandOnly();
+    //IronSource.setInterstitialListener(new InterstitialListener() {
+    //  @Override public void onInterstitialAdReady() {
+    //    if (showInterstitial) {
+    //      showInterstitialAd();
+    //      showInterstitial = false;
+    //    }
+    //  }
+    //
+    //  @Override public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
+    //    Logger.getInstance()
+    //        .e(TAG, "Interstitial Ad failed to load. Reason: " + ironSourceError.getErrorMessage());
+    //  }
+    //
+    //  @Override public void onInterstitialAdOpened() {
+    //  }
+    //
+    //  @Override public void onInterstitialAdClosed() {
+    //  }
+    //
+    //  @Override public void onInterstitialAdShowSucceeded() {
+    //    eventSubject.onNext(AdEvent.IMPRESSION);
+    //  }
+    //
+    //  @Override public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
+    //    Logger.getInstance()
+    //        .e(TAG, "Interstitial Ad failed to show. Reason: " + ironSourceError.getErrorMessage());
+    //  }
+    //
+    //  @Override public void onInterstitialAdClicked() {
+    //    eventSubject.onNext(AdEvent.CLICK);
+    //  }
+    //});
 
-      @Override public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-        Logger.getInstance()
-            .e(TAG, "Interstitial Ad failed to load. Reason: " + ironSourceError.getErrorMessage());
-      }
-
-      @Override public void onInterstitialAdOpened() {
-      }
-
-      @Override public void onInterstitialAdClosed() {
-      }
-
-      @Override public void onInterstitialAdShowSucceeded() {
-        eventSubject.onNext(AdEvent.IMPRESSION);
-      }
-
-      @Override public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-        Logger.getInstance()
-            .e(TAG, "Interstitial Ad failed to show. Reason: " + ironSourceError.getErrorMessage());
-      }
-
-      @Override public void onInterstitialAdClicked() {
-        eventSubject.onNext(AdEvent.CLICK);
-      }
-    });
   }
 
   public void loadInterstitialAd() {
