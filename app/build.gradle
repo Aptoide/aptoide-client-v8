@@ -259,6 +259,7 @@ android {
     if (flavors[0].name.contains("cobrand")) {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
       variant.buildConfigField "String", "MARKET_NAME", "\"" + project.COBRAND_MARKET_NAME + "\""
+      variant.buildConfigField "String", "COBRAND_OEMID", "\"" + project.COBRAND_OEMID + "\""
     } else {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
       variant.buildConfigField "String", "MARKET_NAME", "\"" + project.VANILLA_MARKET_NAME + "\""
