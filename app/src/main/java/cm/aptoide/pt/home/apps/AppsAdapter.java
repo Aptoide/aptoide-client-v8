@@ -13,18 +13,20 @@ import java.util.List;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
-  protected static final int HEADER_DOWNLOADS = 0;
-  protected static final int HEADER_INSTALLED = 1;
-  protected static final int HEADER_UPDATES = 2;
-  protected static final int ACTIVE_DOWNLOAD = 3;
-  protected static final int STANDBY_DOWNLOAD = 4;
-  protected static final int COMPLETED_DOWNLOAD = 5;
-  protected static final int ERROR_DOWNLOAD = 6;
   protected static final int INSTALLED = 7;
   protected static final int UPDATE = 8;
-  protected static final int UPDATING = 9;
-  protected static final int STANDBY_UPDATE = 10;
-  protected static final int ERROR_UPDATE = 11;
+  static final int HEADER_DOWNLOADS = 0;
+  static final int HEADER_INSTALLED = 1;
+  static final int HEADER_UPDATES = 2;
+  static final int ACTIVE_DOWNLOAD = 3;
+  static final int STANDBY_DOWNLOAD = 4;
+  static final int COMPLETED_DOWNLOAD = 5;
+  static final int ERROR_DOWNLOAD = 6;
+  static final int UPDATING = 9;
+  static final int STANDBY_UPDATE = 10;
+  static final int ERROR_UPDATE = 11;
+  static final int PAUSING_UPDATE = 12;
+  static final int PAUSING_DOWNLOAD = 13;
 
   private List<App> listOfApps;
   private AppsCardViewHolderFactory appsCardViewHolderFactory;
@@ -56,10 +58,10 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         type = HEADER_UPDATES;
         break;
       case DOWNLOAD:
-        type = getDownloadType(((DownloadApp) item).getDownloadStatus());
+        type = getDownloadType(((DownloadApp) item).getStatus());
         break;
       case UPDATE:
-        type = getUpdateType(((UpdateApp) item).getUpdateStatus());
+        type = getUpdateType(((UpdateApp) item).getStatus());
         break;
       case INSTALLED:
         type = INSTALLED;
@@ -77,7 +79,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return listOfApps.size();
   }
 
-  private int getUpdateType(UpdateApp.UpdateStatus updateStatus) {
+  private int getUpdateType(StateApp.Status updateStatus) {
     int type;
     switch (updateStatus) {
       case UPDATE:
@@ -92,13 +94,16 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       case ERROR:
         type = ERROR_UPDATE;
         break;
+      case PAUSING:
+        type = PAUSING_UPDATE;
+        break;
       default:
         throw new IllegalArgumentException("Wrong download status : " + updateStatus.name());
     }
     return type;
   }
 
-  private int getDownloadType(DownloadApp.Status downloadStatus) {
+  private int getDownloadType(StateApp.Status downloadStatus) {
     int type;
     switch (downloadStatus) {
 
@@ -114,6 +119,9 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       case ERROR:
         type = ERROR_DOWNLOAD;
         break;
+      case PAUSING:
+        type = PAUSING_DOWNLOAD;
+        break;
       default:
         throw new IllegalArgumentException("Wrong download status : " + downloadStatus.name());
     }
@@ -126,8 +134,25 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         if (listOfApps.contains(list.get(i))) {
           //update
           int itemIndex = listOfApps.indexOf(list.get(i));
-          listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
-          notifyItemChanged(itemIndex);
+          App actualApp = listOfApps.get(itemIndex);
+          App newApp = list.get(i);
+
+          if (actualApp instanceof StateApp && newApp instanceof StateApp) {
+            if (shouldUpdateStateApp(((StateApp) actualApp), ((StateApp) newApp))) {
+
+              if (((StateApp) actualApp).getStatus() == StateApp.Status.PAUSING) {
+                if (shouldUpdatePausingApp(((StateApp) newApp))) {
+                  updateApp(list, i, itemIndex);
+                }
+              } else {
+                updateApp(list, i, itemIndex);
+              }
+            }
+          } else {
+            if (list.get(i) != listOfApps.get(itemIndex)) {
+              updateApp(list, i, itemIndex);
+            }
+          }
         } else {
           //add new element
           listOfApps.add(offset + 1, list.get(i));
@@ -141,6 +166,22 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         }
       }
     }
+  }
+
+  private boolean shouldUpdateStateApp(StateApp actualApp, StateApp newApp) {
+    boolean hasSameStatus = actualApp.getStatus() == newApp.getStatus();
+    boolean hasSameProgress = actualApp.getProgress() == newApp.getProgress();
+    boolean hasSameIndeterminateStatus = (actualApp.isIndeterminate() == newApp.isIndeterminate());
+    return !hasSameStatus || !hasSameProgress || !hasSameIndeterminateStatus;
+  }
+
+  private void updateApp(List<App> list, int i, int itemIndex) {
+    listOfApps.set(itemIndex, list.get(i));//stores the same item with the new emitted changes
+    notifyItemChanged(itemIndex);
+  }
+
+  private boolean shouldUpdatePausingApp(StateApp app) {
+    return app.getStatus() == StateApp.Status.STANDBY || app.getStatus() == StateApp.Status.ERROR;
   }
 
   public void addUpdateAppsList(List<App> updatesList) {
@@ -259,7 +300,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return appsByType;
   }
 
-  public void removeCanceledDownload(App app) {
+  public void removeCanceledAppDownload(App app) {
     if (listOfApps.contains(app)) {
       int indexOfCanceledDownload = listOfApps.indexOf(app);
       listOfApps.remove(app);
@@ -326,15 +367,15 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     int indexOfApp = listOfApps.indexOf(app);
     if (indexOfApp != -1) {
       App application = listOfApps.get(indexOfApp);
-      if (application.getType() == App.Type.UPDATE) {
-        setIndeterminate(indexOfApp, (UpdateApp) application);
+      if (application instanceof StateApp) {
+        setIndeterminate(indexOfApp, (StateApp) application);
       }
     }
   }
 
-  private void setIndeterminate(int indexOfApp, UpdateApp application) {
+  private void setIndeterminate(int indexOfApp, StateApp application) {
     application.setIndeterminate(true);
-    application.setStatus(UpdateApp.UpdateStatus.STANDBY);
+    application.setStatus(StateApp.Status.STANDBY);
     notifyItemChanged(indexOfApp);
   }
 
@@ -343,5 +384,21 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     for (App app : updatesList) {
       setAppStandby(((UpdateApp) app));
     }
+  }
+
+  public void setAppOnPausing(App app) {
+    int indexOfApp = listOfApps.indexOf(app);
+    if (indexOfApp != -1) {
+      App application = listOfApps.get(indexOfApp);
+      if (application instanceof StateApp) {
+        setAppPausing(indexOfApp, ((StateApp) application));
+      }
+    }
+  }
+
+  private void setAppPausing(int indexOfApp, StateApp application) {
+    application.setStatus(StateApp.Status.PAUSING);
+    application.setIndeterminate(true);
+    notifyItemChanged(indexOfApp);
   }
 }

@@ -146,7 +146,8 @@ public class PullingContentService extends Service {
                 .map(updates -> {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
-                    downloadList.add(new DownloadFactory(marketName).create(update));
+                    downloadList.add(
+                        new DownloadFactory(marketName, application.getCachePath()).create(update));
                   }
                   return downloadList;
                 })

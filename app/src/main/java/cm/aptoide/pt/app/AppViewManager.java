@@ -331,9 +331,8 @@ public class AppViewManager {
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        downloadStateParser.getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), campaignId,
-        abTestGroup);
+        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
