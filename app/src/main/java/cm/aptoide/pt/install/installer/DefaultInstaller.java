@@ -160,6 +160,12 @@ public class DefaultInstaller implements Installer {
     return systemInstall(context, installation).onErrorResumeNext(
         throwable -> rootInstall(installation))
         .onErrorResumeNext(throwable -> defaultInstall(context, installation))
+        .doOnError(throwable -> sendErrorEvent(installation.getPackageName(),
+            installation.getVersionCode(), new InstallationException(
+                "Installation with root failed for "
+                    + installation.getPackageName()
+                    + ". Error message: "
+                    + throwable.getMessage())))
         .doOnNext(installation1 -> installation1.save());
   }
 

@@ -8,7 +8,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -17,9 +16,12 @@ import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 
+import static cm.aptoide.pt.install.Install.InstallationType.INSTALL;
+import static cm.aptoide.pt.install.Install.InstallationType.INSTALLED;
 import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
 
 /**
@@ -55,11 +57,14 @@ public class AppsManager {
 
   public Observable<List<App>> getUpdatesList(boolean isExcluded) {
     return updatesManager.getUpdatesList(isExcluded)
+        .distinctUntilChanged()
         .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
   public Observable<List<App>> getUpdateDownloadsList() {
     return installManager.getInstallations()
+        .distinctUntilChanged()
+        .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.empty();
@@ -74,6 +79,7 @@ public class AppsManager {
 
   public Observable<List<App>> getInstalledApps() {
     return installManager.fetchInstalled()
+        .distinctUntilChanged()
         .flatMapIterable(list -> list)
         .flatMap(item -> updatesManager.filterUpdates(item))
         .toList()
@@ -82,6 +88,8 @@ public class AppsManager {
 
   public Observable<List<App>> getDownloadApps() {
     return installManager.getInstallations()
+        .distinctUntilChanged()
+        .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.just(Collections.emptyList());
@@ -124,17 +132,20 @@ public class AppsManager {
 
   private void setupDownloadEvents(Download download) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.DOWNLOADS);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+    downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
+        AnalyticsManager.Action.INSTALL);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL, AppContext.DOWNLOADS,
-        getOrigin(download.getAction()));
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()));
   }
 
   private void setupUpdateEvents(Download download, Origin origin) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.UPDATE_TAB);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+    downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
+        AnalyticsManager.Action.INSTALL);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        InstallType.UPDATE, AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, origin);
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin);
   }
 
   private Origin getOrigin(int action) {
@@ -149,20 +160,9 @@ public class AppsManager {
     }
   }
 
-  private InstallType getInstallType(int action) {
-    switch (action) {
-      default:
-      case Download.ACTION_INSTALL:
-        return InstallType.INSTALL;
-      case Download.ACTION_UPDATE:
-        return InstallType.UPDATE;
-      case Download.ACTION_DOWNGRADE:
-        return InstallType.DOWNGRADE;
-    }
-  }
-
-  public void pauseDownload(App app) {
-    installManager.stopInstallation(((DownloadApp) app).getMd5());
+  public Completable pauseDownload(App app) {
+    return Completable.fromAction(
+        () -> installManager.stopInstallation(((DownloadApp) app).getMd5()));
   }
 
   public Completable resumeUpdate(App app) {
@@ -175,8 +175,9 @@ public class AppsManager {
         ((UpdateApp) app).getPackageName(), ((UpdateApp) app).getVersionCode());
   }
 
-  public void pauseUpdate(App app) {
-    installManager.stopInstallation(((UpdateApp) app).getMd5());
+  public Completable pauseUpdate(App app) {
+    return Completable.fromAction(
+        () -> installManager.stopInstallation(((UpdateApp) app).getMd5()));
   }
 
   public Completable updateApp(App app) {
@@ -223,32 +224,15 @@ public class AppsManager {
   }
 
   public Observable<List<App>> getInstalledDownloads() {
-    return installManager.getInstallations()
-        .flatMap(installations -> {
-          if (installations == null || installations.isEmpty()) {
-            return Observable.empty();
-          }
-          return Observable.just(installations)
-              .flatMapIterable(installs -> installs)
-              .flatMap(install -> installManager.filterNonInstalled(install))
-              .toList()
-              .map(installedApps -> appMapper.getDownloadApps(installedApps));
-        });
-  }
-
-  public Completable refreshAllUpdates() {
-    return updatesManager.refreshUpdates();
-  }
-
-  public Observable<List<App>> getInstalledUpdateApps() {
     return installManager.fetchInstalled()
-        .flatMapIterable(list -> list)
-        .flatMap(installedApp -> getUpdates(installedApp))
+        .distinctUntilChanged()
+        .flatMapIterable(installedAppsList -> installedAppsList)
+        .flatMap(installedApp -> getDownloads(installedApp))
         .toList()
-        .map(installedUpdates -> appMapper.getUpdatesList(installedUpdates));
+        .map(installedApps -> appMapper.getDownloadApps(installedApps));
   }
 
-  private Observable<Install> getUpdates(Installed installedApp) {
+  private Observable<Install> getDownloads(Installed installedApp) {
     return installManager.getInstallations()
         .first()
         .flatMap(installations -> {
@@ -257,10 +241,14 @@ public class AppsManager {
           }
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
-              .filter(install -> install.getType() == UPDATE)
+              .filter(install -> install.getType() == INSTALL || install.getType() == INSTALLED)
               .toList()
               .flatMap(updates -> getMatchingInstalledUpdate(updates, installedApp));
         });
+  }
+
+  public Completable refreshAllUpdates() {
+    return updatesManager.refreshUpdates();
   }
 
   private Observable<Install> getMatchingInstalledUpdate(List<Install> updates,

@@ -184,10 +184,6 @@ public class InstalledIntentService extends IntentService {
         .toBlocking()
         .first();
 
-    if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
-      installAnalytics.sendReplacedEvent(packageName);
-    }
-
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {

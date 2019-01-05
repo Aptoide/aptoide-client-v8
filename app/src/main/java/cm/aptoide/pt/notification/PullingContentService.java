@@ -149,7 +149,7 @@ public class PullingContentService extends Service {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
                     downloadList.add(new DownloadFactory(marketName,
-                        new DownloadApkPathsProvider(new OemidProvider())).create(update));
+                        new DownloadApkPathsProvider(new OemidProvider()), application.getCachePath()).create(update));
                   }
                   return downloadList;
                 })

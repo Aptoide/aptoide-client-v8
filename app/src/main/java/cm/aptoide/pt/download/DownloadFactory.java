@@ -22,9 +22,11 @@ public class DownloadFactory {
 
   private final String marketName;
   private final DownloadApkPathsProvider downloadApkPathsProvider;
+  private final String cachePath;
 
-  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider) {
+  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider, String cachePath) {
     this.marketName = marketName;
+    this.cachePath = cachePath;
     this.downloadApkPathsProvider = downloadApkPathsProvider;
   }
 
@@ -120,19 +122,18 @@ public class DownloadFactory {
       String mainObbName, String patchObbName) {
 
     final RealmList<FileToDownload> downloads = new RealmList<>();
-
     downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
-        FileToDownload.APK, packageName, versionCode, versionName));
+        FileToDownload.APK, packageName, versionCode, versionName, cachePath));
 
     if (mainObbPath != null) {
       downloads.add(FileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
-          FileToDownload.OBB, packageName, versionCode, versionName));
+          FileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
     if (patchObbPath != null) {
       downloads.add(
           FileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
-              FileToDownload.OBB, packageName, versionCode, versionName));
+              FileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
     return downloads;
@@ -158,7 +159,7 @@ public class DownloadFactory {
         createFileList(update.getMd5(), update.getPackageName(), downloadPaths.getPath(),
             downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
             update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
-            update.getVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
+            update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
             update.getPatchObbName()));
     return download;
   }

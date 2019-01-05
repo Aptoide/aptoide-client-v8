@@ -6,6 +6,7 @@ import cm.aptoide.pt.utils.FileUtils;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
+import rx.Completable;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
@@ -31,7 +32,7 @@ public class FileManagerTest {
     when(cacheHelper.cleanCache()).thenReturn(Observable.just(10L));
 
     downloadManager = mock(AptoideDownloadManager.class);
-    when(downloadManager.invalidateDatabase()).thenReturn(Observable.just(null));
+    when(downloadManager.invalidateDatabase()).thenReturn(Completable.complete());
 
     fileUtils = mock(FileUtils.class);
   }

@@ -4,7 +4,7 @@ package cm.aptoide.pt.home.apps;
  * Created by filipegoncalves on 3/8/18.
  */
 
-public class DownloadApp implements App {
+public class DownloadApp implements StateApp {
 
   private String appName;
   private String md5;//to identify
@@ -13,10 +13,10 @@ public class DownloadApp implements App {
   private int progress;
   private boolean isIndeterminate;
   private int versionCode;
-  private Status downloadStatus;
+  private StateApp.Status downloadStatus;
 
   public DownloadApp(String appName, String md5, String packageName, String icon, int progress,
-      boolean isIndeterminate, int versionCode, Status downloadStatus) {
+      boolean isIndeterminate, int versionCode, StateApp.Status downloadStatus) {
     this.appName = appName;
     this.md5 = md5;
     this.packageName = packageName;
@@ -39,20 +39,28 @@ public class DownloadApp implements App {
     return icon;
   }
 
-  public int getProgress() {
-    return progress;
-  }
-
   public boolean isIndeterminate() {
     return isIndeterminate;
   }
 
-  public int getVersionCode() {
-    return versionCode;
+  @Override public void setIndeterminate(boolean indeterminate) {
+    this.isIndeterminate = indeterminate;
   }
 
-  public Status getDownloadStatus() {
+  @Override public StateApp.Status getStatus() {
     return downloadStatus;
+  }
+
+  @Override public void setStatus(Status status) {
+    this.downloadStatus = status;
+  }
+
+  @Override public int getProgress() {
+    return progress;
+  }
+
+  public int getVersionCode() {
+    return versionCode;
   }
 
   @Override public Type getType() {
@@ -71,7 +79,28 @@ public class DownloadApp implements App {
     return md5.equals(other.getMd5()) && getType().equals(other.getType());
   }
 
-  public enum Status {
-    ACTIVE, STANDBY, COMPLETED, ERROR;
+  @Override public String toString() {
+    return "DownloadApp{"
+        + "appName='"
+        + appName
+        + '\''
+        + ", md5='"
+        + md5
+        + '\''
+        + ", packageName='"
+        + packageName
+        + '\''
+        + ", icon='"
+        + icon
+        + '\''
+        + ", progress="
+        + progress
+        + ", isIndeterminate="
+        + isIndeterminate
+        + ", versionCode="
+        + versionCode
+        + ", downloadStatus="
+        + downloadStatus
+        + '}';
   }
 }

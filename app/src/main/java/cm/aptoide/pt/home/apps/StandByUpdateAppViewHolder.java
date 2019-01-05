@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
@@ -20,10 +21,12 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
   private TextView updateProgress;
   private ImageView cancelButton;
   private ImageView resumeButton;
-  private PublishSubject<AppClick> cancelUpdate;
+  private PublishSubject<AppClick> updateAction;
   private TextView updateState;
+  private LinearLayout downloadInteractButtonsLayout;
+  private LinearLayout downloadAppInfoLayout;
 
-  public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> cancelUpdate) {
+  public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> updateAction) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -33,7 +36,9 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     cancelButton = (ImageView) itemView.findViewById(R.id.apps_updates_cancel_button);
     resumeButton = (ImageView) itemView.findViewById(R.id.apps_updates_resume_download);
     updateState = (TextView) itemView.findViewById(R.id.apps_updates_update_state);
-    this.cancelUpdate = cancelUpdate;
+    downloadInteractButtonsLayout = itemView.findViewById(R.id.apps_updates_standby_buttons_layout);
+    downloadAppInfoLayout = itemView.findViewById(R.id.apps_updates_standby_app_info_layout);
+    this.updateAction = updateAction;
   }
 
   @Override public void setApp(App app) {
@@ -43,12 +48,23 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
 
     if (((UpdateApp) app).isIndeterminate()) {
       progressBar.setIndeterminate(true);
+      downloadInteractButtonsLayout.setVisibility(View.GONE);
+
+      adjustStandByDownloadAppInfoWeightAndMargin(3, 56);
+      adjustStandByDownloadButtonsWeight(0);
+
       cancelButton.setVisibility(View.GONE);
       resumeButton.setVisibility(View.GONE);
       updateProgress.setVisibility(View.GONE);
       updateState.setText(itemView.getResources()
           .getString(R.string.apps_short_updating));
     } else {
+
+      adjustStandByDownloadAppInfoWeightAndMargin(2, 8);
+      adjustStandByDownloadButtonsWeight(1);
+
+      downloadInteractButtonsLayout.setVisibility(View.VISIBLE);
+
       progressBar.setIndeterminate(false);
       progressBar.setProgress(((UpdateApp) app).getProgress());
       updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
@@ -59,8 +75,23 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
           .getString(R.string.apps_short_update_paused));
     }
     cancelButton.setOnClickListener(
-        cancel -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.CANCEL_UPDATE)));
+        cancel -> updateAction.onNext(new AppClick(app, AppClick.ClickType.CANCEL_UPDATE)));
     resumeButton.setOnClickListener(
-        resume -> cancelUpdate.onNext(new AppClick(app, AppClick.ClickType.RESUME_UPDATE)));
+        resume -> updateAction.onNext(new AppClick(app, AppClick.ClickType.RESUME_UPDATE)));
+  }
+
+  private void adjustStandByDownloadAppInfoWeightAndMargin(int weight, int margin) {
+    LinearLayout.LayoutParams appInfoParams =
+        (LinearLayout.LayoutParams) downloadAppInfoLayout.getLayoutParams();
+    appInfoParams.weight = weight;
+    appInfoParams.rightMargin = margin;
+    downloadAppInfoLayout.setLayoutParams(appInfoParams);
+  }
+
+  private void adjustStandByDownloadButtonsWeight(int weight) {
+    LinearLayout.LayoutParams buttonsLayoutParams =
+        (LinearLayout.LayoutParams) downloadInteractButtonsLayout.getLayoutParams();
+    buttonsLayoutParams.weight = weight;
+    downloadInteractButtonsLayout.setLayoutParams(buttonsLayoutParams);
   }
 }
