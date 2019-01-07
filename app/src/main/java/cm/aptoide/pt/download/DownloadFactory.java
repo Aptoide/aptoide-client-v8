@@ -24,7 +24,8 @@ public class DownloadFactory {
   private final DownloadApkPathsProvider downloadApkPathsProvider;
   private final String cachePath;
 
-  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider, String cachePath) {
+  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
+      String cachePath) {
     this.marketName = marketName;
     this.cachePath = cachePath;
     this.downloadApkPathsProvider = downloadApkPathsProvider;
