@@ -114,11 +114,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.FileDownloadManagerProvider;
 import cm.aptoide.pt.download.Md5Comparator;
+import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -478,9 +480,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new InstalledRepository(installedAccessor);
   }
 
+  @Singleton @Provides OemidProvider providesOemidProvider() {
+    return new OemidProvider();
+  }
+
+  @Singleton @Provides DownloadApkPathsProvider downloadApkPathsProvider(
+      OemidProvider oemidProvider) {
+    return new DownloadApkPathsProvider(oemidProvider);
+  }
+
   @Singleton @Provides DownloadFactory provideDownloadFactory(
-      @Named("marketName") String marketName, @Named("cachePath") String cachePath) {
-    return new DownloadFactory(marketName, cachePath);
+      @Named("marketName") String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
+      @Named("cachePath") String cachePath) {
+    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath);
   }
 
   @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,
@@ -592,6 +604,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences defaultSharedPreferences) {
     return SecurePreferencesImplementation.getInstance(getApplicationContext(),
         defaultSharedPreferences);
+  }
+
+  @Singleton @Provides @Named("aptoide-theme") String providesAptoideTheme() {
+    return BuildConfig.APTOIDE_THEME;
   }
 
   @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(

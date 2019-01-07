@@ -98,15 +98,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final String marketName;
   private final String autoUpdateUrl;
   private final View view;
-  private final String defaultTheme;
   private final String defaultStoreName;
   private final String fileProviderAuthority;
   private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultTheme, String defaultStoreName, boolean firstCreated,
-      String fileProviderAuthority) {
+      View view, String defaultStoreName, boolean firstCreated, String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
@@ -114,7 +112,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     this.autoUpdateUrl = autoUpdateUrl;
     this.view = view;
     this.firstCreated = firstCreated;
-    this.defaultTheme = defaultTheme;
     this.defaultStoreName = defaultStoreName;
     this.fileProviderAuthority = fileProviderAuthority;
   }
@@ -157,10 +154,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator) {
+      AdsRepository adsRepository, AppNavigator appNavigator,
+      @Named("aptoide-theme") String theme) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
-        sharedPreferences, storeAccessor, defaultTheme, notificationAnalytics, navigationTracker,
+        sharedPreferences, storeAccessor, theme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
         adsRepository, appNavigator);
   }
@@ -245,9 +243,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
       FragmentNavigator fragmentNavigator, @Named("defaultStoreName") String defaultStoreName,
-      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
+      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
+      @Named("aptoide-theme") String theme) {
     return new BottomNavigationNavigator(fragmentNavigator, defaultStoreName,
-        bottomNavigationAnalytics, searchAnalytics);
+        bottomNavigationAnalytics, searchAnalytics, theme);
   }
 
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(

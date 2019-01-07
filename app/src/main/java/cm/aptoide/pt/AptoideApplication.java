@@ -368,12 +368,10 @@ public abstract class AptoideApplication extends Application {
    */
   public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated,
-      String fileProviderAuthority) {
+      View view, String defaultStoreName, boolean firstCreated, String fileProviderAuthority) {
 
     return new ActivityModule(activity, intent, notificationSyncScheduler, marketName,
-        autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated,
-        fileProviderAuthority);
+        autoUpdateUrl, view, defaultStoreName, firstCreated, fileProviderAuthority);
   }
 
   /**
