@@ -20,15 +20,14 @@ import io.realm.RealmList;
  */
 public class DownloadFactory {
 
-  private static final String UPDATE_ACTION = "?action=update";
-  private static final String INSTALL_ACTION = "?action=install";
-  private static final String DOWNGRADE_ACTION = "?action=downgrade";
   private final String marketName;
+  private final DownloadApkPathsProvider downloadApkPathsProvider;
   private final String cachePath;
 
-  public DownloadFactory(String marketName, String cachePath) {
+  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider, String cachePath) {
     this.marketName = marketName;
     this.cachePath = cachePath;
+    this.downloadApkPathsProvider = downloadApkPathsProvider;
   }
 
   public Download create(GetAppMeta.App appToDownload, int downloadAction)
@@ -44,7 +43,8 @@ public class DownloadFactory {
     String altPath = appToDownload.getFile()
         .getPathAlt();
 
-    ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
+    ApkPaths downloadPaths =
+        downloadApkPathsProvider.getDownloadPaths(downloadAction, path, altPath);
 
     Download download = new Download();
     download.setMd5(appToDownload.getFile()
@@ -59,9 +59,10 @@ public class DownloadFactory {
         .getVername());
 
     download.setFilesToDownload(
-        createFileList(appToDownload.getMd5(), appToDownload.getPackageName(), downloadPaths.path,
+        createFileList(appToDownload.getMd5(), appToDownload.getPackageName(),
+            downloadPaths.getPath(), appToDownload.getFile()
+                .getMd5sum(), appToDownload.getObb(), downloadPaths.getAltPath(),
             appToDownload.getFile()
-                .getMd5sum(), appToDownload.getObb(), downloadPaths.altPath, appToDownload.getFile()
                 .getVercode(), appToDownload.getFile()
                 .getVername()));
 
@@ -82,24 +83,6 @@ public class DownloadFactory {
       throw new IllegalArgumentException(
           "This app has an OBB and doesn't have the App name specified");
     }
-  }
-
-  ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
-    switch (downloadAction) {
-      case Download.ACTION_INSTALL:
-        path += INSTALL_ACTION;
-        altPath += INSTALL_ACTION;
-        break;
-      case Download.ACTION_DOWNGRADE:
-        path += DOWNGRADE_ACTION;
-        altPath += DOWNGRADE_ACTION;
-        break;
-      case Download.ACTION_UPDATE:
-        path += UPDATE_ACTION;
-        altPath += UPDATE_ACTION;
-        break;
-    }
-    return new ApkPaths(path, altPath);
   }
 
   private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
@@ -159,6 +142,11 @@ public class DownloadFactory {
   public Download create(Update update) {
     validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
         update.getApkPath(), update.getAlternativeApkPath());
+
+    ApkPaths downloadPaths =
+        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, update.getApkPath(),
+            update.getAlternativeApkPath());
+
     Download download = new Download();
     download.setMd5(update.getMd5());
     download.setIcon(update.getIcon());
@@ -167,15 +155,20 @@ public class DownloadFactory {
     download.setPackageName(update.getPackageName());
     download.setVersionCode(update.getUpdateVersionCode());
     download.setVersionName(update.getUpdateVersionName());
-    download.setFilesToDownload(createFileList(update.getMd5(), update.getPackageName(),
-        update.getApkPath() + UPDATE_ACTION, update.getAlternativeApkPath() + UPDATE_ACTION,
-        update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
-        update.getPatchObbMd5(), update.getUpdateVersionCode(), update.getUpdateVersionName(),
-        update.getMainObbName(), update.getPatchObbName()));
+    download.setFilesToDownload(
+        createFileList(update.getMd5(), update.getPackageName(), downloadPaths.getPath(),
+            downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
+            update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
+            update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
+            update.getPatchObbName()));
     return download;
   }
 
   public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
+    ApkPaths downloadPaths =
+        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, autoUpdateInfo.path,
+            null);
+
     Download download = new Download();
     download.setAppName(marketName);
     download.setMd5(autoUpdateInfo.md5);
@@ -184,8 +177,8 @@ public class DownloadFactory {
     download.setPackageName(autoUpdateInfo.packageName);
     download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
-        createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path + UPDATE_ACTION,
-            autoUpdateInfo.md5, null, null, autoUpdateInfo.vercode, null));
+        createFileList(autoUpdateInfo.md5, null, downloadPaths.getPath(), autoUpdateInfo.md5, null,
+            null, autoUpdateInfo.vercode, null));
     return download;
   }
 
@@ -194,7 +187,8 @@ public class DownloadFactory {
       Obb obb) {
     validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
 
-    ApkPaths downloadPaths = getDownloadPaths(downloadAction, appPath, appPathAlt);
+    ApkPaths downloadPaths =
+        downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt);
 
     Download download = new Download();
     download.setMd5(md5);
@@ -205,20 +199,9 @@ public class DownloadFactory {
     download.setVersionCode(versionCode);
     download.setVersionName(versionName);
 
-    download.setFilesToDownload(
-        createFileList(md5, packageName, downloadPaths.path, md5, obb, downloadPaths.altPath,
-            versionCode, versionName));
+    download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
+        downloadPaths.getAltPath(), versionCode, versionName));
 
     return download;
-  }
-
-  private class ApkPaths {
-    String path;
-    String altPath;
-
-    public ApkPaths(String path, String altPath) {
-      this.path = path;
-      this.altPath = altPath;
-    }
   }
 }

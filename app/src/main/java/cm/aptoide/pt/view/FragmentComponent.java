@@ -32,6 +32,7 @@ import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
+import cm.aptoide.pt.view.fragment.FragmentView;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import dagger.Subcomponent;
@@ -104,4 +105,6 @@ public interface FragmentComponent {
   void inject(EditorialFragment editorialFragment);
 
   void inject(PromotionsFragment promotionsFragment);
+
+  void inject(FragmentView fragmentView);
 }
