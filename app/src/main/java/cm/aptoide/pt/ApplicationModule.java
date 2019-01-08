@@ -114,6 +114,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
+import cm.aptoide.pt.download.AppValidator;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -490,10 +491,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DownloadApkPathsProvider(oemidProvider);
   }
 
+  @Singleton @Provides AppValidator providesAppValidator() {
+    return new AppValidator();
+  }
+
   @Singleton @Provides DownloadFactory provideDownloadFactory(
       @Named("marketName") String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
-      @Named("cachePath") String cachePath) {
-    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath);
+      @Named("cachePath") String cachePath, AppValidator appValidator) {
+    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath, appValidator);
   }
 
   @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,
