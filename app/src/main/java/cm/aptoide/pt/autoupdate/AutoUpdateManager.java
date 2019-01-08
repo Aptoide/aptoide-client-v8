@@ -32,17 +32,17 @@ public class AutoUpdateManager {
   }
 
   private Single<AutoUpdateModel> loadAutoUpdateModel() {
-    return autoUpdateRepository.loadFreshAutoUpdateViewModel()
-        .flatMap(autoUpdateViewModel -> {
-          if (autoUpdateViewModel.hasError()) {
-            return Single.error(new Throwable(autoUpdateViewModel.getError()
+    return autoUpdateRepository.loadFreshAutoUpdateModel()
+        .flatMap(autoUpdateModel -> {
+          if (autoUpdateModel.hasError()) {
+            return Single.error(new Throwable(autoUpdateModel.getError()
                 .toString()));
           }
-          if (autoUpdateViewModel.getVersionCode() > localVersionCode
-              && localVersionSdk >= Integer.parseInt(autoUpdateViewModel.getMinSdk())) {
-            autoUpdateViewModel = new AutoUpdateModel(autoUpdateViewModel, true);
+          if (autoUpdateModel.getVersionCode() > localVersionCode
+              && localVersionSdk >= Integer.parseInt(autoUpdateModel.getMinSdk())) {
+            autoUpdateModel = new AutoUpdateModel(autoUpdateModel, true);
           }
-          return Single.just(autoUpdateViewModel);
+          return Single.just(autoUpdateModel);
         });
   }
 
@@ -58,9 +58,9 @@ public class AutoUpdateManager {
   }
 
   public Observable<Install> startUpdate() {
-    return getAutoUpdateModel().flatMap(autoUpdateViewModel -> Observable.just(
-        downloadFactory.create(autoUpdateViewModel.getMd5(), autoUpdateViewModel.getVersionCode(),
-            autoUpdateViewModel.getPackageName(), autoUpdateViewModel.getUri()))
+    return getAutoUpdateModel().flatMap(autoUpdateModel -> Observable.just(
+        downloadFactory.create(autoUpdateModel.getMd5(), autoUpdateModel.getVersionCode(),
+            autoUpdateModel.getPackageName(), autoUpdateModel.getUri()))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(
                 __ -> downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
@@ -70,7 +70,7 @@ public class AutoUpdateManager {
   }
 
   private Observable<AutoUpdateModel> getAutoUpdateModel() {
-    return autoUpdateRepository.loadAutoUpdateViewModel()
+    return autoUpdateRepository.loadAutoUpdateModel()
         .toObservable();
   }
 

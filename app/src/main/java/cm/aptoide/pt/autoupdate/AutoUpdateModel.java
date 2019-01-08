@@ -23,12 +23,12 @@ public class AutoUpdateModel {
     error = null;
   }
 
-  public AutoUpdateModel(AutoUpdateModel autoUpdateViewModel, boolean shouldUpdate) {
-    this.versionCode = autoUpdateViewModel.getVersionCode();
-    this.uri = autoUpdateViewModel.getUri();
-    this.md5 = autoUpdateViewModel.getMd5();
-    this.minSdk = autoUpdateViewModel.getMinSdk();
-    this.packageName = autoUpdateViewModel.getPackageName();
+  public AutoUpdateModel(AutoUpdateModel autoUpdateModel, boolean shouldUpdate) {
+    this.versionCode = autoUpdateModel.getVersionCode();
+    this.uri = autoUpdateModel.getUri();
+    this.md5 = autoUpdateModel.getMd5();
+    this.minSdk = autoUpdateModel.getMinSdk();
+    this.packageName = autoUpdateModel.getPackageName();
     this.shouldUpdate = shouldUpdate;
     loading = false;
     error = null;

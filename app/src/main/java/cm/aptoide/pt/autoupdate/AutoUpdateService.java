@@ -19,7 +19,7 @@ public class AutoUpdateService {
     this.autoUpdateStoreName = autoUpdateStoreName;
   }
 
-  public Single<AutoUpdateModel> loadAutoUpdateViewModel() {
+  public Single<AutoUpdateModel> loadAutoUpdateModel() {
     if (loading) {
       return Single.just(new AutoUpdateModel(true));
     }
@@ -30,11 +30,11 @@ public class AutoUpdateService {
         .flatMap(jsonResponse -> Observable.just(
             new AutoUpdateModel(jsonResponse.getVersioncode(), jsonResponse.getUri(),
                 jsonResponse.getMd5(), jsonResponse.getMinSdk(), packageName, false)))
-        .onErrorReturn(throwable -> createErrorAutoUpdateViewModel(throwable))
+        .onErrorReturn(throwable -> createErrorAutoUpdateModel(throwable))
         .toSingle();
   }
 
-  private AutoUpdateModel createErrorAutoUpdateViewModel(Throwable throwable) {
+  private AutoUpdateModel createErrorAutoUpdateModel(Throwable throwable) {
     if (throwable instanceof NoNetworkConnectionException) {
       return new AutoUpdateModel(AutoUpdateModel.Error.NETWORK);
     } else {
