@@ -7,11 +7,11 @@ package cm.aptoide.pt.presenter;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
@@ -43,28 +43,28 @@ public class MainPresenter implements Presenter {
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final InstallCompletedNotifier installCompletedNotifier;
   private final ApkFy apkFy;
-  private final AutoUpdate autoUpdate;
   private final boolean firstCreated;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final Scheduler viewScheduler;
+  private final Scheduler ioScheduler;
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final UpdatesManager updatesManager;
+  private final AutoUpdateManager autoUpdateManager;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
-      ApkFy apkFy, AutoUpdate autoUpdate, ContentPuller contentPuller,
-      NotificationSyncScheduler notificationSyncScheduler,
+      ApkFy apkFy, ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler,
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, boolean firstCreated,
-      AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler,
-      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager) {
+      AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
+      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
+      AutoUpdateManager autoUpdateManager) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
     this.crashReport = crashReport;
     this.apkFy = apkFy;
-    this.autoUpdate = autoUpdate;
     this.contentPuller = contentPuller;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.installCompletedNotifier = installCompletedNotifier;
@@ -75,8 +75,10 @@ public class MainPresenter implements Presenter {
     this.securePreferences = securePreferences;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.viewScheduler = viewScheduler;
+    this.ioScheduler = ioScheduler;
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.updatesManager = updatesManager;
+    this.autoUpdateManager = autoUpdateManager;
   }
 
   @Override public void present() {
@@ -103,6 +105,7 @@ public class MainPresenter implements Presenter {
           throw new OnErrorNotImplementedException(throwable);
         });
 
+    handleAutoUpdateDialogAccepted();
     setupInstallErrorsDisplay();
     shortcutManagement();
     setupUpdatesNumber();
@@ -174,13 +177,14 @@ public class MainPresenter implements Presenter {
   }
 
   // FIXME we are showing home by default when we should decide were to go here and provide
+
   // proper up/back navigation to home if needed
   private void navigate() {
     showHome();
     if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences)
         && !AptoideApplication.isAutoUpdateWasCalled()) {
       // only call auto update when the app was not on the background
-      autoUpdate.execute();
+      handleAutoUpdate();
     }
     if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
       SecurePreferences.setWizardAvailable(false, securePreferences);
@@ -192,6 +196,20 @@ public class MainPresenter implements Presenter {
     }
   }
 
+  private void handleAutoUpdate() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .observeOn(ioScheduler)
+        .flatMap(lifecycleEvent -> autoUpdateManager.shouldUpdate())
+        .observeOn(viewScheduler)
+        .filter(shouldUpdate -> shouldUpdate)
+        .doOnNext(__ -> AptoideApplication.setAutoUpdateWasCalled(true))
+        .doOnNext(__ -> view.requestAutoUpdate())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
   private void showWizard() {
     fragmentNavigator.navigateTo(WizardFragment.newInstance(), true);
   }
@@ -200,10 +218,42 @@ public class MainPresenter implements Presenter {
     bottomNavigationNavigator.navigateToHome();
   }
 
+  private void handleAutoUpdateDialogAccepted() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(lifecycleEvent -> view.autoUpdateDialogCreated())
+        .observeOn(viewScheduler)
+        .flatMap(permissionService -> autoUpdateManager.requestPermissions(permissionService))
+        .observeOn(ioScheduler)
+        .flatMap(success -> autoUpdateManager.startUpdate())
+        .observeOn(viewScheduler)
+        .doOnNext(install -> handleAutoUpdateResult(install.isFailed()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(timeoutErrorsCleaned -> {
+        }, throwable -> {
+          handleErrorResult(throwable);
+          crashReport.log(throwable);
+        });
+  }
+
   private void watchInstalls(List<Install> installs) {
     for (Install install : installs) {
       installCompletedNotifier.add(install.getPackageName(), install.getVersionCode(),
           install.getMd5());
+    }
+  }
+
+  private void handleAutoUpdateResult(boolean installFailed) {
+    view.dismissAutoUpdateDialog();
+    if (installFailed) {
+      view.showUnknownErrorMessage();
+    }
+  }
+
+  private void handleErrorResult(Throwable throwable) {
+    view.dismissAutoUpdateDialog();
+    if (!(throwable instanceof SecurityException)) {
+      view.showUnknownErrorMessage();
     }
   }
 }

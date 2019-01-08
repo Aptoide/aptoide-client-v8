@@ -12,7 +12,6 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
-import cm.aptoide.pt.install.AutoUpdate;
 import io.realm.RealmList;
 
 /**
@@ -24,7 +23,8 @@ public class DownloadFactory {
   private final DownloadApkPathsProvider downloadApkPathsProvider;
   private final String cachePath;
 
-  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider, String cachePath) {
+  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
+      String cachePath) {
     this.marketName = marketName;
     this.cachePath = cachePath;
     this.downloadApkPathsProvider = downloadApkPathsProvider;
@@ -164,21 +164,21 @@ public class DownloadFactory {
     return download;
   }
 
-  public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
+  public Download create(String md5, int versionCode, String packageName, String uri) {
     ApkPaths downloadPaths =
-        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, autoUpdateInfo.path,
-            null);
-
+        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, uri, null);
+    String versionName =
+        "Auto-Update"; //This is needed since we're using the version name to compare installs
     Download download = new Download();
     download.setAppName(marketName);
-    download.setMd5(autoUpdateInfo.md5);
-    download.setVersionCode(autoUpdateInfo.vercode);
-    //download.setVersionName(null); // no info available
-    download.setPackageName(autoUpdateInfo.packageName);
+    download.setMd5(md5);
+    download.setVersionCode(versionCode);
+    download.setPackageName(packageName);
+    download.setVersionName(versionName);
     download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
-        createFileList(autoUpdateInfo.md5, null, downloadPaths.getPath(), autoUpdateInfo.md5, null,
-            null, autoUpdateInfo.vercode, null));
+        createFileList(md5, packageName, downloadPaths.getPath(), md5, null, null, versionCode,
+            versionName));
     return download;
   }
 

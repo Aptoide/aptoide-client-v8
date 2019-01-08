@@ -255,6 +255,8 @@ android {
     variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
         "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
     variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.APTOIDE_THEME + "\""
+    variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
+        "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
 
     if (flavors[0].name.contains("cobrand")) {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""

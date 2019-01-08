@@ -86,6 +86,7 @@ import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
+import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -1211,6 +1212,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
   }
 
+  @Singleton @Provides AutoUpdateService.Service providesAutoUpdateService(
+      @Named("retrofit-auto-update") Retrofit retrofit) {
+    return retrofit.create(AutoUpdateService.Service.class);
+  }
+
   @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
       @Named("retrofit-AB") Retrofit retrofit) {
     return retrofit.create(ABTestService.ServiceV7.class);
@@ -1456,8 +1462,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
-      @Named("marketName") String marketName, PackageRepository packageRepository,
-      InstallManager installManager) {
+      @Named("marketName") String marketName, InstallManager installManager,
+      PackageRepository packageRepository) {
     return new BundlesResponseMapper(marketName, installManager, packageRepository);
   }
 
@@ -1729,5 +1735,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
       DownloadAnalytics downloadAnalytics) {
     return new PromotionsAnalytics(analyticsManager, navigationTracker, downloadAnalytics);
+  }
+
+  @Singleton @Provides @Named("retrofit-auto-update") Retrofit providesAutoUpdateRetrofit(
+      @Named("default") OkHttpClient httpClient, @Named("auto-update-base-host") String baseHost,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("auto-update-base-host") String providesAutoUpdateBaseHost() {
+    return "http://imgs.aptoide.com/";
   }
 }

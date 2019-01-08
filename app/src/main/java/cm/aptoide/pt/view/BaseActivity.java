@@ -29,7 +29,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
       activityComponent = aptoideApplication.getApplicationComponent()
           .plus(aptoideApplication.getActivityModule(this, getIntent(),
               aptoideApplication.getNotificationSyncScheduler(), aptoideApplication.getMarketName(),
-              aptoideApplication.getAutoUpdateUrl(), (View) this,
+              (View) this,
               aptoideApplication.getDefaultStoreName(), firstCreated,
               BuildConfig.APPLICATION_ID + ".provider"), new FlavourActivityModule());
     }
