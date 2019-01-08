@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import io.realm.RealmList;
 
@@ -28,45 +27,6 @@ public class DownloadFactory {
     this.marketName = marketName;
     this.cachePath = cachePath;
     this.downloadApkPathsProvider = downloadApkPathsProvider;
-  }
-
-  public Download create(GetAppMeta.App appToDownload, int downloadAction)
-      throws IllegalArgumentException {
-    final GetAppMeta.GetAppMetaFile file = appToDownload.getFile();
-
-    validateApp(appToDownload.getMd5(), appToDownload.getObb(), appToDownload.getPackageName(),
-        appToDownload.getName(), file != null ? file.getPath() : null,
-        file != null ? file.getPathAlt() : null);
-
-    String path = appToDownload.getFile()
-        .getPath();
-    String altPath = appToDownload.getFile()
-        .getPathAlt();
-
-    ApkPaths downloadPaths =
-        downloadApkPathsProvider.getDownloadPaths(downloadAction, path, altPath);
-
-    Download download = new Download();
-    download.setMd5(appToDownload.getFile()
-        .getMd5sum());
-    download.setIcon(appToDownload.getIcon());
-    download.setAppName(appToDownload.getName());
-    download.setAction(downloadAction);
-    download.setPackageName(appToDownload.getPackageName());
-    download.setVersionCode(appToDownload.getFile()
-        .getVercode());
-    download.setVersionName(appToDownload.getFile()
-        .getVername());
-
-    download.setFilesToDownload(
-        createFileList(appToDownload.getMd5(), appToDownload.getPackageName(),
-            downloadPaths.getPath(), appToDownload.getFile()
-                .getMd5sum(), appToDownload.getObb(), downloadPaths.getAltPath(),
-            appToDownload.getFile()
-                .getVercode(), appToDownload.getFile()
-                .getVername()));
-
-    return download;
   }
 
   private void validateApp(String md5, Obb appObb, String packageName, String appName,
