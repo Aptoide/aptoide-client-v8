@@ -5,29 +5,48 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 
 public class AppValidator {
 
-  private void validateApp(String md5, Obb appObb, String packageName,
+  private AppValidationResult validateApp(String md5, Obb appObb, String packageName,
       String appName, String filePath, String filePathAlt) throws IllegalArgumentException {
+    AppValidationResult result = AppValidationResult.VALID_APP;
     if (TextUtils.isEmpty(md5)) {
-      throw new IllegalArgumentException("Invalid App MD5");
+      result = AppValidationResult.INVALID_MD5;
     }
     if (TextUtils.isEmpty(filePath)) {
-      throw new IllegalArgumentException("No main download link provided");
+      result = AppValidationResult.NO_MAIN_DOWNLOAD_LINK;
     } else if (TextUtils.isEmpty(filePathAlt)) {
-      throw new IllegalArgumentException("No alternative download link provided");
+      result = AppValidationResult.NO_ALTERNATIVE_DOWNLOAD_LINK;
     } else if (appObb != null && appObb.getMain() != null && TextUtils.isEmpty(appObb.getMain()
         .getPath())) {
-      throw new IllegalArgumentException("No main obb download link provided");
+      result = AppValidationResult.NO_MAIN_OBB_DOWNLOAD_LINK;
     } else if (appObb != null && appObb.getPatch() != null && TextUtils.isEmpty(appObb.getPatch()
         .getPath())) {
-      throw new IllegalArgumentException("No patch obb download link provided");
+      result = AppValidationResult.NO_PATCH_OBB_DOWNLOAD_LINK;
     } else if (appObb != null && TextUtils.isEmpty(packageName)) {
-      throw new IllegalArgumentException(
-          "This app has an OBB and doesn't have the package name specified");
+      result = AppValidationResult.NO_PACKAGE_NAME_SPECIFIED;
     } else if (TextUtils.isEmpty(appName)) {
-      throw new IllegalArgumentException(
-          "This app has an OBB and doesn't have the App name specified");
+      result = AppValidationResult.NO_APP_NAME_SPECIFIED;
     }
+    return result;
   }
 
+  public enum AppValidationResult {
+    INVALID_MD5("Invalid App md5"), NO_MAIN_DOWNLOAD_LINK(
+        "No main download link provided"), NO_ALTERNATIVE_DOWNLOAD_LINK(
+        "No alternative download link provided"), NO_MAIN_OBB_DOWNLOAD_LINK(
+        "No main obb download link provided"), NO_PATCH_OBB_DOWNLOAD_LINK(
+        "No patch obb download link provided"), NO_PACKAGE_NAME_SPECIFIED(
+        "This app has an OBB and doesn't have the package name specified"), NO_APP_NAME_SPECIFIED(
+        "This app has an OBB and doesn't have the App name specified"), VALID_APP(
+        "This is a valid app");
 
+    private final String message;
+
+    AppValidationResult(String message) {
+      this.message = message;
+    }
+
+    public String getMessage() {
+      return message;
+    }
+  }
 }
