@@ -115,6 +115,12 @@ public class Install {
         || state == Install.InstallationStatus.NOT_ENOUGH_SPACE_ERROR;
   }
 
+  public boolean hasDownloadStarted() {
+    return !(state == Install.InstallationStatus.IN_QUEUE
+        || state == Install.InstallationStatus.INITIAL_STATE
+        || state == Install.InstallationStatus.PAUSED);
+  }
+
   public String getVersionName() {
     return versionName;
   }

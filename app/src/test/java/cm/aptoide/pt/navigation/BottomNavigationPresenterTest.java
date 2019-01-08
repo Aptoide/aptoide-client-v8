@@ -1,11 +1,11 @@
 package cm.aptoide.pt.navigation;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
@@ -37,7 +37,6 @@ public class BottomNavigationPresenterTest {
   @Mock private InstallManager installManager;
   @Mock private RootInstallationRetryHandler rootInstallationRetryHandler;
   @Mock private ApkFy apkFy;
-  @Mock private AutoUpdate autoUpdate;
   @Mock private ContentPuller contentPuller;
   @Mock private NotificationSyncScheduler notificationSyncScheduler;
   @Mock private InstallCompletedNotifier installCompletedNotifier;
@@ -48,6 +47,7 @@ public class BottomNavigationPresenterTest {
   @Mock private MainActivity mainView;
   @Mock private BottomNavigationNavigator bottomNavigationNavigator;
   @Mock private UpdatesManager updatesManager;
+  @Mock private AutoUpdateManager autoUpdateManager;
   private MainPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Integer> navigationEvent;
@@ -59,10 +59,10 @@ public class BottomNavigationPresenterTest {
     navigationEvent = PublishSubject.create();
 
     presenter = new MainPresenter(mainView, installManager, rootInstallationRetryHandler,
-        CrashReport.getInstance(), apkFy, autoUpdate, contentPuller, notificationSyncScheduler,
+        CrashReport.getInstance(), apkFy, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
-        deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(),
-        bottomNavigationNavigator, updatesManager);
+        deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
+        bottomNavigationNavigator, updatesManager, autoUpdateManager);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);
