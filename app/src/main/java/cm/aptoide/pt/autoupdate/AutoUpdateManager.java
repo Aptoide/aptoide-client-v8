@@ -78,12 +78,6 @@ public class AutoUpdateManager {
     return getAutoUpdateModel().flatMap(
         autoUpdateViewModel -> installManager.getInstall(autoUpdateViewModel.getMd5(),
             autoUpdateViewModel.getPackageName(), autoUpdateViewModel.getVersionCode())
-            .skipWhile(install -> !hasDownloadStarted(install)));
-  }
-
-  private boolean hasDownloadStarted(Install install) {
-    return !(install.getState() == Install.InstallationStatus.IN_QUEUE
-        || install.getState() == Install.InstallationStatus.INITIAL_STATE
-        || install.getState() == Install.InstallationStatus.PAUSED);
+            .first(Install::hasDownloadStarted));
   }
 }
