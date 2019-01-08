@@ -23,7 +23,8 @@ public class DownloadFactory {
   private final DownloadApkPathsProvider downloadApkPathsProvider;
   private final String cachePath;
 
-  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider, String cachePath) {
+  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
+      String cachePath) {
     this.marketName = marketName;
     this.cachePath = cachePath;
     this.downloadApkPathsProvider = downloadApkPathsProvider;
@@ -164,9 +165,8 @@ public class DownloadFactory {
   }
 
   public Download create(String md5, int versionCode, String packageName, String uri) {
-    cm.aptoide.pt.download.ApkPaths downloadPaths =
-        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, uri,
-            null);
+    ApkPaths downloadPaths =
+        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, uri, null);
     String versionName =
         "Auto-Update"; //This is needed since we're using the version name to compare installs
     Download download = new Download();
@@ -187,7 +187,7 @@ public class DownloadFactory {
       Obb obb) {
     validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
 
-    cm.aptoide.pt.download.ApkPaths downloadPaths =
+    ApkPaths downloadPaths =
         downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt);
 
     Download download = new Download();
