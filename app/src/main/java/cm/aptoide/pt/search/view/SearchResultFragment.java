@@ -118,19 +118,16 @@ public class SearchResultFragment extends BackButtonFragment
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
 
-  public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
-    return newInstance(currentQuery, false, defaultStoreName);
+  public static SearchResultFragment newInstance(String currentQuery) {
+    return newInstance(currentQuery, false);
   }
 
-  public static SearchResultFragment newInstance(String defaultStoreName,
-      boolean focusInSearchBar) {
-    return newInstance("", false, defaultStoreName, focusInSearchBar);
+  public static SearchResultFragment newInstance(boolean focusInSearchBar) {
+    return newInstance("", false, focusInSearchBar);
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps,
-      String defaultStoreName) {
-    SearchViewModel viewModel =
-        new SearchViewModel(currentQuery, onlyTrustedApps, defaultStoreName);
+  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -139,9 +136,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps,
-      String defaultStoreName, boolean focusInSearchBar) {
-    SearchViewModel viewModel =
-        new SearchViewModel(currentQuery, onlyTrustedApps, defaultStoreName);
+      boolean focusInSearchBar) {
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     args.putBoolean(FOCUS_IN_SEARCH, focusInSearchBar);
@@ -151,9 +147,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   public static SearchResultFragment newInstance(String currentQuery, String storeName,
-      String storeTheme, String defaultStoreName) {
-    SearchViewModel viewModel =
-        new SearchViewModel(currentQuery, storeName, storeTheme, defaultStoreName);
+      String storeTheme) {
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, storeTheme);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();

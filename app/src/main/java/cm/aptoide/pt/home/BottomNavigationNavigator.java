@@ -21,7 +21,6 @@ public class BottomNavigationNavigator {
   private final static String EVENT_ACTION =
       "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
   private final FragmentNavigator fragmentNavigator;
-  private final String defaultStoreName;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
   private final int homePosition = 0;
@@ -30,9 +29,8 @@ public class BottomNavigationNavigator {
   private final int appsPosition = 3;
   private ArrayList<Integer> bottomNavigationItems;
 
-  public BottomNavigationNavigator(FragmentNavigator fragmentNavigator, String defaultStoreName,
+  public BottomNavigationNavigator(FragmentNavigator fragmentNavigator,
       BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
-    this.defaultStoreName = defaultStoreName;
     this.bottomNavigationAnalytics = bottomNavigationAnalytics;
     this.searchAnalytics = searchAnalytics;
     bottomNavigationItems = new ArrayList<>();
@@ -48,8 +46,7 @@ public class BottomNavigationNavigator {
       case searchPosition:
         bottomNavigationAnalytics.sendNavigateToSearchClickEvent();
         searchAnalytics.searchStart(SearchSource.BOTTOM_NAVIGATION, true);
-        SearchResultFragment searchResultFragment =
-            SearchResultFragment.newInstance(defaultStoreName, true);
+        SearchResultFragment searchResultFragment = SearchResultFragment.newInstance(true);
         navigateToSearch(searchResultFragment);
         break;
       case storesPosition:
@@ -117,7 +114,7 @@ public class BottomNavigationNavigator {
         fragment = new HomeFragment();
         break;
       case searchPosition:
-        fragment = SearchResultFragment.newInstance(defaultStoreName, true);
+        fragment = SearchResultFragment.newInstance(true);
         break;
       case storesPosition:
         fragment =
@@ -145,7 +142,7 @@ public class BottomNavigationNavigator {
     return bottomNavigationItems;
   }
 
-  public void setBottomNavigationItems(ArrayList<Integer> savedBottomNavigationItens) {
-    bottomNavigationItems = savedBottomNavigationItens;
+  public void setBottomNavigationItems(ArrayList<Integer> savedBottomNavigationItems) {
+    bottomNavigationItems = savedBottomNavigationItems;
   }
 }

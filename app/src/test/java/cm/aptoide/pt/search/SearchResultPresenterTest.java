@@ -350,7 +350,7 @@ public class SearchResultPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then it should navigate back to the search view
-    verify(searchNavigator).goToSearchFragment(anyString(), anyString());
+    verify(searchNavigator).goToSearchFragment(anyString());
   }
 
   @Test public void handleAllStoresListReachedBottomTest() {

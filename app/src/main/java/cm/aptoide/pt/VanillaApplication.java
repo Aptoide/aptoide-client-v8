@@ -30,24 +30,12 @@ public class VanillaApplication extends NotificationApplicationView {
         .getAbsolutePath() + "/.aptoide/";
   }
 
-  @Override public boolean hasMultiStoreSearch() {
-    return true;
-  }
-
-  @Override public String getDefaultStoreName() {
-    return "apps";
-  }
-
   @Override public String getMarketName() {
     return "Aptoide";
   }
 
   @Override public String getFeedbackEmail() {
     return "support@aptoide.com";
-  }
-
-  @Override public String getImageCachePath() {
-    return getCachePath() + "icons/";
   }
 
   @Override public String getAccountType() {

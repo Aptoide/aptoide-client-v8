@@ -370,12 +370,10 @@ public abstract class AptoideApplication extends Application {
    */
   public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultThemeName, String defaultStoreName, boolean firstCreated,
-      String fileProviderAuthority) {
+      View view, String defaultThemeName, boolean firstCreated, String fileProviderAuthority) {
 
     return new ActivityModule(activity, intent, notificationSyncScheduler, marketName,
-        autoUpdateUrl, view, defaultThemeName, defaultStoreName, firstCreated,
-        fileProviderAuthority);
+        autoUpdateUrl, view, defaultThemeName, firstCreated, fileProviderAuthority);
   }
 
   /**
@@ -424,15 +422,9 @@ public abstract class AptoideApplication extends Application {
 
   public abstract String getCachePath();
 
-  public abstract boolean hasMultiStoreSearch();
-
-  public abstract String getDefaultStoreName();
-
   public abstract String getMarketName();
 
   public abstract String getFeedbackEmail();
-
-  public abstract String getImageCachePath();
 
   public abstract String getAccountType();
 
@@ -726,8 +718,7 @@ public abstract class AptoideApplication extends Application {
               getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
               getDefaultSharedPreferences());
 
-      BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-          storeCredentials.get(getDefaultStoreName());
+      BaseRequestWithStore.StoreCredentials defaultStoreCredentials = storeCredentials.get("apps");
 
       return generateAptoideUuid().andThen(proxy.addDefaultStore(
           GetStoreMetaRequest.of(defaultStoreCredentials, getAccountSettingsBodyInterceptorPoolV7(),

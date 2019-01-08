@@ -99,14 +99,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final String autoUpdateUrl;
   private final View view;
   private final String defaultTheme;
-  private final String defaultStoreName;
   private final String fileProviderAuthority;
   private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultTheme, String defaultStoreName, boolean firstCreated,
-      String fileProviderAuthority) {
+      View view, String defaultTheme, boolean firstCreated, String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
@@ -115,7 +113,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     this.view = view;
     this.firstCreated = firstCreated;
     this.defaultTheme = defaultTheme;
-    this.defaultStoreName = defaultStoreName;
     this.fileProviderAuthority = fileProviderAuthority;
   }
 
@@ -146,7 +143,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides SearchNavigator providesSearchNavigator(
       FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
-    return new SearchNavigator(fragmentNavigator, defaultStoreName, appNavigator);
+    return new SearchNavigator(fragmentNavigator, appNavigator);
   }
 
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
@@ -244,10 +241,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
-      FragmentNavigator fragmentNavigator, @Named("defaultStoreName") String defaultStoreName,
-      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
-    return new BottomNavigationNavigator(fragmentNavigator, defaultStoreName,
-        bottomNavigationAnalytics, searchAnalytics);
+      FragmentNavigator fragmentNavigator, BottomNavigationAnalytics bottomNavigationAnalytics,
+      SearchAnalytics searchAnalytics) {
+    return new BottomNavigationNavigator(fragmentNavigator, bottomNavigationAnalytics,
+        searchAnalytics);
   }
 
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
@@ -257,10 +254,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides AppViewNavigator providesAppViewNavigator(
       FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-
-    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity,
-        application.hasMultiStoreSearch(), application.getDefaultStoreName(), appNavigator);
+    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity, appNavigator);
   }
 
   @ActivityScope @Provides DialogUtils providesDialogUtils(AptoideAccountManager accountManager,

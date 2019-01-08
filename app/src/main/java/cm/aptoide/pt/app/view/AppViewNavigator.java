@@ -26,16 +26,12 @@ public class AppViewNavigator {
   private final int NOT_LOGGED_IN_SHARE_REQUEST_CODE = 13;
   private final FragmentNavigator fragmentNavigator;
   private final ActivityNavigator activityNavigator;
-  private final boolean hasMultiStoreSearch;
-  private final String defaultStoreName;
   private final AppNavigator appNavigator;
 
   public AppViewNavigator(FragmentNavigator fragmentNavigator, ActivityNavigator activityNavigator,
-      boolean hasMultiStoreSearch, String defaultStoreName, AppNavigator appNavigator) {
+      AppNavigator appNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.activityNavigator = activityNavigator;
-    this.hasMultiStoreSearch = hasMultiStoreSearch;
-    this.defaultStoreName = defaultStoreName;
     this.appNavigator = appNavigator;
   }
 
@@ -49,13 +45,8 @@ public class AppViewNavigator {
   }
 
   public void navigateToOtherVersions(String appName, String icon, String packageName) {
-    final Fragment fragment;
-    if (hasMultiStoreSearch) {
-      fragment = OtherVersionsFragment.newInstance(appName, icon, packageName);
-    } else {
-      fragment = OtherVersionsFragment.newInstance(appName, icon, packageName, defaultStoreName);
-    }
-    fragmentNavigator.navigateTo(fragment, true);
+    fragmentNavigator.navigateTo(OtherVersionsFragment.newInstance(appName, icon, packageName),
+        true);
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
