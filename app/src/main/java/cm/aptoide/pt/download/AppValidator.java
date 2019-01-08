@@ -6,7 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 public class AppValidator {
 
   public AppValidationResult validateApp(String md5, Obb appObb, String packageName, String appName,
-      String filePath, String filePathAlt) throws IllegalArgumentException {
+      String filePath, String filePathAlt) {
     AppValidationResult result = AppValidationResult.VALID_APP;
     if (TextUtils.isEmpty(md5)) {
       result = AppValidationResult.INVALID_MD5;
