@@ -79,7 +79,7 @@ public class ShareAppHelper {
     }
     if (createStoreUserPrivacyEnabled) {
       SocialRepository socialRepository =
-          RepositoryFactory.getSocialRepository(activity, timelineAnalytics, sharedPreferences);
+          RepositoryFactory.getSocialRepository(activity, sharedPreferences);
       LayoutInflater inflater = LayoutInflater.from(activity);
       AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
       View alertDialogView = inflater.inflate(R.layout.logged_in_share, null);
