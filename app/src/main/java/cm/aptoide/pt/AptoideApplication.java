@@ -26,7 +26,6 @@ import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -60,9 +59,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.InstallAnalytics;
-import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
@@ -146,7 +143,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   private static boolean autoUpdateWasCalled = false;
   @Inject Database database;
-  @Inject AptoideDownloadManager downloadManager;
+  @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject CacheHelper cacheHelper;
   @Inject AptoideAccountManager accountManager;
   @Inject Preferences preferences;
@@ -187,6 +184,7 @@ public abstract class AptoideApplication extends Application {
   @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   @Inject AptoideShortcutManager shortcutManager;
   @Inject SettingsManager settingsManager;
+  @Inject InstallManager installManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -204,7 +202,6 @@ public abstract class AptoideApplication extends Application {
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
-  private InstallManager installManager;
   private ApplicationComponent applicationComponent;
   private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
@@ -350,6 +347,7 @@ public abstract class AptoideApplication extends Application {
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
+    aptoideDownloadManager.start();
   }
 
   public ApplicationComponent getApplicationComponent() {
@@ -369,11 +367,11 @@ public abstract class AptoideApplication extends Application {
    * @return Returns a new Activity Module for the Activity Component
    */
   public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, View view, String defaultThemeName,
-      String defaultStoreName, boolean firstCreated, String fileProviderAuthority) {
+      NotificationSyncScheduler notificationSyncScheduler, String marketName,
+      View view, String defaultStoreName, boolean firstCreated, String fileProviderAuthority) {
 
-    return new ActivityModule(activity, intent, notificationSyncScheduler, view, defaultThemeName,
-        defaultStoreName, firstCreated, fileProviderAuthority);
+    return new ActivityModule(activity, intent, notificationSyncScheduler, marketName,
+         view, defaultStoreName, firstCreated, fileProviderAuthority);
   }
 
   /**
@@ -491,25 +489,10 @@ public abstract class AptoideApplication extends Application {
   }
 
   public AptoideDownloadManager getDownloadManager() {
-    return downloadManager;
+    return aptoideDownloadManager;
   }
 
   public InstallManager getInstallManager() {
-
-    if (installManager == null) {
-
-      installManager = new InstallManager(getApplicationContext(), getDownloadManager(),
-          new InstallerFactory(new MinimalAdMapper(),
-              new InstallFabricEvents(analyticsManager, installAnalytics,
-                  getDefaultSharedPreferences(), rootAvailabilityManager)).create(this),
-          getRootAvailabilityManager(), getDefaultSharedPreferences(),
-          SecurePreferencesImplementation.getInstance(getApplicationContext(),
-              getDefaultSharedPreferences()),
-          RepositoryFactory.getDownloadRepository(getApplicationContext().getApplicationContext()),
-          RepositoryFactory.getInstalledRepository(
-              getApplicationContext().getApplicationContext()));
-    }
-
     return installManager;
   }
 
@@ -611,8 +594,6 @@ public abstract class AptoideApplication extends Application {
 
   private void clearFileCache() {
     getFileManager().purgeCache()
-        .first()
-        .toSingle()
         .subscribe(cleanedSize -> Logger.getInstance()
                 .d(TAG, "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
             err -> CrashReport.getInstance()

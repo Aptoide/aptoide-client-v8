@@ -39,7 +39,7 @@ public class VanillaApplication extends NotificationApplicationView {
   }
 
   @Override public String getMarketName() {
-    return "Aptoide";
+    return BuildConfig.MARKET_NAME;
   }
 
   @Override public String getFeedbackEmail() {

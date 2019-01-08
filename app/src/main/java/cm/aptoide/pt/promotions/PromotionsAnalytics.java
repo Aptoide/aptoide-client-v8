@@ -11,11 +11,14 @@ import java.util.Map;
 public class PromotionsAnalytics {
   public static final String PROMOTION_DIALOG = "Promotion_Dialog";
   public static final String PROMOTIONS_INTERACT = "Promotions_Interact";
+  private static final String ACTION = "action";
   private static final String ACTION_CLAIM = "claim";
   private static final String ACTION_UPDATE = "update";
   private static final String ACTION_INSTALL = "install";
-  private static final String PACKAGE = "package";
   private static final String AMOUNT = "amount";
+  private static final String PACKAGE = "package";
+  private static final String RELOAD = "reload";
+  private static final String VIEW = "view";
   private final String NEXT = "next";
   private final String CANCEL = "cancel";
   private final String OPEN_WALLET = "open wallet";
@@ -25,7 +28,6 @@ public class PromotionsAnalytics {
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final DownloadAnalytics downloadAnalytics;
-  private final String ACTION = "action";
   private final String ACTION_OPEN = "open";
 
   public PromotionsAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
@@ -69,9 +71,9 @@ public class PromotionsAnalytics {
 
   public void sendClickOnWalletDialogNext(String packageName) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", NEXT);
-    data.put("package", packageName);
-    data.put("view", WALLET_DIALOG);
+    data.put(ACTION, NEXT);
+    data.put(PACKAGE, packageName);
+    data.put(VIEW, WALLET_DIALOG);
 
     analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -79,9 +81,9 @@ public class PromotionsAnalytics {
 
   public void sendClickOnWalletDialogCancel(String packageName) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", CANCEL);
-    data.put("package", packageName);
-    data.put("view", WALLET_DIALOG);
+    data.put(ACTION, CANCEL);
+    data.put(PACKAGE, packageName);
+    data.put(VIEW, WALLET_DIALOG);
 
     analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -89,9 +91,9 @@ public class PromotionsAnalytics {
 
   public void sendClickOnWalletDialogFindWallet(String packageName) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", OPEN_WALLET);
-    data.put("package", packageName);
-    data.put("view", WALLET_DIALOG);
+    data.put(ACTION, OPEN_WALLET);
+    data.put(PACKAGE, packageName);
+    data.put(VIEW, WALLET_DIALOG);
 
     analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -99,9 +101,9 @@ public class PromotionsAnalytics {
 
   public void sendClickOnCaptchaDialogClaim(String packageName) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", CLAIM);
-    data.put("package", packageName);
-    data.put("view", CAPTCHA_DIALOG);
+    data.put(ACTION, CLAIM);
+    data.put(PACKAGE, packageName);
+    data.put(VIEW, CAPTCHA_DIALOG);
 
     analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -109,9 +111,9 @@ public class PromotionsAnalytics {
 
   public void sendClickOnCaptchaDialogCancel(String packageName) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", CANCEL);
-    data.put("package", packageName);
-    data.put("view", CAPTCHA_DIALOG);
+    data.put(ACTION, CANCEL);
+    data.put(PACKAGE, packageName);
+    data.put(VIEW, CAPTCHA_DIALOG);
 
     analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -131,5 +133,15 @@ public class PromotionsAnalytics {
       analyticsManager.logEvent(createPromotionsInteractMap(ACTION_UPDATE, packageName, appcValue),
           PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
     }
+  }
+
+  public void sendRefreshCaptchaEvent(String packageName) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, RELOAD);
+    data.put(PACKAGE, packageName);
+    data.put(VIEW, CAPTCHA_DIALOG);
+
+    analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 }

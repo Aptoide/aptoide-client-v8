@@ -29,6 +29,6 @@ public class GetPromotionAppsRequest extends V7<GetPromotionAppsResponse, BaseBo
   @Override
   protected Observable<GetPromotionAppsResponse> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getPromotionApps(30, body, true);
+    return interfaces.getPromotionApps(30, body, bypassCache);
   }
 }

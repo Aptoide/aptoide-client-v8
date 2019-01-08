@@ -18,6 +18,8 @@ import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.MessageWhiteBgDisplayable;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -27,13 +29,13 @@ import retrofit2.Converter;
 
 public class TimeLineFollowingFragment extends TimeLineFollowFragment {
 
+  @Inject @Named("aptoide-theme") String theme;
   private Long userId;
   private Long storeId;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
-  private String defaultTheme;
 
   public static TimeLineFollowFragment newInstanceUsingUserId(Long id, String storeTheme,
       String title, StoreContext storeContext) {
@@ -75,9 +77,9 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    defaultTheme = application.getDefaultThemeName();
     baseBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
@@ -101,7 +103,7 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
-    return new FollowUserDisplayable(user, false, defaultTheme);
+    return new FollowUserDisplayable(user, false, theme);
   }
 
   @Override

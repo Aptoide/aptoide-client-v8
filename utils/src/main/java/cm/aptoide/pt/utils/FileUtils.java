@@ -6,7 +6,6 @@
 package cm.aptoide.pt.utils;
 
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
 import java.io.File;
@@ -27,15 +26,6 @@ public class FileUtils {
   public static final String COPY = "Copy";
   private static final String TAG = FileUtils.class.getSimpleName();
   private Action1<String> sendFileMoveEvent;
-
-  /**
-   * used to send an analytics event showing who the file was moved
-   *
-   * @param sendFileMoveEvent action to send the event
-   */
-  public FileUtils(@Nullable Action1<String> sendFileMoveEvent) {
-    this.sendFileMoveEvent = sendFileMoveEvent;
-  }
 
   public FileUtils() {
   }
@@ -144,15 +134,15 @@ public class FileUtils {
    * @param fileName Name of the file to be copied
    */
   public void copyFile(String inputPath, String outputPath, String fileName) {
-    if (!fileExists(inputPath + fileName)) {
-      throw new RuntimeException("Input file(" + inputPath + fileName + ") doesn't exists");
-    }
+    if (!inputPath.equals(outputPath)) {
+      if (!fileExists(inputPath + fileName)) {
+        throw new RuntimeException("Input file(" + inputPath + fileName + ") doesn't exists");
+      }
 
-    File file = new File(inputPath + fileName);
-    if (!file.renameTo(new File(outputPath + fileName))) {
-      cloneFile(inputPath, outputPath, fileName);
-    } else if (sendFileMoveEvent != null) {
-      sendFileMoveEvent.call(MOVE);
+      File file = new File(inputPath + fileName);
+      if (!file.renameTo(new File(outputPath + fileName))) {
+        cloneFile(inputPath, outputPath, fileName);
+      }
     }
   }
 
@@ -188,9 +178,6 @@ public class FileUtils {
       out.flush();
       out.close();
       new File(inputPath + fileName).delete();
-      if (sendFileMoveEvent != null) {
-        sendFileMoveEvent.call(COPY);
-      }
     } catch (Exception e) {
       File inputFile = new File(inputPath + "/" + fileName);
       if (inputFile.exists()) {

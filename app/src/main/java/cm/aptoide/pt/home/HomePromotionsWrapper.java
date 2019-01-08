@@ -4,15 +4,17 @@ public class HomePromotionsWrapper {
 
   private boolean hasPromotions;
   private int promotions;
-  private float totalAppcValue;
+  private float totalUnclaimedAppcValue;
   private boolean showDialog;
+  private float totalAppcValue;
 
-  public HomePromotionsWrapper(boolean hasPromotions, int promotions, float totalAppcValue,
-      boolean showDialog) {
+  public HomePromotionsWrapper(boolean hasPromotions, int promotions, float totalUnclaimedAppcValue,
+      boolean showDialog, float totalAppcValue) {
     this.hasPromotions = hasPromotions;
     this.promotions = promotions;
-    this.totalAppcValue = totalAppcValue;
+    this.totalUnclaimedAppcValue = totalUnclaimedAppcValue;
     this.showDialog = showDialog;
+    this.totalAppcValue = totalAppcValue;
   }
 
   public boolean hasPromotions() {
@@ -23,11 +25,15 @@ public class HomePromotionsWrapper {
     return promotions;
   }
 
-  public float getTotalAppcValue() {
-    return totalAppcValue;
+  public float getTotalUnclaimedAppcValue() {
+    return totalUnclaimedAppcValue;
   }
 
   public boolean shouldShowDialog() {
     return showDialog;
+  }
+
+  public float getTotalAppcValue() {
+    return totalAppcValue;
   }
 }

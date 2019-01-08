@@ -27,6 +27,10 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
+  private static final String ACTION = "action";
+  private static final String BUNDLE_TAG = "bundle_tag";
+  private static final String PROMOTION_ICON = "promotion-icon";
+  private static final String PROMOTION_DIALOG = "promotion-dialog";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -37,8 +41,8 @@ public class HomeAnalytics {
 
   public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleTag, int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_MORE);
-    data.put("bundle_tag", bundleTag);
+    data.put(ACTION, TAP_ON_MORE);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
 
@@ -49,8 +53,8 @@ public class HomeAnalytics {
   public void sendScrollRightInteractEvent(int bundlePosition, String bundleTag,
       int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", SCROLL_RIGHT);
-    data.put("bundle_tag", bundleTag);
+    data.put(ACTION, SCROLL_RIGHT);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.SCROLL,
@@ -59,14 +63,14 @@ public class HomeAnalytics {
 
   public void sendLoadMoreInteractEvent() {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", PUSH_LOAD_MORE);
+    data.put(ACTION, PUSH_LOAD_MORE);
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.ENDLESS_SCROLL,
         navigationTracker.getViewName(true));
   }
 
   public void sendPullRefreshInteractEvent() {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", PULL_REFRESH);
+    data.put(ACTION, PULL_REFRESH);
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.PULL_REFRESH,
         navigationTracker.getViewName(true));
   }
@@ -74,11 +78,11 @@ public class HomeAnalytics {
   public void sendTapOnAppInteractEvent(double appRating, String packageName, int appPosition,
       int bundlePosition, String bundleTag, int itemsInBundle) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_APP);
+    data.put(ACTION, TAP_ON_APP);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
     data.put("app_position", appPosition);
-    data.put("bundle_tag", bundleTag);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
 
@@ -89,10 +93,10 @@ public class HomeAnalytics {
   public void sendRecommendedAppInteractEvent(double appRating, String packageName,
       int bundlePosition, String bundleTag, String cardType, HomeEvent.Type type) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_APP);
+    data.put(ACTION, TAP_ON_APP);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
-    data.put("bundle_tag", bundleTag);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("card_type", cardType);
 
@@ -103,30 +107,14 @@ public class HomeAnalytics {
   private void sendAdInteractEvent(String actionType, int appRating, String packageName,
       int bundlePosition, String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", actionType);
+    data.put(ACTION, actionType);
     data.put("app_rating", appRating);
     data.put("package_name", packageName);
-    data.put("bundle_tag", bundleTag);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("network", network.getName());
 
     analyticsManager.logEvent(data, HOME_INTERACT, parseAction(type),
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendAdImpressionEvent(int appRating, String packageName, int bundlePosition,
-      String bundleTag, HomeEvent.Type type, ApplicationAd.Network network) {
-    sendAdInteractEvent(IMPRESSION, appRating, packageName, bundlePosition, bundleTag, type,
-        network);
-  }
-
-  public void sendHighlightedImpressionEvent() {
-    final Map<String, Object> data = new HashMap<>();
-    data.put("action", IMPRESSION);
-    data.put("bundle_tag", "ads-highlighted");
-    data.put("network", ApplicationAd.Network.SERVER.getName());
-
-    analyticsManager.logEvent(data, HOME_INTERACT, parseAction(HomeEvent.Type.AD),
         navigationTracker.getViewName(true));
   }
 
@@ -138,8 +126,8 @@ public class HomeAnalytics {
 
   public void sendAppcKnowMoreInteractEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_CARD);
-    data.put("bundle_tag", bundleTag);
+    data.put(ACTION, TAP_ON_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
@@ -147,8 +135,8 @@ public class HomeAnalytics {
 
   public void sendAppcDismissInteractEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_CARD_DISMISS);
-    data.put("bundle_tag", bundleTag);
+    data.put(ACTION, TAP_ON_CARD_DISMISS);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.DISMISS,
@@ -157,8 +145,8 @@ public class HomeAnalytics {
 
   public void sendAppcImpressionEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", VIEW_CARD);
-    data.put("bundle_tag", bundleTag);
+    data.put(ACTION, VIEW_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
@@ -167,8 +155,8 @@ public class HomeAnalytics {
 
   public void sendEditorialInteractEvent(String bundleTag, int bundlePosition, String cardId) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_CARD);
-    data.put("bundle_tag", bundleTag);
+    data.put(ACTION, TAP_ON_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("card_id", cardId);
     data.put("bundle_position", bundlePosition);
 
@@ -177,8 +165,8 @@ public class HomeAnalytics {
 
   public void sendEditorialImpressionEvent(String bundleTag, int bundlePosition, String cardId) {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", IMPRESSION);
-    data.put("bundle_tag", bundleTag);
+    data.put(ACTION, IMPRESSION);
+    data.put(BUNDLE_TAG, bundleTag);
     data.put("card_id", cardId);
     data.put("bundle_position", bundlePosition);
 
@@ -188,8 +176,8 @@ public class HomeAnalytics {
 
   public void sendPromotionsIconClickEvent() {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP);
-    data.put("bundle_tag", "promotion-icon");
+    data.put(ACTION, TAP);
+    data.put(BUNDLE_TAG, PROMOTION_ICON);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -197,8 +185,8 @@ public class HomeAnalytics {
 
   public void sendPromotionsDialogImpressionEvent() {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", IMPRESSION);
-    data.put("bundle_tag", "promotion-dialog");
+    data.put(ACTION, IMPRESSION);
+    data.put(BUNDLE_TAG, PROMOTION_DIALOG);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
@@ -206,8 +194,8 @@ public class HomeAnalytics {
 
   public void sendPromotionsDialogDismissEvent() {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_CARD_DISMISS);
-    data.put("bundle_tag", "promotion-dialog");
+    data.put(ACTION, TAP_ON_CARD_DISMISS);
+    data.put(BUNDLE_TAG, PROMOTION_DIALOG);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.DISMISS,
         navigationTracker.getViewName(true));
@@ -215,10 +203,19 @@ public class HomeAnalytics {
 
   public void sendPromotionsDialogNavigateEvent() {
     final Map<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_CARD);
-    data.put("bundle_tag", "promotion-dialog");
+    data.put(ACTION, TAP_ON_CARD);
+    data.put(BUNDLE_TAG, PROMOTION_DIALOG);
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionsImpressionEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, IMPRESSION);
+    data.put(BUNDLE_TAG, PROMOTION_ICON);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 

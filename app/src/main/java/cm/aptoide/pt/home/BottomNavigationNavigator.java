@@ -28,13 +28,16 @@ public class BottomNavigationNavigator {
   private final int searchPosition = 1;
   private final int storesPosition = 2;
   private final int appsPosition = 3;
+  private final String theme;
   private ArrayList<Integer> bottomNavigationItems;
 
   public BottomNavigationNavigator(FragmentNavigator fragmentNavigator, String defaultStoreName,
-      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
+      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
+      String theme) {
     this.defaultStoreName = defaultStoreName;
     this.bottomNavigationAnalytics = bottomNavigationAnalytics;
     this.searchAnalytics = searchAnalytics;
+    this.theme = theme;
     bottomNavigationItems = new ArrayList<>();
     this.fragmentNavigator = fragmentNavigator;
   }
@@ -74,7 +77,7 @@ public class BottomNavigationNavigator {
 
   public void navigateToStore() {
     MyStoresFragment myStoresFragment =
-        MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
+        MyStoresFragment.newInstance(getStoreEvent(), theme, "stores", StoreContext.home);
     navigateToSelectedFragment(storesPosition, myStoresFragment);
   }
 
@@ -120,8 +123,7 @@ public class BottomNavigationNavigator {
         fragment = SearchResultFragment.newInstance(defaultStoreName, true);
         break;
       case storesPosition:
-        fragment =
-            MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
+        fragment = MyStoresFragment.newInstance(getStoreEvent(), "", "stores", StoreContext.home);
         break;
       case appsPosition:
         fragment = new AppsFragment();

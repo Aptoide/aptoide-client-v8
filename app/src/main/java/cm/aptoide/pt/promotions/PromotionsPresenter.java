@@ -41,6 +41,7 @@ public class PromotionsPresenter implements Presenter {
     resumeDownload();
     claimApp();
     handlePromotionClaimResult();
+    handleRetryClick();
   }
 
   private void claimApp() {
@@ -146,19 +147,12 @@ public class PromotionsPresenter implements Presenter {
   private void getPromotionApps() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> promotionsManager.getPromotionsModel())
-        .doOnNext(promotionsModel -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
-        .observeOn(viewScheduler)
-        .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
-        .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
-        .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())
-        .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
-        .observeOn(viewScheduler)
-        .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp))
+        .doOnNext(__ -> view.showLoading())
+        .flatMap(__ -> loadPromotionApps())
+        .doOnError(__ -> view.showErrorView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
         });
   }
 
@@ -173,5 +167,31 @@ public class PromotionsPresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  private void handleRetryClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(event -> view.retryClicked()
+            .doOnNext(__ -> view.showLoading())
+            .flatMap(__ -> loadPromotionApps())
+            .doOnError(__ -> view.showErrorView())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+        });
+  }
+
+  private Observable<PromotionViewApp> loadPromotionApps() {
+    return promotionsManager.getPromotionsModel()
+        .doOnNext(promotionsModel -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
+        .observeOn(viewScheduler)
+        .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
+        .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
+        .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())
+        .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
+        .observeOn(viewScheduler)
+        .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp));
   }
 }

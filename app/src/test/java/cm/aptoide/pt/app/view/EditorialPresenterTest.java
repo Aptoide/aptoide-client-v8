@@ -284,4 +284,28 @@ public class EditorialPresenterTest {
     //Then it should deliver that swatch to the view
     verify(view).setMediaListDescriptionsVisible(editorialEvent);
   }
+
+  @Test public void handleMovingCollapseVisiblePlaceHolderTest() {
+    //Given an initialized presenter
+    editorialPresenter.handleMovingCollapse();
+    //If item is shown when collapse toolbar is moving
+    when(view.handleMovingCollapse()).thenReturn(Observable.just(true));
+
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then it should remove the bottom app card
+    verify(view).removeBottomCardAnimation();
+  }
+
+  @Test public void handleMovingCollapseNotVisiblePlaceHolderTest() {
+    //Given an initialized presenter
+    editorialPresenter.handleMovingCollapse();
+    //If item is shown when collapse toolbar is moving
+    when(view.handleMovingCollapse()).thenReturn(Observable.just(false));
+
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then it should add the bottom app card
+    verify(view).addBottomCardAnimation();
+  }
 }
