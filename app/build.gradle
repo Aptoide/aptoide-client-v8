@@ -120,7 +120,7 @@ android {
 
     monetisation {
       dimension "mode"
-      versionName defaultConfig.getVersionName() + "I"
+      versionName defaultConfig.getVersionName() + "J"
       matchingFallbacks = ['prod']
     }
   }
@@ -519,7 +519,8 @@ dependencies {
 //  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
   // UnityAds (IronSource mediation)
 //  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
-//  implementation 'com.mopub.mediation:vungle:6.3.24.0'
+
+  implementation 'com.mopub.mediation:vungle:6.3.24.0'
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
