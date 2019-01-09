@@ -25,11 +25,11 @@ public class MockAptoideApplication extends VanillaApplication {
   }
 
   @Override public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, boolean firstCreated, String s) {
+      NotificationSyncScheduler notificationSyncScheduler, View view, boolean firstCreated,
+      String s) {
 
-    return new MockActivityModule(activity, intent, notificationSyncScheduler, marketName,
-        autoUpdateUrl, view, firstCreated, s);
+    return new MockActivityModule(activity, intent, notificationSyncScheduler, view, firstCreated,
+        s);
   }
 
   @Override

@@ -13,7 +13,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -93,25 +92,22 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 @Module public class ActivityModule {
 
   private final AppCompatActivity activity;
   private final Intent intent;
   private final NotificationSyncScheduler notificationSyncScheduler;
-  private final String marketName;
   private final View view;
   private final String fileProviderAuthority;
   private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, boolean firstCreated, String fileProviderAuthority) {
+      NotificationSyncScheduler notificationSyncScheduler, View view, boolean firstCreated,
+      String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
-    this.marketName = marketName;
     this.view = view;
     this.firstCreated = firstCreated;
     this.fileProviderAuthority = fileProviderAuthority;

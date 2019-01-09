@@ -31,7 +31,8 @@ public class BottomNavigationNavigator {
   private ArrayList<Integer> bottomNavigationItems;
 
   public BottomNavigationNavigator(FragmentNavigator fragmentNavigator,
-      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics, String theme) {
+      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
+      String theme) {
     this.bottomNavigationAnalytics = bottomNavigationAnalytics;
     this.searchAnalytics = searchAnalytics;
     this.theme = theme;
