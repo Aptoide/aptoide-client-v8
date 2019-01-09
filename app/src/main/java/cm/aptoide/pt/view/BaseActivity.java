@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
+import cm.aptoide.pt.FlavourActivityModule;
 import cm.aptoide.pt.presenter.View;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
@@ -28,9 +29,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
       activityComponent = aptoideApplication.getApplicationComponent()
           .plus(aptoideApplication.getActivityModule(this, getIntent(),
               aptoideApplication.getNotificationSyncScheduler(), aptoideApplication.getMarketName(),
-              aptoideApplication.getAutoUpdateUrl(), (View) this,
-              aptoideApplication.getDefaultThemeName(), firstCreated,
-              BuildConfig.APPLICATION_ID + ".provider"));
+              (View) this, firstCreated,
+              BuildConfig.APPLICATION_ID + ".provider"), new FlavourActivityModule());
     }
     return activityComponent;
   }

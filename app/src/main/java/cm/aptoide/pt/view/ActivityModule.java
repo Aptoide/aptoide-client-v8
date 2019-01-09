@@ -2,7 +2,9 @@ package cm.aptoide.pt.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +30,9 @@ import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.EditorialNavigator;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
+import cm.aptoide.pt.autoupdate.AutoUpdateManager;
+import cm.aptoide.pt.autoupdate.AutoUpdateRepository;
+import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -40,7 +45,6 @@ import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.install.AutoUpdate;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -86,6 +90,7 @@ import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -96,23 +101,19 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final Intent intent;
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final String marketName;
-  private final String autoUpdateUrl;
   private final View view;
-  private final String defaultTheme;
   private final String fileProviderAuthority;
   private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultTheme, boolean firstCreated, String fileProviderAuthority) {
+      View view, boolean firstCreated, String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.marketName = marketName;
-    this.autoUpdateUrl = autoUpdateUrl;
     this.view = view;
     this.firstCreated = firstCreated;
-    this.defaultTheme = defaultTheme;
     this.fileProviderAuthority = fileProviderAuthority;
   }
 
@@ -121,13 +122,15 @@ import static com.facebook.FacebookSdk.getApplicationContext;
     return new ApkFy(activity, intent, securePreferences);
   }
 
-  @ActivityScope @Provides AutoUpdate provideAutoUpdate(DownloadFactory downloadFactory,
-      PermissionManager permissionManager, Resources resources,
-      DownloadAnalytics downloadAnalytics) {
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    return new AutoUpdate((ActivityView) activity, downloadFactory, permissionManager,
-        application.getInstallManager(), resources, autoUpdateUrl, R.mipmap.ic_launcher, false,
-        marketName, downloadAnalytics);
+  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
+      AutoUpdateService.Service service, @Named("package-name") String packageName,
+      @Named("auto-update-store-name") String storeName) {
+    return new AutoUpdateService(service, packageName, storeName);
+  }
+
+  @ActivityScope @Provides AutoUpdateRepository providesAutoUpdateRepository(
+      AutoUpdateService autoUpdateService) {
+    return new AutoUpdateRepository(autoUpdateService);
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(
@@ -154,29 +157,29 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator) {
+      AdsRepository adsRepository, AppNavigator appNavigator,
+      @Named("aptoide-theme") String theme) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
-        sharedPreferences, storeAccessor, defaultTheme, notificationAnalytics, navigationTracker,
+        sharedPreferences, storeAccessor, theme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
         adsRepository, appNavigator);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
-      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy, AutoUpdate autoUpdate,
-      @Named("default") SharedPreferences sharedPreferences,
+      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy,
+      InstallManager installManager, @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       FragmentNavigator fragmentNavigator, DeepLinkManager deepLinkManager,
-      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager) {
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    InstallManager installManager = application.getInstallManager();
+      BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
+      AutoUpdateManager autoUpdateManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
-        CrashReport.getInstance(), apkFy, autoUpdate, new ContentPuller(activity),
-        notificationSyncScheduler,
+        CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
-        AndroidSchedulers.mainThread(), bottomNavigationNavigator, updatesManager);
+        AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
+        autoUpdateManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
@@ -242,9 +245,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
       FragmentNavigator fragmentNavigator, BottomNavigationAnalytics bottomNavigationAnalytics,
-      SearchAnalytics searchAnalytics) {
+      SearchAnalytics searchAnalytics, @Named("aptoide-theme") String theme) {
     return new BottomNavigationNavigator(fragmentNavigator, bottomNavigationAnalytics,
-        searchAnalytics);
+        searchAnalytics, theme);
   }
 
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
@@ -296,6 +299,29 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides IronSourceAdRepository providesIronSourceAdRepository() {
     return new IronSourceAdRepository(activity);
+  }
+
+  @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(
+      DownloadFactory downloadFactory, PermissionManager permissionManager,
+      InstallManager installManager, DownloadAnalytics downloadAnalytics,
+      @Named("local-version-code") int localVersionCode,
+      AutoUpdateRepository autoUpdateRepository) {
+    return new AutoUpdateManager(downloadFactory, permissionManager, installManager,
+        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT);
+  }
+
+  @ActivityScope @Provides @Named("package-name") String providePackageName() {
+    return activity.getPackageName();
+  }
+
+  @ActivityScope @Provides @Named("local-version-code") int provideLocalVersionCode(
+      @Named("package-name") String packageName) {
+    try {
+      return activity.getPackageManager()
+          .getPackageInfo(packageName, 0).versionCode;
+    } catch (PackageManager.NameNotFoundException e) {
+      return -1;
+    }
   }
 
   @ActivityScope @Provides ClaimPromotionsManager providesClaimPromotionsManager(

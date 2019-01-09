@@ -31,7 +31,7 @@ public class VanillaApplication extends NotificationApplicationView {
   }
 
   @Override public String getMarketName() {
-    return "Aptoide";
+    return BuildConfig.MARKET_NAME;
   }
 
   @Override public String getFeedbackEmail() {
@@ -40,10 +40,6 @@ public class VanillaApplication extends NotificationApplicationView {
 
   @Override public String getAccountType() {
     return BuildConfig.APPLICATION_ID;
-  }
-
-  @Override public String getAutoUpdateUrl() {
-    return "http://imgs.aptoide.com/latest_version_v8.xml";
   }
 
   @Override public String getPartnerId() {

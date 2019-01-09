@@ -11,7 +11,8 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = { ApplicationModule.class, FlavourApplicationModule.class })
 public interface ApplicationComponent {
 
-  ActivityComponent plus(ActivityModule activityModule);
+  ActivityComponent plus(ActivityModule activityModule,
+      FlavourActivityModule flavourActivityModule);
 
   void inject(AptoideApplication application);
 

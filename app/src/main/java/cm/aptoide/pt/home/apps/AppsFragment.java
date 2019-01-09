@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -59,6 +57,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Inject AppsNavigator appsNavigator;
   @Inject UpdatesManager updatesManager;
   @Inject InstallManager installManager;
+  @Inject DownloadFactory downloadFactory;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
@@ -105,11 +104,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     attachPresenter(new AppsPresenter(this,
         new AppsManager(updatesManager, installManager, new AppMapper(), downloadAnalytics,
             installAnalytics, updatesAnalytics, getContext().getPackageManager(), getContext(),
-            new DownloadFactory(
-                ((AptoideApplication) getContext().getApplicationContext()).getMarketName())),
-        AndroidSchedulers.mainThread(), Schedulers.computation(), CrashReport.getInstance(),
-        new PermissionManager(), ((PermissionService) getContext()), accountManager,
-        appsNavigator));
+            downloadFactory), AndroidSchedulers.mainThread(), Schedulers.io(),
+        CrashReport.getInstance(), new PermissionManager(), ((PermissionService) getContext()),
+        accountManager, appsNavigator));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -143,10 +140,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-    RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
-    if (animator instanceof SimpleItemAnimator) {
-      ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
-    }
+    recyclerView.setItemAnimator(null);
   }
 
   @Nullable @Override
@@ -325,10 +319,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView.smoothScrollToPosition(0);
   }
 
-  @Override public void removeInstalledUpdates(List<App> installedUpdatesList) {
-    adapter.removeUpdatesList(installedUpdatesList);
-  }
-
   @Override public Observable<Void> refreshApps() {
     return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
@@ -339,8 +329,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
   }
 
-  @Override public void removeCanceledDownload(App app) {
-    adapter.removeCanceledDownload(app);
+  @Override public void removeCanceledAppDownload(App app) {
+    adapter.removeCanceledAppDownload(app);
   }
 
   @Override public void setStandbyState(App app) {
@@ -354,6 +344,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void setDefaultUserImage() {
     ImageLoader.with(getContext())
         .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
+  }
+
+  @Override public void setPausingDownloadState(App app) {
+    adapter.setAppOnPausing(app);
   }
 
   private void showAppsList() {

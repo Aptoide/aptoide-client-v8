@@ -64,17 +64,17 @@ public interface AppsFragmentView extends View {
 
   void scrollToTop();
 
-  void removeInstalledUpdates(List<App> installedUpdatesList);
-
   Observable<Void> refreshApps();
 
   void hidePullToRefresh();
 
-  void removeCanceledDownload(App app);
+  void removeCanceledAppDownload(App app);
 
   void setStandbyState(App app);
 
   void showIndeterminateAllUpdates();
 
   void setDefaultUserImage();
+
+  void setPausingDownloadState(App app);
 }

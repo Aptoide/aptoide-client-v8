@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
@@ -44,7 +45,8 @@ public abstract class BaseFragment extends RxFragment {
       fragmentComponent = ((BaseActivity) getActivity()).getActivityComponent()
           .plus(aptoideApplication.getFragmentModule(this, savedInstanceState, getArguments(),
               aptoideApplication.isCreateStoreUserPrivacyEnabled(),
-              (getActivity().getApplicationContext()).getPackageName()));
+              (getActivity().getApplicationContext()).getPackageName()),
+              new FlavourFragmentModule());
     }
     return fragmentComponent;
   }

@@ -14,7 +14,6 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -615,9 +614,8 @@ public class AppViewManagerTest {
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
         AnalyticsManager.Action.CLICK, "aString", null);
-    verify(installAnalytics).installStarted("packageName", 1, InstallType.INSTALL,
-        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
-        downloadStateParser.getOrigin(download.getAction()), 0, null);
+    verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
+        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null);
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -674,9 +672,8 @@ public class AppViewManagerTest {
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString", null,
         AnalyticsManager.Action.CLICK, null, null);
-    verify(installAnalytics).installStarted("packageName", 1, InstallType.INSTALL,
-        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
-        downloadStateParser.getOrigin(download.getAction()), 2, "aString");
+    verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
+        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString");
   }
 
   @Test public void cancelDownloadTest() {

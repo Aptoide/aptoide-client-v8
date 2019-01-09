@@ -59,4 +59,8 @@ dependencies {
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
   implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+
+  // Testing-only dependencies
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 }
