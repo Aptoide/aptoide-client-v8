@@ -1,13 +1,11 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.impressions.ImpressionManager;
-import java.util.ArrayList;
-import java.util.List;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -38,10 +36,37 @@ public class Home {
           if (homeBundlesModel.hasErrors()) {
             return new HomeBundlesModel(homeBundlesModel.getError());
           } else {
-            return new HomeBundlesModel(injectLargeBanner(homeBundlesModel.getList()),
+            return new HomeBundlesModel(injectSmallBanner(homeBundlesModel.getList()),
                 homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
           }
         });
+  }
+
+  private List<HomeBundle> injectSmallBanner(List<HomeBundle> list) {
+    list.add(1, new HomeBundle() {
+      @Override public String getTitle() {
+        return "Advertising";
+      }
+
+      @Override public List<?> getContent() {
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(new BannerAd());
+        return objects;
+      }
+
+      @Override public BundleType getType() {
+        return BundleType.SMALL_BANNER;
+      }
+
+      @Override public Event getEvent() {
+        return null;
+      }
+
+      @Override public String getTag() {
+        return null;
+      }
+    });
+    return list;
   }
 
   private List<HomeBundle> injectLargeBanner(List<HomeBundle> list) {
@@ -77,7 +102,7 @@ public class Home {
           if (homeBundlesModel.hasErrors()) {
             return new HomeBundlesModel(homeBundlesModel.getError());
           } else {
-            return new HomeBundlesModel(injectLargeBanner(homeBundlesModel.getList()),
+            return new HomeBundlesModel(injectSmallBanner(homeBundlesModel.getList()),
                 homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
           }
         });

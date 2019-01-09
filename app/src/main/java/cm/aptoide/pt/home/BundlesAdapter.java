@@ -22,13 +22,13 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int EDITORIAL = R.layout.editorial_action_item;
   private static final int INFO = R.layout.info_action_item;
   private static final int LARGE_BANNER = R.layout.large_banner_item;
+  private static final int SMALL_BANNER = R.layout.small_banner_item;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
+  private final HomeAnalytics homeAnalytics;
   private List<HomeBundle> bundles;
   private PublishSubject<AdHomeEvent> adClickedEvents;
-
-  private final HomeAnalytics homeAnalytics;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
@@ -71,6 +71,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case LARGE_BANNER:
         return new LargeBannerBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(LARGE_BANNER, parent, false), homeAnalytics);
+      case SMALL_BANNER:
+        return new SmallBannerBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(SMALL_BANNER, parent, false));
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -102,6 +105,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return EDITORIAL;
       case LARGE_BANNER:
         return LARGE_BANNER;
+      case SMALL_BANNER:
+        return SMALL_BANNER;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)
