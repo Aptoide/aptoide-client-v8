@@ -187,6 +187,7 @@ public abstract class AptoideApplication extends Application {
   @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
   @Inject AptoideShortcutManager shortcutManager;
   @Inject SettingsManager settingsManager;
+  @Inject @Named("followedStoresNames") List<String> followedStoresNames;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -664,7 +665,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable generateAptoideUuid() {
-    return Completable.fromAction(() -> getIdsRepository().getUniqueIdentifier())
+    return Completable.fromAction(() -> idsRepository.getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
   }
 
@@ -679,7 +680,7 @@ public abstract class AptoideApplication extends Application {
 
             setSharedPreferencesValues();
 
-            return setupFirstRun().andThen(getRootAvailabilityManager().updateRootAvailability())
+            return setupFirstRun().andThen(rootAvailabilityManager.updateRootAvailability())
                 .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
           }
 
@@ -707,27 +708,36 @@ public abstract class AptoideApplication extends Application {
   private Completable setupFirstRun() {
     return Completable.defer(() -> {
 
-      final StoreCredentialsProviderImpl storeCredentials = new StoreCredentialsProviderImpl(
-          AccessorFactory.getAccessorFor(
-              ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class));
+      final StoreCredentialsProviderImpl storeCredentials =
+          new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class));
 
       StoreUtilsProxy proxy =
-          new StoreUtilsProxy(getAccountManager(), getAccountSettingsBodyInterceptorPoolV7(),
-              storeCredentials, AccessorFactory.getAccessorFor(
-              ((AptoideApplication) this.getApplicationContext()).getDatabase(), Store.class),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
+          new StoreUtilsProxy(accountManager, accountSettingsBodyInterceptorPoolV7,
+              storeCredentials, AccessorFactory.getAccessorFor(database, Store.class),
+              defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
               getDefaultSharedPreferences());
 
-      BaseRequestWithStore.StoreCredentials defaultStoreCredentials = storeCredentials.get("apps");
-
-      return generateAptoideUuid().andThen(proxy.addDefaultStore(
-          GetStoreMetaRequest.of(defaultStoreCredentials, getAccountSettingsBodyInterceptorPoolV7(),
-              getDefaultClient(), WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences()), getAccountManager(), defaultStoreCredentials)
-          .andThen(refreshUpdates()))
-          .doOnError(err -> CrashReport.getInstance()
-              .log(err));
+      return generateAptoideUuid().andThen(
+          setDefaultFollowedStores(storeCredentials, proxy).andThen(refreshUpdates())
+              .doOnError(err -> CrashReport.getInstance()
+                  .log(err)));
     });
+  }
+
+  private Completable setDefaultFollowedStores(StoreCredentialsProviderImpl storeCredentials,
+      StoreUtilsProxy proxy) {
+
+    return Observable.from(followedStoresNames)
+        .flatMapCompletable(followedStoreName -> {
+          BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
+              storeCredentials.get(followedStoreName);
+
+          return proxy.addDefaultStore(
+              GetStoreMetaRequest.of(defaultStoreCredentials, accountSettingsBodyInterceptorPoolV7,
+                  defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
+                  getDefaultSharedPreferences()), accountManager, defaultStoreCredentials);
+        })
+        .toCompletable();
   }
 
   /**
@@ -737,13 +747,6 @@ public abstract class AptoideApplication extends Application {
     return bodyInterceptorPoolV7;
   }
 
-  /**
-   * BaseBodyInterceptor for v7 ws calls with CDN = web configuration
-   */
-  public BodyInterceptor<BaseBody> getBodyInterceptorWebV7() {
-    return bodyInterceptorWebV7;
-  }
-
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorPoolV7() {
     return accountSettingsBodyInterceptorPoolV7;
   }
@@ -751,7 +754,7 @@ public abstract class AptoideApplication extends Application {
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorWebV7() {
     if (accountSettingsBodyInterceptorWebV7 == null) {
       accountSettingsBodyInterceptorWebV7 =
-          new AccountSettingsBodyInterceptorV7(getBodyInterceptorWebV7(), getAdultContent());
+          new AccountSettingsBodyInterceptorV7(bodyInterceptorWebV7, adultContent);
     }
     return accountSettingsBodyInterceptorWebV7;
   }
