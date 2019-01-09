@@ -295,21 +295,24 @@ android {
     variant.buildConfigField "String", "MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID",
         "\"" + project.MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "MOPUB_SEARCH_NATIVE_PLACEMENT_ID",
-              "\"" + project.MOPUB_SEARCH_NATIVE_PLACEMENT_ID + "\""
+        "\"" + project.MOPUB_SEARCH_NATIVE_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "VUNGLE_APPLICATION_ID",
-              "\"" + project.VUNGLE_APPLICATION_ID + "\""
+        "\"" + project.VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
-              "\"" + project.ADCOLONY_APPLICATION_ID + "\""
+        "\"" + project.ADCOLONY_APPLICATION_ID + "\""
     variant.buildConfigField "String", "TAPJOY_SDK_KEY",
-              "\"" + project.TAPJOY_SDK_KEY + "\""
+        "\"" + project.TAPJOY_SDK_KEY + "\""
     variant.buildConfigField "String", "UNITYADS_GAME_ID",
-              "\"" + project.UNITYADS_GAME_ID + "\""
+        "\"" + project.UNITYADS_GAME_ID + "\""
     variant.buildConfigField "String", "CHARTBOOST_APPLICATION_ID",
-              "\"" + project.CHARTBOOST_APPLICATION_ID + "\""
+        "\"" + project.CHARTBOOST_APPLICATION_ID + "\""
     variant.buildConfigField "String", "CHARTBOOST_APPLICATION_SIGNATURE",
-              "\"" + project.CHARTBOOST_APPLICATION_SIGNATURE + "\""
+        "\"" + project.CHARTBOOST_APPLICATION_SIGNATURE + "\""
     variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
-              "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
+        "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
+
+    variant.buildConfigField "String", "MOPUB_HOME_BANNER_PLACEMENT_ID_T11",
+        "\"" + project.MOPUB_HOME_BANNER_PLACEMENT_ID_T11 + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -436,21 +439,21 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
   // IronSource
-//  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+  //  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
   // Applovin (IronSource mediation)
-//  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+  //  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
   // Vungle (IronSource mediation)
-//  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
-//  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
-//  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
-//  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
-//  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
-//  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
-//    transitive = true
-//    exclude group: "com.android.support"
-//    exclude module: "support-annotations"
-//    exclude module: "support-v4"
-//  }
+  //  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
+  //  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
+  //  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+  //  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+  //  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
+  //  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
+  //    transitive = true
+  //    exclude group: "com.android.support"
+  //    exclude module: "support-annotations"
+  //    exclude module: "support-v4"
+  //  }
 
   // Mopub
   implementation('com.mopub:mopub-sdk:5.4.0@aar') {
@@ -466,7 +469,7 @@ dependencies {
   implementation 'com.mopub.mediation:applovin:8.1.4.3'
 
   // Google (AdMob)
-  implementation("com.mopub.mediation:admob:17.0.0.2"){
+  implementation("com.mopub.mediation:admob:17.0.0.2") {
     transitive = true
     exclude group: "com.android.support"
     exclude module: "support-annotations"
@@ -480,7 +483,7 @@ dependencies {
     exclude module: "support-annotations"
     exclude module: "support-v4"
   }
-//  implementation 'com.flurry.android:analytics:10.1.0@aar'
+  //  implementation 'com.flurry.android:analytics:10.1.0@aar'
   implementation 'com.mopub.mediation:flurry:10.1.0.2'
 
   // ironSource
@@ -504,21 +507,20 @@ dependencies {
   implementation 'com.mopub.mediation:tapjoy:12.2.0.0'
 
   // UnityAds, Chartboost & One by AOL
-  implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+  implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation 'com.mopub.mediation:unityads:3.0.0.0'
   //  implementation 'com.mopub.mediation:chartboost:7.3.1.0'
-//  implementation 'com.mopub.mediation:onebyaol:6.8.2.0'
-
+  //  implementation 'com.mopub.mediation:onebyaol:6.8.2.0'
 
   // Adcolony (IronSource mediation)
-//  implementation "com.ironsource.adapters:adcolonyadapter:${ADCOLONY_ADAPTER_VERSION}@jar"
-//  implementation "com.adcolony:sdk:${ADCOLONY_VERSION}"
+  //  implementation "com.ironsource.adapters:adcolonyadapter:${ADCOLONY_ADAPTER_VERSION}@jar"
+  //  implementation "com.adcolony:sdk:${ADCOLONY_VERSION}"
   // Tapjoy (IronSource mediation)
-//  implementation "com.ironsource.adapters:tapjoyadapter:${TAPJOY_ADAPTER_VERSION}@jar"
+  //  implementation "com.ironsource.adapters:tapjoyadapter:${TAPJOY_ADAPTER_VERSION}@jar"
   // Chartboost (IronSource mediation)
-//  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
+  //  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
   // UnityAds (IronSource mediation)
-//  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
+  //  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
 
   implementation 'com.mopub.mediation:vungle:6.3.24.0'
 
