@@ -992,8 +992,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     TimelineAnalytics analytics = application.getTimelineAnalytics();
     if (application.isCreateStoreUserPrivacyEnabled()) {
-      SocialRepository socialRepository =
-          RepositoryFactory.getSocialRepository(getActivity(), application.getDefaultSharedPreferences());
+      SocialRepository socialRepository = RepositoryFactory.getSocialRepository(getActivity(),
+          application.getDefaultSharedPreferences());
       LayoutInflater inflater = LayoutInflater.from(getActivity());
       AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
       View alertDialogView = inflater.inflate(R.layout.logged_in_share, null);
@@ -1082,8 +1082,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     donationsProgress.setVisibility(View.GONE);
     if (donations != null && !donations.isEmpty()) {
       donationsAdapter.setDonations(donations);
-      donationsList.setVisibility(View.VISIBLE)
-      ;
+      donationsList.setVisibility(View.VISIBLE);
     } else {
       donationsListEmptyState.setVisibility(View.VISIBLE);
     }
