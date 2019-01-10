@@ -204,27 +204,27 @@ public class SearchResultFragment extends BackButtonFragment
     mopubBanner.setBannerAdListener(new MoPubView.BannerAdListener() {
       @Override public void onBannerLoaded(MoPubView banner) {
         Logger.getInstance()
-            .d("Mopub", "Banner loaded");
+            .d("Mopub Search", "Banner loaded");
       }
 
       @Override public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
         Logger.getInstance()
-            .e("Mopub", "Banner error : " + errorCode.toString());
+            .e("Mopub Search", "Banner error : " + errorCode.toString());
       }
 
       @Override public void onBannerClicked(MoPubView banner) {
         Logger.getInstance()
-            .d("Mopub", "Banner clicked");
+            .d("Mopub Search", "Banner clicked");
       }
 
       @Override public void onBannerExpanded(MoPubView banner) {
         Logger.getInstance()
-            .d("Mopub", "Banner expanded");
+            .d("Mopub Search", "Banner expanded");
       }
 
       @Override public void onBannerCollapsed(MoPubView banner) {
         Logger.getInstance()
-            .d("Mopub", "Banner collapsed");
+            .d("Mopub Search", "Banner collapsed");
       }
     });
     mopubBanner.setAdUnitId(BuildConfig.MOPUB_SEARCH_BANNER_PLACEMENT_ID_T11);
