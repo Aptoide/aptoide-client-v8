@@ -314,6 +314,9 @@ android {
     variant.buildConfigField "String", "MOPUB_HOME_BANNER_PLACEMENT_ID_T11",
         "\"" + project.MOPUB_HOME_BANNER_PLACEMENT_ID_T11 + "\""
 
+    variant.buildConfigField "String", "MOPUB_SEARCH_BANNER_PLACEMENT_ID_T11",
+        "\"" + project.MOPUB_SEARCH_BANNER_PLACEMENT_ID_T11 + "\""
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
