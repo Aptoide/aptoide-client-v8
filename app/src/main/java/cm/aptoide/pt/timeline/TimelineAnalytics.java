@@ -34,12 +34,7 @@ public class TimelineAnalytics {
   public static final String CARD_ACTION = "Apps_Timeline_Card_Action";
   public static final String MESSAGE_IMPRESSION = "Message_Impression";
   public static final String MESSAGE_INTERACT = "Message_Interact";
-  private static final String CARD_TYPE = "card_type";
   private static final String ACTION = "action";
-  private static final String SOCIAL_ACTION = "social_action";
-  private static final String PACKAGE = "package_name";
-  private static final String PUBLISHER = "publisher";
-  private static final String TITLE = "title";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
