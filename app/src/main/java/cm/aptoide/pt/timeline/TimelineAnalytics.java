@@ -53,23 +53,6 @@ public class TimelineAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  public void sendSocialActionEvent(TimelineSocialActionData timelineSocialActionData) {
-    analyticsManager.logEvent(createSocialActionEventData(timelineSocialActionData), CARD_ACTION,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  private Map<String, Object> createSocialActionEventData(
-      TimelineSocialActionData timelineSocialActionData) {
-    Map<String, Object> data = new HashMap<>();
-    data.put(CARD_TYPE, timelineSocialActionData.getCardType());
-    data.put(ACTION, timelineSocialActionData.getAction());
-    data.put(SOCIAL_ACTION, timelineSocialActionData.getSocialAction());
-    data.put(PACKAGE, timelineSocialActionData.getPackageName());
-    data.put(PUBLISHER, timelineSocialActionData.getPublisher());
-    data.put(TITLE, timelineSocialActionData.getTitle());
-    return data;
-  }
-
   private Map<String, Object> createMapData(String key, String value) {
     final Map<String, Object> data = new HashMap<>();
     data.put("alternative_flow", true);
