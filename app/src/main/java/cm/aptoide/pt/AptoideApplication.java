@@ -117,7 +117,6 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
-import com.mopub.common.SdkInitializationListener;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -359,7 +358,7 @@ public abstract class AptoideApplication extends Application {
 
   private void initializeMopub() {
     SdkConfiguration sdkConfiguration =
-        new SdkConfiguration.Builder(BuildConfig.MOPUB_HOME_BANNER_PLACEMENT_ID).build();
+        new SdkConfiguration.Builder(BuildConfig.MOPUB_HOME_BANNER_PLACEMENT_ID_T11).build();
     MoPub.initializeSdk(this, sdkConfiguration, () -> {
     });
   }
