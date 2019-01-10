@@ -298,6 +298,16 @@
             android:layout_marginTop="7dp"
             />
 
+        <com.mopub.mobileads.MoPubView
+            android:id="@+id/mopub_banner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="visible"
+            tools:background="@color/green"
+            tools:layout_height="20dp"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/screenshots_list"
             android:layout_width="match_parent"

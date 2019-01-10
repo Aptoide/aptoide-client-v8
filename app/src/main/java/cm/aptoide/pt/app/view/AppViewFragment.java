@@ -77,6 +77,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -106,6 +107,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
+import com.mopub.mobileads.MoPubView;
 import com.mopub.nativeads.MoPubNativeAdLoadedListener;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
@@ -260,7 +262,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private MoPubInterstitial moPubInterstitial;
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
   private MoPubRecyclerAdapter moPubDownloadRecyclerAdapter;
-
+  private MoPubView mopubBanner;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -323,6 +325,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     latestVersion = (TextView) view.findViewById(R.id.versions_layout)
         .findViewById(R.id.latest_version);
     otherVersions = (TextView) view.findViewById(R.id.other_versions);
+
+    mopubBanner = view.findViewById(R.id.mopub_banner);
+    configureMopubBanner();
 
     screenshots = (RecyclerView) view.findViewById(R.id.screenshots_list);
     screenshots.setLayoutManager(
@@ -520,6 +525,37 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build("AppViewFragment",
         getArguments().getString(BundleKeys.ORIGIN_TAG.name(), ""), StoreContext.meta.name());
+  }
+
+  private void configureMopubBanner() {
+    mopubBanner.setBannerAdListener(new MoPubView.BannerAdListener() {
+      @Override public void onBannerLoaded(MoPubView banner) {
+        Logger.getInstance()
+            .d("Mopub AppView", "Banner loaded");
+      }
+
+      @Override public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
+        Logger.getInstance()
+            .e("Mopub AppView", "Banner error : " + errorCode.toString());
+      }
+
+      @Override public void onBannerClicked(MoPubView banner) {
+        Logger.getInstance()
+            .d("Mopub AppView", "Banner clicked");
+      }
+
+      @Override public void onBannerExpanded(MoPubView banner) {
+        Logger.getInstance()
+            .d("Mopub AppView", "Banner expanded");
+      }
+
+      @Override public void onBannerCollapsed(MoPubView banner) {
+        Logger.getInstance()
+            .d("Mopub AppView", "Banner collapsed");
+      }
+    });
+    mopubBanner.setAdUnitId(BuildConfig.MOPUB_HOME_BANNER_PLACEMENT_ID_T11);
+    mopubBanner.loadAd();
   }
 
   @Override public void onDestroy() {
@@ -1010,37 +1046,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public synchronized void showFullScreenAd() {
-    fullScreenAdShown = true;
-    MoPubInterstitial ad =
-        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
-    ad.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
-      @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
-        appViewAnalytics.installInterstitialImpression("MoPub");
-        ad.show();
-      }
-
-      @Override
-      public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-        Log.i("Mopub_Interstitial", errorCode.toString());
-      }
-
-      @Override public void onInterstitialShown(MoPubInterstitial interstitial) {
-
-      }
-
-      @Override public void onInterstitialClicked(MoPubInterstitial interstitial) {
-        appViewAnalytics.installInterstitialClick("MoPub");
-      }
-
-      @Override public void onInterstitialDismissed(MoPubInterstitial interstitial) {
-
-      }
-    });
-    Handler handler = new Handler();
-    handler.postDelayed(() -> ad.load(), 1000);
-  }
-
   @Override public void showFlagVoteSubmittedMessage() {
     Toast.makeText(getContext(), R.string.vote_submitted, Toast.LENGTH_SHORT)
         .show();
@@ -1182,6 +1187,37 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     } else {
       donationsListEmptyState.setVisibility(View.VISIBLE);
     }
+  }
+
+  @Override public synchronized void showFullScreenAd() {
+    fullScreenAdShown = true;
+    MoPubInterstitial ad =
+        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
+    ad.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
+      @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
+        appViewAnalytics.installInterstitialImpression("MoPub");
+        ad.show();
+      }
+
+      @Override
+      public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
+        Log.i("Mopub_Interstitial", errorCode.toString());
+      }
+
+      @Override public void onInterstitialShown(MoPubInterstitial interstitial) {
+
+      }
+
+      @Override public void onInterstitialClicked(MoPubInterstitial interstitial) {
+        appViewAnalytics.installInterstitialClick("MoPub");
+      }
+
+      @Override public void onInterstitialDismissed(MoPubInterstitial interstitial) {
+
+      }
+    });
+    Handler handler = new Handler();
+    handler.postDelayed(() -> ad.load(), 1000);
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
