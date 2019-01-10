@@ -38,6 +38,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -55,6 +56,8 @@ import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubView;
 import com.mopub.nativeads.MoPubNativeAdLoadedListener;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
@@ -125,6 +128,7 @@ public class SearchResultFragment extends BackButtonFragment
   private BottomNavigationActivity bottomNavigationActivity;
 
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
+  private MoPubView mopubBanner;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -186,12 +190,44 @@ public class SearchResultFragment extends BackButtonFragment
         (Button) view.findViewById(R.id.fragment_search_result_followed_stores_button);
 
     searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
+    mopubBanner = view.findViewById(R.id.mopub_banner);
+    configureMopubBanner();
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
     noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+  }
+
+  private void configureMopubBanner() {
+    mopubBanner.setBannerAdListener(new MoPubView.BannerAdListener() {
+      @Override public void onBannerLoaded(MoPubView banner) {
+        Logger.getInstance()
+            .d("Mopub", "Banner loaded");
+      }
+
+      @Override public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
+        Logger.getInstance()
+            .e("Mopub", "Banner error : " + errorCode.toString());
+      }
+
+      @Override public void onBannerClicked(MoPubView banner) {
+        Logger.getInstance()
+            .d("Mopub", "Banner clicked");
+      }
+
+      @Override public void onBannerExpanded(MoPubView banner) {
+        Logger.getInstance()
+            .d("Mopub", "Banner expanded");
+      }
+
+      @Override public void onBannerCollapsed(MoPubView banner) {
+        Logger.getInstance()
+            .d("Mopub", "Banner collapsed");
+      }
+    });
+    mopubBanner.setAdUnitId(BuildConfig.MOPUB_HOME_BANNER_PLACEMENT_ID_T11);
   }
 
   @Override public void showFollowedStoresResult() {
@@ -271,6 +307,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void showNoResultsView() {
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
+    mopubBanner.setVisibility(View.GONE);
     allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
     followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
@@ -284,12 +321,15 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.VISIBLE);
+    mopubBanner.setVisibility(VISIBLE);
+    mopubBanner.loadAd();
   }
 
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
+    mopubBanner.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -493,11 +533,13 @@ public class SearchResultFragment extends BackButtonFragment
         .isEmpty()) {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
+      mopubBanner.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
+      mopubBanner.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
     }
@@ -506,6 +548,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void forceSuggestions() {
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
+    mopubBanner.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
   }
