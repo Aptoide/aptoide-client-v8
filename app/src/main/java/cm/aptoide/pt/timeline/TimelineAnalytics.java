@@ -44,25 +44,25 @@ public class TimelineAnalytics {
   }
 
   public void sendSocialCardPreviewActionEvent(String value) {
-    analyticsManager.logEvent(createMapData(ACTION, value), SOCIAL_CARD_PREVIEW,
-        AnalyticsManager.Action.CLICK, getViewName(true));
+    analyticsManager.logEvent(createMapData(value), SOCIAL_CARD_PREVIEW,
+        AnalyticsManager.Action.CLICK, getViewName());
   }
 
-  private Map<String, Object> createMapData(String key, String value) {
+  private Map<String, Object> createMapData(String value) {
     final Map<String, Object> data = new HashMap<>();
     data.put("alternative_flow", true);
-    data.put(key, value);
+    data.put(TimelineAnalytics.ACTION, value);
     return data;
   }
 
-  private String getViewName(boolean isCurrent) {
-    return navigationTracker.getViewName(isCurrent);
+  private String getViewName() {
+    return navigationTracker.getViewName(true);
   }
 
   public void sendRecommendedAppImpressionEvent(String packageName) {
     final Map<String, Object> data = new HashMap<>();
     data.put("type", "recommend app");
-    data.put("fragment", getViewName(true));
+    data.put("fragment", getViewName());
     data.put("package_name", packageName);
 
     analyticsManager.logEvent(data, MESSAGE_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
@@ -72,7 +72,7 @@ public class TimelineAnalytics {
   public void sendRecommendedAppInteractEvent(String packageName, String action) {
     final Map<String, Object> data = new HashMap<>();
     data.put("type", "recommend app");
-    data.put("fragment", getViewName(true));
+    data.put("fragment", getViewName());
     data.put("package_name", packageName);
     data.put("action", action);
     data.put("alternative_flow", true);
