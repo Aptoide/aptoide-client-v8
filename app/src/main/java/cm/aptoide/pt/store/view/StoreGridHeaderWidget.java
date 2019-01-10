@@ -35,11 +35,10 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
     final boolean moreIsVisible = wsWidget.hasActions();
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    final String marketName = application.getMarketName();
+    final String marketName = displayable.getMarketName();
     final SharedPreferences sharedPreferences = application.getDefaultSharedPreferences();
     title.setText(Translator.translate(wsWidget.getTitle(), getContext().getApplicationContext(),
         marketName));
-
     StoreGridHeaderDisplayable.Model model = displayable.getModel();
     more.setTextColor(getContext().getResources()
         .getColor(StoreTheme.get(model.getStoreTheme())

@@ -26,11 +26,14 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.DisplayableManager;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 
 /**
@@ -48,7 +51,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
   protected StoreContext storeContext;
-  private String marketName;
+  @Inject @Named("marketName") String marketName;
 
   public static Fragment newInstance(Event event, String storeTheme, String tag,
       StoreContext storeContext) {
@@ -104,7 +107,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    marketName = application.getMarketName();
+    ((MainActivity) getContext()).getActivityComponent()
+        .inject(this);
     storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);

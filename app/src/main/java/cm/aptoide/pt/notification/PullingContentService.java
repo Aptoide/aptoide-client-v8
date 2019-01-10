@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +12,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -28,6 +28,8 @@ import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -35,8 +37,9 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by trinkes on 7/13/16.
  */
-public class PullingContentService extends Service {
+public class PullingContentService extends BaseService {
 
+  @Inject @Named("marketName") String marketName;
   public static final String PUSH_NOTIFICATIONS_ACTION = "PUSH_NOTIFICATIONS_ACTION";
   public static final String UPDATES_ACTION = "UPDATES_ACTION";
   public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
@@ -47,7 +50,6 @@ public class PullingContentService extends Service {
   private InstallManager installManager;
   private UpdateRepository updateRepository;
   private SharedPreferences sharedPreferences;
-  private String marketName;
   private NotificationAnalytics notificationAnalytics;
 
   public void setAlarm(AlarmManager am, Context context, String action, long time) {
@@ -60,13 +62,12 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
+    getApplicationComponent().inject(this);
     application = (AptoideApplication) getApplicationContext();
-    marketName = application.getMarketName();
     sharedPreferences = application.getDefaultSharedPreferences();
-    updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager = application.getInstallManager();
+    updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     notificationAnalytics = application.getNotificationAnalytics();
-
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -149,7 +150,8 @@ public class PullingContentService extends Service {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
                     downloadList.add(new DownloadFactory(marketName,
-                        new DownloadApkPathsProvider(new OemidProvider()), application.getCachePath()).create(update));
+                        new DownloadApkPathsProvider(new OemidProvider()),
+                        application.getCachePath()).create(update));
                   }
                   return downloadList;
                 })

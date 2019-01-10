@@ -56,11 +56,14 @@ import cm.aptoide.pt.util.SettingsConstants;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.rx.RxPreference;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -76,6 +79,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     implements SharedPreferences.OnSharedPreferenceChangeListener, NotBottomNavigationView {
   private static final String TAG = SettingsFragment.class.getSimpleName();
 
+  @Inject @Named("marketName") String marketName;
   private static final String ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "Maturepin";
   private static final String REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "removeMaturepin";
   private static final String ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY = "matureChkBoxWithPin";
@@ -110,7 +114,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
-  private String marketName;
   private UpdateRepository repository;
   private AdultContentAnalytics adultContentAnalytics;
   private FragmentNavigator fragmentNavigator;
@@ -123,9 +126,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ((MainActivity) getContext()).getActivityComponent()
+        .inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    marketName = application.getMarketName();
     trackAnalytics = true;
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();

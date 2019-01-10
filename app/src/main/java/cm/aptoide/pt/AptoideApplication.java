@@ -424,8 +424,6 @@ public abstract class AptoideApplication extends Application {
 
   public abstract String getDefaultStoreName();
 
-  public abstract String getMarketName();
-
   public abstract String getFeedbackEmail();
 
   public abstract String getImageCachePath();
