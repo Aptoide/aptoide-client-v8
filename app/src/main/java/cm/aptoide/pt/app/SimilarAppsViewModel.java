@@ -2,8 +2,8 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.ApplicationAdError;
-import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.AppsList;
+import cm.aptoide.pt.view.app.AptoideApp;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,13 +14,13 @@ import java.util.List;
 public class SimilarAppsViewModel {
 
   private final ApplicationAd ad;
-  private final List<Application> recommendedApps;
+  private final List<AptoideApp> recommendedApps;
   private final boolean loading;
   private final AppsList.Error recommendedAppsError;
   private final ApplicationAdError adError;
   private boolean hasRecordedAdImpression;
 
-  public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
+  public SimilarAppsViewModel(ApplicationAd ad, List<AptoideApp> recommendedApps, boolean loading,
       AppsList.Error recommendedAppsError, ApplicationAdError adResultError) {
     this.ad = ad;
     this.recommendedApps = recommendedApps;
@@ -42,7 +42,7 @@ public class SimilarAppsViewModel {
     return ad;
   }
 
-  public List<Application> getRecommendedApps() {
+  public List<AptoideApp> getRecommendedApps() {
     return recommendedApps;
   }
 

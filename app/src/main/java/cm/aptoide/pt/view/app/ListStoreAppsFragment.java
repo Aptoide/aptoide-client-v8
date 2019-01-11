@@ -44,7 +44,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   @Inject AppCenter appCenter;
   private ListStoreAppsAdapter adapter;
   private long storeId;
-  private PublishSubject<Application> appClicks;
+  private PublishSubject<AptoideApp> appClicks;
   private PublishSubject<Void> refreshEvent;
   private RecyclerView recyclerView;
   private GridLayoutManager layoutManager;
@@ -154,12 +154,12 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     }
   }
 
-  @Override public void addApps(List<Application> appsList) {
+  @Override public void addApps(List<AptoideApp> appsList) {
     adapter.addApps(appsList);
     showApps();
   }
 
-  @Override public Observable<Application> getAppClick() {
+  @Override public Observable<AptoideApp> getAppClick() {
     return appClicks;
   }
 
@@ -186,7 +186,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     swipeRefreshLayout.setRefreshing(false);
   }
 
-  @Override public void setApps(List<Application> applications) {
+  @Override public void setApps(List<AptoideApp> applications) {
     adapter.setApps(applications);
     if (listState != null) {
       layoutManager.onRestoreInstanceState(listState);

@@ -7,8 +7,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;
+import cm.aptoide.pt.home.RewardApp;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.view.app.Application;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -36,7 +36,7 @@ public class GridAppCoinsRewardAppsWidget extends Widget<GridAppCoinsRewardAppsD
   }
 
   @Override public void bindView(GridAppCoinsRewardAppsDisplayable displayable) {
-    Application app = displayable.getPojo();
+    RewardApp app = displayable.getPojo();
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
     appName.setText(app.getName());

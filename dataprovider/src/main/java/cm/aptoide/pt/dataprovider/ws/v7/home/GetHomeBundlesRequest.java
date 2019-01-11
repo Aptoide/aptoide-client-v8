@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
+import cm.aptoide.pt.dataprovider.ws.v8.CampaignsServiceProvider;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -41,6 +42,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final List<String> packageNames;
+  private final CampaignsServiceProvider campaignsService;
   private boolean bypassServerCache;
 
   private GetHomeBundlesRequest(Body body, OkHttpClient httpClient,
@@ -50,7 +52,8 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames,
+      CampaignsServiceProvider campaignsService) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.widgetsUtils = widgetsUtils;
@@ -66,6 +69,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
     this.connectivityManager = connectivityManager;
     this.versionCodeProvider = versionCodeProvider;
     this.packageNames = packageNames;
+    this.campaignsService = campaignsService;
   }
 
   public static GetHomeBundlesRequest of(int limit, int offset, OkHttpClient httpClient,
@@ -75,12 +79,14 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames,
+      CampaignsServiceProvider campaignsService) {
     return new GetHomeBundlesRequest(
         new Body(limit, offset, WidgetsArgs.createDefault(resources, windowManager)), httpClient,
         converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
         storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-        filters, resources, windowManager, connectivityManager, versionCodeProvider, packageNames);
+        filters, resources, windowManager, connectivityManager, versionCodeProvider, packageNames,
+        campaignsService);
   }
 
   private Observable<List<GetStoreWidgets.WSWidget>> loadAppsInBundles(
@@ -93,7 +99,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
             connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames))
+            Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames, campaignsService))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())

@@ -3,8 +3,8 @@ package cm.aptoide.pt.apps;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.app.AppCenter;
-import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.AppsList;
+import cm.aptoide.pt.view.app.AptoideApp;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.app.ListStoreAppsPresenter;
@@ -52,11 +52,11 @@ public class ListStoreAppsPresenterTest {
 
     lifecycleEvent = PublishSubject.create();
 
-    ArrayList<Application> apps = new ArrayList<>();
+    ArrayList<AptoideApp> apps = new ArrayList<>();
     apps.add(
-        new Application("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10, "", false, false));
+        new AptoideApp("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10, "", false, false));
     apps.add(
-        new Application("Fit2Gather", "", (float) 5, 100, "com.fijuro.fit2gather", 357, "", false,
+        new AptoideApp("Fit2Gather", "", (float) 5, 100, "com.fijuro.fit2gather", 357, "", false,
             false));
     appsModel = new AppsList(apps, false, LIMIT_APPS_TEST);
     appsModelWithGenericError = new AppsList(AppsList.Error.GENERIC);
@@ -128,9 +128,9 @@ public class ListStoreAppsPresenterTest {
     //Given an initialized ListStoreAppsPresenter with a STORE_ID and a limit of apps
     //When onCreate lifecycle call event happens
 
-    PublishSubject<Application> appClickEvent = PublishSubject.create();
-    Application aptoide =
-        new Application("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10, "", false, false);
+    PublishSubject<AptoideApp> appClickEvent = PublishSubject.create();
+    AptoideApp aptoide =
+        new AptoideApp("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10, "", false, false);
 
     when(view.getAppClick()).thenReturn(appClickEvent);
 

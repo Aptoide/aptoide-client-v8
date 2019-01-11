@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.ads.data.ApplicationAd;
-import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 
 /**
  * Created by franciscocalado on 11/05/18.
@@ -9,15 +9,15 @@ import cm.aptoide.pt.view.app.Application;
 
 public class AppViewSimilarApp {
 
-  private Application app;
+  private AptoideApp app;
   private ApplicationAd ad;
 
-  public AppViewSimilarApp(Application app, ApplicationAd ad) {
+  public AppViewSimilarApp(AptoideApp app, ApplicationAd ad) {
     this.app = app;
     this.ad = ad;
   }
 
-  public Application getApp() {
+  public AptoideApp getApp() {
     return app;
   }
 

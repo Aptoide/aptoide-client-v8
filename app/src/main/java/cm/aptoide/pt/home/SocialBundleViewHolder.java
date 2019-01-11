@@ -7,7 +7,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -48,8 +48,8 @@ class SocialBundleViewHolder extends AppBundleViewHolder {
           .getName() + " is getting a non SocialBundle instance!");
     }
     SocialBundle bundle = (SocialBundle) homeBundle;
-    List<Application> apps = (List<Application>) homeBundle.getContent();
-    Application app;
+    List<AptoideApp> apps = (List<AptoideApp>) homeBundle.getContent();
+    AptoideApp app;
 
     if (apps != null && !apps.isEmpty()) {
       app = apps.get(0);

@@ -10,6 +10,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -233,12 +234,16 @@ public class HomePresenter implements Presenter {
               if (click.getBundle()
                   .getType()
                   .equals(EDITORS)) {
-                homeNavigator.navigateWithEditorsPosition(click.getApp()
-                    .getAppId(), click.getApp()
-                    .getPackageName(), "", "", click.getApp()
-                    .getTag(), String.valueOf(click.getAppPosition()));
+                AptoideApp aptoideApp = (AptoideApp) app;
+                homeNavigator.navigateWithEditorsPosition(aptoideApp.getAppId(),
+                    aptoideApp.getPackageName(), "", "", aptoideApp.getTag(),
+                    String.valueOf(click.getAppPosition()));
+              } else if (app instanceof RewardApp) {
+                view.showRewardAppSnack();
               } else {
-                homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
+                AptoideApp aptoideApp = (AptoideApp) app;
+                homeNavigator.navigateToAppView(aptoideApp.getAppId(), aptoideApp.getPackageName(),
+                    aptoideApp.getTag());
               }
             })
             .retry())
@@ -254,10 +259,11 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.recommendedAppClicked()
             .observeOn(viewScheduler)
-            .doOnNext(click -> homeNavigator.navigateToRecommendsAppView(click.getApp()
-                .getAppId(), click.getApp()
-                .getPackageName(), click.getApp()
-                .getTag(), click.getType()))
+            .doOnNext(click -> {
+              AptoideApp app = (AptoideApp) click.getApp();
+              homeNavigator.navigateToRecommendsAppView(app.getAppId(), app.getPackageName(),
+                  app.getTag(), click.getType());
+            })
             .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
                 .getRating(), click.getApp()
                 .getPackageName(), click.getBundlePosition(), click.getBundle()

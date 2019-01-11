@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.ads.CampaignsService;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.request.RequestFactory;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -28,6 +30,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
 
   protected RequestFactory requestFactoryCdnPool;
   protected RequestFactory requestFactoryCdnWeb;
+  @Inject CampaignsService campaignsService;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7Pool =
@@ -53,7 +56,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         application.getVersionCodeProvider(),
-        AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+        AdNetworkUtils.isGooglePlayServicesAvailable(getContext()), campaignsService);
 
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7Web =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorWebV7();
@@ -73,7 +76,7 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         application.getVersionCodeProvider(),
-        AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+        AdNetworkUtils.isGooglePlayServicesAvailable(getContext()), campaignsService);
 
     super.onCreate(savedInstanceState);
   }

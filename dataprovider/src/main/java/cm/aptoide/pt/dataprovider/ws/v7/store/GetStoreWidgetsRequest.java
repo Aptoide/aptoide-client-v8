@@ -20,6 +20,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
+import cm.aptoide.pt.dataprovider.ws.v8.CampaignsServiceProvider;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -46,6 +47,7 @@ public class GetStoreWidgetsRequest
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final SharedPreferences sharedPreferences;
   private final WSWidgetsUtils widgetsUtils;
+  private final CampaignsServiceProvider campaignsServiceProvider;
   private boolean bypassServerCache;
 
   public GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
@@ -55,7 +57,8 @@ public class GetStoreWidgetsRequest
       boolean isGooglePlayServicesAvailable, String partnerId, boolean accountMature,
       String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, WSWidgetsUtils widgetsUtils) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, WSWidgetsUtils widgetsUtils,
+      CampaignsServiceProvider campaignsServiceProvider) {
     super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
     this.url = url;
     this.storeCredentials = storeCredentials;
@@ -70,6 +73,7 @@ public class GetStoreWidgetsRequest
     this.versionCodeProvider = versionCodeProvider;
     this.sharedPreferences = sharedPreferences;
     this.widgetsUtils = widgetsUtils;
+    this.campaignsServiceProvider = campaignsServiceProvider;
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -78,7 +82,8 @@ public class GetStoreWidgetsRequest
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      CampaignsServiceProvider campaignsServiceProvider) {
 
     final Body body =
         new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
@@ -87,7 +92,7 @@ public class GetStoreWidgetsRequest
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, accountMature, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils());
+        versionCodeProvider, new WSWidgetsUtils(), campaignsServiceProvider);
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -97,7 +102,7 @@ public class GetStoreWidgetsRequest
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, String storeName,
-      StoreContext storeContext) {
+      StoreContext storeContext, CampaignsServiceProvider campaignsServiceProvider) {
 
     final Body body =
         new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager),
@@ -107,7 +112,7 @@ public class GetStoreWidgetsRequest
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, accountMature, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils());
+        versionCodeProvider, new WSWidgetsUtils(), campaignsServiceProvider);
   }
 
   public String getUrl() {
@@ -137,7 +142,8 @@ public class GetStoreWidgetsRequest
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
             connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList()))
+            Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList(),
+            campaignsServiceProvider))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())

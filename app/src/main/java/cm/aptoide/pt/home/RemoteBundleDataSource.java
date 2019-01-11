@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.ads.CampaignsService;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -35,6 +36,7 @@ import rx.Single;
  */
 
 public class RemoteBundleDataSource implements BundleDataSource {
+  private final CampaignsService campaignsService;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient okHttpClient;
   private final Converter.Factory converterFactory;
@@ -68,7 +70,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       AptoideAccountManager accountManager, String filters, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
-      int latestPackagesCount, int randomPackagesCount) {
+      int latestPackagesCount, int randomPackagesCount, CampaignsService campaignsService) {
     this.limit = limit;
     this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
@@ -91,6 +93,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.packageRepository = packageRepository;
     this.latestPackagesCount = latestPackagesCount;
     this.randomPackagesCount = randomPackagesCount;
+    this.campaignsService = campaignsService;
     loading = new HashMap<>();
   }
 
@@ -110,7 +113,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
             bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
             storeCredentialsProvider.fromUrl(""), clientUniqueId, isGooglePlayServicesAvailable,
             partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
-            versionCodeProvider, packageNames)
+            versionCodeProvider, packageNames, campaignsService)
             .observe(invalidateHttpCache, false)
             .doOnSubscribe(() -> loading.put(key, true))
             .doOnUnsubscribe(() -> loading.put(key, false))
@@ -135,7 +138,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
         .get(), body, bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils());
+        versionCodeProvider, new WSWidgetsUtils(), campaignsService);
   }
 
   private Single<List<String>> getPackages() {

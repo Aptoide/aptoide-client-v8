@@ -63,6 +63,7 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.CampaignsService;
 import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
@@ -1022,9 +1023,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, @Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      InstallManager installManager) {
-    return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
-        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
+      InstallManager installManager, CampaignsService campaignsService) {
+    return new RewardAppCoinsAppsRepository(installManager, campaignsService);
   }
 
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
@@ -1160,6 +1160,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         + BuildConfig.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST;
   }
 
+  @Singleton @Provides @Named("api-bds-base-host") String providesApiBdsBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_API_BDS_HOST;
+  }
+
   @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
       @Named("ab-testing-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
@@ -1184,6 +1192,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
       @Named("apichain-bds-base-host") String baseHost) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("retrofit-api-bds") Retrofit providesApiBDSRetrofit(
+      @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
+      @Named("api-bds-base-host") String baseHost) {
     return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
         .addCallAdapterFactory(rxCallAdapterFactory)
@@ -1226,6 +1245,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(CaptchaService.ServiceInterface.class);
   }
 
+  @Singleton @Provides CampaignsService.CampaignsServiceV8 providesCampaingsServiceInterface(
+      @Named("retrofit-api-bds") Retrofit retrofit) {
+    return retrofit.create(CampaignsService.CampaignsServiceV8.class);
+  }
+
   @Singleton @Provides PromotionsService providesPromotionsService(@Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
@@ -1237,6 +1261,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides CaptchaService providesCaptchaService(
       CaptchaService.ServiceInterface service, IdsRepository idsRepository) {
     return new CaptchaService(service, idsRepository);
+  }
+
+  @Singleton @Provides CampaignsService providesCampaignsService(
+      CampaignsService.CampaignsServiceV8 service) {
+    return new CampaignsService(service);
   }
 
   @Singleton @Provides WalletService.ServiceV7 providesWalletServiceV8(
@@ -1434,7 +1463,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PackageRepository packageRepository, Database database, IdsRepository idsRepository,
       QManager qManager, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
+      CampaignsService campaignsService) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
@@ -1443,7 +1473,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
-        10, 10);
+        10, 10, campaignsService);
   }
 
   @Singleton @Provides BundlesRepository providesBundleRepository(

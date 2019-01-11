@@ -12,10 +12,10 @@ import rx.subjects.PublishSubject;
  */
 
 class ListStoreAppsAdapter extends RecyclerView.Adapter<ListStoreAppViewHolder> {
-  private final PublishSubject<Application> appClicks;
-  private List<Application> list;
+  private final PublishSubject<AptoideApp> appClicks;
+  private List<AptoideApp> list;
 
-  public ListStoreAppsAdapter(List<Application> list, PublishSubject<Application> appClicks) {
+  public ListStoreAppsAdapter(List<AptoideApp> list, PublishSubject<AptoideApp> appClicks) {
     this.list = list;
     this.appClicks = appClicks;
   }
@@ -35,7 +35,7 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<ListStoreAppViewHolder> 
   }
 
   @Override public int getItemViewType(int position) {
-    Application application = list.get(position);
+    AptoideApp application = list.get(position);
     if (application instanceof AppLoading) {
       return R.layout.search_ad_loading_list_item;
     } else {
@@ -47,7 +47,7 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<ListStoreAppViewHolder> 
     return list.size();
   }
 
-  public void addApps(List<Application> applicationList) {
+  public void addApps(List<AptoideApp> applicationList) {
     int loadingPosition = getLoadingPosition();
     int firstInsertedIndex;
     if (loadingPosition >= 0) {
@@ -77,7 +77,7 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<ListStoreAppViewHolder> 
 
   public int getLoadingPosition() {
     for (int i = list.size() - 1; i >= 0; i--) {
-      Application application = list.get(i);
+      AptoideApp application = list.get(i);
       if (application instanceof AppLoading) {
         return i;
       }
@@ -85,11 +85,11 @@ class ListStoreAppsAdapter extends RecyclerView.Adapter<ListStoreAppViewHolder> 
     return -1;
   }
 
-  public Application getItem(int position) {
+  public AptoideApp getItem(int position) {
     return list.get(position);
   }
 
-  public void setApps(List<Application> apps) {
+  public void setApps(List<AptoideApp> apps) {
     this.list = apps;
     notifyDataSetChanged();
   }

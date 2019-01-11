@@ -1,12 +1,11 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.CampaignsServiceResponse;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
-import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
-import cm.aptoide.pt.dataprovider.model.v7.ListAppCoinsCampaigns;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -19,6 +18,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,7 +73,7 @@ public class BundlesResponseMapper {
               .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
           List<Application> applicationList =
-              map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
+              map(((CampaignsServiceResponse) viewObject).getCampaigns(), widgetTag);
           if (!applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
@@ -197,7 +197,7 @@ public class BundlesResponseMapper {
               appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising()));
         } else {
           AppCoinsInfo appc = app.getAppcoins();
-          applications.add(new Application(app.getName(), app.getIcon(), app.getStats()
+          applications.add(new AptoideApp(app.getName(), app.getIcon(), app.getStats()
               .getRating()
               .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), tag,
@@ -214,18 +214,14 @@ public class BundlesResponseMapper {
     return applications;
   }
 
-  private List<Application> map(List<AppCoinsCampaign> appsList, String tag) {
+  private List<Application> map(List<CampaignsServiceResponse.Campaign> appsList, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
-    for (AppCoinsCampaign campaign : appsList) {
-      App app = campaign.getApp();
-      if (!installManager.wasAppEverInstalled(app.getPackageName())) {
-        rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
-            .getRating()
-            .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), tag,
-            app.getAppcoins() != null && app.getAppcoins()
-                .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
-            .hasAdvertising()));
+    for (CampaignsServiceResponse.Campaign campaign : appsList) {
+      if (!installManager.wasAppEverInstalled(campaign.getPackageName())) {
+        rewardAppsList.add(
+            new RewardApp(campaign.getLabel(), campaign.getIcon(), campaign.getAverageRating(),
+                campaign.getDownloads(), campaign.getPackageName(), campaign.getUid(), tag, true,
+                true, campaign.getClickUrl(), campaign.getDownloadUrl()));
       }
     }
     return rewardAppsList;

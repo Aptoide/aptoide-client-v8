@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,11 +43,11 @@ public class FakeBundleDataSource implements BundleDataSource {
   public List<HomeBundle> getFakeBundles() {
     List<Application> appsList = new ArrayList<>();
     String icon = "https://placeimg.com/640/480/any";
-    Application aptoide =
-        new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, "", false, false);
+    AptoideApp aptoide =
+        new AptoideApp("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, "", false, false);
     appsList.add(aptoide);
-    Application facebook =
-        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30, "", false,
+    AptoideApp facebook =
+        new AptoideApp("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30, "", false,
             false);
     appsList.add(facebook);
     appsList.add(aptoide);
@@ -88,7 +89,7 @@ public class FakeBundleDataSource implements BundleDataSource {
     appBundles.add(
         new AdBundle("Highlighted", new AdsTagWrapper(Collections.emptyList(), ""), null, ""));
     List<Application> apps = new ArrayList<>();
-    apps.add(new Application("asf wallet",
+    apps.add(new AptoideApp("asf wallet",
         "http://pool.img.aptoide.com/asf-store/ace60f6352f6dd9289843b5b0b2ab3d4_icon.png", 5,
         1000000, "asf.wallet.android.com", 36057221, "", false, false));
     appBundles.add(new SocialBundle(apps, HomeBundle.BundleType.SOCIAL, null, "TAG",

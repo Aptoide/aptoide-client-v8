@@ -2,8 +2,8 @@ package cm.aptoide.pt.apps;
 
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
-import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.AppsList;
+import cm.aptoide.pt.view.app.AptoideApp;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,10 +39,10 @@ public class AppCenterRepositoryTest {
   @Mock private AppsList serviceApps;
 
   private AppCenterRepository appCenterRepository;
-  private List<Application> apps;
-  private List<Application> serviceAppsList;
-  private AbstractMap.SimpleEntry<Integer, List<Application>> pair;
-  private Map<Long, AbstractMap.SimpleEntry<Integer, List<Application>>> cachedStoreApplications;
+  private List<AptoideApp> apps;
+  private List<AptoideApp> serviceAppsList;
+  private AbstractMap.SimpleEntry<Integer, List<AptoideApp>> pair;
+  private Map<Long, AbstractMap.SimpleEntry<Integer, List<AptoideApp>>> cachedStoreApplications;
 
   @Before public void setupAppCenterRepository() {
     MockitoAnnotations.initMocks(this);
@@ -163,10 +163,10 @@ public class AppCenterRepositoryTest {
     //"TODO. No case found where AppsLeft == 0");
   }
 
-  private List<Application> getAppsList() {
-    List<Application> appslist = new ArrayList<>();
+  private List<AptoideApp> getAppsList() {
+    List<AptoideApp> appslist = new ArrayList<>();
     for (int i = 0; i < LISTSIZE; i++) {
-      appslist.add(new Application(Integer.toString(i), "", i, i, "", i, "", false, false));
+      appslist.add(new AptoideApp(Integer.toString(i), "", i, i, "", i, "", false, false));
     }
     return appslist;
   }

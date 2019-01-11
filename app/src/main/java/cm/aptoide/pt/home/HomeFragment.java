@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -386,6 +387,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void hidePromotionsIcon() {
     promotionsIcon.setVisibility(View.GONE);
     promotionsTicker.setVisibility(View.GONE);
+  }
+
+  @Override public void showRewardAppSnack() {
+    Snackbar.make(this.getView(), "Reward app clicked!", Snackbar.LENGTH_LONG);
   }
 
   private boolean isEndReached() {

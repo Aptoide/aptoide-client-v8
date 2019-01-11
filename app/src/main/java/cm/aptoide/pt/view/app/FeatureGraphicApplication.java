@@ -4,7 +4,7 @@ package cm.aptoide.pt.view.app;
  * Created by jdandrade on 08/03/2018.
  */
 
-public class FeatureGraphicApplication extends Application {
+public class FeatureGraphicApplication extends AptoideApp {
 
   private final String featureGraphic;
 

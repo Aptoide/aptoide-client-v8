@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
+import cm.aptoide.pt.dataprovider.ws.v8.CampaignsServiceProvider;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -34,13 +35,15 @@ public class GetUserRequestFactory {
   private final String filters;
   private final ConnectivityManager systemService;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final CampaignsServiceProvider campaignsServiceProvider;
 
   public GetUserRequestFactory(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       StoreCredentialsProvider storeCredentialsProvider, String clientUniqueId, String partnerId,
       AptoideAccountManager accountManager, String filters, ConnectivityManager systemService,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      CampaignsServiceProvider campaignsServiceProvider) {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -55,6 +58,7 @@ public class GetUserRequestFactory {
     this.filters = filters;
     this.systemService = systemService;
     this.versionCodeProvider = versionCodeProvider;
+    this.campaignsServiceProvider = campaignsServiceProvider;
   }
 
   public GetUserRequest newGetUser(String url, boolean googlePlayServicesAvailable) {
@@ -68,6 +72,6 @@ public class GetUserRequestFactory {
     return GetUserRequest.of(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
         clientUniqueId, googlePlayServicesAvailable, partnerId, adultContentEnabled, filters,
-        systemService, versionCodeProvider);
+        systemService, versionCodeProvider, campaignsServiceProvider);
   }
 }

@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -17,11 +17,11 @@ import rx.subjects.PublishSubject;
 class EditorsAppsAdapter extends RecyclerView.Adapter<FeatureGraphicInBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> appClickedEvents;
-  private List<Application> apps;
+  private List<AptoideApp> apps;
   private HomeBundle homeBundle;
   private int bundlePosition;
 
-  public EditorsAppsAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter,
+  public EditorsAppsAdapter(List<AptoideApp> apps, DecimalFormat oneDecimalFormatter,
       PublishSubject<HomeEvent> appClickedEvents) {
     this.apps = apps;
     this.oneDecimalFormatter = oneDecimalFormatter;
@@ -47,7 +47,7 @@ class EditorsAppsAdapter extends RecyclerView.Adapter<FeatureGraphicInBundleView
     return apps.size();
   }
 
-  public void update(List<Application> apps) {
+  public void update(List<AptoideApp> apps) {
     this.apps = apps;
     notifyDataSetChanged();
   }

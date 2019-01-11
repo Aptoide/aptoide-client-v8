@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
+import cm.aptoide.pt.dataprovider.ws.v8.CampaignsServiceProvider;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -41,6 +42,7 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   private final WindowManager windowManager;
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final CampaignsServiceProvider campaignsServiceProvider;
   private String url;
   private boolean bypassServerCache;
 
@@ -51,7 +53,8 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
       boolean isGooglePlayServicesAvailable, String partnerId, boolean accountMature,
       String filters, SharedPreferences sharedPreferences1, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      CampaignsServiceProvider campaignsServiceProvider) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.url = url;
@@ -68,6 +71,7 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
     this.windowManager = windowManager;
     this.connectivityManager = connectivityManager;
     this.versionCodeProvider = versionCodeProvider;
+    this.campaignsServiceProvider = campaignsServiceProvider;
   }
 
   public static GetUserRequest of(String url,
@@ -77,14 +81,15 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      CampaignsServiceProvider campaignsServiceProvider) {
     final GetUserRequest.Body body =
         new GetUserRequest.Body(WidgetsArgs.createDefault(resources, windowManager));
     return new GetUserRequest(new V7Url(url).remove("user/get")
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, accountMature, filters, sharedPreferences, resources, windowManager,
-        connectivityManager, versionCodeProvider);
+        connectivityManager, versionCodeProvider, campaignsServiceProvider);
   }
 
   @Override
@@ -112,7 +117,8 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
               ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
               tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
               versionCodeProvider, bypassServerCache,
-              Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList());
+              Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList(),
+              campaignsServiceProvider);
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getNodes()
