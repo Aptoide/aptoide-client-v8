@@ -246,7 +246,6 @@ android {
         project.ANALYTICS_SESSION_INTERVAL_IN_MILLIS
     variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
         "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
-    variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.APTOIDE_THEME + "\""
     variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_API_BDS_HOST",
         "\"" + project.APTOIDE_WEB_SERVICES_API_BDS_HOST + "\""
 
