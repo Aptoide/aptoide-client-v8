@@ -54,10 +54,6 @@ public class VanillaApplication extends NotificationApplicationView {
     return BuildConfig.APPLICATION_ID;
   }
 
-  @Override public String getAutoUpdateUrl() {
-    return "http://imgs.aptoide.com/latest_version_v8.xml";
-  }
-
   @Override public String getPartnerId() {
     return null;
   }

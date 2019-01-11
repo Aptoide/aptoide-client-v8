@@ -5,7 +5,12 @@
 
 package cm.aptoide.pt.view;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
@@ -16,6 +21,7 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
@@ -25,19 +31,25 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxrelay.PublishRelay;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class MainActivity extends BottomNavigationActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
   @Inject Presenter presenter;
   @Inject IronSourceAdRepository ironSourceAdRepository;
+  @Inject Resources resources;
+  @Inject @Named("marketName") String marketName;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
   private Snackbar snackbar;
   private View updatesBadge;
   private TextView updatesNumber;
+  private ProgressDialog autoUpdateDialog;
+  private PublishSubject<PermissionService> autoUpdateDialogSubject;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -46,12 +58,23 @@ public class MainActivity extends BottomNavigationActivity
     installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
-
+    autoUpdateDialogSubject = PublishSubject.create();
     ironSourceAdRepository.initialize();
 
     setupUpdatesNotification();
 
     attachPresenter(presenter);
+  }
+
+  @Override protected void onDestroy() {
+    autoUpdateDialogSubject = null;
+    autoUpdateDialog = null;
+    installErrorsDismissEvent = null;
+    installManager = null;
+    updatesBadge = null;
+    snackBarLayout = null;
+    snackbar = null;
+    super.onDestroy();
   }
 
   private void setupUpdatesNotification() {
@@ -117,6 +140,45 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override public void hideUpdatesBadge() {
     updatesBadge.setVisibility(View.GONE);
+  }
+
+  @Override public Observable<PermissionService> autoUpdateDialogCreated() {
+    return autoUpdateDialogSubject;
+  }
+
+  @Override public void requestAutoUpdate() {
+    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+    final AlertDialog updateSelfDialog = dialogBuilder.create();
+    updateSelfDialog.setTitle(getText(R.string.update_self_title));
+    updateSelfDialog.setIcon(R.mipmap.ic_launcher);
+    updateSelfDialog.setMessage(
+        AptoideUtils.StringU.getFormattedString(R.string.update_self_msg, resources, marketName));
+    updateSelfDialog.setCancelable(false);
+    updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
+        (arg0, arg1) -> {
+          autoUpdateDialog = new ProgressDialog(this);
+          autoUpdateDialog.setMessage(getString(R.string.retrieving_update));
+          autoUpdateDialog.show();
+          autoUpdateDialogSubject.onNext(this);
+        });
+    updateSelfDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no),
+        (dialog, arg1) -> {
+          dialog.dismiss();
+        });
+    if (is_resumed()) {
+      updateSelfDialog.show();
+    }
+  }
+
+  @Override public void showUnknownErrorMessage() {
+    Snackbar.make(findViewById(android.R.id.content), R.string.unknown_error, Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public void dismissAutoUpdateDialog() {
+    if (autoUpdateDialog != null && autoUpdateDialog.isShowing()) {
+      autoUpdateDialog.dismiss();
+    }
   }
 
   @Override public void showStoreAlreadyAdded() {
