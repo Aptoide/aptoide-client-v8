@@ -6,6 +6,7 @@ import cm.aptoide.pt.download.AppValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,6 +19,7 @@ public class AppValidatorTest {
   private Obb invalidObbPatch;
 
   @Before public void setupAppValidator() {
+    MockitoAnnotations.initMocks(this);
     appValidator = new AppValidator(appValidationAnalytics);
     validObb = configureValidObb();
     invalidObbMain = configureInvalidObbMain();
