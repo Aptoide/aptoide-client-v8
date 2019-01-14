@@ -1,6 +1,5 @@
 package cm.aptoide.pt.download;
 
-import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 
 public class AppValidator {
@@ -14,25 +13,29 @@ public class AppValidator {
   public AppValidationResult validateApp(String md5, Obb appObb, String packageName, String appName,
       String filePath, String filePathAlt) {
     AppValidationResult result = AppValidationResult.VALID_APP;
-    if (TextUtils.isEmpty(md5)) {
+    if (isStringEmptyOrNull(md5)) {
       result = AppValidationResult.INVALID_MD5;
     }
-    if (TextUtils.isEmpty(filePath)) {
+    if (isStringEmptyOrNull(filePath)) {
       result = AppValidationResult.NO_MAIN_DOWNLOAD_LINK;
-    } else if (TextUtils.isEmpty(filePathAlt)) {
+    } else if (isStringEmptyOrNull(filePathAlt)) {
       result = AppValidationResult.NO_ALTERNATIVE_DOWNLOAD_LINK;
-    } else if (appObb != null && appObb.getMain() != null && TextUtils.isEmpty(appObb.getMain()
+    } else if (appObb != null && appObb.getMain() != null && isStringEmptyOrNull(appObb.getMain()
         .getPath())) {
       result = AppValidationResult.NO_MAIN_OBB_DOWNLOAD_LINK;
-    } else if (appObb != null && appObb.getPatch() != null && TextUtils.isEmpty(appObb.getPatch()
+    } else if (appObb != null && appObb.getPatch() != null && isStringEmptyOrNull(appObb.getPatch()
         .getPath())) {
       result = AppValidationResult.NO_PATCH_OBB_DOWNLOAD_LINK;
-    } else if (appObb != null && TextUtils.isEmpty(packageName)) {
+    } else if (appObb != null && isStringEmptyOrNull(packageName)) {
       result = AppValidationResult.NO_PACKAGE_NAME_SPECIFIED;
-    } else if (TextUtils.isEmpty(appName)) {
+    } else if (isStringEmptyOrNull(appName)) {
       result = AppValidationResult.NO_APP_NAME_SPECIFIED;
     }
     return result;
+  }
+
+  private boolean isStringEmptyOrNull(String text) {
+    return text == null || text.isEmpty();
   }
 
   public enum AppValidationResult {
