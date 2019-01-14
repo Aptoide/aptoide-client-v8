@@ -114,6 +114,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
+import cm.aptoide.pt.download.AppValidationAnalytics;
 import cm.aptoide.pt.download.AppValidator;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadApkPathsProvider;
@@ -491,8 +492,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DownloadApkPathsProvider(oemidProvider);
   }
 
-  @Singleton @Provides AppValidator providesAppValidator() {
-    return new AppValidator();
+  @Singleton @Provides AppValidationAnalytics providesAppValidationAnalytics(
+      AnalyticsManager analyticsManager) {
+    return new AppValidationAnalytics(analyticsManager);
+  }
+
+  @Singleton @Provides AppValidator providesAppValidator(
+      AppValidationAnalytics appValidationAnalytics) {
+    return new AppValidator(appValidationAnalytics);
   }
 
   @Singleton @Provides DownloadFactory provideDownloadFactory(
@@ -1349,7 +1356,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
     return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
         InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
-        InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME);
+        InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
+        AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT);
   }
 
   @Singleton @Provides AnalyticsManager providesAnalyticsManager(

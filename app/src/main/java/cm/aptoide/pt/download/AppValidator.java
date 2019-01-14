@@ -5,6 +5,12 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 
 public class AppValidator {
 
+  private AppValidationAnalytics appValidationAnalytics;
+
+  public AppValidator(AppValidationAnalytics appValidationAnalytics) {
+    this.appValidationAnalytics = appValidationAnalytics;
+  }
+
   public AppValidationResult validateApp(String md5, Obb appObb, String packageName, String appName,
       String filePath, String filePathAlt) {
     AppValidationResult result = AppValidationResult.VALID_APP;
