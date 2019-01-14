@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,15 +12,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.download.AppValidator;
-import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -29,6 +26,7 @@ import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -36,13 +34,14 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by trinkes on 7/13/16.
  */
-public class PullingContentService extends Service {
+public class PullingContentService extends BaseService {
 
   public static final String PUSH_NOTIFICATIONS_ACTION = "PUSH_NOTIFICATIONS_ACTION";
   public static final String UPDATES_ACTION = "UPDATES_ACTION";
   public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
   public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_HALF_DAY;
   public static final int UPDATE_NOTIFICATION_ID = 123;
+  @Inject DownloadFactory downloadFactory;
   private AptoideApplication application;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
@@ -149,9 +148,7 @@ public class PullingContentService extends Service {
                 .map(updates -> {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
-                    downloadList.add(new DownloadFactory(marketName,
-                        new DownloadApkPathsProvider(new OemidProvider()),
-                        application.getCachePath(), new AppValidator()).create(update));
+                    downloadList.add(downloadFactory.create(update));
                   }
                   return downloadList;
                 })
