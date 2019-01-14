@@ -24,9 +24,11 @@ public class AppValidator {
       result = AppValidationResult.NO_ALTERNATIVE_DOWNLOAD_LINK;
     } else if (appObb != null && appObb.getMain() != null && isStringEmptyOrNull(appObb.getMain()
         .getPath())) {
+      appValidationAnalytics.sendInvalidDownloadObbMainPath(packageName);
       result = AppValidationResult.NO_MAIN_OBB_DOWNLOAD_LINK;
     } else if (appObb != null && appObb.getPatch() != null && isStringEmptyOrNull(appObb.getPatch()
         .getPath())) {
+      appValidationAnalytics.sendInvalidDownloadObbPatchPath(packageName);
       result = AppValidationResult.NO_PATCH_OBB_DOWNLOAD_LINK;
     } else if (appObb != null && isStringEmptyOrNull(packageName)) {
       result = AppValidationResult.NO_PACKAGE_NAME_SPECIFIED;

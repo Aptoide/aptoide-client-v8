@@ -51,4 +51,12 @@ public class AppValidationAnalytics {
   public void sendInvalidDownloadAlternativePath(String packageName) {
     sendInvalidDownloadPathEvent(packageName, FILE_TYPE_APK, FILE_TYPE_LEVEL_ALTERNATIVE);
   }
+
+  public void sendInvalidDownloadObbMainPath(String packageName) {
+    sendInvalidDownloadPathEvent(packageName, FILE_TYPE_OBB, FILE_TYPE_LEVEL_OBB_MAIN);
+  }
+
+  public void sendInvalidDownloadObbPatchPath(String packageName) {
+    sendInvalidDownloadPathEvent(packageName, FILE_TYPE_OBB, FILE_TYPE_LEVEL_OBB_PATCH);
+  }
 }
