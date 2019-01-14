@@ -14,10 +14,10 @@ public class AppValidationAnalytics {
   private final String FILE_TYPE_APK = "apk";
   private final String FILE_TYPE_OBB = "obb";
   private final String FILE_TYPE_LEVEL = "File_Type_Level";
-  private final String FILE_TYPE_LEVEL_DOWNLOAD_MAIN = "download_main";
-  private final String FILE_TYPE_LEVEL_ALTERNATIVE = "download_alternative";
-  private final String FILE_TYPE_LEVEL_OBB_MAIN = "obb_main";
-  private final String FILE_TYPE_LEVEL_OBB_PATCH = "obb_patch";
+  private final String FILE_TYPE_LEVEL_DOWNLOAD_MAIN = "main_download";
+  private final String FILE_TYPE_LEVEL_ALTERNATIVE = "alternative_download";
+  private final String FILE_TYPE_LEVEL_OBB_MAIN = "main_obb";
+  private final String FILE_TYPE_LEVEL_OBB_PATCH = "patch_obb";
 
   public AppValidationAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
