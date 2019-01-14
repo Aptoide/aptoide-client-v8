@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
@@ -52,6 +53,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
    */
   private static final int VISIBLE_THRESHOLD = 1;
   @Inject MoreBundlePresenter presenter;
+  @Inject @Named("marketName") String marketName;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -97,7 +99,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents);
+        oneDecimalFormatter, adClickedEvents, marketName);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

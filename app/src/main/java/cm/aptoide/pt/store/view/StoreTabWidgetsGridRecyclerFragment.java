@@ -31,6 +31,7 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import rx.Observable;
 
@@ -45,6 +46,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected StoreAnalytics storeAnalytics;
   protected NavigationTracker navigationTracker;
   @Inject AnalyticsManager analyticsManager;
+  @Inject @Named("marketName") String marketName;
   private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,8 +82,8 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
         .concatMapEager(wsWidget -> {
           AptoideApplication application =
               (AptoideApplication) getContext().getApplicationContext();
-          return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
-              getContext(), accountManager, storeUtilsProxy,
+          return DisplayablesFactory.parse(marketName, wsWidget, storeTheme, storeRepository,
+              storeContext, getContext(), accountManager, storeUtilsProxy,
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
               getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
               navigationTracker, new BadgeDialogFactory(getContext()),

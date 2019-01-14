@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.Translator;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by trinkes on 16/12/2016.
@@ -16,14 +18,14 @@ import cm.aptoide.pt.view.Translator;
 
 public abstract class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragment {
   public static final String TITLE_KEY = "TITLE_KEY";
+  @Inject @Named("marketName") String marketName;
   private String title;
-  private String marketName;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    marketName = application.getMarketName();
+    getFragmentComponent(savedInstanceState).inject(this);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

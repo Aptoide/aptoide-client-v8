@@ -64,11 +64,13 @@ import rx.subscriptions.Subscriptions;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
+  private final String marketName;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, InstalledRepository installedRepository,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
+      String marketName) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
@@ -78,6 +80,7 @@ import rx.subscriptions.Subscriptions;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
+    this.marketName = marketName;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -198,7 +201,7 @@ import rx.subscriptions.Subscriptions;
       setBulletText(highlightedReviewsExplained_3, activity.getResources()
           .getString(R.string.reviewappview_highlighted_reviews_explanation_3));
       setBulletText(highlightedReviewsExplained_4, activity.getResources()
-          .getString(R.string.reviewappview_highlighted_reviews_explanation_4));
+          .getString(R.string.reviewappview_highlighted_reviews_explanation_4, marketName));
 
       // create and show rating dialog
       dialog.show();

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
@@ -26,10 +25,12 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
   private final EditorsAppsAdapter graphicAppsAdapter;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final RecyclerView graphicsList;
+  private final String marketName;
 
   public EditorsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      DecimalFormat oneDecimalFormatter) {
+      DecimalFormat oneDecimalFormatter, String marketName) {
     super(view);
+    this.marketName = marketName;
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
@@ -54,9 +55,8 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
-    bundleTitle.setText(Translator.translate(homeBundle.getTitle(), itemView.getContext(),
-        ((AptoideApplication) itemView.getContext()
-            .getApplicationContext()).getMarketName()));
+    bundleTitle.setText(
+        Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
     graphicAppsAdapter.updateBundle(homeBundle, position);
     graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
     graphicsList.addOnScrollListener(new RecyclerView.OnScrollListener() {

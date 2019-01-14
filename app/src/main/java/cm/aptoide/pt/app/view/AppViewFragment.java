@@ -107,6 +107,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -130,6 +131,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
+  @Inject @Named("marketName") String marketName;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -873,7 +875,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void showTrustedDialog(AppViewViewModel app) {
-    DialogBadgeV7.newInstance(app.getMalware(), app.getAppName(), app.getMalware()
+    DialogBadgeV7.newInstance(marketName, app.getMalware(), app.getAppName(), app.getMalware()
         .getRank())
         .show(getFragmentManager(), BADGE_DIALOG_TAG);
   }
@@ -1076,6 +1078,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     String message = getString(R.string.appview_message_apkfy_1);
     ((TextView) apkfyElement.findViewById(R.id.apkfy_message_1)).setText(
         String.format(message, appName));
+    ((TextView) apkfyElement.findViewById(R.id.apkfy_title)).setText(
+        String.format(getResources().getString(R.string.appview_title_apkfy), marketName));
   }
 
   @Override public void showDonations(List<Donation> donations) {
