@@ -493,8 +493,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppValidationAnalytics providesAppValidationAnalytics(
-      AnalyticsManager analyticsManager) {
-    return new AppValidationAnalytics(analyticsManager);
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new AppValidationAnalytics(analyticsManager, navigationTracker);
   }
 
   @Singleton @Provides AppValidator providesAppValidator(
