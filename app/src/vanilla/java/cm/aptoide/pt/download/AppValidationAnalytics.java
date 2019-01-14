@@ -47,4 +47,8 @@ public class AppValidationAnalytics {
     map.put(FILE_TYPE_LEVEL, fileTypeLevel);
     return map;
   }
+
+  public void sendInvalidDownloadAlternativePath(String packageName) {
+    sendInvalidDownloadPathEvent(packageName, FILE_TYPE_APK, FILE_TYPE_LEVEL_ALTERNATIVE);
+  }
 }

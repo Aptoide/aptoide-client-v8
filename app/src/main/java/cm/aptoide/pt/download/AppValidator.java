@@ -20,6 +20,7 @@ public class AppValidator {
       appValidationAnalytics.sendInvalidDownloadMainPath(packageName);
       result = AppValidationResult.NO_MAIN_DOWNLOAD_LINK;
     } else if (isStringEmptyOrNull(filePathAlt)) {
+      appValidationAnalytics.sendInvalidDownloadAlternativePath(packageName);
       result = AppValidationResult.NO_ALTERNATIVE_DOWNLOAD_LINK;
     } else if (appObb != null && appObb.getMain() != null && isStringEmptyOrNull(appObb.getMain()
         .getPath())) {
