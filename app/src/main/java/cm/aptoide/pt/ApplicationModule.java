@@ -75,6 +75,7 @@ import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
@@ -84,7 +85,8 @@ import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.appview.PreferencesManager;
-import cm.aptoide.pt.appview.UserPreferencesPersister;
+import cm.aptoide.pt.appview.PreferencesPersister;
+import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -113,11 +115,23 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.DownloadInstallationProvider;
 import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
+import cm.aptoide.pt.download.FileDownloadManagerProvider;
+import cm.aptoide.pt.download.Md5Comparator;
+import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
+import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadAppFileMapper;
+import cm.aptoide.pt.downloadmanager.DownloadAppMapper;
+import cm.aptoide.pt.downloadmanager.DownloadStatusMapper;
+import cm.aptoide.pt.downloadmanager.DownloadsRepository;
+import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
+import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
+import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BottomNavigationAnalytics;
@@ -135,6 +149,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
+import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
@@ -162,7 +177,12 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import cm.aptoide.pt.repository.DownloadRepository;
+import cm.aptoide.pt.promotions.CaptchaService;
+import cm.aptoide.pt.promotions.PromotionViewAppMapper;
+import cm.aptoide.pt.promotions.PromotionsAnalytics;
+import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import cm.aptoide.pt.promotions.PromotionsService;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
@@ -268,8 +288,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     this.aptoideMd5sum = aptoideMd5sum;
   }
 
-  @Singleton @Provides InstallManager providesInstallManager() {
-    return application.getInstallManager();
+  @Singleton @Provides InstallManager providesInstallManager(
+      AptoideDownloadManager aptoideDownloadManager, InstallerAnalytics installerAnalytics,
+      RootAvailabilityManager rootAvailabilityManager,
+      @Named("default") SharedPreferences defaultSharedPreferences,
+      @Named("secureShared") SharedPreferences secureSharedPreferences,
+      DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
+      @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
+      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
+
+    return new InstallManager(application, aptoideDownloadManager,
+        new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
+        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
+        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -311,13 +342,43 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.APPLICATION_ID;
   }
 
+  @Singleton @Provides @Named("apkPath") String provideApkPath(
+      @Named("cachePath") String cachePath) {
+    return cachePath + "apks/";
+  }
+
+  @Singleton @Provides @Named("obbPath") String provideObbPath(
+      @Named("cachePath") String cachePath) {
+    return cachePath + "obb/";
+  }
+
   @Singleton @Provides AptoideDownloadManager provideAptoideDownloadManager(
-      DownloadAccessor downloadAccessor, @Named("user-agent") Interceptor userAgentInterceptor,
-      CacheHelper cacheHelper, DownloadAnalytics downloadAnalytics,
-      AuthenticationPersistence authenticationPersistence, @Named("cachePath") String cachePath,
-      InstallAnalytics installAnalytics) {
-    final String apkPath = cachePath + "apks/";
-    final String obbPath = cachePath + "obb/";
+      DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
+      @Named("cachePath") String cachePath, DownloadAppMapper downloadAppMapper,
+      AppDownloaderProvider appDownloaderProvider, @Named("apkPath") String apkPath,
+      @Named("obbPath") String obbPath) {
+
+    FileUtils.createDir(apkPath);
+    FileUtils.createDir(obbPath);
+
+    return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
+        downloadAppMapper, appDownloaderProvider);
+  }
+
+  @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {
+    return new DownloadAppFileMapper();
+  }
+
+  @Singleton @Provides DownloadAppMapper providesDownloadAppMapper(
+      DownloadAppFileMapper downloadAppFileMapper) {
+    return new DownloadAppMapper(downloadAppFileMapper);
+  }
+
+  @Provides @Singleton FileDownloaderProvider providesFileDownloaderProvider(
+      @Named("cachePath") String cachePath, @Named("user-agent") Interceptor userAgentInterceptor,
+      AuthenticationPersistence authenticationPersistence, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, Md5Comparator md5Comparator) {
+
     final OkHttpClient.Builder httpClientBuilder =
         new OkHttpClient.Builder().addInterceptor(userAgentInterceptor)
             .addInterceptor(new PaidAppsDownloadInterceptor(authenticationPersistence))
@@ -325,15 +386,34 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             .connectTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS);
-
-    FileUtils.createDir(apkPath);
-    FileUtils.createDir(obbPath);
     FileDownloader.init(application,
         new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
             new OkHttp3Connection.Creator(httpClientBuilder)));
 
-    return new AptoideDownloadManager(downloadAccessor, cacheHelper, new FileUtils(),
-        downloadAnalytics, FileDownloader.getImpl(), cachePath, apkPath, obbPath);
+    return new FileDownloadManagerProvider(cachePath, FileDownloader.getImpl(), md5Comparator);
+  }
+
+  @Singleton @Provides Md5Comparator providesMd5Comparator(@Named("cachePath") String cachePath) {
+    return new Md5Comparator(cachePath);
+  }
+
+  @Singleton @Provides AppDownloaderProvider providesAppDownloaderProvider(
+      RetryFileDownloaderProvider fileDownloaderProvider, DownloadAnalytics downloadAnalytics) {
+    return new AppDownloaderProvider(fileDownloaderProvider, downloadAnalytics);
+  }
+
+  @Singleton @Provides RetryFileDownloaderProvider providesRetryFileDownloaderProvider(
+      FileDownloaderProvider fileDownloaderProvider) {
+    return new RetryFileDownloadManagerProvider(fileDownloaderProvider);
+  }
+
+  @Singleton @Provides DownloadsRepository provideDownloadsRepository(
+      DownloadAccessor downloadAccessor) {
+    return new DownloadsRepository(downloadAccessor);
+  }
+
+  @Singleton @Provides DownloadStatusMapper downloadStatusMapper() {
+    return new DownloadStatusMapper();
   }
 
   @Singleton @Provides @Named("default") Installer provideDefaultInstaller(
@@ -359,21 +439,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("cachePath") String cachePath) {
     final List<CacheHelper.FolderToManage> folders = new LinkedList<>();
 
-    long month = DateUtils.DAY_IN_MILLIS;
-    folders.add(new CacheHelper.FolderToManage(new File(cachePath), month));
-    folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), month));
+    long day = DateUtils.DAY_IN_MILLIS;
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath), day));
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), day));
     folders.add(new CacheHelper.FolderToManage(
-        new File(application.getCacheDir() + "image_manager_disk_cache/"), month));
+        new File(application.getCacheDir() + "image_manager_disk_cache/"), day));
     return new CacheHelper(ManagerPreferences.getCacheLimit(defaultSharedPreferences), folders,
         new FileUtils());
   }
 
   @Singleton @Provides AppEventsLogger provideAppEventsLogger() {
     return AppEventsLogger.newLogger(application);
-  }
-
-  @Singleton @Provides DownloadRepository provideDownloadRepository(Database database) {
-    return new DownloadRepository(new DownloadAccessor(database));
   }
 
   @Singleton @Provides Answers provideAnswers(Fabric fabric) {
@@ -405,9 +481,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new InstalledRepository(installedAccessor);
   }
 
+  @Singleton @Provides OemidProvider providesOemidProvider() {
+    return new OemidProvider();
+  }
+
+  @Singleton @Provides DownloadApkPathsProvider downloadApkPathsProvider(
+      OemidProvider oemidProvider) {
+    return new DownloadApkPathsProvider(oemidProvider);
+  }
+
   @Singleton @Provides DownloadFactory provideDownloadFactory(
-      @Named("marketName") String marketName) {
-    return new DownloadFactory(marketName);
+      @Named("marketName") String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
+      @Named("cachePath") String cachePath) {
+    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath);
   }
 
   @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,
@@ -434,7 +520,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
       IdsRepository idsRepository, @Named("aptoidePackage") String aptoidePackage) {
     return new UserAgentInterceptorV8(idsRepository, AptoideUtils.SystemU.getRelease(),
-        AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
+        Build.VERSION.SDK_INT, AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
         System.getProperty("os.arch"), new DisplayMetrics(),
         AptoideUtils.Core.getDefaultVername(application)
             .replace("aptoide-", ""), aptoidePackage, aptoideMd5sum, BuildConfig.VERSION_CODE);
@@ -521,7 +607,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences);
   }
 
-  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler() {
+  @Singleton @Provides @Named("aptoide-theme") String providesAptoideTheme() {
+    return BuildConfig.APTOIDE_THEME;
+  }
+
+  @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
+      InstallManager installManager) {
 
     Intent retryActionIntent = new Intent(application, RootInstallNotificationEventReceiver.class);
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
@@ -541,11 +632,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
     int notificationId = 230498;
     return new RootInstallationRetryHandler(notificationId,
-        application.getSystemNotificationShower(), application.getInstallManager(),
-        PublishRelay.create(), 0, application,
-        new RootInstallErrorNotificationFactory(notificationId,
-            BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
-            deleteAction));
+        application.getSystemNotificationShower(), installManager, PublishRelay.create(), 0,
+        application, new RootInstallErrorNotificationFactory(notificationId,
+        BitmapFactory.decodeResource(application.getResources(), R.mipmap.ic_launcher), action,
+        deleteAction));
   }
 
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
@@ -932,10 +1022,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
       @Named("default") OkHttpClient okHttpClient, @Named("pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      InstallManager installManager) {
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
-        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences,
-        application.getInstallManager());
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
   }
 
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
@@ -1063,6 +1153,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         + "/api/v1/";
   }
 
+  @Singleton @Provides @Named("apichain-bds-base-host") String providesApichainBdsBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST;
+  }
+
   @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
       @Named("ab-testing-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
@@ -1077,6 +1175,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(DONATIONS_URL)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("retrofit-apichain-bds") Retrofit providesApiChainBDSRetrofit(
+      @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
+      @Named("apichain-bds-base-host") String baseHost) {
+    return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
         .addCallAdapterFactory(rxCallAdapterFactory)
         .addConverterFactory(converterFactory)
@@ -1103,6 +1212,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
   }
 
+  @Singleton @Provides AutoUpdateService.Service providesAutoUpdateService(
+      @Named("retrofit-auto-update") Retrofit retrofit) {
+    return retrofit.create(AutoUpdateService.Service.class);
+  }
+
   @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
       @Named("retrofit-AB") Retrofit retrofit) {
     return retrofit.create(ABTestService.ServiceV7.class);
@@ -1111,6 +1225,24 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
       @Named("retrofit-donations") Retrofit retrofit) {
     return retrofit.create(DonationsService.ServiceV8.class);
+  }
+
+  @Singleton @Provides CaptchaService.ServiceInterface providesCaptchaServiceInterface(
+      @Named("retrofit-apichain-bds") Retrofit retrofit) {
+    return retrofit.create(CaptchaService.ServiceInterface.class);
+  }
+
+  @Singleton @Provides PromotionsService providesPromotionsService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
+    return new PromotionsService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        converterFactory, sharedPreferences);
+  }
+
+  @Singleton @Provides CaptchaService providesCaptchaService(
+      CaptchaService.ServiceInterface service, IdsRepository idsRepository) {
+    return new CaptchaService(service, idsRepository);
   }
 
   @Singleton @Provides WalletService.ServiceV7 providesWalletServiceV8(
@@ -1330,9 +1462,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
-      @Named("marketName") String marketName, PackageRepository packageRepository) {
-    return new BundlesResponseMapper(marketName, application.getInstallManager(),
-        packageRepository);
+      @Named("marketName") String marketName, InstallManager installManager,
+      PackageRepository packageRepository) {
+    return new BundlesResponseMapper(marketName, installManager, packageRepository);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
@@ -1364,14 +1496,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
   }
 
-  @Singleton @Provides UserPreferencesPersister providesUserPreferencesPersister(
+  @Singleton @Provides PreferencesPersister providesUserPreferencesPersister(
       @Named("default") SharedPreferences sharedPreferences) {
-    return new UserPreferencesPersister(sharedPreferences);
+    return new PreferencesPersister(sharedPreferences);
   }
 
   @Singleton @Provides PreferencesManager providesPreferencesManager(
-      UserPreferencesPersister userPreferencesPersister) {
-    return new PreferencesManager(userPreferencesPersister);
+      PreferencesPersister preferencesPersister) {
+    return new PreferencesManager(preferencesPersister);
   }
 
   @Singleton @Provides ReviewsManager providesReviewsManager(ReviewsRepository reviewsRepository) {
@@ -1422,9 +1554,29 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new ABTestManager(abTestCenterRepository);
   }
 
+  @Singleton @Provides PromotionsManager providePromotionsManager(InstallManager installManager,
+      PromotionViewAppMapper promotionViewAppMapper, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      PreferencesManager preferencesManager, PromotionsService promotionsService) {
+    return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
+        downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
+        preferencesManager, application.getApplicationContext()
+        .getPackageManager(), promotionsService);
+  }
+
+  @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
+      DownloadStateParser downloadStateParser) {
+    return new PromotionViewAppMapper(downloadStateParser);
+  }
+
   @Singleton @Provides ImpressionManager providesImpressionManager(
       ImpressionService impressionService) {
     return new ImpressionManager(impressionService);
+  }
+
+  @Singleton @Provides DownloadStateParser providesDownloadStateParser() {
+    return new DownloadStateParser();
   }
 
   @Singleton @Provides ImpressionService providesImpressionService(@Named("pool-v7")
@@ -1554,7 +1706,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
         NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
         DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
-        EditorialAnalytics.CURATION_CARD_INSTALL);
+        EditorialAnalytics.CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
+        PromotionsAnalytics.PROMOTIONS_INTERACT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
@@ -1571,5 +1724,30 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides MyAccountManager providesMyAccountManager() {
     return new MyAccountManager();
+  }
+
+  @Singleton @Provides PromotionsPreferencesManager providesPromotionsPreferencesManager(
+      PreferencesPersister persister) {
+    return new PromotionsPreferencesManager(persister);
+  }
+
+  @Singleton @Provides PromotionsAnalytics providesPromotionsAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
+      DownloadAnalytics downloadAnalytics) {
+    return new PromotionsAnalytics(analyticsManager, navigationTracker, downloadAnalytics);
+  }
+
+  @Singleton @Provides @Named("retrofit-auto-update") Retrofit providesAutoUpdateRetrofit(
+      @Named("default") OkHttpClient httpClient, @Named("auto-update-base-host") String baseHost,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("auto-update-base-host") String providesAutoUpdateBaseHost() {
+    return "http://imgs.aptoide.com/";
   }
 }

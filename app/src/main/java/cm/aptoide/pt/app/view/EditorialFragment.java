@@ -110,6 +110,7 @@ public class EditorialFragment extends NavigationTrackFragment
 
   private PublishSubject<EditorialEvent> uiEventsListener;
   private PublishSubject<Palette.Swatch> paletteSwatchSubject;
+  private PublishSubject<Boolean> movingCollapseSubject;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -118,6 +119,7 @@ public class EditorialFragment extends NavigationTrackFragment
     ready = PublishSubject.create();
     paletteSwatchSubject = PublishSubject.create();
     uiEventsListener = PublishSubject.create();
+    movingCollapseSubject = PublishSubject.create();
     setHasOptionsMenu(true);
   }
 
@@ -191,22 +193,24 @@ public class EditorialFragment extends NavigationTrackFragment
         Resources resources = getResources();
         switch (state) {
           case EXPANDED:
+            movingCollapseSubject.onNext(isItemShown());
             break;
           default:
           case IDLE:
           case MOVING:
+            movingCollapseSubject.onNext(isItemShown());
             configureAppBarLayout(
                 resources.getDrawable(R.drawable.editorial_up_bottom_black_gradient),
                 resources.getColor(R.color.tw__solid_white), false);
             break;
           case COLLAPSED:
+            movingCollapseSubject.onNext(isItemShown());
             configureAppBarLayout(resources.getDrawable(R.drawable.tw__transparent),
                 resources.getColor(R.color.black), true);
             break;
         }
       }
     });
-    editorialItems.setNestedScrollingEnabled(false);
     attachPresenter(presenter);
   }
 
@@ -225,6 +229,7 @@ public class EditorialFragment extends NavigationTrackFragment
     window = null;
     paletteSwatchSubject = null;
     oneDecimalFormatter = null;
+    movingCollapseSubject = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -323,6 +328,11 @@ public class EditorialFragment extends NavigationTrackFragment
         .map(click -> new EditorialEvent(EditorialEvent.Type.APPCARD))
         .mergeWith(uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
             .equals(EditorialEvent.Type.APPCARD)));
+  }
+
+  @Override public Observable<EditorialEvent> actionButtonClicked() {
+    return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
+        .equals(EditorialEvent.Type.ACTION));
   }
 
   @Override public void populateView(EditorialViewModel editorialViewModel) {
@@ -496,6 +506,10 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
+  @Override public Observable<Boolean> handleMovingCollapse() {
+    return movingCollapseSubject.distinctUntilChanged();
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     placeHolderPosition = editorialViewModel.getPlaceHolderPosition();
     if (editorialViewModel.hasBackgroundImage()) {
@@ -514,7 +528,9 @@ public class EditorialFragment extends NavigationTrackFragment
     appCardTitle.setVisibility(View.VISIBLE);
     ImageLoader.with(getContext())
         .load(editorialViewModel.getIcon(), appCardImage);
-    appCardView.setVisibility(View.VISIBLE);
+    if (editorialViewModel.hasApp()) {
+      appCardView.setVisibility(View.VISIBLE);
+    }
   }
 
   private void populateCardContent(EditorialViewModel editorialViewModel) {

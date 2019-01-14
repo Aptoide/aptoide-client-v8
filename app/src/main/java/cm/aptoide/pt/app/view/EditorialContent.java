@@ -14,9 +14,11 @@ class EditorialContent {
   private final String name;
   private final String icon;
   private final float rating;
+  private final String actionTitle;
+  private final String actionUrl;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      String name, String icon, float rating) {
+      String name, String icon, float rating, String actionTitle, String actionUrl) {
 
     this.title = title;
     this.media = media;
@@ -25,6 +27,8 @@ class EditorialContent {
     this.name = name;
     this.icon = icon;
     this.rating = rating;
+    this.actionTitle = actionTitle;
+    this.actionUrl = actionUrl;
   }
 
   public String getMessage() {
@@ -82,5 +86,17 @@ class EditorialContent {
 
   public float getRating() {
     return rating;
+  }
+
+  public boolean hasAction() {
+    return actionTitle != null && !actionTitle.equals("");
+  }
+
+  public String getActionTitle() {
+    return actionTitle;
+  }
+
+  public String getActionUrl() {
+    return actionUrl;
   }
 }

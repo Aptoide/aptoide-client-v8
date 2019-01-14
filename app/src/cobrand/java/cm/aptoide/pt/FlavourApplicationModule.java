@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.pt.preferences.AdultContentManager;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Module public class FlavourApplicationModule {
@@ -13,5 +14,9 @@ import javax.inject.Singleton;
 
   @Singleton @Provides AdultContent provideAdultContent() {
     return new AdultContentManager();
+  }
+
+  @Singleton @Provides @Named("auto-update-store-name") String provideAutoUpdateStoreName() {
+    return BuildConfig.COBRAND_APPLICATION_ID_SUFFIX;
   }
 }

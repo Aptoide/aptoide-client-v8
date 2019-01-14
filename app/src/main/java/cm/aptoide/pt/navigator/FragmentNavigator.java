@@ -30,5 +30,9 @@ public interface FragmentNavigator {
 
   Fragment getFragment();
 
-  void navigateToDialogFragment(DialogFragment fragment, String tag);
+  void navigateToDialogFragment(DialogFragment fragment);
+
+  void navigateToDialogForResult(DialogFragment fragment, int requestCode);
+
+  void popDialogWithResult(Result result);
 }

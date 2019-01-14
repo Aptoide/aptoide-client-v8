@@ -18,6 +18,7 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
 
+import static cm.aptoide.pt.dataprovider.model.v7.EditorialCard.Action;
 import static cm.aptoide.pt.dataprovider.model.v7.EditorialCard.Content;
 
 /**
@@ -130,6 +131,13 @@ public class EditorialService {
         }
         EditorialContent editorialContent;
         App app = content.getApp();
+        Action action = content.getAction();
+        String actionTitle = "";
+        String actionUrl = "";
+        if (action != null) {
+          actionTitle = action.getTitle();
+          actionUrl = action.getUrl();
+        }
         String appName = null;
         String icon = null;
         float rating = 0;
@@ -142,7 +150,7 @@ public class EditorialService {
         }
         editorialContent =
             new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-                content.getType(), appName, icon, rating);
+                content.getType(), appName, icon, rating, actionTitle, actionUrl);
         editorialContentList.add(editorialContent);
       }
     }

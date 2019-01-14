@@ -84,9 +84,8 @@ public class EditorialManager {
     editorialAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
         AnalyticsManager.Action.CLICK);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        downloadStateParser.getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL,
-        AppContext.EDITORIAL, downloadStateParser.getOrigin(download.getAction()), campaignId,
-        abTestGroup);
+        AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,

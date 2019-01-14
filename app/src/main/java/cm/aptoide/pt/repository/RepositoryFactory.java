@@ -7,10 +7,8 @@ package cm.aptoide.pt.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
@@ -21,7 +19,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.timeline.SocialRepository;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import okhttp3.OkHttpClient;
 
@@ -48,10 +45,6 @@ public final class RepositoryFactory {
     return ((AptoideApplication) context.getApplicationContext()).getDefaultClient();
   }
 
-  private static AptoideAccountManager getAccountManager(Context context) {
-    return ((AptoideApplication) context.getApplicationContext()).getAccountManager();
-  }
-
   public static InstalledRepository getInstalledRepository(Context context) {
     return new InstalledRepository(AccessorFactory.getAccessorFor(
         ((AptoideApplication) context.getApplicationContext()).getDatabase(), Installed.class));
@@ -62,26 +55,16 @@ public final class RepositoryFactory {
         ((AptoideApplication) context.getApplicationContext()).getDatabase(), Store.class));
   }
 
-  public static cm.aptoide.pt.repository.DownloadRepository getDownloadRepository(Context context) {
-    return new cm.aptoide.pt.repository.DownloadRepository(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) context.getApplicationContext()).getDatabase(), Download.class));
-  }
-
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
     return ((AptoideApplication) context.getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
   }
 
-  private static BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBaseBodyInterceptorV3(
-      Context context) {
-    return ((AptoideApplication) context.getApplicationContext()).getBodyInterceptorV3();
-  }
-
   public static SocialRepository getSocialRepository(Context context,
-      TimelineAnalytics timelineAnalytics, SharedPreferences sharedPreferences) {
-    return new SocialRepository(getAccountManager(context),
+      SharedPreferences sharedPreferences) {
+    return new SocialRepository(
         ((AptoideApplication) context.getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-        WebService.getDefaultConverter(), getHttpClient(context), timelineAnalytics,
-        getTokenInvalidator(context), sharedPreferences);
+        WebService.getDefaultConverter(), getHttpClient(context), getTokenInvalidator(context),
+        sharedPreferences);
   }
 
   private static TokenInvalidator getTokenInvalidator(Context context) {

@@ -72,7 +72,7 @@ android {
   productFlavors {
     cobrand {
       dimension "product"
-      applicationId defaultConfig.getApplicationId()
+      applicationId "com.aptoide.partners"
       applicationIdSuffix project.COBRAND_APPLICATION_ID_SUFFIX.toString()
       versionNameSuffix ".c" + project.COBRAND_VERSION.toString()
       matchingFallbacks = ['internal', 'prod']
@@ -121,7 +121,7 @@ android {
     monetisation {
       dimension "mode"
       versionName defaultConfig.getVersionName() + "A"
-      matchingFallbacks = ['internal', 'prod']
+      matchingFallbacks = ['prod']
     }
   }
 
@@ -158,11 +158,10 @@ android {
   variantFilter { variant ->
     List<ProductFlavor> flavors = variant.getFlavors()
 
-    String applicationIdBase = flavors[0].applicationId
     String applicationIdSuffix = flavors[1].applicationIdSuffix
     boolean hasSuffix = applicationIdSuffix != null
 
-    if (applicationIdBase.contains('cobrand') && hasSuffix &&
+    if (flavors[0].name.contains('cobrand') && hasSuffix &&
         (applicationIdSuffix.contains('internal') || applicationIdSuffix.contains('testfairy') ||
             applicationIdSuffix.contains('leak'))) {
       setIgnore(true)
@@ -219,12 +218,6 @@ android {
     variant.resValue "string", "store_suggestion_provider_authority",
         storeSuggestionProviderAuthority
 
-    variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
-
-    variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
-        "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
-    variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
-        "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     variant.buildConfigField "String", "CONTENT_AUTHORITY", "\"" + toolboxProviderAuthority + "\""
     variant.buildConfigField "String", "SIGNATURE_BACKUP", "\"" + project.SIGNATURE_BACKUP + "\""
     variant.buildConfigField "String", "SIGNATURE_UPLOADER",
@@ -232,10 +225,6 @@ android {
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
         "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
-    variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
-        "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
-    variant.buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
-        "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     variant.buildConfigField "int", "DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS",
         project.DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
@@ -255,6 +244,22 @@ android {
         project.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS
     variant.buildConfigField "long", "ANALYTICS_SESSION_INTERVAL_IN_MILLIS",
         project.ANALYTICS_SESSION_INTERVAL_IN_MILLIS
+    variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
+    variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
+        "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
+
+    if (flavors[0].name.contains("cobrand")) {
+      variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""
+      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
+      variant.buildConfigField "String", "MARKET_NAME", "\"" + project.COBRAND_MARKET_NAME + "\""
+      variant.buildConfigField "String", "COBRAND_OEMID", "\"" + project.COBRAND_OEMID + "\""
+    } else {
+      //vanilla
+      variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
+      variant.buildConfigField "String", "APTOIDE_THEME", "\"" + "default" + "\""
+      variant.buildConfigField "String", "MARKET_NAME", "\"" + "Aptoide" + "\""
+    }
 
     if (flavors[1].name.contains('internal')) {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
@@ -276,6 +281,8 @@ android {
         "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID",
         "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_PROD_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_9500_PLACEMENT_ID",
+        "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_9500_PLACEMENT_ID + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -403,7 +410,9 @@ dependencies {
 
   // IronSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
+  // Applovin (IronSource mediation)
   implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
+  // Vungle (IronSource mediation)
   implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
   implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
     transitive = true
@@ -411,8 +420,15 @@ dependencies {
     exclude module: "support-annotations"
     exclude module: "support-v4"
   }
-
-
+  // Adcolony (IronSource mediation)
+  implementation "com.ironsource.adapters:adcolonyadapter:${ADCOLONY_ADAPTER_VERSION}@jar"
+  implementation "com.adcolony:sdk:${ADCOLONY_VERSION}"
+  // Tapjoy (IronSource mediation)
+  implementation "com.ironsource.adapters:tapjoyadapter:${TAPJOY_ADAPTER_VERSION}@jar"
+  // Chartboost (IronSource mediation)
+  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
+  // UnityAds (IronSource mediation)
+  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {

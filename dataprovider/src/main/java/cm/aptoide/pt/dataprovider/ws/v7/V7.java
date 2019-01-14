@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.accounts.NetworkErrorException;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.app.view.donations.data.GetWalletAddressResponse;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -60,6 +61,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
@@ -543,6 +546,17 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("user/action/item/card/markAsRead/") Observable<BaseV7Response> setRead(
         @Body MarkAsReadRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @GET("bds/apks/package/getOwnerWallet") Observable<GetWalletAddressResponse> getWallet(
+        @Query("package_name") String packageName);
+
+    @POST("appcoins/promotions/claim") Observable<BaseV7Response> claimPromotion(
+        @Body ClaimPromotionRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("appcoins/promotions/get/limit={limit}")
+    Observable<GetPromotionAppsResponse> getPromotionApps(@Path(value = "limit") int limit,
+        @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }
 

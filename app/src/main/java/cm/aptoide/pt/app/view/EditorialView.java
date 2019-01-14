@@ -21,6 +21,8 @@ public interface EditorialView extends View {
 
   Observable<EditorialEvent> appCardClicked();
 
+  Observable<EditorialEvent> actionButtonClicked();
+
   void populateView(EditorialViewModel editorialViewModel);
 
   void showError(EditorialViewModel.Error error);
@@ -60,4 +62,6 @@ public interface EditorialView extends View {
   void manageMediaListDescriptionAnimationVisibility(EditorialEvent editorialEvent);
 
   void setMediaListDescriptionsVisible(EditorialEvent editorialEvent);
+
+  Observable<Boolean> handleMovingCollapse();
 }

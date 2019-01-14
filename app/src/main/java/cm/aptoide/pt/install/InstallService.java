@@ -24,10 +24,13 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
+import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import java.util.Locale;
@@ -35,9 +38,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
-public class InstallService extends BaseService {
+public class InstallService extends BaseService implements DownloadsNotification {
 
   public static final String TAG = "InstallService";
 
@@ -58,12 +63,17 @@ public class InstallService extends BaseService {
   @Inject @Named("default") Installer defaultInstaller;
   @Inject InstalledRepository installedRepository;
   @Inject DownloadAnalytics downloadAnalytics;
+  @Inject CacheHelper cacheManager;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private Notification notification;
   private String marketName;
+  private PublishSubject<String> openAppViewAction;
+  private PublishSubject<Void> openDownloadManagerAction;
+  private DownloadsNotificationsPresenter presenter;
 
   @Override public void onCreate() {
+
     super.onCreate();
     getApplicationComponent().inject(this);
     Logger.getInstance()
@@ -72,7 +82,10 @@ public class InstallService extends BaseService {
     installManager = application.getInstallManager();
     marketName = application.getMarketName();
     subscriptions = new CompositeSubscription();
-    setupNotification();
+    openDownloadManagerAction = PublishSubject.create();
+    openAppViewAction = PublishSubject.create();
+    presenter = new DownloadsNotificationsPresenter(this, installManager);
+    presenter.setupSubscriptions();
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
   }
 
@@ -87,9 +100,9 @@ public class InstallService extends BaseService {
         subscriptions.add(stopDownload(md5).subscribe(hasNext -> treatNext(hasNext),
             throwable -> removeNotificationAndStop()));
       } else if (ACTION_OPEN_APP_VIEW.equals(intent.getAction())) {
-        openAppView(md5);
+        openAppViewAction.onNext(md5);
       } else if (ACTION_OPEN_DOWNLOAD_MANAGER.equals(intent.getAction())) {
-        openDownloadManager();
+        openDownloadManagerAction.onNext(null);
       } else if (ACTION_STOP_ALL_INSTALLS.equals(intent.getAction())) {
         stopAllDownloads();
       }
@@ -103,6 +116,9 @@ public class InstallService extends BaseService {
 
   @Override public void onDestroy() {
     subscriptions.unsubscribe();
+    presenter.onDestroy();
+    openAppViewAction = null;
+    openDownloadManagerAction = null;
     super.onDestroy();
   }
 
@@ -111,7 +127,7 @@ public class InstallService extends BaseService {
   }
 
   private Observable<Boolean> stopDownload(String md5) {
-    return downloadManager.pauseDownloadSync(md5)
+    return downloadManager.pauseDownload(md5)
         .andThen(hasNextDownload());
   }
 
@@ -123,12 +139,19 @@ public class InstallService extends BaseService {
   private void treatNext(boolean hasNext) {
     if (!hasNext) {
       removeNotificationAndStop();
+      subscriptions.add(cacheManager.cleanCache()
+          .toSingle()
+          .flatMap(cleaned -> downloadManager.invalidateDatabase()
+              .andThen(Single.just(cleaned)))
+          .subscribe(__ -> {
+          }, throwable -> CrashReport.getInstance()
+              .log(throwable)));
     }
   }
 
   private Observable<Boolean> downloadAndInstallCurrentDownload(Context context,
       boolean forceDefaultInstall) {
-    return downloadManager.getCurrentDownload()
+    return downloadManager.getCurrentInProgressDownload()
         .first()
         .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5(),
             forceDefaultInstall));
@@ -140,8 +163,7 @@ public class InstallService extends BaseService {
         .first()
         .doOnNext(download -> initInstallationProgress(download))
         .flatMap(download -> downloadManager.startDownload(download)
-            .first())
-        .flatMap(download -> downloadManager.getDownload(download.getMd5()))
+            .andThen(downloadManager.getDownload(md5)))
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
           if (download.getOverallDownloadStatus() == Download.PROGRESS) {
@@ -149,6 +171,7 @@ public class InstallService extends BaseService {
           }
         })
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .doOnNext(download -> installManager.moveCompletedDownloadFiles(download))
         .flatMap(download -> stopForegroundAndInstall(context, download, true,
             forceDefaultInstall).andThen(sendBackgroundInstallFinishedBroadcast(download))
             .andThen(hasNextDownload()));
@@ -166,14 +189,9 @@ public class InstallService extends BaseService {
   }
 
   private Observable<Boolean> hasNextDownload() {
-    return downloadManager.getCurrentDownloads()
+    return downloadManager.getCurrentActiveDownloads()
         .first()
         .map(downloads -> downloads != null && !downloads.isEmpty());
-  }
-
-  private void removeNotificationAndStop() {
-    stopForeground(true);
-    stopSelf();
   }
 
   private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
@@ -185,7 +203,7 @@ public class InstallService extends BaseService {
 
   private Completable stopForegroundAndInstall(Context context, Download download,
       boolean removeNotification, boolean forceDefaultInstall) {
-    Installer installer = getInstaller(download.getMd5());
+    Installer installer = getInstaller();
     stopForeground(removeNotification);
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
@@ -200,42 +218,13 @@ public class InstallService extends BaseService {
     }
   }
 
-  private Installer getInstaller(String md5) {
+  private Installer getInstaller() {
     return defaultInstaller;
-  }
-
-  private void setupNotification() {
-    subscriptions.add(installManager.getCurrentInstallation()
-        .subscribe(installation -> {
-          if (!installation.isIndeterminate()) {
-
-            String md5 = installation.getMd5();
-            int requestCode = md5.hashCode();
-
-            NotificationCompat.Action downloadManagerAction =
-                getDownloadManagerAction(requestCode, md5);
-            PendingIntent appViewPendingIntent =
-                getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, md5);
-            NotificationCompat.Action pauseAction = getPauseAction(requestCode, md5);
-
-            if (notification == null) {
-              notification = buildNotification(installation, pauseAction, downloadManagerAction,
-                  appViewPendingIntent);
-            } else {
-              long oldWhen = notification.when;
-              notification = buildNotification(installation, pauseAction, downloadManagerAction,
-                  appViewPendingIntent);
-              notification.when = oldWhen;
-            }
-
-            startForeground(NOTIFICATION_ID, notification);
-          }
-        }, throwable -> removeNotificationAndStop()));
   }
 
   @NonNull private NotificationCompat.Action getPauseAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
+    appIdExtras.putString(OldAptoideDownloadManager.FILE_MD5_EXTRA, md5);
     return getAction(cm.aptoide.pt.downloadmanager.R.drawable.media_pause,
         getString(cm.aptoide.pt.downloadmanager.R.string.pause_download), requestCode,
         ACTION_STOP_INSTALL, md5);
@@ -243,12 +232,12 @@ public class InstallService extends BaseService {
 
   @NonNull private NotificationCompat.Action getDownloadManagerAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
+    appIdExtras.putString(OldAptoideDownloadManager.FILE_MD5_EXTRA, md5);
     return getAction(R.drawable.ic_manager, getString(R.string.open_apps_manager), requestCode,
         ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
 
-  private Notification buildNotification(Install installation,
+  private Notification buildNotification(String appName, int progress, boolean isIndeterminate,
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
     NotificationCompat.Builder builder =
@@ -257,12 +246,11 @@ public class InstallService extends BaseService {
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
             marketName))
-        .setContentText(new StringBuilder().append(installation.getAppName())
+        .setContentText(new StringBuilder().append(appName)
             .append(" - ")
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
         .setContentIntent(contentIntent)
-        .setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE, installation.getProgress(),
-            installation.isIndeterminate())
+        .setProgress(OldAptoideDownloadManager.PROGRESS_MAX_VALUE, progress, isIndeterminate)
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
@@ -298,17 +286,53 @@ public class InstallService extends BaseService {
         PendingIntent.FLAG_ONE_SHOT);
   }
 
-  private void openDownloadManager() {
+  @Override public Observable<String> handleOpenAppView() {
+    return openAppViewAction;
+  }
+
+  @Override public Observable<Void> handleOpenDownloadManager() {
+    return openDownloadManagerAction;
+  }
+
+  @Override public void openAppView(String md5) {
+    Intent intent = createDeeplinkingIntent();
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
+    startActivity(intent);
+  }
+
+  @Override public void openDownloadManager() {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION, true);
     startActivity(intent);
   }
 
-  private void openAppView(String md5) {
-    Intent intent = createDeeplinkingIntent();
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
-    startActivity(intent);
+  @Override
+  public void setupNotification(String md5, String appName, int progress, boolean isIndeterminate) {
+    int requestCode = md5.hashCode();
+
+    NotificationCompat.Action downloadManagerAction = getDownloadManagerAction(requestCode, md5);
+    PendingIntent appViewPendingIntent = getPendingIntent(requestCode, ACTION_OPEN_APP_VIEW, md5);
+    NotificationCompat.Action pauseAction = getPauseAction(requestCode, md5);
+
+    if (notification == null) {
+      notification =
+          buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction,
+              appViewPendingIntent);
+    } else {
+      long oldWhen = notification.when;
+      notification =
+          buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction,
+              appViewPendingIntent);
+      notification.when = oldWhen;
+    }
+
+    startForeground(NOTIFICATION_ID, notification);
+  }
+
+  @Override public void removeNotificationAndStop() {
+    stopForeground(true);
+    stopSelf();
   }
 
   @NonNull private Intent createDeeplinkingIntent() {

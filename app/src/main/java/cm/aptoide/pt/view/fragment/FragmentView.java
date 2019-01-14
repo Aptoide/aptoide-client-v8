@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
@@ -25,15 +24,16 @@ import cm.aptoide.pt.view.MainActivity;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 
 public abstract class FragmentView extends BaseFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
-
+  @Inject @Named("aptoide-theme") String theme;
   private boolean startActivityForResultCalled;
   private ActivityResultNavigator activityResultNavigator;
-  private String defaultThemeName;
 
   public FragmentNavigator getFragmentNavigator() {
     return activityResultNavigator.getFragmentNavigator();
@@ -69,8 +69,7 @@ public abstract class FragmentView extends BaseFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultThemeName =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultThemeName();
+    getFragmentComponent(savedInstanceState).inject(this);
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
   }
@@ -171,6 +170,6 @@ public abstract class FragmentView extends BaseFragment implements View {
   }
 
   protected String getDefaultTheme() {
-    return defaultThemeName;
+    return theme;
   }
 }

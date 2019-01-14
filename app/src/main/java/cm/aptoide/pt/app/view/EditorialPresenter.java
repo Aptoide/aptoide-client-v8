@@ -58,6 +58,8 @@ public class EditorialPresenter implements Presenter {
     handlePlaceHolderVisibilityChange();
     handlePlaceHolderVisibility();
     handleMediaListDescriptionVisibility();
+    handleClickActionButtonCard();
+    handleMovingCollapse();
   }
 
   @VisibleForTesting public void onCreateLoadAppOfTheWeek() {
@@ -117,7 +119,17 @@ public class EditorialPresenter implements Presenter {
           editorialNavigator.navigateToAppView(model.getAppId(), model.getPackageName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(notificationUrl -> {
+        .subscribe(__ -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void handleClickActionButtonCard() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.actionButtonClicked())
+        .doOnNext(editorialEvent -> editorialNavigator.navigateToUri(editorialEvent.getUrl()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
         }, crashReporter::log);
   }
 
@@ -298,6 +310,25 @@ public class EditorialPresenter implements Presenter {
             view.manageMediaListDescriptionAnimationVisibility(editorialEvent);
           } else {
             view.setMediaListDescriptionsVisible(editorialEvent);
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleMovingCollapse() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.handleMovingCollapse())
+        .observeOn(viewScheduler)
+        .doOnNext(isItemShown -> {
+          if (isItemShown) {
+            view.removeBottomCardAnimation();
+          } else {
+            view.addBottomCardAnimation();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

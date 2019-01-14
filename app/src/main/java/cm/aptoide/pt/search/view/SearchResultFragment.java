@@ -59,6 +59,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.parceler.Parcels;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -83,6 +84,7 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String UNSUBMITTED_QUERY = "unsubmitted_query";
 
   @Inject SearchResultPresenter searchResultPresenter;
+  @Inject @Named("aptoide-theme") String theme;
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
   private ImageView noResultsSearchButton;
@@ -106,7 +108,6 @@ public class SearchResultFragment extends BackButtonFragment
   private PublishSubject<SearchQueryEvent> suggestionClickedPublishSubject;
   private PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
   private float listItemPadding;
-  private String defaultThemeName;
   private MenuItem searchMenuItem;
   private SearchView searchView;
   private String currentQuery;
@@ -581,8 +582,6 @@ public class SearchResultFragment extends BackButtonFragment
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 
-    defaultThemeName = application.getDefaultThemeName();
-
     noResults = false;
 
     onItemViewClickRelay = PublishRelay.create();
@@ -675,18 +674,18 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupDefaultTheme() {
-    if (storeThemeExists(defaultThemeName)) {
-      ThemeUtils.setStoreTheme(getActivity(), defaultThemeName);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultThemeName));
+    if (storeThemeExists(theme)) {
+      ThemeUtils.setStoreTheme(getActivity(), theme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(theme));
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(defaultThemeName)
+            StoreTheme.get(theme)
                 .getPrimaryColor()));
         progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
       } else {
         progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(defaultThemeName)
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(theme)
                 .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
       }
     }

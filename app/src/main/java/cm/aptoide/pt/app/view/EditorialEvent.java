@@ -71,6 +71,6 @@ class EditorialEvent {
   }
 
   public enum Type {
-    BUTTON, APPCARD, CANCEL, PAUSE, RESUME, MEDIA, MEDIA_LIST
+    ACTION, APPCARD, BUTTON, CANCEL, PAUSE, RESUME, MEDIA, MEDIA_LIST
   }
 }
