@@ -25,6 +25,10 @@ public class AppValidationAnalytics {
     this.navigationTracker = navigationTracker;
   }
 
+  public void sendInvalidDownloadMainPath(String packageName) {
+    sendInvalidDownloadPathEvent(packageName, FILE_TYPE_APK, FILE_TYPE_LEVEL_DOWNLOAD_MAIN);
+  }
+
   private void sendInvalidDownloadPathEvent(String packageName, String fileType,
       String fileTypeLevel) {
     analyticsManager.logEvent(createInvalidPathMap(packageName, fileType, fileTypeLevel),

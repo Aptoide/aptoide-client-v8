@@ -17,6 +17,7 @@ public class AppValidator {
       result = AppValidationResult.INVALID_MD5;
     }
     if (isStringEmptyOrNull(filePath)) {
+      appValidationAnalytics.sendInvalidDownloadMainPath(packageName);
       result = AppValidationResult.NO_MAIN_DOWNLOAD_LINK;
     } else if (isStringEmptyOrNull(filePathAlt)) {
       result = AppValidationResult.NO_ALTERNATIVE_DOWNLOAD_LINK;
