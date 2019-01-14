@@ -52,6 +52,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -62,6 +63,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   @Inject AppNavigator appNavigator;
+  @Inject @Named("marketName") String marketName;
   private SharedPreferences preferences;
   private DialogUtils dialogUtils;
   private long reviewId;
@@ -209,7 +211,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         ((ActivityResultNavigator) getContext()).getAccountNavigator(), baseBodyInterceptor,
         httpClient, converterFactory, installedRepository, tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        getContext().getResources());
+        getContext().getResources(), marketName);
   }
 
   private void fetchRating(boolean refresh) {

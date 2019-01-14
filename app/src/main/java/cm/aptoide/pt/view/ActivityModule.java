@@ -100,19 +100,17 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final AppCompatActivity activity;
   private final Intent intent;
   private final NotificationSyncScheduler notificationSyncScheduler;
-  private final String marketName;
   private final View view;
   private final String defaultStoreName;
   private final String fileProviderAuthority;
   private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, String marketName, View view,
-      String defaultStoreName, boolean firstCreated, String fileProviderAuthority) {
+      NotificationSyncScheduler notificationSyncScheduler, View view, String defaultStoreName,
+      boolean firstCreated, String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
-    this.marketName = marketName;
     this.view = view;
     this.firstCreated = firstCreated;
     this.defaultStoreName = defaultStoreName;
@@ -271,9 +269,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
       @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptor,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, Resources resources) {
+      @Named("default") SharedPreferences sharedPreferences, Resources resources,
+      @Named("marketName") String marketName) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources);
+        converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources,
+        marketName);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(FragmentNavigator fragmentNavigator) {

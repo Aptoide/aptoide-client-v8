@@ -56,7 +56,7 @@ import cm.aptoide.pt.util.SettingsConstants;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
@@ -126,7 +126,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ((MainActivity) getContext()).getActivityComponent()
+    ((BaseActivity) getContext()).getActivityComponent()
         .inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -330,7 +330,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           @Override public boolean onPreferenceClick(Preference preference) {
             ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
             subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
-                getString(R.string.storage_dialog_title),
+                getString(R.string.storage_dialog_title, marketName),
                 getString(R.string.clear_cache_dialog_message))
                 .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
                 .doOnNext(eResponse -> dialog.show())
