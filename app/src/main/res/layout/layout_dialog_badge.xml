@@ -156,9 +156,9 @@
           />
 
       <TextView
+          android:id="@+id/message_virus_no"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/appviewbadge_message_virus_no"
           style="@style/badgeReasonStyle"
           />
     </TableRow>
@@ -180,9 +180,9 @@
           />
 
       <TextView
+          android:id="@+id/message_virus_no_manual"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/appviewbadge_message_virus_no"
           style="@style/badgeReasonStyle"
           />
     </TableRow>

@@ -20,12 +20,14 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 
 public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
     implements ActivityNavigator {
 
   @Inject AccountNavigator accountNavigator;
+  @Inject @Named("marketName") String marketName;
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
@@ -152,8 +154,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     if (billingNavigator == null) {
       billingNavigator = new BillingNavigator(
           ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
-          getActivityNavigator(), getFragmentNavigator(),
-          ((AptoideApplication) getApplicationContext()).getMarketName(), this,
+          getActivityNavigator(), getFragmentNavigator(), marketName, this,
           ContextCompat.getColor(this, R.color.aptoide_orange));
     }
     return billingNavigator;

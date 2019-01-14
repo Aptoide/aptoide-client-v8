@@ -1636,7 +1636,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("marketName") String provideMarketName() {
-    return "Aptoide";
+    return BuildConfig.MARKET_NAME;
   }
 
   @Singleton @Provides @Named("partnerID") String providePartnerID() {

@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
@@ -108,7 +107,6 @@ import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
@@ -264,25 +262,22 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides SocialRepository providesSocialRepository(
-      AptoideAccountManager accountManager,
       @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, TimelineAnalytics timelineAnalytics,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
-    return new SocialRepository(accountManager, bodyInterceptorPoolV7,
-        WebService.getDefaultConverter(), okHttpClient, timelineAnalytics, tokenInvalidator,
-        sharedPreferences);
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new SocialRepository(bodyInterceptorPoolV7, WebService.getDefaultConverter(),
+        okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
   @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
-      ABTestManager abTestManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
-      SocialRepository socialRepository, @Named("marketName") String marketName,
-      AppCoinsManager appCoinsManager,
+      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      Resources resources, WindowManager windowManager, SocialRepository socialRepository,
+      @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
       IronSourceAdRepository ironSourceAdRepository) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,

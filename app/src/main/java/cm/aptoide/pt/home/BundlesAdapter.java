@@ -24,36 +24,39 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
+  private final String marketName;
   private List<HomeBundle> bundles;
   private PublishSubject<AdHomeEvent> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<AdHomeEvent> adPublishSubject) {
+      PublishSubject<AdHomeEvent> adPublishSubject, String marketName) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adPublishSubject;
+    this.marketName = marketName;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     switch (viewType) {
       case EDITORS:
         return new EditorsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter);
+            .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
       case SOCIAL:
         return new SocialBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(SOCIAL, parent, false), uiEventsListener, oneDecimalFormatter);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter);
+            .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
       case STORE:
         return new StoreBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(STORE, parent, false));
       case ADS:
         return new AdsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, adClickedEvents);
+            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, adClickedEvents,
+            marketName);
       case INFO:
         return new InfoBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(INFO, parent, false), uiEventsListener);

@@ -40,6 +40,7 @@ import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -58,6 +59,7 @@ public class MyAccountFragment extends BackButtonFragment
   @Inject MyAccountNavigator myAccountNavigator;
   @Inject AccountAnalytics accountAnalytics;
   @Inject MyAccountManager myAccountManager;
+  @Inject @Named("marketName") String marketName;
   private AptoideAccountManager accountManager;
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
@@ -105,6 +107,8 @@ public class MyAccountFragment extends BackButtonFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    ((TextView) view.findViewById(R.id.sign_in_message)).setText(
+        getString(R.string.newaccount_signin_message, marketName));
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     notificationHistory = view.findViewById(R.id.notifications_history);
     settings = view.findViewById(R.id.settings);

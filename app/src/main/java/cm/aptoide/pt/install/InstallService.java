@@ -59,10 +59,10 @@ public class InstallService extends BaseService implements DownloadsNotification
   @Inject InstalledRepository installedRepository;
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject CacheHelper cacheManager;
+  @Inject @Named("marketName") String marketName;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private Notification notification;
-  private String marketName;
   private PublishSubject<String> openAppViewAction;
   private PublishSubject<Void> openDownloadManagerAction;
   private DownloadsNotificationsPresenter presenter;
@@ -75,7 +75,6 @@ public class InstallService extends BaseService implements DownloadsNotification
         .d(TAG, "Install service is starting");
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     installManager = application.getInstallManager();
-    marketName = application.getMarketName();
     subscriptions = new CompositeSubscription();
     openDownloadManagerAction = PublishSubject.create();
     openAppViewAction = PublishSubject.create();
