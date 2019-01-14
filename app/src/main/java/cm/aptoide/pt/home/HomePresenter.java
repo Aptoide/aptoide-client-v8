@@ -229,23 +229,7 @@ public class HomePresenter implements Presenter {
                     .getContent()
                     .size()))
             .observeOn(viewScheduler)
-            .doOnNext(click -> {
-              Application app = click.getApp();
-              if (click.getBundle()
-                  .getType()
-                  .equals(EDITORS)) {
-                AptoideApp aptoideApp = (AptoideApp) app;
-                homeNavigator.navigateWithEditorsPosition(aptoideApp.getAppId(),
-                    aptoideApp.getPackageName(), "", "", aptoideApp.getTag(),
-                    String.valueOf(click.getAppPosition()));
-              } else if (app instanceof RewardApp) {
-                view.showRewardAppSnack();
-              } else {
-                AptoideApp aptoideApp = (AptoideApp) app;
-                homeNavigator.navigateToAppView(aptoideApp.getAppId(), aptoideApp.getPackageName(),
-                    aptoideApp.getTag());
-              }
-            })
+            .doOnNext(this::navigateToApp)
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -617,5 +601,24 @@ public class HomePresenter implements Presenter {
       userAvatarUrl = account.getAvatar();
     }
     return Observable.just(userAvatarUrl);
+  }
+
+  private void navigateToApp(AppHomeEvent click) {
+    Application app = click.getApp();
+    if (app instanceof RewardApp) {
+
+    } else {
+      AptoideApp aptoideApp = (AptoideApp) app;
+      if (click.getBundle()
+          .getType()
+          .equals(EDITORS)) {
+        homeNavigator.navigateWithEditorsPosition(aptoideApp.getAppId(),
+            aptoideApp.getPackageName(), "", "", aptoideApp.getTag(),
+            String.valueOf(click.getAppPosition()));
+      } else {
+        homeNavigator.navigateToAppView(aptoideApp.getAppId(), aptoideApp.getPackageName(),
+            aptoideApp.getTag());
+      }
+    }
   }
 }

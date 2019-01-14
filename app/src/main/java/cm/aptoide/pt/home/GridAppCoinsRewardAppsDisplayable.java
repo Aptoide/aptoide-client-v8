@@ -43,7 +43,5 @@ public class GridAppCoinsRewardAppsDisplayable extends DisplayablePojo<RewardApp
   }
 
   public void openAppView() {
-    //appNavigator.navigateWithAppId(getPojo().getAppId(), getPojo().getPackageName(),
-    //    AppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 }

@@ -3,7 +3,6 @@ package cm.aptoide.pt.app.view;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -280,10 +279,6 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   @Override public void setToolbarInfo(String title) {
     toolbar.setTitle(Translator.translate(title, getContext(), ""));
     toolbar.setLogo(R.drawable.logo_toolbar);
-  }
-
-  @Override public void showRewardAppSnack() {
-    Snackbar.make(this.getView(), "Reward app clicked!", Snackbar.LENGTH_LONG);
   }
 
   private boolean isEndReached() {

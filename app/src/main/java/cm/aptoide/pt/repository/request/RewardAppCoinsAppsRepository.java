@@ -14,7 +14,6 @@ import rx.Observable;
 
 public class RewardAppCoinsAppsRepository {
 
-  private static final int APPCOINS_REWARD_LIMIT = 30;
   private InstallManager installManager;
   private CampaignsService campaignsService;
 
@@ -24,7 +23,7 @@ public class RewardAppCoinsAppsRepository {
     this.campaignsService = campaignsService;
   }
 
-  public Observable<List<RewardApp>> getAppCoinsRewardAppsFromHomeMore(boolean refresh) {
+  public Observable<List<RewardApp>> getAppCoinsRewardAppsFromHomeMore() {
     return campaignsService.getCampaigns()
         .flatMap(response -> map(response.getCampaigns()));
   }

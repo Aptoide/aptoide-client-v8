@@ -121,17 +121,7 @@ public class MoreBundlePresenter implements Presenter {
                     .getContent()
                     .size()))
             .observeOn(viewScheduler)
-            .doOnNext(click -> {
-              Application app = click.getApp();
-              if (app instanceof RewardApp) {
-                RewardApp rewardApp = (RewardApp) app;
-                view.showRewardAppSnack();
-              } else {
-                AptoideApp aptoideApp = (AptoideApp) app;
-                homeNavigator.navigateToAppView(aptoideApp.getAppId(), aptoideApp.getPackageName(),
-                    aptoideApp.getTag());
-              }
-            })
+            .doOnNext(click -> navigateToApp(click.getApp()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -266,5 +256,15 @@ public class MoreBundlePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
+  }
+
+  private void navigateToApp(Application app) {
+    if (app instanceof RewardApp) {
+      RewardApp rewardApp = (RewardApp) app;
+    } else {
+      AptoideApp aptoideApp = (AptoideApp) app;
+      homeNavigator.navigateToAppView(aptoideApp.getAppId(), aptoideApp.getPackageName(),
+          aptoideApp.getTag());
+    }
   }
 }
