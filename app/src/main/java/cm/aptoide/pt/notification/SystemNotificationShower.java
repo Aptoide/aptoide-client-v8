@@ -1,11 +1,13 @@
 package cm.aptoide.pt.notification;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
@@ -122,8 +124,9 @@ public class SystemNotificationShower implements Presenter {
       String body, String iconUrl, PendingIntent pressIntentAction, int notificationId,
       PendingIntent onDismissAction, String appName, String graphic) {
     return Single.fromCallable(() -> {
-      android.app.Notification notification =
-          new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
+          createNotificationChannel("system_notification", "System Notification"));
+      android.app.Notification notification = builder.setContentIntent(pressIntentAction)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
               .setLargeIcon(ImageLoader.with(context)
@@ -140,6 +143,20 @@ public class SystemNotificationShower implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .map(notification -> setExpandedView(context, title, body, notificationId, notification,
             appName, graphic, iconUrl));
+  }
+
+  private String createNotificationChannel(String channelId, String channelName) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+      return "";
+    }
+    NotificationChannel chan =
+        new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
+    chan.setLightColor(Color.BLUE);
+    chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+    NotificationManager service =
+        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    service.createNotificationChannel(chan);
+    return channelId;
   }
 
   private android.app.Notification setExpandedView(Context context, String title, String body,
@@ -191,7 +208,9 @@ public class SystemNotificationShower implements Presenter {
 
   private Notification mapToAndroidNotification(Context context,
       RootInstallErrorNotification installErrorNotification) {
-    Notification notification = new NotificationCompat.Builder(context).setContentTitle(
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
+        createNotificationChannel("system_notification", "System Notification"));
+    Notification notification = builder.setContentTitle(
         installErrorNotification.getMessage())
         .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
         .setLargeIcon(installErrorNotification.getIcon())
