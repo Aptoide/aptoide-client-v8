@@ -53,7 +53,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="1dp"
-        android:background="@drawable/aptoide_gradient_rounded"
         android:text="@string/install"
         android:textAlignment="center"
         android:textAllCaps="true"

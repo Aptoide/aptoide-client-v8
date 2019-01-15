@@ -3,8 +3,8 @@
     <shape>
       <gradient
           android:angle="0"
-          android:endColor="@color/default_orange_gradient_end"
-          android:startColor="@color/default_orange_gradient_start"
+          android:endColor="?attr/colorPrimaryDark"
+          android:startColor="?attr/colorPrimary"
           android:type="linear"/>
       <corners
           android:radius="45dp"/>
@@ -14,8 +14,8 @@
     <shape>
       <gradient
           android:angle="0"
-          android:endColor="@color/default_orange_gradient_end"
-          android:startColor="@color/default_orange_gradient_start"
+          android:endColor="?attr/colorPrimaryDark"
+          android:startColor="?attr/colorPrimary"
           android:type="linear"/>
       <corners
           android:radius="45dp"/>

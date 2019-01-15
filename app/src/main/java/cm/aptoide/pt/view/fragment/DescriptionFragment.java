@@ -30,6 +30,8 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
+import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -37,13 +39,13 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     implements NotBottomNavigationView {
 
   private static final String TAG = DescriptionFragment.class.getSimpleName();
-
   private static final String APP_ID = "app_id";
   private static final String PACKAGE_NAME = "packageName";
   private static final String STORE_NAME = "store_name";
   private static final String STORE_THEME = "store_theme";
   private static final String DESCRIPTION = "description";
   private static final String APP_NAME = "APP_NAME";
+  @Inject @Named("aptoide-theme") String theme;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -82,10 +84,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     return fragment;
   }
 
-  public static String getAPP_ID() {
-    return DescriptionFragment.APP_ID;
-  }
-
   public static String getPACKAGE_NAME() {
     return DescriptionFragment.PACKAGE_NAME;
   }
@@ -98,16 +96,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     return DescriptionFragment.STORE_THEME;
   }
 
-  public static String getDESCRIPTION() {
-    return DescriptionFragment.DESCRIPTION;
-  }
-
-  public static String getAPP_NAME() {
-    return DescriptionFragment.APP_NAME;
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
@@ -237,8 +228,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
     if (bar != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
       bar.setBackgroundDrawable(getActivity().getResources()
           .getDrawable(StoreTheme.get(storeTheme)
               .getGradientDrawable()));
@@ -252,13 +243,14 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   }
 
   @Override public void onDestroyView() {
-    super.onDestroyView();
+    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.DEFAULT);
       bar.setBackgroundDrawable(getActivity().getResources()
-          .getDrawable(StoreTheme.DEFAULT.getGradientDrawable()));
+          .getDrawable(StoreTheme.get(theme)
+              .getGradientDrawable()));
     }
+    super.onDestroyView();
   }
 
   @Override public int getContentViewId() {

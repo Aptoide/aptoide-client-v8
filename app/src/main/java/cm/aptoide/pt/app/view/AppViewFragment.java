@@ -1580,7 +1580,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
+    return inflater.inflate(R.layout.fragment_app_view, container, false);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

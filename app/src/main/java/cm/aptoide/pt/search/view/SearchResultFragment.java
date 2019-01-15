@@ -656,7 +656,7 @@ public class SearchResultFragment extends BackButtonFragment
     if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
       String storeTheme = viewModel.getStoreTheme();
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
       toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
           .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -676,7 +676,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void setupDefaultTheme() {
     if (storeThemeExists(theme)) {
       ThemeUtils.setStoreTheme(getActivity(), theme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(theme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
@@ -745,10 +745,6 @@ public class SearchResultFragment extends BackButtonFragment
     focusInSearchBar = currentQuery.isEmpty() && !noResults;
 
     searchSetupPublishSubject.onNext(null);
-  }
-
-  @Override public String getDefaultTheme() {
-    return super.getDefaultTheme();
   }
 
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {

@@ -31,8 +31,10 @@ import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
-import cm.aptoide.pt.view.fragment.FragmentView;
+import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import dagger.Subcomponent;
@@ -106,5 +108,9 @@ public interface FragmentComponent {
 
   void inject(PromotionsFragment promotionsFragment);
 
-  void inject(FragmentView fragmentView);
+  void inject(DescriptionFragment descriptionFragment);
+
+  void inject(TimeLineFollowingFragment timeLineFollowingFragment);
+
+  void inject(TimeLineFollowersFragment timeLineFollowersFragment);
 }

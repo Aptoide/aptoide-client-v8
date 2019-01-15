@@ -5,6 +5,7 @@ import cm.aptoide.pt.install.InstalledIntentService;
 import cm.aptoide.pt.toolbox.ToolboxContentProvider;
 import cm.aptoide.pt.view.ActivityComponent;
 import cm.aptoide.pt.view.ActivityModule;
+import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import dagger.Component;
 import javax.inject.Singleton;
 
@@ -23,4 +24,6 @@ public interface ApplicationComponent {
   void inject(InstallService installService);
 
   void inject(InstalledIntentService installedIntentService);
+
+  void inject(DescriptionFragment descriptionFragment);
 }

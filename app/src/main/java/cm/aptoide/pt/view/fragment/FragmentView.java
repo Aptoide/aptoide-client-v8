@@ -24,14 +24,11 @@ import cm.aptoide.pt.view.MainActivity;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 
 public abstract class FragmentView extends BaseFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
-  @Inject @Named("aptoide-theme") String theme;
   private boolean startActivityForResultCalled;
   private ActivityResultNavigator activityResultNavigator;
 
@@ -69,7 +66,6 @@ public abstract class FragmentView extends BaseFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getFragmentComponent(savedInstanceState).inject(this);
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
   }
@@ -167,9 +163,5 @@ public abstract class FragmentView extends BaseFragment implements View {
 
   public boolean isStartActivityForResultCalled() {
     return startActivityForResultCalled;
-  }
-
-  protected String getDefaultTheme() {
-    return theme;
   }
 }

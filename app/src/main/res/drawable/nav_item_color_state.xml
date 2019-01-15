@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:color="@color/default_orange_gradient_end" android:state_checked="true"/>
-  <item android:color="@color/bottom_nav_non_selected_item_color"/>
+  <item android:color="?attr/activeNavItemColor" android:state_checked="true"/>
+  <item android:color="?attr/defaultNavItemColor"/>
 </selector>

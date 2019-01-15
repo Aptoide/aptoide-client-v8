@@ -185,6 +185,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideShortcutManager shortcutManager;
   @Inject SettingsManager settingsManager;
   @Inject InstallManager installManager;
+  @Inject @Named("aptoide-theme") String theme;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -238,7 +239,6 @@ public abstract class AptoideApplication extends Application {
   @Override public void onCreate() {
 
     getApplicationComponent().inject(this);
-
     CrashReport.getInstance()
         .addLogger(new CrashlyticsCrashLogger(crashlytics))
         .addLogger(new ConsoleLogger());

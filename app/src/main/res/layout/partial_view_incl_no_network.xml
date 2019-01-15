@@ -40,7 +40,7 @@
         android:fontFamily="@string/font_family_medium"
         android:gravity="center_horizontal"
         android:text="@string/could_not_connect_internet"
-        android:textColor="@color/aptoide_orange"
+        android:textColor="?attr/colorPrimaryDark"
         android:textSize="14sp"
         />
 
@@ -55,7 +55,7 @@
         android:gravity="center"
         android:text="@string/retry_connection"
         android:textAllCaps="true"
-        android:textColor="@color/default_color"
+        android:textColor="?attr/colorPrimaryDark"
         android:textSize="14sp"
         style="?attr/customButtonThinLine"
         />

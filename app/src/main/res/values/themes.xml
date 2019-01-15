@@ -15,6 +15,10 @@
     <item name="colorAccent">@color/aptoide_color_focused</item>
     <item name="customColor">@color/default_orange_gradient_start</item>
 
+    <!--bottomNavigation-->
+    <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
+    <item name="activeNavItemColor">@color/default_orange_gradient_end</item>
+    <item name="defaultNavItemColor">@color/bottom_nav_non_selected_item_color</item>
 
     <!--toolbar-->
     <item name="toolbarTheme">@style/Toolbar</item>
@@ -24,6 +28,7 @@
 
     <!--Buttons-->
     <item name="raisedButtonBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme</item>
     <item name="raisedButtonTextColor">@color/white</item>
     <item name="buttonTextFont">roboto-medium</item>
@@ -50,7 +55,7 @@
     <item name="backgroundHomeSeparator">@color/background_window</item>
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
-
+    <item name="wizard3Color">@color/wizard_color_3_orange</item>
 
     <!--text-->
     <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
@@ -263,6 +268,16 @@
     <item name="colorButtonNormal">@color/grey</item>
     <item name="customColor">@color/grey</item>
 
+    <item name="raisedButtonBackground">@drawable/grey_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/grey_gradient</item>
+    <item name="installButtonBackground">@drawable/grey_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/grey_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_grey</item>
+    <item name="colorControlHighlight">@color/grey_gradient_end</item>
+    <item name="activeNavItemColor">@color/grey_gradient_end</item>
+    <item name="wizard3Color">@color/grey</item>
+    <item name="defaultNavItemColor">@color/grey_fog_light</item>
+
     <item name="customButton">@style/WidgetButtonCustomGrey</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
 
@@ -277,6 +292,15 @@
     <item name="colorButtonNormal">@color/teal</item>
     <item name="customColor">@color/teal</item>
 
+    <item name="raisedButtonBackground">@drawable/teal_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/teal_gradient</item>
+    <item name="installButtonBackground">@drawable/teal_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/teal_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_teal</item>
+    <item name="colorControlHighlight">@color/teal_gradient_end</item>
+    <item name="activeNavItemColor">@color/teal_gradient_end</item>
+    <item name="wizard3Color">@color/teal</item>
+
     <item name="customButton">@style/WidgetButtonCustomTeal</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideTeal</item>
 
@@ -289,6 +313,15 @@
     <item name="colorAccent">@color/brown_700</item>
     <item name="colorButtonNormal">@color/brown</item>
     <item name="customColor">@color/brown</item>
+
+    <item name="raisedButtonBackground">@drawable/brown_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/brown_gradient</item>
+    <item name="installButtonBackground">@drawable/brown_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/brown_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_brown</item>
+    <item name="colorControlHighlight">@color/brown_gradient_end</item>
+    <item name="activeNavItemColor">@color/brown_gradient_end</item>
+    <item name="wizard3Color">@color/brown</item>
 
     <item name="customButton">@style/WidgetButtonCustomBrown</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBrown</item>
@@ -303,6 +336,15 @@
     <item name="colorAccent">@color/blue_grey_700</item>
     <item name="colorButtonNormal">@color/blue_grey</item>
     <item name="customColor">@color/blue_grey</item>
+
+    <item name="raisedButtonBackground">@drawable/blue_grey_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/blue_grey_gradient</item>
+    <item name="installButtonBackground">@drawable/blue_grey_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/blue_grey_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_bluegrey</item>
+    <item name="colorControlHighlight">@color/blue_grey_gradient_end</item>
+    <item name="activeNavItemColor">@color/blue_grey_gradient_end</item>
+    <item name="wizard3Color">@color/blue_grey</item>
 
     <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBluegrey</item>
@@ -319,6 +361,15 @@
     <item name="colorButtonNormal">@color/light_green</item>
     <item name="customColor">@color/light_green</item>
 
+    <item name="raisedButtonBackground">@drawable/light_green_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/light_green_gradient</item>
+    <item name="installButtonBackground">@drawable/light_green_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/light_green_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_lightgreen</item>
+    <item name="colorControlHighlight">@color/light_green_gradient_end</item>
+    <item name="activeNavItemColor">@color/light_green_gradient_end</item>
+    <item name="wizard3Color">@color/light_green</item>
+
     <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
 
@@ -332,6 +383,15 @@
     <item name="colorAccent">@color/light_blue_700</item>
     <item name="colorButtonNormal">@color/light_blue</item>
     <item name="customColor">@color/light_blue</item>
+
+    <item name="raisedButtonBackground">@drawable/light_blue_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/light_blue_gradient</item>
+    <item name="installButtonBackground">@drawable/light_blue_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/light_blue_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_lightblue</item>
+    <item name="colorControlHighlight">@color/light_blue_gradient_end</item>
+    <item name="activeNavItemColor">@color/light_blue_gradient_end</item>
+    <item name="wizard3Color">@color/light_blue</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightblue</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
@@ -347,6 +407,15 @@
     <item name="colorButtonNormal">@color/amber</item>
     <item name="customColor">@color/amber</item>
 
+    <item name="raisedButtonBackground">@drawable/amber_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/amber_gradient</item>
+    <item name="installButtonBackground">@drawable/amber_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/amber_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_amber</item>
+    <item name="colorControlHighlight">@color/amber_gradient_end</item>
+    <item name="activeNavItemColor">@color/amber_gradient_end</item>
+    <item name="wizard3Color">@color/amber</item>
+
     <item name="customButton">@style/WidgetButtonCustomAmber</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideAmber</item>
 
@@ -359,6 +428,15 @@
     <item name="colorAccent">@color/lime_700</item>
     <item name="colorButtonNormal">@color/lime</item>
     <item name="customColor">@color/lime</item>
+
+    <item name="raisedButtonBackground">@drawable/lime_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/lime_gradient</item>
+    <item name="installButtonBackground">@drawable/lime_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/lime_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_lime</item>
+    <item name="colorControlHighlight">@color/lime_gradient_end</item>
+    <item name="activeNavItemColor">@color/lime_gradient_end</item>
+    <item name="wizard3Color">@color/lime</item>
 
     <item name="customButton">@style/WidgetButtonCustomLime</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLime</item>
@@ -374,6 +452,15 @@
     <item name="colorButtonNormal">@color/orange</item>
     <item name="customColor">@color/orange</item>
 
+    <item name="raisedButtonBackground">@drawable/orange_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/orange_gradient</item>
+    <item name="installButtonBackground">@drawable/orange_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/orange_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_orange</item>
+    <item name="colorControlHighlight">@color/orange_gradient_end</item>
+    <item name="activeNavItemColor">@color/orange_gradient_end</item>
+    <item name="wizard3Color">@color/orange</item>
+
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomOrange</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideOrange</item>
@@ -387,6 +474,15 @@
     <item name="colorAccent">@color/pink_700</item>
     <item name="colorButtonNormal">@color/pink</item>
     <item name="customColor">@color/pink</item>
+
+    <item name="raisedButtonBackground">@drawable/pink_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/pink_gradient</item>
+    <item name="installButtonBackground">@drawable/pink_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/pink_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_pink</item>
+    <item name="colorControlHighlight">@color/pink_gradient_end</item>
+    <item name="activeNavItemColor">@color/pink_gradient_end</item>
+    <item name="wizard3Color">@color/pink</item>
 
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomPink</item>
@@ -402,6 +498,15 @@
     <item name="colorAccent">@color/indigo_700</item>
     <item name="colorButtonNormal">@color/indigo</item>
     <item name="customColor">@color/indigo</item>
+
+    <item name="raisedButtonBackground">@drawable/indigo_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/indigo_gradient</item>
+    <item name="installButtonBackground">@drawable/indigo_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/indigo_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_indigo</item>
+    <item name="colorControlHighlight">@color/indigo_gradient_end</item>
+    <item name="activeNavItemColor">@color/indigo_gradient_end</item>
+    <item name="wizard3Color">@color/indigo</item>
 
     <item name="customButton">@style/WidgetButtonCustomIndigo</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideIndigo</item>
@@ -420,6 +525,15 @@
     <item name="colorButtonNormal">@color/red</item>
     <item name="customColor">@color/red</item>
 
+    <item name="raisedButtonBackground">@drawable/red_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/red_gradient</item>
+    <item name="installButtonBackground">@drawable/red_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/red_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_red</item>
+    <item name="colorControlHighlight">@color/red_gradient_end</item>
+    <item name="activeNavItemColor">@color/red_gradient_end</item>
+    <item name="wizard3Color">@color/red</item>
+
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomRed</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideRed</item>
@@ -434,6 +548,14 @@
     <item name="colorButtonNormal">@color/green</item>
     <item name="customColor">@color/green</item>
 
+    <item name="raisedButtonBackground">@drawable/green_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/green_gradient</item>
+    <item name="installButtonBackground">@drawable/green_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/green_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_green</item>
+    <item name="colorControlHighlight">@color/green_gradient_end</item>
+    <item name="activeNavItemColor">@color/green_gradient_end</item>
+    <item name="wizard3Color">@color/green</item>
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomGreen</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGreen</item>
@@ -452,6 +574,15 @@
     <item name="colorButtonNormal">@color/deep_purple</item>
     <item name="customColor">@color/deep_purple</item>
 
+    <item name="raisedButtonBackground">@drawable/deep_purple_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/deep_purple_gradient</item>
+    <item name="installButtonBackground">@drawable/deep_purple_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/deep_purple_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_deeppurple</item>
+    <item name="colorControlHighlight">@color/deep_purple_gradient_end</item>
+    <item name="activeNavItemColor">@color/deep_purple_gradient_end</item>
+    <item name="wizard3Color">@color/deep_purple</item>
+
     <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
 
@@ -465,13 +596,18 @@
     <item name="colorButtonNormal">@color/black</item>
     <item name="customColor">@color/black</item>
 
+    <item name="raisedButtonBackground">@drawable/black_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/black_gradient</item>
+    <item name="installButtonBackground">@drawable/black_gradient_rounded</item>
+    <item name="toolbarBackground">@drawable/black_gradient</item>
+    <item name="ghostButtonBackground">@drawable/button_border_black</item>
+    <item name="colorControlHighlight">@color/black_gradient_end</item>
+    <item name="activeNavItemColor">@color/black_gradient_end</item>
+    <item name="wizard3Color">@color/black</item>
+
     <item name="customButton">@style/WidgetButtonCustomBlack</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBlack</item>
 
     <item name="toolbarTheme">@style/ToolbarBlackTransparent</item>
-  </style>
-
-  <style name="AptoideEditorialThemeGrey" parent="AptoideThemeDefault">
-    <item name="colorPrimaryDark">@color/grey_700</item>
   </style>
 </resources>

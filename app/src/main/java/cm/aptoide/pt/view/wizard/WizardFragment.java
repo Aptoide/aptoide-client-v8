@@ -14,6 +14,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -23,6 +24,7 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,6 +43,7 @@ public class WizardFragment extends UIComponentFragment
   private static final String PAGE_INDEX = "page_index";
   AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
   @Inject WizardPresenter wizardPresenter;
+  @Inject @Named("aptoide-theme") String theme;
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -94,10 +97,15 @@ public class WizardFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    int lastPageColor = R.color.wizard_color_3_orange;
+    if (!theme.equals("default")) {
+      lastPageColor = StoreTheme.get(theme)
+          .getPrimaryColor();
+    }
     transitionColors = new Integer[] {
         getContext().getResources().getColor(R.color.wizard_color_1_blue),
         getContext().getResources().getColor(R.color.wizard_color_2_green),
-        getContext().getResources().getColor(R.color.wizard_color_3_orange)
+        getContext().getResources().getColor(lastPageColor)
     };
   }
 

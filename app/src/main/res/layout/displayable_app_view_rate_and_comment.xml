@@ -216,8 +216,8 @@
           android:lineSpacingMultiplier="0.9"
           android:maxLines="1"
           android:text="@string/zero"
-          android:textColor="@color/default_orange_gradient_end"
           android:textSize="52sp"
+          style="@style/Widget.Aptoide.defaultDarkColorText"
           />
 
       <RatingBar

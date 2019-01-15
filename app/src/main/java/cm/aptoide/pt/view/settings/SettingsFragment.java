@@ -244,7 +244,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
       removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     } else {
       PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference("adultContent");
-      getPreferenceScreen().removePreference(preferenceCategory);
+      if (preferenceCategory != null) {
+        getPreferenceScreen().removePreference(preferenceCategory);
+      }
     }
   }
 

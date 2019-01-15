@@ -91,6 +91,7 @@
   <attr format="reference" name="raisedButtonBackground"/>
   <attr format="reference" name="ghostButtonBackground"/>
   <attr format="color" name="raisedButtonTextColor"/>
+  <attr format="color" name="flatButtonBackground"/>
   <attr format="string" name="buttonTextFont"/>
   <attr format="dimension" name="buttonTextSize"/>
   <attr format="dimension" name="buttonTextSizeSmall"/>
@@ -101,7 +102,10 @@
   <attr format="dimension" name="preferenceTitleTextSize"/>
   <attr format="color" name="preferenceSummaryColor"/>
   <attr format="dimension" name="preferenceSummaryTextSize"/>
-
+  <attr format="color" name="colorControlHighlight"/>
+  <attr format="color" name="activeNavItemColor"/>
+  <attr format="color" name="defaultNavItemColor"/>
+  <attr format="color" name="wizard3Color"/>
   <declare-styleable name="CustomTextInputLayout">
     <attr format="string" name="helperText"/>
     <attr format="color|reference" name="helperTextColor"/>

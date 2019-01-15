@@ -15,6 +15,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ThemeUtils.setStatusBarThemeColor(this, BuildConfig.APTOIDE_THEME);
+    ThemeUtils.setAptoideTheme(this, BuildConfig.APTOIDE_THEME);
     firstCreated = savedInstanceState == null;
   }
 
@@ -29,8 +31,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
       activityComponent = aptoideApplication.getApplicationComponent()
           .plus(aptoideApplication.getActivityModule(this, getIntent(),
               aptoideApplication.getNotificationSyncScheduler(), aptoideApplication.getMarketName(),
-              (View) this,
-              aptoideApplication.getDefaultStoreName(), firstCreated,
+              (View) this, aptoideApplication.getDefaultStoreName(), firstCreated,
               BuildConfig.APPLICATION_ID + ".provider"), new FlavourActivityModule());
     }
     return activityComponent;

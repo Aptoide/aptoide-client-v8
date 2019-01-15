@@ -8,7 +8,6 @@
     android:layout_marginRight="30dp"
     android:layout_marginStart="30dp"
     android:orientation="vertical"
-    android:theme="@style/AppBaseTheme"
     >
 
   <ImageView
