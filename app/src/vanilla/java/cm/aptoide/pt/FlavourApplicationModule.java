@@ -29,4 +29,8 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("auto-update-store-name") String provideAutoUpdateStoreName() {
     return "v9";
   }
+
+  @Singleton @Provides @Named("support-email") String providesSupportEmail() {
+    return application.getString(R.string.aptoide_email);
+  }
 }

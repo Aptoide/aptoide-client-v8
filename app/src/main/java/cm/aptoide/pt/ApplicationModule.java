@@ -1627,10 +1627,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.MARKET_NAME;
   }
 
-  @Singleton @Provides @Named("support-email") String providesSupportEmail() {
-    return application.getString(R.string.aptoide_email);
-  }
-
   @Singleton @Provides @Named("partnerID") String providePartnerID() {
     return "";
   }
@@ -1758,6 +1754,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SupportEmailProvider providesSupportEmailProvider(
       @Named("support-email") String supportEmail) {
-    return new SupportEmailProvider(supportEmail, "aptoide@aptoide.com");
+    return new SupportEmailProvider(supportEmail, application.getString(R.string.aptoide_email));
   }
 }

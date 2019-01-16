@@ -19,4 +19,8 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("auto-update-store-name") String provideAutoUpdateStoreName() {
     return BuildConfig.COBRAND_APPLICATION_ID_SUFFIX;
   }
+
+  @Singleton @Provides @Named("support-email") String providesSupportEmail() {
+    return "n/a";
+  }
 }
