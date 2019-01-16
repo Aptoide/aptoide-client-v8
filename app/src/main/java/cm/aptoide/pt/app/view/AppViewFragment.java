@@ -78,6 +78,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.AppUtils;
@@ -107,6 +108,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -130,6 +132,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
+  @Inject @Named("aptoide-theme") String theme;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -1308,8 +1311,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
 
     SpannableString spannable = new SpannableString(tryAppMessage);
-    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.orange_700)),
-        tryAppMessage.indexOf(reward), tryAppMessage.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(StoreTheme.get(theme)
+            .getPrimaryColor())), tryAppMessage.indexOf(reward), tryAppMessage.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
     return spannable;
   }
