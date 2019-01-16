@@ -60,6 +60,7 @@ import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -1755,5 +1756,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SupportEmailProvider providesSupportEmailProvider(
       @Named("support-email") String supportEmail) {
     return new SupportEmailProvider(supportEmail, application.getString(R.string.aptoide_email));
+  }
+
+  @Singleton @Provides NewsletterManager providesNewsletterManager() {
+    return new NewsletterManager();
   }
 }

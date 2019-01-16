@@ -58,6 +58,7 @@ public class ManageUserFragment extends BackButtonFragment
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageUserPresenter manageUserPresenter;
   @Inject ScreenOrientationManager orientationManager;
+  @Inject NewsletterManager newsletterManager;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -145,7 +146,7 @@ public class ManageUserFragment extends BackButtonFragment
       cancelUserProfile.setVisibility(View.VISIBLE);
     } else {
       birthdayLayout.setVisibility(View.VISIBLE);
-      newsLetterLayout.setVisibility(View.VISIBLE);
+      handleNewsletterVisibility();
       setupDatePickerDialog(calendar);
     }
     attachPresenters();
@@ -154,6 +155,14 @@ public class ManageUserFragment extends BackButtonFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  private void handleNewsletterVisibility() {
+    if (newsletterManager.shouldShowNewsletter()) {
+      newsLetterLayout.setVisibility(View.VISIBLE);
+    } else {
+      newsLetterLayout.setVisibility(View.GONE);
+    }
   }
 
   private void setupDatePickerDialog(Calendar calendar) {
