@@ -78,8 +78,6 @@ import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTI
 public class SettingsFragment extends PreferenceFragmentCompat
     implements SharedPreferences.OnSharedPreferenceChangeListener, NotBottomNavigationView {
   private static final String TAG = SettingsFragment.class.getSimpleName();
-
-  @Inject @Named("marketName") String marketName;
   private static final String ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "Maturepin";
   private static final String REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "removeMaturepin";
   private static final String ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY = "matureChkBoxWithPin";
@@ -91,6 +89,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String DELETE_ACCOUNT = "deleteAccount";
 
   protected Toolbar toolbar;
+
+  @Inject @Named("marketName") String marketName;
+
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
