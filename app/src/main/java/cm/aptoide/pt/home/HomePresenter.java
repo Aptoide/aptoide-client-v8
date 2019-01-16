@@ -10,6 +10,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -228,19 +229,7 @@ public class HomePresenter implements Presenter {
                     .getContent()
                     .size()))
             .observeOn(viewScheduler)
-            .doOnNext(click -> {
-              Application app = click.getApp();
-              if (click.getBundle()
-                  .getType()
-                  .equals(EDITORS)) {
-                homeNavigator.navigateWithEditorsPosition(click.getApp()
-                    .getAppId(), click.getApp()
-                    .getPackageName(), "", "", click.getApp()
-                    .getTag(), String.valueOf(click.getAppPosition()));
-              } else {
-                homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
-              }
-            })
+            .doOnNext(this::navigateToApp)
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -254,10 +243,11 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.recommendedAppClicked()
             .observeOn(viewScheduler)
-            .doOnNext(click -> homeNavigator.navigateToRecommendsAppView(click.getApp()
-                .getAppId(), click.getApp()
-                .getPackageName(), click.getApp()
-                .getTag(), click.getType()))
+            .doOnNext(click -> {
+              AptoideApp app = (AptoideApp) click.getApp();
+              homeNavigator.navigateToRecommendsAppView(app.getAppId(), app.getPackageName(),
+                  app.getTag(), click.getType());
+            })
             .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
                 .getRating(), click.getApp()
                 .getPackageName(), click.getBundlePosition(), click.getBundle()
@@ -611,5 +601,24 @@ public class HomePresenter implements Presenter {
       userAvatarUrl = account.getAvatar();
     }
     return Observable.just(userAvatarUrl);
+  }
+
+  private void navigateToApp(AppHomeEvent click) {
+    Application app = click.getApp();
+    if (app instanceof RewardApp) {
+
+    } else {
+      AptoideApp aptoideApp = (AptoideApp) app;
+      if (click.getBundle()
+          .getType()
+          .equals(EDITORS)) {
+        homeNavigator.navigateWithEditorsPosition(aptoideApp.getAppId(),
+            aptoideApp.getPackageName(), "", "", aptoideApp.getTag(),
+            String.valueOf(click.getAppPosition()));
+      } else {
+        homeNavigator.navigateToAppView(aptoideApp.getAppId(), aptoideApp.getPackageName(),
+            aptoideApp.getTag());
+      }
+    }
   }
 }

@@ -81,10 +81,10 @@ public class AppService {
 
   private Observable<AppsList> mapListApps(ListApps listApps) {
     if (listApps.isOk()) {
-      List<Application> list = new ArrayList<>();
+      List<AptoideApp> list = new ArrayList<>();
       for (App app : listApps.getDataList()
           .getList()) {
-        list.add(new Application(app.getName(), app.getIcon(), app.getStats()
+        list.add(new AptoideApp(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
             .getDownloads(), app.getPackageName(), app.getId(), "",

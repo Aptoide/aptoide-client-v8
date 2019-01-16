@@ -10,7 +10,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
-import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
         ((AptoideApplication) itemView.getContext()
             .getApplicationContext()).getMarketName()));
     graphicAppsAdapter.updateBundle(homeBundle, position);
-    graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
+    graphicAppsAdapter.update((List<AptoideApp>) homeBundle.getContent());
     graphicsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);

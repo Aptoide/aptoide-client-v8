@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.dataprovider.ws.v8.CampaignsServiceProvider;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -51,7 +52,7 @@ import rx.schedulers.Schedulers;
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache, int limit,
-      List<String> packageNames) {
+      List<String> packageNames, CampaignsServiceProvider campaignsService) {
     if (wsWidget.getType() != null) {
 
       String url = null;
@@ -99,13 +100,12 @@ import rx.schedulers.Schedulers;
               .map(listApps -> wsWidget);
 
         case APPCOINS_ADS:
-          return new GetAppCoinsCampaignsRequest(new GetAppCoinsCampaignsRequest.Body(0, limit),
-              httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
-              sharedPreferences).observe(bypassCache, bypassServerCache)
+          return campaignsService.getCampaigns()
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listAppCoinsRewardApps -> wsWidget);
+
         case HOME_META:
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)

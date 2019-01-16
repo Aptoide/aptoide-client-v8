@@ -25,7 +25,7 @@ import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import java.util.Collections;
 import java.util.Date;
 import org.junit.Before;
@@ -69,7 +69,7 @@ public class HomePresenterTest {
   private PublishSubject<Void> pullToRefreshEvent;
   private PublishSubject<Void> retryClickedEvent;
   private HomeBundle localTopAppsBundle;
-  private Application aptoide;
+  private AptoideApp aptoide;
   private PublishSubject<Void> imageClickEvent;
   private PublishSubject<Account> accountStatusEvent;
   private PublishSubject<HomeEvent> bundleScrolledEvent;
@@ -97,7 +97,7 @@ public class HomePresenterTest {
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
         new AdMapper(), aptoideAccountManager, homeAnalytics);
     aptoide =
-        new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
+        new AptoideApp("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300, "", false, false);
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
     bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);

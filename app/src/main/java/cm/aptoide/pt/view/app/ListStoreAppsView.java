@@ -11,9 +11,9 @@ import rx.subjects.PublishSubject;
 
 public interface ListStoreAppsView extends View {
 
-  void addApps(List<Application> appsList);
+  void addApps(List<AptoideApp> appsList);
 
-  Observable<Application> getAppClick();
+  Observable<AptoideApp> getAppClick();
 
   Observable<Object> reachesBottom();
 
@@ -25,7 +25,7 @@ public interface ListStoreAppsView extends View {
 
   void hideRefreshLoading();
 
-  void setApps(List<Application> applications);
+  void setApps(List<AptoideApp> applications);
 
   void showNetworkError();
 

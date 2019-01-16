@@ -1,6 +1,6 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 
 /**
  * Created by jdandrade on 28/03/2018.
@@ -8,17 +8,17 @@ import cm.aptoide.pt.view.app.Application;
 
 public class AppClick {
 
-  private final Application app;
+  private final AptoideApp app;
   private final int position;
   private final Type type;
 
-  public AppClick(Application app, int position, Type type) {
+  public AppClick(AptoideApp app, int position, Type type) {
     this.app = app;
     this.position = position;
     this.type = type;
   }
 
-  public Application getApp() {
+  public AptoideApp getApp() {
     return app;
   }
 

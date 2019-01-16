@@ -88,7 +88,7 @@ import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
-import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
@@ -1270,7 +1270,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
     if (hasAd) resultList.add(new AppViewSimilarApp(null, similarApps.getAd()));
 
-    for (Application app : similarApps.getRecommendedApps())
+    for (AptoideApp app : similarApps.getRecommendedApps())
       resultList.add(new AppViewSimilarApp(app, null));
 
     return resultList;

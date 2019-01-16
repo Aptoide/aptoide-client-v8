@@ -7,10 +7,12 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeBundlesModel;
 import cm.aptoide.pt.home.HomeNavigator;
+import cm.aptoide.pt.home.RewardApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.BundleEvent;
 import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.AptoideApp;
 import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
@@ -119,10 +121,7 @@ public class MoreBundlePresenter implements Presenter {
                     .getContent()
                     .size()))
             .observeOn(viewScheduler)
-            .doOnNext(click -> {
-              Application app = click.getApp();
-              homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
-            })
+            .doOnNext(click -> navigateToApp(click.getApp()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -257,5 +256,15 @@ public class MoreBundlePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
+  }
+
+  private void navigateToApp(Application app) {
+    if (app instanceof RewardApp) {
+      RewardApp rewardApp = (RewardApp) app;
+    } else {
+      AptoideApp aptoideApp = (AptoideApp) app;
+      homeNavigator.navigateToAppView(aptoideApp.getAppId(), aptoideApp.getPackageName(),
+          aptoideApp.getTag());
+    }
   }
 }

@@ -17,9 +17,9 @@ public class ApplicationViewHolder extends ListStoreAppViewHolder {
   private final TextView nameTextView;
   private final ImageView iconView;
   private final TextView rating;
-  private final PublishSubject<Application> appClicks;
+  private final PublishSubject<AptoideApp> appClicks;
 
-  public ApplicationViewHolder(View itemView, PublishSubject<Application> appClicks) {
+  public ApplicationViewHolder(View itemView, PublishSubject<AptoideApp> appClicks) {
     super(itemView);
     nameTextView = ((TextView) itemView.findViewById(R.id.name));
     iconView = ((ImageView) itemView.findViewById(R.id.icon));
@@ -27,7 +27,7 @@ public class ApplicationViewHolder extends ListStoreAppViewHolder {
     this.appClicks = appClicks;
   }
 
-  public void setApp(Application app) {
+  public void setApp(AptoideApp app) {
     nameTextView.setText(app.getName());
     ImageLoader.with(itemView.getContext())
         .load(app.getIcon(), iconView);

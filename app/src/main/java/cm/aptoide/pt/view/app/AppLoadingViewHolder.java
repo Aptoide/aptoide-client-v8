@@ -11,7 +11,7 @@ public class AppLoadingViewHolder extends ListStoreAppViewHolder {
     super(itemView);
   }
 
-  @Override public void setApp(Application app) {
+  @Override public void setApp(AptoideApp app) {
 
   }
 }

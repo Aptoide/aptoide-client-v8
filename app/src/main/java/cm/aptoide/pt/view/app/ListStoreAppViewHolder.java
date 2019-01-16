@@ -12,5 +12,5 @@ public abstract class ListStoreAppViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
   }
 
-  public abstract void setApp(Application app);
+  public abstract void setApp(AptoideApp app);
 }

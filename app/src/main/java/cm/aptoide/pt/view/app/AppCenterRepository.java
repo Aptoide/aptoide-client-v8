@@ -13,18 +13,17 @@ import rx.Single;
 
 public class AppCenterRepository {
   private final AppService appService;
-  private final Map<Long, AbstractMap.SimpleEntry<Integer, List<Application>>>
+  private final Map<Long, AbstractMap.SimpleEntry<Integer, List<AptoideApp>>>
       cachedStoreApplications;
 
   public AppCenterRepository(AppService appService,
-      Map<Long, AbstractMap.SimpleEntry<Integer, List<Application>>> cachedStoreApplications) {
+      Map<Long, AbstractMap.SimpleEntry<Integer, List<AptoideApp>>> cachedStoreApplications) {
     this.appService = appService;
     this.cachedStoreApplications = cachedStoreApplications;
   }
 
   public Single<AppsList> loadNextApps(long storeId, int limit) {
-    AbstractMap.SimpleEntry<Integer, List<Application>> cache =
-        cachedStoreApplications.get(storeId);
+    AbstractMap.SimpleEntry<Integer, List<AptoideApp>> cache = cachedStoreApplications.get(storeId);
     int offset = 0;
     if (cache != null) {
       offset = cache.getKey();
@@ -50,13 +49,13 @@ public class AppCenterRepository {
 
   private void updateCache(long storeId, AppsList applications, boolean isFresh) {
     if (!applications.hasErrors() && !applications.isLoading()) {
-      AbstractMap.SimpleEntry<Integer, List<Application>> cache =
+      AbstractMap.SimpleEntry<Integer, List<AptoideApp>> cache =
           cachedStoreApplications.get(storeId);
       if (cache == null || isFresh) {
         cachedStoreApplications.put(storeId,
             new AbstractMap.SimpleEntry<>(applications.getOffset(), applications.getList()));
       } else {
-        List<Application> list = cache.getValue();
+        List<AptoideApp> list = cache.getValue();
         list.addAll(applications.getList());
         cachedStoreApplications.put(storeId,
             new AbstractMap.SimpleEntry<>(applications.getOffset(), list));
@@ -75,8 +74,7 @@ public class AppCenterRepository {
    * <p>&#09;return list's size = 4</p>
    */
   public Single<AppsList> getApplications(long storeId, int limit) {
-    AbstractMap.SimpleEntry<Integer, List<Application>> cache =
-        cachedStoreApplications.get(storeId);
+    AbstractMap.SimpleEntry<Integer, List<AptoideApp>> cache = cachedStoreApplications.get(storeId);
     if (cache == null || cache.getValue()
         .isEmpty()) {
       return loadNextApps(storeId, limit);

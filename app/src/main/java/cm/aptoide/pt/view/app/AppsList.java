@@ -7,7 +7,7 @@ import java.util.List;
  * Created by trinkes on 24/10/2017.
  */
 public class AppsList {
-  private final List<Application> list;
+  private final List<AptoideApp> list;
   private final boolean loading;
   private final Error error;
   private final int offset;
@@ -19,7 +19,7 @@ public class AppsList {
     offset = -1;
   }
 
-  public AppsList(List<Application> list, boolean loading, int offset) {
+  public AppsList(List<AptoideApp> list, boolean loading, int offset) {
     this.list = list;
     this.loading = loading;
     this.offset = offset;
@@ -37,7 +37,7 @@ public class AppsList {
     return offset;
   }
 
-  public List<Application> getList() {
+  public List<AptoideApp> getList() {
     return list;
   }
 
