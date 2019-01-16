@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -91,6 +92,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   protected Toolbar toolbar;
 
   @Inject @Named("marketName") String marketName;
+  @Inject SupportEmailProvider supportEmailProvider;
 
   private Context context;
   private CompositeSubscription subscriptions;
@@ -442,6 +444,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         ((TextView) view.findViewById(R.id.credits)).setMovementMethod(
             LinkMovementMethod.getInstance());
+
+        LinearLayout contactLayout = view.findViewById(R.id.contact_layout);
+
+        if (supportEmailProvider.isAptoideSupport()) {
+          contactLayout.setVisibility(View.VISIBLE);
+        } else {
+          contactLayout.setVisibility(View.INVISIBLE);
+        }
 
         new AlertDialog.Builder(context).setView(view)
             .setTitle(getString(R.string.settings_about_us))
