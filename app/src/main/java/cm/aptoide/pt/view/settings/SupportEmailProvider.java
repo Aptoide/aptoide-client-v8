@@ -12,4 +12,8 @@ public class SupportEmailProvider {
   public boolean isAptoideSupport() {
     return aptoideEmail.equals(email);
   }
+
+  public String getEmail() {
+    return email;
+  }
 }

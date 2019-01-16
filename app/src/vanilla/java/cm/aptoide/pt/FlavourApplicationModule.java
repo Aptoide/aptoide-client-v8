@@ -13,7 +13,10 @@ import javax.inject.Singleton;
 
 @Module public class FlavourApplicationModule {
 
-  public FlavourApplicationModule() {
+  private final AptoideApplication application;
+
+  public FlavourApplicationModule(AptoideApplication application) {
+    this.application = application;
   }
 
   @Singleton @Provides AdultContent provideAdultContent(

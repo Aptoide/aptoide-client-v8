@@ -446,6 +446,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             LinkMovementMethod.getInstance());
 
         LinearLayout contactLayout = view.findViewById(R.id.contact_layout);
+        ((TextView) view.findViewById(R.id.contact_text)).setText(supportEmailProvider.getEmail());
 
         if (supportEmailProvider.isAptoideSupport()) {
           contactLayout.setVisibility(View.VISIBLE);

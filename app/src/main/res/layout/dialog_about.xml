@@ -100,12 +100,12 @@
         />
 
     <TextView
+        android:id="@+id/contact_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
         android:autoLink="email"
-        android:text="@string/aptoide_email"
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
   </LinearLayout>
