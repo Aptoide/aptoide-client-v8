@@ -296,8 +296,10 @@ android {
         "\"" + project.MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID + "\""
     variant.buildConfigField "String", "MOPUB_SEARCH_NATIVE_PLACEMENT_ID",
         "\"" + project.MOPUB_SEARCH_NATIVE_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "VUNGLE_APPLICATION_ID",
-        "\"" + project.VUNGLE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
+        "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "IRONSOURCE_VUNGLE_APPLICATION_ID",
+        "\"" + project.IRONSOURCE_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
         "\"" + project.ADCOLONY_APPLICATION_ID + "\""
     variant.buildConfigField "String", "TAPJOY_SDK_KEY",

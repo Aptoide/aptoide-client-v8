@@ -6,7 +6,6 @@
 package cm.aptoide.pt.view;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
@@ -27,7 +26,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.adcolony.sdk.AdColony;
 import com.applovin.sdk.AppLovinSdk;
-import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.tapjoy.TJConnectListener;
 import com.tapjoy.Tapjoy;
@@ -69,19 +67,20 @@ public class MainActivity extends BottomNavigationActivity
 
   private void setupMediation() {
     AppLovinSdk.initializeSdk(this);
-    Vungle.init(BuildConfig.VUNGLE_APPLICATION_ID, getApplicationContext(), new InitCallback() {
-      @Override public void onSuccess() {
+    Vungle.init(BuildConfig.MOPUB_VUNGLE_APPLICATION_ID, getApplicationContext(),
+        new InitCallback() {
+          @Override public void onSuccess() {
 
-      }
+          }
 
-      @Override public void onError(Throwable throwable) {
+          @Override public void onError(Throwable throwable) {
 
-      }
+          }
 
-      @Override public void onAutoCacheAdAvailable(String s) {
+          @Override public void onAutoCacheAdAvailable(String s) {
 
-      }
-    });
+          }
+        });
     AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
 
     Hashtable<String, Object> connectFlags = new Hashtable<String, Object>();
