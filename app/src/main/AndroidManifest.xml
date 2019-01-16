@@ -178,12 +178,6 @@
         android:hardwareAccelerated="true"
         android:theme="@android:style/Theme.Translucent"/>
 
-    <activity
-        android:name="com.applovin.adview.AppLovinInterstitialActivity"/>
-
-    <activity
-        android:name="com.applovin.adview.AppLovinConfirmationActivity"/>
-
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="${fabricApiKey}"/>
@@ -195,6 +189,14 @@
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
+
+    <activity
+        android:name="com.applovin.adview.AppLovinInterstitialActivity"
+        android:configChanges="orientation|screenSize"/>
+
+    <activity
+        android:name="com.applovin.adview.AppLovinConfirmationActivity"
+        android:configChanges="orientation|screenSize"/>
 
     <service android:name=".account.AccountAuthenticatorService">
       <intent-filter>
