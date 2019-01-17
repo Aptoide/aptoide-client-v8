@@ -1647,7 +1647,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return cachePath + "icons/";
   }
 
-  @Singleton @Provides @Named("followedStoresNames") List<String> provideFollowedStoresNames() {
+  @Singleton @Provides @Named("default-followed-stores")
+  List<String> provideDefaultFollowedStores() {
     return Arrays.asList("apps", "catappult");
   }
 

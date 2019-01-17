@@ -174,7 +174,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideShortcutManager shortcutManager;
   @Inject SettingsManager settingsManager;
   @Inject InstallManager installManager;
-  @Inject @Named("followedStoresNames") List<String> followedStoresNames;
+  @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -671,7 +671,7 @@ public abstract class AptoideApplication extends Application {
   private Completable setDefaultFollowedStores(StoreCredentialsProviderImpl storeCredentials,
       StoreUtilsProxy proxy) {
 
-    return Observable.from(followedStoresNames)
+    return Observable.from(defaultFollowedStores)
         .flatMapCompletable(followedStoreName -> {
           BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
               storeCredentials.get(followedStoreName);
