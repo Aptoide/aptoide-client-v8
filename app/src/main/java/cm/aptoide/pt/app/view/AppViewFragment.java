@@ -1193,7 +1193,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public synchronized void showFullScreenAd() {
     fullScreenAdShown = true;
     MoPubInterstitial ad =
-        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_APPVIEW_INTERSTITIAL_PLACEMENT_ID);
+        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12);
     ad.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
       @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
         appViewAnalytics.installInterstitialImpression("MoPub");
