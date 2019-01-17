@@ -227,7 +227,7 @@ public class SearchResultFragment extends BackButtonFragment
             .d("Mopub Search", "Banner collapsed");
       }
     });
-    mopubBanner.setAdUnitId(BuildConfig.MOPUB_SEARCH_BANNER_PLACEMENT_ID_T11);
+    mopubBanner.setAdUnitId(BuildConfig.MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12);
   }
 
   @Override public void showFollowedStoresResult() {
