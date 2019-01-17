@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import android.app.Activity;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -60,6 +61,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     });
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
+
     moPubRecyclerAdapter =
         new MoPubRecyclerAdapter((Activity) view.getContext(), appsInBundleAdapter);
     ViewBinder moPubViewBinder =
@@ -78,7 +80,11 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
 
       }
     });
-    appsList.setAdapter(moPubRecyclerAdapter);
+    if (Build.VERSION.SDK_INT >= 21) {
+      appsList.setAdapter(moPubRecyclerAdapter);
+    } else {
+      appsList.setAdapter(appsInBundleAdapter);
+    }
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -105,7 +111,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     moreButton.setOnClickListener(
         v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
 
-    if (!hasAdLoaded) {
+    if (Build.VERSION.SDK_INT >= 21 && !hasAdLoaded) {
       hasAdLoaded = true;
       moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID_T12);
     }
