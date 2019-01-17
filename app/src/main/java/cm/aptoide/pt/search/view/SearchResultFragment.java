@@ -344,7 +344,10 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void addAllStoresResult(List<SearchAppResult> dataList, String query) {
     RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
         .build();
-    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID_T12, requestParameters);
+    if (Build.VERSION.SDK_INT >= 21) {
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID_T12,
+          requestParameters);
+    }
     allStoresResultAdapter.addResultForSearch(dataList);
     viewModel.addAllStoresSearchAppResults(dataList);
   }
@@ -911,7 +914,11 @@ public class SearchResultFragment extends BackButtonFragment
 
       }
     });
-    allStoresResultList.setAdapter(moPubRecyclerAdapter);
+    if (Build.VERSION.SDK_INT >= 21) {
+      allStoresResultList.setAdapter(moPubRecyclerAdapter);
+    } else {
+      allStoresResultList.setAdapter(allStoresResultAdapter);
+    }
     allStoresResultList.setLayoutManager(getDefaultLayoutManager());
     allStoresResultList.addItemDecoration(getDefaultItemDecoration());
   }
