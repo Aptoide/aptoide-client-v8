@@ -98,7 +98,8 @@ public class WizardFragment extends UIComponentFragment
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     int lastPageColor = R.color.wizard_color_3_orange;
-    if (!theme.equals("default")) {
+    if (!theme.equals(StoreTheme.DEFAULT.toString()
+        .toLowerCase())) {
       lastPageColor = StoreTheme.get(theme)
           .getPrimaryColor();
     }
