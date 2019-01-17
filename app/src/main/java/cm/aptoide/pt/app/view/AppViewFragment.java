@@ -785,16 +785,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     similarAppsAdapter.update(mapToSimilar(similarApps, true));
     similarDownloadsAdapter.update(mapToSimilar(similarApps, true));
     similarBottomView.setVisibility(View.VISIBLE);
-    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_SIMILAR_PLACEMENT_ID);
-    moPubDownloadRecyclerAdapter.loadAds(BuildConfig.MOPUB_SIMILAR_PLACEMENT_ID);
+    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
+    moPubDownloadRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
   }
 
   @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
     similarAppsAdapter.update(mapToSimilar(ads, false));
     similarDownloadsAdapter.update(mapToSimilar(ads, false));
     similarBottomView.setVisibility(View.VISIBLE);
-    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_SIMILAR_PLACEMENT_ID);
-    moPubDownloadRecyclerAdapter.loadAds(BuildConfig.MOPUB_SIMILAR_PLACEMENT_ID);
+    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
+    moPubDownloadRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
   }
 
   @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {
