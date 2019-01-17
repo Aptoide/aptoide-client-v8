@@ -13,7 +13,10 @@ import javax.inject.Singleton;
 
 @Module public class FlavourApplicationModule {
 
-  public FlavourApplicationModule() {
+  private final AptoideApplication application;
+
+  public FlavourApplicationModule(AptoideApplication application) {
+    this.application = application;
   }
 
   @Singleton @Provides AdultContent provideAdultContent(
@@ -28,5 +31,9 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("auto-update-store-name") String provideAutoUpdateStoreName() {
     return "v9";
+  }
+
+  @Singleton @Provides @Named("support-email") String providesSupportEmail() {
+    return application.getString(R.string.aptoide_email);
   }
 }

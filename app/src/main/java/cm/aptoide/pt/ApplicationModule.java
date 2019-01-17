@@ -60,6 +60,7 @@ import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -213,6 +214,7 @@ import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
+import cm.aptoide.pt.view.settings.SupportEmailProvider;
 import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
@@ -1749,5 +1751,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("auto-update-base-host") String providesAutoUpdateBaseHost() {
     return "http://imgs.aptoide.com/";
+  }
+
+  @Singleton @Provides SupportEmailProvider providesSupportEmailProvider(
+      @Named("support-email") String supportEmail) {
+    return new SupportEmailProvider(supportEmail, application.getString(R.string.aptoide_email));
+  }
+
+  @Singleton @Provides NewsletterManager providesNewsletterManager() {
+    return new NewsletterManager();
   }
 }

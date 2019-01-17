@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -78,8 +79,6 @@ import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTI
 public class SettingsFragment extends PreferenceFragmentCompat
     implements SharedPreferences.OnSharedPreferenceChangeListener, NotBottomNavigationView {
   private static final String TAG = SettingsFragment.class.getSimpleName();
-
-  @Inject @Named("marketName") String marketName;
   private static final String ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "Maturepin";
   private static final String REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY = "removeMaturepin";
   private static final String ADULT_CONTENT_WITH_PIN_PREFERENCE_VIEW_KEY = "matureChkBoxWithPin";
@@ -91,6 +90,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String DELETE_ACCOUNT = "deleteAccount";
 
   protected Toolbar toolbar;
+
+  @Inject @Named("marketName") String marketName;
+  @Inject SupportEmailProvider supportEmailProvider;
+
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
@@ -441,6 +444,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         ((TextView) view.findViewById(R.id.credits)).setMovementMethod(
             LinkMovementMethod.getInstance());
+
+        LinearLayout contactLayout = view.findViewById(R.id.contact_layout);
+        ((TextView) view.findViewById(R.id.contact_text)).setText(supportEmailProvider.getEmail());
+
+        if (supportEmailProvider.isAptoideSupport()) {
+          contactLayout.setVisibility(View.VISIBLE);
+        } else {
+          contactLayout.setVisibility(View.INVISIBLE);
+        }
 
         new AlertDialog.Builder(context).setView(view)
             .setTitle(getString(R.string.settings_about_us))
