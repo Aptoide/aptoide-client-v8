@@ -62,6 +62,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   @Inject AppNavigator appNavigator;
+  @Inject @Named("marketName") String marketName;
   @Inject @Named("aptoide-theme") String theme;
   private SharedPreferences preferences;
   private DialogUtils dialogUtils;
@@ -210,7 +211,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         ((ActivityResultNavigator) getContext()).getAccountNavigator(), baseBodyInterceptor,
         httpClient, converterFactory, installedRepository, tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        getContext().getResources());
+        getContext().getResources(), marketName);
   }
 
   private void fetchRating(boolean refresh) {

@@ -23,7 +23,6 @@ import rx.subjects.PublishSubject;
 public class LoggedInTermsAndConditionsDialog {
   private static final String GDPR_DIALOG_EVENT_LISTENER_IS_NULL =
       "GDPR_DIALOG_EVENT_LISTENER_IS_NULL";
-
   private AlertDialog dialog;
   private Button continueButton;
   private Button logOutButton;
@@ -68,7 +67,16 @@ public class LoggedInTermsAndConditionsDialog {
   }
 
   public void destroyDialog() {
+    if (dialog.isShowing()) {
+      dialog.dismiss();
+    }
     dialog = null;
+    if (continueButton != null) {
+      continueButton.setOnClickListener(null);
+    }
+    if (logOutButton != null) {
+      logOutButton.setOnClickListener(null);
+    }
     continueButton = null;
     logOutButton = null;
     uiEvents = null;

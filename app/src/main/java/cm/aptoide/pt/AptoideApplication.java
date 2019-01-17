@@ -367,11 +367,11 @@ public abstract class AptoideApplication extends Application {
    * @return Returns a new Activity Module for the Activity Component
    */
   public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, String marketName, View view,
-      String defaultStoreName, boolean firstCreated, String fileProviderAuthority) {
+      NotificationSyncScheduler notificationSyncScheduler, View view, String defaultStoreName,
+      boolean firstCreated, String fileProviderAuthority) {
 
-    return new ActivityModule(activity, intent, notificationSyncScheduler, marketName, view,
-        defaultStoreName, firstCreated, fileProviderAuthority);
+    return new ActivityModule(activity, intent, notificationSyncScheduler, view, defaultStoreName,
+        firstCreated, fileProviderAuthority);
   }
 
   /**
@@ -423,8 +423,6 @@ public abstract class AptoideApplication extends Application {
   public abstract boolean hasMultiStoreSearch();
 
   public abstract String getDefaultStoreName();
-
-  public abstract String getMarketName();
 
   public abstract String getFeedbackEmail();
 

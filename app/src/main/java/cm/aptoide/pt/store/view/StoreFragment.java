@@ -89,6 +89,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Inject NavigationTracker navigationTracker;
   @Inject AppNavigator appNavigator;
   @Inject @Named("aptoide-theme") String theme;
+  @Inject @Named("marketName") String marketName;
   private AptoideAccountManager accountManager;
   private String storeName;
   private String title;
@@ -117,7 +118,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private ShareStoreHelper shareStoreHelper;
   private String storeUrl;
   private String iconPath;
-  private String marketName;
   private Runnable registerViewpagerCurrentItem;
   private SharedPreferences sharedPreferences;
   private AppSearchSuggestionsView appSearchSuggestionsView;
@@ -221,7 +221,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     sharedPreferences = application.getDefaultSharedPreferences();
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
-    marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
     if (hasSearchFromStoreFragment()) {

@@ -20,6 +20,7 @@ import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by jdandrade on 23/02/2017.
@@ -30,6 +31,7 @@ public class InviteFriendsFragment extends UIComponentFragment
   public static final String TAG = "TAG";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject @Named("marketName") String marketName;
   private InviteFriendsContract.UserActionsListener mActionsListener;
   private OpenMode openMode;
   private String entranceTag;
@@ -37,7 +39,6 @@ public class InviteFriendsFragment extends UIComponentFragment
   private Button allowFind;
   private Button done;
   private TextView message;
-  private String marketName;
 
   public static Fragment newInstance(OpenMode openMode, String tag) {
     InviteFriendsFragment inviteFriendsFragment = new InviteFriendsFragment();
@@ -58,7 +59,6 @@ public class InviteFriendsFragment extends UIComponentFragment
     getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    marketName = application.getMarketName();
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),

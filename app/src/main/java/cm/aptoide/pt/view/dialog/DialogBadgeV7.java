@@ -29,13 +29,16 @@ public class DialogBadgeV7 extends BaseDialog {
   protected Malware malware;
   protected String appName;
   protected Malware.Rank rank;
+  protected String marketName;
 
-  public static DialogBadgeV7 newInstance(Malware malware, String appName, Malware.Rank rank) {
+  public static DialogBadgeV7 newInstance(String marketName, Malware malware, String appName,
+      Malware.Rank rank) {
 
     DialogBadgeV7 dialog = new DialogBadgeV7();
     dialog.malware = malware;
     dialog.appName = appName;
     dialog.rank = rank;
+    dialog.marketName = marketName;
     return dialog;
   }
 
@@ -101,6 +104,8 @@ public class DialogBadgeV7 extends BaseDialog {
             .getAvInfo() != null) {
           v.findViewById(R.id.tr_scanned)
               .setVisibility(View.VISIBLE);
+          ((TextView) v.findViewById(R.id.message_virus_no)).setText(
+              getString(R.string.appviewbadge_message_virus_no, marketName));
         }
       }
 
@@ -157,6 +162,8 @@ public class DialogBadgeV7 extends BaseDialog {
           .getStatus())) {
         v.findViewById(R.id.tr_manual)
             .setVisibility(View.VISIBLE);
+        ((TextView) v.findViewById(R.id.message_virus_no_manual)).setText(
+            getString(R.string.appviewbadge_message_virus_no, marketName));
       }
     }
 
