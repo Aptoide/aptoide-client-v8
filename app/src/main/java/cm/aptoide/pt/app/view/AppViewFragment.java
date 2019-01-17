@@ -554,7 +554,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             .d("Mopub AppView", "Banner collapsed");
       }
     });
-    mopubBanner.setAdUnitId(BuildConfig.MOPUB_APPVIEW_BANNER_PLACEMENT_ID_T11);
+    mopubBanner.setAdUnitId(BuildConfig.MOPUB_BANNER_90_APPVIEW_PLACEMENT_ID_T12);
     mopubBanner.loadAd();
   }
 
@@ -579,6 +579,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (moPubInterstitial != null) moPubInterstitial.destroy();
     if (moPubRecyclerAdapter != null) moPubRecyclerAdapter.destroy();
     if (moPubDownloadRecyclerAdapter != null) moPubDownloadRecyclerAdapter.destroy();
+    if (mopubBanner != null) mopubBanner.destroy();
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
