@@ -33,6 +33,7 @@ import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -49,6 +50,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   private static final String EXTRA_PROGRESS_VISIBLE =
       "cm.aptoide.pt.billing.view.login.extra.PROGRESS_VISIBLE";
   @Inject PaymentLoginPresenter paymentLoginPresenter;
+  @Inject @Named("marketName") String marketName;
   private ClickHandler handler;
   private PublishRelay<Void> backButtonRelay;
   private PublishRelay<Void> upNavigationRelay;
@@ -150,7 +152,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
       aptoideJoinToggle.setText(getString(R.string.onboarding_button_join_us));
     } else {
-      aptoideJoinToggle.setText(getString(R.string.join_company, application.getMarketName()));
+      aptoideJoinToggle.setText(getString(R.string.join_company, marketName));
     }
     aptoideLoginToggle = (Button) view.findViewById(R.id.fragment_payment_login_small_button);
     recoverPasswordButton = view.findViewById(R.id.fragment_payment_login_recover_password_button);

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
@@ -20,15 +19,19 @@ import rx.subjects.PublishSubject;
  */
 
 class AdsBundleViewHolder extends AppBundleViewHolder {
+
   private final TextView bundleTitle;
   private final Button moreButton;
   private final AdsInBundleAdapter appsInBundleAdapter;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final RecyclerView appsList;
+  private final String marketName;
 
   public AdsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents) {
+      DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents,
+      String marketName) {
     super(view);
+    this.marketName = marketName;
     this.uiEventsListener = uiEventsListener;
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
@@ -53,9 +56,8 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");
     }
-    bundleTitle.setText(Translator.translate(homeBundle.getTitle(), itemView.getContext(),
-        ((AptoideApplication) itemView.getContext()
-            .getApplicationContext()).getMarketName()));
+    bundleTitle.setText(
+        Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
 
     appsInBundleAdapter.updateBundle(homeBundle, position);
     appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());

@@ -261,9 +261,11 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptor,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, Resources resources) {
+      @Named("default") SharedPreferences sharedPreferences, Resources resources,
+      @Named("marketName") String marketName) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources);
+        converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources,
+        marketName);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(FragmentNavigator fragmentNavigator) {

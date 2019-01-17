@@ -409,8 +409,6 @@ public abstract class AptoideApplication extends Application {
 
   public abstract String getCachePath();
 
-  public abstract String getMarketName();
-
   public abstract String getFeedbackEmail();
 
   public abstract String getAccountType();
