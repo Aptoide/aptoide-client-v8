@@ -81,7 +81,6 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     appsList.setAdapter(moPubRecyclerAdapter);
   }
 
-
   @Override public void setBundle(HomeBundle homeBundle, int position) {
     if (!(homeBundle instanceof AdBundle)) {
       throw new IllegalStateException(this.getClass()
@@ -108,8 +107,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
 
     if (!hasAdLoaded) {
       hasAdLoaded = true;
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_HIGHLIGHTED_PLACEMENT_ID);
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID_T12);
     }
   }
-
 }
