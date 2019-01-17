@@ -315,12 +315,26 @@ android {
 
     variant.buildConfigField "String", "MOPUB_HOME_BANNER_PLACEMENT_ID_T11",
         "\"" + project.MOPUB_HOME_BANNER_PLACEMENT_ID_T11 + "\""
-
     variant.buildConfigField "String", "MOPUB_SEARCH_BANNER_PLACEMENT_ID_T11",
         "\"" + project.MOPUB_SEARCH_BANNER_PLACEMENT_ID_T11 + "\""
-
     variant.buildConfigField "String", "MOPUB_APPVIEW_BANNER_PLACEMENT_ID_T11",
         "\"" + project.MOPUB_APPVIEW_BANNER_PLACEMENT_ID_T11 + "\""
+
+    variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_NATIVE_HOME_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_90_APPVIEW_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_BANNER_90_APPVIEW_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_BANNER_90_HOME_PLACEMENT_ID_T12 + "\""
+
+
+
 
     variant.outputs.all { output ->
       def SEP = "_"
