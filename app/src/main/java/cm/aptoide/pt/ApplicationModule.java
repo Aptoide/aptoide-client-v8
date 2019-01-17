@@ -115,6 +115,8 @@ import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
+import cm.aptoide.pt.download.AppValidationAnalytics;
+import cm.aptoide.pt.download.AppValidator;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -492,10 +494,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DownloadApkPathsProvider(oemidProvider);
   }
 
+  @Singleton @Provides AppValidationAnalytics providesAppValidationAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new AppValidationAnalytics(analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides AppValidator providesAppValidator(
+      AppValidationAnalytics appValidationAnalytics) {
+    return new AppValidator(appValidationAnalytics);
+  }
+
   @Singleton @Provides DownloadFactory provideDownloadFactory(
       @Named("marketName") String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
-      @Named("cachePath") String cachePath) {
-    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath);
+      @Named("cachePath") String cachePath, AppValidator appValidator) {
+    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath, appValidator);
   }
 
   @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,
@@ -1346,7 +1358,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
     return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
         InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
-        InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME);
+        InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
+        AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT);
   }
 
   @Singleton @Provides AnalyticsManager providesAnalyticsManager(
