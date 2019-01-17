@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
@@ -440,7 +441,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             .build();
     MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
     moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
-    similarApps.setAdapter(moPubRecyclerAdapter);
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
       @Override public void onAdLoaded(int position) {
         appViewAnalytics.similarAppBundleImpression(ApplicationAd.Network.MOPUB, true);
@@ -450,6 +450,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
       }
     });
+    if (Build.VERSION.SDK_INT >= 21) {
+      similarApps.setAdapter(moPubRecyclerAdapter);
+    } else {
+      similarApps.setAdapter(similarAppsAdapter);
+    }
 
     moPubDownloadRecyclerAdapter = new MoPubRecyclerAdapter(activity, similarDownloadsAdapter);
     ViewBinder moPubDownloadViewBinder =
@@ -459,7 +464,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     MoPubStaticNativeAdRenderer moPubDownloadRenderer =
         new MoPubStaticNativeAdRenderer(moPubDownloadViewBinder);
     moPubDownloadRecyclerAdapter.registerAdRenderer(moPubDownloadRenderer);
-    similarDownloadApps.setAdapter(moPubDownloadRecyclerAdapter);
     moPubDownloadRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
       @Override public void onAdLoaded(int position) {
         appViewAnalytics.similarAppBundleImpression(ApplicationAd.Network.MOPUB, true);
@@ -485,6 +489,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         outRect.set(margin, margin, 0, margin);
       }
     });
+
+    if (Build.VERSION.SDK_INT >= 21) {
+      similarDownloadApps.setAdapter(moPubDownloadRecyclerAdapter);
+    } else {
+      similarDownloadApps.setAdapter(similarDownloadsAdapter);
+    }
 
     SnapHelper commentsSnap = new SnapToStartHelper();
     SnapHelper screenshotsSnap = new SnapToStartHelper();
@@ -785,16 +795,21 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     similarAppsAdapter.update(mapToSimilar(similarApps, true));
     similarDownloadsAdapter.update(mapToSimilar(similarApps, true));
     similarBottomView.setVisibility(View.VISIBLE);
-    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
-    moPubDownloadRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
+    if (Build.VERSION.SDK_INT >= 21) {
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
+      moPubDownloadRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
+    }
   }
 
   @Override public void populateSimilarWithoutAds(SimilarAppsViewModel ads) {
     similarAppsAdapter.update(mapToSimilar(ads, false));
     similarDownloadsAdapter.update(mapToSimilar(ads, false));
     similarBottomView.setVisibility(View.VISIBLE);
-    moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
-    moPubDownloadRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
+
+    if (Build.VERSION.SDK_INT >= 21) {
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
+      moPubDownloadRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12);
+    }
   }
 
   @Override public Observable<FlagsVote.VoteType> clickWorkingFlag() {
