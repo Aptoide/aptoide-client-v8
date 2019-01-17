@@ -227,12 +227,14 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
-    if (bar != null) {
-      bar.setBackgroundDrawable(getActivity().getResources()
-          .getDrawable(StoreTheme.get(storeTheme)
-              .getGradientDrawable()));
+    if (storeTheme != null) {
+      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
+      if (bar != null) {
+        bar.setBackgroundDrawable(getActivity().getResources()
+            .getDrawable(StoreTheme.get(storeTheme)
+                .getGradientDrawable()));
+      }
     }
   }
 

@@ -10,6 +10,7 @@ import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
+import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
@@ -34,8 +35,8 @@ import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
-import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.view.fragment.DescriptionFragment;
+import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
@@ -119,4 +120,6 @@ public interface FragmentComponent {
   void inject(GridRecyclerSwipeWithToolbarFragment gridRecyclerSwipeWithToolbarFragment);
 
   void inject(SettingsFragment settingsFragment);
+
+  void inject(ThankYouConnectingFragment thankYouConnectingFragment);
 }
