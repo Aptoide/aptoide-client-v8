@@ -17,8 +17,7 @@
 
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
-    <item name="activeNavItemColor">@color/default_orange_gradient_end</item>
-    <item name="defaultNavItemColor">@color/bottom_nav_non_selected_item_color</item>
+    <item name="nav_item_color_state">@drawable/default_nav_item_color_state</item>
 
     <!--toolbar-->
     <item name="toolbarTheme">@style/Toolbar</item>
@@ -73,7 +72,6 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
     <item name="customButtonThinLine">@style/WidgetButtonCustomAptoideThinLine</item>
     <item name="customButtomDarkGrayThinLine">@style/WidgetButtonCustomDarkGrayThinLine</item>
-    <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
     <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
     <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
     <item name="customRowForeground">@style/customRowStyle</item>
@@ -194,7 +192,6 @@
     <item name="colorButtonNormal">@color/default_color</item>
     <item name="customButton">@style/WidgetButtonCustomAptoide</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
-    <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
     <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
     <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>
     <item name="customRowForeground">@style/customRowStyle</item>
@@ -274,9 +271,8 @@
     <item name="toolbarBackground">@drawable/grey_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_grey</item>
     <item name="colorControlHighlight">@color/grey_gradient_end</item>
-    <item name="activeNavItemColor">@color/grey_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/grey_nav_item_color_state</item>
     <item name="wizard3Color">@color/grey</item>
-    <item name="defaultNavItemColor">@color/grey_fog_light</item>
 
     <item name="customButton">@style/WidgetButtonCustomGrey</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
@@ -298,7 +294,7 @@
     <item name="toolbarBackground">@drawable/teal_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_teal</item>
     <item name="colorControlHighlight">@color/teal_gradient_end</item>
-    <item name="activeNavItemColor">@color/teal_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/teal_nav_item_color_state</item>
     <item name="wizard3Color">@color/teal</item>
 
     <item name="customButton">@style/WidgetButtonCustomTeal</item>
@@ -320,7 +316,7 @@
     <item name="toolbarBackground">@drawable/brown_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_brown</item>
     <item name="colorControlHighlight">@color/brown_gradient_end</item>
-    <item name="activeNavItemColor">@color/brown_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/brown_nav_item_color_state</item>
     <item name="wizard3Color">@color/brown</item>
 
     <item name="customButton">@style/WidgetButtonCustomBrown</item>
@@ -343,7 +339,7 @@
     <item name="toolbarBackground">@drawable/blue_grey_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_bluegrey</item>
     <item name="colorControlHighlight">@color/blue_grey_gradient_end</item>
-    <item name="activeNavItemColor">@color/blue_grey_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/blue_grey_nav_item_color_state</item>
     <item name="wizard3Color">@color/blue_grey</item>
 
     <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
@@ -367,7 +363,7 @@
     <item name="toolbarBackground">@drawable/light_green_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_lightgreen</item>
     <item name="colorControlHighlight">@color/light_green_gradient_end</item>
-    <item name="activeNavItemColor">@color/light_green_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/light_green_nav_item_color_state</item>
     <item name="wizard3Color">@color/light_green</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
@@ -390,7 +386,7 @@
     <item name="toolbarBackground">@drawable/light_blue_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_lightblue</item>
     <item name="colorControlHighlight">@color/light_blue_gradient_end</item>
-    <item name="activeNavItemColor">@color/light_blue_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/light_blue_nav_item_color_state</item>
     <item name="wizard3Color">@color/light_blue</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightblue</item>
@@ -413,7 +409,7 @@
     <item name="toolbarBackground">@drawable/amber_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_amber</item>
     <item name="colorControlHighlight">@color/amber_gradient_end</item>
-    <item name="activeNavItemColor">@color/amber_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/amber_nav_item_color_state</item>
     <item name="wizard3Color">@color/amber</item>
 
     <item name="customButton">@style/WidgetButtonCustomAmber</item>
@@ -435,7 +431,7 @@
     <item name="toolbarBackground">@drawable/lime_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_lime</item>
     <item name="colorControlHighlight">@color/lime_gradient_end</item>
-    <item name="activeNavItemColor">@color/lime_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/lime_nav_item_color_state</item>
     <item name="wizard3Color">@color/lime</item>
 
     <item name="customButton">@style/WidgetButtonCustomLime</item>
@@ -458,7 +454,7 @@
     <item name="toolbarBackground">@drawable/orange_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_orange</item>
     <item name="colorControlHighlight">@color/orange_gradient_end</item>
-    <item name="activeNavItemColor">@color/orange_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/orange_nav_item_color_state</item>
     <item name="wizard3Color">@color/orange</item>
 
     <!-- widgets -->
@@ -481,7 +477,7 @@
     <item name="toolbarBackground">@drawable/pink_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_pink</item>
     <item name="colorControlHighlight">@color/pink_gradient_end</item>
-    <item name="activeNavItemColor">@color/pink_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/pink_nav_item_color_state</item>
     <item name="wizard3Color">@color/pink</item>
 
     <!-- widgets -->
@@ -505,7 +501,7 @@
     <item name="toolbarBackground">@drawable/indigo_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_indigo</item>
     <item name="colorControlHighlight">@color/indigo_gradient_end</item>
-    <item name="activeNavItemColor">@color/indigo_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/indigo_nav_item_color_state</item>
     <item name="wizard3Color">@color/indigo</item>
 
     <item name="customButton">@style/WidgetButtonCustomIndigo</item>
@@ -531,7 +527,7 @@
     <item name="toolbarBackground">@drawable/red_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_red</item>
     <item name="colorControlHighlight">@color/red_gradient_end</item>
-    <item name="activeNavItemColor">@color/red_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/red_nav_item_color_state</item>
     <item name="wizard3Color">@color/red</item>
 
     <!-- widgets -->
@@ -554,7 +550,7 @@
     <item name="toolbarBackground">@drawable/green_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_green</item>
     <item name="colorControlHighlight">@color/green_gradient_end</item>
-    <item name="activeNavItemColor">@color/green_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/green_nav_item_color_state</item>
     <item name="wizard3Color">@color/green</item>
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomGreen</item>
@@ -580,7 +576,7 @@
     <item name="toolbarBackground">@drawable/deep_purple_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_deeppurple</item>
     <item name="colorControlHighlight">@color/deep_purple_gradient_end</item>
-    <item name="activeNavItemColor">@color/deep_purple_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/deep_purple_nav_item_color_state</item>
     <item name="wizard3Color">@color/deep_purple</item>
 
     <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
@@ -602,7 +598,7 @@
     <item name="toolbarBackground">@drawable/black_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_black</item>
     <item name="colorControlHighlight">@color/black_gradient_end</item>
-    <item name="activeNavItemColor">@color/black_gradient_end</item>
+    <item name="nav_item_color_state">@drawable/black_nav_item_color_state</item>
     <item name="wizard3Color">@color/black</item>
 
     <item name="customButton">@style/WidgetButtonCustomBlack</item>

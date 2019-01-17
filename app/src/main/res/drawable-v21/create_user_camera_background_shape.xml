@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
   <solid
-      android:color="@color/default_orange_gradient_start">
+      android:color="?attr/colorPrimary">
   </solid>
 </shape>
