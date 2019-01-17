@@ -128,7 +128,7 @@ public class SearchResultFragment extends BackButtonFragment
   private BottomNavigationActivity bottomNavigationActivity;
 
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
-  private MoPubView mopubBanner;
+  private MoPubView moPubBanner;
 
   public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
     return newInstance(currentQuery, false, defaultStoreName);
@@ -190,7 +190,7 @@ public class SearchResultFragment extends BackButtonFragment
         (Button) view.findViewById(R.id.fragment_search_result_followed_stores_button);
 
     searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
-    mopubBanner = view.findViewById(R.id.mopub_banner);
+    moPubBanner = view.findViewById(R.id.mopub_banner);
     configureMopubBanner();
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
@@ -201,7 +201,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void configureMopubBanner() {
-    mopubBanner.setBannerAdListener(new MoPubView.BannerAdListener() {
+    moPubBanner.setBannerAdListener(new MoPubView.BannerAdListener() {
       @Override public void onBannerLoaded(MoPubView banner) {
         Logger.getInstance()
             .d("Mopub Search", "Banner loaded");
@@ -227,7 +227,7 @@ public class SearchResultFragment extends BackButtonFragment
             .d("Mopub Search", "Banner collapsed");
       }
     });
-    mopubBanner.setAdUnitId(BuildConfig.MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12);
+    moPubBanner.setAdUnitId(BuildConfig.MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12);
   }
 
   @Override public void showFollowedStoresResult() {
@@ -307,7 +307,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void showNoResultsView() {
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
-    mopubBanner.setVisibility(View.GONE);
+    moPubBanner.setVisibility(View.GONE);
     allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
     followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
@@ -321,15 +321,15 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.VISIBLE);
-    mopubBanner.setVisibility(VISIBLE);
-    mopubBanner.loadAd();
+    moPubBanner.setVisibility(VISIBLE);
+    moPubBanner.loadAd();
   }
 
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
-    mopubBanner.setVisibility(View.GONE);
+    moPubBanner.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -533,13 +533,13 @@ public class SearchResultFragment extends BackButtonFragment
         .isEmpty()) {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
-      mopubBanner.setVisibility(View.GONE);
+      moPubBanner.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
-      mopubBanner.setVisibility(View.GONE);
+      moPubBanner.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
     }
@@ -548,7 +548,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void forceSuggestions() {
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
-    mopubBanner.setVisibility(View.GONE);
+    moPubBanner.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
   }
@@ -763,6 +763,11 @@ public class SearchResultFragment extends BackButtonFragment
     if (activity instanceof BottomNavigationActivity) {
       bottomNavigationActivity = ((BottomNavigationActivity) activity);
     }
+  }
+
+  @Override public void onDestroy() {
+    if (moPubBanner != null) moPubBanner.destroy();
+    super.onDestroy();
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
