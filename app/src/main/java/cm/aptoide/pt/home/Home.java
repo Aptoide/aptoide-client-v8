@@ -36,10 +36,37 @@ public class Home {
           if (homeBundlesModel.hasErrors()) {
             return new HomeBundlesModel(homeBundlesModel.getError());
           } else {
-            return new HomeBundlesModel(injectSmallBanner(homeBundlesModel.getList()),
+            return new HomeBundlesModel(injectCustomBanner(homeBundlesModel.getList()),
                 homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
           }
         });
+  }
+
+  private List<HomeBundle> injectCustomBanner(List<HomeBundle> list) {
+    list.add(1, new HomeBundle() {
+      @Override public String getTitle() {
+        return "Advertising";
+      }
+
+      @Override public List<?> getContent() {
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(new BannerAd());
+        return objects;
+      }
+
+      @Override public BundleType getType() {
+        return BundleType.CUSTOM_BANNER;
+      }
+
+      @Override public Event getEvent() {
+        return null;
+      }
+
+      @Override public String getTag() {
+        return null;
+      }
+    });
+    return list;
   }
 
   private List<HomeBundle> injectSmallBanner(List<HomeBundle> list) {
@@ -102,7 +129,7 @@ public class Home {
           if (homeBundlesModel.hasErrors()) {
             return new HomeBundlesModel(homeBundlesModel.getError());
           } else {
-            return new HomeBundlesModel(injectSmallBanner(homeBundlesModel.getList()),
+            return new HomeBundlesModel(injectCustomBanner(homeBundlesModel.getList()),
                 homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
           }
         });

@@ -358,7 +358,7 @@ public abstract class AptoideApplication extends Application {
 
   private void initializeMopub() {
     SdkConfiguration sdkConfiguration =
-        new SdkConfiguration.Builder(BuildConfig.MOPUB_HOME_BANNER_PLACEMENT_ID_T11).build();
+        new SdkConfiguration.Builder(BuildConfig.MOPUB_BANNER_90_HOME_PLACEMENT_ID_T12).build();
     MoPub.initializeSdk(this, sdkConfiguration, () -> {
     });
   }
