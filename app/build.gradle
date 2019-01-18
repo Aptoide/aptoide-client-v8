@@ -254,6 +254,12 @@ android {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
       variant.buildConfigField "String", "MARKET_NAME", "\"" + project.COBRAND_MARKET_NAME + "\""
       variant.buildConfigField "String", "COBRAND_OEMID", "\"" + project.COBRAND_OEMID + "\""
+      if (flavors[1].name.contains("dev")) {
+        variant.resValue "string", "COBRAND_LOGO_TITLE",
+            "\"" + project.COBRAND_MARKET_NAME + "\"" + " Dev"
+      } else {
+        variant.resValue "string", "COBRAND_LOGO_TITLE", "\"" + project.COBRAND_MARKET_NAME + "\""
+      }
     } else {
       //vanilla
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
