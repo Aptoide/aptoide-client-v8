@@ -16,7 +16,9 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.customtabs.CustomTabsSession;
 import android.support.v4.content.ContextCompat;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.store.StoreTheme;
 
 /**
  * Created by jdandrade on 02/09/16.
@@ -92,8 +94,10 @@ public class CustomTabsHelper {
         new Intent(context.getApplicationContext(), CustomTabNativeReceiver.class);
     PendingIntent pendingIntent =
         PendingIntent.getBroadcast(context.getApplicationContext(), 0, openInNativeIntent, 0);
+    int toolbarColor = StoreTheme.get(BuildConfig.APTOIDE_THEME)
+        .getPrimaryColor();
     return new CustomTabsIntent.Builder(getCustomTabsSession()).setToolbarColor(
-        ContextCompat.getColor(context, R.color.aptoide_orange))
+        ContextCompat.getColor(context, toolbarColor))
         .setShowTitle(true)
         .setCloseButtonIcon(
             BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_arrow_back))
