@@ -15,6 +15,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.billing.view.BillingNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -28,6 +29,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
 
   @Inject AccountNavigator accountNavigator;
   @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
@@ -152,10 +154,12 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
 
   public BillingNavigator getBillingNavigator() {
     if (billingNavigator == null) {
+      int toolbarColor = StoreTheme.get(theme)
+          .getPrimaryColor();
       billingNavigator = new BillingNavigator(
           ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
           getActivityNavigator(), getFragmentNavigator(), marketName, this,
-          ContextCompat.getColor(this, R.color.aptoide_orange));
+          ContextCompat.getColor(this, toolbarColor));
     }
     return billingNavigator;
   }
