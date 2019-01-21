@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.view.MenuItem;
+import cm.aptoide.pt.ads.InterstitialClick;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
@@ -158,4 +159,6 @@ public interface AppViewView extends InstallAppView {
   void showDonations(List<Donation> donations);
 
   void loadInterstitialAd();
+
+  Observable<InterstitialClick> clickInterstitialAd();
 }

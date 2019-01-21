@@ -71,7 +71,6 @@ public class AppViewPresenter implements Presenter {
   }
 
   @Override public void present() {
-    initializeInterstitialAd();
     handleFirstLoad();
     handleReviewAutoScroll();
     handleClickOnScreenshot();
@@ -113,6 +112,19 @@ public class AppViewPresenter implements Presenter {
     handleClickOnDonateAfterInstall();
     handleClickOnTopDonorsDonate();
     handleDonateCardImpressions();
+
+    initializeInterstitialAd();
+    handleInterstitialAdClick();
+  }
+
+  private void handleInterstitialAdClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickInterstitialAd())
+        .doOnNext(__ -> System.out.println("interstitial ad clicked"))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleInterstitialEvents() {

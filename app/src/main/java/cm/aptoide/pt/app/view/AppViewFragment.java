@@ -50,6 +50,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.InterstitialClick;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
@@ -160,6 +161,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
   private PublishSubject<DownloadModel.Action> installClickSubject;
+  private PublishSubject<InterstitialClick> interstitialClick;
 
   //Views
   private View noNetworkErrorView;
@@ -270,6 +272,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
     installClickSubject = PublishSubject.create();
+    interstitialClick = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -490,6 +493,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     dialogUtils = null;
     presenter = null;
     similarAppsVisibilitySubject = null;
+    interstitialClick = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -571,6 +575,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     donationsAdapter = null;
     donationsElement = null;
     donationsList = null;
+    interstitialAd = null;
   }
 
   @Override public void showLoading() {
@@ -1103,6 +1108,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     interstitialAd.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
       @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
         //appViewAnalytics.installInterstitialImpression("MoPub");
+        interstitialClick.onNext(InterstitialClick.INTERSTITIAL_LOADED);
         interstitialAd.show();
       }
 
@@ -1117,6 +1123,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
       @Override public void onInterstitialClicked(MoPubInterstitial interstitial) {
         //appViewAnalytics.installInterstitialClick("MoPub");
+        interstitialClick.onNext(InterstitialClick.INTERSTITIAL_CLICKED);
       }
 
       @Override public void onInterstitialDismissed(MoPubInterstitial interstitial) {
@@ -1125,6 +1132,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     });
     Handler handler = new Handler();
     handler.postDelayed(() -> interstitialAd.load(), 1000);
+  }
+
+  @Override public Observable<InterstitialClick> clickInterstitialAd() {
+    return interstitialClick.filter(
+        clickType -> clickType == InterstitialClick.INTERSTITIAL_CLICKED);
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
