@@ -44,6 +44,7 @@ public class AppViewPresenter implements Presenter {
 
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private final String INTERSTITIAL_NETWORK_MOPUB = "MoPub";
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
@@ -123,6 +124,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.interstitialAdLoaded())
         .doOnNext(__ -> view.showInterstitialAd())
+        .doOnNext(__ -> appViewAnalytics.installInterstitialImpression(INTERSTITIAL_NETWORK_MOPUB))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
