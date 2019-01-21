@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -1127,8 +1126,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
       }
     });
-    Handler handler = new Handler();
-    handler.postDelayed(() -> interstitialAd.load(), 1000);
+    interstitialAd.load();
   }
 
   @Override public Observable<InterstitialClick> InterstitialAdClicked() {
