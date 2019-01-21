@@ -227,8 +227,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
     if (hasSearchFromStoreFragment()) {
       searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
-      searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName, storeTheme,
-          application.getDefaultStoreName(), appNavigator);
+      searchNavigator =
+          new SearchNavigator(getFragmentNavigator(), storeName, storeTheme, appNavigator);
       trendingManager = application.getTrendingManager();
       crashReport = CrashReport.getInstance();
     }

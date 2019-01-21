@@ -899,6 +899,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RequestBodyFactory();
   }
 
+  /**
+   * BaseBodyInterceptor for v7 ws calls with CDN = web configuration
+   */
   @Singleton @Provides @Named("web-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideBodyInterceptorWebV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
@@ -1657,6 +1660,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("imageCachePath") String provideImageCachePatch(
       @Named("cachePath") String cachePath) {
     return cachePath + "icons/";
+  }
+
+  @Singleton @Provides @Named("default-followed-stores")
+  List<String> provideDefaultFollowedStores() {
+    return Arrays.asList("apps", "bds-store");
   }
 
   @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {

@@ -113,8 +113,6 @@ public interface SearchResultView extends SearchSuggestionsView {
 
     String getStoreName();
 
-    String getDefaultStoreName();
-
     String getStoreTheme();
 
     boolean isOnlyTrustedApps();

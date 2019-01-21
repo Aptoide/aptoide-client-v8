@@ -13,7 +13,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -93,7 +92,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static android.content.Context.WINDOW_SERVICE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 @Module public class ActivityModule {
 
@@ -101,19 +99,17 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   private final Intent intent;
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final View view;
-  private final String defaultStoreName;
   private final String fileProviderAuthority;
   private boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, View view, String defaultStoreName,
-      boolean firstCreated, String fileProviderAuthority) {
+      NotificationSyncScheduler notificationSyncScheduler, View view, boolean firstCreated,
+      String fileProviderAuthority) {
     this.activity = activity;
     this.intent = intent;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.view = view;
     this.firstCreated = firstCreated;
-    this.defaultStoreName = defaultStoreName;
     this.fileProviderAuthority = fileProviderAuthority;
   }
 
@@ -146,7 +142,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides SearchNavigator providesSearchNavigator(
       FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
-    return new SearchNavigator(fragmentNavigator, defaultStoreName, appNavigator);
+    return new SearchNavigator(fragmentNavigator, appNavigator);
   }
 
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
@@ -244,11 +240,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
-      FragmentNavigator fragmentNavigator, @Named("defaultStoreName") String defaultStoreName,
-      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
-      @Named("aptoide-theme") String theme) {
-    return new BottomNavigationNavigator(fragmentNavigator, defaultStoreName,
-        bottomNavigationAnalytics, searchAnalytics, theme);
+      FragmentNavigator fragmentNavigator, BottomNavigationAnalytics bottomNavigationAnalytics,
+      SearchAnalytics searchAnalytics, @Named("aptoide-theme") String theme) {
+    return new BottomNavigationNavigator(fragmentNavigator, bottomNavigationAnalytics,
+        searchAnalytics, theme);
   }
 
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
@@ -258,10 +253,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
   @ActivityScope @Provides AppViewNavigator providesAppViewNavigator(
       FragmentNavigator fragmentNavigator, AppNavigator appNavigator) {
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-
-    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity,
-        application.hasMultiStoreSearch(), application.getDefaultStoreName(), appNavigator);
+    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity, appNavigator);
   }
 
   @ActivityScope @Provides DialogUtils providesDialogUtils(AptoideAccountManager accountManager,

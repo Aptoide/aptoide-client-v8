@@ -25,11 +25,11 @@ public class MockAptoideApplication extends VanillaApplication {
   }
 
   @Override public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, View view, String defaultStoreName,
-      boolean firstCreated, String s) {
+      NotificationSyncScheduler notificationSyncScheduler, View view, boolean firstCreated,
+      String fileProviderAuthority) {
 
-    return new MockActivityModule(activity, intent, notificationSyncScheduler, view,
-        defaultStoreName, firstCreated, s);
+    return new MockActivityModule(activity, intent, notificationSyncScheduler, view, firstCreated,
+        fileProviderAuthority);
   }
 
   @Override
