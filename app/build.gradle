@@ -282,6 +282,22 @@ android {
     variant.buildConfigField "String", "IRONSOURCE_APPVIEW_INTERSTITIAL_9500_PLACEMENT_ID",
         "\"" + project.IRONSOURCE_APPVIEW_INTERSTITIAL_9500_PLACEMENT_ID + "\""
 
+    variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_NATIVE_HOME_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_NATIVE_SEARCH_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_90_APPVIEW_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_BANNER_90_APPVIEW_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12 + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_90_HOME_PLACEMENT_ID_T12",
+        "\"" + project.MOPUB_BANNER_90_HOME_PLACEMENT_ID_T12 + "\""
+
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -427,6 +443,15 @@ dependencies {
   implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
   // UnityAds (IronSource mediation)
   implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
+
+  // Mopub
+  implementation('com.mopub:mopub-sdk:5.4.0@aar') {
+    transitive = true
+    exclude module: 'moat-mobile-app-kit'
+    exclude group: "com.android.support"
+    exclude module: "support-annotations"
+    exclude module: "support-v4"
+  }
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
