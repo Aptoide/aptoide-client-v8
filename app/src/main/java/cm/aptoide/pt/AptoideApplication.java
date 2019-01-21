@@ -185,7 +185,6 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideShortcutManager shortcutManager;
   @Inject SettingsManager settingsManager;
   @Inject InstallManager installManager;
-  @Inject @Named("aptoide-theme") String theme;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
