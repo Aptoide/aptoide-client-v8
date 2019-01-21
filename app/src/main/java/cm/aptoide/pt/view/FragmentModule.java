@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -279,13 +280,15 @@ import rx.schedulers.Schedulers;
       Resources resources, WindowManager windowManager, SocialRepository socialRepository,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
-      IronSourceAdRepository ironSourceAdRepository) {
+      IronSourceAdRepository ironSourceAdRepository,
+      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+        marketName, appCoinsManager, ironSourceInterstitialAdExperiment, ironSourceAdRepository,
+        moPubInterstitialAdExperiment);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

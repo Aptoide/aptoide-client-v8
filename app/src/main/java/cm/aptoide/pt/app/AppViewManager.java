@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.Experiment;
 import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.AdEvent;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
@@ -67,6 +68,7 @@ public class AppViewManager {
   private AppCoinsManager appCoinsManager;
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
+  private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -77,7 +79,8 @@ public class AppViewManager {
       InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
       String marketName, AppCoinsManager appCoinsManager,
       IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
-      IronSourceAdRepository ironSourceAdRepository) {
+      IronSourceAdRepository ironSourceAdRepository,
+      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -97,6 +100,7 @@ public class AppViewManager {
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
+    this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
     this.isFirstLoad = true;
     this.ironSourceInterstitialAdExperiment = ironSourceInterstitialAdExperiment;
     this.ironSourceAdRepository = ironSourceAdRepository;
@@ -440,5 +444,9 @@ public class AppViewManager {
 
   public Single<List<Donation>> getTopDonations(String packageName) {
     return appCoinsManager.getDonationsList(packageName);
+  }
+
+  public Observable<Boolean> shouldLoadInterstitialAd() {
+    return moPubInterstitialAdExperiment.loadInterstitial();
   }
 }

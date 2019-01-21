@@ -1092,6 +1092,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
+  @Override public void loadInterstitialAd() {
+    System.out.println("AppView Loading intestitial");
+  }
+
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
     if (!hasSimilarApps) {
       hideSimilarApps();

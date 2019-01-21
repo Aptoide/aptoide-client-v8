@@ -143,7 +143,9 @@ public class AppViewPresenter implements Presenter {
   private void initializeInterstitialAd() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.initializeInterstitialAd())
+        .flatMap(__ -> appViewManager.shouldLoadInterstitialAd())
+        .filter(loadInterstitial -> loadInterstitial)
+        .doOnNext(__-> view.loadInterstitialAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
