@@ -145,7 +145,8 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appViewManager.shouldLoadInterstitialAd())
         .filter(loadInterstitial -> loadInterstitial)
-        .doOnNext(__-> view.loadInterstitialAd())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.loadInterstitialAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));

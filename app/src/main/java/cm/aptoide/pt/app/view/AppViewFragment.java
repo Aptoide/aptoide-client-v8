@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -30,6 +31,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -99,6 +101,8 @@ import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubInterstitial;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -245,6 +249,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View donateInstallCard;
   private Button installCardDonateButton;
   private Button listDonateButton;
+  private MoPubInterstitial interstitialAd;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -1093,7 +1098,33 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void loadInterstitialAd() {
-    System.out.println("AppView Loading intestitial");
+    interstitialAd =
+        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12);
+    interstitialAd.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
+      @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
+        //appViewAnalytics.installInterstitialImpression("MoPub");
+        interstitialAd.show();
+      }
+
+      @Override
+      public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
+        Log.i("Mopub_Interstitial", errorCode.toString());
+      }
+
+      @Override public void onInterstitialShown(MoPubInterstitial interstitial) {
+
+      }
+
+      @Override public void onInterstitialClicked(MoPubInterstitial interstitial) {
+        //appViewAnalytics.installInterstitialClick("MoPub");
+      }
+
+      @Override public void onInterstitialDismissed(MoPubInterstitial interstitial) {
+
+      }
+    });
+    Handler handler = new Handler();
+    handler.postDelayed(() -> interstitialAd.load(), 1000);
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
