@@ -115,12 +115,23 @@ public class AppViewPresenter implements Presenter {
 
     initializeInterstitialAd();
     handleInterstitialAdClick();
+    handleInterstitialAdLoaded();
+  }
+
+  private void handleInterstitialAdLoaded() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.interstitialAdLoaded())
+        .doOnNext(__ -> view.showInterstitialAd())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleInterstitialAdClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickInterstitialAd())
+        .flatMap(__ -> view.InterstitialAdClicked())
         .doOnNext(__ -> System.out.println("interstitial ad clicked"))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

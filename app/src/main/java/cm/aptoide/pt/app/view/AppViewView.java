@@ -160,5 +160,9 @@ public interface AppViewView extends InstallAppView {
 
   void loadInterstitialAd();
 
-  Observable<InterstitialClick> clickInterstitialAd();
+  Observable<InterstitialClick> InterstitialAdClicked();
+
+  Observable<InterstitialClick> interstitialAdLoaded();
+
+  void showInterstitialAd();
 }

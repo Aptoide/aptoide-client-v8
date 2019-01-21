@@ -1109,7 +1109,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
         //appViewAnalytics.installInterstitialImpression("MoPub");
         interstitialClick.onNext(InterstitialClick.INTERSTITIAL_LOADED);
-        interstitialAd.show();
       }
 
       @Override
@@ -1134,9 +1133,18 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     handler.postDelayed(() -> interstitialAd.load(), 1000);
   }
 
-  @Override public Observable<InterstitialClick> clickInterstitialAd() {
+  @Override public Observable<InterstitialClick> InterstitialAdClicked() {
     return interstitialClick.filter(
         clickType -> clickType == InterstitialClick.INTERSTITIAL_CLICKED);
+  }
+
+  @Override public Observable<InterstitialClick> interstitialAdLoaded() {
+    return interstitialClick.filter(
+        clickType -> clickType == InterstitialClick.INTERSTITIAL_LOADED);
+  }
+
+  @Override public void showInterstitialAd() {
+    interstitialAd.show();
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
