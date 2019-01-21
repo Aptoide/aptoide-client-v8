@@ -106,8 +106,6 @@ public class AppDownloadManager implements AppDownloader {
           if (fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.COMPLETED) {
             handleCompletedFileDownload(fileDownloader);
-            downloadAnalytics.onDownloadComplete(fileDownloadCallback.getMd5(),
-                app.getPackageName(), app.getVersionCode());
           } else if (fileDownloadCallback.getDownloadState()
               == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND
               || fileDownloadCallback.getDownloadState() == AppDownloadStatus.AppDownloadState.ERROR

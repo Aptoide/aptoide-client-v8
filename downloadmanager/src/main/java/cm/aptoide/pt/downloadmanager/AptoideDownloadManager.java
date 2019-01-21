@@ -24,16 +24,19 @@ public class AptoideDownloadManager implements DownloadManager {
   private DownloadStatusMapper downloadStatusMapper;
   private AppDownloaderProvider appDownloaderProvider;
   private Subscription dispatchDownloadsSubscription;
+  private DownloadAnalytics downloadAnalytics;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath,
-      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider) {
+      DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
+      DownloadAnalytics downloadAnalytics) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
-    appDownloaderMap = new HashMap<>();
+    this.downloadAnalytics = downloadAnalytics;
+    this.appDownloaderMap = new HashMap<>();
   }
 
   public synchronized void start() {
@@ -212,6 +215,8 @@ public class AptoideDownloadManager implements DownloadManager {
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
         .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
+        .doOnNext(download -> downloadAnalytics.onDownloadComplete(download.getMd5(),
+            download.getPackageName(), download.getVersionCode()))
         .takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED);
   }
 
