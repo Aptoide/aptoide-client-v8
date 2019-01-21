@@ -38,7 +38,7 @@ public class GetRewardAppCoinsAppsFragment extends StoreTabGridRecyclerFragment 
   @Nullable @Override
   protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
       boolean bypassServerCache) {
-    return rewardAppsRepository.getAppCoinsRewardAppsFromHomeMore(refresh)
+    return rewardAppsRepository.getAppCoinsRewardAppsFromHomeMore(refresh, tag)
         .map(rewardApps -> {
           List<Displayable> displayables = new LinkedList<>();
           for (Application app : rewardApps) {
