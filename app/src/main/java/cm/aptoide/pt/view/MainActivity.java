@@ -31,8 +31,6 @@ import com.tapjoy.TJConnectListener;
 import com.tapjoy.Tapjoy;
 import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
-import com.vungle.warren.InitCallback;
-import com.vungle.warren.Vungle;
 import java.util.Hashtable;
 import javax.inject.Inject;
 import rx.Observable;
@@ -67,20 +65,6 @@ public class MainActivity extends BottomNavigationActivity
 
   private void setupMediation() {
     AppLovinSdk.initializeSdk(this);
-    Vungle.init(BuildConfig.MOPUB_VUNGLE_APPLICATION_ID, getApplicationContext(),
-        new InitCallback() {
-          @Override public void onSuccess() {
-
-          }
-
-          @Override public void onError(Throwable throwable) {
-
-          }
-
-          @Override public void onAutoCacheAdAvailable(String s) {
-
-          }
-        });
     AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
 
     Hashtable<String, Object> connectFlags = new Hashtable<String, Object>();
