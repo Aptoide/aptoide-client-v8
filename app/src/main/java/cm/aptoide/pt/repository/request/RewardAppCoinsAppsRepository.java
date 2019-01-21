@@ -40,14 +40,15 @@ public class RewardAppCoinsAppsRepository {
     this.installManager = installManager;
   }
 
-  public Observable<List<Application>> getAppCoinsRewardAppsFromHomeMore(boolean refresh) {
+  public Observable<List<Application>> getAppCoinsRewardAppsFromHomeMore(boolean refresh,
+      String tag) {
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(0, APPCOINS_REWARD_LIMIT), httpClient,
         converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(refresh)
-        .flatMap(response -> map(response.getList()));
+        .flatMap(response -> map(response.getList(), tag));
   }
 
-  private Observable<List<Application>> map(List<AppCoinsCampaign> list) {
+  private Observable<List<Application>> map(List<AppCoinsCampaign> list, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsCampaign campaign : list) {
       App app = campaign.getApp();
@@ -55,7 +56,7 @@ public class RewardAppCoinsAppsRepository {
         rewardAppsList.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), "",
+            .getPdownloads(), app.getPackageName(), app.getId(), tag,
             app.getAppcoins() != null && app.getAppcoins()
                 .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
             .hasAdvertising()));
