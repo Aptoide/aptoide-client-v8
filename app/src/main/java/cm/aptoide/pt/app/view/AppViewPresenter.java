@@ -134,7 +134,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.InterstitialAdClicked())
-        .doOnNext(__ -> System.out.println("interstitial ad clicked"))
+        .doOnNext(__ -> appViewAnalytics.installInterstitialClick(INTERSTITIAL_NETWORK_MOPUB))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
