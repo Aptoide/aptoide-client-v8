@@ -1641,10 +1641,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.MARKET_NAME;
   }
 
-  @Singleton @Provides @Named("partnerID") String providePartnerID() {
-    return "";
-  }
-
   @Singleton @Provides @Named("accountType") String provideAccountType() {
     return BuildConfig.APPLICATION_ID;
   }
