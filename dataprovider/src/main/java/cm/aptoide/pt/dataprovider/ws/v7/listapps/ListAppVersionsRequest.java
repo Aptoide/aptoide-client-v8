@@ -36,23 +36,6 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
         tokenInvalidator);
   }
 
-  public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
-      HashMapNotNull<String, List<String>> storeCredentials,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Resources resources) {
-    if (storeNames != null && !storeNames.isEmpty()) {
-      Body body = new Body(packageName, storeNames, storeCredentials, sharedPreferences,
-          AptoideUtils.SystemU.getCountryCode(resources));
-      body.setLimit(MAX_LIMIT);
-      return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator, sharedPreferences);
-    } else {
-      return of(packageName, storeCredentials, bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator, sharedPreferences, resources);
-    }
-  }
-
   public static ListAppVersionsRequest of(String packageName,
       HashMapNotNull<String, List<String>> storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,

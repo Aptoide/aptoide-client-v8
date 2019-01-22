@@ -21,9 +21,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.download.DownloadApkPathsProvider;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -42,12 +40,13 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class PullingContentService extends BaseService {
 
-  @Inject @Named("marketName") String marketName;
   public static final String PUSH_NOTIFICATIONS_ACTION = "PUSH_NOTIFICATIONS_ACTION";
   public static final String UPDATES_ACTION = "UPDATES_ACTION";
   public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
   public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_HALF_DAY;
   public static final int UPDATE_NOTIFICATION_ID = 123;
+  @Inject @Named("marketName") String marketName;
+  @Inject DownloadFactory downloadFactory;
   private AptoideApplication application;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
@@ -152,9 +151,7 @@ public class PullingContentService extends BaseService {
                 .map(updates -> {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
-                    downloadList.add(new DownloadFactory(marketName,
-                        new DownloadApkPathsProvider(new OemidProvider()),
-                        application.getCachePath()).create(update));
+                    downloadList.add(downloadFactory.create(update));
                   }
                   return downloadList;
                 })

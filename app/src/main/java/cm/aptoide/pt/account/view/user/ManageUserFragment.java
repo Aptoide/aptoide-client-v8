@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -58,6 +57,7 @@ public class ManageUserFragment extends BackButtonFragment
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageUserPresenter manageUserPresenter;
   @Inject ScreenOrientationManager orientationManager;
+  @Inject NewsletterManager newsletterManager;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -145,7 +145,7 @@ public class ManageUserFragment extends BackButtonFragment
       cancelUserProfile.setVisibility(View.VISIBLE);
     } else {
       birthdayLayout.setVisibility(View.VISIBLE);
-      newsLetterLayout.setVisibility(View.VISIBLE);
+      handleNewsletterVisibility();
       setupDatePickerDialog(calendar);
     }
     attachPresenters();
@@ -156,15 +156,21 @@ public class ManageUserFragment extends BackButtonFragment
         .getSimpleName());
   }
 
+  private void handleNewsletterVisibility() {
+    if (newsletterManager.shouldShowNewsletter()) {
+      newsLetterLayout.setVisibility(View.VISIBLE);
+    } else {
+      newsLetterLayout.setVisibility(View.GONE);
+    }
+  }
+
   private void setupDatePickerDialog(Calendar calendar) {
     DatePickerDialog.OnDateSetListener datePickerDialogListener =
-        new DatePickerDialog.OnDateSetListener() {
-          @Override public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            int monthNumber = month
-                + 1; //Android starts counting months on 0 to better count time. e.g 22 jan is 0 months and 22 days
-            setupCalendar(calendar, year, monthNumber, day);
-            setupCalendarDateString(year, monthNumber, day);
-          }
+        (datePicker, year, month, day) -> {
+          int monthNumber = month
+              + 1; //Android starts counting months on 0 to better count time. e.g 22 jan is 0 months and 22 days
+          setupCalendar(calendar, year, monthNumber, day);
+          setupCalendarDateString(year, monthNumber, day);
         };
     datePickerDialog =
         new DatePickerDialog(getContext(), R.style.DatePickerDialog, datePickerDialogListener,
