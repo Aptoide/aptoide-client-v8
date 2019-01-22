@@ -49,7 +49,6 @@ import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
-import cm.aptoide.pt.link.LinksHandlerFactory;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -185,11 +184,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
       FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       CallbackManager callbackManager, GoogleApiClient googleApiClient,
-      AccountAnalytics accountAnalytics, BottomNavigationNavigator bottomNavigationNavigator) {
+      AccountAnalytics accountAnalytics, BottomNavigationNavigator bottomNavigationNavigator,
+      @Named("aptoide-theme") String theme) {
     return new AccountNavigator(bottomNavigationNavigator, fragmentNavigator, accountManager,
         ((ActivityNavigator) activity), LoginManager.getInstance(), callbackManager,
         googleApiClient, PublishRelay.create(), "http://m.aptoide.com/account/password-recovery",
-        accountAnalytics);
+        accountAnalytics, theme);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {
@@ -222,10 +222,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   @ActivityScope @Provides ManageUserNavigator provideManageUserNavigator(
       FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator) {
     return new ManageUserNavigator(fragmentNavigator, bottomNavigationNavigator);
-  }
-
-  @ActivityScope @Provides LinksHandlerFactory provideLinksHandlerFactory() {
-    return new LinksHandlerFactory(activity);
   }
 
   @ActivityScope @Provides ListStoreAppsNavigator provideListStoreAppsNavigator(
@@ -281,8 +277,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
   }
 
   @ActivityScope @Provides AppCoinsInfoNavigator providesAppCoinsInfoNavigator(
-      FragmentNavigator fragmentNavigator) {
-    return new AppCoinsInfoNavigator(((ActivityNavigator) activity), fragmentNavigator);
+      FragmentNavigator fragmentNavigator, @Named("aptoide-theme") String theme) {
+    return new AppCoinsInfoNavigator(((ActivityNavigator) activity), fragmentNavigator, theme);
   }
 
   @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(

@@ -16,18 +16,20 @@ public class AppCoinsInfoNavigator {
   static final String APPC_WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   private final ActivityNavigator activityNavigator;
   private final FragmentNavigator fragmentNavigator;
+  private final String theme;
 
   public AppCoinsInfoNavigator(ActivityNavigator activityNavigator,
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, String theme) {
 
     this.activityNavigator = activityNavigator;
     this.fragmentNavigator = fragmentNavigator;
+    this.theme = theme;
   }
 
   public void navigateToCoinbaseLink() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.coinbase_url), activityNavigator.getActivity());
+            .getString(R.string.coinbase_url), activityNavigator.getActivity(), theme);
   }
 
   public void navigateToAppCoinsWallet() {
