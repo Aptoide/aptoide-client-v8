@@ -134,6 +134,9 @@ public class AppViewPresenter implements Presenter {
             .flatMap(model -> appViewManager.shouldLoadInterstitialAd())
             .filter(loadInterstitial -> loadInterstitial)
             .observeOn(viewScheduler)
+            .doOnNext(__ -> view.initInterstitialAd())
+            .delay(1, TimeUnit.SECONDS)
+            .observeOn(viewScheduler)
             .doOnNext(__ -> view.loadInterstitialAd()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

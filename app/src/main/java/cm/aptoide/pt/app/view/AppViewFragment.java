@@ -1101,7 +1101,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public void loadInterstitialAd() {
+  @Override public void initInterstitialAd() {
     interstitialAd =
         new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12);
     interstitialAd.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
@@ -1126,7 +1126,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
       }
     });
-    interstitialAd.load();
   }
 
   @Override public Observable<InterstitialClick> InterstitialAdClicked() {
@@ -1141,6 +1140,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showInterstitialAd() {
     interstitialAd.show();
+  }
+
+  @Override public void loadInterstitialAd() {
+    interstitialAd.load();
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {

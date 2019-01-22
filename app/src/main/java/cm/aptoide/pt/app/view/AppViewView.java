@@ -158,11 +158,13 @@ public interface AppViewView extends InstallAppView {
 
   void showDonations(List<Donation> donations);
 
-  void loadInterstitialAd();
+  void initInterstitialAd();
 
   Observable<InterstitialClick> InterstitialAdClicked();
 
   Observable<InterstitialClick> interstitialAdLoaded();
 
   void showInterstitialAd();
+
+  void loadInterstitialAd();
 }
