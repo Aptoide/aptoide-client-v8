@@ -217,15 +217,14 @@ public class BundlesResponseMapper {
   private List<Application> map(List<AppCoinsCampaign> appsList, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsCampaign campaign : appsList) {
-      App app = campaign.getApp();
+      AppCoinsCampaign.CampaignApp app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
         rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), tag,
+            .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppcoins() != null,
             app.getAppcoins() != null && app.getAppcoins()
-                .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
-            .hasAdvertising()));
+                .hasAdvertising()));
       }
     }
     return rewardAppsList;

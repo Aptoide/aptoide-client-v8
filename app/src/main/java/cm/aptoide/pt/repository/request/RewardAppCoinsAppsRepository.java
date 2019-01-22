@@ -3,7 +3,6 @@ package cm.aptoide.pt.repository.request;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsCampaignsRequest;
@@ -51,15 +50,14 @@ public class RewardAppCoinsAppsRepository {
   private Observable<List<Application>> map(List<AppCoinsCampaign> list, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsCampaign campaign : list) {
-      App app = campaign.getApp();
+      AppCoinsCampaign.CampaignApp app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
         rewardAppsList.add(new Application(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), tag,
+            .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppcoins() != null,
             app.getAppcoins() != null && app.getAppcoins()
-                .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
-            .hasAdvertising()));
+                .hasAdvertising()));
       }
     }
     return Observable.just(rewardAppsList);
