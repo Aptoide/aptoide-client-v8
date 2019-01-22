@@ -41,7 +41,7 @@ public class WizardFragment extends UIComponentFragment
   private static final String PAGE_INDEX = "page_index";
   AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
   @Inject WizardPresenter wizardPresenter;
-  @Inject WizardManager wizardManager;
+  @Inject WizardFragmentProvider wizardFragmentProvider;
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -96,7 +96,7 @@ public class WizardFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    Integer[] colorInt = wizardManager.getTransitionColors();
+    Integer[] colorInt = wizardFragmentProvider.getTransitionColors();
     transitionColors = new Integer[colorInt.length];
     for (int i = 0; i < colorInt.length; i++) {
       transitionColors[i] = getContext().getResources()
@@ -158,11 +158,10 @@ public class WizardFragment extends UIComponentFragment
     super.onDestroyView();
   }
 
-  @Override public Completable createWizardAdapter(Account account) {
-    isLoggedIn = account.isLoggedIn();
+  @Override public Completable createWizardAdapter(boolean isLoggedIn) {
     return Completable.fromAction(() -> {
       viewPagerAdapter =
-          new WizardPagerAdapter(getChildFragmentManager(), isLoggedIn, wizardManager);
+          new WizardPagerAdapter(getChildFragmentManager(), isLoggedIn, wizardFragmentProvider);
       createRadioButtons();
       viewPager.setAdapter(viewPagerAdapter);
       viewPager.setCurrentItem(currentPosition);
@@ -242,7 +241,7 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public int getCount() {
-    return wizardManager.getCount(isLoggedIn);
+    return wizardFragmentProvider.getCount(isLoggedIn);
   }
 
   @Override public int getContentViewId() {

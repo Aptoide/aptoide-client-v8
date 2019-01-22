@@ -12,13 +12,13 @@ import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.SHOULD_REGISTE
  * Created by tiagopedrinho on 29/11/2018.
  */
 
-public class WizardManager {
+public class WizardFragmentProvider {
 
   private static final int WIZARD_STEP_ONE_POSITION = 0;
   private static final int WIZARD_LOGIN_POSITION = 1;
   private final String theme;
 
-  public WizardManager(String theme) {
+  public WizardFragmentProvider(String theme) {
     this.theme = theme;
   }
 

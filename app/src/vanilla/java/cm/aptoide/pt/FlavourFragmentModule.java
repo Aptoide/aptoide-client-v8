@@ -5,7 +5,7 @@ import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.view.FragmentScope;
-import cm.aptoide.pt.view.wizard.WizardManager;
+import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
 import dagger.Module;
 import dagger.Provides;
 import rx.android.schedulers.AndroidSchedulers;
@@ -23,7 +23,7 @@ import rx.android.schedulers.AndroidSchedulers;
         ironSourceAdRepository, ironSourceAnalytics);
   }
 
-  @FragmentScope @Provides WizardManager providesWizardManager() {
-    return new WizardManager();
+  @FragmentScope @Provides WizardFragmentProvider providesWizardFragmentProvider() {
+    return new WizardFragmentProvider();
   }
 }

@@ -10,21 +10,21 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
     implements NavigationTrackerPagerAdapterHelper {
 
   private final boolean isLoggedIn;
-  private final WizardManager wizardManager;
+  private final WizardFragmentProvider wizardFragmentProvider;
 
   public WizardPagerAdapter(FragmentManager fragmentManager, Boolean isLoggedIn,
-      WizardManager wizardManager) {
+      WizardFragmentProvider wizardFragmentProvider) {
     super(fragmentManager);
     this.isLoggedIn = isLoggedIn;
-    this.wizardManager = wizardManager;
+    this.wizardFragmentProvider = wizardFragmentProvider;
   }
 
   @Override public Fragment getItem(int position) {
-    return wizardManager.getItem(position);
+    return wizardFragmentProvider.getItem(position);
   }
 
   @Override public int getCount() {
-    return wizardManager.getCount(isLoggedIn);
+    return wizardFragmentProvider.getCount(isLoggedIn);
   }
 
   public boolean isLoggedIn() {

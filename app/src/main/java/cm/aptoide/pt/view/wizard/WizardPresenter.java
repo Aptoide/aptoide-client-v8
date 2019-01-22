@@ -30,7 +30,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
         .first()
         .toSingle()
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMapCompletable(account -> view.createWizardAdapter(account));
+        .flatMapCompletable(account -> view.createWizardAdapter(account.isLoggedIn()));
   }
 
   private Observable<Void> setupHandlers() {
