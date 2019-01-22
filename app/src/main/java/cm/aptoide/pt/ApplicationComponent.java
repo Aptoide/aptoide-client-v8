@@ -6,7 +6,6 @@ import cm.aptoide.pt.notification.PullingContentService;
 import cm.aptoide.pt.toolbox.ToolboxContentProvider;
 import cm.aptoide.pt.view.ActivityComponent;
 import cm.aptoide.pt.view.ActivityModule;
-import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import dagger.Component;
 import javax.inject.Singleton;
 
@@ -27,6 +26,4 @@ public interface ApplicationComponent {
   void inject(InstalledIntentService installedIntentService);
 
   void inject(PullingContentService pullingContentService);
-
-  void inject(DescriptionFragment descriptionFragment);
 }
