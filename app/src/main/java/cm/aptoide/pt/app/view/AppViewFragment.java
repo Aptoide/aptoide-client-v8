@@ -30,7 +30,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +50,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.InterstitialClick;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -101,7 +101,6 @@ import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
-import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -1104,28 +1103,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void initInterstitialAd() {
     interstitialAd =
         new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12);
-    interstitialAd.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
-      @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
-        interstitialClick.onNext(InterstitialClick.INTERSTITIAL_LOADED);
-      }
-
-      @Override
-      public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-        Log.i("Mopub_Interstitial", errorCode.toString());
-      }
-
-      @Override public void onInterstitialShown(MoPubInterstitial interstitial) {
-
-      }
-
-      @Override public void onInterstitialClicked(MoPubInterstitial interstitial) {
-        interstitialClick.onNext(InterstitialClick.INTERSTITIAL_CLICKED);
-      }
-
-      @Override public void onInterstitialDismissed(MoPubInterstitial interstitial) {
-
-      }
-    });
+    interstitialAd.setInterstitialAdListener(new MoPubInterstitialAdListener(interstitialClick));
   }
 
   @Override public Observable<InterstitialClick> InterstitialAdClicked() {
