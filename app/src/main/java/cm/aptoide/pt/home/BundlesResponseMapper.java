@@ -201,7 +201,7 @@ public class BundlesResponseMapper {
               .getRating()
               .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), tag,
-              appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising()));
+              appc != null && appc.hasBilling()));
         }
       } catch (Exception e) {
         Logger.getInstance()
