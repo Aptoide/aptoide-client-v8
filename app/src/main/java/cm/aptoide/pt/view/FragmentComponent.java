@@ -37,6 +37,7 @@ import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
+import cm.aptoide.pt.view.wizard.WizardManager;
 import dagger.Subcomponent;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class, FlavourFragmentModule.class })
@@ -113,4 +114,6 @@ public interface FragmentComponent {
   void inject(GridRecyclerSwipeWithToolbarFragment gridRecyclerSwipeWithToolbarFragment);
 
   void inject(SettingsFragment settingsFragment);
+
+  void inject(WizardManager wizardManager);
 }

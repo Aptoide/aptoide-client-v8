@@ -41,6 +41,7 @@ public class WizardFragment extends UIComponentFragment
   private static final String PAGE_INDEX = "page_index";
   AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
   @Inject WizardPresenter wizardPresenter;
+  @Inject WizardManager wizardManager;
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -53,6 +54,7 @@ public class WizardFragment extends UIComponentFragment
   private Runnable registerViewpagerCurrentItem;
   private View animatedColorView;
   private Integer[] transitionColors;
+  private boolean isLoggedIn;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -94,11 +96,12 @@ public class WizardFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    transitionColors = new Integer[] {
-        getContext().getResources().getColor(R.color.wizard_color_1_blue),
-        getContext().getResources().getColor(R.color.wizard_color_2_green),
-        getContext().getResources().getColor(R.color.wizard_color_3_orange)
-    };
+    Integer[] colorInt = wizardManager.getTransitionColors();
+    transitionColors = new Integer[colorInt.length];
+    for (int i = 0; i < colorInt.length; i++) {
+      transitionColors[i] = getContext().getResources()
+          .getColor(colorInt[i]);
+    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -156,8 +159,10 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public Completable createWizardAdapter(Account account) {
+    isLoggedIn = account.isLoggedIn();
     return Completable.fromAction(() -> {
-      viewPagerAdapter = new WizardPagerAdapter(getChildFragmentManager(), account);
+      viewPagerAdapter =
+          new WizardPagerAdapter(getChildFragmentManager(), isLoggedIn, wizardManager);
       createRadioButtons();
       viewPager.setAdapter(viewPagerAdapter);
       viewPager.setCurrentItem(currentPosition);
@@ -202,7 +207,7 @@ public class WizardFragment extends UIComponentFragment
                 transitionColors[position + 1]);
         animatedColorView.setBackgroundColor(argbEvaluation);
       } else {
-        if (viewPagerAdapter.getCount() == 2) {
+        if (viewPagerAdapter.isLoggedIn()) {
           animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 2]);
         } else {
           animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 1]);
@@ -234,6 +239,10 @@ public class WizardFragment extends UIComponentFragment
       radioGroup.addView(radioButton);
       wizardButtons.add(radioButton);
     }
+  }
+
+  @Override public int getCount() {
+    return wizardManager.getCount(isLoggedIn);
   }
 
   @Override public int getContentViewId() {

@@ -15,4 +15,6 @@ public interface WizardView extends View {
   void handleSelectedPage(int selectedPage);
 
   void handleColorTransitions(int position, float positionOffset, int positionOffsetPixels);
+
+  int getCount();
 }
