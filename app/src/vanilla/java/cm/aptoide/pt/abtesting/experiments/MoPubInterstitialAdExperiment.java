@@ -35,4 +35,12 @@ public class MoPubInterstitialAdExperiment {
           }
         });
   }
+
+  public Observable<Boolean> recordAdImpression() {
+    return abTestManager.recordImpression(EXPERIMENT_ID);
+  }
+
+  public Observable<Boolean> recordAdClick() {
+    return abTestManager.recordAction(EXPERIMENT_ID);
+  }
 }

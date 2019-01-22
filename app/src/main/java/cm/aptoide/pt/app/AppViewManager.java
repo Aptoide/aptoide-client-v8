@@ -179,11 +179,11 @@ public class AppViewManager {
   }
 
   public Observable<Boolean> recordInterstitialImpression() {
-    return ironSourceInterstitialAdExperiment.recordAdImpression();
+    return moPubInterstitialAdExperiment.recordAdImpression();
   }
 
   public Observable<Boolean> recordInterstitialClick() {
-    return ironSourceInterstitialAdExperiment.recordAdClick();
+    return moPubInterstitialAdExperiment.recordAdClick();
   }
 
   public PublishSubject<AdEvent> getInterstitialEvent() {

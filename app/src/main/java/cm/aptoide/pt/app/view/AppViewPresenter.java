@@ -151,6 +151,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.interstitialAdLoaded())
         .doOnNext(__ -> view.showInterstitialAd())
         .doOnNext(__ -> appViewAnalytics.installInterstitialImpression(INTERSTITIAL_NETWORK_MOPUB))
+        .flatMap(__ -> appViewManager.recordInterstitialImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -161,6 +162,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.InterstitialAdClicked())
         .doOnNext(__ -> appViewAnalytics.installInterstitialClick(INTERSTITIAL_NETWORK_MOPUB))
+        .flatMap(__ -> appViewManager.recordInterstitialClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
