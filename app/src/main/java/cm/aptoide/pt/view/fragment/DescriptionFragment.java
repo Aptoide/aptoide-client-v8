@@ -84,18 +84,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     return fragment;
   }
 
-  public static String getPACKAGE_NAME() {
-    return DescriptionFragment.PACKAGE_NAME;
-  }
-
-  public static String getSTORE_NAME() {
-    return DescriptionFragment.STORE_NAME;
-  }
-
-  public static String getSTORE_THEME() {
-    return DescriptionFragment.STORE_THEME;
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
@@ -159,7 +147,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
       descriptionContainer.setText(AptoideUtils.HtmlU.parse(description));
       if (hasToolbar()) {
         ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        bar.setTitle(appName);
+        if (bar != null) {
+          bar.setTitle(appName);
+        }
       }
       finishLoading();
     } else if (hasAppId) {

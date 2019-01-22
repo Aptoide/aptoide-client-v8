@@ -854,10 +854,11 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void showRecommendsDialog(boolean isLoggedIn, String packageName) {
-    view.showRecommendsDialog();
     if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
+      view.showRecommendsDialog();
       appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
     } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
+      appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
       appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
     }
   }
