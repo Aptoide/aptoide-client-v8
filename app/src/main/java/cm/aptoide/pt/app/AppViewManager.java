@@ -447,7 +447,6 @@ public class AppViewManager {
   }
 
   public Observable<Boolean> shouldLoadInterstitialAd() {
-    return moPubInterstitialAdExperiment.loadInterstitial()
-        .map(__ -> true);
+    return moPubInterstitialAdExperiment.loadInterstitial();
   }
 }
