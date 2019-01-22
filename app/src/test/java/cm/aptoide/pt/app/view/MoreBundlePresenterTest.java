@@ -76,7 +76,7 @@ public class MoreBundlePresenterTest {
             homeNavigator, new AdMapper(), bundleEvent, homeAnalytics);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
-            300, "", false, false);
+            300, "", false);
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
     bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
     localTopAppsBundle = bundlesModel.getList()

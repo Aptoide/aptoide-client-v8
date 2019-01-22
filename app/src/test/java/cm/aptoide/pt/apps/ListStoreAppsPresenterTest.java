@@ -53,11 +53,9 @@ public class ListStoreAppsPresenterTest {
     lifecycleEvent = PublishSubject.create();
 
     ArrayList<Application> apps = new ArrayList<>();
+    apps.add(new Application("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10, "", false));
     apps.add(
-        new Application("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10, "", false, false));
-    apps.add(
-        new Application("Fit2Gather", "", (float) 5, 100, "com.fijuro.fit2gather", 357, "", false,
-            false));
+        new Application("Fit2Gather", "", (float) 5, 100, "com.fijuro.fit2gather", 357, "", false));
     appsModel = new AppsList(apps, false, LIMIT_APPS_TEST);
     appsModelWithGenericError = new AppsList(AppsList.Error.GENERIC);
     appsModelWithNetworkError = new AppsList(AppsList.Error.NETWORK);
@@ -130,7 +128,7 @@ public class ListStoreAppsPresenterTest {
 
     PublishSubject<Application> appClickEvent = PublishSubject.create();
     Application aptoide =
-        new Application("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10, "", false, false);
+        new Application("Aptoide", "", (float) 4.5, 1000, "cm.aptoide.com", 10, "", false);
 
     when(view.getAppClick()).thenReturn(appClickEvent);
 

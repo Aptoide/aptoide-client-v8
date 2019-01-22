@@ -43,11 +43,10 @@ public class FakeBundleDataSource implements BundleDataSource {
     List<Application> appsList = new ArrayList<>();
     String icon = "https://placeimg.com/640/480/any";
     Application aptoide =
-        new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, "", false, false);
+        new Application("Aptoide", icon, 0, 1000, "cm.aptoide.pt", 300, "", false);
     appsList.add(aptoide);
     Application facebook =
-        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30, "", false,
-            false);
+        new Application("Facebook", icon, (float) 4.2, 1000, "katana.facebook.com", 30, "", false);
     appsList.add(facebook);
     appsList.add(aptoide);
     appsList.add(facebook);
@@ -90,7 +89,7 @@ public class FakeBundleDataSource implements BundleDataSource {
     List<Application> apps = new ArrayList<>();
     apps.add(new Application("asf wallet",
         "http://pool.img.aptoide.com/asf-store/ace60f6352f6dd9289843b5b0b2ab3d4_icon.png", 5,
-        1000000, "asf.wallet.android.com", 36057221, "", false, false));
+        1000000, "asf.wallet.android.com", 36057221, "", false));
     appBundles.add(new SocialBundle(apps, HomeBundle.BundleType.SOCIAL, null, "TAG",
         "http://pool.img.aptoide.com/asf-store/3bf5adf05843f9f28c486d5ddef8f873_ravatar.jpg",
         "asf-store", SocialBundle.CardType.SOCIAL_RECOMMENDATIONS));

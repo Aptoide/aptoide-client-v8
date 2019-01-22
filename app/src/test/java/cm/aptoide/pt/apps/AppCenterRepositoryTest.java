@@ -166,7 +166,7 @@ public class AppCenterRepositoryTest {
   private List<Application> getAppsList() {
     List<Application> appslist = new ArrayList<>();
     for (int i = 0; i < LISTSIZE; i++) {
-      appslist.add(new Application(Integer.toString(i), "", i, i, "", i, "", false, false));
+      appslist.add(new Application(Integer.toString(i), "", i, i, "", i, "", false));
     }
     return appslist;
   }
