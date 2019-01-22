@@ -1640,20 +1640,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   public enum BundleKeys {
-    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG,
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, DOWNLOAD_CONVERSION_URL, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG,
   }
 
   public enum OpenType {
     /**
      * Only open the appview
      */
-    OPEN_ONLY, /**
+    OPEN_ONLY,
+    /**
      * opens the appView and starts the installation
      */
-    OPEN_AND_INSTALL, /**
+    OPEN_AND_INSTALL,
+    /**
      * open the appView and ask user if want to install the app
      */
-    OPEN_WITH_INSTALL_POPUP, /**
+    OPEN_WITH_INSTALL_POPUP,
+    /**
      * open the appView and ask user if want to install the app
      */
     APK_FY_INSTALL_POPUP

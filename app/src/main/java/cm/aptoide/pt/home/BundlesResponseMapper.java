@@ -223,8 +223,11 @@ public class BundlesResponseMapper {
             .getRating()
             .getAvg(), app.getStats()
             .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppcoins() != null,
-            app.getAppcoins() != null && app.getAppcoins()
-                .hasAdvertising()));
+            app.getAppcoins()
+                .getClicks()
+                .getClick(), app.getAppcoins()
+            .getClicks()
+            .getDownload(), Float.parseFloat(campaign.getReward())));
       }
     }
     return rewardAppsList;

@@ -15,6 +15,7 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
+import static cm.aptoide.pt.home.HomeBundle.BundleType.APPCOINS_ADS;
 import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
 
 /**
@@ -237,6 +238,13 @@ public class HomePresenter implements Presenter {
                     .getAppId(), click.getApp()
                     .getPackageName(), "", "", click.getApp()
                     .getTag(), String.valueOf(click.getAppPosition()));
+              } else if (click.getBundle()
+                  .getType()
+                  .equals(APPCOINS_ADS)) {
+                RewardApp rewardApp = (RewardApp) app;
+                homeNavigator.navigateWithDownloadUrlAndReward(rewardApp.getAppId(),
+                    rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getDownloadUrl(),
+                    rewardApp.getReward());
               } else {
                 homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
               }
