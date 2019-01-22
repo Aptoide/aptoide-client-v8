@@ -54,7 +54,7 @@ public class WizardFragment extends UIComponentFragment
   private Runnable registerViewpagerCurrentItem;
   private View animatedColorView;
   private Integer[] transitionColors;
-  private boolean isLoggedIn;
+  private boolean isUserLoggedIn;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -159,6 +159,7 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public Completable createWizardAdapter(boolean isLoggedIn) {
+    isUserLoggedIn = isLoggedIn;
     return Completable.fromAction(() -> {
       viewPagerAdapter =
           new WizardPagerAdapter(getChildFragmentManager(), isLoggedIn, wizardFragmentProvider);
@@ -241,7 +242,7 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public int getCount() {
-    return wizardFragmentProvider.getCount(isLoggedIn);
+    return wizardFragmentProvider.getCount(isUserLoggedIn);
   }
 
   @Override public int getContentViewId() {
