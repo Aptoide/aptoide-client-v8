@@ -64,7 +64,6 @@ import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
@@ -1662,10 +1661,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {
     return new AptoideApplicationAnalytics();
-  }
-
-  @Singleton @Provides IronSourceAnalytics provideIronSourceAnalytics() {
-    return new IronSourceAnalytics();
   }
 
   @Singleton @Provides MoPubAnalytics provideMoPubAnalytics() {
