@@ -51,7 +51,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private String appName;
   private String appImgUrl;
   private String appPackge;
-  private String storeName;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private OkHttpClient httpClient;
@@ -72,26 +71,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     args.putString(BundleCons.APP_NAME, appName);
     args.putString(BundleCons.APP_IMG_URL, appImgUrl);
     args.putString(BundleCons.APP_PACKAGE, appPackage);
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  /**
-   * @param appName
-   * @param appImgUrl
-   * @param appPackage
-   * @param storeName
-   *
-   * @return
-   */
-  public static OtherVersionsFragment newInstance(String appName, String appImgUrl,
-      String appPackage, String storeName) {
-    OtherVersionsFragment fragment = new OtherVersionsFragment();
-    Bundle args = new Bundle();
-    args.putString(BundleCons.APP_NAME, appName);
-    args.putString(BundleCons.APP_IMG_URL, appImgUrl);
-    args.putString(BundleCons.APP_PACKAGE, appPackage);
-    args.putString(BundleCons.STORE_NAME, storeName);
     fragment.setArguments(args);
     return fragment;
   }
@@ -117,7 +96,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     appName = args.getString(BundleCons.APP_NAME);
     appImgUrl = args.getString(BundleCons.APP_IMG_URL);
     appPackge = args.getString(BundleCons.APP_PACKAGE);
-    storeName = args.getString(BundleCons.STORE_NAME);
   }
 
   @Override public int getContentViewId() {
@@ -142,16 +120,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    //super.load(create, refresh, savedInstanceState);
     Logger.getInstance()
         .d(TAG, "Other versions should refresh? " + create);
-
-    ArrayList<String> list = new ArrayList<>();
-    if (storeName != null) {
-      list.add(storeName);
-    }
-
-    fetchOtherVersions(list);
+    fetchOtherVersions();
     setHeader();
   }
 
@@ -159,7 +130,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onResume();
   }
 
-  protected void fetchOtherVersions(List<String> storeNames) {
+  protected void fetchOtherVersions() {
 
     final SuccessRequestListener<ListAppVersions> otherVersionsSuccessRequestListener =
         listAppVersions -> {
@@ -173,7 +144,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
         };
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
-        ListAppVersionsRequest.of(appPackge, storeNames, StoreUtils.getSubscribedStoresAuthMap(
+        ListAppVersionsRequest.of(appPackge, StoreUtils.getSubscribedStoresAuthMap(
             AccessorFactory.getAccessorFor(
                 ((AptoideApplication) getContext().getApplicationContext()
                     .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
@@ -290,6 +261,5 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     public static final String APP_NAME = "app_name";
     public static final String APP_IMG_URL = "app_img_url";
     public static final String APP_PACKAGE = "app_package";
-    public static final String STORE_NAME = "store_name";
   }
 }

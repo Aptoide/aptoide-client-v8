@@ -119,19 +119,16 @@ public class SearchResultFragment extends BackButtonFragment
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
 
-  public static SearchResultFragment newInstance(String currentQuery, String defaultStoreName) {
-    return newInstance(currentQuery, false, defaultStoreName);
+  public static SearchResultFragment newInstance(String currentQuery) {
+    return newInstance(currentQuery, false);
   }
 
-  public static SearchResultFragment newInstance(String defaultStoreName,
-      boolean focusInSearchBar) {
-    return newInstance("", false, defaultStoreName, focusInSearchBar);
+  public static SearchResultFragment newInstance(boolean focusInSearchBar) {
+    return newInstance("", false, focusInSearchBar);
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps,
-      String defaultStoreName) {
-    SearchViewModel viewModel =
-        new SearchViewModel(currentQuery, onlyTrustedApps, defaultStoreName);
+  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -140,9 +137,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps,
-      String defaultStoreName, boolean focusInSearchBar) {
-    SearchViewModel viewModel =
-        new SearchViewModel(currentQuery, onlyTrustedApps, defaultStoreName);
+      boolean focusInSearchBar) {
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     args.putBoolean(FOCUS_IN_SEARCH, focusInSearchBar);
@@ -152,9 +148,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   public static SearchResultFragment newInstance(String currentQuery, String storeName,
-      String storeTheme, String defaultStoreName) {
-    SearchViewModel viewModel =
-        new SearchViewModel(currentQuery, storeName, storeTheme, defaultStoreName);
+      String storeTheme) {
+    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, storeTheme);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -520,7 +515,8 @@ public class SearchResultFragment extends BackButtonFragment
   private void setFollowedStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-      followedStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
+      followedStoresButton.setBackgroundResource(StoreTheme.get(theme)
+          .getRoundGradientButtonDrawable());
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
@@ -541,7 +537,8 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.white));
-      allStoresButton.setBackgroundResource(R.drawable.default_search_button_background);
+      allStoresButton.setBackgroundResource(StoreTheme.get(theme)
+          .getRoundGradientButtonDrawable());
     }
     viewModel.setAllStoresSelected(true);
     String storeTheme = viewModel.getStoreTheme();
@@ -656,7 +653,7 @@ public class SearchResultFragment extends BackButtonFragment
     if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
       String storeTheme = viewModel.getStoreTheme();
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
       toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
           .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -676,7 +673,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void setupDefaultTheme() {
     if (storeThemeExists(theme)) {
       ThemeUtils.setStoreTheme(getActivity(), theme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(theme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
@@ -745,10 +742,6 @@ public class SearchResultFragment extends BackButtonFragment
     focusInSearchBar = currentQuery.isEmpty() && !noResults;
 
     searchSetupPublishSubject.onNext(null);
-  }
-
-  @Override public String getDefaultTheme() {
-    return super.getDefaultTheme();
   }
 
   @NonNull private DividerItemDecoration getDefaultItemDecoration() {

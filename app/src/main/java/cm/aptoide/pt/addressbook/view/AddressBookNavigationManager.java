@@ -22,13 +22,15 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   private final String exitNavigationFragmentTag;
   private final String aboutFragmentActionBarTitle;
   private final String aboutFragmentBodyMessage;
+  private final String theme;
 
   public AddressBookNavigationManager(FragmentNavigator navigator, String exitNavigatonFragmentTag,
-      String aboutFragmentActionBarTitle, String aboutFragmentBodyMessage) {
+      String aboutFragmentActionBarTitle, String aboutFragmentBodyMessage, String theme) {
     this.navigator = navigator;
     this.exitNavigationFragmentTag = exitNavigatonFragmentTag;
     this.aboutFragmentActionBarTitle = aboutFragmentActionBarTitle;
     this.aboutFragmentBodyMessage = aboutFragmentBodyMessage;
+    this.theme = theme;
   }
 
   @Override public void leaveAddressBook() {
@@ -68,7 +70,7 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
 
   @Override public void showAboutFragment() {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
-            .newDescriptionFragment(aboutFragmentActionBarTitle, aboutFragmentBodyMessage, "default"),
+            .newDescriptionFragment(aboutFragmentActionBarTitle, aboutFragmentBodyMessage, theme),
         true);
   }
 

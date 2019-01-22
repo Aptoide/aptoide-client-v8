@@ -17,8 +17,9 @@ public class ThemeUtils {
   /**
    * Responsible for changing status bar color
    */
-  public static void setStatusBarThemeColor(Activity activity, StoreTheme storeTheme) {
+  public static void setStatusBarThemeColor(Activity activity, String theme) {
     if (Build.VERSION.SDK_INT >= 21) {
+      StoreTheme storeTheme = StoreTheme.get(theme);
       Window window = activity.getWindow();
       window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
       window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -30,7 +31,7 @@ public class ThemeUtils {
   /**
    * Used to set Default themes
    */
-  public static void setAptoideTheme(Activity activity, String defaultTheme) {
+  public static void setAptoideTheme(Activity activity, String theme) {
 
     SharedPreferences sPref =
         ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences();
@@ -39,13 +40,14 @@ public class ThemeUtils {
         .equals("dark")) {
       sPref.edit()
           .putString("theme", "default_dark")
-          .commit();
+          .apply();
       activity.setTheme(R.style.AptoideThemeDefaultDark);
     } else {
       sPref.edit()
-          .putString("theme", defaultTheme)
-          .commit();
-      activity.setTheme(R.style.AptoideThemeDefault);
+          .putString("theme", theme)
+          .apply();
+      activity.setTheme(StoreTheme.get(theme)
+          .getThemeResource());
     }
   }
 
@@ -56,14 +58,5 @@ public class ThemeUtils {
 
     StoreTheme storeTheme = StoreTheme.get(theme);
     activity.setTheme(storeTheme.getThemeResource());
-  }
-
-  /**
-   * Returns applied theme
-   */
-  public static StoreTheme getAppliedTheme(Activity activity) {
-    StoreTheme storeTheme = StoreTheme.get(activity.getTheme()
-        .toString());
-    return storeTheme;
   }
 }

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.logger.Logger;
@@ -32,6 +31,7 @@ public class InviteFriendsFragment extends UIComponentFragment
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private InviteFriendsContract.UserActionsListener mActionsListener;
   private OpenMode openMode;
   private String entranceTag;
@@ -57,12 +57,10 @@ public class InviteFriendsFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName)), openMode,
+            getString(R.string.addressbook_data_about, marketName), theme), openMode,
         new AddressBookAnalytics(analyticsManager, navigationTracker), marketName);
   }
 

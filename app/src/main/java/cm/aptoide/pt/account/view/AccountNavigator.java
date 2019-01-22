@@ -48,13 +48,14 @@ public class AccountNavigator {
   private final PublishRelay<FacebookLoginResult> facebookLoginSubject;
   private final String recoverPasswordUrl;
   private final AccountAnalytics accountAnalytics;
+  private final String theme;
 
   public AccountNavigator(BottomNavigationNavigator bottomNavigationNavigator,
       FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       ActivityNavigator activityNavigator, LoginManager facebookLoginManager,
       CallbackManager callbackManager, GoogleApiClient client,
       PublishRelay<FacebookLoginResult> facebookLoginSubject, String recoverPasswordUrl,
-      AccountAnalytics accountAnalytics) {
+      AccountAnalytics accountAnalytics, String theme) {
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
@@ -65,6 +66,7 @@ public class AccountNavigator {
     this.facebookLoginSubject = facebookLoginSubject;
     this.recoverPasswordUrl = recoverPasswordUrl;
     this.accountAnalytics = accountAnalytics;
+    this.theme = theme;
   }
 
   public void navigateToRecoverPasswordView() {
@@ -155,12 +157,12 @@ public class AccountNavigator {
   public void navigateToTermsAndConditions() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity());
+            .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity(), theme);
   }
 
   public void navigateToPrivacyPolicy() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity());
+            .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity(), theme);
   }
 }

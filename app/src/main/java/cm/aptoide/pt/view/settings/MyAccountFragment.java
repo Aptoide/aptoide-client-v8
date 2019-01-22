@@ -60,6 +60,7 @@ public class MyAccountFragment extends BackButtonFragment
   @Inject AccountAnalytics accountAnalytics;
   @Inject MyAccountManager myAccountManager;
   @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private AptoideAccountManager accountManager;
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
@@ -267,7 +268,7 @@ public class MyAccountFragment extends BackButtonFragment
 
   @Override public void startAptoideTvWebView() {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab("https://blog.aptoide.com/what-is-aptoidetv/", getContext());
+        .openInChromeCustomTab("https://blog.aptoide.com/what-is-aptoidetv/", getContext(), theme);
   }
 
   @Override public void refreshUI(Store store) {

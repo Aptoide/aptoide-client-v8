@@ -36,7 +36,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -70,6 +69,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Inject EditorialPresenter presenter;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
+  @Inject @Named("aptoide-theme") String theme;
   private Toolbar toolbar;
   private ImageView appImage;
   private TextView itemName;
@@ -246,7 +246,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
+    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       window.getDecorView()
           .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);

@@ -143,7 +143,6 @@
       android:layout_height="42dp"
       android:layout_marginLeft="5dp"
       android:layout_marginStart="5dp"
-      android:background="@drawable/addressbook_button_rectangle_shape"
       android:text="@string/addressbook_allow_friends_find"
       app:layout_constraintBottom_toTopOf="@+id/facebook_sync_button"
       app:layout_constraintEnd_toEndOf="parent"
@@ -154,6 +153,7 @@
       tools:layout_conversion_absoluteX="30dp"
       tools:layout_conversion_absoluteY="415dp"
       tools:layout_editor_absoluteX="30dp"
+      style="@style/Aptoide.Button"
       />
 
 
@@ -307,13 +307,12 @@
       android:layout_height="42dp"
       android:layout_gravity="center"
       android:text="@string/done"
-      android:textColor="@color/default_color"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/addressbook_about"
       tools:layout_editor_absoluteX="0dp"
-      style="?attr/customButtonThinLine"
+      style="@style/Aptoide.Button.Ghost"
       />
 
 </android.support.constraint.ConstraintLayout>
