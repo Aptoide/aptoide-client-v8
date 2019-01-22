@@ -114,9 +114,32 @@ public class AppViewPresenter implements Presenter {
     handleClickOnTopDonorsDonate();
     handleDonateCardImpressions();
 
-    initializeInterstitialAd();
     handleInterstitialAdClick();
     handleInterstitialAdLoaded();
+    showInterstitialAd();
+  }
+
+  private void showInterstitialAd() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.installAppClick())
+        .flatMap(create -> appViewManager.loadAppViewViewModel()
+            .toObservable())
+        .filter(app -> !app.isLoading())
+        .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
+            app.getVersionCode(), app.isPaid(), app.getPay())
+            .filter(model -> model.getDownloadModel()
+                .isDownloading())
+            .first()
+            .flatMap(model -> appViewManager.shouldLoadInterstitialAd())
+            .filter(loadInterstitial -> loadInterstitial)
+            .observeOn(viewScheduler)
+            .doOnNext(__ -> view.loadInterstitialAd()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
   }
 
   private void handleInterstitialAdLoaded() {
@@ -160,18 +183,6 @@ public class AppViewPresenter implements Presenter {
           }
           return Observable.empty();
         })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
-  private void initializeInterstitialAd() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.shouldLoadInterstitialAd())
-        .filter(loadInterstitial -> loadInterstitial)
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.loadInterstitialAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
