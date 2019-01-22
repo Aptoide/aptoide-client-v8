@@ -52,7 +52,7 @@ public class EditorialPresenterTest {
     List<EditorialContent> editorialContent = new ArrayList<>();
     editorialContent.add(
         new EditorialContent("title", Collections.emptyList(), "message", "type", "appName", "icon",
-            0));
+            0, "actionTitle", "actionUrl"));
     editorialViewModel =
         new EditorialViewModel(editorialContent, "type", "title", 1, "caption", "appName", 0,
             "packageName", 0, "icon", "graphic", null, 0, "storeName", "storeTheme", "versionName",
@@ -143,6 +143,20 @@ public class EditorialPresenterTest {
     //When the user clicks on a media
     when(view.mediaContentClicked()).thenReturn(
         Observable.just(new EditorialEvent(EditorialEvent.Type.MEDIA, "url")));
+
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then it should navigate to the url of the media
+    verify(editorialNavigator).navigateToUri("url");
+  }
+
+  @Test public void handleClickActionButtonTest() {
+    //Given an initialized presenter
+    editorialPresenter.handleClickActionButtonCard();
+
+    //When the user clicks on a media
+    when(view.actionButtonClicked()).thenReturn(
+        Observable.just(new EditorialEvent(EditorialEvent.Type.ACTION, "url")));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -269,5 +283,29 @@ public class EditorialPresenterTest {
 
     //Then it should deliver that swatch to the view
     verify(view).setMediaListDescriptionsVisible(editorialEvent);
+  }
+
+  @Test public void handleMovingCollapseVisiblePlaceHolderTest() {
+    //Given an initialized presenter
+    editorialPresenter.handleMovingCollapse();
+    //If item is shown when collapse toolbar is moving
+    when(view.handleMovingCollapse()).thenReturn(Observable.just(true));
+
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then it should remove the bottom app card
+    verify(view).removeBottomCardAnimation();
+  }
+
+  @Test public void handleMovingCollapseNotVisiblePlaceHolderTest() {
+    //Given an initialized presenter
+    editorialPresenter.handleMovingCollapse();
+    //If item is shown when collapse toolbar is moving
+    when(view.handleMovingCollapse()).thenReturn(Observable.just(false));
+
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    //Then it should add the bottom app card
+    verify(view).addBottomCardAnimation();
   }
 }

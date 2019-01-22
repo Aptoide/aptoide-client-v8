@@ -70,6 +70,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -87,6 +88,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject AppNavigator appNavigator;
+  @Inject @Named("aptoide-theme") String theme;
+  @Inject @Named("marketName") String marketName;
   private AptoideAccountManager accountManager;
   private String storeName;
   private String title;
@@ -115,8 +118,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private ShareStoreHelper shareStoreHelper;
   private String storeUrl;
   private String iconPath;
-  private String marketName;
-  private String defaultTheme;
   private Runnable registerViewpagerCurrentItem;
   private SharedPreferences sharedPreferences;
   private AppSearchSuggestionsView appSearchSuggestionsView;
@@ -181,9 +182,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
-    }
+    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -212,7 +211,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    defaultTheme = application.getDefaultThemeName();
     tokenInvalidator = application.getTokenInvalidator();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(
         AccessorFactory.getAccessorFor(application.getDatabase(),
@@ -223,13 +221,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     sharedPreferences = application.getDefaultSharedPreferences();
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
-    marketName = application.getMarketName();
     shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
 
     if (hasSearchFromStoreFragment()) {
       searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);
-      searchNavigator = new SearchNavigator(getFragmentNavigator(), storeName, storeTheme,
-          application.getDefaultStoreName(), appNavigator);
+      searchNavigator =
+          new SearchNavigator(getFragmentNavigator(), storeName, storeTheme, appNavigator);
       trendingManager = application.getTrendingManager();
       crashReport = CrashReport.getInstance();
     }
@@ -259,9 +256,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
     // reset to default theme in the toolbar
     // TODO re-do this ThemeUtils methods and avoid loading resources using
     // execution-time generated ids for the desired resource
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(defaultTheme));
-    ThemeUtils.setAptoideTheme(getActivity(), defaultTheme);
-    ThemeUtils.setStoreTheme(getActivity(), defaultTheme);
+    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
+    ThemeUtils.setAptoideTheme(getActivity(), theme);
+    ThemeUtils.setStoreTheme(getActivity(), theme);
 
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
@@ -377,7 +374,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
       @Nullable Bundle savedInstanceState) {
     if (storeTheme != null) {
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);

@@ -21,20 +21,21 @@ public class BottomNavigationNavigator {
   private final static String EVENT_ACTION =
       "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=stores";
   private final FragmentNavigator fragmentNavigator;
-  private final String defaultStoreName;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
   private final int homePosition = 0;
   private final int searchPosition = 1;
   private final int storesPosition = 2;
   private final int appsPosition = 3;
+  private final String theme;
   private ArrayList<Integer> bottomNavigationItems;
 
-  public BottomNavigationNavigator(FragmentNavigator fragmentNavigator, String defaultStoreName,
-      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
-    this.defaultStoreName = defaultStoreName;
+  public BottomNavigationNavigator(FragmentNavigator fragmentNavigator,
+      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
+      String theme) {
     this.bottomNavigationAnalytics = bottomNavigationAnalytics;
     this.searchAnalytics = searchAnalytics;
+    this.theme = theme;
     bottomNavigationItems = new ArrayList<>();
     this.fragmentNavigator = fragmentNavigator;
   }
@@ -48,8 +49,7 @@ public class BottomNavigationNavigator {
       case searchPosition:
         bottomNavigationAnalytics.sendNavigateToSearchClickEvent();
         searchAnalytics.searchStart(SearchSource.BOTTOM_NAVIGATION, true);
-        SearchResultFragment searchResultFragment =
-            SearchResultFragment.newInstance(defaultStoreName, true);
+        SearchResultFragment searchResultFragment = SearchResultFragment.newInstance(true);
         navigateToSearch(searchResultFragment);
         break;
       case storesPosition:
@@ -74,7 +74,7 @@ public class BottomNavigationNavigator {
 
   public void navigateToStore() {
     MyStoresFragment myStoresFragment =
-        MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
+        MyStoresFragment.newInstance(getStoreEvent(), theme, "stores", StoreContext.home);
     navigateToSelectedFragment(storesPosition, myStoresFragment);
   }
 
@@ -117,11 +117,10 @@ public class BottomNavigationNavigator {
         fragment = new HomeFragment();
         break;
       case searchPosition:
-        fragment = SearchResultFragment.newInstance(defaultStoreName, true);
+        fragment = SearchResultFragment.newInstance(true);
         break;
       case storesPosition:
-        fragment =
-            MyStoresFragment.newInstance(getStoreEvent(), "default", "stores", StoreContext.home);
+        fragment = MyStoresFragment.newInstance(getStoreEvent(), "", "stores", StoreContext.home);
         break;
       case appsPosition:
         fragment = new AppsFragment();
@@ -145,7 +144,7 @@ public class BottomNavigationNavigator {
     return bottomNavigationItems;
   }
 
-  public void setBottomNavigationItems(ArrayList<Integer> savedBottomNavigationItens) {
-    bottomNavigationItems = savedBottomNavigationItens;
+  public void setBottomNavigationItems(ArrayList<Integer> savedBottomNavigationItems) {
+    bottomNavigationItems = savedBottomNavigationItems;
   }
 }

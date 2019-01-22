@@ -8,7 +8,6 @@
     android:layout_marginRight="30dp"
     android:layout_marginStart="30dp"
     android:orientation="vertical"
-    android:theme="@style/AppBaseTheme"
     >
 
   <ImageView
@@ -47,9 +46,8 @@
       android:layout_marginTop="10dp"
       android:gravity="center_horizontal"
       android:text="@string/addressbook_invite_friends"
-      android:textColor="@color/aptoide_orange"
       android:textStyle="bold"
-      style="@style/Aptoide.TextView.Regular.M"
+      style="@style/Aptoide.TextView.Regular.M.Theme"
       />
 
   <Button
@@ -80,7 +78,6 @@
       android:layout_marginTop="5dp"
       android:padding="10dp"
       android:text="@string/done"
-      android:textColor="@color/default_color"
       style="@style/Aptoide.Button.Ghost"
       />
 </RelativeLayout>

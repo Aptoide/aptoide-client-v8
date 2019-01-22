@@ -8,8 +8,6 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.experiments.ApkFyExperiment;
 import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
@@ -33,7 +31,6 @@ import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
-import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
@@ -90,6 +87,13 @@ import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.promotions.PromotionViewAppMapper;
+import cm.aptoide.pt.promotions.PromotionsAnalytics;
+import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsNavigator;
+import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import cm.aptoide.pt.promotions.PromotionsPresenter;
+import cm.aptoide.pt.promotions.PromotionsView;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -103,7 +107,6 @@ import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
@@ -211,14 +214,18 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
-      BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
+      BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
+      @Named("aptoide-theme") String theme) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()));
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, AdsManager adsManager) {
-    return new Home(bundlesRepository, impressionManager, adsManager);
+      ImpressionManager impressionManager, AdsManager adsManager,
+      PromotionsManager promotionsManager,
+      PromotionsPreferencesManager promotionsPreferencesManager) {
+    return new Home(bundlesRepository, impressionManager, promotionsManager,
+        promotionsPreferencesManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -255,30 +262,23 @@ import rx.schedulers.Schedulers;
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
-  @FragmentScope @Provides DownloadStateParser providesDownloadStateParser() {
-    return new DownloadStateParser();
-  }
-
   @FragmentScope @Provides SocialRepository providesSocialRepository(
-      AptoideAccountManager accountManager,
       @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, TimelineAnalytics timelineAnalytics,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
-    return new SocialRepository(accountManager, bodyInterceptorPoolV7,
-        WebService.getDefaultConverter(), okHttpClient, timelineAnalytics, tokenInvalidator,
-        sharedPreferences);
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new SocialRepository(bodyInterceptorPoolV7, WebService.getDefaultConverter(),
+        okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
   @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
-      ABTestManager abTestManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
-      SocialRepository socialRepository, @Named("marketName") String marketName,
-      AppCoinsManager appCoinsManager,
+      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      Resources resources, WindowManager windowManager, SocialRepository socialRepository,
+      @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment,
       IronSourceAdRepository ironSourceAdRepository) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
@@ -379,15 +379,16 @@ import rx.schedulers.Schedulers;
         ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator);
   }
 
-  @FragmentScope @Provides ApkFyExperiment providesApkfyExperiment(ABTestManager abTestManager) {
-    return new ApkFyExperiment(abTestManager);
+  @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
+      PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
+      PromotionsNavigator promotionsNavigator) {
+    return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
+        new PermissionManager(), ((PermissionService) fragment.getContext()),
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator);
   }
 
-  @FragmentScope @Provides
-  IronSourceInterstitialAdExperiment providesIronSourceInterstitialAdExperiment(
-      ABTestManager abTestManager, IronSourceAdRepository ironSourceAdRepository,
-      IronSourceAnalytics ironSourceAnalytics) {
-    return new IronSourceInterstitialAdExperiment(abTestManager, AndroidSchedulers.mainThread(),
-        ironSourceAdRepository, ironSourceAnalytics);
+  @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
+      DownloadStateParser downloadStateParser) {
+    return new PromotionViewAppMapper(downloadStateParser);
   }
 }

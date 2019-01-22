@@ -2,37 +2,35 @@ package cm.aptoide.pt.notification;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.abtesting.ABTestCenterRepository;
-import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.ABTestService;
-import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
-import cm.aptoide.pt.abtesting.experiments.NotificationsExperiment;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -40,19 +38,20 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by trinkes on 7/13/16.
  */
-public class PullingContentService extends Service {
+public class PullingContentService extends BaseService {
 
   public static final String PUSH_NOTIFICATIONS_ACTION = "PUSH_NOTIFICATIONS_ACTION";
   public static final String UPDATES_ACTION = "UPDATES_ACTION";
   public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
   public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_HALF_DAY;
   public static final int UPDATE_NOTIFICATION_ID = 123;
+  @Inject @Named("marketName") String marketName;
+  @Inject DownloadFactory downloadFactory;
   private AptoideApplication application;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private UpdateRepository updateRepository;
   private SharedPreferences sharedPreferences;
-  private String marketName;
   private NotificationAnalytics notificationAnalytics;
 
   public void setAlarm(AlarmManager am, Context context, String action, long time) {
@@ -65,13 +64,12 @@ public class PullingContentService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
+    getApplicationComponent().inject(this);
     application = (AptoideApplication) getApplicationContext();
-    marketName = application.getMarketName();
     sharedPreferences = application.getDefaultSharedPreferences();
-    updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     installManager = application.getInstallManager();
+    updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     notificationAnalytics = application.getNotificationAnalytics();
-
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -128,13 +126,10 @@ public class PullingContentService extends Service {
         }))
         .filter(__ -> ManagerPreferences.isUpdateNotificationEnable(sharedPreferences))
         .observeOn(Schedulers.io())
-        .flatMap(updates -> getNotificationsExperiment(application.getIdsRepository(),
-            application.getAbTestService(),
-            application.getAbTestExperimentPersistence()).performAbTest()
-            .doOnNext(showNotifications -> {
-              notificationAnalytics.sendUpdatesNotificationReceivedEvent();
-              setUpdatesNotification(updates, startId, showNotifications);
-            }))
+        .doOnNext(updates -> {
+          notificationAnalytics.sendUpdatesNotificationReceivedEvent();
+          setUpdatesNotification(updates, startId);
+        })
         .subscribe(__ -> {
         }, throwable -> {
           throwable.printStackTrace();
@@ -156,8 +151,7 @@ public class PullingContentService extends Service {
                 .map(updates -> {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
                   for (Update update : updates) {
-                    downloadList.add(
-                        new DownloadFactory(marketName, application.getCachePath()).create(update));
+                    downloadList.add(downloadFactory.create(update));
                   }
                   return downloadList;
                 })
@@ -168,8 +162,7 @@ public class PullingContentService extends Service {
         });
   }
 
-  private void setUpdatesNotification(List<Update> updates, int startId,
-      boolean showNotifications) {
+  private void setUpdatesNotification(List<Update> updates, int startId) {
     Intent resultIntent = new Intent(getApplicationContext(),
         AptoideApplication.getActivityProvider()
             .getMainActivityFragmentClass());
@@ -181,8 +174,7 @@ public class PullingContentService extends Service {
     int numberUpdates = updates.size();
     if (numberUpdates > 0
         && numberUpdates != ManagerPreferences.getLastUpdates(sharedPreferences)
-        && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)
-        && showNotifications) {
+        && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)) {
       CharSequence tickerText =
           AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(), marketName);
       CharSequence contentTitle = marketName;
@@ -195,17 +187,17 @@ public class PullingContentService extends Service {
                 numberUpdates);
       }
 
-      Notification notification =
-          new NotificationCompat.Builder(getApplicationContext()).setContentIntent(
-              resultPendingIntent)
-              .setOngoing(false)
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                  R.mipmap.ic_launcher))
-              .setContentTitle(contentTitle)
-              .setContentText(contentText)
-              .setTicker(tickerText)
-              .build();
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
+          createNotificationChannel("updates_notification", "Updates Notification"));
+      Notification notification = builder.setContentIntent(resultPendingIntent)
+          .setOngoing(false)
+          .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+          .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+              R.mipmap.ic_launcher))
+          .setContentTitle(contentTitle)
+          .setContentText(contentText)
+          .setTicker(tickerText)
+          .build();
 
       notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
       final NotificationManager managerNotification =
@@ -218,10 +210,17 @@ public class PullingContentService extends Service {
     stopSelf(startId);
   }
 
-  private NotificationsExperiment getNotificationsExperiment(IdsRepository idsRepository,
-      ABTestService.ServiceV7 service, RealmExperimentPersistence persistence) {
-    return new NotificationsExperiment(new ABTestManager(
-        new ABTestCenterRepository(new ABTestService(service, idsRepository.getUniqueIdentifier()),
-            new HashMap<>(), persistence)));
+  private String createNotificationChannel(String channelId, String channelName) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+      return "";
+    }
+    NotificationChannel chan =
+        new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
+    chan.setLightColor(Color.BLUE);
+    chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+    NotificationManager service =
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    service.createNotificationChannel(chan);
+    return channelId;
   }
 }

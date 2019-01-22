@@ -29,7 +29,6 @@
     <item name="android:lineSpacingExtra">4dp</item>
   </style>
 
-
   <style name="Aptoide.TextView.Regular.M">
     <item name="android:textSize">16sp</item>
     <item name="android:lineSpacingExtra">4dp</item>
@@ -156,6 +155,11 @@
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.S.White">
+    <item name="android:textColor">@color/white</item>
+  </style>
+
+
   <style name="Aptoide.TextView.Medium.M.Grey_900">
     <item name="android:textColor">@color/grey_900</item>
   </style>
@@ -194,6 +198,10 @@
     <item name="android:textColor">@color/default_orange_gradient_end</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XXS.GreyMedium">
+    <item name="android:textColor">@color/grey_medium</item>
+  </style>
+
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
     <item name="android:textAllCaps">true</item>
@@ -213,6 +221,52 @@
 
   <style name="Aptoide.TextView.Regular.XS.Youtube">
     <item name="android:textColor">@color/youtube</item>
+  </style>
+
+  <!-- Theme Color -->
+
+  <style name="Aptoide.TextView.Regular.L.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XL.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.M.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.S.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XXS.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.L.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.M.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.S.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.XS.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.XXS.Theme">
+    <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 
 </resources>

@@ -10,9 +10,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
-import cm.aptoide.pt.install.AutoUpdate;
 import io.realm.RealmList;
 
 /**
@@ -20,52 +18,17 @@ import io.realm.RealmList;
  */
 public class DownloadFactory {
 
-  private static final String UPDATE_ACTION = "?action=update";
-  private static final String INSTALL_ACTION = "?action=install";
-  private static final String DOWNGRADE_ACTION = "?action=downgrade";
   private final String marketName;
+  private final DownloadApkPathsProvider downloadApkPathsProvider;
   private final String cachePath;
+  private final AppValidator appValidator;
 
-  public DownloadFactory(String marketName, String cachePath) {
+  public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
+      String cachePath, AppValidator appValidator) {
     this.marketName = marketName;
     this.cachePath = cachePath;
-  }
-
-  public Download create(GetAppMeta.App appToDownload, int downloadAction)
-      throws IllegalArgumentException {
-    final GetAppMeta.GetAppMetaFile file = appToDownload.getFile();
-
-    validateApp(appToDownload.getMd5(), appToDownload.getObb(), appToDownload.getPackageName(),
-        appToDownload.getName(), file != null ? file.getPath() : null,
-        file != null ? file.getPathAlt() : null);
-
-    String path = appToDownload.getFile()
-        .getPath();
-    String altPath = appToDownload.getFile()
-        .getPathAlt();
-
-    ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
-
-    Download download = new Download();
-    download.setMd5(appToDownload.getFile()
-        .getMd5sum());
-    download.setIcon(appToDownload.getIcon());
-    download.setAppName(appToDownload.getName());
-    download.setAction(downloadAction);
-    download.setPackageName(appToDownload.getPackageName());
-    download.setVersionCode(appToDownload.getFile()
-        .getVercode());
-    download.setVersionName(appToDownload.getFile()
-        .getVername());
-
-    download.setFilesToDownload(
-        createFileList(appToDownload.getMd5(), appToDownload.getPackageName(), downloadPaths.path,
-            appToDownload.getFile()
-                .getMd5sum(), appToDownload.getObb(), downloadPaths.altPath, appToDownload.getFile()
-                .getVercode(), appToDownload.getFile()
-                .getVername()));
-
-    return download;
+    this.downloadApkPathsProvider = downloadApkPathsProvider;
+    this.appValidator = appValidator;
   }
 
   private void validateApp(String md5, Obb appObb, String packageName, String appName,
@@ -82,24 +45,6 @@ public class DownloadFactory {
       throw new IllegalArgumentException(
           "This app has an OBB and doesn't have the App name specified");
     }
-  }
-
-  ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
-    switch (downloadAction) {
-      case Download.ACTION_INSTALL:
-        path += INSTALL_ACTION;
-        altPath += INSTALL_ACTION;
-        break;
-      case Download.ACTION_DOWNGRADE:
-        path += DOWNGRADE_ACTION;
-        altPath += DOWNGRADE_ACTION;
-        break;
-      case Download.ACTION_UPDATE:
-        path += UPDATE_ACTION;
-        altPath += UPDATE_ACTION;
-        break;
-    }
-    return new ApkPaths(path, altPath);
   }
 
   private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
@@ -157,68 +102,82 @@ public class DownloadFactory {
   }
 
   public Download create(Update update) {
-    validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
-        update.getApkPath(), update.getAlternativeApkPath());
-    Download download = new Download();
-    download.setMd5(update.getMd5());
-    download.setIcon(update.getIcon());
-    download.setAppName(update.getLabel());
-    download.setAction(Download.ACTION_UPDATE);
-    download.setPackageName(update.getPackageName());
-    download.setVersionCode(update.getUpdateVersionCode());
-    download.setVersionName(update.getUpdateVersionName());
-    download.setFilesToDownload(createFileList(update.getMd5(), update.getPackageName(),
-        update.getApkPath() + UPDATE_ACTION, update.getAlternativeApkPath() + UPDATE_ACTION,
-        update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
-        update.getPatchObbMd5(), update.getUpdateVersionCode(), update.getUpdateVersionName(),
-        update.getMainObbName(), update.getPatchObbName()));
-    return download;
+    AppValidator.AppValidationResult validationResult =
+        appValidator.validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
+            update.getApkPath(), update.getAlternativeApkPath());
+
+    if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
+      ApkPaths downloadPaths =
+          downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, update.getApkPath(),
+              update.getAlternativeApkPath());
+
+      Download download = new Download();
+      download.setMd5(update.getMd5());
+      download.setIcon(update.getIcon());
+      download.setAppName(update.getLabel());
+      download.setAction(Download.ACTION_UPDATE);
+      download.setPackageName(update.getPackageName());
+      download.setVersionCode(update.getUpdateVersionCode());
+      download.setVersionName(update.getUpdateVersionName());
+      download.setFilesToDownload(
+          createFileList(update.getMd5(), update.getPackageName(), downloadPaths.getPath(),
+              downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
+              update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
+              update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
+              update.getPatchObbName()));
+      return download;
+    } else {
+      throw new IllegalArgumentException(validationResult.getMessage());
+    }
   }
 
-  public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
+  public Download create(String md5, int versionCode, String packageName, String uri) {
+    ApkPaths downloadPaths =
+        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, uri, null);
+    String versionName =
+        "Auto-Update"; //This is needed since we're using the version name to compare installs
     Download download = new Download();
     download.setAppName(marketName);
-    download.setMd5(autoUpdateInfo.md5);
-    download.setVersionCode(autoUpdateInfo.vercode);
-    //download.setVersionName(null); // no info available
-    download.setPackageName(autoUpdateInfo.packageName);
+    download.setMd5(md5);
+    download.setVersionCode(versionCode);
+    download.setPackageName(packageName);
+    download.setVersionName(versionName);
     download.setAction(Download.ACTION_UPDATE);
     download.setFilesToDownload(
-        createFileList(autoUpdateInfo.md5, null, autoUpdateInfo.path + UPDATE_ACTION,
-            autoUpdateInfo.md5, null, null, autoUpdateInfo.vercode, null));
+        createFileList(md5, packageName, downloadPaths.getPath(), md5, null, null, versionCode,
+            versionName));
     return download;
   }
 
   public Download create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt,
       Obb obb) {
-    validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
 
-    ApkPaths downloadPaths = getDownloadPaths(downloadAction, appPath, appPathAlt);
+    AppValidator.AppValidationResult validationResult =
+        appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
 
-    Download download = new Download();
-    download.setMd5(md5);
-    download.setIcon(icon);
-    download.setAppName(appName);
-    download.setAction(downloadAction);
-    download.setPackageName(packageName);
-    download.setVersionCode(versionCode);
-    download.setVersionName(versionName);
+    if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
 
-    download.setFilesToDownload(
-        createFileList(md5, packageName, downloadPaths.path, md5, obb, downloadPaths.altPath,
-            versionCode, versionName));
+      ApkPaths downloadPaths =
+          downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt);
 
-    return download;
-  }
+      Download download = new Download();
+      download.setMd5(md5);
+      download.setIcon(icon);
+      download.setAppName(appName);
+      download.setAction(downloadAction);
+      download.setPackageName(packageName);
 
-  private class ApkPaths {
-    String path;
-    String altPath;
+      download.setVersionCode(versionCode);
+      download.setVersionName(versionName);
 
-    public ApkPaths(String path, String altPath) {
-      this.path = path;
-      this.altPath = altPath;
+      download.setFilesToDownload(
+          createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
+              downloadPaths.getAltPath(), versionCode, versionName));
+
+      return download;
+    } else {
+      throw new IllegalArgumentException(validationResult.getMessage());
     }
   }
 }

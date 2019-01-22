@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
@@ -30,10 +29,8 @@ import rx.Observable;
 public abstract class FragmentView extends BaseFragment implements View {
 
   private static final String TAG = FragmentView.class.getName();
-
   private boolean startActivityForResultCalled;
   private ActivityResultNavigator activityResultNavigator;
-  private String defaultThemeName;
 
   public FragmentNavigator getFragmentNavigator() {
     return activityResultNavigator.getFragmentNavigator();
@@ -69,8 +66,6 @@ public abstract class FragmentView extends BaseFragment implements View {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    defaultThemeName =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultThemeName();
     ScreenTrackingUtils.getInstance()
         .incrementNumberOfScreens();
   }
@@ -168,9 +163,5 @@ public abstract class FragmentView extends BaseFragment implements View {
 
   public boolean isStartActivityForResultCalled() {
     return startActivityForResultCalled;
-  }
-
-  protected String getDefaultTheme() {
-    return defaultThemeName;
   }
 }

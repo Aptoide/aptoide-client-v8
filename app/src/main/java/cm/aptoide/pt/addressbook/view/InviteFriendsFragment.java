@@ -10,7 +10,6 @@ import android.widget.TextView;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.logger.Logger;
@@ -20,6 +19,7 @@ import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by jdandrade on 23/02/2017.
@@ -30,6 +30,8 @@ public class InviteFriendsFragment extends UIComponentFragment
   public static final String TAG = "TAG";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private InviteFriendsContract.UserActionsListener mActionsListener;
   private OpenMode openMode;
   private String entranceTag;
@@ -37,7 +39,6 @@ public class InviteFriendsFragment extends UIComponentFragment
   private Button allowFind;
   private Button done;
   private TextView message;
-  private String marketName;
 
   public static Fragment newInstance(OpenMode openMode, String tag) {
     InviteFriendsFragment inviteFriendsFragment = new InviteFriendsFragment();
@@ -56,13 +57,10 @@ public class InviteFriendsFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    marketName = application.getMarketName();
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName)), openMode,
+            getString(R.string.addressbook_data_about, marketName), theme), openMode,
         new AddressBookAnalytics(analyticsManager, navigationTracker), marketName);
   }
 

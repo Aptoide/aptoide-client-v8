@@ -78,7 +78,6 @@
   <attr format="reference" name="timelinePostBackground"/>
   <attr format="reference" name="timelineSendDrawable"/>
   <attr format="reference" name="homeLabelbackground"/>
-  <attr format="reference" name="headerSeparatorButton"/>
   <attr format="color" name="customColor"/>
 
   <attr format="reference" name="gridItemRatingBar"/>
@@ -91,6 +90,7 @@
   <attr format="reference" name="raisedButtonBackground"/>
   <attr format="reference" name="ghostButtonBackground"/>
   <attr format="color" name="raisedButtonTextColor"/>
+  <attr format="color" name="flatButtonBackground"/>
   <attr format="string" name="buttonTextFont"/>
   <attr format="dimension" name="buttonTextSize"/>
   <attr format="dimension" name="buttonTextSizeSmall"/>
@@ -101,6 +101,9 @@
   <attr format="dimension" name="preferenceTitleTextSize"/>
   <attr format="color" name="preferenceSummaryColor"/>
   <attr format="dimension" name="preferenceSummaryTextSize"/>
+  <attr format="color" name="colorControlHighlight"/>
+  <attr format="color" name="nav_item_color_state"/>
+  <attr format="color" name="wizard3Color"/>
 
   <declare-styleable name="CustomTextInputLayout">
     <attr format="string" name="helperText"/>

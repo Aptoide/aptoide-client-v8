@@ -8,7 +8,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -133,17 +132,20 @@ public class AppsManager {
 
   private void setupDownloadEvents(Download download) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.DOWNLOADS);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+    downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
+        AnalyticsManager.Action.INSTALL);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        getInstallType(download.getAction()), AnalyticsManager.Action.INSTALL, AppContext.DOWNLOADS,
-        getOrigin(download.getAction()));
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()));
   }
 
   private void setupUpdateEvents(Download download, Origin origin) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.UPDATE_TAB);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+    downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
+        AnalyticsManager.Action.INSTALL);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        InstallType.UPDATE, AnalyticsManager.Action.INSTALL, AppContext.UPDATE_TAB, origin);
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin);
   }
 
   private Origin getOrigin(int action) {
@@ -155,18 +157,6 @@ public class AppsManager {
         return Origin.UPDATE;
       case Download.ACTION_DOWNGRADE:
         return Origin.DOWNGRADE;
-    }
-  }
-
-  private InstallType getInstallType(int action) {
-    switch (action) {
-      default:
-      case Download.ACTION_INSTALL:
-        return InstallType.INSTALL;
-      case Download.ACTION_UPDATE:
-        return InstallType.UPDATE;
-      case Download.ACTION_DOWNGRADE:
-        return InstallType.DOWNGRADE;
     }
   }
 

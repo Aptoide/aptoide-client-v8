@@ -48,6 +48,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import java.util.Arrays;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -60,6 +61,8 @@ public class AddressBookFragment extends UIComponentFragment
   @Inject TwitterAuthClient mTwitterAuthClient;
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
   private Button allowFriendsFindButton;
@@ -75,7 +78,6 @@ public class AddressBookFragment extends UIComponentFragment
   private ProgressDialog mGenericPleaseWaitDialog;
   private TwitterSession twitterSession;
   private AddressBookAnalytics analytics;
-  private String marketName;
 
   public static AddressBookFragment newInstance() {
     AddressBookFragment addressBookFragment = new AddressBookFragment();
@@ -89,7 +91,6 @@ public class AddressBookFragment extends UIComponentFragment
     getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    marketName = application.getMarketName();
     analytics = new AddressBookAnalytics(analyticsManager, navigationTracker);
     final BodyInterceptor<BaseBody> baseBodyBodyInterceptor =
         application.getAccountSettingsBodyInterceptorPoolV7();
@@ -103,7 +104,7 @@ public class AddressBookFragment extends UIComponentFragment
             application.getDefaultSharedPreferences()), analytics,
         new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName)),
+            getString(R.string.addressbook_data_about, marketName), theme),
         application.getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();

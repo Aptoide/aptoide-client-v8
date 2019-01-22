@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout_appview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical"
+    >
+
+  <include
+      layout="@layout/action_bar_appview"
+      />
+  <ImageView
+      android:id="@+id/app_icon"
+      android:layout_width="104dp"
+      android:layout_height="104dp"
+      app:layout_anchor="@id/app_bar_layout"
+      app:layout_anchorGravity="bottom|center"
+      tools:src="@mipmap/ic_launcher"
+      />
+  <android.support.v4.widget.NestedScrollView
+      android:id="@+id/scroll_view_app"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scrollbars="none"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <ProgressBar
+          android:id="@+id/appview_progress"
+          android:layout_width="100dp"
+          android:layout_height="100dp"
+          android:layout_gravity="center"
+          android:layout_marginTop="150dp"
+          android:visibility="gone"
+          />
+
+      <include
+          layout="@layout/partial_view_incl_no_network"
+          tools:visibility="gone"
+          />
+
+      <include
+          layout="@layout/partial_view_error"
+          tools:visibility="gone"
+          />
+
+      <LinearLayout
+          android:id="@+id/appview_full"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          tools:visibility="visible"
+          >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+          <LinearLayout
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              />
+          <View
+              android:layout_width="104dp"
+              android:layout_height="1dp"
+              />
+
+          <LinearLayout
+              android:id="@+id/trusted_layout"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:gravity="center"
+              android:orientation="vertical"
+              >
+            <ImageView
+                android:id="@+id/trusted_badge"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_badge_trusted"
+                />
+
+            <TextView
+                android:id="@+id/trusted_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/appview_header_trusted_text"
+                android:textAllCaps="true"
+                android:textColor="#4a4a4a"
+                style="@style/Aptoide.TextView.Medium.XXS"
+                />
+          </LinearLayout>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            tools:text="Clash Royale"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="9dp"
+            android:orientation="horizontal"
+            >
+
+          <ImageView
+              android:layout_width="12dp"
+              android:layout_height="16dp"
+              android:layout_gravity="center_vertical"
+              android:src="@drawable/ic_appview_download_icon"
+              android:tint="@color/grey"
+              />
+          <TextView
+              android:id="@+id/header_downloads"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginLeft="3dp"
+              android:layout_marginStart="3dp"
+              android:textColor="@color/grey"
+              android:textSize="10sp"
+              tools:text="5 M"
+              />
+          <ImageView
+              android:layout_width="12dp"
+              android:layout_height="16dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginLeft="15dp"
+              android:layout_marginStart="15dp"
+              android:src="@drawable/ic_dimension"
+              android:tint="@color/grey"
+              />
+
+          <TextView
+              android:id="@+id/header_size"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginLeft="3dp"
+              android:layout_marginStart="3dp"
+              android:textColor="@color/grey"
+              android:textSize="10sp"
+              tools:text="90.7 MB"
+              />
+
+          <ImageView
+              android:layout_width="12dp"
+              android:layout_height="16dp"
+              android:layout_gravity="center_vertical"
+              android:layout_marginLeft="15dp"
+              android:layout_marginStart="15dp"
+              android:src="@drawable/ic_star_black"
+              android:tint="@color/grey"
+              />
+
+          <TextView
+              android:id="@+id/header_rating"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginLeft="3dp"
+              android:layout_marginStart="3dp"
+              android:textColor="@color/grey"
+              android:textSize="10sp"
+              tools:text="4.2"
+              />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/install_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible"
+            tools:visibility="visible"
+            >
+
+          <include
+              layout="@layout/install_app_view"/>
+
+
+          <include
+              layout="@layout/appview_apkfy_layout_element"
+              android:id="@+id/apkfy_element"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="14dp"
+              android:layout_marginEnd="8dp"
+              android:layout_marginLeft="8dp"
+              android:layout_marginRight="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="26dp"
+              android:visibility="gone"
+              tools:visibility="visible"
+              />
+
+          <include
+              layout="@layout/appview_donate_install_card"
+              android:id="@+id/donate_install_card"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginEnd="8dp"
+              android:layout_marginLeft="8dp"
+              android:layout_marginRight="8dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="28dp"
+              android:visibility="gone"
+              tools:visibility="visible"
+              />
+
+          <FrameLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              >
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                >
+              <include
+                  layout="@layout/appview_appc_reward"
+                  android:id="@+id/appc_layout"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center_horizontal"
+                  android:layout_marginEnd="8dp"
+                  android:layout_marginLeft="8dp"
+                  android:layout_marginRight="8dp"
+                  android:layout_marginStart="8dp"
+                  android:layout_marginTop="11dp"
+                  android:visibility="gone"
+                  tools:visibility="visible"
+                  />
+            </FrameLayout>
+            <include
+                layout="@layout/iap_appc_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="11dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+          </FrameLayout>
+
+          <include
+              layout="@layout/appview_similar_layout"
+              android:id="@+id/similar_download_apps"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="9dp"
+              android:visibility="gone"
+              />
+
+        </LinearLayout>
+        <include
+            layout="@layout/separator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            />
+        <include
+            layout="@layout/appview_app_versions_layout"
+            android:id="@+id/versions_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="7dp"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/screenshots_list"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginTop="9dp"
+            android:nestedScrollingEnabled="false"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingStart="0dp"
+            style="@style/AppViewWidget"
+            />
+
+        <include
+            layout="@layout/appview_app_description_layout"
+            android:id="@+id/description_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="28dp"
+            />
+
+        <include
+            layout="@layout/fragment_appview_donations_list"
+            android:id="@+id/donations_element"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <include
+            layout="@layout/displayable_app_view_rate_and_comment"
+            android:id="@+id/reviews_layout"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="5dp"
+            />
+
+        <include
+            layout="@layout/displayable_app_view_flag_this"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <include
+            layout="@layout/appview_uploaded_by_layout"
+            android:id="@+id/store_uploaded_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="28dp"
+            />
+
+        <include
+            layout="@layout/appview_similar_layout"
+            android:id="@+id/similar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:visibility="gone"
+            />
+
+        <include
+            layout="@layout/displayable_app_view_developer"
+            android:id="@+id/dev_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            />
+      </LinearLayout>
+    </LinearLayout>
+  </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

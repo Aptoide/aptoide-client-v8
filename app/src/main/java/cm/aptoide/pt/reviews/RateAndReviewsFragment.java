@@ -41,7 +41,6 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
@@ -52,6 +51,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -62,6 +62,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   @Inject AppNavigator appNavigator;
+  @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private SharedPreferences preferences;
   private DialogUtils dialogUtils;
   private long reviewId;
@@ -183,15 +185,15 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(getDefaultTheme()));
-    ThemeUtils.setStoreTheme(getActivity(), getDefaultTheme());
+    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
+    ThemeUtils.setStoreTheme(getActivity(), theme);
     super.onDestroyView();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreTheme.get(storeTheme));
+      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
     }
   }
@@ -209,7 +211,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         ((ActivityResultNavigator) getContext()).getAccountNavigator(), baseBodyInterceptor,
         httpClient, converterFactory, installedRepository, tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        getContext().getResources());
+        getContext().getResources(), marketName);
   }
 
   private void fetchRating(boolean refresh) {

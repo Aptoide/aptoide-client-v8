@@ -25,6 +25,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by jdandrade on 13/02/2017.
@@ -38,6 +39,8 @@ public class SyncResultFragment extends UIComponentFragment
   private static final String TAG = "TAG";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private SyncResultContract.UserActionsListener mActionsListener;
   private List<Contact> contacts;
   private RecyclerView recyclerView;
@@ -46,7 +49,6 @@ public class SyncResultFragment extends UIComponentFragment
   private Button done;
   private TextView successMessage;
   private String entranceTag;
-  private String marketName;
 
   public static Fragment newInstance(List<Contact> contacts, String tag) {
     SyncResultFragment syncSuccessFragment = new SyncResultFragment();
@@ -80,12 +82,11 @@ public class SyncResultFragment extends UIComponentFragment
     getFragmentComponent(savedInstanceState).inject(this);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
-    marketName = application.getMarketName();
     mActionsListener =
         new SyncResultPresenter(this, new AddressBookAnalytics(analyticsManager, navigationTracker),
             new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
                 getString(R.string.addressbook_about),
-                getString(R.string.addressbook_data_about, marketName)));
+                getString(R.string.addressbook_data_about, marketName), theme));
     mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, getContext());
   }
 

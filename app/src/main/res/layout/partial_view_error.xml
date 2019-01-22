@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp"
-        android:background="@drawable/flat_selector"
+        android:background="?attr/flatButtonBackground"
         android:focusable="true"
         android:gravity="center"
         android:padding="5dp"

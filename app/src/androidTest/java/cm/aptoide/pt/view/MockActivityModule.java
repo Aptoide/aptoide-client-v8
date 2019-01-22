@@ -18,11 +18,9 @@ public class MockActivityModule extends ActivityModule {
   private final AppCompatActivity activity;
 
   public MockActivityModule(AppCompatActivity activity, Intent intent,
-      NotificationSyncScheduler notificationSyncScheduler, String marketName, String autoUpdateUrl,
-      View view, String defaultTheme, String defaultStoreName, boolean firstCreated,
+      NotificationSyncScheduler notificationSyncScheduler, View view, boolean firstCreated,
       String fileProviderAuthority) {
-    super(activity, intent, notificationSyncScheduler, marketName, autoUpdateUrl, view,
-        defaultTheme, defaultStoreName, firstCreated, fileProviderAuthority);
+    super(activity, intent, notificationSyncScheduler, view, firstCreated, fileProviderAuthority);
     this.activity = activity;
   }
 

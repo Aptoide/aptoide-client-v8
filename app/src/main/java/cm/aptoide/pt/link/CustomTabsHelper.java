@@ -1,7 +1,6 @@
 package cm.aptoide.pt.link;
 
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -10,23 +9,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Browser;
 import android.support.annotation.NonNull;
-import android.support.customtabs.CustomTabsCallback;
-import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
-import android.support.customtabs.CustomTabsServiceConnection;
-import android.support.customtabs.CustomTabsSession;
 import android.support.v4.content.ContextCompat;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.store.StoreTheme;
 
 /**
  * Created by jdandrade on 02/09/16.
  */
 public class CustomTabsHelper {
 
-  private static final String CHROME_PACKAGE = "com.android.chrome";
   private static CustomTabsHelper customTabsHelper;
-  private CustomTabsServiceConnection ctConnection;
-  private CustomTabsSession customTabsSession;
 
   private CustomTabsHelper() {
     if (customTabsHelper != null) {
@@ -39,29 +32,6 @@ public class CustomTabsHelper {
       customTabsHelper = new CustomTabsHelper();
     }
     return customTabsHelper;
-  }
-
-  public void setUpCustomTabsService(String url, Context context) {
-    ctConnection = new CustomTabsServiceConnection() {
-      @Override public void onCustomTabsServiceConnected(ComponentName componentName,
-          CustomTabsClient customTabsClient) {
-        customTabsClient.warmup(0);
-        customTabsSession = getSession(customTabsClient);
-        customTabsSession.mayLaunchUrl(Uri.parse(url), null, null);
-      }
-
-      @Override public void onServiceDisconnected(ComponentName name) {
-      }
-    };
-    CustomTabsClient.bindCustomTabsService(context, CHROME_PACKAGE, ctConnection);
-  }
-
-  private CustomTabsSession getSession(CustomTabsClient customTabsClient) {
-    if (customTabsClient != null) {
-      return customTabsClient.newSession(new CustomTabsCallback() {
-      });
-    }
-    return null;
   }
 
   /**
@@ -79,21 +49,22 @@ public class CustomTabsHelper {
    * @param url Url to be launched in the Custom Chrome Tab
    * @param context Context
    */
-  public void openInChromeCustomTab(String url, Context context) {
-    CustomTabsIntent.Builder builder = getBuilder(context);
+  public void openInChromeCustomTab(String url, Context context, String theme) {
+    CustomTabsIntent.Builder builder = getBuilder(context, theme);
     CustomTabsIntent customTabsIntent = builder.build();
     addRefererHttpHeader(context, customTabsIntent);
     customTabsIntent.intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     customTabsIntent.launchUrl(context, Uri.parse(url));
   }
 
-  @NonNull private CustomTabsIntent.Builder getBuilder(Context context) {
+  @NonNull private CustomTabsIntent.Builder getBuilder(Context context, String theme) {
     Intent openInNativeIntent =
         new Intent(context.getApplicationContext(), CustomTabNativeReceiver.class);
     PendingIntent pendingIntent =
         PendingIntent.getBroadcast(context.getApplicationContext(), 0, openInNativeIntent, 0);
-    return new CustomTabsIntent.Builder(getCustomTabsSession()).setToolbarColor(
-        ContextCompat.getColor(context, R.color.aptoide_orange))
+    return new CustomTabsIntent.Builder().setToolbarColor(ContextCompat.getColor(context,
+        StoreTheme.get(theme)
+            .getPrimaryColor()))
         .setShowTitle(true)
         .setCloseButtonIcon(
             BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_arrow_back))
@@ -116,9 +87,5 @@ public class CustomTabsHelper {
       customTabsIntent.intent.putExtra(Intent.EXTRA_REFERRER_NAME,
           "android-app://" + context.getPackageName() + "/");
     }
-  }
-
-  private CustomTabsSession getCustomTabsSession() {
-    return this.customTabsSession;
   }
 }

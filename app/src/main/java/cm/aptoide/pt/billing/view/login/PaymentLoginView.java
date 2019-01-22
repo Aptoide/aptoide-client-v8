@@ -10,9 +10,9 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   Observable<Void> upNavigationEvent();
 
-  Observable<Boolean> facebookSignUpEvent();
+  Observable<Void> facebookSignUpEvent();
 
-  Observable<Boolean> googleSignUpEvent();
+  Observable<Void> googleSignUpEvent();
 
   Observable<Void> recoverPasswordEvent();
 

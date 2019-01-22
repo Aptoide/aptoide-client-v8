@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -36,6 +35,7 @@ import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -50,6 +50,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Inject LoginSignUpCredentialsPresenter presenter;
   @Inject ScreenOrientationManager orientationManager;
   @Inject AccountAnalytics accountAnalytics;
+  @Inject @Named("marketName") String marketName;
   private ProgressDialog progressDialog;
   private RxAlertDialog facebookEmailRequiredDialog;
   private Button googleLoginButton;
@@ -75,7 +76,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private Drawable checkboxDrawable;
   private int originalHeight;
 
-  private String marketName;
   private PublishSubject<Void> privacyPolicySubject;
   private PublishSubject<Void> termsAndConditionsSubject;
 
@@ -94,7 +94,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    marketName = ((AptoideApplication) getActivity().getApplication()).getMarketName();
     privacyPolicySubject = PublishSubject.create();
     termsAndConditionsSubject = PublishSubject.create();
   }
@@ -149,11 +148,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .map(event -> termsConditionCheckBox.isChecked());
   }
 
-  @Override public Observable<Boolean> googleSignUpEvent() {
+  @Override public Observable<Void> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_GOOGLE,
-            getStartupClickOrigin()))
-        .map(event -> termsConditionCheckBox.isChecked());
+            getStartupClickOrigin()));
   }
 
   @Override public Observable<Void> showHidePasswordClick() {
@@ -169,11 +167,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .map(dialog -> null);
   }
 
-  @Override public Observable<Boolean> facebookSignUpEvent() {
+  @Override public Observable<Void> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
-            getStartupClickOrigin()))
-        .map(event -> termsConditionCheckBox.isChecked());
+            getStartupClickOrigin()));
   }
 
   @Override public Observable<AptoideCredentials> aptoideLoginEvent() {

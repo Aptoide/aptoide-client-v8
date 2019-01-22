@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view;
 
+import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
@@ -9,6 +10,7 @@ import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
+import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.EditorialFragment;
@@ -19,6 +21,7 @@ import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
+import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
@@ -29,12 +32,17 @@ import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
+import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
+import cm.aptoide.pt.view.fragment.DescriptionFragment;
+import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
+import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = { FragmentModule.class })
+@FragmentScope @Subcomponent(modules = { FragmentModule.class, FlavourFragmentModule.class })
 public interface FragmentComponent {
 
   void inject(AddressBookFragment addressBookFragment);
@@ -100,4 +108,18 @@ public interface FragmentComponent {
   void inject(AppCoinsInfoFragment appCoinsInfoFragment);
 
   void inject(EditorialFragment editorialFragment);
+
+  void inject(PromotionsFragment promotionsFragment);
+
+  void inject(DescriptionFragment descriptionFragment);
+
+  void inject(TimeLineFollowingFragment timeLineFollowingFragment);
+
+  void inject(TimeLineFollowersFragment timeLineFollowersFragment);
+
+  void inject(GridRecyclerSwipeWithToolbarFragment gridRecyclerSwipeWithToolbarFragment);
+
+  void inject(SettingsFragment settingsFragment);
+
+  void inject(ThankYouConnectingFragment thankYouConnectingFragment);
 }

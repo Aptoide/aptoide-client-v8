@@ -1,18 +1,12 @@
 package cm.aptoide.pt.app.view.donations;
 
-import android.content.SharedPreferences;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.GetDonations;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.donations.GetWalletAddressRequest;
+import cm.aptoide.pt.app.view.donations.data.GetDonations;
 import java.util.ArrayList;
 import java.util.List;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
 
 /**
@@ -21,36 +15,18 @@ import rx.Single;
 
 public class DonationsService {
 
-  private final BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   private ServiceV8 service;
-  private SharedPreferences sharedPreferences;
-  private OkHttpClient httpClient;
-  private Converter.Factory converterFactory;
-  private TokenInvalidator tokenInvalidator;
+  private Scheduler viewScheduler;
 
-  public DonationsService(ServiceV8 service, SharedPreferences sharedPreferences,
-      OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      BodyInterceptor<BaseBody> bodyInterceptorPoolV7, TokenInvalidator tokenInvalidator) {
+  public DonationsService(ServiceV8 service, Scheduler viewScheduler) {
     this.service = service;
-    this.sharedPreferences = sharedPreferences;
-    this.httpClient = okHttpClient;
-    this.converterFactory = converterFactory;
-    this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
-    this.tokenInvalidator = tokenInvalidator;
+    this.viewScheduler = viewScheduler;
   }
 
   public Single<List<Donation>> getDonations(String packageName) {
     return service.getDonations(packageName, 5)
+        .observeOn(viewScheduler)
         .map(this::mapToDonationsList)
-        .toSingle();
-  }
-
-  public Single<String> getWalletAddress(String packageName) {
-    return GetWalletAddressRequest.of(packageName, sharedPreferences, httpClient, converterFactory,
-        bodyInterceptorPoolV7, tokenInvalidator)
-        .observe()
-        .map(response -> response.getData()
-            .getAddress())
         .toSingle();
   }
 

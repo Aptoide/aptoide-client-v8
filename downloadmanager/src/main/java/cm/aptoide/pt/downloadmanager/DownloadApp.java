@@ -8,10 +8,15 @@ import java.util.List;
 
 public class DownloadApp {
 
+  private final String packageName;
+  private final int versionCode;
   private List<DownloadAppFile> downloadFiles;
   private String md5;
 
-  public DownloadApp(List<DownloadAppFile> downloadFiles, String md5) {
+  public DownloadApp(String packageName, int versionCode, List<DownloadAppFile> downloadFiles,
+      String md5) {
+    this.packageName = packageName;
+    this.versionCode = versionCode;
     this.downloadFiles = downloadFiles;
     this.md5 = md5;
   }
@@ -22,5 +27,13 @@ public class DownloadApp {
 
   public String getMd5() {
     return md5;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public int getVersionCode() {
+    return versionCode;
   }
 }

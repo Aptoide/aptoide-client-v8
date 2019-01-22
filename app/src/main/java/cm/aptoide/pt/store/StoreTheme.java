@@ -212,7 +212,7 @@ public enum StoreTheme {
   @DrawableRes private final int raisedButtonDrawable;
   @DrawableRes private final int roundDrawable;
   @ColorRes private final int colorLetters;
-  @ColorRes private int storeStyle;
+  @StyleRes private int storeStyle;
   @ColorRes private int primaryColor;
   @DrawableRes private int gradientDrawable;
   @DrawableRes private int roundGradientButtonDrawable;
