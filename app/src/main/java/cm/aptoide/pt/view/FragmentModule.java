@@ -214,9 +214,10 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
-      BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
+      BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
+      @Named("aptoide-theme") String theme) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()));
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,

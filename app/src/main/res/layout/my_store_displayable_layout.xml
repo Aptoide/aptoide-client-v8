@@ -138,7 +138,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/create_store_displayable_explore_button"
-          android:textColor="@color/default_color"
+          android:textColor="?attr/colorPrimary"
           android:textSize="12sp"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"

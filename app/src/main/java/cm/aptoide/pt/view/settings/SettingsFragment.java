@@ -88,12 +88,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String TERMS_AND_CONDITIONS_PREFERENCE_KEY = "termsConditions";
   private static final String PRIVACY_POLICY_PREFERENCE_KEY = "privacyPolicy";
   private static final String DELETE_ACCOUNT = "deleteAccount";
-
   protected Toolbar toolbar;
-
   @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   @Inject SupportEmailProvider supportEmailProvider;
-
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
@@ -251,7 +249,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
       removePinPreferenceView = findPreference(REMOVE_ADULT_CONTENT_PIN_PREFERENCE_VIEW_KEY);
     } else {
       PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference("adultContent");
-      getPreferenceScreen().removePreference(preferenceCategory);
+      if (preferenceCategory != null) {
+        getPreferenceScreen().removePreference(preferenceCategory);
+      }
     }
   }
 
@@ -306,11 +306,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     subscriptions.add(RxPreference.clicks(termsAndConditions)
         .subscribe(clicked -> CustomTabsHelper.getInstance()
-            .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext())));
+            .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext(),
+                theme)));
 
     subscriptions.add(RxPreference.clicks(privacyPolicy)
         .subscribe(clicked -> CustomTabsHelper.getInstance()
-            .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext())));
+            .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext(),
+                theme)));
 
     findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
       final SwitchPreferenceCompat cb = (SwitchPreferenceCompat) preference;
@@ -597,7 +599,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void openDeleteAccountView(String accessToken) {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(getString(R.string.settings_url_delete_account, accessToken),
-            getContext());
+            getContext(), theme);
   }
 
   private void handleSocialNotifications(Boolean isChecked) {

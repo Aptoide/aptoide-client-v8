@@ -227,7 +227,6 @@ public abstract class AptoideApplication extends Application {
   @Override public void onCreate() {
 
     getApplicationComponent().inject(this);
-
     CrashReport.getInstance()
         .addLogger(new CrashlyticsCrashLogger(crashlytics))
         .addLogger(new ConsoleLogger());

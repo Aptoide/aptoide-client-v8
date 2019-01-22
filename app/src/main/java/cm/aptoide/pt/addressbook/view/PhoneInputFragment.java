@@ -47,6 +47,7 @@ public class PhoneInputFragment extends UIComponentFragment
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private PhoneInputContract.UserActionsListener mActionsListener;
   private TextView mNotNowV;
   private TextView mSharePhoneV;
@@ -88,7 +89,7 @@ public class PhoneInputFragment extends UIComponentFragment
         new AddressBookAnalytics(analyticsManager, navigationTracker),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName)));
+            getString(R.string.addressbook_data_about, marketName), theme));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),

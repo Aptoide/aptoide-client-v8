@@ -45,8 +45,6 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void setAllStoresAdsEmpty();
 
-  String getDefaultTheme();
-
   Observable<Void> followedStoresResultReachedBottom();
 
   Observable<Void> allStoresResultReachedBottom();

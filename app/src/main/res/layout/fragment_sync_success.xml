@@ -50,8 +50,8 @@
       android:layout_marginLeft="20dp"
       android:layout_marginRight="20dp"
       android:layout_marginStart="20dp"
-      android:background="@drawable/addressbook_button_rectangle_shape"
       android:text="@string/addressbook_allow_friends_find"
+      style="@style/Aptoide.Button"
       />
 
   <Button
@@ -65,7 +65,6 @@
       android:layout_marginStart="20dp"
       android:layout_marginTop="5dp"
       android:text="@string/done"
-      android:textColor="@color/default_color"
       style="?attr/customButtonThinLine"
       />
 </LinearLayout>

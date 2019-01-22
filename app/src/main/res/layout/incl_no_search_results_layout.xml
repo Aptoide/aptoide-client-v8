@@ -56,7 +56,7 @@
           android:id="@+id/ic_search_button"
           android:layout_width="60dp"
           android:layout_height="50dp"
-          android:background="@drawable/search_button_shape_layout"
+          android:background="?attr/flatButtonBackground"
           android:paddingEnd="15dp"
           android:paddingLeft="15dp"
           android:paddingRight="15dp"

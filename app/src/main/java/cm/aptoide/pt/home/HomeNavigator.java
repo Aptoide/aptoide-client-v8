@@ -28,15 +28,17 @@ public class HomeNavigator {
   private final BottomNavigationMapper bottomNavigationMapper;
   private final AppNavigator appNavigator;
   private final ActivityNavigator activityNavigator;
+  private final String theme;
 
   public HomeNavigator(FragmentNavigator fragmentNavigator,
       AptoideBottomNavigator aptoideBottomNavigator, BottomNavigationMapper bottomNavigationMapper,
-      AppNavigator appNavigator, ActivityNavigator activityNavigator) {
+      AppNavigator appNavigator, ActivityNavigator activityNavigator, String theme) {
     this.fragmentNavigator = fragmentNavigator;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.bottomNavigationMapper = bottomNavigationMapper;
     this.appNavigator = appNavigator;
     this.activityNavigator = activityNavigator;
+    this.theme = theme;
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
@@ -99,13 +101,13 @@ public class HomeNavigator {
   public void navigateToTermsAndConditions() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity());
+            .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity(), theme);
   }
 
   public void navigateToPrivacyPolicy() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity());
+            .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity(), theme);
   }
 
   public void navigateToPromotions() {
