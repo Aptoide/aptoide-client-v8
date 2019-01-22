@@ -66,6 +66,7 @@ import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
@@ -1665,6 +1666,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides IronSourceAnalytics provideIronSourceAnalytics() {
     return new IronSourceAnalytics();
+  }
+
+  @Singleton @Provides MoPubAnalytics provideMoPubAnalytics() {
+    return new MoPubAnalytics();
   }
 
   @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {

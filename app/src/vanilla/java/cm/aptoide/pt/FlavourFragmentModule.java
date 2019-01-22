@@ -5,6 +5,7 @@ import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.ads.IronSourceAnalytics;
+import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.view.FragmentScope;
 import dagger.Module;
 import dagger.Provides;
@@ -24,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @FragmentScope @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment(
-      ABTestManager abTestManager) {
-    return new MoPubInterstitialAdExperiment(abTestManager);
+      ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
+    return new MoPubInterstitialAdExperiment(abTestManager, moPubAnalytics);
   }
 }
