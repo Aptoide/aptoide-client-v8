@@ -48,6 +48,8 @@ import cm.aptoide.pt.store.view.home.AdultRowDisplayable;
 import cm.aptoide.pt.store.view.home.AdultRowWidget;
 import cm.aptoide.pt.store.view.my.MyStoreDisplayable;
 import cm.aptoide.pt.store.view.my.MyStoreWidget;
+import cm.aptoide.pt.store.view.my.TargetStoreDisplayable;
+import cm.aptoide.pt.store.view.my.TargetStoreWidget;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreWidget;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
@@ -184,6 +186,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((MyStoreWidget.class), MyStoreDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((TargetStoreWidget.class), TargetStoreDisplayable.class));
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((RecommendedStoreWidget.class),
         RecommendedStoreDisplayable.class));

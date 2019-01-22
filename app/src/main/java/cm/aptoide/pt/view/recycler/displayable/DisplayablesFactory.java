@@ -35,6 +35,7 @@ import cm.aptoide.pt.dataprovider.model.v7.ListComments;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -59,6 +60,7 @@ import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
 import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
 import cm.aptoide.pt.store.view.my.MyStoreDisplayable;
+import cm.aptoide.pt.store.view.my.TargetStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,8 +75,6 @@ import rx.schedulers.Schedulers;
  * Created by neuro on 01-05-2016.
  */
 public class DisplayablesFactory {
-  private static final String TAG = DisplayablesFactory.class.getSimpleName();
-
   public static Observable<Displayable> parse(String marketName, GetStoreWidgets.WSWidget widget,
       String storeTheme, StoreRepository storeRepository, StoreContext storeContext,
       Context context, AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
@@ -87,7 +87,7 @@ public class DisplayablesFactory {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
-    // Unknows types are null
+    // Unknown types are null
     if (widget.getType() != null && widget.getViewObject() != null) {
       switch (widget.getType()) {
 
@@ -143,6 +143,9 @@ public class DisplayablesFactory {
           return Observable.from(
               createMyStoreDisplayables(widget.getViewObject(), storeAnalytics, storeContext,
                   accountManager));
+
+        case STORE_META:
+          return Observable.from(createStoreDisplayables(widget.getViewObject(), storeContext));
 
         case STORES_RECOMMENDED:
           return Observable.just(
@@ -370,6 +373,16 @@ public class DisplayablesFactory {
       } else {
         displayables.add(new LoginDisplayable());
       }
+    }
+    return displayables;
+  }
+
+  private static List<Displayable> createStoreDisplayables(Object viewObject,
+      StoreContext storeContext) {
+    ArrayList<Displayable> displayables = new ArrayList<>();
+    if (viewObject instanceof GetStoreMeta) {
+      displayables.add(
+          new TargetStoreDisplayable(((GetStoreMeta) viewObject).getData(), storeContext));
     }
     return displayables;
   }
