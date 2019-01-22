@@ -26,4 +26,8 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("support-email") String providesSupportEmail() {
     return "n/a";
   }
+
+  @Singleton @Provides @Named("partnerID") String providePartnerID() {
+    return BuildConfig.COBRAND_OEMID;
+  }
 }

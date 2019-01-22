@@ -36,4 +36,8 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("support-email") String providesSupportEmail() {
     return application.getString(R.string.aptoide_email);
   }
+
+  @Singleton @Provides @Named("partnerID") String providePartnerID() {
+    return "";
+  }
 }
