@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginSignUpFragment;
+import cm.aptoide.pt.store.StoreTheme;
 
 import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.SHOULD_REGISTER_VIEW;
 
@@ -15,8 +16,10 @@ public class WizardManager {
 
   private static final int WIZARD_STEP_ONE_POSITION = 0;
   private static final int WIZARD_LOGIN_POSITION = 1;
+  private final String theme;
 
-  public WizardManager() {
+  public WizardManager(String theme) {
+    this.theme = theme;
   }
 
   public Fragment getItem(int position) {
@@ -53,8 +56,14 @@ public class WizardManager {
   }
 
   public Integer[] getTransitionColors() {
+    int lastPageColor = R.color.wizard_color_3_orange;
+    if (!theme.equals(StoreTheme.DEFAULT.toString()
+        .toLowerCase())) {
+      lastPageColor = StoreTheme.get(theme)
+          .getPrimaryColor();
+    }
     return new Integer[] {
-        R.color.wizard_color_1_blue, R.color.wizard_color_3_orange
+        R.color.wizard_color_1_blue, lastPageColor
     };
   }
 }

@@ -392,8 +392,4 @@ import rx.schedulers.Schedulers;
       DownloadStateParser downloadStateParser) {
     return new PromotionViewAppMapper(downloadStateParser);
   }
-
-  @FragmentScope @Provides WizardManager providesWizardManager() {
-    return new WizardManager();
-  }
 }
