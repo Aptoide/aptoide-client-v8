@@ -49,12 +49,12 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
-    storeName = (TextView) itemView.findViewById(R.id.store_name);
-    suggestionMessage = (TextView) itemView.findViewById(R.id.create_store_text);
-    firstStats = (TextView) itemView.findViewById(R.id.followers);
-    secondStats = (TextView) itemView.findViewById(R.id.following);
-    exploreButton = (Button) itemView.findViewById(R.id.explore_button);
+    storeIcon = itemView.findViewById(R.id.store_icon);
+    storeName = itemView.findViewById(R.id.store_name);
+    suggestionMessage = itemView.findViewById(R.id.create_store_text);
+    firstStats = itemView.findViewById(R.id.followers);
+    secondStats = itemView.findViewById(R.id.following);
+    exploreButton = itemView.findViewById(R.id.explore_button);
   }
 
   @Override public void bindView(StoreDisplayable displayable) {
