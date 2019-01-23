@@ -82,6 +82,21 @@ import rx.functions.Func2;
     handleClickOnBottomNavWithResults();
     handleClickOnBottomNavWithoutResults();
     listenToSearchQueries();
+
+    loadBannerAd();
+  }
+
+  private void loadBannerAd() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.showedResultsView())
+        .flatMap(__ -> searchManager.shouldLoadBannerAd())
+        .filter(loadInterstitial -> loadInterstitial)
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showBannerAd())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
   }
 
   @VisibleForTesting public void handleFragmentRestorationVisibility() {
