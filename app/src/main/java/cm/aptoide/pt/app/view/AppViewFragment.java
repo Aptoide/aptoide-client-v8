@@ -48,7 +48,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.MoPubInterstitialClickType;
+import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -159,7 +159,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
   private PublishSubject<DownloadModel.Action> installClickSubject;
-  private PublishSubject<MoPubInterstitialClickType> interstitialClick;
+  private PublishSubject<MoPubInterstitialAdClickType> interstitialClick;
 
   //Views
   private View noNetworkErrorView;
@@ -1106,14 +1106,14 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     interstitialAd.setInterstitialAdListener(new MoPubInterstitialAdListener(interstitialClick));
   }
 
-  @Override public Observable<MoPubInterstitialClickType> InterstitialAdClicked() {
+  @Override public Observable<MoPubInterstitialAdClickType> InterstitialAdClicked() {
     return interstitialClick.filter(
-        clickType -> clickType == MoPubInterstitialClickType.INTERSTITIAL_CLICKED);
+        clickType -> clickType == MoPubInterstitialAdClickType.INTERSTITIAL_CLICKED);
   }
 
-  @Override public Observable<MoPubInterstitialClickType> interstitialAdLoaded() {
+  @Override public Observable<MoPubInterstitialAdClickType> interstitialAdLoaded() {
     return interstitialClick.filter(
-        clickType -> clickType == MoPubInterstitialClickType.INTERSTITIAL_LOADED);
+        clickType -> clickType == MoPubInterstitialAdClickType.INTERSTITIAL_LOADED);
   }
 
   @Override public void showInterstitialAd() {
