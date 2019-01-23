@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
@@ -62,6 +63,7 @@ public class AppViewManager {
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
+  private MoPubBannerAdExperiment moPubBannerAdExperiment;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -71,7 +73,8 @@ public class AppViewManager {
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
       String marketName, AppCoinsManager appCoinsManager,
-      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment) {
+      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
+      MoPubBannerAdExperiment moPubBannerAdExperiment) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -92,6 +95,7 @@ public class AppViewManager {
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
     this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
+    this.moPubBannerAdExperiment = moPubBannerAdExperiment;
     this.isFirstLoad = true;
   }
 
@@ -425,5 +429,9 @@ public class AppViewManager {
 
   public Observable<Boolean> shouldLoadInterstitialAd() {
     return moPubInterstitialAdExperiment.loadInterstitial();
+  }
+
+  public Observable<Boolean> shouldLoadBannerAd() {
+    return moPubBannerAdExperiment.shouldLoadBanner();
   }
 }

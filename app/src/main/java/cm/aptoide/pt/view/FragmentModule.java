@@ -280,13 +280,14 @@ import rx.schedulers.Schedulers;
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       Resources resources, WindowManager windowManager, SocialRepository socialRepository,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
-      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment) {
+      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
+      MoPubBannerAdExperiment moPubBannerAdExperiment) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, moPubInterstitialAdExperiment);
+        marketName, appCoinsManager, moPubInterstitialAdExperiment, moPubBannerAdExperiment);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
