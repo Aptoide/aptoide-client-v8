@@ -26,4 +26,8 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("support-email") String providesSupportEmail() {
     return "n/a";
   }
+
+  @Singleton @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment() {
+    return new MoPubBannerAdExperiment();
+  }
 }
