@@ -191,8 +191,8 @@ import rx.schedulers.Schedulers;
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
         case STORE_META:
-          return GetStoreMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences)
+          return GetStoreMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences)
               .observe(bypassCache, bypassServerCache)
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
