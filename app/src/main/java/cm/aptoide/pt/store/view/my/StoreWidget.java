@@ -77,28 +77,29 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
         }));
 
     showStats(displayable);
+    if (displayable.isStatsClickable()) {
+      compositeSubscription.add(RxView.clicks(firstStats)
+          .subscribe(click -> {
+            storeAnalytics.sendFollowersStoresInteractEvent();
+            getFragmentNavigator().navigateTo(
+                TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
+                    AptoideUtils.StringU.getFormattedString(
+                        R.string.social_timeline_followers_fragment_title,
+                        getContext().getResources(), displayable.getFirstStatsNumber()),
+                    displayable.getStoreContext()), true);
+          }));
 
-    compositeSubscription.add(RxView.clicks(firstStats)
-        .subscribe(click -> {
-          storeAnalytics.sendFollowersStoresInteractEvent();
-          getFragmentNavigator().navigateTo(
-              TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
-                  AptoideUtils.StringU.getFormattedString(
-                      R.string.social_timeline_followers_fragment_title,
-                      getContext().getResources(), displayable.getFirstStatsNumber()),
-                  displayable.getStoreContext()), true);
-        }));
-
-    compositeSubscription.add(RxView.clicks(secondStats)
-        .subscribe(click -> {
-          storeAnalytics.sendFollowingStoresInteractEvent();
-          getFragmentNavigator().navigateTo(
-              TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
-                  AptoideUtils.StringU.getFormattedString(
-                      R.string.social_timeline_following_fragment_title,
-                      getContext().getResources(), displayable.getSecondStatsNumber()),
-                  displayable.getStoreContext()), true);
-        }));
+      compositeSubscription.add(RxView.clicks(secondStats)
+          .subscribe(click -> {
+            storeAnalytics.sendFollowingStoresInteractEvent();
+            getFragmentNavigator().navigateTo(
+                TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
+                    AptoideUtils.StringU.getFormattedString(
+                        R.string.social_timeline_following_fragment_title,
+                        getContext().getResources(), displayable.getSecondStatsNumber()),
+                    displayable.getStoreContext()), true);
+          }));
+    }
   }
 
   private void showStats(StoreDisplayable displayable) {

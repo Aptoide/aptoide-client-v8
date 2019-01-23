@@ -22,18 +22,21 @@ public class StoreDisplayable extends Displayable {
   private long secondStatsNumber;
   private int firstStatsLabel;
   private int secondStatsLabel;
+  private boolean statsClickable;
 
   public StoreDisplayable() {
   }
 
   public StoreDisplayable(Store store, StoreContext storeContext, long firstStatsNumber,
-      long secondStatsNumber, int firstStatsLabelStringId, int secondStatsLabelStringId) {
+      long secondStatsNumber, int firstStatsLabelStringId, int secondStatsLabelStringId,
+      boolean statsClickable) {
     this.store = store;
     this.storeContext = storeContext;
     this.firstStatsNumber = firstStatsNumber;
     this.secondStatsNumber = secondStatsNumber;
     this.firstStatsLabel = firstStatsLabelStringId;
     this.secondStatsLabel = secondStatsLabelStringId;
+    this.statsClickable = statsClickable;
     Calendar aWeekBefore = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     aWeekBefore.add(Calendar.DAY_OF_MONTH, -Calendar.DAY_OF_WEEK);
     Date added = store.getAdded();
@@ -98,5 +101,9 @@ public class StoreDisplayable extends Displayable {
 
   public Store getStore() {
     return this.store;
+  }
+
+  public boolean isStatsClickable() {
+    return statsClickable;
   }
 }

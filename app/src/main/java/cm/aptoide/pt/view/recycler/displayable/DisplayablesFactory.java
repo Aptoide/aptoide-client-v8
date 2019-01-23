@@ -370,7 +370,7 @@ public class DisplayablesFactory {
         displayables.add(new StoreDisplayable(store.getGetHomeMeta()
             .getData()
             .getStore(), storeContext, followerStats.getFollowing(), followerStats.getFollowers(),
-            R.string.storetab_short_followers, R.string.storetab_short_followings));
+            R.string.storetab_short_followers, R.string.storetab_short_followings, true));
       } else if (accountManager.isLoggedIn()) {
         if (MyStoreManager.shouldShowCreateStore()) {
           displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
@@ -389,8 +389,8 @@ public class DisplayablesFactory {
       Store store = ((GetStoreMeta) viewObject).getData();
       displayables.add(new StoreDisplayable(store, storeContext, store.getStats()
           .getApps(), store.getStats()
-          .getDownloads(), R.string.storehometab_short_apps,
-          R.string.storehometab_short_downloads));
+          .getDownloads(), R.string.storehometab_short_apps, R.string.storehometab_short_downloads,
+          false));
     }
     return displayables;
   }
