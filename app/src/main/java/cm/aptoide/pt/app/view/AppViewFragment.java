@@ -1309,14 +1309,28 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private SpannableString formatAppCoinsRewardMessage() {
+    String appcValue = String.valueOf(getArguments().getFloat(BundleKeys.APPC.name(), -1));
     String reward = "APPC";
-    String tryAppMessage =
-        getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
+    String tryAppMessage;
+    SpannableString spannable;
 
-    SpannableString spannable = new SpannableString(tryAppMessage);
+    if (!appcValue.equals("-1.0")) {
+      tryAppMessage =
+          getResources().getString(R.string.appc_message_appview_appcoins_reward_with_value,
+              appcValue, reward);
+      spannable = new SpannableString(tryAppMessage);
+      spannable.setSpan(new ForegroundColorSpan(getResources().getColor(StoreTheme.get(theme)
+              .getPrimaryColor())), tryAppMessage.indexOf(appcValue),
+          tryAppMessage.indexOf(appcValue) + appcValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    } else {
+      tryAppMessage =
+          getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
+      spannable = new SpannableString(tryAppMessage);
+    }
+
     spannable.setSpan(new ForegroundColorSpan(getResources().getColor(StoreTheme.get(theme)
-            .getPrimaryColor())), tryAppMessage.indexOf(reward), tryAppMessage.length(),
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            .getPrimaryColor())), tryAppMessage.indexOf(reward),
+        tryAppMessage.indexOf(reward) + reward.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
     return spannable;
   }

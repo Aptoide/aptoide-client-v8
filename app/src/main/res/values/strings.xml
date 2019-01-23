@@ -539,6 +539,7 @@
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
   <string name="appc_title_about_appcoins">About AppCoins</string>
   <string name="appc_message_appview_appcoins_reward">Try this app and get %s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Try this app and get %1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
   <string name="appc_short_get_appc">GET APPC</string>
   <string name="appc_short_spend_appc">SPEND APPC</string>
