@@ -59,7 +59,7 @@ import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
 import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
-import cm.aptoide.pt.store.view.my.MyStoreDisplayable;
+import cm.aptoide.pt.store.view.my.StoreDisplayable;
 import cm.aptoide.pt.store.view.my.TargetStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import java.util.ArrayList;
@@ -365,7 +365,7 @@ public class DisplayablesFactory {
     if (viewObject instanceof MyStore) {
       MyStore store = (MyStore) viewObject;
       if (!store.isCreateStore()) {
-        displayables.add(new MyStoreDisplayable(store, storeContext));
+        displayables.add(new StoreDisplayable(store, storeContext));
       } else if (accountManager.isLoggedIn()) {
         if (MyStoreManager.shouldShowCreateStore()) {
           displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));

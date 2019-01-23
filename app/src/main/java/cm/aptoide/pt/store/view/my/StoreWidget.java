@@ -29,7 +29,7 @@ import com.jakewharton.rxbinding.view.RxView;
  * Created by trinkes on 05/12/2016.
  */
 
-public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
+public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
 
   private ImageView storeIcon;
   private TextView storeName;
@@ -39,7 +39,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   private TextView followers;
   private TextView following;
 
-  public MyStoreWidget(View itemView) {
+  public StoreWidget(View itemView) {
     super(itemView);
     NavigationTracker navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
@@ -57,7 +57,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     exploreButton = (Button) itemView.findViewById(R.id.explore_button);
   }
 
-  @Override public void bindView(MyStoreDisplayable displayable) {
+  @Override public void bindView(StoreDisplayable displayable) {
     final FragmentActivity context = getContext();
     Store store = displayable.getMeta()
         .getData()

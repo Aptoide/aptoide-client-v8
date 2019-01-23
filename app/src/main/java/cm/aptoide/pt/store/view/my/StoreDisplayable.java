@@ -16,16 +16,16 @@ import java.util.TimeZone;
  * Created by trinkes on 05/12/2016.
  */
 
-public class MyStoreDisplayable extends Displayable {
+public class StoreDisplayable extends Displayable {
   private GetHomeMeta meta;
   private boolean isLongTime;
   private TimelineStats timelineStats;
   private StoreContext storeContext;
 
-  public MyStoreDisplayable() {
+  public StoreDisplayable() {
   }
 
-  public MyStoreDisplayable(MyStore myStore, StoreContext storeContext) {
+  public StoreDisplayable(MyStore myStore, StoreContext storeContext) {
     this.meta = myStore.getGetHomeMeta();
     timelineStats = myStore.getTimelineStats();
     this.storeContext = storeContext;
