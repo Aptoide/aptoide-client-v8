@@ -1,5 +1,6 @@
 package cm.aptoide.pt;
 
+import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.view.FragmentScope;
 import dagger.Module;
 import dagger.Provides;

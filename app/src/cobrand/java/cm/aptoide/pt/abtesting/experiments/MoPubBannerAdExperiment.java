@@ -1,11 +1,21 @@
 package cm.aptoide.pt.abtesting.experiments;
 
-public class MoPubInterstitialAdExperiment {
+import rx.Observable;
 
-  public MoPubInterstitialAdExperiment() {
+public class MoPubBannerAdExperiment {
+
+  public MoPubBannerAdExperiment() {
   }
 
-  public Observable<Boolean> loadBanner() {
+  public Observable<Boolean> shouldLoadBanner() {
+    return Observable.just(false);
+  }
+
+  public Observable<Boolean> recordAdImpression() {
+    return Observable.just(false);
+  }
+
+  public Observable<Boolean> recordAdClick() {
     return Observable.just(false);
   }
 }
