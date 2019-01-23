@@ -60,7 +60,7 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
   @Override public void bindView(StoreDisplayable displayable) {
     final FragmentActivity context = getContext();
     Store store = displayable.getStore();
-    suggestionMessage.setText(displayable.getSuggestionMessage(context));
+    showStoreDescription(displayable, context);
     exploreButton.setText(displayable.getExploreButtonText());
     String storeTheme = store.getAppearance()
         .getTheme();
@@ -99,6 +99,16 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
                         getContext().getResources(), displayable.getSecondStatsNumber()),
                     displayable.getStoreContext()), true);
           }));
+    }
+  }
+
+  private void showStoreDescription(StoreDisplayable displayable, FragmentActivity context) {
+    String message = displayable.getSuggestionMessage(context);
+    if (message.isEmpty()) {
+      this.suggestionMessage.setVisibility(View.GONE);
+    } else {
+      this.suggestionMessage.setText(message);
+      this.suggestionMessage.setVisibility(View.VISIBLE);
     }
   }
 

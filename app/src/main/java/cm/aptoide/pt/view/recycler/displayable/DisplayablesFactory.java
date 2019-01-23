@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -142,7 +143,7 @@ public class DisplayablesFactory {
         case MY_STORE_META:
           return Observable.from(
               createMyStoreDisplayables(widget.getViewObject(), storeAnalytics, storeContext,
-                  accountManager));
+                  accountManager, context));
 
         case STORE_META:
           return Observable.from(createStoreDisplayables(widget.getViewObject(), storeContext));
@@ -359,7 +360,7 @@ public class DisplayablesFactory {
 
   private static List<Displayable> createMyStoreDisplayables(Object viewObject,
       StoreAnalytics storeAnalytics, StoreContext storeContext,
-      AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager, Context context) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
     if (viewObject instanceof MyStore) {
@@ -370,7 +371,10 @@ public class DisplayablesFactory {
         displayables.add(new StoreDisplayable(store.getGetHomeMeta()
             .getData()
             .getStore(), storeContext, followerStats.getFollowing(), followerStats.getFollowers(),
-            R.string.storetab_short_followers, R.string.storetab_short_followings, true));
+            R.string.storetab_short_followers, R.string.storetab_short_followings, true,
+            getStoreDescriptionMessage(context, store.getGetHomeMeta()
+                .getData()
+                .getStore())));
       } else if (accountManager.isLoggedIn()) {
         if (MyStoreManager.shouldShowCreateStore()) {
           displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
@@ -382,6 +386,18 @@ public class DisplayablesFactory {
     return displayables;
   }
 
+  private static String getStoreDescriptionMessage(Context context, Store store) {
+    String message;
+    if (TextUtils.isEmpty(store.getAppearance()
+        .getDescription())) {
+      message = context.getString(R.string.create_store_displayable_empty_description_message);
+    } else {
+      message = store.getAppearance()
+          .getDescription();
+    }
+    return message;
+  }
+
   private static List<Displayable> createStoreDisplayables(Object viewObject,
       StoreContext storeContext) {
     ArrayList<Displayable> displayables = new ArrayList<>();
@@ -390,7 +406,8 @@ public class DisplayablesFactory {
       displayables.add(new StoreDisplayable(store, storeContext, store.getStats()
           .getApps(), store.getStats()
           .getDownloads(), R.string.storehometab_short_apps, R.string.storehometab_short_downloads,
-          false));
+          false, store.getAppearance()
+          .getDescription()));
     }
     return displayables;
   }

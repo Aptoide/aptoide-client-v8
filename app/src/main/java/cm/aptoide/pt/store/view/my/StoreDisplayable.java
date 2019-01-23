@@ -1,7 +1,6 @@
 package cm.aptoide.pt.store.view.my;
 
 import android.content.Context;
-import android.text.TextUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -23,13 +22,14 @@ public class StoreDisplayable extends Displayable {
   private int firstStatsLabel;
   private int secondStatsLabel;
   private boolean statsClickable;
+  private String message;
 
   public StoreDisplayable() {
   }
 
   public StoreDisplayable(Store store, StoreContext storeContext, long firstStatsNumber,
       long secondStatsNumber, int firstStatsLabelStringId, int secondStatsLabelStringId,
-      boolean statsClickable) {
+      boolean statsClickable, String message) {
     this.store = store;
     this.storeContext = storeContext;
     this.firstStatsNumber = firstStatsNumber;
@@ -37,6 +37,7 @@ public class StoreDisplayable extends Displayable {
     this.firstStatsLabel = firstStatsLabelStringId;
     this.secondStatsLabel = secondStatsLabelStringId;
     this.statsClickable = statsClickable;
+    this.message = message;
     Calendar aWeekBefore = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     aWeekBefore.add(Calendar.DAY_OF_MONTH, -Calendar.DAY_OF_WEEK);
     Date added = store.getAdded();
@@ -53,21 +54,13 @@ public class StoreDisplayable extends Displayable {
 
   public String getSuggestionMessage(Context context) {
     if (isLongTime) {
-      return getStoreDescription(context);
+      return getStoreDescription();
     } else {
       return context.getString(R.string.create_store_displayable_explore_message);
     }
   }
 
-  private String getStoreDescription(Context context) {
-    String message;
-    if (TextUtils.isEmpty(store.getAppearance()
-        .getDescription())) {
-      message = context.getString(R.string.create_store_displayable_empty_description_message);
-    } else {
-      message = store.getAppearance()
-          .getDescription();
-    }
+  private String getStoreDescription() {
     return message;
   }
 
