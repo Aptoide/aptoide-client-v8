@@ -12,4 +12,8 @@ import dagger.Provides;
   @FragmentScope @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment() {
     return new MoPubInterstitialAdExperiment();
   }
+
+  @FragmentScope @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment() {
+    return new MoPubBannerAdExperiment();
+  }
 }
