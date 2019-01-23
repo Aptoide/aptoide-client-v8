@@ -42,7 +42,7 @@ public class StoreDisplayable extends Displayable {
   }
 
   @Override public int getViewLayout() {
-    return R.layout.my_store_displayable_layout;
+    return R.layout.store_displayable_layout;
   }
 
   public String getSuggestionMessage(Context context) {
