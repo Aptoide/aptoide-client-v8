@@ -210,6 +210,7 @@ android {
         [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
+         appLovinApiKey                  : "${project.APPLOVIN_SDK_KEY}",
          fabricApiKey                    : "${project.FABRIC_API_KEY}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
@@ -279,6 +280,21 @@ android {
 
     variant.buildConfigField "String", "IRONSOURCE_APPLICATION_ID",
         "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
+
+    variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
+        "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
+        "\"" + project.ADCOLONY_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "TAPJOY_SDK_KEY",
+        "\"" + project.TAPJOY_SDK_KEY + "\""
+    variant.buildConfigField "String", "UNITYADS_GAME_ID",
+        "\"" + project.UNITYADS_GAME_ID + "\""
+    variant.buildConfigField "String", "CHARTBOOST_APPLICATION_ID",
+        "\"" + project.CHARTBOOST_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "CHARTBOOST_APPLICATION_SIGNATURE",
+        "\"" + project.CHARTBOOST_APPLICATION_SIGNATURE + "\""
+    variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
+        "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12",
         "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12 + "\""
@@ -420,27 +436,6 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
-  // IronSource
-  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_VERSION}@jar"
-  // Applovin (IronSource mediation)
-  implementation "com.ironsource.adapters:applovinadapter:${APPLOVIN_VERSION}@jar"
-  // Vungle (IronSource mediation)
-  implementation "com.ironsource.adapters:vungleadapter:${VUNGLE_ADAPTER_VERSION}@jar"
-  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_VERSION}") {
-    transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
-  // Adcolony (IronSource mediation)
-  implementation "com.ironsource.adapters:adcolonyadapter:${ADCOLONY_ADAPTER_VERSION}@jar"
-  implementation "com.adcolony:sdk:${ADCOLONY_VERSION}"
-  // Tapjoy (IronSource mediation)
-  implementation "com.ironsource.adapters:tapjoyadapter:${TAPJOY_ADAPTER_VERSION}@jar"
-  // Chartboost (IronSource mediation)
-  implementation "com.ironsource.adapters:chartboostadapter:${CHARTBOOST_ADAPTER_VERSION}@jar"
-  // UnityAds (IronSource mediation)
-  implementation "com.ironsource.adapters:unityadsadapter:${UNITYADS_ADAPTER_VERSION}@jar"
 
   // Mopub
   implementation('com.mopub:mopub-sdk:5.4.0@aar') {
@@ -450,6 +445,53 @@ dependencies {
     exclude module: "support-annotations"
     exclude module: "support-v4"
   }
+
+  // AppLovin
+  implementation 'com.applovin:applovin-sdk:8.1.4'
+  implementation 'com.mopub.mediation:applovin:8.1.4.3'
+
+  // Google (AdMob)
+  implementation("com.mopub.mediation:admob:17.0.0.2") {
+    transitive = true
+    exclude group: "com.android.support"
+    exclude module: "support-annotations"
+    exclude module: "support-v4"
+  }
+
+  // Yahoo! Flurry
+  implementation("com.flurry.android:ads:10.1.0@aar") {
+    transitive = true
+    exclude group: "com.android.support"
+    exclude module: "support-annotations"
+    exclude module: "support-v4"
+  }
+  implementation 'com.mopub.mediation:flurry:10.1.0.2'
+
+  // ironSource
+  implementation "com.ironsource.sdk:mediationsdk:6.7.12@jar"
+  implementation 'com.mopub.mediation:ironsource:6.7.12.0'
+
+  // Vungle
+  implementation("com.github.vungle:vungle-android-sdk:6.3.24") {
+    transitive = true
+    exclude group: "com.android.support"
+    exclude module: "support-annotations"
+    exclude module: "support-v4"
+  }
+
+  // Adcolony
+  implementation 'com.mopub.mediation:adcolony:3.3.7.0'
+  implementation 'com.adcolony:sdk:3.3.7'
+
+  // Tapjoy
+  implementation 'com.tapjoy:tapjoy-android-sdk:12.2.0@aar'
+  implementation 'com.mopub.mediation:tapjoy:12.2.0.0'
+
+  // UnityAds, Chartboost & One by AOL
+  implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+  implementation 'com.mopub.mediation:unityads:3.0.0.0'
+
+  implementation 'com.mopub.mediation:vungle:6.3.24.0'
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
