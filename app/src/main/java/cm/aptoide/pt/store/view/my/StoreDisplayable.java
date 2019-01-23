@@ -3,9 +3,7 @@ package cm.aptoide.pt.store.view.my;
 import android.content.Context;
 import android.text.TextUtils;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
-import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.dataprovider.ws.v7.MyStore;
+import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.Calendar;
@@ -17,23 +15,28 @@ import java.util.TimeZone;
  */
 
 public class StoreDisplayable extends Displayable {
-  private GetHomeMeta meta;
+  private Store store;
   private boolean isLongTime;
-  private TimelineStats timelineStats;
   private StoreContext storeContext;
+  private long firstStatsNumber;
+  private long secondStatsNumber;
+  private int firstStatsLabel;
+  private int secondStatsLabel;
 
   public StoreDisplayable() {
   }
 
-  public StoreDisplayable(MyStore myStore, StoreContext storeContext) {
-    this.meta = myStore.getGetHomeMeta();
-    timelineStats = myStore.getTimelineStats();
+  public StoreDisplayable(Store store, StoreContext storeContext, long firstStatsNumber,
+      long secondStatsNumber, int firstStatsLabelStringId, int secondStatsLabelStringId) {
+    this.store = store;
     this.storeContext = storeContext;
+    this.firstStatsNumber = firstStatsNumber;
+    this.secondStatsNumber = secondStatsNumber;
+    this.firstStatsLabel = firstStatsLabelStringId;
+    this.secondStatsLabel = secondStatsLabelStringId;
     Calendar aWeekBefore = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     aWeekBefore.add(Calendar.DAY_OF_MONTH, -Calendar.DAY_OF_WEEK);
-    Date added = meta.getData()
-        .getStore()
-        .getAdded();
+    Date added = store.getAdded();
     isLongTime = added.before(aWeekBefore.getTime());
   }
 
@@ -55,15 +58,11 @@ public class StoreDisplayable extends Displayable {
 
   private String getStoreDescription(Context context) {
     String message;
-    if (TextUtils.isEmpty(meta.getData()
-        .getStore()
-        .getAppearance()
+    if (TextUtils.isEmpty(store.getAppearance()
         .getDescription())) {
       message = context.getString(R.string.create_store_displayable_empty_description_message);
     } else {
-      message = meta.getData()
-          .getStore()
-          .getAppearance()
+      message = store.getAppearance()
           .getDescription();
     }
     return message;
@@ -77,21 +76,27 @@ public class StoreDisplayable extends Displayable {
     }
   }
 
-  public long getFollowers() {
-    return timelineStats.getData()
-        .getFollowers();
+  long getFirstStatsNumber() {
+    return firstStatsNumber;
   }
 
-  public long getFollowings() {
-    return timelineStats.getData()
-        .getFollowing();
+  long getSecondStatsNumber() {
+    return secondStatsNumber;
+  }
+
+  int getFirstStatsLabel() {
+    return firstStatsLabel;
+  }
+
+  int getSecondStatsLabel() {
+    return secondStatsLabel;
   }
 
   public StoreContext getStoreContext() {
     return storeContext;
   }
 
-  public GetHomeMeta getMeta() {
-    return this.meta;
+  public Store getStore() {
+    return this.store;
   }
 }

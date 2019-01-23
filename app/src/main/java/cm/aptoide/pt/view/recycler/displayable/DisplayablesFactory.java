@@ -32,6 +32,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
@@ -365,7 +366,12 @@ public class DisplayablesFactory {
     if (viewObject instanceof MyStore) {
       MyStore store = (MyStore) viewObject;
       if (!store.isCreateStore()) {
-        displayables.add(new StoreDisplayable(store, storeContext));
+        TimelineStats.StatusData followerStats = store.getTimelineStats()
+            .getData();
+        displayables.add(new StoreDisplayable(store.getGetHomeMeta()
+            .getData()
+            .getStore(), storeContext, followerStats.getFollowing(), followerStats.getFollowers(),
+            R.string.storetab_short_followers, R.string.storetab_short_followings));
       } else if (accountManager.isLoggedIn()) {
         if (MyStoreManager.shouldShowCreateStore()) {
           displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));

@@ -36,8 +36,8 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
   private Button exploreButton;
   private TextView suggestionMessage;
   private StoreAnalytics storeAnalytics;
-  private TextView followers;
-  private TextView following;
+  private TextView firstStats;
+  private TextView secondStats;
 
   public StoreWidget(View itemView) {
     super(itemView);
@@ -52,16 +52,14 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
     storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
     storeName = (TextView) itemView.findViewById(R.id.store_name);
     suggestionMessage = (TextView) itemView.findViewById(R.id.create_store_text);
-    followers = (TextView) itemView.findViewById(R.id.followers);
-    following = (TextView) itemView.findViewById(R.id.following);
+    firstStats = (TextView) itemView.findViewById(R.id.followers);
+    secondStats = (TextView) itemView.findViewById(R.id.following);
     exploreButton = (Button) itemView.findViewById(R.id.explore_button);
   }
 
   @Override public void bindView(StoreDisplayable displayable) {
     final FragmentActivity context = getContext();
-    Store store = displayable.getMeta()
-        .getData()
-        .getStore();
+    Store store = displayable.getStore();
     suggestionMessage.setText(displayable.getSuggestionMessage(context));
     exploreButton.setText(displayable.getExploreButtonText());
     String storeTheme = store.getAppearance()
@@ -79,39 +77,39 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
         }));
 
     SpannableFactory spannableFactory = new SpannableFactory();
-    String followersText = String.format(getContext().getString(R.string.storetab_short_followers),
-        String.valueOf(displayable.getFollowers()));
+    String followersText = String.format(getContext().getString(displayable.getFirstStatsLabel()),
+        String.valueOf(displayable.getFirstStatsNumber()));
 
     ParcelableSpan[] textStyle = {
         new StyleSpan(android.graphics.Typeface.BOLD), new ForegroundColorSpan(getTextColor())
     };
-    followers.setText(spannableFactory.createMultiSpan(followersText, textStyle,
-        String.valueOf(displayable.getFollowers())));
+    firstStats.setText(spannableFactory.createMultiSpan(followersText, textStyle,
+        String.valueOf(displayable.getFirstStatsNumber())));
 
-    String followingText = String.format(getContext().getString(R.string.storetab_short_followings),
-        String.valueOf(displayable.getFollowings()));
-    following.setText(spannableFactory.createMultiSpan(followingText, textStyle,
-        String.valueOf(displayable.getFollowings())));
+    String followingText = String.format(getContext().getString(displayable.getSecondStatsLabel()),
+        String.valueOf(displayable.getSecondStatsNumber()));
+    secondStats.setText(spannableFactory.createMultiSpan(followingText, textStyle,
+        String.valueOf(displayable.getSecondStatsNumber())));
 
-    compositeSubscription.add(RxView.clicks(followers)
+    compositeSubscription.add(RxView.clicks(firstStats)
         .subscribe(click -> {
           storeAnalytics.sendFollowersStoresInteractEvent();
           getFragmentNavigator().navigateTo(
               TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
                   AptoideUtils.StringU.getFormattedString(
                       R.string.social_timeline_followers_fragment_title,
-                      getContext().getResources(), displayable.getFollowers()),
+                      getContext().getResources(), displayable.getFirstStatsNumber()),
                   displayable.getStoreContext()), true);
         }));
 
-    compositeSubscription.add(RxView.clicks(following)
+    compositeSubscription.add(RxView.clicks(secondStats)
         .subscribe(click -> {
           storeAnalytics.sendFollowingStoresInteractEvent();
           getFragmentNavigator().navigateTo(
               TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
                   AptoideUtils.StringU.getFormattedString(
                       R.string.social_timeline_following_fragment_title,
-                      getContext().getResources(), displayable.getFollowings()),
+                      getContext().getResources(), displayable.getSecondStatsNumber()),
                   displayable.getStoreContext()), true);
         }));
   }
