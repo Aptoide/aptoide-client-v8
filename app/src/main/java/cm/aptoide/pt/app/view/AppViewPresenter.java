@@ -115,6 +115,21 @@ public class AppViewPresenter implements Presenter {
     handleInterstitialAdClick();
     handleInterstitialAdLoaded();
     showInterstitialAd();
+    showBannerAd();
+  }
+
+  private void showBannerAd() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(model -> appViewManager.shouldLoadBannerAd())
+        .filter(loadBanner -> loadBanner)
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showBannerAd())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
   }
 
   private void showInterstitialAd() {

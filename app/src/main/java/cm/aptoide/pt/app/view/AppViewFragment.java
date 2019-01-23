@@ -48,8 +48,9 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.MoPubBannerAdListener;
+import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
@@ -102,6 +103,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
 import com.mopub.mobileads.MoPubInterstitial;
+import com.mopub.mobileads.MoPubView;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -250,6 +252,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private Button installCardDonateButton;
   private Button listDonateButton;
   private MoPubInterstitial interstitialAd;
+  private MoPubView bannerAd;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -462,6 +465,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
     collapsingToolbarLayout.setExpandedTitleColor(
         getResources().getColor(android.R.color.transparent));
+
+    bannerAd = view.findViewById(R.id.mopub_banner);
     attachPresenter(presenter);
   }
 
@@ -492,6 +497,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     presenter = null;
     similarAppsVisibilitySubject = null;
     interstitialClick = null;
+    if (bannerAd != null) {
+      bannerAd.destroy();
+    }
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -574,6 +582,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     donationsElement = null;
     donationsList = null;
     interstitialAd = null;
+    bannerAd = null;
   }
 
   @Override public void showLoading() {
@@ -1122,6 +1131,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void loadInterstitialAd() {
     interstitialAd.load();
+  }
+
+  @Override public void showBannerAd() {
+    bannerAd.setBannerAdListener(new MoPubBannerAdListener());
+    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID_PROD);
+    bannerAd.setVisibility(View.VISIBLE);
+    bannerAd.loadAd();
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
