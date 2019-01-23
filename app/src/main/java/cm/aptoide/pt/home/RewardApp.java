@@ -2,12 +2,12 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.view.app.Application;
 
-class RewardApp extends Application {
+public class RewardApp extends Application {
   private String clickUrl;
   private String downloadUrl;
   private float reward;
 
-  RewardApp(String appName, String appIcon, float ratingAverage, int downloadsNumber,
+  public RewardApp(String appName, String appIcon, float ratingAverage, int downloadsNumber,
       String packageName, long appId, String tag, boolean hasBilling, String clickUrl,
       String downloadUrl, float reward) {
     super(appName, appIcon, ratingAverage, downloadsNumber, packageName, appId, tag, hasBilling);

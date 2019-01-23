@@ -219,6 +219,10 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
+  public void convertAppcAdClick(String clickUrl) {
+    analyticsManager.logEvent(clickUrl);
+  }
+
   private AnalyticsManager.Action parseAction(HomeEvent.Type type) {
     if (type.equals(HomeEvent.Type.SOCIAL_CLICK) || type.equals(HomeEvent.Type.AD)) {
       return OPEN;

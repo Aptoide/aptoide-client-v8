@@ -242,6 +242,7 @@ public class HomePresenter implements Presenter {
                   .getType()
                   .equals(APPCOINS_ADS)) {
                 RewardApp rewardApp = (RewardApp) app;
+                homeAnalytics.convertAppcAdClick(rewardApp.getClickUrl());
                 homeNavigator.navigateWithDownloadUrlAndReward(rewardApp.getAppId(),
                     rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getDownloadUrl(),
                     rewardApp.getReward());
