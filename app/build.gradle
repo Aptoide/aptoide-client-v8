@@ -296,20 +296,21 @@ android {
     variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
         "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
 
-    variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12",
-        "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12 + "\""
-    variant.buildConfigField "String", "MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12",
-        "\"" + project.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_T12 + "\""
-    variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID_T12",
-        "\"" + project.MOPUB_NATIVE_HOME_PLACEMENT_ID_T12 + "\""
-    variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_PLACEMENT_ID_T12",
-        "\"" + project.MOPUB_NATIVE_SEARCH_PLACEMENT_ID_T12 + "\""
-    variant.buildConfigField "String", "MOPUB_BANNER_90_APPVIEW_PLACEMENT_ID_T12",
-        "\"" + project.MOPUB_BANNER_90_APPVIEW_PLACEMENT_ID_T12 + "\""
-    variant.buildConfigField "String", "MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12",
-        "\"" + project.MOPUB_BANNER_90_SEARCH_PLACEMENT_ID_T12 + "\""
-    variant.buildConfigField "String", "MOPUB_BANNER_90_HOME_PLACEMENT_ID_T12",
-        "\"" + project.MOPUB_BANNER_90_HOME_PLACEMENT_ID_T12 + "\""
+
+    variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_PROD",
+        "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_PROD + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID_PROD",
+        "\"" + project.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID_PROD + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_50_SEARCH_PLACEMENT_ID_PROD",
+        "\"" + project.MOPUB_BANNER_50_SEARCH_PLACEMENT_ID_PROD + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID_PROD",
+        "\"" + project.MOPUB_BANNER_50_HOME_PLACEMENT_ID_PROD + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_PROD",
+        "\"" + project.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_PROD + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_PLACEMENT_ID_PROD",
+        "\"" + project.MOPUB_NATIVE_SEARCH_PLACEMENT_ID_PROD + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID_PROD",
+        "\"" + project.MOPUB_NATIVE_HOME_PLACEMENT_ID_PROD + "\""
 
 
     variant.outputs.all { output ->
