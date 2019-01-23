@@ -38,7 +38,6 @@ public class HomePresenter implements Presenter {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
-
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;

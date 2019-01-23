@@ -137,6 +137,7 @@ import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.BannerRepository;
 import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
@@ -1470,6 +1471,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides BundlesRepository providesBundleRepository(
       @Named("remote") BundleDataSource remoteBundleDataSource) {
     return new BundlesRepository(remoteBundleDataSource, new HashMap<>(), new HashMap<>(), 5);
+  }
+
+  @Singleton @Provides BannerRepository providesBannerRepository() {
+    return new BannerRepository();
   }
 
   @Singleton @Provides AdMapper providesAdMapper() {
