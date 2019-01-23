@@ -52,8 +52,8 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
     storeIcon = itemView.findViewById(R.id.store_icon);
     storeName = itemView.findViewById(R.id.store_name);
     suggestionMessage = itemView.findViewById(R.id.create_store_text);
-    firstStats = itemView.findViewById(R.id.followers);
-    secondStats = itemView.findViewById(R.id.following);
+    firstStats = itemView.findViewById(R.id.following);
+    secondStats = itemView.findViewById(R.id.followers);
     exploreButton = itemView.findViewById(R.id.explore_button);
   }
 
@@ -76,20 +76,7 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
           storeAnalytics.sendStoreOpenEvent("View Own Store", store.getName(), false);
         }));
 
-    SpannableFactory spannableFactory = new SpannableFactory();
-    String followersText = String.format(getContext().getString(displayable.getFirstStatsLabel()),
-        String.valueOf(displayable.getFirstStatsNumber()));
-
-    ParcelableSpan[] textStyle = {
-        new StyleSpan(android.graphics.Typeface.BOLD), new ForegroundColorSpan(getTextColor())
-    };
-    firstStats.setText(spannableFactory.createMultiSpan(followersText, textStyle,
-        String.valueOf(displayable.getFirstStatsNumber())));
-
-    String followingText = String.format(getContext().getString(displayable.getSecondStatsLabel()),
-        String.valueOf(displayable.getSecondStatsNumber()));
-    secondStats.setText(spannableFactory.createMultiSpan(followingText, textStyle,
-        String.valueOf(displayable.getSecondStatsNumber())));
+    showStats(displayable);
 
     compositeSubscription.add(RxView.clicks(firstStats)
         .subscribe(click -> {
@@ -112,6 +99,23 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
                       getContext().getResources(), displayable.getSecondStatsNumber()),
                   displayable.getStoreContext()), true);
         }));
+  }
+
+  private void showStats(StoreDisplayable displayable) {
+    SpannableFactory spannableFactory = new SpannableFactory();
+    ParcelableSpan[] textStyle = {
+        new StyleSpan(android.graphics.Typeface.BOLD), new ForegroundColorSpan(getTextColor())
+    };
+    String firstStatsText = String.format(getContext().getString(displayable.getFirstStatsLabel()),
+        String.valueOf(displayable.getFirstStatsNumber()));
+    firstStats.setText(spannableFactory.createMultiSpan(firstStatsText, textStyle,
+        String.valueOf(displayable.getFirstStatsNumber())));
+
+    String secondStatsText =
+        String.format(getContext().getString(displayable.getSecondStatsLabel()),
+            String.valueOf(displayable.getSecondStatsNumber()));
+    secondStats.setText(spannableFactory.createMultiSpan(secondStatsText, textStyle,
+        String.valueOf(displayable.getSecondStatsNumber())));
   }
 
   private @ColorInt int getTextColor() {

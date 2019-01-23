@@ -61,7 +61,6 @@ import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
 import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
 import cm.aptoide.pt.store.view.my.StoreDisplayable;
-import cm.aptoide.pt.store.view.my.TargetStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -387,8 +386,11 @@ public class DisplayablesFactory {
       StoreContext storeContext) {
     ArrayList<Displayable> displayables = new ArrayList<>();
     if (viewObject instanceof GetStoreMeta) {
-      displayables.add(
-          new TargetStoreDisplayable(((GetStoreMeta) viewObject).getData(), storeContext));
+      Store store = ((GetStoreMeta) viewObject).getData();
+      displayables.add(new StoreDisplayable(store, storeContext, store.getStats()
+          .getApps(), store.getStats()
+          .getDownloads(), R.string.storehometab_short_apps,
+          R.string.storehometab_short_downloads));
     }
     return displayables;
   }
