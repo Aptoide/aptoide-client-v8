@@ -178,8 +178,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView appcRewardValue;
   private View similarDownloadView;
   private RecyclerView similarDownloadApps;
+  private View versionsLayout;
   private TextView latestVersionTitle;
   private TextView latestVersion;
+  private TextView rewardAppLatestVersion;
   private TextView otherVersions;
   private RecyclerView screenshots;
   private TextView descriptionText;
@@ -305,9 +307,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             (TextView) appcRewardView.findViewById(R.id.appc_billing_text_secondary));
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
     similarDownloadApps = (RecyclerView) similarDownloadView.findViewById(R.id.similar_list);
+    versionsLayout = view.findViewById(R.id.versions_layout);
     latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
-    latestVersion = (TextView) view.findViewById(R.id.versions_layout)
-        .findViewById(R.id.latest_version);
+    latestVersion = versionsLayout.findViewById(R.id.latest_version);
+    rewardAppLatestVersion = view.findViewById(R.id.appview_reward_app_versions_element);
     otherVersions = (TextView) view.findViewById(R.id.other_versions);
 
     screenshots = (RecyclerView) view.findViewById(R.id.screenshots_list);
@@ -594,10 +597,24 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           .getAverage()));
     }
 
-    latestVersion.setText(model.getVersionName());
-    if (!model.isLatestTrustedVersion()) {
-      latestVersionTitle.setText(getString(R.string.appview_version_text));
-      otherVersions.setText(getString(R.string.newer_version_available));
+    if (getArguments().getFloat(BundleKeys.APPC.name(), -1) != -1f) {
+      versionsLayout.setVisibility(View.GONE);
+      rewardAppLatestVersion.setVisibility(View.VISIBLE);
+      String versionName = model.getVersionName();
+      String message =
+          String.format(getResources().getString(R.string.appview_latest_version_with_value),
+              versionName);
+      SpannableString spannable = new SpannableString(message);
+      spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_medium)),
+          message.indexOf(versionName), message.indexOf(versionName) + versionName.length(),
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      rewardAppLatestVersion.setText(spannable);
+    } else {
+      latestVersion.setText(model.getVersionName());
+      if (!model.isLatestTrustedVersion()) {
+        latestVersionTitle.setText(getString(R.string.appview_version_text));
+        otherVersions.setText(getString(R.string.newer_version_available));
+      }
     }
     storeName.setText(model.getStore()
         .getName());

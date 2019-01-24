@@ -57,6 +57,7 @@
   <string name="appview_other_versions">Other versions</string>
   <string name="appview_newer_version">Newer version available</string>
   <string name="appview_latest_version_text">Latest version</string>
+  <string name="appview_latest_version_with_value">Latest version %s</string>
   <string name="appview_version_text">Version</string>
   <string name="appview_rate_this_app">Rate this App</string>
   <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
