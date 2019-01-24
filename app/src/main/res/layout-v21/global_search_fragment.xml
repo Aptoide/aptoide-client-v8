@@ -108,7 +108,7 @@
         android:visibility="gone"
         tools:background="@color/green"
         tools:layout_height="20dp"
-        tools:visibility="visible"
+        tools:visibility="gone"
         />
 
     <android.support.v7.widget.RecyclerView
