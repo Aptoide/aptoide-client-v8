@@ -67,7 +67,7 @@
         android:paddingBottom="16dp"
         >
       <TextView
-          android:id="@+id/following"
+          android:id="@+id/first_stat"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:background="?attr/selectableItemBackgroundBorderless"
@@ -76,7 +76,6 @@
           android:paddingLeft="16dp"
           android:paddingRight="16dp"
           android:paddingStart="16dp"
-          android:text="@string/storetab_short_followings"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toStartOf="@+id/leftSeparator"
           app:layout_constraintLeft_toLeftOf="parent"
@@ -92,16 +91,16 @@
           android:layout_height="36dp"
           android:background="@color/light_custom_gray"
           app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toStartOf="@+id/followers"
-          app:layout_constraintLeft_toRightOf="@id/following"
-          app:layout_constraintRight_toLeftOf="@id/followers"
-          app:layout_constraintStart_toEndOf="@id/following"
+          app:layout_constraintEnd_toStartOf="@+id/second_stat"
+          app:layout_constraintLeft_toRightOf="@id/first_stat"
+          app:layout_constraintRight_toLeftOf="@id/second_stat"
+          app:layout_constraintStart_toEndOf="@id/first_stat"
           app:layout_constraintTop_toTopOf="parent"
           />
 
 
       <TextView
-          android:id="@+id/followers"
+          android:id="@+id/second_stat"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:background="?attr/selectableItemBackgroundBorderless"
@@ -110,7 +109,6 @@
           android:paddingLeft="16dp"
           android:paddingRight="16dp"
           android:paddingStart="16dp"
-          android:text="@string/storetab_short_followers"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toStartOf="@+id/rightSeparator"
           app:layout_constraintLeft_toRightOf="@+id/leftSeparator"
@@ -127,9 +125,9 @@
           android:background="@color/light_custom_gray"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toStartOf="@+id/explore_button"
-          app:layout_constraintLeft_toRightOf="@id/followers"
+          app:layout_constraintLeft_toRightOf="@id/second_stat"
           app:layout_constraintRight_toLeftOf="@id/explore_button"
-          app:layout_constraintStart_toEndOf="@id/followers"
+          app:layout_constraintStart_toEndOf="@id/second_stat"
           app:layout_constraintTop_toTopOf="parent"
           />
 

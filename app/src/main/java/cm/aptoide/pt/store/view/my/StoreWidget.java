@@ -36,8 +36,8 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
   private Button exploreButton;
   private TextView suggestionMessage;
   private StoreAnalytics storeAnalytics;
-  private TextView firstStats;
-  private TextView secondStats;
+  private TextView firstStat;
+  private TextView secondStat;
 
   public StoreWidget(View itemView) {
     super(itemView);
@@ -52,8 +52,8 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
     storeIcon = itemView.findViewById(R.id.store_icon);
     storeName = itemView.findViewById(R.id.store_name);
     suggestionMessage = itemView.findViewById(R.id.create_store_text);
-    firstStats = itemView.findViewById(R.id.following);
-    secondStats = itemView.findViewById(R.id.followers);
+    firstStat = itemView.findViewById(R.id.first_stat);
+    secondStat = itemView.findViewById(R.id.second_stat);
     exploreButton = itemView.findViewById(R.id.explore_button);
   }
 
@@ -78,7 +78,7 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
 
     showStats(displayable);
     if (displayable.isStatsClickable()) {
-      compositeSubscription.add(RxView.clicks(firstStats)
+      compositeSubscription.add(RxView.clicks(firstStat)
           .subscribe(click -> {
             storeAnalytics.sendFollowersStoresInteractEvent();
             getFragmentNavigator().navigateTo(
@@ -89,7 +89,7 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
                     displayable.getStoreContext()), true);
           }));
 
-      compositeSubscription.add(RxView.clicks(secondStats)
+      compositeSubscription.add(RxView.clicks(secondStat)
           .subscribe(click -> {
             storeAnalytics.sendFollowingStoresInteractEvent();
             getFragmentNavigator().navigateTo(
@@ -119,13 +119,13 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
     };
     String firstStatsText = String.format(getContext().getString(displayable.getFirstStatsLabel()),
         String.valueOf(displayable.getFirstStatsNumber()));
-    firstStats.setText(spannableFactory.createMultiSpan(firstStatsText, textStyle,
+    firstStat.setText(spannableFactory.createMultiSpan(firstStatsText, textStyle,
         String.valueOf(displayable.getFirstStatsNumber())));
 
     String secondStatsText =
         String.format(getContext().getString(displayable.getSecondStatsLabel()),
             String.valueOf(displayable.getSecondStatsNumber()));
-    secondStats.setText(spannableFactory.createMultiSpan(secondStatsText, textStyle,
+    secondStat.setText(spannableFactory.createMultiSpan(secondStatsText, textStyle,
         String.valueOf(displayable.getSecondStatsNumber())));
   }
 
