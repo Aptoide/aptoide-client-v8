@@ -17,7 +17,7 @@ import javax.inject.Named;
     return new IronSourceInterstitialAdExperiment();
   }
 
-  @FragmentScope @Provides WizardFragmentProvider providesWizardFragmentProvider@Named("aptoide-theme") String theme) {
+  @FragmentScope @Provides WizardFragmentProvider providesWizardFragmentProvider(@Named("aptoide-theme") String theme) {
     return new WizardFragmentProvider(theme);
   }
 
