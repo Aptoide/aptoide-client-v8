@@ -24,12 +24,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -41,6 +43,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     implements AppCoinsInfoView, NotBottomNavigationView {
 
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
+  @Inject @Named("aptoide-theme") String theme;
   private Toolbar toolbar;
   private PublishSubject<Void> coinbaseClickSubject;
   private View appCardView;
@@ -48,6 +51,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Button installButton;
   private TextView appcMessageAppcoinsSection2b;
   private ClickableSpan coinbaseClickListener;
+  private int spannableColor;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -65,6 +69,8 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    spannableColor = StoreTheme.get(theme)
+        .getPrimaryColor();
     appCardView = view.findViewById(R.id.app_cardview);
     installButton = (Button) view.findViewById(R.id.appview_install_button);
     appcMessageAppcoinsSection2a =
@@ -131,7 +137,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     SpannableString spannableString = new SpannableString(section2b);
     spannableString.setSpan(coinbaseClickListener, section2b.indexOf(coinbase),
         section2b.indexOf(coinbase) + coinbase.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.orange)),
+    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(spannableColor)),
         section2b.indexOf(coinbase), section2b.indexOf(coinbase) + coinbase.length(),
         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -142,7 +148,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private void setupTextView(String appcString, String text, TextView appcMessageAppcoinsSection) {
     final String spendGetAppcoinsLogo =
         String.format("<img src=\"%1$s\"/> <font color=\"%2$s\"><small>%3$s</small></font>",
-            R.drawable.spend_get_appc_icon, getResources().getColor(R.color.orange), appcString);
+            R.drawable.spend_get_appc_icon, getResources().getColor(spannableColor), appcString);
     final String formatedText = String.format(text, spendGetAppcoinsLogo);
     appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
   }

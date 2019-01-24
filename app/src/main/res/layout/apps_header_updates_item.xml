@@ -36,8 +36,7 @@
       android:maxLines="1"
       android:text="@string/apps_button_update_all"
       android:textAllCaps="true"
-      android:textColor="@color/orange"
-      style="@style/Aptoide.TextView.Medium.XS"
+      style="@style/Aptoide.TextView.Medium.XS.Theme"
       />
 
 </RelativeLayout>

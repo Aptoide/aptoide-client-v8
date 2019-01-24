@@ -81,6 +81,7 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.AppUtils;
@@ -137,6 +138,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -1360,8 +1362,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
 
     SpannableString spannable = new SpannableString(tryAppMessage);
-    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.orange_700)),
-        tryAppMessage.indexOf(reward), tryAppMessage.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(StoreTheme.get(theme)
+            .getPrimaryColor())), tryAppMessage.indexOf(reward), tryAppMessage.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
     return spannable;
   }
@@ -1632,7 +1635,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_new_app_view, container, false);
+    return inflater.inflate(R.layout.fragment_app_view, container, false);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

@@ -10,7 +10,7 @@
         android:shape="rectangle">
 
       <stroke
-          android:color="@color/default_orange_gradient_end"
+          android:color="?attr/colorPrimaryDark"
           android:width="2dp"
           >
       </stroke>

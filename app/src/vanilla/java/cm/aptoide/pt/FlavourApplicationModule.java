@@ -44,4 +44,8 @@ import javax.inject.Singleton;
       ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
     return new MoPubBannerAdExperiment(abTestManager, moPubAnalytics);
   }
+
+  @Singleton @Provides @Named("partnerID") String providePartnerID() {
+    return "";
+  }
 }

@@ -9,7 +9,6 @@
     android:layout_marginRight="30dp"
     android:layout_marginStart="30dp"
     android:fillViewport="true"
-    android:theme="@style/AppBaseTheme"
     >
 
 

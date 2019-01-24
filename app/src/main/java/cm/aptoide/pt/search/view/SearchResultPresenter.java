@@ -268,8 +268,7 @@ import rx.functions.Func2;
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickNoResultsSearchButton())
         .filter(query -> query.length() > 1)
-        .doOnNext(query -> navigator.goToSearchFragment(query, view.getViewModel()
-            .getStoreName()))
+        .doOnNext(query -> navigator.goToSearchFragment(query))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

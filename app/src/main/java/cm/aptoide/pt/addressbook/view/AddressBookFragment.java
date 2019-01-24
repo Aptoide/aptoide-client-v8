@@ -62,6 +62,7 @@ public class AddressBookFragment extends UIComponentFragment
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject @Named("marketName") String marketName;
+  @Inject @Named("aptoide-theme") String theme;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
   private Button allowFriendsFindButton;
@@ -103,7 +104,7 @@ public class AddressBookFragment extends UIComponentFragment
             application.getDefaultSharedPreferences()), analytics,
         new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName)),
+            getString(R.string.addressbook_data_about, marketName), theme),
         application.getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();

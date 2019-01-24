@@ -362,13 +362,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
       @Named("cachePath") String cachePath, DownloadAppMapper downloadAppMapper,
       AppDownloaderProvider appDownloaderProvider, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath) {
-
+      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
     FileUtils.createDir(apkPath);
     FileUtils.createDir(obbPath);
-
     return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
-        downloadAppMapper, appDownloaderProvider);
+        downloadAppMapper, appDownloaderProvider, downloadAnalytics);
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {
@@ -901,6 +899,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RequestBodyFactory();
   }
 
+  /**
+   * BaseBodyInterceptor for v7 ws calls with CDN = web configuration
+   */
   @Singleton @Provides @Named("web-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideBodyInterceptorWebV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
@@ -1648,10 +1649,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.MARKET_NAME;
   }
 
-  @Singleton @Provides @Named("partnerID") String providePartnerID() {
-    return "";
-  }
-
   @Singleton @Provides @Named("accountType") String provideAccountType() {
     return BuildConfig.APPLICATION_ID;
   }
@@ -1664,6 +1661,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("imageCachePath") String provideImageCachePatch(
       @Named("cachePath") String cachePath) {
     return cachePath + "icons/";
+  }
+
+  @Singleton @Provides @Named("default-followed-stores")
+  List<String> provideDefaultFollowedStores() {
+    return Arrays.asList("apps", "bds-store");
   }
 
   @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {

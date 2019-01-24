@@ -28,6 +28,10 @@ import javax.inject.Singleton;
     return "n/a";
   }
 
+  @Singleton @Provides @Named("partnerID") String providePartnerID() {
+    return BuildConfig.COBRAND_OEMID;
+  }
+
   @Singleton @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment() {
     return new MoPubBannerAdExperiment();
   }

@@ -53,6 +53,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.parceler.Parcels;
 import rx.Observable;
 
@@ -66,6 +67,7 @@ public class ManageStoreFragment extends BackButtonFragment
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageStorePresenter manageStorePresenter;
   @Inject ScreenOrientationManager orientationManager;
+  @Inject @Named("aptoide-theme") String theme;
   private TextView chooseStoreNameTitle;
   private View selectStoreImageButton;
   private ImageView storeImage;
@@ -226,9 +228,11 @@ public class ManageStoreFragment extends BackButtonFragment
   }
 
   @Override public void loadImageStateless(String pictureUri) {
+    int color = StoreTheme.get(theme)
+        .getPrimaryColor();
     ImageLoader.with(getActivity())
-        .loadWithShadowCircleTransform(pictureUri, storeImage,
-            getResources().getColor(R.color.aptoide_orange), SPACE_BETWEEN, STROKE_SIZE);
+        .loadWithShadowCircleTransform(pictureUri, storeImage, getResources().getColor(color),
+            SPACE_BETWEEN, STROKE_SIZE);
     currentModel.setPictureUri(pictureUri);
   }
 

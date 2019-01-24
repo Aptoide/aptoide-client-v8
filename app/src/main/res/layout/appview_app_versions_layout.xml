@@ -64,8 +64,8 @@
         android:gravity="center"
         android:minLines="2"
         android:text="@string/appview_other_versions"
-        android:textColor="@color/default_orange_gradient_end"
         android:textSize="12sp"
+        style="@style/Widget.Aptoide.defaultColorText"
         />
   </LinearLayout>
 </LinearLayout>
