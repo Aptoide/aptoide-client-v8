@@ -1663,7 +1663,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideApplicationAnalytics();
   }
 
-  @Singleton @Provides MoPubAnalytics provideMoPubAnalytics() {
+  @Singleton @Provides MoPubAnalytics providesMoPubAnalytics() {
     return new MoPubAnalytics();
   }
 
