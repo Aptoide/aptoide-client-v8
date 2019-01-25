@@ -483,6 +483,7 @@
   <string name="storehometab_short_subscribers">Followers\n%s</string>
   <string name="storehometab_short_apps">Apps\n%s</string>
   <string name="storehometab_short_following">Following\n%s</string>
+  <string name="storehometab_short_downloads">Downloads\n%s</string>
   <string name="storetab_short_followings">Following\n%s</string>
   <string name="storetab_short_followers">Followers\n%s</string>
   <string name="storetab_short_follow_error">An error occurred while following store</string>
