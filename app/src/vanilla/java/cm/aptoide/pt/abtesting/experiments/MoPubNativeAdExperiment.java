@@ -2,7 +2,6 @@ package cm.aptoide.pt.abtesting.experiments;
 
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
-import rx.Observable;
 
 public class MoPubNativeAdExperiment {
 
@@ -15,7 +14,7 @@ public class MoPubNativeAdExperiment {
     this.moPubAnalytics = moPubAnalytics;
   }
 
-  public Observable<Boolean> loadNative() {
+  public Single<Boolean> loadNative() {
     return abTestManager.getExperiment(EXPERIMENT_ID)
         .flatMap(experiment -> {
           String experimentAssignment = "default";
@@ -26,21 +25,21 @@ public class MoPubNativeAdExperiment {
             case "default":
             case "control_group":
               moPubAnalytics.setMoPubAbTestGroup(true);
-              return Observable.just(false);
+              return Single.just(false);
             case "mopub":
               moPubAnalytics.setMoPubAbTestGroup(false);
-              return Observable.just(true);
+              return Single.just(true);
             default:
-              return Observable.just(false);
+              return Single.just(false);
           }
         });
   }
 
-  public Observable<Boolean> recordAdImpression() {
+  public Single<Boolean> recordAdImpression() {
     return abTestManager.recordImpression(EXPERIMENT_ID);
   }
 
-  public Observable<Boolean> recordAdClick() {
+  public Single<Boolean> recordAdClick() {
     return abTestManager.recordAction(EXPERIMENT_ID);
   }
 }
