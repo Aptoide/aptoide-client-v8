@@ -303,7 +303,7 @@ public abstract class AptoideApplication extends Application {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
 
-    initializeMoPub(this, BuildConfig.MOPUB_BANNER_90_HOME_PLACEMENT_ID_T12);
+    initializeMoPub(this, BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 

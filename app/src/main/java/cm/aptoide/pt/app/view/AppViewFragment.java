@@ -1104,7 +1104,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void initInterstitialAd() {
     interstitialAd =
-        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12);
+        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID);
     interstitialAd.setInterstitialAdListener(new MoPubInterstitialAdListener(interstitialClick));
   }
 
