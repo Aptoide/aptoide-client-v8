@@ -76,6 +76,7 @@ import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
@@ -325,6 +326,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides UpdatesAnalytics providesUpdatesAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new UpdatesAnalytics(analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides CampaignAnalytics providesCampaignAnalytics(
+      AnalyticsManager analyticsManager) {
+    return new CampaignAnalytics(new HashMap<>(), analyticsManager);
   }
 
   @Singleton @Provides TelephonyManager providesTelephonyManager() {
