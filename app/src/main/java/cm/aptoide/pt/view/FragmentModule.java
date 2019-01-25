@@ -10,6 +10,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -225,9 +226,10 @@ import rx.schedulers.Schedulers;
       ImpressionManager impressionManager, AdsManager adsManager,
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager,
-      MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository) {
+      MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository,
+      MoPubNativeAdExperiment nativeAdExperiment) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerAdExperiment,
-        bannerRepository, promotionsPreferencesManager);
+        nativeAdExperiment, bannerRepository, promotionsPreferencesManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(

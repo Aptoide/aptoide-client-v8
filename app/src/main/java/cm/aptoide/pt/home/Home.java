@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -19,17 +20,19 @@ public class Home {
   private final ImpressionManager impressionManager;
   private final PromotionsManager promotionsManager;
   private final MoPubBannerAdExperiment bannerAdExperiment;
+  private final MoPubNativeAdExperiment nativeAdExperiment;
   private final BannerRepository bannerRepository;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
-      BannerRepository bannerRepository,
+      MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
       PromotionsPreferencesManager promotionsPreferencesManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
     this.bannerAdExperiment = bannerAdExperiment;
+    this.nativeAdExperiment = nativeAdExperiment;
     this.bannerRepository = bannerRepository;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
   }
@@ -127,5 +130,9 @@ public class Home {
     return new HomePromotionsWrapper(!apps.isEmpty(), promotions, unclaimedAppcValue,
         (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0),
         totalAppcValue);
+  }
+
+  public Single<Boolean> shouldLoadNativeAd() {
+    return nativeAdExperiment.shouldLoadNative();
   }
 }

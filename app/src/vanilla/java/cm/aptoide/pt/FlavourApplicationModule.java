@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
@@ -43,6 +44,11 @@ import javax.inject.Singleton;
   @Singleton @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment(
       ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
     return new MoPubBannerAdExperiment(abTestManager, moPubAnalytics);
+  }
+
+  @Singleton @Provides MoPubNativeAdExperiment providesMoPubNativeAdExperiment(
+      ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
+    return new MoPubNativeAdExperiment(abTestManager, moPubAnalytics);
   }
 
   @Singleton @Provides @Named("partnerID") String providePartnerID() {
