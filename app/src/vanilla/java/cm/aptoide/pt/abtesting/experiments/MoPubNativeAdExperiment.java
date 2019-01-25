@@ -2,6 +2,7 @@ package cm.aptoide.pt.abtesting.experiments;
 
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
+import rx.Single;
 
 public class MoPubNativeAdExperiment {
 
@@ -16,6 +17,7 @@ public class MoPubNativeAdExperiment {
 
   public Single<Boolean> loadNative() {
     return abTestManager.getExperiment(EXPERIMENT_ID)
+        .toSingle()
         .flatMap(experiment -> {
           String experimentAssignment = "default";
           if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
@@ -36,10 +38,12 @@ public class MoPubNativeAdExperiment {
   }
 
   public Single<Boolean> recordAdImpression() {
-    return abTestManager.recordImpression(EXPERIMENT_ID);
+    return abTestManager.recordImpression(EXPERIMENT_ID)
+        .toSingle();
   }
 
   public Single<Boolean> recordAdClick() {
-    return abTestManager.recordAction(EXPERIMENT_ID);
+    return abTestManager.recordAction(EXPERIMENT_ID)
+        .toSingle();
   }
 }
