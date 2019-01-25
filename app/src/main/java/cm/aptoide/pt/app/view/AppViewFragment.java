@@ -48,7 +48,9 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.InterstitialClick;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -100,6 +102,7 @@ import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
+import com.mopub.mobileads.MoPubInterstitial;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -158,6 +161,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
   private PublishSubject<DownloadModel.Action> installClickSubject;
+  private PublishSubject<InterstitialClick> interstitialClick;
 
   //Views
   private View noNetworkErrorView;
@@ -247,6 +251,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View donateInstallCard;
   private Button installCardDonateButton;
   private Button listDonateButton;
+  private MoPubInterstitial interstitialAd;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -267,6 +272,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
     installClickSubject = PublishSubject.create();
+    interstitialClick = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -487,6 +493,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     dialogUtils = null;
     presenter = null;
     similarAppsVisibilitySubject = null;
+    interstitialClick = null;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -568,6 +575,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     donationsAdapter = null;
     donationsElement = null;
     donationsList = null;
+    interstitialAd = null;
   }
 
   @Override public void showLoading() {
@@ -1092,6 +1100,30 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     } else {
       donationsListEmptyState.setVisibility(View.VISIBLE);
     }
+  }
+
+  @Override public void initInterstitialAd() {
+    interstitialAd =
+        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_T12);
+    interstitialAd.setInterstitialAdListener(new MoPubInterstitialAdListener(interstitialClick));
+  }
+
+  @Override public Observable<InterstitialClick> InterstitialAdClicked() {
+    return interstitialClick.filter(
+        clickType -> clickType == InterstitialClick.INTERSTITIAL_CLICKED);
+  }
+
+  @Override public Observable<InterstitialClick> interstitialAdLoaded() {
+    return interstitialClick.filter(
+        clickType -> clickType == InterstitialClick.INTERSTITIAL_LOADED);
+  }
+
+  @Override public void showInterstitialAd() {
+    interstitialAd.show();
+  }
+
+  @Override public void loadInterstitialAd() {
+    interstitialAd.load();
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {

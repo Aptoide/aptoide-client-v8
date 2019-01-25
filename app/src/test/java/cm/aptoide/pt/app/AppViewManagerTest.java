@@ -3,9 +3,8 @@ package cm.aptoide.pt.app;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.experiments.IronSourceInterstitialAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
-import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
@@ -72,8 +71,7 @@ public class AppViewManagerTest {
   @Mock private DownloadFactory downloadFactory;
   @Mock private ABTestManager abTestManager;
   @Mock private AppCoinsManager appCoinsManager;
-  @Mock private IronSourceAdRepository ironSourceAdRepository;
-  @Mock private IronSourceInterstitialAdExperiment ironSourceInterstitialAdExperiment;
+  @Mock private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
   private AppStats appStats;
@@ -91,7 +89,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
@@ -112,7 +110,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -162,7 +160,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -212,7 +210,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -261,7 +259,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -304,7 +302,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -331,7 +329,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -358,7 +356,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -470,7 +468,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "marketName", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -577,7 +575,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            ironSourceInterstitialAdExperiment, ironSourceAdRepository);
+            moPubInterstitialAdExperiment);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));

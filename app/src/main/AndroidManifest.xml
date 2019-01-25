@@ -41,7 +41,7 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
   <uses-sdk
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy, com.asf.appcoins.sdk.core"/>
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy, com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner, com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial, com.mopub.mobileads.native_video, com.mopub.mobileads.native_static, com.mopub.mobileads.base"/>
 
   <application
       android:allowBackup="false"
@@ -51,6 +51,32 @@
       android:supportsRtl="true"
       android:theme="@style/AppBaseTheme.NoTitle.Transparent"
       tools:replace="theme, allowBackup">
+
+    <!-- MoPub's consent dialog -->
+    <activity
+        android:name="com.mopub.common.privacy.ConsentDialogActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize"/>
+
+    <!-- All ad formats -->
+    <activity
+        android:name="com.mopub.common.MoPubBrowser"
+        android:configChanges="keyboardHidden|orientation|screenSize"/>
+
+    <!-- Interstitials -->
+    <activity
+        android:name="com.mopub.mobileads.MoPubActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize"/>
+    <activity
+        android:name="com.mopub.mobileads.MraidActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize"/>
+
+    <!-- Rewarded Video and Rewarded Playables -->
+    <activity
+        android:name="com.mopub.mobileads.RewardedMraidActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize"/>
+    <activity
+        android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize"/>
 
     <activity
         android:name=".view.entry.EntryActivity"

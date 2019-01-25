@@ -22,7 +22,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.ads.IronSourceAdRepository;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
@@ -39,7 +38,6 @@ public class MainActivity extends BottomNavigationActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
   @Inject Presenter presenter;
-  @Inject IronSourceAdRepository ironSourceAdRepository;
   @Inject Resources resources;
   @Inject @Named("marketName") String marketName;
   private InstallManager installManager;
@@ -59,7 +57,6 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
-    ironSourceAdRepository.initialize();
 
     setupUpdatesNotification();
 
@@ -193,11 +190,9 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onResume() {
     super.onResume();
-    ironSourceAdRepository.onResume();
   }
 
   @Override protected void onPause() {
     super.onPause();
-    ironSourceAdRepository.onPause();
   }
 }
