@@ -9,7 +9,7 @@ public class MoPubNativeAdExperiment {
   public MoPubNativeAdExperiment() {
   }
 
-  public Single<Boolean> loadNative() {
+  public Single<Boolean> shouldLoadNative() {
     return Single.just(false);
   }
 

@@ -15,7 +15,7 @@ public class MoPubNativeAdExperiment {
     this.moPubAnalytics = moPubAnalytics;
   }
 
-  public Single<Boolean> loadNative() {
+  public Single<Boolean> shouldLoadNative() {
     return abTestManager.getExperiment(EXPERIMENT_ID)
         .toSingle()
         .flatMap(experiment -> {
