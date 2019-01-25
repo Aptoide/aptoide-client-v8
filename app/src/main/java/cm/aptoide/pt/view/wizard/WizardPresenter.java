@@ -30,7 +30,7 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
         .first()
         .toSingle()
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMapCompletable(account -> view.createWizardAdapter(account));
+        .flatMapCompletable(account -> view.createWizardAdapter(account.isLoggedIn()));
   }
 
   private Observable<Void> setupHandlers() {
@@ -57,8 +57,8 @@ public class WizardPresenter implements Presenter, AptoideViewPager.OnPageChange
   }
 
   @Override public void onPageSelected(int position) {
-    if (position == 2) {
-      //Inside the wizards third page
+    if (position == view.getCount() - 1) {
+      //Inside the wizards login page
       accountAnalytics.enterAccountScreen(AccountAnalytics.AccountOrigins.WIZARD);
     }
     view.handleSelectedPage(position);

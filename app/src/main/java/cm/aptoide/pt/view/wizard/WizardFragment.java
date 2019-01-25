@@ -14,7 +14,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -24,7 +23,6 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -43,7 +41,7 @@ public class WizardFragment extends UIComponentFragment
   private static final String PAGE_INDEX = "page_index";
   AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
   @Inject WizardPresenter wizardPresenter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject WizardFragmentProvider wizardFragmentProvider;
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -56,6 +54,7 @@ public class WizardFragment extends UIComponentFragment
   private Runnable registerViewpagerCurrentItem;
   private View animatedColorView;
   private Integer[] transitionColors;
+  private boolean isUserLoggedIn;
 
   public static WizardFragment newInstance() {
     return new WizardFragment();
@@ -97,17 +96,12 @@ public class WizardFragment extends UIComponentFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    int lastPageColor = R.color.wizard_color_3_orange;
-    if (!theme.equals(StoreTheme.DEFAULT.toString()
-        .toLowerCase())) {
-      lastPageColor = StoreTheme.get(theme)
-          .getPrimaryColor();
+    Integer[] colorInt = wizardFragmentProvider.getTransitionColors();
+    transitionColors = new Integer[colorInt.length];
+    for (int i = 0; i < colorInt.length; i++) {
+      transitionColors[i] = getContext().getResources()
+          .getColor(colorInt[i]);
     }
-    transitionColors = new Integer[] {
-        getContext().getResources().getColor(R.color.wizard_color_1_blue),
-        getContext().getResources().getColor(R.color.wizard_color_2_green),
-        getContext().getResources().getColor(lastPageColor)
-    };
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -164,9 +158,11 @@ public class WizardFragment extends UIComponentFragment
     super.onDestroyView();
   }
 
-  @Override public Completable createWizardAdapter(Account account) {
+  @Override public Completable createWizardAdapter(boolean isLoggedIn) {
+    isUserLoggedIn = isLoggedIn;
     return Completable.fromAction(() -> {
-      viewPagerAdapter = new WizardPagerAdapter(getChildFragmentManager(), account);
+      viewPagerAdapter =
+          new WizardPagerAdapter(getChildFragmentManager(), isLoggedIn, wizardFragmentProvider);
       createRadioButtons();
       viewPager.setAdapter(viewPagerAdapter);
       viewPager.setCurrentItem(currentPosition);
@@ -211,7 +207,7 @@ public class WizardFragment extends UIComponentFragment
                 transitionColors[position + 1]);
         animatedColorView.setBackgroundColor(argbEvaluation);
       } else {
-        if (viewPagerAdapter.getCount() == 2) {
+        if (viewPagerAdapter.isLoggedIn()) {
           animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 2]);
         } else {
           animatedColorView.setBackgroundColor(transitionColors[transitionColors.length - 1]);
@@ -243,6 +239,10 @@ public class WizardFragment extends UIComponentFragment
       radioGroup.addView(radioButton);
       wizardButtons.add(radioButton);
     }
+  }
+
+  @Override public int getCount() {
+    return wizardFragmentProvider.getCount(isUserLoggedIn);
   }
 
   @Override public int getContentViewId() {
