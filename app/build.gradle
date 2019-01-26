@@ -437,7 +437,7 @@ dependencies {
 
 
   // Mopub
-  implementation('com.mopub:mopub-sdk:5.4.0@aar') {
+  implementation("com.mopub:mopub-sdk:${MOPUB_SDK_VERSION}@aar") {
     transitive = true
     exclude module: 'moat-mobile-app-kit'
     exclude group: "com.android.support"
@@ -446,11 +446,11 @@ dependencies {
   }
 
   // AppLovin
-  implementation 'com.applovin:applovin-sdk:8.1.4'
-  implementation 'com.mopub.mediation:applovin:8.1.4.3'
+  implementation "com.applovin:applovin-sdk:${APPLOVIN_SDK_VERSION}"
+  implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
 
   // Google (AdMob)
-  implementation("com.mopub.mediation:admob:17.0.0.2") {
+  implementation("com.mopub.mediation:admob:${MOPUB_MEDIATION_ADMOB_VERSION}") {
     transitive = true
     exclude group: "com.android.support"
     exclude module: "support-annotations"
@@ -458,39 +458,39 @@ dependencies {
   }
 
   // Yahoo! Flurry
-  implementation("com.flurry.android:ads:10.1.0@aar") {
+  implementation("com.flurry.android:ads:${FLURRY_ADS_VERSION}@aar") {
     transitive = true
     exclude group: "com.android.support"
     exclude module: "support-annotations"
     exclude module: "support-v4"
   }
-  implementation 'com.mopub.mediation:flurry:10.1.0.2'
+  implementation "com.mopub.mediation:flurry:${MOPUB_MEDIATION_FLURRY_VERSION}"
 
   // ironSource
-  implementation "com.ironsource.sdk:mediationsdk:6.7.12@jar"
-  implementation 'com.mopub.mediation:ironsource:6.7.12.0'
+  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
+  implementation "com.mopub.mediation:ironsource:${MOPUB_MEDIATION_IRONSOURCE_VERSION}"
 
   // Vungle
-  implementation("com.github.vungle:vungle-android-sdk:6.3.24") {
+  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {
     transitive = true
     exclude group: "com.android.support"
     exclude module: "support-annotations"
     exclude module: "support-v4"
   }
+  implementation "com.mopub.mediation:vungle:${MOPUB_MEDIATION_VUNGLE_VERSION}"
 
   // Adcolony
-  implementation 'com.mopub.mediation:adcolony:3.3.7.0'
-  implementation 'com.adcolony:sdk:3.3.7'
+  implementation "com.mopub.mediation:adcolony:${MOPUB_MEDIATION_ADCOLONY_VERSION}"
+  implementation "com.adcolony:sdk:${ADCOLONY_SDK_VERSION}"
 
   // Tapjoy
-  implementation 'com.tapjoy:tapjoy-android-sdk:12.2.0@aar'
-  implementation 'com.mopub.mediation:tapjoy:12.2.0.0'
+  implementation "com.tapjoy:tapjoy-android-sdk:${TAPJOY_SDK_VERSION}@aar"
+  implementation "com.mopub.mediation:tapjoy:${MOPUB_MEDIATION_TAPJOY_VERSION}"
 
   // UnityAds, Chartboost & One by AOL
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-  implementation 'com.mopub.mediation:unityads:3.0.0.0'
+  implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
-  implementation 'com.mopub.mediation:vungle:6.3.24.0'
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
