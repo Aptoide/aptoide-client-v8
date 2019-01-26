@@ -499,9 +499,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     presenter = null;
     similarAppsVisibilitySubject = null;
     interstitialClick = null;
-    if (bannerAd != null) {
-      bannerAd.destroy();
-    }
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -584,7 +581,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     donationsElement = null;
     donationsList = null;
     interstitialAd = null;
-    bannerAd = null;
+    if (bannerAd != null) {
+      bannerAd.destroy();
+      bannerAd = null;
+    }
   }
 
   @Override public void showLoading() {
