@@ -155,14 +155,11 @@ android {
   }
 
   variantFilter { variant ->
-    List<ProductFlavor> flavors = variant.getFlavors()
+    def names = variant.flavors*.name
 
-    String applicationIdSuffix = flavors[1].applicationIdSuffix
-    boolean hasSuffix = applicationIdSuffix != null
-
-    if (flavors[0].name.contains('cobrand') && hasSuffix &&
-        (applicationIdSuffix.contains('internal') || applicationIdSuffix.contains('testfairy') ||
-            applicationIdSuffix.contains('leak'))) {
+    if (names.contains('cobrand') && (names.contains('internal') || names.contains('fairy') ||
+        names.contains('leak') ||
+        names.contains('monetisation'))) {
       setIgnore(true)
     }
   }
