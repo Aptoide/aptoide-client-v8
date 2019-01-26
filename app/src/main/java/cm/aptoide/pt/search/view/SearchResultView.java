@@ -103,7 +103,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showBannerAd();
 
-  Observable<Void> showedResultsView();
+  Observable<Boolean> showingSearchResultsView();
 
   interface Model {
 

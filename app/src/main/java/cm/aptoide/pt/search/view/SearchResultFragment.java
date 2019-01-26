@@ -122,7 +122,7 @@ public class SearchResultFragment extends BackButtonFragment
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
   private MoPubView bannerAd;
-  private PublishSubject<Void> showResultsViewSubject;
+  private PublishSubject<Boolean> showingSearchResultsView;
 
   public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -280,7 +280,7 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.VISIBLE);
-    showResultsViewSubject.onNext(null);
+    showingSearchResultsView.onNext(true);
   }
 
   @Override public void showLoading() {
@@ -489,8 +489,8 @@ public class SearchResultFragment extends BackButtonFragment
     bannerAd.loadAd();
   }
 
-  @Override public Observable<Void> showedResultsView() {
-    return showResultsViewSubject;
+  @Override public Observable<Boolean> showingSearchResultsView() {
+    return showingSearchResultsView;
   }
 
   public void showSuggestionsView() {
@@ -611,7 +611,7 @@ public class SearchResultFragment extends BackButtonFragment
     searchSetupPublishSubject = PublishSubject.create();
     queryTextChangedPublisher = PublishSubject.create();
 
-    showResultsViewSubject = PublishSubject.create();
+    showingSearchResultsView = PublishSubject.create();
 
     final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
@@ -739,7 +739,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void onDestroy() {
     super.onDestroy();
-    showResultsViewSubject = null;
+    showingSearchResultsView = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
