@@ -23,6 +23,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.TapJoyConnectListener;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
@@ -32,7 +33,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import com.adcolony.sdk.AdColony;
 import com.applovin.sdk.AppLovinSdk;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.tapjoy.TJConnectListener;
 import com.tapjoy.Tapjoy;
 import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
@@ -87,18 +87,8 @@ public class MainActivity extends BottomNavigationActivity
     AppLovinSdk.initializeSdk(this);
     AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
 
-    Hashtable<String, Object> connectFlags = new Hashtable<String, Object>();
-    //connectFlags.put(TapjoyConnectFlag.ENABLE_LOGGING, "true");      // remember to turn this off for your production builds!
-    Tapjoy.connect(getApplicationContext(), BuildConfig.TAPJOY_SDK_KEY, connectFlags,
-        new TJConnectListener() {
-          @Override public void onConnectSuccess() {
-
-          }
-
-          @Override public void onConnectFailure() {
-
-          }
-        });
+    Tapjoy.connect(getApplicationContext(), BuildConfig.TAPJOY_SDK_KEY,
+        new Hashtable<String, Object>(), new TapJoyConnectListener());
 
     UnityAds.initialize(this, BuildConfig.UNITYADS_GAME_ID, new IUnityAdsListener() {
       @Override public void onUnityAdsReady(String s) {
