@@ -43,7 +43,7 @@ class SmallBannerAdBundleViewHolder extends AppBundleViewHolder {
             .d(TAG, "Banner collapsed");
       }
     });
-    bannerView.setAdUnitId(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID_PROD);
+    bannerView.setAdUnitId(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {

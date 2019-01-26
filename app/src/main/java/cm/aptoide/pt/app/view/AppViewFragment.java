@@ -1137,7 +1137,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showBannerAd() {
     bannerAd.setBannerAdListener(new MoPubBannerAdListener());
-    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID_PROD);
+    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID);
     bannerAd.setVisibility(View.VISIBLE);
     bannerAd.loadAd();
   }
