@@ -8,26 +8,26 @@ public class MoPubBannerAdListener implements MoPubView.BannerAdListener {
 
   @Override public void onBannerLoaded(MoPubView banner) {
     Logger.getInstance()
-        .d("Mopub Search", "Banner loaded");
+        .d("Mopub", "Banner loaded");
   }
 
   @Override public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
     Logger.getInstance()
-        .e("Mopub Search", "Banner error : " + errorCode.toString());
+        .e("Mopub", "Banner error : " + errorCode.toString());
   }
 
   @Override public void onBannerClicked(MoPubView banner) {
     Logger.getInstance()
-        .d("Mopub Search", "Banner clicked");
+        .d("Mopub", "Banner clicked");
   }
 
   @Override public void onBannerExpanded(MoPubView banner) {
     Logger.getInstance()
-        .d("Mopub Search", "Banner expanded");
+        .d("Mopub", "Banner expanded");
   }
 
   @Override public void onBannerCollapsed(MoPubView banner) {
     Logger.getInstance()
-        .d("Mopub Search", "Banner collapsed");
+        .d("Mopub", "Banner collapsed");
   }
 }
