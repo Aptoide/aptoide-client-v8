@@ -719,6 +719,10 @@ public class SearchResultFragment extends BackButtonFragment
     followedStoresResultList.clearAnimation();
     setupDefaultTheme();
     super.onDestroyView();
+    if (bannerAd != null) {
+      bannerAd.destroy();
+      bannerAd = null;
+    }
   }
 
   @Override public void onDetach() {
@@ -736,9 +740,6 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void onDestroy() {
     super.onDestroy();
     showResultsViewSubject = null;
-    if (bannerAd != null) {
-      bannerAd.destroy();
-    }
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
