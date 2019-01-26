@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -17,23 +18,67 @@ public class Home {
   private final BundlesRepository bundlesRepository;
   private final ImpressionManager impressionManager;
   private final PromotionsManager promotionsManager;
+  private final MoPubBannerAdExperiment bannerAdExperiment;
+  private final BannerRepository bannerRepository;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
-      PromotionsManager promotionsManager,
+      PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
+      BannerRepository bannerRepository,
       PromotionsPreferencesManager promotionsPreferencesManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
+    this.bannerAdExperiment = bannerAdExperiment;
+    this.bannerRepository = bannerRepository;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
-    return bundlesRepository.loadHomeBundles();
+    return bundlesRepository.loadHomeBundles()
+        .flatMap(bundlesModel -> {
+          if (bundlesModel.hasErrors() || bundlesModel.isLoading()) {
+            return Single.just(bundlesModel);
+          }
+          return addAdBundle(bundlesModel);
+        });
   }
 
   public Single<HomeBundlesModel> loadFreshHomeBundles() {
-    return bundlesRepository.loadFreshHomeBundles();
+    return bundlesRepository.loadFreshHomeBundles()
+        .flatMap(bundlesModel -> {
+          if (bundlesModel.hasErrors() || bundlesModel.isLoading()) {
+            return Single.just(bundlesModel);
+          }
+          return addAdBundle(bundlesModel);
+        });
+  }
+
+  private Single<HomeBundlesModel> addAdBundle(HomeBundlesModel bundlesModel) {
+    return bannerAdExperiment.shouldLoadBanner()
+        .toSingle()
+        .flatMap(shouldLoadBanner -> {
+          if (shouldLoadBanner) {
+            return bannerRepository.getBannerBundle()
+                .map(banner -> addBannerToHomeBundleModel(bundlesModel, banner));
+          } else {
+            return Single.just(bundlesModel);
+          }
+        });
+  }
+
+  private HomeBundlesModel addBannerToHomeBundleModel(HomeBundlesModel bundlesModel,
+      HomeBundle banner) {
+    if (bundlesModel.isLoading()) {
+      return bundlesModel;
+    } else if (bundlesModel.hasErrors()) {
+      return bundlesModel;
+    } else {
+
+      List<HomeBundle> bundleList = bundlesModel.getList();
+      bundleList.add(1, banner);
+      return new HomeBundlesModel(bundleList, bundlesModel.isLoading(), bundlesModel.getOffset());
+    }
   }
 
   public Single<HomeBundlesModel> loadNextHomeBundles() {

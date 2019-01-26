@@ -7,14 +7,14 @@ import rx.subjects.PublishSubject;
 
 public class MoPubInterstitialAdListener implements MoPubInterstitial.InterstitialAdListener {
 
-  private PublishSubject<InterstitialClick> interstitialClick;
+  private PublishSubject<MoPubInterstitialAdClickType> interstitialClick;
 
-  public MoPubInterstitialAdListener(PublishSubject<InterstitialClick> interstitialClick) {
+  public MoPubInterstitialAdListener(PublishSubject<MoPubInterstitialAdClickType> interstitialClick) {
     this.interstitialClick = interstitialClick;
   }
 
   @Override public void onInterstitialLoaded(MoPubInterstitial interstitial) {
-    interstitialClick.onNext(InterstitialClick.INTERSTITIAL_LOADED);
+    interstitialClick.onNext(MoPubInterstitialAdClickType.INTERSTITIAL_LOADED);
   }
 
   @Override
@@ -28,7 +28,7 @@ public class MoPubInterstitialAdListener implements MoPubInterstitial.Interstiti
   }
 
   @Override public void onInterstitialClicked(MoPubInterstitial interstitial) {
-    interstitialClick.onNext(InterstitialClick.INTERSTITIAL_CLICKED);
+    interstitialClick.onNext(MoPubInterstitialAdClickType.INTERSTITIAL_CLICKED);
   }
 
   @Override public void onInterstitialDismissed(MoPubInterstitial interstitial) {

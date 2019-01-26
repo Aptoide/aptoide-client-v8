@@ -99,11 +99,23 @@
       </LinearLayout>
     </android.support.v7.widget.CardView>
 
+    <com.mopub.mobileads.MoPubView
+        android:id="@+id/mopub_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        tools:background="@color/green"
+        tools:layout_height="20dp"
+        tools:visibility="gone"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_search_result_followed_stores_app_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+        android:layout_below="@id/mopub_banner"
         android:layout_marginTop="5dp"
         android:visibility="invisible"
         />
@@ -112,7 +124,7 @@
         android:id="@+id/fragment_search_result_all_stores_app_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+        android:layout_below="@id/mopub_banner"
         android:layout_marginTop="5dp"
         android:visibility="visible"
         />
