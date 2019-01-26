@@ -101,7 +101,7 @@
 
     <com.mopub.mobileads.MoPubView
         android:id="@+id/mopub_banner"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
         android:layout_marginTop="5dp"
