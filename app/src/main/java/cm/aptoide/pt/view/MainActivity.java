@@ -24,6 +24,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.TapJoyConnectListener;
+import cm.aptoide.pt.ads.UnityAdsListener;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
@@ -34,7 +35,6 @@ import com.adcolony.sdk.AdColony;
 import com.applovin.sdk.AppLovinSdk;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.tapjoy.Tapjoy;
-import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
 import java.util.Hashtable;
 import javax.inject.Inject;
@@ -90,23 +90,7 @@ public class MainActivity extends BottomNavigationActivity
     Tapjoy.connect(getApplicationContext(), BuildConfig.TAPJOY_SDK_KEY,
         new Hashtable<String, Object>(), new TapJoyConnectListener());
 
-    UnityAds.initialize(this, BuildConfig.UNITYADS_GAME_ID, new IUnityAdsListener() {
-      @Override public void onUnityAdsReady(String s) {
-
-      }
-
-      @Override public void onUnityAdsStart(String s) {
-
-      }
-
-      @Override public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
-
-      }
-
-      @Override public void onUnityAdsError(UnityAds.UnityAdsError unityAdsError, String s) {
-
-      }
-    });
+    UnityAds.initialize(this, BuildConfig.UNITYADS_GAME_ID, new UnityAdsListener());
   }
 
   @Override protected void onStart() {
