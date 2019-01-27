@@ -130,6 +130,44 @@ import static org.junit.Assert.assertEquals;
         .getKey());
   }
 
+  @Test public void cleanLimitExceededNotificationsExceedingLimit() throws Exception {
+    TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
+
+    Map<String, Notification> list = new HashMap<>();
+    long timeStamp = System.currentTimeMillis();
+    Notification notification = createNotification(timeStamp + 2000, timeStamp, "me", true);
+    list.put(notification.getKey(), notification);
+    timeStamp = System.currentTimeMillis();
+    notification = createNotification(timeStamp + 2000, timeStamp - 1, "me", true);
+    list.put(notification.getKey(), notification);
+    timeStamp = System.currentTimeMillis();
+    notification = createNotification(timeStamp + 2000, timeStamp - 2, "me", true);
+    list.put(notification.getKey(), notification);
+    NotificationAccessor notificationAccessor = new NotAccessor(list);
+    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
+        getNotificationProvider(), CrashReport.getInstance());
+
+    List<Notification> notificationList = notificationAccessor.getAllSorted(Sort.DESCENDING)
+        .toBlocking()
+        .first();
+    notificationsCleaner.cleanLimitExceededNotifications(1)
+        .subscribe(objectTestSubscriber);
+    objectTestSubscriber.awaitTerminalEvent();
+    objectTestSubscriber.assertCompleted();
+    objectTestSubscriber.assertNoErrors();
+    assertEquals(notificationAccessor.getAllSorted(null)
+        .toBlocking()
+        .first()
+        .size(), 1);
+    assertEquals(notificationAccessor.getAllSorted(Sort.DESCENDING)
+        .toBlocking()
+        .first()
+        .get(0)
+        .getKey(), notificationList.get(0)
+        .getKey());
+  }
+
   private NotificationProvider getNotificationProvider() {
     return Mockito.mock(NotificationProvider.class);
   }
