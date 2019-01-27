@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
-import com.mopub.nativeads.MoPubNativeAdLoadedListener;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
@@ -63,16 +63,7 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
             .build();
     MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
     moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
-    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
-      @Override public void onAdLoaded(int position) {
-        // homeAnalytics.sendAdImpressionEvent(0, "Ad", position, "ads-highlighted", HomeEvent.Type.AD,
-        //   ApplicationAd.Network.MOPUB);
-      }
-
-      @Override public void onAdRemoved(int position) {
-
-      }
-    });
+    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
     appsList.setAdapter(moPubRecyclerAdapter);
   }
 
