@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 import rx.Completable;
 import rx.Observable;
@@ -26,11 +24,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by trinkes on 28/08/2017.
  */
-@RunWith(Parameterized.class) public class NotificationsCleanerTest {
-
-  @Parameterized.Parameters public static Object[][] data() {
-    return new Object[100][0];
-  }
+public class NotificationsCleanerTest {
 
   @Test public void cleanOtherUsersNotifications() throws Exception {
     Map<String, Notification> list = new HashMap<>();
