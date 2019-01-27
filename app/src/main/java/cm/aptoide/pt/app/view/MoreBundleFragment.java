@@ -101,7 +101,8 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
         oneDecimalFormatter, adClickedEvents, marketName,
-        new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter, marketName));
+        new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
+            marketName, false));
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

@@ -48,4 +48,6 @@ public interface HomeView extends BundleView {
   void setEllipsizedPromotionsTicker();
 
   void hidePromotionsIcon();
+
+  void setAdsTest(boolean showNatives);
 }
