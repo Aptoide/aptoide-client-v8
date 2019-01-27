@@ -168,6 +168,33 @@ import static org.junit.Assert.assertEquals;
         .getKey());
   }
 
+  @Test public void cleanLimitExceededNotificationsNotExpiring() throws Exception {
+    TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
+
+    Map<String, Notification> list = new HashMap<>();
+    long timeStamp = System.currentTimeMillis();
+    Notification notification = createNotification(null, timeStamp, "me", true);
+    list.put(notification.getKey(), notification);
+    notification = createNotification(null, timeStamp - 1, "me", true);
+    list.put(notification.getKey(), notification);
+    notification = createNotification(null, timeStamp - 2, "me", true);
+    list.put(notification.getKey(), notification);
+    NotificationAccessor notificationAccessor = new NotAccessor(list);
+    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
+        getNotificationProvider(), CrashReport.getInstance());
+
+    notificationsCleaner.cleanLimitExceededNotifications(3)
+        .subscribe(objectTestSubscriber);
+    objectTestSubscriber.awaitTerminalEvent();
+    objectTestSubscriber.assertCompleted();
+    objectTestSubscriber.assertNoErrors();
+    assertEquals(notificationAccessor.getAllSorted(null)
+        .toBlocking()
+        .first()
+        .size(), 3);
+  }
+
   private NotificationProvider getNotificationProvider() {
     return Mockito.mock(NotificationProvider.class);
   }
