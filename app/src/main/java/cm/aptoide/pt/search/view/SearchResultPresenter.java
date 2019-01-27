@@ -89,9 +89,9 @@ import rx.functions.Func2;
   private void loadBannerAd() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.showedResultsView())
+        .flatMap(__ -> view.showingSearchResultsView())
         .flatMap(__ -> searchManager.shouldLoadBannerAd())
-        .filter(loadInterstitial -> loadInterstitial)
+        .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showBannerAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

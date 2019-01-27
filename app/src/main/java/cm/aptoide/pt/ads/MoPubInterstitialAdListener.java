@@ -1,6 +1,6 @@
 package cm.aptoide.pt.ads;
 
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import rx.subjects.PublishSubject;
@@ -19,7 +19,8 @@ public class MoPubInterstitialAdListener implements MoPubInterstitial.Interstiti
 
   @Override
   public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-    Log.i("Mopub_Interstitial", errorCode.toString());
+    Logger.getInstance()
+        .e("Mopub_Interstitial", errorCode.toString());
   }
 
   @Override public void onInterstitialShown(MoPubInterstitial interstitial) {

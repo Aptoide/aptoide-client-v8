@@ -499,9 +499,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     presenter = null;
     similarAppsVisibilitySubject = null;
     interstitialClick = null;
-    if (bannerAd != null) {
-      bannerAd.destroy();
-    }
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -584,7 +581,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     donationsElement = null;
     donationsList = null;
     interstitialAd = null;
-    bannerAd = null;
+    if (bannerAd != null) {
+      bannerAd.destroy();
+      bannerAd = null;
+    }
   }
 
   @Override public void showLoading() {
@@ -1113,7 +1113,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void initInterstitialAd() {
     interstitialAd =
-        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_PROD);
+        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID);
     interstitialAd.setInterstitialAdListener(new MoPubInterstitialAdListener(interstitialClick));
   }
 
@@ -1137,7 +1137,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showBannerAd() {
     bannerAd.setBannerAdListener(new MoPubBannerAdListener());
-    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID_PROD);
+    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID);
     bannerAd.setVisibility(View.VISIBLE);
     bannerAd.loadAd();
   }

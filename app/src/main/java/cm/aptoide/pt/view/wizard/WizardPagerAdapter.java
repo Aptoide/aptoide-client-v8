@@ -1,53 +1,34 @@
 package cm.aptoide.pt.view.wizard;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.pt.NavigationTrackerPagerAdapterHelper;
-import cm.aptoide.pt.account.view.LoginSignUpFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-
-import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.SHOULD_REGISTER_VIEW;
 
 public class WizardPagerAdapter extends FragmentPagerAdapter
     implements NavigationTrackerPagerAdapterHelper {
 
-  private static final int WIZARD_STEP_ONE_POSITION = 0;
-  private static final int WIZARD_STEP_TWO_POSITION = 1;
-  private static final int WIZARD_LOGIN_POSITION = 2;
-  private final Account account;
+  private final boolean isLoggedIn;
+  private final WizardFragmentProvider wizardFragmentProvider;
 
-  public WizardPagerAdapter(FragmentManager fragmentManager, Account account) {
+  public WizardPagerAdapter(FragmentManager fragmentManager, Boolean isLoggedIn,
+      WizardFragmentProvider wizardFragmentProvider) {
     super(fragmentManager);
-    this.account = account;
+    this.isLoggedIn = isLoggedIn;
+    this.wizardFragmentProvider = wizardFragmentProvider;
   }
 
   @Override public Fragment getItem(int position) {
-    Fragment fragment;
-    switch (position) {
-      case WIZARD_STEP_ONE_POSITION:
-        fragment = WizardPageOneFragment.newInstance();
-        break;
-      case WIZARD_STEP_TWO_POSITION:
-        fragment = WizardPageTwoFragment.newInstance();
-        break;
-      case WIZARD_LOGIN_POSITION:
-        fragment = LoginSignUpFragment.newInstance(true, false, true, true);
-        break;
-      default:
-        throw new IllegalArgumentException("Invalid wizard fragment position: " + position);
-    }
-    fragment = setFragmentLogFlag(fragment);
-    return fragment;
+    return wizardFragmentProvider.getItem(position);
   }
 
   @Override public int getCount() {
-    if (account.isLoggedIn()) {
-      return 2;
-    }
-    return 3;
+    return wizardFragmentProvider.getCount(isLoggedIn);
+  }
+
+  public boolean isLoggedIn() {
+    return isLoggedIn;
   }
 
   @Override public String getItemName(int position) {
@@ -61,15 +42,5 @@ public class WizardPagerAdapter extends FragmentPagerAdapter
 
   @Override public StoreContext getItemStore() {
     return StoreContext.home;
-  }
-
-  private Fragment setFragmentLogFlag(Fragment fragment) {
-    Bundle bundle = fragment.getArguments();
-    if (bundle == null) {
-      bundle = new Bundle();
-    }
-    bundle.putBoolean(SHOULD_REGISTER_VIEW, false);
-    fragment.setArguments(bundle);
-    return fragment;
   }
 }

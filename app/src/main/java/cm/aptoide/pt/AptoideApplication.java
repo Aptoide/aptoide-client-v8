@@ -303,7 +303,7 @@ public abstract class AptoideApplication extends Application {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
 
-    initializeMopub();
+    initializeMoPub(this, BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -342,11 +342,9 @@ public abstract class AptoideApplication extends Application {
     aptoideDownloadManager.start();
   }
 
-  private void initializeMopub() {
-    SdkConfiguration sdkConfiguration =
-        new SdkConfiguration.Builder(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID_PROD).build();
-    MoPub.initializeSdk(this, sdkConfiguration, () -> {
-    });
+  private void initializeMoPub(Context context, String moPubKey) {
+    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(moPubKey).build();
+    MoPub.initializeSdk(context, sdkConfiguration, null);
   }
 
   public ApplicationComponent getApplicationComponent() {
