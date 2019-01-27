@@ -1,14 +1,20 @@
 package cm.aptoide.pt.home;
 
+import android.app.Activity;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
+import com.mopub.nativeads.MoPubNativeAdLoadedListener;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
+import com.mopub.nativeads.ViewBinder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,23 +22,20 @@ import rx.subjects.PublishSubject;
 
 public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
 
-  private static final int ADS = R.layout.ads_bundle_item;
   private final TextView bundleTitle;
   private final Button moreButton;
   private final AdsInBundleAdapter appsInBundleAdapter;
   private final PublishSubject<HomeEvent> uiEventsListener;
-  private final PublishSubject<AdHomeEvent> adClickedEvents;
-  private final DecimalFormat oneDecimalFormatter;
   private final RecyclerView appsList;
   private final String marketName;
+  private final MoPubRecyclerAdapter moPubRecyclerAdapter;
+  private boolean hasAdLoaded;
 
   public AdsWithMoPubBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents,
       String marketName) {
     super(view);
     this.uiEventsListener = uiEventsListener;
-    this.oneDecimalFormatter = oneDecimalFormatter;
-    this.adClickedEvents = adClickedEvents;
     this.marketName = marketName;
 
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
@@ -51,6 +54,26 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     });
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
+
+    moPubRecyclerAdapter =
+        new MoPubRecyclerAdapter((Activity) view.getContext(), appsInBundleAdapter);
+    ViewBinder moPubViewBinder =
+        new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
+            .iconImageId(R.id.icon)
+            .build();
+    MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
+    moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
+    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdLoadedListener() {
+      @Override public void onAdLoaded(int position) {
+        // homeAnalytics.sendAdImpressionEvent(0, "Ad", position, "ads-highlighted", HomeEvent.Type.AD,
+        //   ApplicationAd.Network.MOPUB);
+      }
+
+      @Override public void onAdRemoved(int position) {
+
+      }
+    });
+    appsList.setAdapter(moPubRecyclerAdapter);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -75,5 +98,10 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
 
     moreButton.setOnClickListener(
         v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
+
+    if (!hasAdLoaded) {
+      hasAdLoaded = true;
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID);
+    }
   }
 }
