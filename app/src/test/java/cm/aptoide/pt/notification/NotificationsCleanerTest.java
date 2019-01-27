@@ -14,18 +14,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
 import rx.Completable;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by trinkes on 28/08/2017.
  */
-public class NotificationsCleanerTest {
+@RunWith(Parameterized.class) public class NotificationsCleanerTest {
+
+  @Parameterized.Parameters public static Object[][] data() {
+    return new Object[100][0];
+  }
 
   @Test public void cleanOtherUsersNotifications() throws Exception {
     Map<String, Notification> list = new HashMap<>();
@@ -57,6 +62,35 @@ public class NotificationsCleanerTest {
         .size(), 0);
   }
 
+  @Test public void cleanLimitExceededNotificationsWithAExpiredNotification() throws Exception {
+    TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
+
+    Map<String, Notification> list = new HashMap<>();
+    long timeStamp = System.currentTimeMillis();
+    Notification notification = createNotification(timeStamp, timeStamp, "me", true);
+    list.put(notification.getKey(), notification);
+    timeStamp = System.currentTimeMillis();
+    notification = createNotification(timeStamp + 10000, timeStamp - 1000, "me", true);
+    list.put(notification.getKey(), notification);
+    timeStamp = System.currentTimeMillis();
+    notification = createNotification(timeStamp + 20000, timeStamp - 2000, "me", true);
+    list.put(notification.getKey(), notification);
+    NotificationAccessor notificationAccessor = new NotAccessor(list);
+    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
+        getNotificationProvider(), CrashReport.getInstance());
+
+    notificationsCleaner.cleanLimitExceededNotifications(2)
+        .subscribe(objectTestSubscriber);
+    objectTestSubscriber.awaitTerminalEvent();
+    objectTestSubscriber.assertCompleted();
+    objectTestSubscriber.assertNoErrors();
+    assertEquals(2, notificationAccessor.getAllSorted(null)
+        .toBlocking()
+        .first()
+        .size());
+  }
+
   private NotificationProvider getNotificationProvider() {
     return Mockito.mock(NotificationProvider.class);
   }
@@ -64,7 +98,7 @@ public class NotificationsCleanerTest {
   private AptoideAccountManager getAptoideAccountManager() {
     return Mockito.mock(AptoideAccountManager.class);
   }
-  
+
   @NonNull private Notification createNotification(Long expire, long timeStamp, String ownerId,
       boolean processed) {
     return new Notification(expire, null, null, 0, null, null, null, null, null, null, timeStamp, 0,
