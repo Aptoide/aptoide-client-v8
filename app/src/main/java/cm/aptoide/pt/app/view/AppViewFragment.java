@@ -145,7 +145,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject DialogUtils dialogUtils;
   @Inject @Named("marketName") String marketName;
   @Inject @Named("aptoide-theme") String theme;
-  @Inject @Named("rating-decimal-format") DecimalFormat decimalFormat;
+  @Inject @Named("rating-one-decimal-format") DecimalFormat oneDecimalFormat;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -617,7 +617,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .getAverage() == 0) {
       ratingInfo.setText(R.string.appcardview_title_no_stars);
     } else {
-      ratingInfo.setText(new DecimalFormat("0.0").format(model.getRating()
+      ratingInfo.setText(oneDecimalFormat.format(model.getRating()
           .getAverage()));
     }
 
@@ -1197,10 +1197,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   private void createSimilarAppsAdapters() {
     similarAppsAdapter =
-        new AppViewSimilarAppsAdapter(Collections.emptyList(), decimalFormat, similarAppClick,
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat, similarAppClick,
             "similar_apps");
     similarDownloadsAdapter =
-        new AppViewSimilarAppsAdapter(Collections.emptyList(), decimalFormat, similarAppClick,
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat, similarAppClick,
             "similar_downloads");
   }
 
@@ -1715,8 +1715,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(dialogLayout)
           .create();
       ((TextView) dialogLayout.findViewById(R.id.app_name)).setText(appName);
-      ((TextView) dialogLayout.findViewById(R.id.app_rating)).setText(
-          new DecimalFormat("0.0").format(rating));
+      ((TextView) dialogLayout.findViewById(R.id.app_rating)).setText(oneDecimalFormat.format(rating));
       if (appc > 0) {
         ((TextView) dialogLayout.findViewById(R.id.appc_value)).setText(
             new DecimalFormat("0.00").format(appc));

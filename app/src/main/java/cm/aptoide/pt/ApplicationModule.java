@@ -1787,7 +1787,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new NewsletterManager();
   }
 
-  @Named("rating-decimal-format") @Singleton @Provides DecimalFormat providesDecimalFormat() {
+  @Named("rating-one-decimal-format") @Singleton @Provides DecimalFormat providesDecimalFormat() {
     return new DecimalFormat("0.0");
   }
 }
