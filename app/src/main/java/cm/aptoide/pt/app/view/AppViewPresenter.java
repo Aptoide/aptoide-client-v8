@@ -16,6 +16,7 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
+import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
@@ -47,6 +48,7 @@ public class AppViewPresenter implements Presenter {
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
+  private CampaignAnalytics campaignAnalytics;
   private AppViewNavigator appViewNavigator;
   private AppViewManager appViewManager;
   private AptoideAccountManager accountManager;
@@ -54,13 +56,14 @@ public class AppViewPresenter implements Presenter {
   private CrashReport crashReport;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
-      AppViewAnalytics appViewAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
-      CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService) {
+      AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
+      PermissionManager permissionManager, PermissionService permissionService) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
+    this.campaignAnalytics = campaignAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -811,9 +814,16 @@ public class AppViewPresenter implements Presenter {
                   completable = appViewManager.loadAppViewViewModel()
                       .flatMapCompletable(
                           appViewModel -> downloadApp(action, appViewModel).observeOn(viewScheduler)
-                              .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
-                                  appViewModel.getPackageName(), appViewModel.getDeveloper()
-                                      .getName(), action.toString()))
+                              .doOnCompleted(() -> {
+                                String conversionUrl = view.getCampaignUrl();
+                                if (conversionUrl != null) {
+                                  campaignAnalytics.sendCampaignConversionEvent(conversionUrl,
+                                      appViewModel.getPackageName(), appViewModel.getVersionCode());
+                                }
+                                appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                                    appViewModel.getDeveloper()
+                                        .getName(), action.toString());
+                              })
                               .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
                                   appViewModel.getPackageName()))
                               .toSingleDefault(true)

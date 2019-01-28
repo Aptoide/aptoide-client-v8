@@ -1111,6 +1111,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
+  @Override public String getCampaignUrl() {
+    return getArguments().getString(BundleKeys.DOWNLOAD_CONVERSION_URL.name());
+  }
+
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
     if (!hasSimilarApps) {
       hideSimilarApps();
