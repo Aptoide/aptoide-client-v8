@@ -73,11 +73,6 @@
 -dontwarn com.bumptech.glide.manager.RequestManagerRetriever
 -dontwarn com.bumptech.glide.util.Util$1
 
-### TestFairy
--keep class com.testfairy.** { *; }
--dontwarn com.testfairy.**
--keepattributes Exceptions, Signature, LineNumberTable
-
 ### Adyen ###
 -dontwarn com.adyen.ui.**
 

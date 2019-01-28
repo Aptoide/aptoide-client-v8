@@ -160,11 +160,6 @@
         android:windowSoftInputMode="adjustPan"></activity>
 
     <activity
-        android:name=".view.FairyMainActivity"
-        android:windowSoftInputMode="adjustPan"
-        />
-
-    <activity
         android:name="com.ironsource.sdk.controller.ControllerActivity"
         android:configChanges="orientation|screenSize"
         android:hardwareAccelerated="true"/>
