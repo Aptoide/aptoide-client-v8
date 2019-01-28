@@ -200,14 +200,14 @@ public class HomePresenter implements Presenter {
   private Single<HomeBundlesModel> loadHome() {
     return Single.zip(showNativeAds(), loadBundles(), (aBoolean, bundlesModel) -> bundlesModel)
         .observeOn(viewScheduler)
-        .doOnSuccess(bundlesModel -> handleLoadBundlesResult(bundlesModel));
+        .doOnSuccess(bundlesModel -> handleBundlesResult(bundlesModel));
   }
 
   @NonNull private Single<HomeBundlesModel> loadBundles() {
     return home.loadHomeBundles();
   }
 
-  private void handleLoadBundlesResult(HomeBundlesModel bundlesModel) {
+  private void handleBundlesResult(HomeBundlesModel bundlesModel) {
     if (bundlesModel.hasErrors()) {
       handleError(bundlesModel.getError());
     } else if (!bundlesModel.isLoading()) {
