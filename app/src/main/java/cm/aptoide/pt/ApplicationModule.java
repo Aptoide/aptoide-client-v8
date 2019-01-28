@@ -252,6 +252,7 @@ import io.realm.RealmConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1784,5 +1785,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides NewsletterManager providesNewsletterManager() {
     return new NewsletterManager();
+  }
+
+  @Named("rating-decimal-format") @Singleton @Provides DecimalFormat providesDecimalFormat() {
+    return new DecimalFormat("0.0");
   }
 }

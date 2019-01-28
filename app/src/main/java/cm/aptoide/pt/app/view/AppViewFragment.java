@@ -145,6 +145,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject DialogUtils dialogUtils;
   @Inject @Named("marketName") String marketName;
   @Inject @Named("aptoide-theme") String theme;
+  @Inject @Named("rating-decimal-format") DecimalFormat decimalFormat;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -1196,11 +1197,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   private void createSimilarAppsAdapters() {
     similarAppsAdapter =
-        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("0.0"),
-            similarAppClick, "similar_apps");
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), decimalFormat, similarAppClick,
+            "similar_apps");
     similarDownloadsAdapter =
-        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("0.0"),
-            similarAppClick, "similar_downloads");
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), decimalFormat, similarAppClick,
+            "similar_downloads");
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
