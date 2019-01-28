@@ -33,7 +33,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
@@ -54,6 +56,7 @@ import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.mopub.mobileads.MoPubView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -118,6 +121,8 @@ public class SearchResultFragment extends BackButtonFragment
   private String unsubmittedQuery;
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
+  private MoPubView bannerAd;
+  private PublishSubject<Boolean> showingSearchResultsView;
 
   public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -180,6 +185,8 @@ public class SearchResultFragment extends BackButtonFragment
     noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+    bannerAd = view.findViewById(R.id.mopub_banner);
   }
 
   @Override public void showFollowedStoresResult() {
@@ -265,6 +272,7 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     noResults = true;
+    bannerAd.setVisibility(View.GONE);
   }
 
   @Override public void showResultsView() {
@@ -272,12 +280,14 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.VISIBLE);
+    showingSearchResultsView.onNext(true);
   }
 
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
+    bannerAd.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -472,6 +482,17 @@ public class SearchResultFragment extends BackButtonFragment
         .equals(getResources().getString(R.string.search_hint_title));
   }
 
+  @Override public void showBannerAd() {
+    bannerAd.setBannerAdListener(new MoPubBannerAdListener());
+    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_PLACEMENT_ID);
+    bannerAd.setVisibility(VISIBLE);
+    bannerAd.loadAd();
+  }
+
+  @Override public Observable<Boolean> showingSearchResultsView() {
+    return showingSearchResultsView;
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -480,11 +501,13 @@ public class SearchResultFragment extends BackButtonFragment
       searchResultsLayout.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
+      bannerAd.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
+      bannerAd.setVisibility(View.GONE);
     }
   }
 
@@ -493,6 +516,7 @@ public class SearchResultFragment extends BackButtonFragment
     searchResultsLayout.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
+    bannerAd.setVisibility(View.GONE);
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
@@ -586,6 +610,8 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionClickedPublishSubject = PublishSubject.create();
     searchSetupPublishSubject = PublishSubject.create();
     queryTextChangedPublisher = PublishSubject.create();
+
+    showingSearchResultsView = PublishSubject.create();
 
     final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
@@ -693,6 +719,10 @@ public class SearchResultFragment extends BackButtonFragment
     followedStoresResultList.clearAnimation();
     setupDefaultTheme();
     super.onDestroyView();
+    if (bannerAd != null) {
+      bannerAd.destroy();
+      bannerAd = null;
+    }
   }
 
   @Override public void onDetach() {
@@ -705,6 +735,11 @@ public class SearchResultFragment extends BackButtonFragment
     if (activity instanceof BottomNavigationActivity) {
       bottomNavigationActivity = ((BottomNavigationActivity) activity);
     }
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    showingSearchResultsView = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

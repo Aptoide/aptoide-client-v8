@@ -47,6 +47,7 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
+import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
@@ -64,8 +65,8 @@ import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.IronSourceAnalytics;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
@@ -138,6 +139,7 @@ import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.BannerRepository;
 import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
@@ -1113,11 +1115,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      Database database, AdsRepository adsRepository, AptoideAccountManager accountManager) {
+      Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
+      MoPubBannerAdExperiment moPubBannerAdExperiment) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
         AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager);
+        accountManager, moPubBannerAdExperiment);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1479,6 +1482,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new BundlesRepository(remoteBundleDataSource, new HashMap<>(), new HashMap<>(), 5);
   }
 
+  @Singleton @Provides BannerRepository providesBannerRepository() {
+    return new BannerRepository();
+  }
+
   @Singleton @Provides AdMapper providesAdMapper() {
     return new AdMapper();
   }
@@ -1671,8 +1678,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AptoideApplicationAnalytics();
   }
 
-  @Singleton @Provides IronSourceAnalytics provideIronSourceAnalytics() {
-    return new IronSourceAnalytics();
+  @Singleton @Provides MoPubAnalytics providesMoPubAnalytics() {
+    return new MoPubAnalytics();
   }
 
   @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {

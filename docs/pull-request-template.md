@@ -36,5 +36,4 @@
 - [ ] If yes - Database migration?
 - [ ] Remove comments & unused code & forgotten testing Logs
 - [ ] Codestyle
-- [ ] Unit tests pass
 - [ ] Functional QA tests pass

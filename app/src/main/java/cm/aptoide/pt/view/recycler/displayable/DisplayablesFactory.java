@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -32,9 +33,11 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
+import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
+import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -58,7 +61,7 @@ import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.store.view.StoreTabNavigator;
 import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
-import cm.aptoide.pt.store.view.my.MyStoreDisplayable;
+import cm.aptoide.pt.store.view.my.StoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,8 +76,6 @@ import rx.schedulers.Schedulers;
  * Created by neuro on 01-05-2016.
  */
 public class DisplayablesFactory {
-  private static final String TAG = DisplayablesFactory.class.getSimpleName();
-
   public static Observable<Displayable> parse(String marketName, GetStoreWidgets.WSWidget widget,
       String storeTheme, StoreRepository storeRepository, StoreContext storeContext,
       Context context, AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
@@ -87,7 +88,7 @@ public class DisplayablesFactory {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
-    // Unknows types are null
+    // Unknown types are null
     if (widget.getType() != null && widget.getViewObject() != null) {
       switch (widget.getType()) {
 
@@ -142,7 +143,10 @@ public class DisplayablesFactory {
         case MY_STORE_META:
           return Observable.from(
               createMyStoreDisplayables(widget.getViewObject(), storeAnalytics, storeContext,
-                  accountManager));
+                  accountManager, context));
+
+        case STORE_META:
+          return Observable.from(createStoreDisplayables(widget.getViewObject(), storeContext));
 
         case STORES_RECOMMENDED:
           return Observable.just(
@@ -356,13 +360,21 @@ public class DisplayablesFactory {
 
   private static List<Displayable> createMyStoreDisplayables(Object viewObject,
       StoreAnalytics storeAnalytics, StoreContext storeContext,
-      AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager, Context context) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
     if (viewObject instanceof MyStore) {
       MyStore store = (MyStore) viewObject;
       if (!store.isCreateStore()) {
-        displayables.add(new MyStoreDisplayable(store, storeContext));
+        TimelineStats.StatusData followerStats = store.getTimelineStats()
+            .getData();
+        displayables.add(new StoreDisplayable(store.getGetHomeMeta()
+            .getData()
+            .getStore(), storeContext, followerStats.getFollowing(), followerStats.getFollowers(),
+            R.string.storetab_short_followers, R.string.storetab_short_followings, true,
+            getStoreDescriptionMessage(context, store.getGetHomeMeta()
+                .getData()
+                .getStore())));
       } else if (accountManager.isLoggedIn()) {
         if (MyStoreManager.shouldShowCreateStore()) {
           displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
@@ -370,6 +382,32 @@ public class DisplayablesFactory {
       } else {
         displayables.add(new LoginDisplayable());
       }
+    }
+    return displayables;
+  }
+
+  private static String getStoreDescriptionMessage(Context context, Store store) {
+    String message;
+    if (TextUtils.isEmpty(store.getAppearance()
+        .getDescription())) {
+      message = context.getString(R.string.create_store_displayable_empty_description_message);
+    } else {
+      message = store.getAppearance()
+          .getDescription();
+    }
+    return message;
+  }
+
+  private static List<Displayable> createStoreDisplayables(Object viewObject,
+      StoreContext storeContext) {
+    ArrayList<Displayable> displayables = new ArrayList<>();
+    if (viewObject instanceof GetStoreMeta) {
+      Store store = ((GetStoreMeta) viewObject).getData();
+      displayables.add(new StoreDisplayable(store, storeContext, store.getStats()
+          .getApps(), store.getStats()
+          .getDownloads(), R.string.storehometab_short_apps, R.string.storehometab_short_downloads,
+          false, store.getAppearance()
+          .getDescription()));
     }
     return displayables;
   }

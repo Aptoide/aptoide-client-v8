@@ -484,6 +484,7 @@
   <string name="storehometab_short_subscribers">Followers\n%s</string>
   <string name="storehometab_short_apps">Apps\n%s</string>
   <string name="storehometab_short_following">Following\n%s</string>
+  <string name="storehometab_short_downloads">Downloads\n%s</string>
   <string name="storetab_short_followings">Following\n%s</string>
   <string name="storetab_short_followers">Followers\n%s</string>
   <string name="storetab_short_follow_error">An error occurred while following store</string>
@@ -569,8 +570,8 @@
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
 
   <!--Holidays AppCoins Craze-->
-  <string name="holidayspromotion_title_holidays">Holidays AppCoins Craze</string>
-  <string name="holidayspromotion_message_1">Earn up to %s AppCoins Credits to spend on in-app purchases! Install the apps below and get diamonds, gems or lives in your favorite games!</string>
+  <string name="holidayspromotion_title_holidays">Love Is In The Air</string>
+  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>
   <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>

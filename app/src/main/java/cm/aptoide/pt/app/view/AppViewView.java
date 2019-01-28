@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import android.view.MenuItem;
+import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
@@ -156,6 +157,18 @@ public interface AppViewView extends InstallAppView {
   void showApkfyElement(String appName);
 
   void showDonations(List<Donation> donations);
+
+  void initInterstitialAd();
+
+  Observable<MoPubInterstitialAdClickType> InterstitialAdClicked();
+
+  Observable<MoPubInterstitialAdClickType> interstitialAdLoaded();
+
+  void showInterstitialAd();
+
+  void loadInterstitialAd();
+
+  void showBannerAd();
 
   String getCampaignUrl();
 }

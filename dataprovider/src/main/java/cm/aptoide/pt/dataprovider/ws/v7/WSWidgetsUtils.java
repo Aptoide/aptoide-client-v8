@@ -27,6 +27,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import java.util.LinkedList;
 import java.util.List;
@@ -152,7 +153,6 @@ import rx.schedulers.Schedulers;
               })
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
-
         case MY_STORE_META:
           return Observable.zip(
               GetTimelineStatsRequest.of(bodyInterceptor, null, httpClient, converterFactory,
@@ -190,7 +190,13 @@ import rx.schedulers.Schedulers;
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
-
+        case STORE_META:
+          return GetStoreMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences)
+              .observe(bypassCache, bypassServerCache)
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(myStore -> wsWidget);
         case APP_META:
           return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences)

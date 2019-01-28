@@ -106,6 +106,8 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.mopub.common.MoPub;
+import com.mopub.common.SdkConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -301,6 +303,8 @@ public abstract class AptoideApplication extends Application {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
 
+    initializeMoPub(this, BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
+
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     clearFileCache();
@@ -336,6 +340,11 @@ public abstract class AptoideApplication extends Application {
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
     aptoideDownloadManager.start();
+  }
+
+  private void initializeMoPub(Context context, String moPubKey) {
+    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(moPubKey).build();
+    MoPub.initializeSdk(context, sdkConfiguration, null);
   }
 
   public ApplicationComponent getApplicationComponent() {

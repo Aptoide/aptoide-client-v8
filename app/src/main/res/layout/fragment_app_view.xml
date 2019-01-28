@@ -312,6 +312,16 @@
             style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
             />
 
+        <com.mopub.mobileads.MoPubView
+            android:id="@+id/mopub_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            tools:background="@color/green"
+            tools:layout_height="20dp"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/screenshots_list"
             android:layout_width="match_parent"

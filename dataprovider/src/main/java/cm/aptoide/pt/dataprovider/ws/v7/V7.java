@@ -312,6 +312,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("store/getMeta") Observable<GetStoreMeta> getStoreMeta(@Body GetHomeMetaRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
+    @POST("{url}") Observable<GetStoreMeta> getStoreMeta(
+        @Path(value = "url", encoded = true) String url, @Body GetHomeMetaRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
     @POST("listSearchApps") Observable<ListSearchApps> listSearchApps(
         @Body ListSearchAppsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

@@ -17,23 +17,37 @@ import rx.Observable;
 public class GetStoreMetaRequest
     extends BaseRequestWithStore<GetStoreMeta, GetHomeMetaRequest.Body> {
 
-  public GetStoreMetaRequest(GetHomeMetaRequest.Body body,
+  private final String url;
+
+  public GetStoreMetaRequest(String url, GetHomeMetaRequest.Body body,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
+    this.url = url;
   }
 
   public static GetStoreMetaRequest of(StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
-    return new GetStoreMetaRequest(new GetHomeMetaRequest.Body(storeCredentials), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+    return new GetStoreMetaRequest("", new GetHomeMetaRequest.Body(storeCredentials),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+  }
+
+  public static GetStoreMetaRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+    return new GetStoreMetaRequest(url, new GetHomeMetaRequest.Body(new StoreCredentials()),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getStoreMeta(body, bypassCache);
+    if (!url.isEmpty()) {
+      return interfaces.getStoreMeta(url, body, bypassCache);
+    } else {
+      return interfaces.getStoreMeta(body, bypassCache);
+    }
   }
 }

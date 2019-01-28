@@ -111,40 +111,4 @@ public class L2CacheUnitTest {
     Response resp2 = cache.get(request);
     assertNull("stored response after put() should be null due to cache control", resp2);
   }
-
-  // TODO: 3/4/2017 move this code to a test for cache interceptor
-  // the following test it's not working now since it is the interceptor that filters what is
-  // cached by request headers
-  /*
-  @Test(timeout = 300)
-  public void cacheControlBypassCache() {
-    Request request2 = request.newBuilder()
-        .header(PostCacheInterceptor.BYPASS_HEADER_KEY, PostCacheInterceptor.BYPASS_HEADER_VALUE)
-        .build();
-
-    usedRequests.add(request2);
-
-    cache.put(request2, response);
-
-    Response resp2 = cache.get(request2);
-    assertNull("stored response after put() should be null due to cache bypass", resp2);
-  }
-  */
-
-  // the following test it's not working now since it is the interceptor that filters what is
-  // cached by response status code
-  /*
-  @Test(timeout = 300)
-  public void doNotCacheErrorResponse() {
-    Response response2 = response.newBuilder().code(501).build();
-
-    usedRequests.add(request);
-
-    cache.put(request, response2);
-
-    Response responseFromCache = cache.get(request);
-    assertNull("stored response after put() should be null due to cache control",
-        responseFromCache);
-  }
-  */
 }

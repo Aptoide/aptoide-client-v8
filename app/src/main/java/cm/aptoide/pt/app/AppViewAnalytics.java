@@ -41,6 +41,7 @@ public class AppViewAnalytics {
   private static final String PACKAGE_NAME = "Package_name";
   private static final String IMPRESSION = "impression";
   private static final String TAP_ON_APP = "tap_on_app";
+  private final String INTERSTITIAL_NETWORK_MOPUB = "MoPub";
 
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
@@ -378,12 +379,12 @@ public class AppViewAnalytics {
             : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
 
-  public void installInterstitialImpression(String network) {
-    installInterstitialInteract("impression", network);
+  public void installInterstitialImpression() {
+    installInterstitialInteract("impression", INTERSTITIAL_NETWORK_MOPUB);
   }
 
-  public void installInterstitialClick(String network) {
-    installInterstitialInteract("tap_on_app", network);
+  public void installInterstitialClick() {
+    installInterstitialInteract("tap_on_app", INTERSTITIAL_NETWORK_MOPUB);
   }
 
   private void installInterstitialInteract(String action, String network) {
