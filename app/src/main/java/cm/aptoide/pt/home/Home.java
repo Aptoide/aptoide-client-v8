@@ -59,7 +59,6 @@ public class Home {
 
   private Single<HomeBundlesModel> addAdBundle(HomeBundlesModel bundlesModel) {
     return bannerAdExperiment.shouldLoadBanner()
-        .toSingle()
         .flatMap(shouldLoadBanner -> {
           if (shouldLoadBanner) {
             return bannerRepository.getBannerBundle()

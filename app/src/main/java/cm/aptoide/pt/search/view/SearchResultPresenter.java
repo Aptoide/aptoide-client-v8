@@ -90,7 +90,7 @@ import rx.functions.Func2;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.showingSearchResultsView())
-        .flatMap(__ -> searchManager.shouldLoadBannerAd())
+        .flatMapSingle(__ -> searchManager.shouldLoadBannerAd())
         .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showBannerAd())

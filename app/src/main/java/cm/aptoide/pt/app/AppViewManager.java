@@ -167,11 +167,11 @@ public class AppViewManager {
         .map(SearchAdResult::new);
   }
 
-  public Observable<Boolean> recordInterstitialImpression() {
+  public Single<Boolean> recordInterstitialImpression() {
     return moPubInterstitialAdExperiment.recordAdImpression();
   }
 
-  public Observable<Boolean> recordInterstitialClick() {
+  public Single<Boolean> recordInterstitialClick() {
     return moPubInterstitialAdExperiment.recordAdClick();
   }
 
@@ -431,11 +431,11 @@ public class AppViewManager {
     return appCoinsManager.getDonationsList(packageName);
   }
 
-  public Observable<Boolean> shouldLoadInterstitialAd() {
+  public Single<Boolean> shouldLoadInterstitialAd() {
     return moPubInterstitialAdExperiment.loadInterstitial();
   }
 
-  public Observable<Boolean> shouldLoadBannerAd() {
+  public Single<Boolean> shouldLoadBannerAd() {
     return moPubBannerAdExperiment.shouldLoadBanner();
   }
 

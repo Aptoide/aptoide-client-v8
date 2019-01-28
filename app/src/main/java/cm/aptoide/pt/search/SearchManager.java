@@ -124,7 +124,7 @@ import rx.Single;
         .size() > 0;
   }
 
-  public Observable<Boolean> shouldLoadBannerAd() {
+  public Single<Boolean> shouldLoadBannerAd() {
     return moPubBannerAdExperiment.shouldLoadBanner();
   }
 
