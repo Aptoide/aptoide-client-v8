@@ -36,6 +36,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
+import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
@@ -57,6 +58,10 @@ import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.mobileads.MoPubView;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
+import com.mopub.nativeads.RequestParameters;
+import com.mopub.nativeads.ViewBinder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -123,6 +128,7 @@ public class SearchResultFragment extends BackButtonFragment
   private BottomNavigationActivity bottomNavigationActivity;
   private MoPubView bannerAd;
   private PublishSubject<Boolean> showingSearchResultsView;
+  private MoPubRecyclerAdapter moPubRecyclerAdapter;
 
   public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -491,6 +497,14 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public Observable<Boolean> showingSearchResultsView() {
     return showingSearchResultsView;
+  }
+
+  @Override public void showNativeAds(String query) {
+    RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
+        .build();
+    if (Build.VERSION.SDK_INT >= 21) {
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_PLACEMENT_ID, requestParameters);
+    }
   }
 
   public void showSuggestionsView() {
@@ -864,9 +878,26 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void attachAllStoresResultListDependencies() {
-    allStoresResultList.setAdapter(allStoresResultAdapter);
+    moPubRecyclerAdapter = new MoPubRecyclerAdapter(getActivity(), allStoresResultAdapter);
+    moPubRecyclerAdapter.registerAdRenderer(getMoPubStaticNativeAdRenderer());
+    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
+    if (Build.VERSION.SDK_INT >= 21) {
+      allStoresResultList.setAdapter(moPubRecyclerAdapter);
+    } else {
+      allStoresResultList.setAdapter(allStoresResultAdapter);
+    }
     allStoresResultList.setLayoutManager(getDefaultLayoutManager());
     allStoresResultList.addItemDecoration(getDefaultItemDecoration());
+  }
+
+  @NonNull private MoPubStaticNativeAdRenderer getMoPubStaticNativeAdRenderer() {
+    return new MoPubStaticNativeAdRenderer(getMoPubViewBinder());
+  }
+
+  @NonNull private ViewBinder getMoPubViewBinder() {
+    return new ViewBinder.Builder(R.layout.search_ad).titleId(R.id.app_name)
+        .iconImageId(R.id.app_icon)
+        .build();
   }
 
   private void setupToolbar() {
