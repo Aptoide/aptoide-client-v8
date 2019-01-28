@@ -7,8 +7,10 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
@@ -52,6 +54,7 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
+import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewSimilarApp;
@@ -105,6 +108,9 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
+import com.mopub.nativeads.ViewBinder;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -255,6 +261,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private Button listDonateButton;
   private MoPubInterstitial interstitialAd;
   private MoPubView bannerAd;
+  private MoPubRecyclerAdapter moPubSimilarAppsRecyclerAdapter;
+  private MoPubRecyclerAdapter moPubSimilarAppsDownloadRecyclerAdapter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -410,15 +418,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     reviewsView.setNestedScrollingEnabled(false);
     similarApps.setNestedScrollingEnabled(false);
 
-    similarAppsAdapter =
-        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("0.0"),
-            similarAppClick, "similar_apps");
-    similarDownloadsAdapter =
-        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("0.0"),
-            similarAppClick, "similar_downloads");
-
-    similarDownloadApps.setAdapter(similarDownloadsAdapter);
-    similarApps.setAdapter(similarAppsAdapter);
     similarDownloadApps.setLayoutManager(similarDownloadsLayout);
     similarApps.setLayoutManager(similarLayout);
 
@@ -510,6 +509,14 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    if (moPubSimilarAppsRecyclerAdapter != null) {
+      moPubSimilarAppsRecyclerAdapter.destroy();
+      moPubSimilarAppsRecyclerAdapter = null;
+    }
+    if (moPubSimilarAppsDownloadRecyclerAdapter != null) {
+      moPubSimilarAppsDownloadRecyclerAdapter.destroy();
+      moPubSimilarAppsDownloadRecyclerAdapter = null;
+    }
     scrollViewY = scrollView.getScrollY();
     noNetworkErrorView = null;
     genericErrorView = null;
@@ -1140,6 +1147,58 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID);
     bannerAd.setVisibility(View.VISIBLE);
     bannerAd.loadAd();
+  }
+
+  @Override public void setSimilarAppsAdapters() {
+    createSimilarAppsAdapters();
+    similarDownloadApps.setAdapter(similarDownloadsAdapter);
+    similarApps.setAdapter(similarAppsAdapter);
+  }
+
+  @Override public void setSimilarAppsMoPubAdapters() {
+    createSimilarAppsAdapters();
+
+    moPubSimilarAppsRecyclerAdapter = new MoPubRecyclerAdapter(getActivity(), similarAppsAdapter);
+    moPubSimilarAppsRecyclerAdapter.registerAdRenderer(
+        new MoPubStaticNativeAdRenderer(getMoPubAdViewBinder()));
+    moPubSimilarAppsRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
+
+    moPubSimilarAppsDownloadRecyclerAdapter =
+        new MoPubRecyclerAdapter(getActivity(), similarDownloadsAdapter);
+    moPubSimilarAppsDownloadRecyclerAdapter.registerAdRenderer(
+        new MoPubStaticNativeAdRenderer(getMoPubAdViewBinder()));
+    moPubSimilarAppsDownloadRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
+
+    if (Build.VERSION.SDK_INT >= 21) {
+      similarApps.setAdapter(moPubSimilarAppsRecyclerAdapter);
+      similarDownloadApps.setAdapter(moPubSimilarAppsDownloadRecyclerAdapter);
+    } else {
+      similarApps.setAdapter(similarAppsAdapter);
+      similarDownloadApps.setAdapter(similarDownloadsAdapter);
+    }
+  }
+
+  @Override public void loadNativeAds() {
+    if (Build.VERSION.SDK_INT >= 21) {
+      moPubSimilarAppsRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID);
+      moPubSimilarAppsDownloadRecyclerAdapter.loadAds(
+          BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID);
+    }
+  }
+
+  @NonNull private ViewBinder getMoPubAdViewBinder() {
+    return new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
+        .iconImageId(R.id.icon)
+        .build();
+  }
+
+  private void createSimilarAppsAdapters() {
+    similarAppsAdapter =
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("0.0"),
+            similarAppClick, "similar_apps");
+    similarDownloadsAdapter =
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), new DecimalFormat("0.0"),
+            similarAppClick, "similar_downloads");
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {

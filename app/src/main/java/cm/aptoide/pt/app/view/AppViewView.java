@@ -169,4 +169,10 @@ public interface AppViewView extends InstallAppView {
   void loadInterstitialAd();
 
   void showBannerAd();
+
+  void setSimilarAppsAdapters();
+
+  void setSimilarAppsMoPubAdapters();
+
+  void loadNativeAds();
 }

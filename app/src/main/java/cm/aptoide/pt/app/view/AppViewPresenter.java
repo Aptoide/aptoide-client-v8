@@ -750,6 +750,17 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
         appViewModel.getMedia()
             .getKeywords())
+        .flatMap(similarAppsViewModel -> appViewManager.shouldLoadNativeAds()
+            .observeOn(viewScheduler)
+            .doOnSuccess(loadNativeAds -> {
+              if (loadNativeAds) {
+                view.setSimilarAppsMoPubAdapters();
+                view.loadNativeAds();
+              } else {
+                view.setSimilarAppsAdapters();
+              }
+            })
+            .map(__ -> similarAppsViewModel))
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
