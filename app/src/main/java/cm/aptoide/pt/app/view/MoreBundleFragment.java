@@ -21,6 +21,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdHomeEvent;
+import cm.aptoide.pt.home.AdsBundlesViewHolderFactory;
 import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.BundlesAdapter;
 import cm.aptoide.pt.home.HomeBundle;
@@ -99,7 +100,9 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents, marketName);
+        oneDecimalFormatter, adClickedEvents, marketName,
+        new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
+            marketName, false));
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

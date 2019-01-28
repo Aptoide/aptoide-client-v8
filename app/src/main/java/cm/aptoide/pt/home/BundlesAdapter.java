@@ -26,18 +26,21 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final String marketName;
+  private final AdsBundlesViewHolderFactory adsBundlesViewHolderFactory;
   private List<HomeBundle> bundles;
   private PublishSubject<AdHomeEvent> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<AdHomeEvent> adPublishSubject, String marketName) {
+      PublishSubject<AdHomeEvent> adPublishSubject, String marketName,
+      AdsBundlesViewHolderFactory adsBundlesViewHolderFactory) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.adClickedEvents = adPublishSubject;
     this.marketName = marketName;
+    this.adsBundlesViewHolderFactory = adsBundlesViewHolderFactory;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -55,9 +58,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return new StoreBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(STORE, parent, false));
       case ADS:
-        return new AdsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(ADS, parent, false), uiEventsListener, oneDecimalFormatter, adClickedEvents,
-            marketName);
+        return adsBundlesViewHolderFactory.createViewHolder(parent);
       case INFO:
         return new InfoBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(INFO, parent, false), uiEventsListener);
