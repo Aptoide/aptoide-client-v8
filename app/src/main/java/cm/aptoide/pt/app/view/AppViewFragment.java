@@ -507,16 +507,18 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     showHideOptionsMenu(true);
   }
 
+  private void destroyAdapter(MoPubRecyclerAdapter adapter) {
+    if (adapter != null) {
+      adapter.destroy();
+    }
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
-    if (moPubSimilarAppsRecyclerAdapter != null) {
-      moPubSimilarAppsRecyclerAdapter.destroy();
-      moPubSimilarAppsRecyclerAdapter = null;
-    }
-    if (moPubSimilarAppsDownloadRecyclerAdapter != null) {
-      moPubSimilarAppsDownloadRecyclerAdapter.destroy();
-      moPubSimilarAppsDownloadRecyclerAdapter = null;
-    }
+    destroyAdapter(moPubSimilarAppsRecyclerAdapter);
+    moPubSimilarAppsRecyclerAdapter = null;
+    destroyAdapter(moPubSimilarAppsDownloadRecyclerAdapter);
+    moPubSimilarAppsDownloadRecyclerAdapter = null;
     scrollViewY = scrollView.getScrollY();
     noNetworkErrorView = null;
     genericErrorView = null;
