@@ -1,21 +1,21 @@
 package cm.aptoide.pt.abtesting.experiments;
 
-import rx.Observable;
+import rx.Single;
 
 public class MoPubBannerAdExperiment {
 
   public MoPubBannerAdExperiment() {
   }
 
-  public Observable<Boolean> shouldLoadBanner() {
-    return Observable.just(false);
+  public Single<Boolean> shouldLoadBanner() {
+    return Single.just(false);
   }
 
-  public Observable<Boolean> recordAdImpression() {
-    return Observable.just(false);
+  public Single<Boolean> recordAdImpression() {
+    return Single.just(false);
   }
 
-  public Observable<Boolean> recordAdClick() {
-    return Observable.just(false);
+  public Single<Boolean> recordAdClick() {
+    return Single.just(false);
   }
 }

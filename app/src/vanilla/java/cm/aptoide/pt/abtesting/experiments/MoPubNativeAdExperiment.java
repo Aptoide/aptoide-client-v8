@@ -4,18 +4,18 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import rx.Single;
 
-public class MoPubBannerAdExperiment {
+public class MoPubNativeAdExperiment {
 
   private final String EXPERIMENT_ID = "ASV-1377-MoPub-Ads";
   private final ABTestManager abTestManager;
   private final MoPubAnalytics moPubAnalytics;
 
-  public MoPubBannerAdExperiment(ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
+  public MoPubNativeAdExperiment(ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
     this.abTestManager = abTestManager;
     this.moPubAnalytics = moPubAnalytics;
   }
 
-  public Single<Boolean> shouldLoadBanner() {
+  public Single<Boolean> shouldLoadNative() {
     return abTestManager.getExperiment(EXPERIMENT_ID)
         .toSingle()
         .flatMap(experiment -> {

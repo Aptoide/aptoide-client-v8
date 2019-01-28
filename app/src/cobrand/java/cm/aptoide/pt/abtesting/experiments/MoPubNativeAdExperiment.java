@@ -2,12 +2,14 @@ package cm.aptoide.pt.abtesting.experiments;
 
 import rx.Single;
 
-public class MoPubInterstitialAdExperiment {
+public class MoPubNativeAdExperiment {
 
-  public MoPubInterstitialAdExperiment() {
+  private final String EXPERIMENT_ID = "ASV-1377-MoPub-Ads";
+
+  public MoPubNativeAdExperiment() {
   }
 
-  public Single<Boolean> loadInterstitial() {
+  public Single<Boolean> shouldLoadNative() {
     return Single.just(false);
   }
 

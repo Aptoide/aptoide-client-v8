@@ -2,7 +2,7 @@ package cm.aptoide.pt.abtesting.experiments;
 
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
-import rx.Observable;
+import rx.Single;
 
 public class MoPubInterstitialAdExperiment {
 
@@ -15,8 +15,9 @@ public class MoPubInterstitialAdExperiment {
     this.moPubAnalytics = moPubAnalytics;
   }
 
-  public Observable<Boolean> loadInterstitial() {
+  public Single<Boolean> loadInterstitial() {
     return abTestManager.getExperiment(EXPERIMENT_ID)
+        .toSingle()
         .flatMap(experiment -> {
           String experimentAssignment = "default";
           if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
@@ -26,21 +27,23 @@ public class MoPubInterstitialAdExperiment {
             case "default":
             case "control_group":
               moPubAnalytics.setMoPubAbTestGroup(true);
-              return Observable.just(false);
+              return Single.just(false);
             case "mopub":
               moPubAnalytics.setMoPubAbTestGroup(false);
-              return Observable.just(true);
+              return Single.just(true);
             default:
-              return Observable.just(false);
+              return Single.just(false);
           }
         });
   }
 
-  public Observable<Boolean> recordAdImpression() {
-    return abTestManager.recordImpression(EXPERIMENT_ID);
+  public Single<Boolean> recordAdImpression() {
+    return abTestManager.recordImpression(EXPERIMENT_ID)
+        .toSingle();
   }
 
-  public Observable<Boolean> recordAdClick() {
-    return abTestManager.recordAction(EXPERIMENT_ID);
+  public Single<Boolean> recordAdClick() {
+    return abTestManager.recordAction(EXPERIMENT_ID)
+        .toSingle();
   }
 }

@@ -113,11 +113,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
-    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents, marketName);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
-    bundlesList.setAdapter(adapter);
     gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
     promotionsIcon = view.findViewById(R.id.promotions_icon);
@@ -388,6 +385,14 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void hidePromotionsIcon() {
     promotionsIcon.setVisibility(View.GONE);
     promotionsTicker.setVisibility(View.GONE);
+  }
+
+  @Override public void setAdsTest(boolean showNatives) {
+    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
+        oneDecimalFormatter, adClickedEvents, marketName,
+        new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
+            marketName, showNatives));
+    bundlesList.setAdapter(adapter);
   }
 
   private boolean isEndReached() {

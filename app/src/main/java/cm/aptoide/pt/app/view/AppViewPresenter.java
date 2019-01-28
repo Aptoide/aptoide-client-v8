@@ -123,7 +123,7 @@ public class AppViewPresenter implements Presenter {
   private void showBannerAd() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(model -> appViewManager.shouldLoadBannerAd())
+        .flatMapSingle(model -> appViewManager.shouldLoadBannerAd())
         .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showBannerAd())
@@ -146,7 +146,7 @@ public class AppViewPresenter implements Presenter {
             .filter(model -> model.getDownloadModel()
                 .isDownloading())
             .first()
-            .flatMap(model -> appViewManager.shouldLoadInterstitialAd())
+            .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
             .filter(loadInterstitial -> loadInterstitial)
             .observeOn(viewScheduler)
             .doOnNext(__ -> view.initInterstitialAd())
@@ -166,7 +166,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.interstitialAdLoaded())
         .doOnNext(__ -> view.showInterstitialAd())
         .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
-        .flatMap(__ -> appViewManager.recordInterstitialImpression())
+        .flatMapSingle(__ -> appViewManager.recordInterstitialImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -177,7 +177,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.InterstitialAdClicked())
         .doOnNext(__ -> appViewAnalytics.installInterstitialClick())
-        .flatMap(__ -> appViewManager.recordInterstitialClick())
+        .flatMapSingle(__ -> appViewManager.recordInterstitialClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -753,6 +753,17 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
         appViewModel.getMedia()
             .getKeywords())
+        .flatMap(similarAppsViewModel -> appViewManager.shouldLoadNativeAds()
+            .observeOn(viewScheduler)
+            .doOnSuccess(loadNativeAds -> {
+              if (loadNativeAds) {
+                view.setSimilarAppsMoPubAdapters();
+                view.loadNativeAds();
+              } else {
+                view.setSimilarAppsAdapters();
+              }
+            })
+            .map(__ -> similarAppsViewModel))
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideSimilarApps())
         .doOnSuccess(adsViewModel -> {
