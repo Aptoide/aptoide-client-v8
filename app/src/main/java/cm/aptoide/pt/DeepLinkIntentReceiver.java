@@ -56,7 +56,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-
 public class DeepLinkIntentReceiver extends ActivityView {
 
   public static final String AUTHORITY = "cm.aptoide.pt";
@@ -447,7 +446,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
   public Intent startWithRepo(ArrayList<String> repo) {
     Intent intent = new Intent(DeepLinkIntentReceiver.this, startClass);
     intent.putExtra(DeepLinksTargets.NEW_REPO, repo);
-    // TODO: 10-08-2016 jdandrade
     deepLinkAnalytics.newRepo();
     return intent;
   }
