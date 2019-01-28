@@ -1,5 +1,7 @@
 package cm.aptoide.pt.abtesting.experiments;
 
+import rx.Single;
+
 public class MoPubInterstitialAdExperiment {
 
   public MoPubInterstitialAdExperiment() {
