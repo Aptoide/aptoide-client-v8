@@ -6,18 +6,13 @@
 package cm.aptoide.pt.install;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
@@ -239,8 +234,7 @@ public class InstallService extends BaseService implements DownloadsNotification
   private Notification buildNotification(String appName, int progress, boolean isIndeterminate,
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
-    NotificationCompat.Builder builder =
-        new NotificationCompat.Builder(this, createNotificationChannel(TAG, "Install Service"));
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
     builder.setSmallIcon(android.R.drawable.stat_sys_download)
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
@@ -253,20 +247,6 @@ public class InstallService extends BaseService implements DownloadsNotification
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
-  }
-
-  private String createNotificationChannel(String channelId, String channelName) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-      return "";
-    }
-    NotificationChannel chan =
-        new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
-    chan.setLightColor(Color.BLUE);
-    chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-    NotificationManager service =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    service.createNotificationChannel(chan);
-    return channelId;
   }
 
   private NotificationCompat.Action getAction(int icon, String title, int requestCode,
