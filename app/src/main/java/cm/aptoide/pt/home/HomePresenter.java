@@ -200,9 +200,7 @@ public class HomePresenter implements Presenter {
   private Single<HomeBundlesModel> loadHome() {
     return Single.zip(showNativeAds(), loadBundles(), (aBoolean, bundlesModel) -> bundlesModel)
         .observeOn(viewScheduler)
-        .doOnSuccess(bundlesModel -> {
-          handleLoadBundlesResult(bundlesModel);
-        });
+        .doOnSuccess(bundlesModel -> handleLoadBundlesResult(bundlesModel));
   }
 
   @NonNull private Single<HomeBundlesModel> loadBundles() {
