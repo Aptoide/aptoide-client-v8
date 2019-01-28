@@ -200,6 +200,7 @@ public class SearchResultPresenterTest {
     when(searchManager.searchInNonFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
         Single.just(searchAppResultList));
     when(searchResultModel.isAllStoresSelected()).thenReturn(true);
+    when(searchManager.shouldLoadNativeAds()).thenReturn(Single.just(false));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -366,6 +367,7 @@ public class SearchResultPresenterTest {
     searchAppResultList.add(searchAppResult);
     when(searchManager.searchInNonFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
         Single.just(searchAppResultList));
+    when(searchManager.shouldLoadNativeAds()).thenReturn(Single.just(false));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
