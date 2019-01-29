@@ -298,6 +298,20 @@
             android:layout_marginTop="7dp"
             />
 
+        <TextView
+            android:id="@+id/appview_reward_app_versions_element"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:visibility="gone"
+            tools:text="Latest Version 1.7.1"
+            style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
+            />
+
         <com.mopub.mobileads.MoPubView
             android:id="@+id/mopub_banner"
             android:layout_width="match_parent"

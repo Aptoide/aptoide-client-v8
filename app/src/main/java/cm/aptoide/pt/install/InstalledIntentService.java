@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -39,6 +40,7 @@ public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
   @Inject InstallAnalytics installAnalytics;
+  @Inject CampaignAnalytics campaignAnalytics;
   private SharedPreferences sharedPreferences;
   private AdsRepository adsRepository;
   private UpdateRepository updatesRepository;
@@ -110,6 +112,7 @@ public class InstalledIntentService extends IntentService {
     PackageInfo packageInfo = databaseOnPackageAdded(packageName);
     checkAndBroadcastReferrer(packageName);
     sendInstallEvent(packageName, packageInfo);
+    sendCampaignConversion(packageName, packageInfo);
   }
 
   protected void onPackageReplaced(String packageName) {
@@ -117,6 +120,7 @@ public class InstalledIntentService extends IntentService {
         .d(TAG, "Packaged replaced: " + packageName);
     PackageInfo packageInfo = databaseOnPackageReplaced(packageName);
     sendInstallEvent(packageName, packageInfo);
+    sendCampaignConversion(packageName, packageInfo);
   }
 
   protected void onPackageRemoved(String packageName) {
@@ -241,5 +245,9 @@ public class InstalledIntentService extends IntentService {
             ReferrerUtils.RETRIES, true, adsRepository, httpClient, converterFactory, qManager,
             getApplicationContext(), sharedPreferences, new MinimalAdMapper()))
         .toCompletable();
+  }
+
+  private void sendCampaignConversion(String packageName, PackageInfo packageInfo) {
+    campaignAnalytics.convertCampaignEvent(packageName, packageInfo.versionCode);
   }
 }

@@ -267,8 +267,8 @@ public class AppViewManager {
             app.isLatestTrustedVersion(), app.getUniqueName(), appViewConfiguration.shouldInstall(),
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
-            isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(),
-            app.getBdsFlags()));
+            isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
+            appViewConfiguration.getCampaignUrl()));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {

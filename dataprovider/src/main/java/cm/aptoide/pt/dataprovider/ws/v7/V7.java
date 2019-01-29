@@ -538,8 +538,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body GetSocialRecommendsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("appcoins/campaigns/get/limit={limit}") Observable<ListAppCoinsCampaigns> getAppCoinsAds(
-        @Body GetAppCoinsCampaignsRequest.Body body,
+    @POST("appcoins/catappult/campaigns/get/limit={limit}")
+    Observable<ListAppCoinsCampaigns> getAppCoinsAds(@Body GetAppCoinsCampaignsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Path(value = "limit") int limit);
 

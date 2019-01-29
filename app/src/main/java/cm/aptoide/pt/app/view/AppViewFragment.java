@@ -191,8 +191,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView appcRewardValue;
   private View similarDownloadView;
   private RecyclerView similarDownloadApps;
+  private View versionsLayout;
   private TextView latestVersionTitle;
   private TextView latestVersion;
+  private TextView rewardAppLatestVersion;
   private TextView otherVersions;
   private RecyclerView screenshots;
   private TextView descriptionText;
@@ -323,9 +325,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             (TextView) appcRewardView.findViewById(R.id.appc_billing_text_secondary));
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
     similarDownloadApps = (RecyclerView) similarDownloadView.findViewById(R.id.similar_list);
+    versionsLayout = view.findViewById(R.id.versions_layout);
     latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
-    latestVersion = (TextView) view.findViewById(R.id.versions_layout)
-        .findViewById(R.id.latest_version);
+    latestVersion = versionsLayout.findViewById(R.id.latest_version);
+    rewardAppLatestVersion = view.findViewById(R.id.appview_reward_app_versions_element);
     otherVersions = (TextView) view.findViewById(R.id.other_versions);
 
     screenshots = (RecyclerView) view.findViewById(R.id.screenshots_list);
@@ -621,10 +624,24 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           .getAverage()));
     }
 
-    latestVersion.setText(model.getVersionName());
-    if (!model.isLatestTrustedVersion()) {
-      latestVersionTitle.setText(getString(R.string.appview_version_text));
-      otherVersions.setText(getString(R.string.newer_version_available));
+    if (getArguments().getFloat(BundleKeys.APPC.name(), -1) != -1f) {
+      versionsLayout.setVisibility(View.GONE);
+      rewardAppLatestVersion.setVisibility(View.VISIBLE);
+      String versionName = model.getVersionName();
+      String message =
+          String.format(getResources().getString(R.string.appview_latest_version_with_value),
+              versionName);
+      SpannableString spannable = new SpannableString(message);
+      spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.grey_medium)),
+          message.indexOf(versionName), message.indexOf(versionName) + versionName.length(),
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      rewardAppLatestVersion.setText(spannable);
+    } else {
+      latestVersion.setText(model.getVersionName());
+      if (!model.isLatestTrustedVersion()) {
+        latestVersionTitle.setText(getString(R.string.appview_version_text));
+        otherVersions.setText(getString(R.string.newer_version_available));
+      }
     }
     storeName.setText(model.getStore()
         .getName());
@@ -1419,14 +1436,28 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private SpannableString formatAppCoinsRewardMessage() {
+    String appcValue = String.valueOf(getArguments().getFloat(BundleKeys.APPC.name(), -1));
     String reward = "APPC";
-    String tryAppMessage =
-        getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
+    String tryAppMessage;
+    SpannableString spannable;
 
-    SpannableString spannable = new SpannableString(tryAppMessage);
+    if (!appcValue.equals("-1.0")) {
+      tryAppMessage =
+          getResources().getString(R.string.appc_message_appview_appcoins_reward_with_value,
+              appcValue, reward);
+      spannable = new SpannableString(tryAppMessage);
+      spannable.setSpan(new ForegroundColorSpan(getResources().getColor(StoreTheme.get(theme)
+              .getPrimaryColor())), tryAppMessage.indexOf(appcValue),
+          tryAppMessage.indexOf(appcValue) + appcValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    } else {
+      tryAppMessage =
+          getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
+      spannable = new SpannableString(tryAppMessage);
+    }
+
     spannable.setSpan(new ForegroundColorSpan(getResources().getColor(StoreTheme.get(theme)
-            .getPrimaryColor())), tryAppMessage.indexOf(reward), tryAppMessage.length(),
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            .getPrimaryColor())), tryAppMessage.indexOf(reward),
+        tryAppMessage.indexOf(reward) + reward.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
     return spannable;
   }
@@ -1715,7 +1746,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(dialogLayout)
           .create();
       ((TextView) dialogLayout.findViewById(R.id.app_name)).setText(appName);
-      ((TextView) dialogLayout.findViewById(R.id.app_rating)).setText(oneDecimalFormat.format(rating));
+      ((TextView) dialogLayout.findViewById(R.id.app_rating)).setText(
+          oneDecimalFormat.format(rating));
       if (appc > 0) {
         ((TextView) dialogLayout.findViewById(R.id.appc_value)).setText(
             new DecimalFormat("0.00").format(appc));
@@ -1749,20 +1781,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   public enum BundleKeys {
-    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG,
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, DOWNLOAD_CONVERSION_URL, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG,
   }
 
   public enum OpenType {
     /**
      * Only open the appview
      */
-    OPEN_ONLY, /**
+    OPEN_ONLY,
+    /**
      * opens the appView and starts the installation
      */
-    OPEN_AND_INSTALL, /**
+    OPEN_AND_INSTALL,
+    /**
      * open the appView and ask user if want to install the app
      */
-    OPEN_WITH_INSTALL_POPUP, /**
+    OPEN_WITH_INSTALL_POPUP,
+    /**
      * open the appView and ask user if want to install the app
      */
     APK_FY_INSTALL_POPUP

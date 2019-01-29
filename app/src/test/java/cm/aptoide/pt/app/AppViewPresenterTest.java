@@ -48,6 +48,7 @@ public class AppViewPresenterTest {
   @Mock private AppViewManager appViewManager;
   @Mock private AptoideAccountManager accountManager;
   @Mock private CrashReport crashReporter;
+  @Mock private CampaignAnalytics campaignAnalytics;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -57,9 +58,9 @@ public class AppViewPresenterTest {
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
-    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, appViewNavigator,
-        appViewManager, accountManager, Schedulers.immediate(), crashReporter, permissionManager,
-        permissionService);
+    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
+        appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
+        permissionManager, permissionService);
 
     lifecycleEvent = PublishSubject.create();
 
@@ -80,7 +81,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags);
+            "marketName", false, false, bdsFlags, "");
 
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
@@ -212,7 +213,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
-            false, bdsFlags);
+            false, bdsFlags, "");
 
     //Given an initialized presenter
     presenter.handleFirstLoad();

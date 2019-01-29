@@ -56,6 +56,11 @@ public class HomeNavigator {
     appNavigator.navigateWithAppId(appId, packageName, parseAction(type), tag);
   }
 
+  public void navigateWithDownloadUrlAndReward(long appId, String packageName, String tag,
+      String downloadUrl, float reward) {
+    appNavigator.navigateWithDownloadUrlAndReward(appId, packageName, tag, downloadUrl, reward);
+  }
+
   public void navigateWithAction(HomeEvent click) {
     fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
         .getEvent(), click.getBundle()

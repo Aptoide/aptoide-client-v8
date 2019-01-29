@@ -66,14 +66,14 @@ public class AppNavigator {
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateWithAppcReward(long appId, String packageName,
-      AppViewFragment.OpenType openType, String tag, double appRewardAppc) {
+  public void navigateWithDownloadUrlAndReward(long appId, String packageName, String tag,
+      String downloadUrl, float appRewardAppc) {
     Bundle bundle = new Bundle();
     bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
     bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
     bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
-    bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
-    bundle.putDouble(AppViewFragment.BundleKeys.APPC.name(), appRewardAppc);
+    bundle.putFloat(AppViewFragment.BundleKeys.APPC.name(), appRewardAppc);
+    bundle.putString(AppViewFragment.BundleKeys.DOWNLOAD_CONVERSION_URL.name(), downloadUrl);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);

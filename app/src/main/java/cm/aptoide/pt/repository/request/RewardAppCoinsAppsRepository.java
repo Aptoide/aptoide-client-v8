@@ -3,12 +3,11 @@ package cm.aptoide.pt.repository.request;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsCampaignsRequest;
+import cm.aptoide.pt.home.RewardApp;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.view.app.Application;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -40,7 +39,7 @@ public class RewardAppCoinsAppsRepository {
     this.installManager = installManager;
   }
 
-  public Observable<List<Application>> getAppCoinsRewardAppsFromHomeMore(boolean refresh,
+  public Observable<List<RewardApp>> getAppCoinsRewardAppsFromHomeMore(boolean refresh,
       String tag) {
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(0, APPCOINS_REWARD_LIMIT), httpClient,
@@ -48,18 +47,20 @@ public class RewardAppCoinsAppsRepository {
         .flatMap(response -> map(response.getList(), tag));
   }
 
-  private Observable<List<Application>> map(List<AppCoinsCampaign> list, String tag) {
-    List<Application> rewardAppsList = new ArrayList<>();
+  private Observable<List<RewardApp>> map(List<AppCoinsCampaign> list, String tag) {
+    List<RewardApp> rewardAppsList = new ArrayList<>();
     for (AppCoinsCampaign campaign : list) {
-      App app = campaign.getApp();
+      AppCoinsCampaign.CampaignApp app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
-        rewardAppsList.add(new Application(app.getName(), app.getIcon(), app.getStats()
+        rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), tag,
-            app.getAppcoins() != null && app.getAppcoins()
-                .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
-            .hasAdvertising()));
+            .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppcoins() != null,
+            app.getAppcoins()
+                .getClicks()
+                .getClick(), app.getAppcoins()
+            .getClicks()
+            .getDownload(), Float.parseFloat(campaign.getReward())));
       }
     }
     return Observable.just(rewardAppsList);

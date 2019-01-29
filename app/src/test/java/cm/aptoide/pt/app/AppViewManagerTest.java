@@ -85,7 +85,7 @@ public class AppViewManagerTest {
     downloadStateParser = new DownloadStateParser();
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "");
+            "", "", "");
     AppRating appRating = new AppRating(1, 1, Collections.emptyList());
     appStats = new AppStats(appRating, appRating, 1, 1);
     appViewManager =
@@ -107,7 +107,7 @@ public class AppViewManagerTest {
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "");
+            "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
@@ -157,7 +157,7 @@ public class AppViewManagerTest {
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "md5", "",
-            0.0, "", "");
+            0.0, "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
@@ -207,7 +207,7 @@ public class AppViewManagerTest {
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "",
-            "uniqueName", 0.0, "", "");
+            "uniqueName", 0.0, "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
@@ -256,7 +256,7 @@ public class AppViewManagerTest {
             null, null, null, true, true, "uniqueName", false, false, bdsFlags);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) -1, "", "", "", null, null, "", "", 0.0, "", "");
+        new AppViewConfiguration((long) -1, "", "", "", null, null, "", "", 0.0, "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
@@ -299,7 +299,7 @@ public class AppViewManagerTest {
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(true);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "");
+            "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
@@ -326,7 +326,7 @@ public class AppViewManagerTest {
 
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "");
+            "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
@@ -353,7 +353,7 @@ public class AppViewManagerTest {
 
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "");
+            "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
@@ -465,7 +465,7 @@ public class AppViewManagerTest {
 
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "");
+            "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
@@ -572,7 +572,7 @@ public class AppViewManagerTest {
 
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) 1, "packageName", "anyString", "", null, null, "", "", 0.0,
-            "", "");
+            "", "", "");
 
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,

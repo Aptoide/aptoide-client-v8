@@ -20,10 +20,11 @@ public class AppViewConfiguration {
   private final double appc;
   private final String editorsChoice;
   private final String originTag;
+  private final String campaignUrl;
 
   public AppViewConfiguration(long appId, String packageName, String storeName, String storeTheme,
       SearchAdResult minimalAd, OpenType shouldInstall, String md5, String uniqueName, double appc,
-      String editorsChoice, String originTag) {
+      String editorsChoice, String originTag, String campaignUrl) {
     this.appId = appId;
     this.packageName = packageName;
     this.storeName = storeName;
@@ -35,6 +36,7 @@ public class AppViewConfiguration {
     this.appc = appc;
     this.editorsChoice = editorsChoice;
     this.originTag = originTag;
+    this.campaignUrl = campaignUrl;
   }
 
   public long getAppId() {
@@ -87,5 +89,9 @@ public class AppViewConfiguration {
 
   public String getOriginTag() {
     return originTag;
+  }
+
+  public String getCampaignUrl() {
+    return campaignUrl;
   }
 }

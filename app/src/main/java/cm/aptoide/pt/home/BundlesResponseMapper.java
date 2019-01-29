@@ -201,7 +201,7 @@ public class BundlesResponseMapper {
               .getRating()
               .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), tag,
-              appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising()));
+              appc != null && appc.hasBilling()));
         }
       } catch (Exception e) {
         Logger.getInstance()
@@ -217,15 +217,17 @@ public class BundlesResponseMapper {
   private List<Application> map(List<AppCoinsCampaign> appsList, String tag) {
     List<Application> rewardAppsList = new ArrayList<>();
     for (AppCoinsCampaign campaign : appsList) {
-      App app = campaign.getApp();
+      AppCoinsCampaign.CampaignApp app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
         rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
             .getRating()
             .getAvg(), app.getStats()
-            .getPdownloads(), app.getPackageName(), app.getId(), tag,
-            app.getAppcoins() != null && app.getAppcoins()
-                .hasBilling(), app.getAppcoins() != null && app.getAppcoins()
-            .hasAdvertising()));
+            .getPdownloads(), app.getPackageName(), app.getId(), tag, app.getAppcoins() != null,
+            app.getAppcoins()
+                .getClicks()
+                .getClick(), app.getAppcoins()
+            .getClicks()
+            .getDownload(), Float.parseFloat(campaign.getReward())));
       }
     }
     return rewardAppsList;

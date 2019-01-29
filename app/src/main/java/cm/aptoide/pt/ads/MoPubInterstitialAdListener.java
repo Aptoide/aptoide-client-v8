@@ -9,7 +9,8 @@ public class MoPubInterstitialAdListener implements MoPubInterstitial.Interstiti
 
   private PublishSubject<MoPubInterstitialAdClickType> interstitialClick;
 
-  public MoPubInterstitialAdListener(PublishSubject<MoPubInterstitialAdClickType> interstitialClick) {
+  public MoPubInterstitialAdListener(
+      PublishSubject<MoPubInterstitialAdClickType> interstitialClick) {
     this.interstitialClick = interstitialClick;
   }
 
