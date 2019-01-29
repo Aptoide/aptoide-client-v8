@@ -318,7 +318,8 @@ import rx.schedulers.Schedulers;
         arguments.getString(BundleKeys.UNAME.name(), ""),
         arguments.getDouble(BundleKeys.APPC.name(), -1),
         arguments.getString(BundleKeys.EDITORS_CHOICE_POSITION.name(), ""),
-        arguments.getString(BundleKeys.ORIGIN_TAG.name(), ""));
+        arguments.getString(BundleKeys.ORIGIN_TAG.name(), ""),
+        arguments.getString(BundleKeys.DOWNLOAD_CONVERSION_URL.name(), ""));
   }
 
   @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(

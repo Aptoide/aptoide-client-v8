@@ -857,8 +857,8 @@ public class AppViewPresenter implements Presenter {
                       .flatMapCompletable(
                           appViewModel -> downloadApp(action, appViewModel).observeOn(viewScheduler)
                               .doOnCompleted(() -> {
-                                String conversionUrl = view.getCampaignUrl();
-                                if (conversionUrl != null) {
+                                String conversionUrl = appViewModel.getCampaignUrl();
+                                if (conversionUrl != "") {
                                   campaignAnalytics.sendCampaignConversionEvent(conversionUrl,
                                       appViewModel.getPackageName(), appViewModel.getVersionCode());
                                 }

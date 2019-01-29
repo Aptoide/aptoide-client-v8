@@ -170,8 +170,6 @@ public interface AppViewView extends InstallAppView {
 
   void showBannerAd();
 
-  String getCampaignUrl();
-
   void setSimilarAppsAdapters();
 
   void setSimilarAppsMoPubAdapters();
