@@ -2,15 +2,12 @@ package cm.aptoide.pt.notification;
 
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -187,17 +184,17 @@ public class PullingContentService extends BaseService {
                 numberUpdates);
       }
 
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
-          createNotificationChannel("updates_notification", "Updates Notification"));
-      Notification notification = builder.setContentIntent(resultPendingIntent)
-          .setOngoing(false)
-          .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-          .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-              R.mipmap.ic_launcher))
-          .setContentTitle(contentTitle)
-          .setContentText(contentText)
-          .setTicker(tickerText)
-          .build();
+      Notification notification =
+          new NotificationCompat.Builder(getApplicationContext()).setContentIntent(
+              resultPendingIntent)
+              .setOngoing(false)
+              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                  R.mipmap.ic_launcher))
+              .setContentTitle(contentTitle)
+              .setContentText(contentText)
+              .setTicker(tickerText)
+              .build();
 
       notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
       final NotificationManager managerNotification =
@@ -208,19 +205,5 @@ public class PullingContentService extends BaseService {
       ManagerPreferences.setLastUpdates(numberUpdates, sharedPreferences);
     }
     stopSelf(startId);
-  }
-
-  private String createNotificationChannel(String channelId, String channelName) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-      return "";
-    }
-    NotificationChannel chan =
-        new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
-    chan.setLightColor(Color.BLUE);
-    chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-    NotificationManager service =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    service.createNotificationChannel(chan);
-    return channelId;
   }
 }
