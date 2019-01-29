@@ -858,7 +858,7 @@ public class AppViewPresenter implements Presenter {
                           appViewModel -> downloadApp(action, appViewModel).observeOn(viewScheduler)
                               .doOnCompleted(() -> {
                                 String conversionUrl = appViewModel.getCampaignUrl();
-                                if (conversionUrl != "") {
+                                if (!conversionUrl.isEmpty()) {
                                   campaignAnalytics.sendCampaignConversionEvent(conversionUrl,
                                       appViewModel.getPackageName(), appViewModel.getVersionCode());
                                 }
