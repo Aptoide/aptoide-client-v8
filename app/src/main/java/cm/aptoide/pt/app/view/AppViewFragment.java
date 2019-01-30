@@ -1715,7 +1715,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(dialogLayout)
           .create();
       ((TextView) dialogLayout.findViewById(R.id.app_name)).setText(appName);
-      ((TextView) dialogLayout.findViewById(R.id.app_rating)).setText(oneDecimalFormat.format(rating));
+      ((TextView) dialogLayout.findViewById(R.id.app_rating)).setText(
+          oneDecimalFormat.format(rating));
       if (appc > 0) {
         ((TextView) dialogLayout.findViewById(R.id.appc_value)).setText(
             new DecimalFormat("0.00").format(appc));
