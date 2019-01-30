@@ -3,4 +3,4 @@ For translation contributions please go to http://translate.aptoide.com
 Thank you.
 The Aptoide Team
 
-Jenkins test #3
+Jenkins test #4
