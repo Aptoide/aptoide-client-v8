@@ -33,6 +33,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.adcolony.sdk.AdColony;
 import com.applovin.sdk.AppLovinSdk;
+import com.ironsource.mediationsdk.IronSource;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.tapjoy.Tapjoy;
 import com.unity3d.ads.UnityAds;
@@ -84,6 +85,7 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   private void initializeAdsMediation() {
+    IronSource.init(this, BuildConfig.IRONSOURCE_APPLICATION_ID);
     AppLovinSdk.initializeSdk(this);
     AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
 
@@ -100,10 +102,12 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onResume() {
     super.onResume();
+    IronSource.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
+    IronSource.onPause(this);
   }
 
   @Override protected void onStop() {
