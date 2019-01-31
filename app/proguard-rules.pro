@@ -139,8 +139,6 @@
     *;
  }
 
-#TapJoy
--keep class com.tapjoy.** { *; }
 -keep class com.moat.** { *; }
 -keepattributes JavascriptInterface
 -keepattributes *Annotation*
@@ -158,7 +156,6 @@
  public static final ** CREATOR;
 }
 -keep class com.google.android.gms.ads.identifier.** { *; }
--dontwarn com.tapjoy.**
 
 -keep class com.chartboost.** { *; }
 -dontwarn com.ironsource.adapters.chartboost.**

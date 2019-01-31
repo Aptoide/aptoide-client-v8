@@ -23,7 +23,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.ads.TapJoyConnectListener;
 import cm.aptoide.pt.ads.UnityAdsListener;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
@@ -34,9 +33,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import com.adcolony.sdk.AdColony;
 import com.applovin.sdk.AppLovinSdk;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.tapjoy.Tapjoy;
 import com.unity3d.ads.UnityAds;
-import java.util.Hashtable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
@@ -87,15 +84,11 @@ public class MainActivity extends BottomNavigationActivity
     AppLovinSdk.initializeSdk(this);
     AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
 
-    Tapjoy.connect(getApplicationContext(), BuildConfig.TAPJOY_SDK_KEY,
-        new Hashtable<String, Object>(), new TapJoyConnectListener());
-
     UnityAds.initialize(this, BuildConfig.UNITYADS_GAME_ID, new UnityAdsListener());
   }
 
   @Override protected void onStart() {
     super.onStart();
-    Tapjoy.onActivityStart(this);
   }
 
   @Override protected void onResume() {
@@ -108,7 +101,6 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onStop() {
     super.onStop();
-    Tapjoy.onActivityStop(this);
   }
 
   private void setupUpdatesNotification() {
