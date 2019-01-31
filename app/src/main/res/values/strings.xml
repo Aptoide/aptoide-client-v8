@@ -568,6 +568,7 @@
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
   <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
+  <string name="appc_title_bundle">AppCoins Apps</string>
 
   <!--Holidays AppCoins Craze-->
   <string name="holidayspromotion_title_holidays">Love Is In The Air</string>
