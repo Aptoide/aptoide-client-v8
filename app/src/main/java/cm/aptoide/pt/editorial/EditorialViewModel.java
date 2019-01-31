@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import java.util.Collections;
@@ -8,7 +8,7 @@ import java.util.List;
  * Created by D01 on 29/08/2018.
  */
 
-class EditorialViewModel {
+public class EditorialViewModel {
 
   private final List<EditorialContent> contentList;
   private final String cardType;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -297,7 +297,7 @@ public class EditorialPresenter implements Presenter {
         });
   }
 
-  @VisibleForTesting void handleMediaListDescriptionVisibility() {
+  @VisibleForTesting public void handleMediaListDescriptionVisibility() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.mediaListDescriptionChanged())

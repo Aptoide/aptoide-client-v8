@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 /**
  * Created by D01 on 29/08/2018.

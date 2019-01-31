@@ -1,7 +1,8 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 import android.net.Uri;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 
 /**

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  * Created by D01 on 31/08/2018.
  */
 
-class EditorialContent {
+public class EditorialContent {
   private final String title;
   private final List<EditorialMedia> media;
   private final String message;
