@@ -180,3 +180,19 @@
 -dontwarn com.google.ar.core.**
 -dontwarn com.unity3d.services.**
 -dontwarn com.ironsource.adapters.unityads.**
+
+#StartApp proguard rules
+
+-keep class com.startapp.** {
+      *;
+}
+
+-keep class com.truenet.** {
+      *;
+}
+
+-keepattributes Exceptions, InnerClasses, Signature, Deprecated, SourceFile, LineNumberTable, *Annotation*, EnclosingMethod
+-dontwarn android.webkit.JavascriptInterface
+-dontwarn com.startapp.**
+
+-dontwarn org.jetbrains.annotations.**
