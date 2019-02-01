@@ -32,7 +32,7 @@
 
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two">Create a Personal Store</string>
-  <string name="wizard_sub_title_viewpager_two">Share your favorite apps \n with the Aptoide Community</string>
+  <string name="wizard_sub_title_viewpager_two">Share your favorite apps \n with the %1$s Community</string>
 
   <!-- WIZARD PAGE 3 -->
   <string name="login_sign_up_title">Join Our Community</string>
@@ -60,7 +60,7 @@
 
   <!--Create Store fragment-->
   <string name="create_store_title">Create your store</string>
-  <string name="create_store_name">Choose a name for your %s store</string>
+  <string name="create_store_name">Choose a name for your store</string>
   <string name="create_store_name_inserted">Your store\'s name</string>
   <string name="create_store_theme">Store theme</string>
   <string name="create_store_create">Create store</string>
@@ -78,7 +78,7 @@
   <!--Public/Private-->
   <string name="create_profile_pub_pri_suc_login">Welcome!</string>
   <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow your store and see the apps you share!</string>
-  <string name="create_profile_pub_pri">Aptoide\'s Community</string>
+  <string name="create_profile_pub_pri">%1$s\'s Community</string>
   <string name="create_profile_pub_pri_sub_text_1">Your friends can get app recommendations based on your downloads!</string>
   <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend\'s taste,</string>
   <string name="create_profile_pub_pri_sub_text_3">but you can also make your profile private.</string>
@@ -111,7 +111,7 @@
   <string name="newaccount_my_profile">My profile</string>
   <string name="newaccount_my_store">My store</string>
   <string name="newaccount_create_store">create a store</string>
-  <string name="newaccount_create_store_message">Create an Aptoide store to share apps with the community.</string>
+  <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
   <string name="newaccount_find_friends">find friends</string>
   <string name="newaccount_log_out">log out</string>
   <string name="newaccount_notification_history">Notification history</string>
