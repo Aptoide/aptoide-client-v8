@@ -40,4 +40,9 @@
   <color name="wizard_color_1_blue">#35A1A7</color>
   <color name="wizard_color_2_green">#69B131</color>
   <color name="wizard_color_3_orange">#FE6F49</color>
+
+  <!-- Promotions Colors -->
+  <color name="light_green_background">#126eba15</color>
+  <color name="dark_grey_text">#ab000000</color>
+
 </resources>

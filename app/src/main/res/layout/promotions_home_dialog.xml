@@ -19,7 +19,7 @@
           android:layout_width="match_parent"
           android:layout_height="218dp"
           android:scaleType="fitXY"
-          android:src="@drawable/ic_winter_bundle_illustration"
+          android:src="@drawable/ic_valentines_illustration"
           />
       <TextView
           android:layout_width="match_parent"

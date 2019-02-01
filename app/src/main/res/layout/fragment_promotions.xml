@@ -36,10 +36,10 @@
       <ImageView
           android:id="@+id/app_graphic"
           android:layout_width="match_parent"
-          android:layout_height="216dp"
+          android:layout_height="wrap_content"
           android:adjustViewBounds="true"
-          android:scaleType="fitXY"
-          android:src="@drawable/ic_winter_bundle_illustration"
+          android:scaleType="fitCenter"
+          android:src="@drawable/ic_valentines_illustration"
           android:visibility="gone"
           app:layout_collapseMode="parallax"
           tools:background="@color/grey_fog_normal"
@@ -75,7 +75,7 @@
       android:id="@+id/promotions_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:visibility="gone"
+      android:visibility="visible"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
@@ -99,9 +99,9 @@
           android:layout_marginLeft="24dp"
           android:layout_marginRight="24dp"
           android:layout_marginStart="24dp"
-          android:layout_marginTop="9dp"
+          android:layout_marginTop="18dp"
           android:text="@string/holidayspromotion_title_holidays"
-          style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
+          style="@style/Aptoide.TextView.Regular.L"
           />
 
       <TextView
@@ -114,26 +114,27 @@
           android:layout_marginRight="24dp"
           android:layout_marginStart="24dp"
           android:text="@string/holidayspromotion_message_1"
-          style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+          style="@style/Aptoide.TextView.Regular.S"
           />
 
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="24dp"
-          android:layout_marginEnd="24dp"
-          android:layout_marginLeft="24dp"
-          android:layout_marginRight="24dp"
-          android:layout_marginStart="24dp"
           android:orientation="horizontal"
+          android:background="@color/light_green_background"
+          android:paddingBottom="10dp"
+          android:paddingTop="10dp"
           >
 
         <TextView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="13dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginStart="24dp"
             android:background="@drawable/shape_circular_grey_textview"
             android:gravity="center"
             android:text="1"
@@ -144,7 +145,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
             android:text="@string/holidayspromotion_message_2"
+            android:textColor="@color/dark_grey_text"
             tools:text="First, get the appcoins wallet to receive your appcoins credits"
             style="@style/Aptoide.TextView.Medium.XS.Black"
             />
@@ -165,7 +169,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:visibility="gone"
-            tools:visibility="visible"
+            tools:visibility="gone"
             />
         <include
             layout="@layout/promotion_app_inactive"
@@ -178,6 +182,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:visibility="gone"
+            tools:visibility="visible"
             />
 
       </FrameLayout>
@@ -186,19 +191,21 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="24dp"
-          android:layout_marginEnd="24dp"
-          android:layout_marginLeft="24dp"
-          android:layout_marginRight="24dp"
-          android:layout_marginStart="24dp"
+          android:layout_marginTop="24dp"
           android:orientation="horizontal"
+          android:background="@color/light_green_background"
+          android:paddingBottom="10dp"
+          android:paddingTop="10dp"
           >
 
         <TextView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="13dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginStart="24dp"
             android:background="@drawable/shape_circular_grey_textview"
             android:gravity="center"
             android:text="2"
@@ -209,12 +216,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
+            android:textColor="@color/dark_grey_text"
             android:text="@string/holidayspromotion_message_3"
             tools:text="Then install any of these games to earn AppCoins Credits!"
             style="@style/Aptoide.TextView.Medium.XS.Black"
             />
       </LinearLayout>
-
 
       <android.support.v7.widget.RecyclerView
           android:id="@+id/fragment_promotions_promotions_list"
