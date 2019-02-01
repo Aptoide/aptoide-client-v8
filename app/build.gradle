@@ -476,6 +476,8 @@ dependencies {
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
+  //StartApp
+  implementation "com.startapp:inapp-sdk:${STARTAPP_SDK_VERSION}"
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
