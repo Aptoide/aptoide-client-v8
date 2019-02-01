@@ -283,6 +283,8 @@ android {
         "\"" + project.CHARTBOOST_APPLICATION_SIGNATURE + "\""
     variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
         "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
+    variant.buildConfigField "String", "STARTAPP_APPLICATION_ID",
+        "\"" + project.STARTAPP_APPLICATION_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_PROD + "\""

@@ -33,6 +33,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import com.adcolony.sdk.AdColony;
 import com.applovin.sdk.AppLovinSdk;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.startapp.android.publish.adsCommon.StartAppSDK;
 import com.unity3d.ads.UnityAds;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -81,6 +82,7 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   private void initializeAdsMediation() {
+    StartAppSDK.init(this, BuildConfig.STARTAPP_APPLICATION_ID, false);
     AppLovinSdk.initializeSdk(this);
     AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
 
