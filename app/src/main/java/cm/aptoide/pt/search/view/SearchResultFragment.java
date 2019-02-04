@@ -530,7 +530,9 @@ public class SearchResultFragment extends BackButtonFragment
     searchResultsLayout.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
-    bannerAd.setVisibility(View.GONE);
+    if (bannerAd != null) {
+      bannerAd.setVisibility(View.GONE);
+    }
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
