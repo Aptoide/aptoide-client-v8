@@ -587,6 +587,10 @@
   <string name="holidayspromotion_message_lords_description">Driven by their ambition and greed, Lords seek power and shatter the peace that once reigned.</string>
   <string name="holidayspromotion_message_metal_description">A 2D mobile shooter centered around an army of mercenaries trying to save the world.</string>
   <string name="holidayspromotion_message_maximum_description">An explosion-laden, arcade racing game that will have you feeling like a badass in seconds.</string>
+  <string name="holidayspromotion_message_word_jungle">A great fun words game available offline. Find all the words for every level!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Start the happy and mystery journey with various candies in sweet wonderland!</string>
+  <string name="holidayspromotion_message_word_mine">Reveal the hidden answer by eliminating letter tiles. A great brain challenge!</string>
+  <string name="holidayspromotion_message_brawling_animals">Welcome to the Jungle! Release your beast and jump into battle royale multiplayer battles!</string>
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
   <string name="holidayspromotion_message_wallet">Tell us your AppCoins wallet address. Once you create a wallet, you\'ll find the address when pressing on \'Receive\'.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
