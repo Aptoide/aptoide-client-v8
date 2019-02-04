@@ -75,7 +75,7 @@
       android:id="@+id/promotions_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:visibility="visible"
+      android:visibility="gone"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
@@ -155,7 +155,7 @@
       </LinearLayout>
 
       <FrameLayout
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           >
         <include
@@ -169,20 +169,19 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:visibility="gone"
-            tools:visibility="gone"
+            tools:visibility="visible"
             />
         <include
             layout="@layout/promotion_app_inactive"
             android:id="@+id/promotion_wallet_inactive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="26dp"
+            android:layout_marginBottom="3dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:visibility="gone"
-            tools:visibility="visible"
             />
 
       </FrameLayout>
@@ -190,7 +189,7 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="24dp"
+          android:layout_marginBottom="12dp"
           android:layout_marginTop="24dp"
           android:orientation="horizontal"
           android:background="@color/light_green_background"

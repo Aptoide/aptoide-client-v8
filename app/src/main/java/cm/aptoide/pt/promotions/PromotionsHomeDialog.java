@@ -2,8 +2,11 @@ package cm.aptoide.pt.promotions;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.CrashLogger;
@@ -34,6 +37,11 @@ public class PromotionsHomeDialog {
     navigate = dialogView.findViewById(R.id.navigate_button);
     dialog.setCancelable(true);
     dialog.setCanceledOnTouchOutside(true);
+
+    Window window = dialog.getWindow();
+    if (window != null) {
+      window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    }
 
     navigate.setOnClickListener(__ -> {
       if (uiEvents != null) {

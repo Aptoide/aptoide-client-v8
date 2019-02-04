@@ -1,6 +1,7 @@
 package cm.aptoide.pt.promotions;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -447,12 +448,16 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionAction.setEnabled(false);
         promotionAction.setBackgroundColor(getContext().getResources()
             .getColor(R.color.grey_fog_light));
-
+        promotionAction.setBackgroundDrawable(getContext().getResources()
+            .getDrawable(R.drawable.card_border_fog_grey_normal));
+        promotionAction.setTextColor(getContext().getResources()
+            .getColor(R.color.grey_fog_light));
         promotionsAdapter.isWalletInstalled(true);
       } else if (getState(promotionViewApp) == CLAIM) {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundColor(getContext().getResources()
             .getColor(R.color.green));
+        promotionAction.setTextColor(Color.WHITE);
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
         promotionsAdapter.isWalletInstalled(true);
@@ -461,6 +466,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         TypedValue resultValue = new TypedValue();
         getContext().getTheme()
             .resolveAttribute(R.attr.installButtonBackground, resultValue, true);
+        promotionAction.setTextColor(Color.WHITE);
         if (resultValue.resourceId != 0) {
           promotionAction.setBackgroundResource(resultValue.resourceId);
         } else {
