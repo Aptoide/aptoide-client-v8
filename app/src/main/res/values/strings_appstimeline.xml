@@ -20,14 +20,7 @@
   <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
   <string name="addressbook_sync">Sync address book</string>
   <string name="not_now">Not now</string>
-  <string name="addressbook_data_about"><b>How Aptoide uses your data</b>
-    \n\nAptoide will search in your address book for friends and family that are using our app store. We\'ll
-    only use this information to improve your experience by connecting you to more people
-    that can share apps-related content with you.\n\n\nTo protect your privacy, no clear private data
-    will be sent out to Aptoide servers. An anonymous signature (hash) will be created with your data
-    and that hash can\'t be reversed into the original contact info.
-  </string>
-  <string name="addressbook_data_about_cobrand"><b>How %1$s uses your data</b>
+  <string name="addressbook_data_about"><b>How %1$s uses your data</b>
     \n\n%1$s will search in your address book for friends and family that are using our app store. We\'ll
     only use this information to improve your %1$s experience by connecting you to more people
     that can share apps-related content with you.\n\n\nTo protect your privacy, no clear private data
@@ -44,13 +37,10 @@
   <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
   <string name="addressbook_invite_friends">Invite friends to join you!</string>
   <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
-  <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use our platform!</string>
+  <string name="addressbook_success_connected_friends">We successfully connected you with %s friends that use our platform!</string>
   <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using our app store.</string>
   <string name="addressbook_2nd_msg">Aptoide will search in your address book for friends and family
     that are using our app store. To protect your privacy, no private data will be sent out to Aptoide
-    servers.</string>
-  <string name="addressbook_2nd_msg_cobrand">We\'ll search in your address book for friends and family
-    that are using our app store. To protect your privacy, no private data will be sent out to our
     servers.</string>
   <string name="addressbook_3rd_msg">LEARN MORE</string>
   <string name="address_book_twitter_error">Twitter authorization error</string>

@@ -281,9 +281,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     autoUpdatePreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
             getContext().getResources(), marketName));
-    autoUpdatePreference.setSummary(
-        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
-            getContext().getResources(), marketName));
+    autoUpdatePreference.setSummary(getContext().getResources()
+        .getString(R.string.setting_category_autoupdate_message));
 
     subscriptions.add(RxPreference.clicks(deleteAccount)
         .flatMapSingle(__ -> authenticationPersistence.getAuthentication())

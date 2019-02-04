@@ -1125,7 +1125,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     ((TextView) apkfyElement.findViewById(R.id.apkfy_message_1)).setText(
         String.format(message, appName));
     ((TextView) apkfyElement.findViewById(R.id.apkfy_title)).setText(
-        String.format(getResources().getString(R.string.appview_title_apkfy), marketName));
+        getResources().getString(R.string.appview_title_apkfy));
   }
 
   @Override public void showDonations(List<Donation> donations) {

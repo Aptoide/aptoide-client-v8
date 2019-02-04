@@ -103,7 +103,7 @@ public class PhoneInputFragment extends UIComponentFragment
 
   @Override public void setupViews() {
     mNotNowV.setPaintFlags(mNotNowV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    mSharePhoneV.setText(getString(R.string.addressbook_share_phone, marketName));
+    mSharePhoneV.setText(getString(R.string.addressbook_share_phone));
 
     String countryCodeE164 = contactUtils.getCountryCodeForRegion();
     if (!countryCodeE164.isEmpty()) {

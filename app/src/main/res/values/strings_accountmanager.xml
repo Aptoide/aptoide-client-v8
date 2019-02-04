@@ -32,7 +32,8 @@
 
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two">Create a Personal Store</string>
-  <string name="wizard_sub_title_viewpager_two">Share your favorite apps \n with the %1$s Community</string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <string name="wizard_sub_title_viewpager_two">Share your favorite apps \n with the Aptoide community</string>
 
   <!-- WIZARD PAGE 3 -->
   <string name="login_sign_up_title">Join Our Community</string>

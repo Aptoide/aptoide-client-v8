@@ -620,10 +620,7 @@ public class ManageStoreFragment extends BackButtonFragment
     storeName.setText(currentModel.getStoreName());
 
     if (!currentModel.storeExists()) {
-      String appName = getString(R.string.app_name);
-      chooseStoreNameTitle.setText(
-          AptoideUtils.StringU.getFormattedString(R.string.create_store_name, getResources(),
-              appName));
+      chooseStoreNameTitle.setText(R.string.create_store_name);
     } else {
       chooseStoreNameTitle.setText(
           AptoideUtils.StringU.getFormattedString(R.string.description, getResources()));
