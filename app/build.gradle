@@ -270,6 +270,8 @@ android {
       variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
     }
 
+    variant.buildConfigField "String", "IRONSOURCE_APPLICATION_ID",
+        "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
