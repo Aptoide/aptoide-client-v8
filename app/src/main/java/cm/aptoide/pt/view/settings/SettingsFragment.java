@@ -168,7 +168,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     context = getContext();
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar = view.findViewById(R.id.toolbar);
 
     final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
     if (toolbar != null) {
