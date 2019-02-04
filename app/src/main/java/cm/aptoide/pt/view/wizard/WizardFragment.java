@@ -250,9 +250,9 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public void bindViews(@Nullable View view) {
-    viewPager = (AptoideViewPager) view.findViewById(R.id.view_pager);
+    viewPager = view.findViewById(R.id.view_pager);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
-    radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
+    radioGroup = view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);
     isInPortraitMode = getActivity().getResources()
         .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
