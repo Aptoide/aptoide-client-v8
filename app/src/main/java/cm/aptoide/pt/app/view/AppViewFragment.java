@@ -309,16 +309,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
     noNetworkRetryButton.setOnClickListener(click -> noNetworkRetryClick.onNext(null));
     genericRetryButton.setOnClickListener(click -> genericRetryClick.onNext(null));
-    appIcon = (ImageView) view.findViewById(R.id.app_icon);
-    trustedBadge = (ImageView) view.findViewById(R.id.trusted_badge);
-    appName = (TextView) view.findViewById(R.id.app_name);
+    appIcon = view.findViewById(R.id.app_icon);
+    trustedBadge = view.findViewById(R.id.trusted_badge);
+    appName = view.findViewById(R.id.app_name);
     trustedLayout = view.findViewById(R.id.trusted_layout);
-    trustedText = (TextView) view.findViewById(R.id.trusted_text);
-    downloadsTop = (TextView) view.findViewById(R.id.header_downloads);
-    sizeInfo = (TextView) view.findViewById(R.id.header_size);
-    ratingInfo = (TextView) view.findViewById(R.id.header_rating);
+    trustedText = view.findViewById(R.id.trusted_text);
+    downloadsTop = view.findViewById(R.id.header_downloads);
+    sizeInfo = view.findViewById(R.id.header_size);
+    ratingInfo = view.findViewById(R.id.header_rating);
     appcRewardView = view.findViewById(R.id.appc_layout);
-    appcRewardValue = (TextView) view.findViewById(R.id.appcoins_reward_message);
+    appcRewardValue = view.findViewById(R.id.appcoins_reward_message);
     appcInfoView =
         new AppViewAppcInfoViewHolder((LinearLayout) view.findViewById(R.id.iap_appc_label),
             appcRewardView, appcRewardValue,
