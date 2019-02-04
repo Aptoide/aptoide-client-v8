@@ -433,6 +433,10 @@ public class AppViewViewModel {
     return hasBilling;
   }
 
+  public boolean isAppCoinApp() {
+    return hasBilling || hasAdvertising;
+  }
+
   public boolean hasAdvertising() {
     return this.hasAdvertising;
   }

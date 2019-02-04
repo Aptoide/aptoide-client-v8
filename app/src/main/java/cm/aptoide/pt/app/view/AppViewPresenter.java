@@ -141,6 +141,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(create -> appViewManager.loadAppViewViewModel()
             .toObservable())
         .filter(app -> !app.isLoading())
+        .filter(app -> !app.isAppCoinApp())
         .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
             app.getVersionCode(), app.isPaid(), app.getPay())
             .filter(model -> model.getDownloadModel()
