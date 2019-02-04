@@ -125,7 +125,6 @@ public class WizardFragment extends UIComponentFragment
           }
         });
     pageChangeListener = new AptoideViewPager.SimpleOnPageChangeListener() {
-
       @Override public void onPageSelected(int position) {
         if (position == 0) {
           navigationTracker.registerScreen(
