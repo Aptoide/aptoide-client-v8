@@ -122,7 +122,7 @@
           android:layout_height="wrap_content"
           android:layout_marginBottom="24dp"
           android:orientation="horizontal"
-          android:background="@color/light_green_background"
+          android:background="#126eba15"
           android:paddingBottom="10dp"
           android:paddingTop="10dp"
           >
@@ -148,7 +148,7 @@
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:text="@string/holidayspromotion_message_2"
-            android:textColor="@color/dark_grey_text"
+            android:textColor="@color/black_87_alpha"
             tools:text="First, get the appcoins wallet to receive your appcoins credits"
             style="@style/Aptoide.TextView.Medium.XS.Black"
             />
@@ -192,7 +192,7 @@
           android:layout_marginBottom="12dp"
           android:layout_marginTop="24dp"
           android:orientation="horizontal"
-          android:background="@color/light_green_background"
+          android:background="#126eba15"
           android:paddingBottom="10dp"
           android:paddingTop="10dp"
           >
@@ -217,7 +217,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
-            android:textColor="@color/dark_grey_text"
+            android:textColor="@color/black_87_alpha"
             android:text="@string/holidayspromotion_message_3"
             tools:text="Then install any of these games to earn AppCoins Credits!"
             style="@style/Aptoide.TextView.Medium.XS.Black"
