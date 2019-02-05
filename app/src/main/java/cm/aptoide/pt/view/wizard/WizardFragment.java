@@ -38,9 +38,9 @@ public class WizardFragment extends UIComponentFragment
 
   public static final int LAYOUT = R.layout.fragment_wizard;
   private static final String PAGE_INDEX = "page_index";
-  AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
   @Inject WizardPresenter wizardPresenter;
   @Inject WizardFragmentProvider wizardFragmentProvider;
+  private AptoideViewPager.SimpleOnPageChangeListener pageChangeListener;
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
@@ -70,10 +70,6 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public void onDestroy() {
-    if (viewPager != null) {
-      viewPager.removeOnPageChangeListener(null);
-      viewPager = null;
-    }
     super.onDestroy();
   }
 
@@ -129,7 +125,6 @@ public class WizardFragment extends UIComponentFragment
           }
         });
     pageChangeListener = new AptoideViewPager.SimpleOnPageChangeListener() {
-
       @Override public void onPageSelected(int position) {
         if (position == 0) {
           navigationTracker.registerScreen(
@@ -139,20 +134,25 @@ public class WizardFragment extends UIComponentFragment
     };
     viewPager.addOnPageChangeListener(wizardPresenter);
     viewPager.addOnPageChangeListener(pageChangeListener);
-    registerViewpagerCurrentItem =
-        () -> pageChangeListener.onPageSelected(viewPager.getCurrentItem());
+    registerViewpagerCurrentItem = () -> {
+      if (viewPager != null) {
+        pageChangeListener.onPageSelected(viewPager.getCurrentItem());
+      }
+    };
     viewPager.post(registerViewpagerCurrentItem);
   }
 
   @Override public void onDestroyView() {
     viewPager.removeOnPageChangeListener(pageChangeListener);
+    viewPager.setAdapter(null);
     viewPager.removeCallbacks(registerViewpagerCurrentItem);
+    viewPager.removeOnPageChangeListener(null);
+    registerViewpagerCurrentItem = null;
+    viewPager = null;
     skipOrNextLayout = null;
     wizardButtons = null;
     radioGroup = null;
     skipText = null;
-    viewPager.setAdapter(null);
-    viewPager = null;
     animatedColorView = null;
     super.onDestroyView();
   }
@@ -215,6 +215,10 @@ public class WizardFragment extends UIComponentFragment
     }
   }
 
+  @Override public int getCount() {
+    return wizardFragmentProvider.getCount(isUserLoggedIn);
+  }
+
   private void createRadioButtons() {
     // set button dimension
     int buttonSize = AptoideUtils.ScreenU.getPixelsForDip(10, getResources());
@@ -240,18 +244,14 @@ public class WizardFragment extends UIComponentFragment
     }
   }
 
-  @Override public int getCount() {
-    return wizardFragmentProvider.getCount(isUserLoggedIn);
-  }
-
   @Override public int getContentViewId() {
     return LAYOUT;
   }
 
   @Override public void bindViews(@Nullable View view) {
-    viewPager = (AptoideViewPager) view.findViewById(R.id.view_pager);
+    viewPager = view.findViewById(R.id.view_pager);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
-    radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
+    radioGroup = view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);
     isInPortraitMode = getActivity().getResources()
         .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
