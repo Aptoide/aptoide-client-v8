@@ -23,7 +23,6 @@ allprojects {
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
     maven { url "https://adcolony.bintray.com/AdColony" }
-    maven { url 'https://tapjoy.bintray.com/maven' }
 
     google()
     jcenter()
@@ -128,8 +127,6 @@ ext {
   MOPUB_MEDIATION_VUNGLE_VERSION = '6.3.24.0'
   MOPUB_MEDIATION_ADCOLONY_VERSION = '3.3.7.0'
   ADCOLONY_SDK_VERSION = '3.3.7'
-  TAPJOY_SDK_VERSION = '12.2.0'
-  MOPUB_MEDIATION_TAPJOY_VERSION = '12.2.0.0'
   MOPUB_MEDIATION_UNITYADS_VERSION = '3.0.0.0'
 
   // https://github.com/googlei18n/libphonenumber

@@ -276,8 +276,6 @@ android {
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
         "\"" + project.ADCOLONY_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "TAPJOY_SDK_KEY",
-        "\"" + project.TAPJOY_SDK_KEY + "\""
     variant.buildConfigField "String", "UNITYADS_GAME_ID",
         "\"" + project.UNITYADS_GAME_ID + "\""
     variant.buildConfigField "String", "CHARTBOOST_APPLICATION_ID",
@@ -474,10 +472,6 @@ dependencies {
   // Adcolony
   implementation "com.mopub.mediation:adcolony:${MOPUB_MEDIATION_ADCOLONY_VERSION}"
   implementation "com.adcolony:sdk:${ADCOLONY_SDK_VERSION}"
-
-  // Tapjoy
-  implementation "com.tapjoy:tapjoy-android-sdk:${TAPJOY_SDK_VERSION}@aar"
-  implementation "com.mopub.mediation:tapjoy:${MOPUB_MEDIATION_TAPJOY_VERSION}"
 
   // UnityAds, Chartboost & One by AOL
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
