@@ -39,6 +39,8 @@
   <!-- Wizard Colors -->
   <color name="wizard_color_1_blue">#35A1A7</color>
   <color name="wizard_color_2_green">#69B131</color>
+  <color name="wizard_color_2_green_faded">#3369B131</color>
+  <color name="wizard_color_2_green_faded_secondary">#1269B131</color>
   <color name="wizard_color_3_orange">#FE6F49</color>
 
 </resources>
