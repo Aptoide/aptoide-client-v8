@@ -19,7 +19,7 @@ public class ThankYouConnectingFragment extends UIComponentFragment
     implements NotBottomNavigationView {
   public static final String TAG = "TAG";
   @Inject @Named("aptoide-theme") String theme;
-  @Inject @Named("market") String marketName;
+  @Inject @Named("marketName") String marketName;
   private Button done;
   private String entranceTag;
 
