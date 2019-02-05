@@ -47,7 +47,7 @@
           android:layout_marginLeft="26dp"
           android:layout_marginStart="26dp"
           android:layout_marginTop="12dp"
-          android:background="@drawable/updates_badge_circle_border"
+          android:background="@drawable/promotions_ticker_badge"
           android:gravity="center"
           android:textColor="@color/white"
           android:textStyle="bold"
