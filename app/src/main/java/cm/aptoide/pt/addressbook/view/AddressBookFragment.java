@@ -124,7 +124,7 @@ public class AddressBookFragment extends UIComponentFragment
   }
 
   @Override public void setupViews() {
-    addressbook_2nd_msg.setText(getString(R.string.addressbook_2nd_msg, marketName));
+    addressbook_2nd_msg.setText(getString(R.string.addressbook_2nd_msg));
     mActionsListener.getButtonsState();
     //dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

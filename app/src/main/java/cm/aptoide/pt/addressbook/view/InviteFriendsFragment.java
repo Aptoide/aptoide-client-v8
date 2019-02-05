@@ -86,8 +86,7 @@ public class InviteFriendsFragment extends UIComponentFragment
         message.setText(getString(R.string.addressbook_insuccess_connection));
         break;
       case NO_FRIENDS:
-        message.setText(
-            getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide, marketName));
+        message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide));
         break;
       case CONTACTS_PERMISSION_DENIAL:
         message.setText(R.string.addressbook_we_werent_able_to_connect_you);

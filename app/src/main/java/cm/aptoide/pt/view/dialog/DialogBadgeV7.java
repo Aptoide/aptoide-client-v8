@@ -105,7 +105,7 @@ public class DialogBadgeV7 extends BaseDialog {
           v.findViewById(R.id.tr_scanned)
               .setVisibility(View.VISIBLE);
           ((TextView) v.findViewById(R.id.message_virus_no)).setText(
-              getString(R.string.appviewbadge_message_virus_no, marketName));
+              getString(R.string.appviewbadge_message_virus_no));
         }
       }
 
@@ -163,7 +163,7 @@ public class DialogBadgeV7 extends BaseDialog {
         v.findViewById(R.id.tr_manual)
             .setVisibility(View.VISIBLE);
         ((TextView) v.findViewById(R.id.message_virus_no_manual)).setText(
-            getString(R.string.appviewbadge_message_virus_no, marketName));
+            getString(R.string.appviewbadge_message_virus_no));
       }
     }
 
