@@ -19,6 +19,7 @@ public class ThankYouConnectingFragment extends UIComponentFragment
     implements NotBottomNavigationView {
   public static final String TAG = "TAG";
   @Inject @Named("aptoide-theme") String theme;
+  @Inject @Named("market") String marketName;
   private Button done;
   private String entranceTag;
 
@@ -48,7 +49,8 @@ public class ThankYouConnectingFragment extends UIComponentFragment
   @Override public void setupViews() {
     AddressBookNavigationManager addressBookNavigationManager =
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
-            getString(R.string.addressbook_about), getString(R.string.addressbook_data_about),
+            getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about, marketName),
             theme);
     RxView.clicks(done)
         .subscribe(clicks -> addressBookNavigationManager.leaveAddressBook(),
