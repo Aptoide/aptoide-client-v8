@@ -1,4 +1,4 @@
-package cm.aptoide.pt.ads;
+package com.mopub.nativeads;
 
 public class AppLovinNativeAdapter extends AppLovinCustomEventNative {
 }
