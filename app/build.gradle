@@ -210,7 +210,7 @@ android {
     variant.buildConfigField "String", "SIGNATURE_BACKUP", "\"" + project.SIGNATURE_BACKUP + "\""
     variant.buildConfigField "String", "SIGNATURE_UPLOADER",
         "\"" + project.SIGNATURE_UPLOADER + "\""
-    variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
+    variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID_VANILLA + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
         "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
     variant.buildConfigField "int", "DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS",
