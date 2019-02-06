@@ -135,7 +135,10 @@ public class PromotionsService {
             .getVercode(), app.isClaimed(), app.getApp()
             .getFile()
             .getVername(), app.getApp()
-            .getObb(), app.getAppc()));
+            .getObb(), app.getAppc(), app.getApp()
+            .getFile()
+            .getSignature()
+            .getSha1()));
       }
     }
 

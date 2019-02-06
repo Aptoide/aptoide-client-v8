@@ -22,11 +22,12 @@ public class PromotionViewApp {
   private String versionName;
   private Obb obb;
   private float appcValue;
+  private String signature;
 
   public PromotionViewApp(DownloadModel downloadModel, String name, String packageName, long appId,
       String downloadPath, String alternativePath, String appIcon, boolean isClaimed,
       String description, long size, float rating, int numberOfDownloads, String md5,
-      int versionCode, String versionName, Obb obb, float appcValue) {
+      int versionCode, String versionName, Obb obb, float appcValue, String signature) {
     this.downloadModel = downloadModel;
     this.name = name;
     this.packageName = packageName;
@@ -44,6 +45,7 @@ public class PromotionViewApp {
     this.versionName = versionName;
     this.obb = obb;
     this.appcValue = appcValue;
+    this.signature = signature;
   }
 
   public String getName() {
@@ -148,5 +150,9 @@ public class PromotionViewApp {
 
   public float getAppcValue() {
     return appcValue;
+  }
+
+  public String getSignature() {
+    return signature;
   }
 }
