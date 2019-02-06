@@ -8,6 +8,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialContent;
+import cm.aptoide.pt.editorial.EditorialDownloadModel;
 import cm.aptoide.pt.editorial.EditorialEvent;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorial.EditorialManager;
@@ -18,7 +19,6 @@ import cm.aptoide.pt.editorial.ScrollEvent;
 import cm.aptoide.pt.presenter.View;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -48,9 +48,10 @@ public class EditorialPresenterTest {
   private EditorialPresenter editorialPresenter;
   private EditorialViewModel editorialViewModel;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
-  private DownloadModel downloadModel;
+  private EditorialDownloadModel downloadModel;
   private EditorialViewModel errorEditorialViewModel;
   private EditorialViewModel loadingEditorialViewModel;
+  private ArrayList<EditorialContent> editorialContent;
 
   @Before public void setupEditorialPresenter() {
     MockitoAnnotations.initMocks(this);
@@ -58,17 +59,15 @@ public class EditorialPresenterTest {
         new EditorialPresenter(view, editorialManager, Schedulers.immediate(), crashReport,
             permissionManager, permissionService, editorialAnalytics, editorialNavigator);
     lifecycleEvent = PublishSubject.create();
-    List<EditorialContent> editorialContent = new ArrayList<>();
+    editorialContent = new ArrayList<>();
     editorialContent.add(
-        new EditorialContent("title", Collections.emptyList(), "message", "type", "appName", "icon",
-            0, "actionTitle", "actionUrl"));
-    editorialViewModel =
-        new EditorialViewModel(editorialContent, "type", "title", 1, "caption", "appName", 0,
-            "packageName", 0, "icon", "graphic", null, 0, "storeName", "storeTheme", "versionName",
-            0, "path", "backgroundImage", "pathAlt", "md5", 0);
-    downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            null);
+        new EditorialContent("title", Collections.emptyList(), "message", "type", 1, "appName",
+            "icon", 1, "packageName", 0, "graphic", null, 1, "storeName", "verName", 0, "path",
+            "pathAlt", "md5", "actionTitle", "url", 1));
+    editorialViewModel = new EditorialViewModel(editorialContent, "title", "caption", "background",
+        Collections.emptyList(), editorialContent);
+    downloadModel = new EditorialDownloadModel(DownloadModel.Action.INSTALL, 0,
+        DownloadModel.DownloadState.ACTIVE, null, 1);
     errorEditorialViewModel = new EditorialViewModel(EditorialViewModel.Error.GENERIC);
     loadingEditorialViewModel = new EditorialViewModel(true);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
@@ -178,8 +177,8 @@ public class EditorialPresenterTest {
     editorialPresenter.handleClickOnAppCard();
 
     //When the user clicks on an appCard
-    when(view.appCardClicked()).thenReturn(
-        Observable.just(new EditorialEvent(EditorialEvent.Type.APPCARD)));
+    when(view.appCardClicked(editorialViewModel)).thenReturn(
+        Observable.just(new EditorialEvent(EditorialEvent.Type.APPCARD, 0, "packageName")));
 
     //Then it should request and load the editorialViewModel
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
@@ -200,9 +199,10 @@ public class EditorialPresenterTest {
     //Then it should request and load the editorialViewModel
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
 
-    //And request and load the downloadModel
-    when(editorialManager.loadDownloadModel("md5", "packageName", 0, false, null)).thenReturn(
-        Observable.just(downloadModel));
+    //And request and load the downloadModel for each one
+    when(editorialManager.loadDownloadModel("md5", "packageName", 0, false, null,
+        editorialContent.get(0)
+            .getPosition())).thenReturn(Observable.just(downloadModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.editorial;
 
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
@@ -60,17 +59,19 @@ public class EditorialManager {
     installManager.rootInstallAllowed(answer);
   }
 
-  public Completable downloadApp(DownloadModel.Action downloadAction,
-      EditorialViewModel viewModel) {
+  public Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent) {
     increaseInstallClick();
-    return Observable.just(
-        downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
-            viewModel.getAppName(), viewModel.getPackageName(), viewModel.getMd5(),
-            viewModel.getIcon(), viewModel.getVername(), viewModel.getVercode(),
-            viewModel.getPath(), viewModel.getPathAlt(), viewModel.getObb()))
+    return Observable.just(downloadFactory.create(
+        downloadStateParser.parseDownloadAction(editorialDownloadEvent.getAction()),
+        editorialDownloadEvent.getAppName(), editorialDownloadEvent.getPackageName(),
+        editorialDownloadEvent.getMd5(), editorialDownloadEvent.getIcon(),
+        editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
+        editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
+        editorialDownloadEvent.getObb()))
         .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, viewModel.getPackageName(),
-                viewModel.getAppId())))
+            .doOnSubscribe(
+                __ -> setupDownloadEvents(download, editorialDownloadEvent.getPackageName(),
+                    editorialDownloadEvent.getAppId())))
         .toCompletable();
   }
 
@@ -88,13 +89,13 @@ public class EditorialManager {
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
   }
 
-  public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
+  public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay, int position) {
     return installManager.getInstall(md5, packageName, versionCode)
-        .map(install -> new DownloadModel(
+        .map(install -> new EditorialDownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), paidApp,
                 pay != null && pay.isPaid()), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), pay));
+            downloadStateParser.parseDownloadState(install.getState()), pay, position));
   }
 
   public Completable pauseDownload(String md5) {

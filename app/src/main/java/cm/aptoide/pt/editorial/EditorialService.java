@@ -71,89 +71,102 @@ public class EditorialService {
   private Observable<EditorialViewModel> mapEditorial(EditorialCard editorialCard) {
     if (editorialCard.isOk()) {
       Data card = editorialCard.getData();
-      String cardType = card.getType();
 
       List<Content> contentList = card.getContent();
-      List<EditorialContent> editorialContentList = new ArrayList<>();
-      editorialContentList = mapEditorialContent(contentList, editorialContentList);
-      int placeHolderPosition = getPlaceHolderPosition(editorialContentList);
-      App app = null;
-      if (placeHolderPosition != -1) {
-        app = contentList.get(placeHolderPosition)
-            .getApp();
-      }
-      if (app != null) {
-        Store store = app.getStore();
-        File file = app.getFile();
-        return Observable.just(
-            new EditorialViewModel(editorialContentList, cardType, card.getTitle(), app.getId(),
-                card.getCaption(), app.getName(), app.getStats()
-                .getRating()
-                .getAvg(), app.getPackageName(), app.getSize(), app.getIcon(), app.getGraphic(),
-                app.getObb(), store.getId(), store.getName(), store.getName(), file.getVername(),
-                file.getVercode(), file.getPath(), card.getBackground(), file.getPathAlt(),
-                file.getMd5sum(), placeHolderPosition));
-      } else {
-        return Observable.just(
-            new EditorialViewModel(editorialContentList, cardType, card.getTitle(),
-                card.getCaption(), card.getBackground(), placeHolderPosition));
-      }
+
+      List<EditorialContent> editorialContentList = mapEditorialContent(contentList);
+
+      List<Integer> placeHolderPositions = getPlaceHolderPositions(editorialContentList);
+
+      List<EditorialContent> placeHolderContent =
+          buildPlaceHolderContent(editorialContentList, placeHolderPositions);
+
+      return Observable.just(
+          new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
+              card.getBackground(), placeHolderPositions, placeHolderContent));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
   }
 
-  private int getPlaceHolderPosition(List<EditorialContent> editorialContentList) {
-    if (editorialContentList != null) {
-      for (int i = 0; i < editorialContentList.size(); i++) {
-        EditorialContent editorialContent = editorialContentList.get(i);
-        if (editorialContent.isPlaceHolderType()) {
-          return i;
-        }
-      }
-    }
-    return -1;
-  }
-
-  private List<EditorialContent> mapEditorialContent(List<Content> contentList,
-      List<EditorialContent> editorialContentList) {
+  private List<EditorialContent> mapEditorialContent(List<Content> contentList) {
+    List<EditorialContent> editorialContentList = new ArrayList<>();
     if (contentList != null) {
-      for (Content content : contentList) {
-        List<Media> mediaList = content.getMedia();
-        List<EditorialMedia> editorialMediaList = new ArrayList<>();
-        if (mediaList != null) {
-          for (Media media : mediaList) {
-            EditorialMedia editorialMedia =
-                new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
-                    media.getImage());
-            editorialMediaList.add(editorialMedia);
-          }
-        }
-        EditorialContent editorialContent;
+      for (int position = 0; position < contentList.size(); position++) {
+        Content content = contentList.get(position);
+        List<EditorialMedia> editorialMediaList = buildMediaList(content.getMedia());
         App app = content.getApp();
         Action action = content.getAction();
-        String actionTitle = "";
-        String actionUrl = "";
-        if (action != null) {
-          actionTitle = action.getTitle();
-          actionUrl = action.getUrl();
-        }
-        String appName = null;
-        String icon = null;
-        float rating = 0;
-        if (app != null) {
-          appName = app.getName();
-          icon = app.getIcon();
-          rating = app.getStats()
-              .getRating()
-              .getAvg();
-        }
-        editorialContent =
-            new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-                content.getType(), appName, icon, rating, actionTitle, actionUrl);
+        EditorialContent editorialContent =
+            buildEditorialContent(content, editorialMediaList, app, action, position);
         editorialContentList.add(editorialContent);
       }
     }
     return editorialContentList;
+  }
+
+  private List<Integer> getPlaceHolderPositions(List<EditorialContent> editorialContentList) {
+    List<Integer> placeHolderPositions = new ArrayList<>();
+    if (editorialContentList != null) {
+      for (int contendIndex = 0; contendIndex < editorialContentList.size(); contendIndex++) {
+        EditorialContent editorialContent = editorialContentList.get(contendIndex);
+        if (editorialContent.isPlaceHolderType()) {
+          placeHolderPositions.add(contendIndex);
+        }
+      }
+    }
+    return placeHolderPositions;
+  }
+
+  private List<EditorialContent> buildPlaceHolderContent(
+      List<EditorialContent> editorialContentList, List<Integer> placeHolderPositions) {
+    List<EditorialContent> placeHolderContent = new ArrayList<>();
+    for (Integer placeHolderPosition : placeHolderPositions) {
+      placeHolderContent.add(editorialContentList.get(placeHolderPosition));
+    }
+    return placeHolderContent;
+  }
+
+  private List<EditorialMedia> buildMediaList(List<Media> mediaList) {
+    List<EditorialMedia> editorialMediaList = new ArrayList<>();
+    if (mediaList != null) {
+      for (Media media : mediaList) {
+        EditorialMedia editorialMedia =
+            new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
+                media.getImage());
+        editorialMediaList.add(editorialMedia);
+      }
+    }
+    return editorialMediaList;
+  }
+
+  private EditorialContent buildEditorialContent(Content content,
+      List<EditorialMedia> editorialMediaList, App app, Action action, int position) {
+    if (action != null && app != null) {
+      Store store = app.getStore();
+      File file = app.getFile();
+      return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
+          content.getType(), app.getId(), app.getName(), app.getIcon(), app.getStats()
+          .getRating()
+          .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
+          store.getId(), store.getName(), file.getVername(), file.getVercode(), file.getPath(),
+          file.getPathAlt(), file.getMd5sum(), action.getTitle(), action.getUrl(), position);
+    }
+    if (app != null) {
+      Store store = app.getStore();
+      File file = app.getFile();
+      return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
+          content.getType(), app.getId(), app.getName(), app.getIcon(), app.getStats()
+          .getRating()
+          .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
+          store.getId(), store.getName(), file.getVername(), file.getVercode(), file.getPath(),
+          file.getPathAlt(), file.getMd5sum(), position);
+    }
+    if (action != null) {
+      return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
+          content.getType(), action.getTitle(), action.getUrl(), position);
+    }
+    return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
+        content.getType(), position);
   }
 }

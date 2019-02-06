@@ -1,7 +1,6 @@
 package cm.aptoide.pt.editorial;
 
 import android.support.v7.graphics.Palette;
-import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 
@@ -17,9 +16,7 @@ public interface EditorialView extends View {
 
   Observable<Void> retryClicked();
 
-  Observable<DownloadModel.Action> installButtonClick();
-
-  Observable<EditorialEvent> appCardClicked();
+  Observable<EditorialEvent> appCardClicked(EditorialViewModel model);
 
   Observable<EditorialEvent> actionButtonClicked();
 
@@ -27,17 +24,19 @@ public interface EditorialView extends View {
 
   void showError(EditorialViewModel.Error error);
 
-  void showDownloadModel(DownloadModel model);
+  void showDownloadModel(EditorialDownloadModel model);
 
   Observable<Boolean> showRootInstallWarningPopup();
 
   void openApp(String packageName);
 
-  Observable<EditorialEvent> pauseDownload();
+  Observable<EditorialDownloadEvent> installButtonClick(EditorialViewModel editorialViewModel);
 
-  Observable<EditorialEvent> resumeDownload();
+  Observable<EditorialDownloadEvent> pauseDownload(EditorialViewModel editorialViewModel);
 
-  Observable<EditorialEvent> cancelDownload();
+  Observable<EditorialDownloadEvent> resumeDownload(EditorialViewModel editorialViewModel);
+
+  Observable<EditorialDownloadEvent> cancelDownload(EditorialViewModel editorialViewModel);
 
   Observable<Void> isViewReady();
 
