@@ -5,7 +5,7 @@ import rx.Observable;
 
 public interface PromotionsView extends View {
 
-  void showPromotionApp(PromotionViewApp promotionViewApp);
+  void showPromotionApp(PromotionViewApp promotionViewApp, boolean isWalletInstalled);
 
   Observable<PromotionViewApp> installButtonClick();
 

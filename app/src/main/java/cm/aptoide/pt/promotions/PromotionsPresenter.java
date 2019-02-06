@@ -188,10 +188,18 @@ public class PromotionsPresenter implements Presenter {
         .doOnNext(promotionsModel -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
         .observeOn(viewScheduler)
         .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
-        .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
-        .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())
-        .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
-        .observeOn(viewScheduler)
-        .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp));
+        .flatMap(promotionsModel -> Observable.just(promotionsModel)
+            .flatMapIterable(promotionsModel1 -> promotionsModel1.getAppsList())
+            .filter(promotionApp -> promotionApp.getPackageName()
+                .equals("com.appcoins.wallet"))
+            .doOnNext(wallet -> view.lockPromotionApps(
+                promotionsModel.isWalletInstalled() && wallet.isClaimed()))
+            .map(promotionApp -> promotionsModel))
+        .flatMap(promotionsModel -> Observable.just(promotionsModel)
+            .flatMapIterable(promotionsModel1 -> promotionsModel.getAppsList())
+            .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
+            .observeOn(viewScheduler)
+            .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp,
+                promotionsModel.isWalletInstalled())));
   }
 }
