@@ -39,12 +39,14 @@
           android:layout_height="wrap_content"
           android:maxLines="1"
           tools:text="Snapchat"
-          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+          style="@style/Aptoide.TextView.Regular.M"
           />
 
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginBottom="8dp"
+          android:layout_marginTop="4dp"
           android:orientation="horizontal"
           >
 
@@ -116,6 +118,8 @@
       android:id="@+id/app_description"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginLeft="1dp"
+      android:layout_marginStart="1dp"
       tools:text="Snapchat is the easiest way to share a memorable moment with your friends. Snappity snap snapchat!"
       style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
       />

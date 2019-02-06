@@ -168,7 +168,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     context = getContext();
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar = view.findViewById(R.id.toolbar);
 
     final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
     if (toolbar != null) {
@@ -329,30 +329,27 @@ public class SettingsFragment extends PreferenceFragmentCompat
       return true;
     });
 
-    findPreference(SettingsConstants.CLEAR_CACHE).setOnPreferenceClickListener(
-        new Preference.OnPreferenceClickListener() {
-          @Override public boolean onPreferenceClick(Preference preference) {
-            ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
-            subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
-                getString(R.string.storage_dialog_title, marketName),
-                getString(R.string.clear_cache_dialog_message))
-                .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
-                .doOnNext(eResponse -> dialog.show())
-                .flatMap(eResponse -> fileManager.deleteCache())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> dialog.dismiss())
-                .subscribe(deletedSize -> {
-                  ShowMessage.asSnack(SettingsFragment.this,
-                      AptoideUtils.StringU.getFormattedString(R.string.freed_space,
-                          getContext().getResources(),
-                          AptoideUtils.StringU.formatBytes(deletedSize, false)));
-                }, throwable -> {
-                  ShowMessage.asSnack(SettingsFragment.this, R.string.ws_error_SYS_1);
-                  throwable.printStackTrace();
-                }));
-            return false;
-          }
-        });
+    findPreference(SettingsConstants.CLEAR_CACHE).setOnPreferenceClickListener(preference -> {
+      ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+      subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
+          getString(R.string.storage_dialog_title, marketName),
+          getString(R.string.clear_cache_dialog_message))
+          .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
+          .doOnNext(eResponse -> dialog.show())
+          .flatMap(eResponse -> fileManager.deleteCache())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnTerminate(() -> dialog.dismiss())
+          .subscribe(deletedSize -> {
+            ShowMessage.asSnack(SettingsFragment.this,
+                AptoideUtils.StringU.getFormattedString(R.string.freed_space,
+                    getContext().getResources(),
+                    AptoideUtils.StringU.formatBytes(deletedSize, false)));
+          }, throwable -> {
+            ShowMessage.asSnack(SettingsFragment.this, R.string.ws_error_SYS_1);
+            throwable.printStackTrace();
+          }));
+      return false;
+    });
 
     Preference hwSpecs = findPreference(SettingsConstants.HARDWARE_SPECS);
 
