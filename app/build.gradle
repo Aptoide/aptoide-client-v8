@@ -477,6 +477,13 @@ dependencies {
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
+  //AppNext
+  implementation 'com.appnext.sdk:ads:2.+'
+  implementation 'com.appnext.sdk:banners:2.+'
+  implementation 'com.appnext.sdk:native-ads2:2.+'
+  implementation 'com.appnext.sdk.adapters:mopub-ads:2.+'
+  implementation 'com.appnext.sdk.adapters:mopub-native-ads:2.+'
+  implementation 'com.appnext.sdk.adapters:mopub-banners:2.+'
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {

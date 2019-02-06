@@ -23,6 +23,7 @@ allprojects {
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
     maven { url "https://adcolony.bintray.com/AdColony" }
+    maven { url "http://dl.appnext.com/" }
 
     google()
     jcenter()
