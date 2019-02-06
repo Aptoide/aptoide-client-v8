@@ -11,6 +11,7 @@ import java.util.Map;
 public class PromotionsAnalytics {
   public static final String PROMOTION_DIALOG = "Promotion_Dialog";
   public static final String PROMOTIONS_INTERACT = "Promotions_Interact";
+  public static final String VALENTINE_MIGRATOR = "Valentine_Migrator";
   private static final String ACTION = "action";
   private static final String ACTION_CLAIM = "claim";
   private static final String ACTION_UPDATE = "update";
@@ -25,6 +26,7 @@ public class PromotionsAnalytics {
   private final String CLAIM = "claim";
   private final String WALLET_DIALOG = "wallet dialog";
   private final String CAPTCHA_DIALOG = "captcha dialog";
+  private final String SIGNATURE = "signature";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final DownloadAnalytics downloadAnalytics;
@@ -142,6 +144,15 @@ public class PromotionsAnalytics {
     data.put(VIEW, CAPTCHA_DIALOG);
 
     analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendValentineMigratorEvent(String packageName, Boolean signatureMatch) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(PACKAGE, packageName);
+    data.put(SIGNATURE, signatureMatch ? "same" : "different");
+
+    analyticsManager.logEvent(data, VALENTINE_MIGRATOR, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 }
