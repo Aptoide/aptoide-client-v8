@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -216,10 +217,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return inflater.inflate(R.layout.fragment_promotions, container, false);
   }
 
-  @Override public void showPromotionApp(PromotionViewApp promotionViewApp) {
+  @Override
+  public void showPromotionApp(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
     if (promotionViewApp.getPackageName()
         .equals("com.appcoins.wallet")) {
-      showWallet(promotionViewApp);
+      showWallet(promotionViewApp, isWalletInstalled);
     } else {
       if (promotionViewApp.getDownloadModel()
           .hasError()) {
@@ -313,7 +315,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     return RxView.clicks(genericErrorViewRetry);
   }
 
-  private void showWallet(PromotionViewApp promotionViewApp) {
+  private void showWallet(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
     if (promotionViewApp.getDownloadModel()
         .isDownloading()) {
       walletActiveView.setVisibility(View.VISIBLE);
@@ -445,14 +447,31 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       promotionAction.setText(getContext().getString(getButtonMessage(getState(promotionViewApp)),
           promotionViewApp.getAppcValue()));
       if (getState(promotionViewApp) == CLAIMED) {
-        promotionAction.setEnabled(false);
-        promotionAction.setBackgroundColor(getContext().getResources()
-            .getColor(R.color.grey_fog_light));
-        promotionAction.setBackgroundDrawable(getContext().getResources()
-            .getDrawable(R.drawable.card_border_fog_grey_normal));
-        promotionAction.setTextColor(getContext().getResources()
-            .getColor(R.color.grey_fog_light));
-        promotionsAdapter.isWalletInstalled(true);
+        if (!isWalletInstalled()) {
+          promotionAction.setEnabled(true);
+          TypedValue resultValue = new TypedValue();
+          getContext().getTheme()
+              .resolveAttribute(R.attr.installButtonBackground, resultValue, true);
+          promotionAction.setTextColor(Color.WHITE);
+          if (resultValue.resourceId != 0) {
+            promotionAction.setBackgroundResource(resultValue.resourceId);
+          } else {
+            promotionAction.setBackgroundColor(getContext().getResources()
+                .getColor(R.color.orange));
+          }
+          promotionAction.setText(getContext().getString(R.string.appview_button_install));
+          promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
+              new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.INSTALL_APP)));
+        } else {
+          promotionAction.setEnabled(false);
+          promotionAction.setBackgroundColor(getContext().getResources()
+              .getColor(R.color.grey_fog_light));
+          promotionAction.setBackgroundDrawable(getContext().getResources()
+              .getDrawable(R.drawable.card_border_fog_grey_normal));
+          promotionAction.setTextColor(getContext().getResources()
+              .getColor(R.color.grey_fog_light));
+        }
+        promotionsAdapter.isWalletInstalled(isWalletInstalled);
       } else if (getState(promotionViewApp) == CLAIM) {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundColor(getContext().getResources()
@@ -460,7 +479,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionAction.setTextColor(Color.WHITE);
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
-        promotionsAdapter.isWalletInstalled(true);
+        promotionsAdapter.isWalletInstalled(isWalletInstalled);
       } else {
         promotionAction.setEnabled(true);
         TypedValue resultValue = new TypedValue();
@@ -473,10 +492,23 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           promotionAction.setBackgroundColor(getContext().getResources()
               .getColor(R.color.orange));
         }
+        if (promotionViewApp.isClaimed()) {
+          promotionAction.setText(getContext().getString(R.string.appview_button_install));
+        }
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
       }
     }
+  }
+
+  private boolean isWalletInstalled() {
+    for (ApplicationInfo applicationInfo : getContext().getPackageManager()
+        .getInstalledApplications(0)) {
+      if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void handleDownloadError(DownloadModel.DownloadState downloadState) {
@@ -527,32 +559,30 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   private int getState(PromotionViewApp app) {
     int state;
-    if (app.isClaimed()) {
-      return CLAIMED;
+    DownloadModel downloadModel = app.getDownloadModel();
+    if (downloadModel.isDownloading()) {
+      return DOWNLOADING;
     } else {
-      DownloadModel downloadModel = app.getDownloadModel();
-
-      if (downloadModel.isDownloading()) {
-        return DOWNLOADING;
-      } else {
-        switch (downloadModel.getAction()) {
-          case DOWNGRADE:
-            state = DOWNGRADE;
-            break;
-          case INSTALL:
-            state = INSTALL;
-            break;
-          case OPEN:
-            state = CLAIM;
-            break;
-          case UPDATE:
-            state = UPDATE;
-            break;
-          default:
-            throw new IllegalArgumentException("Invalid type of download action");
-        }
-        return state;
+      switch (downloadModel.getAction()) {
+        case DOWNGRADE:
+          state = DOWNGRADE;
+          break;
+        case INSTALL:
+          state = INSTALL;
+          break;
+        case OPEN:
+          if (app.isClaimed()) {
+            return CLAIMED;
+          }
+          state = CLAIM;
+          break;
+        case UPDATE:
+          state = UPDATE;
+          break;
+        default:
+          throw new IllegalArgumentException("Invalid type of download action");
       }
+      return state;
     }
   }
 
