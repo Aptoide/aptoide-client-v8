@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -446,7 +447,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       promotionAction.setText(getContext().getString(getButtonMessage(getState(promotionViewApp)),
           promotionViewApp.getAppcValue()));
       if (getState(promotionViewApp) == CLAIMED) {
-        if (!isWalletInstalled) {
+        if (!isWalletInstalled()) {
           promotionAction.setEnabled(true);
           TypedValue resultValue = new TypedValue();
           getContext().getTheme()
@@ -458,8 +459,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
             promotionAction.setBackgroundColor(getContext().getResources()
                 .getColor(R.color.orange));
           }
+          promotionAction.setText(getContext().getString(R.string.appview_button_install));
           promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
-              new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
+              new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.INSTALL_APP)));
         } else {
           promotionAction.setEnabled(false);
           promotionAction.setBackgroundColor(getContext().getResources()
@@ -497,6 +499,16 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
       }
     }
+  }
+
+  private boolean isWalletInstalled() {
+    for (ApplicationInfo applicationInfo : getContext().getPackageManager()
+        .getInstalledApplications(0)) {
+      if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void handleDownloadError(DownloadModel.DownloadState downloadState) {
