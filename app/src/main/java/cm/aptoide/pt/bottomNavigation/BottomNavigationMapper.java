@@ -8,6 +8,12 @@ import cm.aptoide.pt.R;
 
 public class BottomNavigationMapper {
 
+  static final int HOME_POSITION = 0;
+  static final int SEARCH_POSITION = 1;
+  static final int STORES_POSITION = 2;
+  static final int APPS_POSITION = 3;
+  static final int CURATION_POSITION = 4;
+
   public BottomNavigationItem mapItemClicked(Integer menuItemId) {
     BottomNavigationItem bottomNavigationItem;
     switch (menuItemId) {
@@ -23,6 +29,9 @@ public class BottomNavigationMapper {
       case R.id.action_apps:
         bottomNavigationItem = BottomNavigationItem.APPS;
         break;
+      case R.id.action_curation:
+        bottomNavigationItem = BottomNavigationItem.CURATION;
+        break;
       default:
         throw new IllegalStateException("The selected menuItem is not supported");
     }
@@ -33,16 +42,19 @@ public class BottomNavigationMapper {
     int bottomNavigationPosition;
     switch (bottomNavigationItem) {
       case HOME:
-        bottomNavigationPosition = 0;
+        bottomNavigationPosition = HOME_POSITION;
         break;
       case SEARCH:
-        bottomNavigationPosition = 1;
+        bottomNavigationPosition = SEARCH_POSITION;
         break;
       case STORES:
-        bottomNavigationPosition = 2;
+        bottomNavigationPosition = STORES_POSITION;
         break;
       case APPS:
-        bottomNavigationPosition = 3;
+        bottomNavigationPosition = APPS_POSITION;
+        break;
+      case CURATION:
+        bottomNavigationPosition = CURATION_POSITION;
         break;
       default:
         throw new IllegalStateException("The selected bottomNavigationItem is not supported");
@@ -54,16 +66,19 @@ public class BottomNavigationMapper {
     int bottomNavigationPosition;
     switch (menuItemId) {
       case R.id.action_home:
-        bottomNavigationPosition = 0;
+        bottomNavigationPosition = HOME_POSITION;
         break;
       case R.id.action_search:
-        bottomNavigationPosition = 1;
+        bottomNavigationPosition = SEARCH_POSITION;
         break;
       case R.id.action_stores:
-        bottomNavigationPosition = 2;
+        bottomNavigationPosition = STORES_POSITION;
         break;
       case R.id.action_apps:
-        bottomNavigationPosition = 3;
+        bottomNavigationPosition = APPS_POSITION;
+        break;
+      case R.id.action_curation:
+        bottomNavigationPosition = CURATION_POSITION;
         break;
       default:
         throw new IllegalStateException("The selected menuItem is not supported");
