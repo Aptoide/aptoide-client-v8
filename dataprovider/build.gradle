@@ -52,6 +52,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_READ_V7_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
       matchingFallbacks = ['internal', 'prod']
@@ -74,6 +76,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_READ_V7_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
       matchingFallbacks = ['prod', 'internal']

@@ -194,6 +194,7 @@ import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
+import cm.aptoide.pt.search.SearchHostProvider;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -1103,10 +1104,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Singleton @Provides @Named("ws-prod-suggestions-base-url") String provideSearchBaseUrl() {
-    return "http://"
-        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST
-        + "/v1/";
+  @Singleton @Provides @Named("ws-prod-suggestions-base-url") String provideSearchBaseUrl(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new SearchHostProvider(ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences),
+        cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME,
+        cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST,
+        cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST).getSearchHost();
   }
 
   @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {
