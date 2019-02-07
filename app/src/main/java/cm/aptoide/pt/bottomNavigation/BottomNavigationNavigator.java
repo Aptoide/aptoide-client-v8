@@ -1,8 +1,9 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.bottomNavigation;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
