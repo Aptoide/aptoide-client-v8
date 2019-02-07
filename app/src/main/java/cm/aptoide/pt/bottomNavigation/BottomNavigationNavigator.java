@@ -1,6 +1,7 @@
 package cm.aptoide.pt.bottomNavigation;
 
 import android.support.v4.app.Fragment;
+import cm.aptoide.pt.CurationListFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.HomeFragment;
@@ -13,6 +14,12 @@ import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static cm.aptoide.pt.bottomNavigation.BottomNavigationMapper.APPS_POSITION;
+import static cm.aptoide.pt.bottomNavigation.BottomNavigationMapper.CURATION_POSITION;
+import static cm.aptoide.pt.bottomNavigation.BottomNavigationMapper.HOME_POSITION;
+import static cm.aptoide.pt.bottomNavigation.BottomNavigationMapper.SEARCH_POSITION;
+import static cm.aptoide.pt.bottomNavigation.BottomNavigationMapper.STORES_POSITION;
+
 /**
  * Created by D01 on 02/04/18.
  */
@@ -24,10 +31,6 @@ public class BottomNavigationNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
-  private final int homePosition = 0;
-  private final int searchPosition = 1;
-  private final int storesPosition = 2;
-  private final int appsPosition = 3;
   private final String theme;
   private ArrayList<Integer> bottomNavigationItems;
 
@@ -43,45 +46,54 @@ public class BottomNavigationNavigator {
 
   public void navigateToBottomNavigationItem(int bottomNavigationPosition) {
     switch (bottomNavigationPosition) {
-      case homePosition:
+      case HOME_POSITION:
         bottomNavigationAnalytics.sendNavigateToHomeClickEvent();
         navigateToHome();
         break;
-      case searchPosition:
+      case SEARCH_POSITION:
         bottomNavigationAnalytics.sendNavigateToSearchClickEvent();
         searchAnalytics.searchStart(SearchSource.BOTTOM_NAVIGATION, true);
         SearchResultFragment searchResultFragment = SearchResultFragment.newInstance(true);
         navigateToSearch(searchResultFragment);
         break;
-      case storesPosition:
+      case STORES_POSITION:
         bottomNavigationAnalytics.sendNavigateToStoresClickEvent();
         navigateToStore();
         break;
-      case appsPosition:
+      case APPS_POSITION:
         bottomNavigationAnalytics.sendNavigateToAppsClickEvent();
         navigateToApps();
+        break;
+      case CURATION_POSITION:
+        bottomNavigationAnalytics.sendNavigateToCurationClickEvent();
+        navigateToCuration();
         break;
     }
   }
 
   public void navigateToHome() {
     HomeFragment homeFragment = new HomeFragment();
-    navigateToSelectedFragment(homePosition, homeFragment);
+    navigateToSelectedFragment(HOME_POSITION, homeFragment);
   }
 
   public void navigateToSearch(SearchResultFragment searchResultFragment) {
-    navigateToSelectedFragment(searchPosition, searchResultFragment);
+    navigateToSelectedFragment(SEARCH_POSITION, searchResultFragment);
   }
 
   public void navigateToStore() {
     MyStoresFragment myStoresFragment =
         MyStoresFragment.newInstance(getStoreEvent(), theme, "stores", StoreContext.home);
-    navigateToSelectedFragment(storesPosition, myStoresFragment);
+    navigateToSelectedFragment(STORES_POSITION, myStoresFragment);
   }
 
   public void navigateToApps() {
     AppsFragment appsFragment = new AppsFragment();
-    navigateToSelectedFragment(appsPosition, appsFragment);
+    navigateToSelectedFragment(APPS_POSITION, appsFragment);
+  }
+
+  public void navigateToCuration() {
+    CurationListFragment curationListFragment = new CurationListFragment();
+    navigateToSelectedFragment(CURATION_POSITION, curationListFragment);
   }
 
   public void navigateBack() {
@@ -114,17 +126,20 @@ public class BottomNavigationNavigator {
   private void navigateBackToBottomNavigationItem(int bottomNavigationPosition) {
     Fragment fragment = null;
     switch (bottomNavigationPosition) {
-      case homePosition:
+      case HOME_POSITION:
         fragment = new HomeFragment();
         break;
-      case searchPosition:
+      case SEARCH_POSITION:
         fragment = SearchResultFragment.newInstance(true);
         break;
-      case storesPosition:
+      case STORES_POSITION:
         fragment = MyStoresFragment.newInstance(getStoreEvent(), "", "stores", StoreContext.home);
         break;
-      case appsPosition:
+      case APPS_POSITION:
         fragment = new AppsFragment();
+        break;
+      case CURATION_POSITION:
+        fragment = new CurationListFragment();
         break;
     }
     if (fragment != null) {

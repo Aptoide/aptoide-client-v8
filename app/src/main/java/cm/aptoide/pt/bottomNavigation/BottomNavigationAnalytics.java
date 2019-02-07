@@ -41,6 +41,11 @@ public class BottomNavigationAnalytics {
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
+  public void sendNavigateToCurationClickEvent() {
+    analyticsManager.logEvent(createBottomNavData("curation"), BOTTOM_NAVIGATION_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
   private Map<String, Object> createBottomNavData(String view) {
     Map<String, Object> map = new HashMap<>();
     map.put(VIEW, view);
