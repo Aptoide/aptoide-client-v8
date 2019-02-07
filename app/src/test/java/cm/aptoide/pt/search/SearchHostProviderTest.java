@@ -12,4 +12,11 @@ public class SearchHostProviderTest {
     String searchHost = searchHostProvider.getSearchHost();
     assertEquals(searchHost, "http://buzz.aptoide.com:10001/v1/");
   }
+
+  @Test public void getSearchHost_toolBoxDisabled_aptoideHTTPSscheme() {
+    SearchHostProvider searchHostProvider =
+        new SearchHostProvider(false, "https", "buzz.aptoide.com:10001", "buzz.aptoide.com:10002");
+    String searchHost = searchHostProvider.getSearchHost();
+    assertEquals(searchHost, "https://buzz.aptoide.com:10002/v1/");
+  }
 }
