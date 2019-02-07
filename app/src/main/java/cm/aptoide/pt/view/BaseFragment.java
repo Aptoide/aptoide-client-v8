@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.FlavourFragmentModule;
-import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 public abstract class BaseFragment extends RxFragment {

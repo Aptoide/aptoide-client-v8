@@ -1,7 +1,7 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.app.Activity;
-import cm.aptoide.pt.home.BottomNavigationNavigator;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
 
