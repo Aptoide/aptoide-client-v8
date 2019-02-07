@@ -6,14 +6,14 @@ import static org.junit.Assert.assertEquals;
 
 public class SearchHostProviderTest {
 
-  @Test public void getSearchHost_toolBoxDisabled_aptoideHTTPscheme() {
+  @Test public void getSearchHost_toolBoxDisabled_aptoideHttpScheme() {
     SearchHostProvider searchHostProvider =
         new SearchHostProvider(false, "http", "buzz.aptoide.com:10001", "buzz.aptoide.com:10002");
     String searchHost = searchHostProvider.getSearchHost();
     assertEquals(searchHost, "http://buzz.aptoide.com:10001/v1/");
   }
 
-  @Test public void getSearchHost_toolBoxDisabled_aptoideHTTPSscheme() {
+  @Test public void getSearchHost_toolBoxDisabled_aptoideHttpsScheme() {
     SearchHostProvider searchHostProvider =
         new SearchHostProvider(false, "https", "buzz.aptoide.com:10001", "buzz.aptoide.com:10002");
     String searchHost = searchHostProvider.getSearchHost();
