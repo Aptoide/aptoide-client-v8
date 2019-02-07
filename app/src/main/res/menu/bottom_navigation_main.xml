@@ -27,4 +27,10 @@
       android:title="@string/bottomnavigation_button_apps"
       app:showAsAction="ifRoom"/>
 
+  <item
+      android:id="@+id/action_curation"
+      android:enabled="true"
+      android:icon="@drawable/ic_action_important"
+      android:title="@string/bottomnavigation_button_curation"
+      app:showAsAction="ifRoom"/>
 </menu>
