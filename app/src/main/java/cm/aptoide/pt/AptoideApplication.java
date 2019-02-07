@@ -108,6 +108,7 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
+import com.mopub.nativeads.AppnextCustomAdapterConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -343,7 +344,15 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void initializeMoPub(Context context, String moPubKey) {
-    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(moPubKey).build();
+    Map<String, String> mediatedNetworkConfiguration = new HashMap<>();
+    mediatedNetworkConfiguration.put("Placement_Id", "xxxx");
+
+    SdkConfiguration sdkConfiguration =
+        new SdkConfiguration.Builder(moPubKey).withAdditionalNetwork(
+            AppnextCustomAdapterConfiguration.class.toString())
+            .withMediatedNetworkConfiguration(AppnextCustomAdapterConfiguration.class.toString(),
+                mediatedNetworkConfiguration)
+            .build();
     MoPub.initializeSdk(context, sdkConfiguration, null);
   }
 
