@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.bottomNavigation;
 
 public enum BottomNavigationItem {
   HOME, SEARCH, STORES, APPS

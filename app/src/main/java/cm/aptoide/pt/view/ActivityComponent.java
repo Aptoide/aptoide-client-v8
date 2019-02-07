@@ -4,7 +4,7 @@ import cm.aptoide.pt.FlavourActivityModule;
 import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.analytics.view.AnalyticsActivity;
 import cm.aptoide.pt.app.view.donations.view.DonateDialogFragment;
-import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogFragment;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
