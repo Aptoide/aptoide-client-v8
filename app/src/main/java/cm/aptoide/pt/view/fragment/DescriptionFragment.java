@@ -230,8 +230,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    emptyData = (TextView) view.findViewById(R.id.empty_data);
-    descriptionContainer = (TextView) view.findViewById(R.id.data_container);
+    emptyData = view.findViewById(R.id.empty_data);
+    descriptionContainer = view.findViewById(R.id.data_container);
   }
 
   @Override public void onDestroyView() {

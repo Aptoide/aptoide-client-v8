@@ -32,16 +32,16 @@
   <string name="google">Google</string>
   <string name="connect_google">Connect with Google</string>
   <string name="done">Done</string>
-  <string name="addressbook_share_phone">Share your phone number so your friends can easily find you on %s</string>
+  <string name="addressbook_share_phone">Share your phone number so your friends can easily find you!</string>
   <string name="addressbook_phone_number">Phone number</string>
   <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
   <string name="addressbook_invite_friends">Invite friends to join you!</string>
   <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
-  <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using %1$s</string>
-  <string name="addressbook_2nd_msg">%1$s will search in your address book for friends and family
-    that are using our app store. To protect your privacy, no private data will be sent out to %1$s
-    servers</string>
+  <string name="addressbook_success_connected_friends">We successfully connected you with %s friends that use our platform!</string>
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using our app store.</string>
+  <string name="addressbook_2nd_msg">Aptoide will search in your address book for friends and family
+    that are using our app store. To protect your privacy, no private data will be sent out to Aptoide
+    servers.</string>
   <string name="addressbook_3rd_msg">LEARN MORE</string>
   <string name="address_book_twitter_error">Twitter authorization error</string>
   <string name="follow_my_store">Hello, follow my %1$s store here %2$s</string>

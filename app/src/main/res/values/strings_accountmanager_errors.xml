@@ -72,7 +72,7 @@
 
   <string name="ws_error_AUTH_1">Invalid login credentials!</string>
   <string name="ws_error_AUTH_2">Invalid credentials!</string>
-  <string name="ws_error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support team.</string>
+  <string name="ws_error_AUTH_3">Your account was cancelled. For any questions, contact our Support team.</string>
   <string name="ws_error_AUTH_4">HMAC Authentication failure</string>
   <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Couldn\'t login with Google. Check your Google account (you may need to validate your email address).</string>

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.promotions;
 
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
-import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 
 public class GetPromotionAppsResponse
     extends BaseV7EndlessDataListResponse<GetPromotionAppsResponse.PromotionAppModel> {
@@ -13,7 +13,7 @@ public class GetPromotionAppsResponse
     private boolean claimed;
     private float appc;
     private String promotionDescription;
-    private App app;
+    private GetAppMeta.App app;
 
     public PromotionAppModel() {
     }
@@ -34,11 +34,11 @@ public class GetPromotionAppsResponse
       this.appc = appc;
     }
 
-    public App getApp() {
+    public GetAppMeta.App getApp() {
       return app;
     }
 
-    public void setApp(App app) {
+    public void setApp(GetAppMeta.App app) {
       this.app = app;
     }
 

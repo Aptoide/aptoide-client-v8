@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addressbook_2nd_msg">We\'ll search in your address book for friends and family
+    that are using our app store. To protect your privacy, no private data will be sent out to our
+    servers.</string>
+</resources>
