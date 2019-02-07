@@ -65,7 +65,7 @@ public class EditorialPresenterTest {
             "icon", 1, "packageName", 0, "graphic", null, 1, "storeName", "verName", 0, "path",
             "pathAlt", "md5", "actionTitle", "url", 1));
     editorialViewModel = new EditorialViewModel(editorialContent, "title", "caption", "background",
-        Collections.emptyList(), editorialContent);
+        Collections.emptyList(), editorialContent, false);
     downloadModel = new EditorialDownloadModel(DownloadModel.Action.INSTALL, 0,
         DownloadModel.DownloadState.ACTIVE, null, 1);
     errorEditorialViewModel = new EditorialViewModel(EditorialViewModel.Error.GENERIC);
@@ -176,12 +176,12 @@ public class EditorialPresenterTest {
     //Given an initialized presenter
     editorialPresenter.handleClickOnAppCard();
 
-    //When the user clicks on an appCard
-    when(view.appCardClicked(editorialViewModel)).thenReturn(
-        Observable.just(new EditorialEvent(EditorialEvent.Type.APPCARD, 0, "packageName")));
-
     //Then it should request and load the editorialViewModel
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
+
+    //When the user clicks on an appCard
+    when(view.appCardClicked(editorialViewModel)).thenReturn(
+        Observable.just(new EditorialEvent(EditorialEvent.Type.APPCARD, 1, "packageName")));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

@@ -402,7 +402,7 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(pauseDownload)
         .map(click -> new EditorialDownloadEvent(EditorialEvent.Type.PAUSE,
             editorialViewModel.getBottomCardPackageName(), editorialViewModel.getBottomCardMd5(),
-            editorialViewModel.getBottomCardVercode(), editorialViewModel.getBottomCardAppId()))
+            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId()))
         .mergeWith(downloadEventListener.filter(editorialEvent -> editorialEvent.getClickType()
             .equals(EditorialEvent.Type.PAUSE)));
   }
@@ -412,7 +412,7 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(resumeDownload)
         .map(click -> new EditorialDownloadEvent(EditorialEvent.Type.RESUME,
             editorialViewModel.getBottomCardPackageName(), editorialViewModel.getBottomCardMd5(),
-            editorialViewModel.getBottomCardVercode(), editorialViewModel.getBottomCardAppId()))
+            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId()))
         .mergeWith(downloadEventListener.filter(editorialEvent -> editorialEvent.getClickType()
             .equals(EditorialEvent.Type.RESUME)));
   }
@@ -422,7 +422,7 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(cancelDownload)
         .map(click -> new EditorialDownloadEvent(EditorialEvent.Type.CANCEL,
             editorialViewModel.getBottomCardPackageName(), editorialViewModel.getBottomCardMd5(),
-            editorialViewModel.getBottomCardVercode(), editorialViewModel.getBottomCardAppId()))
+            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId()))
         .mergeWith(downloadEventListener.filter(editorialEvent -> editorialEvent.getClickType()
             .equals(EditorialEvent.Type.CANCEL)));
   }
@@ -557,7 +557,7 @@ public class EditorialFragment extends NavigationTrackFragment
       appCardTitle.setText(editorialViewModel.getBottomCardAppName());
       appCardTitle.setVisibility(View.VISIBLE);
       ImageLoader.with(getContext())
-          .load(editorialViewModel.getBottomCardAppIcon(), appCardImage);
+          .load(editorialViewModel.getBottomCardIcon(), appCardImage);
       appCardView.setVisibility(View.VISIBLE);
     }
   }

@@ -11,47 +11,117 @@ import java.util.List;
 public class EditorialViewModel {
 
   private final List<EditorialContent> contentList;
+  private final String title;
   private final String caption;
   private final String background;
   private final List<Integer> placeHolderPositions;
   private final List<EditorialContent> placeHolderContent;
-  private final String title;
+  private final String appName;
+  private final String icon;
+  private final long id;
+  private final String packageName;
+  private final String md5sum;
+  private final int versionCode;
+  private final String versionName;
+  private final String path;
+  private final String pathAlt;
+  private final Obb obb;
+  private final boolean shouldHaveAnimation;
   private final boolean loading;
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
       String caption, String background, List<Integer> placeHolderPositions,
-      List<EditorialContent> placeHolderContent) {
+      List<EditorialContent> placeHolderContent, boolean shouldHaveAnimation) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
     this.background = background;
     this.placeHolderPositions = placeHolderPositions;
     this.placeHolderContent = placeHolderContent;
+    this.shouldHaveAnimation = shouldHaveAnimation;
+    appName = "";
+    icon = null;
+    id = -1;
+    packageName = "";
+    md5sum = "";
+    versionCode = -1;
+    versionName = "";
+    path = "";
+    pathAlt = "";
+    obb = null;
     loading = false;
     error = null;
   }
 
   public EditorialViewModel(boolean loading) {
     this.loading = loading;
-    error = null;
+    title = "";
+    caption = "";
+    background = "";
+    placeHolderPositions = Collections.emptyList();
     contentList = Collections.emptyList();
-    this.title = "";
-    this.caption = "";
-    this.background = "";
-    this.placeHolderPositions = Collections.emptyList();
     placeHolderContent = Collections.emptyList();
+    appName = "";
+    icon = null;
+    id = -1;
+    packageName = "";
+    md5sum = "";
+    versionCode = -1;
+    versionName = "";
+    path = "";
+    pathAlt = "";
+    obb = null;
+    shouldHaveAnimation = false;
+    error = null;
   }
 
   public EditorialViewModel(Error error) {
-    loading = false;
     this.error = error;
+    loading = false;
     contentList = Collections.emptyList();
-    this.title = "";
-    this.caption = "";
-    this.background = "";
-    this.placeHolderPositions = Collections.emptyList();
+    title = "";
+    caption = "";
+    background = "";
+    placeHolderPositions = Collections.emptyList();
     placeHolderContent = Collections.emptyList();
+    appName = "";
+    icon = null;
+    id = -1;
+    packageName = "";
+    md5sum = "";
+    versionCode = -1;
+    versionName = "";
+    path = "";
+    pathAlt = "";
+    obb = null;
+    shouldHaveAnimation = false;
+  }
+
+  public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
+      String caption, String background, List<Integer> placeHolderPositions,
+      List<EditorialContent> placeHolderContent, String appName, String icon, long id,
+      String packageName, String md5sum, int versionCode, String versionName, String path,
+      String pathAlt, Obb obb, boolean shouldHaveAnimation) {
+    contentList = editorialContentList;
+    this.title = title;
+    this.caption = caption;
+    this.background = background;
+    this.placeHolderPositions = placeHolderPositions;
+    this.placeHolderContent = placeHolderContent;
+    this.appName = appName;
+    this.icon = icon;
+    this.id = id;
+    this.packageName = packageName;
+    this.md5sum = md5sum;
+    this.versionCode = versionCode;
+    this.versionName = versionName;
+    this.path = path;
+    this.pathAlt = pathAlt;
+    this.obb = obb;
+    this.shouldHaveAnimation = shouldHaveAnimation;
+    error = null;
+    loading = false;
   }
 
   boolean hasContent() {
@@ -91,54 +161,43 @@ public class EditorialViewModel {
   }
 
   String getBottomCardAppName() {
-    return getBottomCardContent().getAppName();
-  }
-
-  String getBottomCardAppIcon() {
-    return getBottomCardContent().getIcon();
-  }
-
-  long getBottomCardAppId() {
-    return getBottomCardContent().getId();
-  }
-
-  String getBottomCardPackageName() {
-    return getBottomCardContent().getPackageName();
-  }
-
-  String getBottomCardMd5() {
-    return getBottomCardContent().getMd5sum();
-  }
-
-  int getBottomCardVercode() {
-    return getBottomCardContent().getVerCode();
+    return appName;
   }
 
   String getBottomCardIcon() {
-    return getBottomCardContent().getIcon();
+    return icon;
   }
 
-  String getBottomCardVername() {
-    return getBottomCardContent().getVerName();
+  long getBottomCardAppId() {
+    return id;
+  }
+
+  String getBottomCardPackageName() {
+    return packageName;
+  }
+
+  String getBottomCardMd5() {
+    return md5sum;
+  }
+
+  int getBottomCardVersionCode() {
+    return versionCode;
+  }
+
+  String getBottomCardVersionName() {
+    return versionName;
   }
 
   String getBottomCardPath() {
-    return getBottomCardContent().getPath();
+    return path;
   }
 
   String getBottomCardPathAlt() {
-    return getBottomCardContent().getPathAlt();
+    return pathAlt;
   }
 
   Obb getBottomCardObb() {
-    return getBottomCardContent().getObb();
-  }
-
-  boolean shouldHaveAnimation() {
-    if (placeHolderPositions != null) {
-      return placeHolderPositions.size() == 1;
-    }
-    return false;
+    return obb;
   }
 
   String getBackgroundImage() {
@@ -153,15 +212,8 @@ public class EditorialViewModel {
     return placeHolderContent;
   }
 
-  private int getBottomCardPlaceHolderPosition() {
-    if (placeHolderPositions != null && !placeHolderPositions.isEmpty()) {
-      return placeHolderPositions.get(0);
-    }
-    return -1;
-  }
-
-  private EditorialContent getBottomCardContent() {
-    return contentList.get(getBottomCardPlaceHolderPosition());
+  boolean shouldHaveAnimation() {
+    return shouldHaveAnimation;
   }
 
   public enum Error {

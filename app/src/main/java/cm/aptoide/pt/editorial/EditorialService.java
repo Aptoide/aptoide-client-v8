@@ -37,7 +37,6 @@ public class EditorialService {
   public EditorialService(BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, SharedPreferences sharedPreferences) {
-
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
     this.okHttpClient = okHttpClient;
     this.tokenInvalidator = tokenInvalidator;
@@ -81,9 +80,17 @@ public class EditorialService {
       List<EditorialContent> placeHolderContent =
           buildPlaceHolderContent(editorialContentList, placeHolderPositions);
 
-      return Observable.just(
-          new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
-              card.getBackground(), placeHolderPositions, placeHolderContent));
+      EditorialContent bottomCardPlaceHolderContent = null;
+
+      if (!placeHolderContent.isEmpty() && placeHolderContent.size() == 1) {
+        bottomCardPlaceHolderContent = placeHolderContent.get(0);
+      }
+
+      EditorialViewModel editorialViewModel =
+          buildEditorialViewModel(editorialContentList, card, placeHolderPositions,
+              placeHolderContent, bottomCardPlaceHolderContent);
+
+      return Observable.just(editorialViewModel);
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
@@ -168,5 +175,21 @@ public class EditorialService {
     }
     return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
         content.getType(), position);
+  }
+
+  private EditorialViewModel buildEditorialViewModel(List<EditorialContent> editorialContentList,
+      Data card, List<Integer> placeHolderPositions, List<EditorialContent> placeHolderContent,
+      EditorialContent bottomCardPlaceHolderContent) {
+    if (bottomCardPlaceHolderContent != null) {
+      return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
+          card.getBackground(), placeHolderPositions, placeHolderContent,
+          bottomCardPlaceHolderContent.getAppName(), bottomCardPlaceHolderContent.getIcon(),
+          bottomCardPlaceHolderContent.getId(), bottomCardPlaceHolderContent.getPackageName(),
+          bottomCardPlaceHolderContent.getMd5sum(), bottomCardPlaceHolderContent.getVerCode(),
+          bottomCardPlaceHolderContent.getVerName(), bottomCardPlaceHolderContent.getPath(),
+          bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true);
+    }
+    return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
+        card.getBackground(), placeHolderPositions, placeHolderContent, false);
   }
 }

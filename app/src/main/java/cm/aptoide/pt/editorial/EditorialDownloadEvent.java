@@ -59,8 +59,8 @@ public class EditorialDownloadEvent {
     this.packageName = editorialViewModel.getBottomCardPackageName();
     this.md5sum = editorialViewModel.getBottomCardMd5();
     this.icon = editorialViewModel.getBottomCardIcon();
-    this.verName = editorialViewModel.getBottomCardVername();
-    this.verCode = editorialViewModel.getBottomCardVercode();
+    this.verName = editorialViewModel.getBottomCardVersionName();
+    this.verCode = editorialViewModel.getBottomCardVersionCode();
     this.path = editorialViewModel.getBottomCardPath();
     this.pathAlt = editorialViewModel.getBottomCardPathAlt();
     this.obb = editorialViewModel.getBottomCardObb();
