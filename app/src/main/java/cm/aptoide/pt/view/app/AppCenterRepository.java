@@ -119,4 +119,15 @@ public class AppCenterRepository {
             .map(apps -> new AppsList(apps, appsList.isLoading(), appsList.getOffset())))
         .toSingle();
   }
+
+  public Single<AppsList> loadAppcRecommendedApps(int limit, String packageName) {
+    return appService.loadAppcRecommendedApps(limit, packageName)
+        .flatMapObservable(appsList -> Observable.just(appsList)
+            .flatMapIterable(AppsList::getList)
+            .filter(application -> !application.getPackageName()
+                .equals(packageName))
+            .toList()
+            .map(apps -> new AppsList(apps, appsList.isLoading(), appsList.getOffset())))
+        .toSingle();
+  }
 }

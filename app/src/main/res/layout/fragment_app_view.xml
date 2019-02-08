@@ -278,6 +278,15 @@
               android:visibility="gone"
               />
 
+          <include
+              layout="@layout/appview_similar_appc_layout"
+              android:id="@+id/similar_download_appc_apps"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="9dp"
+              android:visibility="gone"
+              />
+
         </LinearLayout>
         <include
             layout="@layout/separator_horizontal"
@@ -389,6 +398,15 @@
         <include
             layout="@layout/appview_similar_layout"
             android:id="@+id/similar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:visibility="gone"
+            />
+
+        <include
+            layout="@layout/appview_similar_appc_layout"
+            android:id="@+id/similar_appc_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"

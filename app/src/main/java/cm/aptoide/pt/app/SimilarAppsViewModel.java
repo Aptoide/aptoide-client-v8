@@ -55,11 +55,11 @@ public class SimilarAppsViewModel {
   }
 
   public boolean hasSimilarApps() {
-    return !hasRecommendedAppsError() && (!recommendedApps.isEmpty() || ad != null);
+    return !hasRecommendedAppsError() && !recommendedApps.isEmpty();
   }
 
   public boolean hasError() {
-    return (recommendedAppsError != null || adError != null);
+    return (recommendedAppsError != null || adError != null || ad == null);
   }
 
   public ApplicationAdError getAdError() {
@@ -75,7 +75,7 @@ public class SimilarAppsViewModel {
   }
 
   public boolean hasAdError() {
-    return (adError != null);
+    return (adError != null || ad == null);
   }
 
   public void setHasRecordedAdImpression(boolean recorded) {

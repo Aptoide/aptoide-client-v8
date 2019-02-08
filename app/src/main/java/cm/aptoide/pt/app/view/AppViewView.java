@@ -175,4 +175,10 @@ public interface AppViewView extends InstallAppView {
   void setSimilarAppsMoPubAdapters();
 
   void loadNativeAds();
+
+  void hideSimilarAppcApps();
+
+  void setSimilarAppcAppsAdapters();
+
+  void populateSimilarAppc(SimilarAppsViewModel appcAppsViewModel);
 }

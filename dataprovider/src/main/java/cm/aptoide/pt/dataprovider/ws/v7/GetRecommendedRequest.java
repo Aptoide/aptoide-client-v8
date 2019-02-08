@@ -35,11 +35,19 @@ public class GetRecommendedRequest extends V7<ListApps, GetRecommendedRequest.Bo
     private Integer limit;
     private String packageName;
     private int offset;
+    private String section;
 
     public Body(int limit, String packageName) {
       super();
       this.limit = limit;
       this.packageName = packageName;
+    }
+
+    public Body(int limit, String packageName, String section) {
+      super();
+      this.limit = limit;
+      this.packageName = packageName;
+      this.section = section;
     }
 
     @Override public int getOffset() {
@@ -60,6 +68,14 @@ public class GetRecommendedRequest extends V7<ListApps, GetRecommendedRequest.Bo
 
     public void setPackageName(String packageName) {
       this.packageName = packageName;
+    }
+
+    public String getSection() {
+      return section;
+    }
+
+    public void setSection(String section) {
+      this.section = section;
     }
   }
 }

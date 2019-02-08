@@ -98,6 +98,7 @@ import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
+import cm.aptoide.pt.view.custom.HorizontalHeaderItemDecoration;
 import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -154,10 +155,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private DonationsAdapter donationsAdapter;
   private AppViewSimilarAppsAdapter similarAppsAdapter;
   private AppViewSimilarAppsAdapter similarDownloadsAdapter;
+  private AppViewSimilarAppsAdapter similarAppcAppsAdapter;
+  private AppViewSimilarAppsAdapter similarAppcDownloadsAdapter;
   private PublishSubject<ScreenShotClickEvent> screenShotClick;
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
+  private PublishSubject<SimilarAppClickEvent> similarAppcAppClick;
   private PublishSubject<ShareDialogs.ShareResponse> shareDialogClick;
   private PublishSubject<Integer> reviewsAutoScroll;
   private PublishSubject<Void> noNetworkRetryClick;
@@ -169,6 +173,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
+  private PublishSubject<Boolean> similarAppcAppsVisibilitySubject;
   private PublishSubject<DownloadModel.Action> installClickSubject;
   private PublishSubject<MoPubInterstitialAdClickType> interstitialClick;
 
@@ -191,6 +196,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView appcRewardValue;
   private View similarDownloadView;
   private RecyclerView similarDownloadApps;
+  private View similarAppcDownloadView;
+  private RecyclerView similarAppcDownloadApps;
   private View versionsLayout;
   private TextView latestVersionTitle;
   private TextView latestVersion;
@@ -229,6 +236,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private Button storeFollow;
   private View similarBottomView;
   private RecyclerView similarApps;
+  private View similarAppcBottomView;
+  private RecyclerView similarAppcApps;
   private View infoWebsite;
   private View infoEmail;
   private View infoPrivacy;
@@ -274,6 +283,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     readMoreClick = PublishSubject.create();
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
+    similarAppcAppClick = PublishSubject.create();
     shareDialogClick = PublishSubject.create();
     ready = PublishSubject.create();
     reviewsAutoScroll = PublishSubject.create();
@@ -281,6 +291,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     genericRetryClick = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
     similarAppsVisibilitySubject = PublishSubject.create();
+    similarAppcAppsVisibilitySubject = PublishSubject.create();
     shareRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
@@ -325,6 +336,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             (TextView) appcRewardView.findViewById(R.id.appc_billing_text_secondary));
     similarDownloadView = view.findViewById(R.id.similar_download_apps);
     similarDownloadApps = (RecyclerView) similarDownloadView.findViewById(R.id.similar_list);
+    similarAppcDownloadView = view.findViewById(R.id.similar_download_appc_apps);
+    similarAppcDownloadApps =
+        (RecyclerView) similarAppcDownloadView.findViewById(R.id.similar_appc_list);
     versionsLayout = view.findViewById(R.id.versions_layout);
     latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
     latestVersion = versionsLayout.findViewById(R.id.latest_version);
@@ -385,6 +399,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     storeFollow = (Button) view.findViewById(R.id.follow_button);
     similarBottomView = view.findViewById(R.id.similar_layout);
     similarApps = (RecyclerView) similarBottomView.findViewById(R.id.similar_list);
+    similarAppcBottomView = view.findViewById(R.id.similar_appc_layout);
+    similarAppcApps = (RecyclerView) similarAppcBottomView.findViewById(R.id.similar_appc_list);
     infoWebsite = view.findViewById(R.id.website_label);
     infoEmail = view.findViewById(R.id.email_label);
     infoPrivacy = view.findViewById(R.id.privacy_policy_label);
@@ -416,14 +432,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
     LinearLayoutManager similarDownloadsLayout =
         new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+    LinearLayoutManager similarAppcLayout =
+        new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+    LinearLayoutManager similarAppcDownloadsLayout =
+        new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
     reviewsView.setLayoutManager(layoutManager);
     // because otherwise the AppBar won't be collapsed
     reviewsView.setNestedScrollingEnabled(false);
     similarApps.setNestedScrollingEnabled(false);
-
-    similarDownloadApps.setLayoutManager(similarDownloadsLayout);
-    similarApps.setLayoutManager(similarLayout);
+    similarAppcApps.setNestedScrollingEnabled(false);
 
     similarApps.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
@@ -432,7 +450,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         outRect.set(margin, margin, 0, margin);
       }
     });
-
     similarDownloadApps.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
           RecyclerView.State state) {
@@ -441,12 +458,27 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       }
     });
 
+    HorizontalHeaderItemDecoration similarAppcHeaderItemDecoration =
+        new HorizontalHeaderItemDecoration(getContext(), similarAppcApps,
+            R.layout.appview_appc_similar_header,
+            AptoideUtils.ScreenU.getPixelsForDip(112, view.getResources()),
+            AptoideUtils.ScreenU.getPixelsForDip(5, view.getResources()));
+    similarAppcApps.addItemDecoration(similarAppcHeaderItemDecoration);
+    similarAppcDownloadApps.addItemDecoration(similarAppcHeaderItemDecoration);
+
+    similarDownloadApps.setLayoutManager(similarDownloadsLayout);
+    similarApps.setLayoutManager(similarLayout);
+    similarAppcDownloadApps.setLayoutManager(similarAppcDownloadsLayout);
+    similarAppcApps.setLayoutManager(similarAppcLayout);
+
     SnapHelper commentsSnap = new SnapToStartHelper();
     SnapHelper screenshotsSnap = new SnapToStartHelper();
     SnapHelper similarSnap = new SnapToStartHelper();
+    SnapHelper similarAppcSnap = new SnapToStartHelper();
     commentsSnap.attachToRecyclerView(reviewsView);
     screenshotsSnap.attachToRecyclerView(screenshots);
     similarSnap.attachToRecyclerView(similarApps);
+    similarAppcSnap.attachToRecyclerView(similarAppcApps);
 
     setupToolbar();
 
@@ -584,7 +616,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     appview = null;
     screenshotsAdapter = null;
     similarAppsAdapter = null;
+    similarAppcAppsAdapter = null;
     similarDownloadsAdapter = null;
+    similarAppcDownloadsAdapter = null;
     menu = null;
     toolbar = null;
     actionBar = null;
@@ -1206,6 +1240,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
+  @Override public void hideSimilarAppcApps() {
+    similarAppcBottomView.setVisibility(View.GONE);
+    similarAppcDownloadView.setVisibility(View.GONE);
+  }
+
+  @Override public void setSimilarAppcAppsAdapters() {
+    createSimilarAppcAppsAdapters();
+    similarAppcDownloadApps.setAdapter(similarAppcDownloadsAdapter);
+    similarAppcApps.setAdapter(similarAppcAppsAdapter);
+  }
+
+  @Override public void populateSimilarAppc(SimilarAppsViewModel similarApps) {
+    similarAppcAppsAdapter.update(mapToSimilar(similarApps, false));
+    similarAppcDownloadsAdapter.update(mapToSimilar(similarApps, false));
+    similarAppcBottomView.setVisibility(View.VISIBLE);
+  }
+
   @NonNull private ViewBinder getMoPubAdViewBinder() {
     return new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
         .iconImageId(R.id.icon)
@@ -1221,6 +1272,15 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             "similar_downloads");
   }
 
+  private void createSimilarAppcAppsAdapters() {
+    similarAppcAppsAdapter =
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat,
+            similarAppcAppClick, "similar_appc_apps");
+    similarAppcDownloadsAdapter =
+        new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat,
+            similarAppcAppClick, "similar_appc_downloads");
+  }
+
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
     if (!hasSimilarApps) {
       hideSimilarApps();
@@ -1232,6 +1292,22 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       } else {
         if (similarDownloadView.getVisibility() != View.VISIBLE) {
           similarBottomView.setVisibility(View.VISIBLE);
+        }
+      }
+    }
+  }
+
+  private void manageSimilarAppcAppsVisibility(boolean hasSimilarAppcApps, boolean isDownloading) {
+    if (!hasSimilarAppcApps) {
+      hideSimilarAppcApps();
+    } else {
+      if (isDownloading) {
+        similarAppcBottomView.setVisibility(View.GONE);
+        similarAppcDownloadView.setVisibility(View.VISIBLE);
+        similarAppcAppsVisibilitySubject.onNext(true);
+      } else {
+        if (similarAppcDownloadView.getVisibility() != View.VISIBLE) {
+          similarAppcBottomView.setVisibility(View.VISIBLE);
         }
       }
     }
@@ -1475,6 +1551,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showDownloadAppModel(DownloadAppViewModel model, boolean hasDonations) {
     DownloadModel downloadModel = model.getDownloadModel();
     SimilarAppsViewModel similarAppsViewModel = model.getSimilarAppsViewModel();
+    SimilarAppsViewModel similarAppcAppsViewModel = model.getSimilarAppcAppsViewModel();
     AppCoinsViewModel appCoinsViewModel = model.getAppCoinsViewModel();
     this.action = downloadModel.getAction();
     if (downloadModel.getAction() == DownloadModel.Action.PAY) {
@@ -1488,6 +1565,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
       manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), true);
+      manageSimilarAppcAppsVisibility(similarAppcAppsViewModel.hasSimilarApps(), true);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
       if (hasDonations) {
@@ -1498,6 +1576,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
       manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), false);
+      manageSimilarAppcAppsVisibility(similarAppcAppsViewModel.hasSimilarApps(), false);
       setButtonText(downloadModel);
       if (downloadModel.hasError()) {
         handleDownloadError(downloadModel.getDownloadState());
@@ -1788,16 +1867,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     /**
      * Only open the appview
      */
-    OPEN_ONLY,
-    /**
+    OPEN_ONLY, /**
      * opens the appView and starts the installation
      */
-    OPEN_AND_INSTALL,
-    /**
+    OPEN_AND_INSTALL, /**
      * open the appView and ask user if want to install the app
      */
-    OPEN_WITH_INSTALL_POPUP,
-    /**
+    OPEN_WITH_INSTALL_POPUP, /**
      * open the appView and ask user if want to install the app
      */
     APK_FY_INSTALL_POPUP

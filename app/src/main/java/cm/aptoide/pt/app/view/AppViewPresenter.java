@@ -744,10 +744,28 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
-            updateReviews(appViewModel),
-            (similarAppsViewModel, reviewsViewModel) -> Observable.just(appViewModel))
+            updateSuggestedAppcApps(appViewModel), updateReviews(appViewModel),
+            (similarAppsViewModel, similarAppcAppsViewModel, reviewsViewModel) -> Observable.just(
+                appViewModel))
             .first()
             .map(__ -> appViewModel));
+  }
+
+  private Observable<SimilarAppsViewModel> updateSuggestedAppcApps(AppViewViewModel appViewModel) {
+    return appViewManager.loadAppcSimilarAppsViewModel(appViewModel.getPackageName(),
+        appViewModel.getMedia()
+            .getKeywords())
+        .observeOn(viewScheduler)
+        .doOnError(__ -> view.hideSimilarAppcApps())
+        .doOnSuccess(appcAppsViewModel -> {
+          view.setSimilarAppcAppsAdapters();
+          if (!appcAppsViewModel.hasSimilarApps()) {
+            view.hideSimilarAppcApps();
+          } else {
+            view.populateSimilarAppc(appcAppsViewModel);
+          }
+        })
+        .toObservable();
   }
 
   private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {
