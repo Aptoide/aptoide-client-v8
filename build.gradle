@@ -5,30 +5,28 @@ buildscript {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     jcenter()
   }
+
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
-    classpath 'me.tatarka:gradle-retrolambda:3.7.0'
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
-    classpath 'io.realm:realm-gradle-plugin:3.5.0'
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    classpath 'com.android.tools.build:gradle:3.3.1'
+    classpath 'me.tatarka:gradle-retrolambda:3.7.0' //TODO: Eventually delete this
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2' //0.8.6
+    classpath 'io.realm:realm-gradle-plugin:3.5.0' //https://github.com/realm/realm-java/blob/master/CHANGELOG.md
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
   }
 }
 
 allprojects {
   repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
     maven { url "https://adcolony.bintray.com/AdColony" }
-    maven { url 'https://tapjoy.bintray.com/maven' }
-
+    maven { url "https://tapjoy.bintray.com/maven" }
+    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
     google()
     jcenter()
-    maven { url 'https://maven.google.com' }
-    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
     flatDir {
       dirs 'libs'
     }
