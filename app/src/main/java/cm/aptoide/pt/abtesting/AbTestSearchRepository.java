@@ -1,24 +1,22 @@
 package cm.aptoide.pt.abtesting;
 
+import cm.aptoide.pt.autoupdate.AptoideImgsService;
 import java.util.HashMap;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by franciscocalado on 18/06/18.
- */
-
-public class ABTestCenterRepository implements AbTestRepository {
-
+public class AbTestSearchRepository implements AbTestRepository {
+  private AptoideImgsService aptoideImgsService;
   private ABTestService service;
   private RealmExperimentPersistence persistence;
   private HashMap<String, ExperimentModel> localCache;
 
-  public ABTestCenterRepository(ABTestService service, HashMap<String, ExperimentModel> localCache,
-      RealmExperimentPersistence persistence) {
+  public AbTestSearchRepository(ABTestService service, HashMap<String, ExperimentModel> localCache,
+      RealmExperimentPersistence persistence, AptoideImgsService aptoideImgsService) {
+    this.aptoideImgsService = aptoideImgsService;
     this.service = service;
-    this.localCache = localCache;
     this.persistence = persistence;
+    this.localCache = localCache;
   }
 
   public Observable<Experiment> getExperiment(String identifier) {
@@ -32,7 +30,8 @@ public class ABTestCenterRepository implements AbTestRepository {
         return Observable.just(localCache.get(identifier)
             .getExperiment());
       } else {
-        return service.getExperiment(identifier)
+        return aptoideImgsService.getExperimentForSearchAbTest()
+            .flatMap(searchId -> service.getExperiment(searchId))
             .flatMap(experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
                 __ -> Observable.just(experimentToCache.getExperiment())));
       }
@@ -47,7 +46,8 @@ public class ABTestCenterRepository implements AbTestRepository {
             }
             return Observable.just(model.getExperiment());
           } else {
-            return service.getExperiment(identifier)
+            return aptoideImgsService.getExperimentForSearchAbTest()
+                .flatMap(searchId -> service.getExperiment(searchId))
                 .flatMap(
                     experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
                         __ -> Observable.just(experimentToCache.getExperiment())));
@@ -55,34 +55,16 @@ public class ABTestCenterRepository implements AbTestRepository {
         });
   }
 
-  public Observable<Boolean> recordImpression(String identifier) {
-    if (localCache.containsKey(identifier) && !localCache.get(identifier)
-        .hasError() && !localCache.get(identifier)
-        .getExperiment()
-        .isExperimentOver()) {
-      return service.recordImpression(identifier);
-    }
-    return Observable.just(false);
+  @Override public Observable<Boolean> recordImpression(String identifier) {
+    return null;
   }
 
-  public Observable<Boolean> recordAction(String identifier) {
-    if (localCache.containsKey(identifier) && !localCache.get(identifier)
-        .hasError() && !localCache.get(identifier)
-        .getExperiment()
-        .isExperimentOver()) {
-      return getExperiment(identifier).flatMap(
-          experiment -> service.recordAction(identifier, experiment.getAssignment()));
-    }
-    return Observable.just(false);
+  @Override public Observable<Boolean> recordAction(String identifier) {
+    return null;
   }
 
+  @Override
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-
-    if (localCache.containsKey(experimentName)) localCache.remove(experimentName);
-
-    localCache.put(experimentName, experiment);
-    persistence.save(experimentName, experiment.getExperiment());
-    return Observable.just(null);
+    return null;
   }
 }
-

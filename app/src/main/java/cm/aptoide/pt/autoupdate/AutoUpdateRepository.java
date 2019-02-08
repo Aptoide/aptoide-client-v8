@@ -4,11 +4,11 @@ import rx.Single;
 
 public class AutoUpdateRepository {
 
-  private final AutoUpdateService autoUpdateService;
+  private final AptoideImgsService aptoideImgsService;
   private AutoUpdateModel autoUpdateModel;
 
-  public AutoUpdateRepository(AutoUpdateService autoUpdateService) {
-    this.autoUpdateService = autoUpdateService;
+  public AutoUpdateRepository(AptoideImgsService aptoideImgsService) {
+    this.aptoideImgsService = aptoideImgsService;
   }
 
   public Single<AutoUpdateModel> loadFreshAutoUpdateModel() {
@@ -23,7 +23,7 @@ public class AutoUpdateRepository {
   }
 
   private Single<AutoUpdateModel> loadAndSaveAutoUpdateModel() {
-    return autoUpdateService.loadAutoUpdateModel()
+    return aptoideImgsService.loadAutoUpdateModel()
         .doOnSuccess(autoUpdateModel -> this.autoUpdateModel = autoUpdateModel);
   }
 }

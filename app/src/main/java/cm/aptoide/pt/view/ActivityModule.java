@@ -28,9 +28,9 @@ import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.EditorialNavigator;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
+import cm.aptoide.pt.autoupdate.AptoideImgsService;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.autoupdate.AutoUpdateRepository;
-import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -116,15 +116,15 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ApkFy(activity, intent, securePreferences);
   }
 
-  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
-      AutoUpdateService.Service service, @Named("package-name") String packageName,
+  @ActivityScope @Provides AptoideImgsService providesRetrofitAptoideBiService(
+      AptoideImgsService.Service service, @Named("package-name") String packageName,
       @Named("auto-update-store-name") String storeName) {
-    return new AutoUpdateService(service, packageName, storeName);
+    return new AptoideImgsService(service, packageName, storeName);
   }
 
   @ActivityScope @Provides AutoUpdateRepository providesAutoUpdateRepository(
-      AutoUpdateService autoUpdateService) {
-    return new AutoUpdateRepository(autoUpdateService);
+      AptoideImgsService aptoideImgsService) {
+    return new AutoUpdateRepository(aptoideImgsService);
   }
 
   @ActivityScope @Provides FragmentNavigator provideFragmentNavigator(

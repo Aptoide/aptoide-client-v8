@@ -6,15 +6,15 @@ import retrofit2.http.Path;
 import rx.Observable;
 import rx.Single;
 
-public class AutoUpdateService {
+public class AptoideImgsService {
 
-  private final Service retrofit;
+  private final Service service;
   private final String packageName;
   private final String autoUpdateStoreName;
   private boolean loading;
 
-  public AutoUpdateService(Service retrofit, String packageName, String autoUpdateStoreName) {
-    this.retrofit = retrofit;
+  public AptoideImgsService(Service service, String packageName, String autoUpdateStoreName) {
+    this.service = service;
     this.packageName = packageName;
     this.autoUpdateStoreName = autoUpdateStoreName;
   }
@@ -23,7 +23,7 @@ public class AutoUpdateService {
     if (loading) {
       return Single.just(new AutoUpdateModel(true));
     }
-    return retrofit.getJsonResponse(autoUpdateStoreName)
+    return service.getJsonResponse(autoUpdateStoreName)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
@@ -32,6 +32,11 @@ public class AutoUpdateService {
                 jsonResponse.getMd5(), jsonResponse.getMinSdk(), packageName, false)))
         .onErrorReturn(throwable -> createErrorAutoUpdateModel(throwable))
         .toSingle();
+  }
+
+  public Observable<String> getExperimentForSearchAbTest() {
+    return service.getAbTestForSearch()
+        .map(AbSearchGroupResponse::getAbSearchId);
   }
 
   private AutoUpdateModel createErrorAutoUpdateModel(Throwable throwable) {
@@ -45,5 +50,7 @@ public class AutoUpdateService {
   public interface Service {
     @GET("latest_version_{storeName}.json") Observable<AutoUpdateJsonResponse> getJsonResponse(
         @Path(value = "storeName") String storeName);
+
+    @GET("search_ab_test_mobile.json") Observable<AbSearchGroupResponse> getAbTestForSearch();
   }
 }
