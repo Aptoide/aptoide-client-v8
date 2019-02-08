@@ -7,6 +7,7 @@ import cm.aptoide.pt.view.FragmentScope;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
 
 @Module public class FlavourFragmentModule {
 
@@ -14,7 +15,7 @@ import dagger.Provides;
   }
 
   @FragmentScope @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment(
-      ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
+      @Named("ab-test") ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
     return new MoPubInterstitialAdExperiment(abTestManager, moPubAnalytics);
   }
 

@@ -13,12 +13,14 @@ public class ABTestCenterRepository implements AbTestRepository {
   private ABTestService service;
   private RealmExperimentPersistence persistence;
   private HashMap<String, ExperimentModel> localCache;
+  private AbTestHelper abTestHelper;
 
   public ABTestCenterRepository(ABTestService service, HashMap<String, ExperimentModel> localCache,
-      RealmExperimentPersistence persistence) {
+      RealmExperimentPersistence persistence, AbTestHelper abTestHelper) {
     this.service = service;
     this.localCache = localCache;
     this.persistence = persistence;
+    this.abTestHelper = abTestHelper;
   }
 
   public Observable<Experiment> getExperiment(String identifier) {
@@ -56,13 +58,7 @@ public class ABTestCenterRepository implements AbTestRepository {
   }
 
   public Observable<Boolean> recordImpression(String identifier) {
-    if (localCache.containsKey(identifier) && !localCache.get(identifier)
-        .hasError() && !localCache.get(identifier)
-        .getExperiment()
-        .isExperimentOver()) {
-      return service.recordImpression(identifier);
-    }
-    return Observable.just(false);
+    return abTestHelper.recordImpression(localCache, identifier, service);
   }
 
   public Observable<Boolean> recordAction(String identifier) {
@@ -77,12 +73,7 @@ public class ABTestCenterRepository implements AbTestRepository {
   }
 
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-
-    if (localCache.containsKey(experimentName)) localCache.remove(experimentName);
-
-    localCache.put(experimentName, experiment);
-    persistence.save(experimentName, experiment.getExperiment());
-    return Observable.just(null);
+    return abTestHelper.cacheExperiment(localCache, persistence, experiment, experimentName);
   }
 }
 

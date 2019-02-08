@@ -10,13 +10,16 @@ public class AbTestSearchRepository implements AbTestRepository {
   private ABTestService service;
   private RealmExperimentPersistence persistence;
   private HashMap<String, ExperimentModel> localCache;
+  private AbTestHelper abTestHelper;
 
   public AbTestSearchRepository(ABTestService service, HashMap<String, ExperimentModel> localCache,
-      RealmExperimentPersistence persistence, AptoideImgsService aptoideImgsService) {
+      RealmExperimentPersistence persistence, AptoideImgsService aptoideImgsService,
+      AbTestHelper abTestHelper) {
     this.aptoideImgsService = aptoideImgsService;
     this.service = service;
     this.persistence = persistence;
     this.localCache = localCache;
+    this.abTestHelper = abTestHelper;
   }
 
   public Observable<Experiment> getExperiment(String identifier) {
@@ -56,15 +59,22 @@ public class AbTestSearchRepository implements AbTestRepository {
   }
 
   @Override public Observable<Boolean> recordImpression(String identifier) {
-    return null;
+    return abTestHelper.recordImpression(localCache, identifier, service);
   }
 
   @Override public Observable<Boolean> recordAction(String identifier) {
-    return null;
+    if (localCache.containsKey(identifier) && !localCache.get(identifier)
+        .hasError() && !localCache.get(identifier)
+        .getExperiment()
+        .isExperimentOver()) {
+      return getExperiment(identifier).flatMap(
+          experiment -> service.recordAction(identifier, experiment.getAssignment()));
+    }
+    return Observable.just(false);
   }
 
   @Override
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-    return null;
+    return abTestHelper.cacheExperiment(localCache, persistence, experiment, experimentName);
   }
 }

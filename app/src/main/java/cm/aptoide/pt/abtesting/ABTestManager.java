@@ -7,22 +7,22 @@ import rx.Observable;
  */
 
 public class ABTestManager {
-  private ABTestCenterRepository abTestCenterRepository;
+  private AbTestRepository abTestRepository;
 
-  public ABTestManager(ABTestCenterRepository abTestCenterRepository) {
-    this.abTestCenterRepository = abTestCenterRepository;
+  public ABTestManager(AbTestRepository abTestRepository) {
+    this.abTestRepository = abTestRepository;
   }
 
   public Observable<Experiment> getExperiment(String identifier) {
-    return abTestCenterRepository.getExperiment(identifier)
+    return abTestRepository.getExperiment(identifier)
         .first();
   }
 
   public Observable<Boolean> recordImpression(String identifier) {
-    return abTestCenterRepository.recordImpression(identifier);
+    return abTestRepository.recordImpression(identifier);
   }
 
   public Observable<Boolean> recordAction(String identifier) {
-    return abTestCenterRepository.recordAction(identifier);
+    return abTestRepository.recordAction(identifier);
   }
 }
