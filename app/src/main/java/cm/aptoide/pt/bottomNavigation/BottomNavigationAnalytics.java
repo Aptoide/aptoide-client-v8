@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.bottomNavigation;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -38,6 +38,11 @@ public class BottomNavigationAnalytics {
 
   public void sendNavigateToAppsClickEvent() {
     analyticsManager.logEvent(createBottomNavData("apps"), BOTTOM_NAVIGATION_INTERACT,
+        AnalyticsManager.Action.CLICK, getViewName(true));
+  }
+
+  public void sendNavigateToCurationClickEvent() {
+    analyticsManager.logEvent(createBottomNavData("curation"), BOTTOM_NAVIGATION_INTERACT,
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 

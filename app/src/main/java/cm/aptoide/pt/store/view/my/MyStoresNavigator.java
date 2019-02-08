@@ -1,8 +1,8 @@
 package cm.aptoide.pt.store.view.my;
 
+import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.BottomNavigationItem;
-import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import rx.Observable;

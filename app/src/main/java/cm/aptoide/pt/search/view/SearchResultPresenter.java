@@ -2,10 +2,10 @@ package cm.aptoide.pt.search.view;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.BottomNavigationItem;
-import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;

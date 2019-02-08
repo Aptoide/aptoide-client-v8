@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.bottomNavigation;
 
 import android.annotation.SuppressLint;
 import android.support.design.internal.BottomNavigationItemView;

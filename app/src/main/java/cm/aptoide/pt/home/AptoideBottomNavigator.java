@@ -4,6 +4,7 @@ package cm.aptoide.pt.home;
  * Created by D01 on 12/03/18.
  */
 
+import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import rx.Observable;
 
 /**
