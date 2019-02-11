@@ -104,9 +104,8 @@ public class SyncResultFragment extends UIComponentFragment
     recyclerView.setLayoutManager(
         new GridLayoutManager(getContext(), SYNCED_LIST_NUMBER_OF_COLUMNS));
 
-    successMessage.setText(
-        getString(R.string.addressbook_success_connected_friends, Integer.toString(contacts.size()),
-            marketName));
+    successMessage.setText(getString(R.string.addressbook_success_connected_friends,
+        Integer.toString(contacts.size())));
 
     RxView.clicks(allowFind)
         .subscribe(click -> mActionsListener.allowFindClicked());

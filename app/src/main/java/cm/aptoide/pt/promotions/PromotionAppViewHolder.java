@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
@@ -76,7 +77,10 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
   private void lockInstallButton(boolean lock) {
     if (lock) {
       promotionAction.setEnabled(false);
-      promotionAction.setBackgroundColor(itemView.getContext()
+      promotionAction.setBackgroundDrawable(itemView.getContext()
+          .getResources()
+          .getDrawable(R.drawable.card_border_fog_grey_normal));
+      promotionAction.setTextColor(itemView.getContext()
           .getResources()
           .getColor(R.color.grey_fog_light));
     } else {
@@ -84,6 +88,8 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
       itemView.getContext()
           .getTheme()
           .resolveAttribute(R.attr.installButtonBackground, resultValue, true);
+
+      promotionAction.setTextColor(Color.WHITE);
 
       promotionAction.setEnabled(true);
       if (resultValue.resourceId != 0) {

@@ -130,7 +130,6 @@ public abstract class WebService<T, U> {
 
   private ErrorRequestListener defaultErrorRequestListener() {
     return (Throwable e) -> {
-      // TODO: Implementar
       Logger.getInstance()
           .e(ErrorRequestListener.class.getName(), "Erro por implementar");
       e.printStackTrace();

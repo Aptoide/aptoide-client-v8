@@ -2,6 +2,7 @@ package cm.aptoide.pt.promotions;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Completable;
@@ -188,10 +189,29 @@ public class PromotionsPresenter implements Presenter {
         .doOnNext(promotionsModel -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
         .observeOn(viewScheduler)
         .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
-        .doOnNext(promotionsModel -> view.lockPromotionApps(promotionsModel.isWalletInstalled()))
-        .flatMapIterable(promotionsModel -> promotionsModel.getAppsList())
-        .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
-        .observeOn(viewScheduler)
-        .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp));
+        .flatMap(promotionsModel -> Observable.just(promotionsModel)
+            .flatMapIterable(promotionsModel1 -> promotionsModel1.getAppsList())
+            .filter(promotionApp -> promotionApp.getPackageName()
+                .equals("com.appcoins.wallet"))
+            .doOnNext(wallet -> view.lockPromotionApps(
+                promotionsModel.isWalletInstalled() && wallet.isClaimed()))
+            .map(promotionApp -> promotionsModel))
+        .flatMap(promotionsModel -> Observable.just(promotionsModel)
+            .flatMapIterable(promotionsModel1 -> promotionsModel.getAppsList())
+            .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
+            .observeOn(viewScheduler)
+            .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp,
+                promotionsModel.isWalletInstalled()))
+            .filter(promotionViewApp -> promotionViewApp.getDownloadModel()
+                .getAction()
+                .equals(DownloadModel.Action.UPDATE))
+            .flatMap(promotionViewApp -> promotionsManager.getPackageSignature(
+                promotionViewApp.getPackageName())
+                .observeOn(viewScheduler)
+                .map(signature -> promotionViewApp.getSignature()
+                    .equals(signature))
+                .doOnNext(signatureMatch -> promotionsAnalytics.sendValentineMigratorEvent(
+                    promotionViewApp.getPackageName(), signatureMatch))
+                .map(__ -> promotionViewApp)));
   }
 }

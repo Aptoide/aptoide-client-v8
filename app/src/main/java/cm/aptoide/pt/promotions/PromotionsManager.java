@@ -10,6 +10,7 @@ import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import java.util.List;
 import rx.Completable;
@@ -29,13 +30,14 @@ public class PromotionsManager {
   private final PreferencesManager preferencesManager;
   private final PackageManager packageManager;
   private final PromotionsService promotionsService;
+  private final InstalledRepository installedRepository;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PackageManager packageManager,
-      PromotionsService promotionsService) {
+      PromotionsService promotionsService, InstalledRepository installedRepository) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -46,6 +48,7 @@ public class PromotionsManager {
     this.preferencesManager = preferencesManager;
     this.packageManager = packageManager;
     this.promotionsService = promotionsService;
+    this.installedRepository = installedRepository;
   }
 
   public Single<List<PromotionApp>> getPromotionApps() {
@@ -143,5 +146,16 @@ public class PromotionsManager {
   public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
       String captcha) {
     return promotionsService.claimPromotion(walletAddress, packageName, captcha);
+  }
+
+  public Observable<String> getPackageSignature(String packageName) {
+    return installedRepository.getInstalled(packageName)
+        .map(installed -> {
+          if (installed != null) {
+            return installed.getSignature();
+          } else {
+            return "";
+          }
+        });
   }
 }

@@ -102,11 +102,11 @@ public class PromotionsService {
     return GetPromotionAppsRequest.of(bodyInterceptorPoolV7, okHttpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe(false, false)
-        .map(this::mapGet)
+        .map(this::mapPromotionsResponse)
         .toSingle();
   }
 
-  private List<PromotionApp> mapGet(GetPromotionAppsResponse response) {
+  private List<PromotionApp> mapPromotionsResponse(GetPromotionAppsResponse response) {
     List<PromotionApp> result = new ArrayList<>();
     if (response != null
         && response.getDataList() != null
@@ -135,7 +135,10 @@ public class PromotionsService {
             .getVercode(), app.isClaimed(), app.getApp()
             .getFile()
             .getVername(), app.getApp()
-            .getObb(), app.getAppc()));
+            .getObb(), app.getAppc(), app.getApp()
+            .getFile()
+            .getSignature()
+            .getSha1()));
       }
     }
 

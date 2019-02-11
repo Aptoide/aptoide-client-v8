@@ -171,8 +171,11 @@ public class InstalledIntentService extends IntentService {
               .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
       return;
     }
-
     // information about the package is null so we don't broadcast an event
+    reportPackageInfoNullEvent();
+  }
+
+  private void reportPackageInfoNullEvent() {
     CrashReport.getInstance()
         .log(new NullPointerException("PackageInfo is null."));
   }
@@ -248,6 +251,11 @@ public class InstalledIntentService extends IntentService {
   }
 
   private void sendCampaignConversion(String packageName, PackageInfo packageInfo) {
-    campaignAnalytics.convertCampaignEvent(packageName, packageInfo.versionCode);
+    if (packageInfo != null) {
+      campaignAnalytics.convertCampaignEvent(packageName, packageInfo.versionCode);
+    } else {
+      // information about the package is null so we don't broadcast an event
+      reportPackageInfoNullEvent();
+    }
   }
 }

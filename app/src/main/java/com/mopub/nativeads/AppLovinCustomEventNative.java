@@ -1,4 +1,4 @@
-package cm.aptoide.pt.ads;
+package com.mopub.nativeads;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,10 +16,6 @@ import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkSettings;
 import com.mopub.common.MoPub;
 import com.mopub.common.privacy.PersonalInfoManager;
-import com.mopub.nativeads.CustomEventNative;
-import com.mopub.nativeads.NativeErrorCode;
-import com.mopub.nativeads.NativeImageHelper;
-import com.mopub.nativeads.StaticNativeAd;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
