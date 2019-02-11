@@ -25,4 +25,8 @@ public class ABTestManager {
   public Observable<Boolean> recordAction(String identifier) {
     return abTestRepository.recordAction(identifier);
   }
+
+  public Observable<String> getExperimentId(String id) {
+    return abTestRepository.getExperimentId(id);
+  }
 }

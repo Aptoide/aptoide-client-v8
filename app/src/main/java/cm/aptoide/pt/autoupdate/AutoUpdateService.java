@@ -6,14 +6,14 @@ import retrofit2.http.Path;
 import rx.Observable;
 import rx.Single;
 
-public class AptoideImgsService {
+public class AutoUpdateService {
 
   private final Service service;
   private final String packageName;
   private final String autoUpdateStoreName;
   private boolean loading;
 
-  public AptoideImgsService(Service service, String packageName, String autoUpdateStoreName) {
+  public AutoUpdateService(Service service, String packageName, String autoUpdateStoreName) {
     this.service = service;
     this.packageName = packageName;
     this.autoUpdateStoreName = autoUpdateStoreName;
@@ -34,11 +34,6 @@ public class AptoideImgsService {
         .toSingle();
   }
 
-  public Observable<String> getExperimentForSearchAbTest() {
-    return service.getAbTestForSearch()
-        .map(AbSearchGroupResponse::getAbSearchId);
-  }
-
   private AutoUpdateModel createErrorAutoUpdateModel(Throwable throwable) {
     if (throwable instanceof NoNetworkConnectionException) {
       return new AutoUpdateModel(AutoUpdateModel.Error.NETWORK);
@@ -50,7 +45,5 @@ public class AptoideImgsService {
   public interface Service {
     @GET("latest_version_{storeName}.json") Observable<AutoUpdateJsonResponse> getJsonResponse(
         @Path(value = "storeName") String storeName);
-
-    @GET("search_ab_test_mobile.json") Observable<AbSearchGroupResponse> getAbTestForSearch();
   }
 }

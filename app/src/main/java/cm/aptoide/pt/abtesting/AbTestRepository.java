@@ -11,5 +11,7 @@ public interface AbTestRepository {
   Observable<Boolean> recordAction(String identifier);
 
   Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName);
+
+  Observable<String> getExperimentId(String id);
 }
 

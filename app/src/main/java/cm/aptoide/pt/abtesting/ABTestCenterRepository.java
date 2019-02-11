@@ -75,5 +75,9 @@ public class ABTestCenterRepository implements AbTestRepository {
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
     return abTestHelper.cacheExperiment(localCache, persistence, experiment, experimentName);
   }
+
+  @Override public Observable<String> getExperimentId(String id) {
+    return Observable.just(id);
+  }
 }
 

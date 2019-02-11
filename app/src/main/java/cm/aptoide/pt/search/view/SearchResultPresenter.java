@@ -27,6 +27,7 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 
 @SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
     implements Presenter {
@@ -90,6 +91,7 @@ import rx.functions.Func2;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.showingSearchResultsView())
+        .observeOn(Schedulers.io())
         .flatMapSingle(__ -> searchManager.shouldLoadBannerAd())
         .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
@@ -241,6 +243,8 @@ import rx.functions.Func2;
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onViewItemClicked())
         .doOnNext(data -> openAppView(data))
+        .observeOn(Schedulers.io())
+        .flatMap(__ -> searchManager.recordAction())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -350,6 +354,7 @@ import rx.functions.Func2;
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
         })
+        .observeOn(Schedulers.io())
         .flatMap(nonFollowedStoresSearchResult -> searchManager.shouldLoadNativeAds()
             .observeOn(viewScheduler)
             .doOnSuccess(loadNativeAds -> {
@@ -394,15 +399,18 @@ import rx.functions.Func2;
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideSuggestionsViews())
         .doOnNext(__ -> view.showLoading())
+        .observeOn(Schedulers.io())
         .flatMapSingle(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
             viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
+          Logger.getInstance()
+              .d("MNHAAAAAA", err.getMessage());
           crashReport.log(err);
-          return Single.just(0);
+          return Single.just(-1);
         })
             .observeOn(viewScheduler)
             .doOnSuccess(__2 -> view.hideLoading())
             .doOnSuccess(itemCount -> {
-              if (itemCount == 0) {
+              if (itemCount <= 0) {
                 view.showNoResultsView();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
               } else {
@@ -414,6 +422,9 @@ import rx.functions.Func2;
                 }
               }
             }))
+        .filter(result -> result != -1)
+        .observeOn(Schedulers.io())
+        .flatMap(__ -> searchManager.recordImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
