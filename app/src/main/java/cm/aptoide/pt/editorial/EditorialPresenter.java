@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -55,6 +55,7 @@ public class EditorialPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
+
     handlePlaceHolderVisibilityChange();
     handlePlaceHolderVisibility();
     handleMediaListDescriptionVisibility();
@@ -113,10 +114,12 @@ public class EditorialPresenter implements Presenter {
   @VisibleForTesting public void handleClickOnAppCard() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.appCardClicked())
-        .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
-        .doOnNext(model -> {
-          editorialNavigator.navigateToAppView(model.getAppId(), model.getPackageName());
+        .flatMap(__ -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .flatMap(model -> view.appCardClicked(model))
+        .doOnNext(editorialEvent -> {
+          editorialNavigator.navigateToAppView(editorialEvent.getId(),
+              editorialEvent.getPackageName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -136,22 +139,26 @@ public class EditorialPresenter implements Presenter {
   private void handleInstallClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.installButtonClick()
-            .flatMapCompletable(action -> {
+        .flatMap(__ -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .flatMap(editorialViewModel -> view.installButtonClick(editorialViewModel)
+            .flatMapCompletable(editorialDownloadEvent -> {
               Completable completable = null;
+              DownloadModel.Action action = editorialDownloadEvent.getAction();
               switch (action) {
                 case INSTALL:
                 case UPDATE:
                   completable = editorialManager.loadEditorialViewModel()
-                      .flatMapCompletable(viewModel -> downloadApp(action).observeOn(viewScheduler)
-                          .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
-                              viewModel.getPackageName(), action.toString())));
+                      .flatMapCompletable(
+                          viewModel -> downloadApp(editorialDownloadEvent).observeOn(viewScheduler)
+                              .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
+                                  viewModel.getBottomCardPackageName(), action.toString())));
                   break;
                 case OPEN:
                   completable = editorialManager.loadEditorialViewModel()
                       .observeOn(viewScheduler)
-                      .flatMapCompletable(
-                          appViewViewModel -> openInstalledApp(appViewViewModel.getPackageName()));
+                      .flatMapCompletable(appViewViewModel -> openInstalledApp(
+                          appViewViewModel.getBottomCardPackageName()));
                   break;
               }
               return completable;
@@ -168,12 +175,14 @@ public class EditorialPresenter implements Presenter {
   private void cancelDownload() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.cancelDownload()
-            .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
-            .doOnNext(app -> editorialAnalytics.sendDownloadCancelEvent(app.getPackageName()))
+        .flatMap(created -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .flatMap(editorialViewModel -> view.cancelDownload(editorialViewModel)
+            .doOnNext(editorialEvent -> editorialAnalytics.sendDownloadCancelEvent(
+                editorialEvent.getPackageName()))
             .flatMapCompletable(
-                app -> editorialManager.cancelDownload(app.getMd5(), app.getPackageName(),
-                    app.getVercode()))
+                editorialEvent -> editorialManager.cancelDownload(editorialEvent.getMd5(),
+                    editorialEvent.getPackageName(), editorialEvent.getVerCode()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -184,14 +193,14 @@ public class EditorialPresenter implements Presenter {
   private void resumeDownload() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.resumeDownload()
-            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
+        .flatMap(created -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .flatMap(editorialViewModel -> view.resumeDownload(editorialViewModel)
+            .flatMap(editorialEvent -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
-                .flatMapSingle(__1 -> editorialManager.loadEditorialViewModel())
-                .flatMapCompletable(
-                    app -> editorialManager.resumeDownload(app.getMd5(), app.getPackageName(),
-                        app.getAppId()))
+                .flatMapCompletable(__ -> editorialManager.resumeDownload(editorialEvent.getMd5(),
+                    editorialEvent.getPackageName(), editorialEvent.getAppId()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -202,10 +211,13 @@ public class EditorialPresenter implements Presenter {
   private void pauseDownload() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.pauseDownload()
-            .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
-            .doOnNext(app -> editorialAnalytics.sendDownloadPauseEvent(app.getPackageName()))
-            .flatMapCompletable(app -> editorialManager.pauseDownload(app.getMd5()))
+        .flatMap(created -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .flatMap(editorialViewModel -> view.pauseDownload(editorialViewModel)
+            .doOnNext(editorialEvent -> editorialAnalytics.sendDownloadPauseEvent(
+                editorialEvent.getPackageName()))
+            .flatMapCompletable(
+                editorialEvent -> editorialManager.pauseDownload(editorialEvent.getMd5()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -213,21 +225,20 @@ public class EditorialPresenter implements Presenter {
         });
   }
 
-  private Completable downloadApp(DownloadModel.Action action) {
+  private Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent) {
     return Observable.defer(() -> {
       if (editorialManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
             .doOnNext(editorialManager::allowRootInstall)
-            .map(__ -> action);
+            .map(__ -> editorialDownloadEvent);
       }
-      return Observable.just(action);
+      return Observable.just(editorialDownloadEvent);
     })
         .observeOn(viewScheduler)
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
         .observeOn(Schedulers.io())
-        .flatMapCompletable(__1 -> editorialManager.loadEditorialViewModel()
-            .flatMapCompletable(viewModel -> editorialManager.downloadApp(action, viewModel)))
+        .flatMapCompletable(viewModel -> editorialManager.downloadApp(editorialDownloadEvent))
         .toCompletable();
   }
 
@@ -237,8 +248,11 @@ public class EditorialPresenter implements Presenter {
         .flatMap(created -> view.isViewReady())
         .flatMap(create -> editorialManager.loadEditorialViewModel()
             .toObservable())
-        .flatMap(app -> editorialManager.loadDownloadModel(app.getMd5(), app.getPackageName(),
-            app.getVercode(), false, null))
+        .flatMapIterable(editorialViewModel -> editorialViewModel.getPlaceHolderContent())
+        .flatMap(
+            editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
+                editorialContent.getPackageName(), editorialContent.getVerCode(), false, null,
+                editorialContent.getPosition()))
         .observeOn(viewScheduler)
         .doOnNext(view::showDownloadModel)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -297,7 +311,7 @@ public class EditorialPresenter implements Presenter {
         });
   }
 
-  @VisibleForTesting void handleMediaListDescriptionVisibility() {
+  @VisibleForTesting public void handleMediaListDescriptionVisibility() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.mediaListDescriptionChanged())

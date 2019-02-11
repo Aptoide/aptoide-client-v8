@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 import java.util.List;
 
@@ -6,9 +6,11 @@ import java.util.List;
  * Created by D01 on 19/09/2018.
  */
 
-class EditorialEvent {
+public class EditorialEvent {
 
   private final Type clickType;
+  private final long id;
+  private final String packageName;
   private final int firstVisibleItemPosition;
   private final int lastVisibleItemPosition;
   private final int position;
@@ -22,12 +24,16 @@ class EditorialEvent {
     firstVisibleItemPosition = -1;
     lastVisibleItemPosition = -1;
     media = null;
+    id = -1;
+    packageName = "";
     position = -1;
   }
 
-  public EditorialEvent(Type clickType) {
+  public EditorialEvent(Type clickType, long id, String packageName) {
 
     this.clickType = clickType;
+    this.id = id;
+    this.packageName = packageName;
     this.url = "";
     firstVisibleItemPosition = -1;
     lastVisibleItemPosition = -1;
@@ -44,6 +50,8 @@ class EditorialEvent {
     this.position = position;
     this.media = media;
     this.url = "";
+    id = -1;
+    packageName = "";
   }
 
   public Type getClickType() {
@@ -68,6 +76,14 @@ class EditorialEvent {
 
   public List<EditorialMedia> getMedia() {
     return media;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public String getPackageName() {
+    return packageName;
   }
 
   public enum Type {

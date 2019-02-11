@@ -1,10 +1,10 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 /**
  * Created by D01 on 18/09/2018.
  */
 
-class ScrollEvent {
+public class ScrollEvent {
   private final boolean scrollDown;
   private final Boolean isItemShown;
 

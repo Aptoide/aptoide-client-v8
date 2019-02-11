@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +17,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -39,6 +40,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private final Button appCardButton;
   private final LinearLayoutManager layoutManager;
   private final Button actionButton;
+  private final PublishSubject<EditorialDownloadEvent> downloadEventListener;
   private TextSwitcher descriptionSwitcher;
   private View itemText;
   private View title;
@@ -52,7 +54,6 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private RecyclerView mediaList;
   private MediaBundleAdapter mediaBundleAdapter;
   private PublishSubject<EditorialEvent> uiEventListener;
-
   private LinearLayout downloadInfoLayout;
   private ProgressBar downloadProgressBar;
   private TextView downloadProgressValue;
@@ -65,7 +66,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private boolean mediaDescriptionVisible;
 
   public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
-      PublishSubject<EditorialEvent> uiEventListener) {
+      PublishSubject<EditorialEvent> uiEventListener,
+      PublishSubject<EditorialDownloadEvent> downloadEventListener) {
     super(view);
     itemText = view.findViewById(R.id.editorial_item_text);
     title = view.findViewById(R.id.editorial_item_title);
@@ -83,6 +85,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     actionButton = (Button) view.findViewById(R.id.action_button);
     this.oneDecimalFormat = oneDecimalFormat;
     this.uiEventListener = uiEventListener;
+    this.downloadEventListener = downloadEventListener;
     appCardButton = (Button) appCardLayout.findViewById(R.id.appview_install_button);
     appCardNameWithRating =
         (TextView) appCardLayout.findViewById(R.id.app_title_textview_with_rating);
@@ -125,7 +128,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     mediaList.setAdapter(mediaBundleAdapter);
   }
 
-  public void setVisibility(EditorialContent editorialItem, int position) {
+  public void setVisibility(EditorialContent editorialItem, int position,
+      Boolean shouldHaveAnimation) {
     if (editorialItem.hasTitle() || editorialItem.hasMessage()) {
       itemText.setVisibility(View.VISIBLE);
       manageTitleVisibility(editorialItem, position);
@@ -133,12 +137,17 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
     manageMediaVisibility(editorialItem, position);
     if (editorialItem.isPlaceHolderType()) {
+      setPlaceHolderListeners(editorialItem.getAppName(), editorialItem.getPackageName(),
+          editorialItem.getMd5sum(), editorialItem.getIcon(), editorialItem.getVerName(),
+          editorialItem.getVerCode(), editorialItem.getPath(), editorialItem.getPathAlt(),
+          editorialItem.getObb(), editorialItem.getId());
       setPlaceHolderInfo(editorialItem.getAppName(), editorialItem.getIcon(),
           editorialItem.getRating());
-      appCardLayout.setVisibility(View.INVISIBLE);
-      appCardLayout.setScaleX(0.1f);
-      appCardLayout.setScaleY(0.1f);
-      setPlaceHolderListeners();
+      if (shouldHaveAnimation) {
+        appCardLayout.setVisibility(View.INVISIBLE);
+        appCardLayout.setScaleX(0.1f);
+        appCardLayout.setScaleY(0.1f);
+      }
     }
     if (editorialItem.hasAction()) {
       manageActionVisibility(editorialItem);
@@ -343,16 +352,21 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     }
   }
 
-  private void setPlaceHolderListeners() {
-    cancelDownload.setOnClickListener(
-        click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.CANCEL)));
-    resumeDownload.setOnClickListener(
-        click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.RESUME)));
-    pauseDownload.setOnClickListener(
-        click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.PAUSE)));
-    appCardLayout.setOnClickListener(
-        click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.APPCARD)));
-    appCardButton.setOnClickListener(
-        click -> uiEventListener.onNext(new EditorialEvent(EditorialEvent.Type.BUTTON)));
+  private void setPlaceHolderListeners(String appName, String packageName, String md5sum,
+      String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long id) {
+    cancelDownload.setOnClickListener(click -> downloadEventListener.onNext(
+        new EditorialDownloadEvent(EditorialEvent.Type.CANCEL, appName, packageName, md5sum, icon,
+            verName, verCode, path, pathAlt, obb)));
+    resumeDownload.setOnClickListener(click -> downloadEventListener.onNext(
+        new EditorialDownloadEvent(EditorialEvent.Type.RESUME, appName, packageName, md5sum, icon,
+            verName, verCode, path, pathAlt, obb)));
+    pauseDownload.setOnClickListener(click -> downloadEventListener.onNext(
+        new EditorialDownloadEvent(EditorialEvent.Type.PAUSE, appName, packageName, md5sum, icon,
+            verName, verCode, path, pathAlt, obb)));
+    appCardButton.setOnClickListener(click -> downloadEventListener.onNext(
+        new EditorialDownloadEvent(EditorialEvent.Type.BUTTON, appName, packageName, md5sum, icon,
+            verName, verCode, path, pathAlt, obb)));
+    appCardLayout.setOnClickListener(click -> uiEventListener.onNext(
+        new EditorialEvent(EditorialEvent.Type.APPCARD, id, packageName)));
   }
 }
