@@ -1400,9 +1400,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           formatAppCoinsRewardMessage());
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
-      manageSimilarAppsVisibility(
-          similarAppsViewModel.hasSimilarApps() || similarAppcAppsViewModel.hasSimilarApps(),
-          false);
       setButtonText(downloadModel);
       if (downloadModel.hasError()) {
         handleDownloadError(downloadModel.getDownloadState());
