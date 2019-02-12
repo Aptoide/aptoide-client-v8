@@ -48,6 +48,7 @@
           />
 
       <LinearLayout
+          android:id="@+id/app_info_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="1dp"
@@ -57,6 +58,7 @@
           android:layout_marginTop="2dp"
           android:gravity="center_vertical"
           android:orientation="horizontal"
+          tools:visibility="visible"
           >
 
         <ImageView

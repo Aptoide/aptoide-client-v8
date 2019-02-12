@@ -11,7 +11,7 @@
       android:layout_width="53dp"
       android:layout_height="53dp"
       android:layout_gravity="center_horizontal"
-      android:src="@drawable/appcoins_wallet_icon"
+      android:src="@drawable/appcoins_icon_gradient"
       />
   <TextView
       android:layout_width="105dp"
