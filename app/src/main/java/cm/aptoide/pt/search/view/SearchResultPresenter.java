@@ -27,7 +27,6 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.functions.Func2;
-import rx.schedulers.Schedulers;
 
 @SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
     implements Presenter {
@@ -42,12 +41,13 @@ import rx.schedulers.Schedulers;
   private final SearchSuggestionManager suggestionManager;
   private final AptoideBottomNavigator bottomNavigator;
   private final BottomNavigationMapper bottomNavigationMapper;
+  private final Scheduler ioScheduler;
 
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, TrendingManager trendingManager,
       SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper, Scheduler ioScheduler) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -58,6 +58,7 @@ import rx.schedulers.Schedulers;
     this.suggestionManager = suggestionManager;
     this.bottomNavigator = bottomNavigator;
     this.bottomNavigationMapper = bottomNavigationMapper;
+    this.ioScheduler = ioScheduler;
   }
 
   @Override public void present() {
@@ -91,7 +92,7 @@ import rx.schedulers.Schedulers;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.showingSearchResultsView())
-        .observeOn(Schedulers.io())
+        .observeOn(ioScheduler)
         .flatMapSingle(__ -> searchManager.shouldLoadBannerAd())
         .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
@@ -242,9 +243,9 @@ import rx.schedulers.Schedulers;
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onViewItemClicked())
-        .doOnNext(data -> openAppView(data))
-        .observeOn(Schedulers.io())
-        .flatMap(__ -> searchManager.recordAction())
+        .observeOn(ioScheduler)
+        .flatMap(data -> searchManager.recordAction()
+            .doOnNext(__ -> openAppView(data)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -354,7 +355,7 @@ import rx.schedulers.Schedulers;
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
         })
-        .observeOn(Schedulers.io())
+        .observeOn(ioScheduler)
         .flatMap(nonFollowedStoresSearchResult -> searchManager.shouldLoadNativeAds()
             .observeOn(viewScheduler)
             .doOnSuccess(loadNativeAds -> {
@@ -399,11 +400,9 @@ import rx.schedulers.Schedulers;
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideSuggestionsViews())
         .doOnNext(__ -> view.showLoading())
-        .observeOn(Schedulers.io())
+        .observeOn(ioScheduler)
         .flatMapSingle(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
             viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
-          Logger.getInstance()
-              .d("MNHAAAAAA", err.getMessage());
           crashReport.log(err);
           return Single.just(-1);
         })
@@ -423,7 +422,7 @@ import rx.schedulers.Schedulers;
               }
             }))
         .filter(result -> result != -1)
-        .observeOn(Schedulers.io())
+        .observeOn(ioScheduler)
         .flatMap(__ -> searchManager.recordImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
