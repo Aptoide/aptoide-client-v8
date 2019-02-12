@@ -36,6 +36,7 @@ public class LoginSignupCredentialsSpecificPresenter extends LoginSignUpCredenti
 
     super.present();
 
+    handleCobrandText();
     showAptoideSignUpEvent();
     handleAptoideShowSignUpEvent();
     handleAptoideSignUpEvent();
@@ -101,9 +102,17 @@ public class LoginSignupCredentialsSpecificPresenter extends LoginSignUpCredenti
         .doOnNext(__ -> view.showAptoideSignUpArea());
   }
 
+  private void handleCobrandText() {
+    view.getLifecycleEvent()
+        .doOnNext(__ -> view.setCobrandText())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          crashReport.log(err);
+        });
+  }
+
   @Override public boolean handle() {
     return view.tryCloseLoginBottomSheet(false);
   }
-
-
 }

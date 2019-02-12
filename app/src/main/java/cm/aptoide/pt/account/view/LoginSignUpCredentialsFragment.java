@@ -359,6 +359,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
   }
 
+  @Override public void setCobrandText(){
+    buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
+    signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -370,11 +375,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
 
-    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
-      buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
-    } else {
-      buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
-    }
     aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
@@ -386,11 +386,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
 
-    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
-      buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
-    } else {
-      signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
-    }
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     separator = view.findViewById(R.id.separator);
