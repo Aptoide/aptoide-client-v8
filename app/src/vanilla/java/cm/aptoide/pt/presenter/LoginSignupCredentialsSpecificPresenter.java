@@ -139,5 +139,4 @@ public class LoginSignupCredentialsSpecificPresenter extends LoginSignUpCredenti
   @Override public boolean handle() {
     return view.tryCloseLoginBottomSheet(true);
   }
-
 }

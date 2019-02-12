@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
@@ -359,7 +358,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
   }
 
-  @Override public void setCobrandText(){
+  @Override public void setCobrandText() {
     buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
     signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
   }
