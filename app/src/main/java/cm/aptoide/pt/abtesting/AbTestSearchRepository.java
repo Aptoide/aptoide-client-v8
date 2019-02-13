@@ -9,17 +9,14 @@ public class AbTestSearchRepository implements AbTestRepository {
   private ABTestService service;
   private RealmExperimentPersistence persistence;
   private HashMap<String, ExperimentModel> localCache;
-  private AbTestHelper abTestHelper;
   private String experimentId;
 
   public AbTestSearchRepository(ABTestService service, HashMap<String, ExperimentModel> localCache,
-      RealmExperimentPersistence persistence, SearchAbTestService searchAbTestService,
-      AbTestHelper abTestHelper) {
+      RealmExperimentPersistence persistence, SearchAbTestService searchAbTestService) {
     this.searchAbTestService = searchAbTestService;
     this.service = service;
     this.persistence = persistence;
     this.localCache = localCache;
-    this.abTestHelper = abTestHelper;
   }
 
   public Observable<Experiment> getExperiment(String identifier) {
@@ -27,8 +24,15 @@ public class AbTestSearchRepository implements AbTestRepository {
   }
 
   @Override public Observable<Boolean> recordImpression(String identifier) {
-    return getExperimentId(identifier).flatMap(
-        id -> abTestHelper.recordImpression(localCache, id, service));
+    return getExperimentId(identifier).flatMap(id -> {
+      if (localCache.containsKey(id) && !localCache.get(id)
+          .hasError() && !localCache.get(id)
+          .getExperiment()
+          .isExperimentOver()) {
+        return service.recordImpression(id);
+      }
+      return Observable.just(false);
+    });
   }
 
   @Override public Observable<Boolean> recordAction(String identifier) {
@@ -46,7 +50,11 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   @Override
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-    return abTestHelper.cacheExperiment(localCache, persistence, experiment, experimentName);
+    if (localCache.containsKey(experimentName)) localCache.remove(experimentName);
+
+    localCache.put(experimentName, experiment);
+    persistence.save(experimentName, experiment.getExperiment());
+    return Observable.just(null);
   }
 
   @Override public Observable<String> getExperimentId(String id) {

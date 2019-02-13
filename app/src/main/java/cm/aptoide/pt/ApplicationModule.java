@@ -45,7 +45,6 @@ import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormali
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
-import cm.aptoide.pt.abtesting.AbTestHelper;
 import cm.aptoide.pt.abtesting.AbTestSearchRepository;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
@@ -1591,21 +1590,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RealmExperimentPersistence(database, new RealmExperimentMapper());
   }
 
-  @Singleton @Provides AbTestHelper providesAbTestHelper() {
-    return new AbTestHelper();
-  }
-
   @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
-      ABTestService abTestService, RealmExperimentPersistence persistence,
-      AbTestHelper abTestHelper) {
-    return new ABTestCenterRepository(abTestService, new HashMap<>(), persistence, abTestHelper);
+      ABTestService abTestService, RealmExperimentPersistence persistence) {
+    return new ABTestCenterRepository(abTestService, new HashMap<>(), persistence);
   }
 
   @Singleton @Provides AbTestSearchRepository providesAbTestSearchRepository(
       ABTestService abTestService, RealmExperimentPersistence persistence,
-      AbTestHelper abTestHelper, SearchAbTestService searchAbTestService) {
+      SearchAbTestService searchAbTestService) {
     return new AbTestSearchRepository(abTestService, new HashMap<>(), persistence,
-        searchAbTestService, abTestHelper);
+        searchAbTestService);
   }
 
   @Singleton @Provides @Named("ab-test") ABTestManager providesABTestManager(
