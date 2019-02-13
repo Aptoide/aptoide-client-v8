@@ -63,7 +63,8 @@ public class HorizontalHeaderItemDecoration extends RecyclerView.ItemDecoration 
     if (!foundFirstChild) {
       left = limit;
     }
-    int movementPercentage = (int) (getPercentage(limit, initialPosition, left) * 255f);
+    // With API <= 23, there's a bug where if alpha is set to 0, TextViews' alpha is not set correctly
+    int movementPercentage = Math.max((int) (getPercentage(limit, initialPosition, left) * 255), 1);
     c.save();
     c.saveLayerAlpha(new RectF(0, 0, headerSize - 2, c.getHeight()), movementPercentage,
         Canvas.ALL_SAVE_FLAG);
