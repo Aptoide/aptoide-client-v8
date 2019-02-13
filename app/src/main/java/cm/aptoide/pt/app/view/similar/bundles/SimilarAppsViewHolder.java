@@ -91,6 +91,7 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
       setSimilarAdapter(bundle.getContent()
           .shouldLoadNativeAds());
     }
-    adapter.update(mapToSimilar(bundle.getContent(), true));
+    adapter.update(mapToSimilar(bundle.getContent(), bundle.getContent()
+        .hasAd()));
   }
 }
