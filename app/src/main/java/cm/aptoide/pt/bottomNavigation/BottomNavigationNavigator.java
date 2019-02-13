@@ -1,9 +1,9 @@
 package cm.aptoide.pt.bottomNavigation;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.CurationListFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.editorialList.EditorialListFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -92,7 +92,7 @@ public class BottomNavigationNavigator {
   }
 
   public void navigateToCuration() {
-    CurationListFragment curationListFragment = new CurationListFragment();
+    EditorialListFragment curationListFragment = new EditorialListFragment();
     navigateToSelectedFragment(CURATION_POSITION, curationListFragment);
   }
 
@@ -139,7 +139,7 @@ public class BottomNavigationNavigator {
         fragment = new AppsFragment();
         break;
       case CURATION_POSITION:
-        fragment = new CurationListFragment();
+        fragment = new EditorialListFragment();
         break;
     }
     if (fragment != null) {

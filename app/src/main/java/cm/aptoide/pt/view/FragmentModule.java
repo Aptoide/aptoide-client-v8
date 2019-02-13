@@ -48,6 +48,13 @@ import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.app.view.AppViewView;
+import cm.aptoide.pt.app.view.EditorialAnalytics;
+import cm.aptoide.pt.app.view.EditorialManager;
+import cm.aptoide.pt.app.view.EditorialNavigator;
+import cm.aptoide.pt.app.view.EditorialPresenter;
+import cm.aptoide.pt.app.view.EditorialRepository;
+import cm.aptoide.pt.app.view.EditorialService;
+import cm.aptoide.pt.app.view.EditorialView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
@@ -62,13 +69,13 @@ import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.editorial.EditorialAnalytics;
-import cm.aptoide.pt.editorial.EditorialManager;
-import cm.aptoide.pt.editorial.EditorialNavigator;
-import cm.aptoide.pt.editorial.EditorialPresenter;
-import cm.aptoide.pt.editorial.EditorialRepository;
-import cm.aptoide.pt.editorial.EditorialService;
-import cm.aptoide.pt.editorial.EditorialView;
+import cm.aptoide.pt.editorialList.EditorialListAnalytics;
+import cm.aptoide.pt.editorialList.EditorialListManager;
+import cm.aptoide.pt.editorialList.EditorialListNavigator;
+import cm.aptoide.pt.editorialList.EditorialListPresenter;
+import cm.aptoide.pt.editorialList.EditorialListRepository;
+import cm.aptoide.pt.editorialList.EditorialListService;
+import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BannerRepository;
@@ -400,5 +407,42 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
       DownloadStateParser downloadStateParser) {
     return new PromotionViewAppMapper(downloadStateParser);
+  }
+
+  @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
+      EditorialListManager editorialListManager, AptoideAccountManager aptoideAccountManager,
+      EditorialListNavigator editorialListNavigator,
+      EditorialListAnalytics editorialListAnalytics) {
+    return new EditorialListPresenter((EditorialListView) fragment, editorialListManager,
+        aptoideAccountManager, editorialListNavigator, editorialListAnalytics,
+        CrashReport.getInstance(), AndroidSchedulers.mainThread());
+  }
+
+  @FragmentScope @Provides EditorialListManager providesEditorialListManager(
+      EditorialListRepository editorialListRepository) {
+    return new EditorialListManager(editorialListRepository);
+  }
+
+  @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
+      EditorialListService editorialListService) {
+    return new EditorialListRepository(editorialListService);
+  }
+
+  @FragmentScope @Provides EditorialListService providesEditorialService(
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        WebService.getDefaultConverter(), sharedPreferences);
+  }
+
+  @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new EditorialListNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
+      NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
+    return new EditorialListAnalytics(navigationTracker, analyticsManager);
   }
 }

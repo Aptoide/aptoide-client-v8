@@ -13,10 +13,11 @@ import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
-import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.editorialList.EditorialListFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
@@ -128,4 +129,6 @@ public interface FragmentComponent {
   void inject(WizardFragmentProvider wizardFragmentProvider);
 
   void inject(WizardPageTwoFragment wizardPageTwoFragment);
+
+  void inject(EditorialListFragment editorialListFragment);
 }
