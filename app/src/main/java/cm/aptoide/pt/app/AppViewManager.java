@@ -432,7 +432,7 @@ public class AppViewManager {
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {
-    return moPubInterstitialAdExperiment.loadInterstitial();
+    return moPubInterstitialAdExperiment.shouldLoadInterstitial();
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
