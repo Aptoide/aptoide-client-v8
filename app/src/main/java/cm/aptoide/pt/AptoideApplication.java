@@ -108,6 +108,8 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
+import com.mopub.common.logging.MoPubLog;
+import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -342,8 +344,18 @@ public abstract class AptoideApplication extends Application {
     aptoideDownloadManager.start();
   }
 
-  private void initializeMoPub(Context context, String moPubKey) {
-    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(moPubKey).build();
+  private void initializeMoPub(Context context, String adUnitPlacementId) {
+    Map<String, String> appLovinConfiguration = new HashMap<>();
+    appLovinConfiguration.put("Placement_Id", BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
+
+    SdkConfiguration sdkConfiguration =
+        new SdkConfiguration.Builder(adUnitPlacementId).withAdditionalNetwork(
+            AppLovinBaseAdapterConfiguration.class.toString())
+            .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
+                appLovinConfiguration)
+            .withLogLevel(MoPubLog.LogLevel.DEBUG)
+            .build();
+
     MoPub.initializeSdk(context, sdkConfiguration, null);
   }
 
