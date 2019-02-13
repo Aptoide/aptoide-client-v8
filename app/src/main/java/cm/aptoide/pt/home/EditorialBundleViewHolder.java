@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.Translator;
 import rx.subjects.PublishSubject;
@@ -32,14 +33,24 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     ActionBundle actionBundle = (ActionBundle) homeBundle;
     ActionItem actionItem = actionBundle.getActionItem();
 
+    setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
+        actionItem.getCardId(), position, homeBundle);
+  }
+
+  private void setBundleInformation(String icon, String title, String subTitle, String cardId,
+      int position, HomeBundle homeBundle) {
     ImageLoader.with(itemView.getContext())
-        .load(actionItem.getIcon(), backgroundImage);
-    editorialTitle.setText(Translator.translate(actionItem.getTitle(), itemView.getContext(), ""));
-    editorialSubtitle.setText(
-        Translator.translate(actionItem.getSubTitle(), itemView.getContext(), ""));
+        .load(icon, backgroundImage);
+    editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
+    editorialSubtitle.setText(Translator.translate(subTitle, itemView.getContext(), ""));
     editorialCard.setOnClickListener(view -> {
-      uiEventsListener.onNext(new EditorialHomeEvent(actionItem.getCardId(), homeBundle, position,
-          HomeEvent.Type.EDITORIAL));
+      uiEventsListener.onNext(
+          new EditorialHomeEvent(cardId, homeBundle, position, HomeEvent.Type.EDITORIAL));
     });
+  }
+
+  public void setEditorialCard(CurationCard curationCard, int position) {
+    setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
+        curationCard.getSubTitle(), curationCard.getId(), position, null);
   }
 }

@@ -131,4 +131,6 @@ public interface FragmentComponent {
   void inject(WizardPageTwoFragment wizardPageTwoFragment);
 
   void inject(ClaimPromotionDialogFragment claimPromotionDialogFragment);
+
+  void inject(EditorialListFragment editorialListFragment);
 }
