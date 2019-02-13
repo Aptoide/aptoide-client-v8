@@ -8,7 +8,7 @@ import rx.schedulers.Schedulers;
  * Created by franciscocalado on 18/06/18.
  */
 
-public class ABTestCenterRepository {
+public class ABTestCenterRepository implements AbTestRepository {
 
   private ABTestService service;
   private RealmExperimentPersistence persistence;
@@ -76,13 +76,16 @@ public class ABTestCenterRepository {
     return Observable.just(false);
   }
 
-  private Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-
+  public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
     if (localCache.containsKey(experimentName)) localCache.remove(experimentName);
 
     localCache.put(experimentName, experiment);
     persistence.save(experimentName, experiment.getExperiment());
     return Observable.just(null);
+  }
+
+  @Override public Observable<String> getExperimentId(String id) {
+    return Observable.just(id);
   }
 }
 

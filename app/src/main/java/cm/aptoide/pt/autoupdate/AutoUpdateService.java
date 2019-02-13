@@ -8,13 +8,13 @@ import rx.Single;
 
 public class AutoUpdateService {
 
-  private final Service retrofit;
+  private final Service service;
   private final String packageName;
   private final String autoUpdateStoreName;
   private boolean loading;
 
-  public AutoUpdateService(Service retrofit, String packageName, String autoUpdateStoreName) {
-    this.retrofit = retrofit;
+  public AutoUpdateService(Service service, String packageName, String autoUpdateStoreName) {
+    this.service = service;
     this.packageName = packageName;
     this.autoUpdateStoreName = autoUpdateStoreName;
   }
@@ -23,7 +23,7 @@ public class AutoUpdateService {
     if (loading) {
       return Single.just(new AutoUpdateModel(true));
     }
-    return retrofit.getJsonResponse(autoUpdateStoreName)
+    return service.getJsonResponse(autoUpdateStoreName)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)

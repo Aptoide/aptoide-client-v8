@@ -206,7 +206,7 @@ import rx.schedulers.Schedulers;
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper);
+        bottomNavigationMapper, Schedulers.io());
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,

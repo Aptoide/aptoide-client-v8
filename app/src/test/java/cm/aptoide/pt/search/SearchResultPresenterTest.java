@@ -81,7 +81,7 @@ public class SearchResultPresenterTest {
     presenter =
         new SearchResultPresenter(searchResultView, searchAnalytics, searchNavigator, crashReport,
             Schedulers.immediate(), searchManager, trendingManager, searchSuggestionManager,
-            aptoideBottomNavigator, bottomNavigationMapper);
+            aptoideBottomNavigator, bottomNavigationMapper, Schedulers.immediate());
     //simulate view lifecycle event
     when(searchResultView.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
@@ -312,6 +312,7 @@ public class SearchResultPresenterTest {
     //When the user clicks on an item from the search result list
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
     when(searchResultView.onViewItemClicked()).thenReturn(Observable.just(searchAppResultWrapper));
+    when(searchManager.recordAction()).thenReturn(Observable.just(true));
     when(searchAppResult.getPackageName()).thenReturn("random");
     when(searchAppResult.getAppId()).thenReturn((long) 0);
     when(searchAppResult.getStoreName()).thenReturn("random");
@@ -320,6 +321,7 @@ public class SearchResultPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should send the necessary analytics and navigate to the app's App view
+    //verify(searchManager).recordAction();
     verify(searchAnalytics).searchAppClick("non-empty", "random", 1);
     verify(searchNavigator).goToAppView(anyLong(), eq("random"), anyString(), eq("random"));
   }

@@ -123,6 +123,7 @@ public class AppViewPresenter implements Presenter {
   private void showBannerAd() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(Schedulers.io())
         .flatMapSingle(model -> appViewManager.shouldLoadBannerAd())
         .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
@@ -147,6 +148,7 @@ public class AppViewPresenter implements Presenter {
             .filter(model -> model.getDownloadModel()
                 .isDownloading())
             .first()
+            .observeOn(Schedulers.io())
             .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
             .filter(loadInterstitial -> loadInterstitial)
             .observeOn(viewScheduler)
@@ -167,6 +169,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.interstitialAdLoaded())
         .doOnNext(__ -> view.showInterstitialAd())
         .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
+        .observeOn(Schedulers.io())
         .flatMapSingle(__ -> appViewManager.recordInterstitialImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -178,6 +181,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.InterstitialAdClicked())
         .doOnNext(__ -> appViewAnalytics.installInterstitialClick())
+        .observeOn(Schedulers.io())
         .flatMapSingle(__ -> appViewManager.recordInterstitialClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
