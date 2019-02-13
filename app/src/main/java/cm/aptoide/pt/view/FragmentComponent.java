@@ -128,4 +128,6 @@ public interface FragmentComponent {
   void inject(WizardFragmentProvider wizardFragmentProvider);
 
   void inject(WizardPageTwoFragment wizardPageTwoFragment);
+
+  void inject(EditorialListFragment editorialListFragment);
 }

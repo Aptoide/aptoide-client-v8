@@ -401,4 +401,41 @@ import rx.schedulers.Schedulers;
       DownloadStateParser downloadStateParser) {
     return new PromotionViewAppMapper(downloadStateParser);
   }
+
+  @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
+      EditorialListManager editorialListManager, AptoideAccountManager aptoideAccountManager,
+      EditorialListNavigator editorialListNavigator,
+      EditorialListAnalytics editorialListAnalytics) {
+    return new EditorialListPresenter((EditorialListView) fragment, editorialListManager,
+        aptoideAccountManager, editorialListNavigator, editorialListAnalytics,
+        CrashReport.getInstance(), AndroidSchedulers.mainThread());
+  }
+
+  @FragmentScope @Provides EditorialListManager providesEditorialListManager(
+      EditorialListRepository editorialListRepository) {
+    return new EditorialListManager(editorialListRepository);
+  }
+
+  @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
+      EditorialListService editorialListService) {
+    return new EditorialListRepository(editorialListService);
+  }
+
+  @FragmentScope @Provides EditorialListService providesEditorialService(
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        WebService.getDefaultConverter(), sharedPreferences);
+  }
+
+  @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new EditorialListNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
+      NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
+    return new EditorialListAnalytics(navigationTracker, analyticsManager);
+  }
 }
