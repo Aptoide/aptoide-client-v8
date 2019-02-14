@@ -25,8 +25,6 @@ public interface EditorialListView extends View {
 
   void setUserImage(String userAvatarUrl);
 
-  Observable<Object> reachesBottom();
-
   void populateView(EditorialListViewModel editorialListViewModel);
 
   void showError(EditorialListViewModel.Error error);
