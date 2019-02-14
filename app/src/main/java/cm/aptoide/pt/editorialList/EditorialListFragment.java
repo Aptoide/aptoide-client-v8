@@ -18,7 +18,6 @@ import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
-import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -27,10 +26,6 @@ import rx.subjects.PublishSubject;
 
 public class EditorialListFragment extends NavigationTrackFragment implements EditorialListView {
 
-  /**
-   * The minimum number of items to have below your current scroll position before loading more.
-   */
-  private static final int VISIBLE_THRESHOLD = 1;
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.CURATION;
   @Inject public EditorialListPresenter presenter;
   private BottomNavigationActivity bottomNavigationActivity;
@@ -153,14 +148,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
             R.drawable.ic_account_circle);
   }
 
-  @Override public Observable<Object> reachesBottom() {
-    return RxRecyclerView.scrollEvents(editorialList)
-        .map(scroll -> isEndReached())
-        .distinctUntilChanged()
-        .filter(isEnd -> isEnd)
-        .cast(Object.class);
-  }
-
   @Override public void populateView(EditorialListViewModel editorialListViewModel) {
     adapter.add(editorialListViewModel.getCurationCards());
   }
@@ -192,10 +179,5 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     retryButton = null;
     userAvatar = null;
     super.onDestroyView();
-  }
-
-  private boolean isEndReached() {
-    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
-        <= VISIBLE_THRESHOLD;
   }
 }
