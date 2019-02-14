@@ -28,8 +28,9 @@ public class PullSocialNotificationRequest
   private final String id;
 
   private PullSocialNotificationRequest(String id, Map<String, String> options,
-      OkHttpClient okHttpClient, Converter.Factory converterFactory) {
-    super(okHttpClient, converterFactory);
+      OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      SharedPreferences sharedPreferences) {
+    super(okHttpClient, converterFactory, sharedPreferences);
     this.options = options;
     this.id = id;
   }
@@ -60,7 +61,7 @@ public class PullSocialNotificationRequest
     options.put("status_in_json", String.valueOf(true));
 
     return new PullSocialNotificationRequest(uniqueIdentifier, options, httpClient,
-        converterFactory);
+        converterFactory, sharedPreferences);
   }
 
   @Override

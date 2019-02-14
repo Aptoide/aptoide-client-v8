@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.editorial;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -11,8 +11,8 @@ import java.util.HashMap;
  */
 
 public class EditorialAnalytics {
-  private static final String APPLICATION_NAME = "Application Name";
   public static final String CURATION_CARD_INSTALL = "Curation_Card_Install";
+  private static final String APPLICATION_NAME = "Application Name";
   private static final String TYPE = "type";
 
   private final DownloadAnalytics downloadAnalytics;

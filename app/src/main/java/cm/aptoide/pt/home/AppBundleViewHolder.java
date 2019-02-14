@@ -7,7 +7,7 @@ import android.view.View;
  * Created by jdandrade on 07/03/2018.
  */
 
-abstract class AppBundleViewHolder extends RecyclerView.ViewHolder {
+public abstract class AppBundleViewHolder extends RecyclerView.ViewHolder {
   public AppBundleViewHolder(View itemView) {
     super(itemView);
   }

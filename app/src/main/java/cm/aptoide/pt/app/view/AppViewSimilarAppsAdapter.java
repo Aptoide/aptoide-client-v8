@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewSimilarApp;
+import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -37,7 +38,9 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
 
   @Override public void onBindViewHolder(AppViewSimilarAppViewHolder appViewSimilarAppViewHolder,
       int position) {
-    appViewSimilarAppViewHolder.setSimilarApp(similarApps.get(position), type);
+    if (similarApps.get(position) != null) {
+      appViewSimilarAppViewHolder.setSimilarApp(similarApps.get(position), type);
+    }
   }
 
   @Override public int getItemViewType(int position) {
