@@ -63,6 +63,7 @@ public class AppViewManager {
   private AppCoinsManager appCoinsManager;
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
+  private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
   private MoPubBannerAdExperiment moPubBannerAdExperiment;
   private MoPubNativeAdExperiment moPubNativeAdExperiment;
@@ -124,6 +125,21 @@ public class AppViewManager {
             result.getError()));
   }
 
+  public Single<SimilarAppsViewModel> loadAppcSimilarAppsViewModel(String packageName,
+      List<String> keyWords) {
+    if (cachedAppcSimilarAppsViewModel != null) {
+      return Single.just(cachedAppcSimilarAppsViewModel);
+    } else {
+      return loadAppcRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
+        cachedAppcSimilarAppsViewModel =
+            new SimilarAppsViewModel(null, recommendedAppsRequestResult.getList(),
+                recommendedAppsRequestResult.isLoading(), recommendedAppsRequestResult.getError(),
+                null);
+        return cachedAppcSimilarAppsViewModel;
+      });
+    }
+  }
+
   public Single<SimilarAppsViewModel> loadSimilarAppsViewModel(String packageName,
       List<String> keyWords) {
     if (cachedSimilarAppsViewModel != null) {
@@ -179,7 +195,7 @@ public class AppViewManager {
       int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
     return loadDownloadModel(md5, packageName, versionCode, paidApp, pay).map(
         downloadModel -> new DownloadAppViewModel(downloadModel, cachedSimilarAppsViewModel,
-            cachedAppCoinsViewModel));
+            cachedAppcSimilarAppsViewModel, cachedAppCoinsViewModel));
   }
 
   public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
@@ -233,6 +249,10 @@ public class AppViewManager {
 
   private Single<AppsList> loadRecommended(int limit, String packageName) {
     return appCenter.loadRecommendedApps(limit, packageName);
+  }
+
+  private Single<AppsList> loadAppcRecommended(int limit, String packageName) {
+    return appCenter.loadAppcRecommendedApps(limit, packageName);
   }
 
   private Single<MinimalAdRequestResult> loadAdForSimilarApps(String packageName,

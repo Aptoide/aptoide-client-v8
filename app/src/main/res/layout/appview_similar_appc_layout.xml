@@ -4,23 +4,23 @@
     android:layout_height="wrap_content"
     >
 
-  <TextView
-      android:id="@+id/title"
-      android:layout_width="wrap_content"
+  <View
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="11dp"
-      android:layout_marginStart="11dp"
-      android:layout_marginTop="8dp"
-      android:text="@string/appview_similar_apps"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      android:layout_marginTop="12dp"
+      android:paddingBottom="25dp"
+      android:paddingTop="25dp"
       />
 
   <android.support.v7.widget.RecyclerView
-      android:id="@+id/similar_list"
+      android:id="@+id/similar_appc_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/title"
       android:layout_marginTop="12dp"
+      android:background="@drawable/appview_appc_similar_gradient_bg"
       android:nestedScrollingEnabled="false"
+      android:paddingBottom="25dp"
+      android:paddingTop="25dp"
       />
 </RelativeLayout>

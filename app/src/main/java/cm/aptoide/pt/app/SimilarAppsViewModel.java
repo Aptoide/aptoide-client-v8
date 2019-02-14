@@ -19,15 +19,23 @@ public class SimilarAppsViewModel {
   private final AppsList.Error recommendedAppsError;
   private final ApplicationAdError adError;
   private boolean hasRecordedAdImpression;
+  private boolean shouldLoadNativeAds;
 
   public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
       AppsList.Error recommendedAppsError, ApplicationAdError adResultError) {
+    this(ad, recommendedApps, loading, recommendedAppsError, adResultError, false);
+  }
+
+  public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
+      AppsList.Error recommendedAppsError, ApplicationAdError adResultError,
+      boolean shouldLoadNativeAds) {
     this.ad = ad;
     this.recommendedApps = recommendedApps;
     this.loading = loading;
     this.recommendedAppsError = recommendedAppsError;
     this.adError = adResultError;
     this.hasRecordedAdImpression = false;
+    this.shouldLoadNativeAds = shouldLoadNativeAds;
   }
 
   public SimilarAppsViewModel() {
@@ -36,6 +44,7 @@ public class SimilarAppsViewModel {
     this.loading = false;
     this.recommendedAppsError = null;
     this.adError = null;
+    this.shouldLoadNativeAds = false;
   }
 
   public ApplicationAd getAd() {
@@ -55,11 +64,11 @@ public class SimilarAppsViewModel {
   }
 
   public boolean hasSimilarApps() {
-    return !hasRecommendedAppsError() && (!recommendedApps.isEmpty() || ad != null);
+    return !hasRecommendedAppsError() && !recommendedApps.isEmpty();
   }
 
   public boolean hasError() {
-    return (recommendedAppsError != null || adError != null);
+    return (recommendedAppsError != null || adError != null || ad == null);
   }
 
   public ApplicationAdError getAdError() {
@@ -75,7 +84,7 @@ public class SimilarAppsViewModel {
   }
 
   public boolean hasAdError() {
-    return (adError != null);
+    return (adError != null || ad == null);
   }
 
   public void setHasRecordedAdImpression(boolean recorded) {
@@ -84,5 +93,13 @@ public class SimilarAppsViewModel {
 
   public boolean hasRecordedAdImpression() {
     return hasRecordedAdImpression;
+  }
+
+  public boolean shouldLoadNativeAds() {
+    return shouldLoadNativeAds;
+  }
+
+  public void setShouldLoadNativeAds(boolean shouldLoadNativeAds) {
+    this.shouldLoadNativeAds = shouldLoadNativeAds;
   }
 }

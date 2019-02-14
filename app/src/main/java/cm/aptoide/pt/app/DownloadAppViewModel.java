@@ -10,14 +10,17 @@ public class DownloadAppViewModel {
 
   private final DownloadModel downloadModel;
   private SimilarAppsViewModel similarAppsViewModel;
+  private SimilarAppsViewModel similarAppcAppsViewModel;
   private AppCoinsViewModel appCoinsViewModel;
 
   public DownloadAppViewModel(DownloadModel downloadModel,
-      SimilarAppsViewModel similarAppsViewModel, AppCoinsViewModel appCoinsViewModel) {
+      SimilarAppsViewModel similarAppsViewModel, SimilarAppsViewModel similarAppcAppsViewModel,
+      AppCoinsViewModel appCoinsViewModel) {
 
     this.downloadModel = downloadModel;
     this.similarAppsViewModel = similarAppsViewModel;
     this.appCoinsViewModel = appCoinsViewModel;
+    this.similarAppcAppsViewModel = similarAppcAppsViewModel;
   }
 
   public AppCoinsViewModel getAppCoinsViewModel() {
@@ -36,5 +39,12 @@ public class DownloadAppViewModel {
 
   public DownloadModel getDownloadModel() {
     return downloadModel;
+  }
+
+  public SimilarAppsViewModel getSimilarAppcAppsViewModel() {
+    if (similarAppcAppsViewModel == null) {
+      similarAppcAppsViewModel = new SimilarAppsViewModel();
+    }
+    return similarAppcAppsViewModel;
   }
 }
