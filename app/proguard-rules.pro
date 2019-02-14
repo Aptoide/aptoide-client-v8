@@ -180,3 +180,7 @@
 -dontwarn com.google.ar.core.**
 -dontwarn com.unity3d.services.**
 -dontwarn com.ironsource.adapters.unityads.**
+
+#AppNext
+-keep class com.appnext.** { *; }
+-dontwarn com.appnext.**

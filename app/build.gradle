@@ -481,7 +481,6 @@ dependencies {
   implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk:banners:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk:native-ads2:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk.adapters:mopub-ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
 
