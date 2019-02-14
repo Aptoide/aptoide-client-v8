@@ -344,14 +344,14 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void initializeMoPub(Context context, String moPubKey) {
-    Map<String, String> mediatedNetworkConfiguration = new HashMap<>();
-    mediatedNetworkConfiguration.put("Placement_Id", "xxxx");
+    Map<String, String> appnextConfiguration = new HashMap<>();
+    appnextConfiguration.put("Placement_Id", BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
 
     SdkConfiguration sdkConfiguration =
         new SdkConfiguration.Builder(moPubKey).withAdditionalNetwork(
             AppnextCustomAdapterConfiguration.class.toString())
             .withMediatedNetworkConfiguration(AppnextCustomAdapterConfiguration.class.toString(),
-                mediatedNetworkConfiguration)
+                appnextConfiguration)
             .build();
     MoPub.initializeSdk(context, sdkConfiguration, null);
   }
