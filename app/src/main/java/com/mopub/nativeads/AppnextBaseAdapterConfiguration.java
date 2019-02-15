@@ -9,7 +9,7 @@ import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.mobileads.MoPubErrorCode;
 import java.util.Map;
 
-public class AppnextCustomAdapterConfiguration extends BaseAdapterConfiguration {
+public class AppnextBaseAdapterConfiguration extends BaseAdapterConfiguration {
   @NonNull @Override public String getAdapterVersion() {
     return "2.4.4.472";
   }
