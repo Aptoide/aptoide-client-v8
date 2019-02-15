@@ -84,7 +84,7 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   private void initializeAdsMediation() {
-    IronSource.init(this, BuildConfig.IRONSOURCE_APPLICATION_ID);
+    IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
     AdColony.configure(this, BuildConfig.MOPUB_ADCOLONY_APPLICATION_ID, BuildConfig.MOPUB_ADCOLONY_ZONE_ID_T7);
 
     Tapjoy.connect(getApplicationContext(), BuildConfig.MOPUB_TAPJOY_SDK_KEY,
