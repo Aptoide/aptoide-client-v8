@@ -90,7 +90,7 @@ public class MainActivity extends BottomNavigationActivity
     Tapjoy.connect(getApplicationContext(), BuildConfig.TAPJOY_SDK_KEY,
         new Hashtable<String, Object>(), new TapJoyConnectListener());
 
-    UnityAds.initialize(this, BuildConfig.UNITYADS_GAME_ID, new UnityAdsListener());
+    UnityAds.initialize(this, BuildConfig.MOPUB_UNITYADS_GAME_ID, new UnityAdsListener());
   }
 
   @Override protected void onStart() {

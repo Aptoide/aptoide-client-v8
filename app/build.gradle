@@ -278,8 +278,8 @@ android {
         "\"" + project.ADCOLONY_APPLICATION_ID + "\""
     variant.buildConfigField "String", "TAPJOY_SDK_KEY",
         "\"" + project.TAPJOY_SDK_KEY + "\""
-    variant.buildConfigField "String", "UNITYADS_GAME_ID",
-        "\"" + project.UNITYADS_GAME_ID + "\""
+    variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
+        "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
 
     variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
         "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
