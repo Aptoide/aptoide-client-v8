@@ -4,6 +4,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 buildscript {
 
@@ -392,6 +394,9 @@ dependencies {
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
   androidTestImplementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
   androidTestImplementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
 
   implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 

@@ -27,9 +27,10 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
-import cm.aptoide.pt.autoupdate.AutoUpdateManager;
-import cm.aptoide.pt.autoupdate.AutoUpdateRepository;
-import cm.aptoide.pt.autoupdate.AutoUpdateService;
+import cm.aptoide.pt.autoupdate.kotlin.AutoUpdateManager;
+import cm.aptoide.pt.autoupdate.kotlin.AutoUpdateRepository;
+import cm.aptoide.pt.autoupdate.kotlin.AutoUpdateService;
+import cm.aptoide.pt.autoupdate.kotlin.Service;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -116,8 +117,8 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ApkFy(activity, intent, securePreferences);
   }
 
-  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
-      AutoUpdateService.Service service, @Named("package-name") String packageName,
+  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(Service service,
+      @Named("package-name") String packageName,
       @Named("auto-update-store-name") String storeName) {
     return new AutoUpdateService(service, packageName, storeName);
   }
