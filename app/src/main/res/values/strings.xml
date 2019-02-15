@@ -569,7 +569,7 @@
   <string name="appc_title_bundle">AppCoins Apps</string>
 
   <!--Holidays AppCoins Craze-->
-  <string name="holidayspromotion_title_holidays">Love Is In The Air</string>
+  <string name="holidayspromotion_title_holidays">Carnival Frenzy</string>
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>
@@ -589,6 +589,7 @@
   <string name="holidayspromotion_message_big_sweet_bomb">Start the happy and mystery journey with various candies in sweet wonderland!</string>
   <string name="holidayspromotion_message_word_mine">Reveal the hidden answer by eliminating letter tiles. A great brain challenge!</string>
   <string name="holidayspromotion_message_brawling_animals">Welcome to the Jungle! Release your beast and jump into battle royale multiplayer battles!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Fight against powerful enemies and discover new virtual worlds in this unique action RPG game.</string>
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
   <string name="holidayspromotion_message_wallet">Tell us your AppCoins wallet address. Once you create a wallet, you\'ll find the address when pressing on \'Receive\'.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
@@ -608,5 +609,13 @@
   <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
   <string name="holidayspromotion_message_popup">Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Check it out!</string>
+
+  <!--AppCoins Wallet Promotion-->
+  <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
+  <string name="wallet_promotion__wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
+  <string name="wallet_promotion_install_button">Install Wallet</string>
+  <string name="wallet_promotion_no_button">No, thanks</string>
+
 </resources>
 
