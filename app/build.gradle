@@ -197,7 +197,7 @@ android {
         [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
-         appLovinApiKey                  : "${project.APPLOVIN_SDK_KEY}",
+         appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
          fabricApiKey                    : "${project.FABRIC_API_KEY}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
