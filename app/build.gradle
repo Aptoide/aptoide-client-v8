@@ -280,10 +280,7 @@ android {
         "\"" + project.TAPJOY_SDK_KEY + "\""
     variant.buildConfigField "String", "UNITYADS_GAME_ID",
         "\"" + project.UNITYADS_GAME_ID + "\""
-    variant.buildConfigField "String", "CHARTBOOST_APPLICATION_ID",
-        "\"" + project.CHARTBOOST_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "CHARTBOOST_APPLICATION_SIGNATURE",
-        "\"" + project.CHARTBOOST_APPLICATION_SIGNATURE + "\""
+
     variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
         "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
 
