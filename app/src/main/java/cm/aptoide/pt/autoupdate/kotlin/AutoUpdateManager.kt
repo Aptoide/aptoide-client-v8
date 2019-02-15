@@ -10,7 +10,7 @@ import cm.aptoide.pt.install.InstallManager
 import rx.Observable
 import rx.Single
 
-class AutoUpdateManager(private val downloadFactory: DownloadFactory, private val permissionManager: PermissionManager,
+open class AutoUpdateManager(private val downloadFactory: DownloadFactory, private val permissionManager: PermissionManager,
                         private val installManager: InstallManager, private val downloadAnalytics: DownloadAnalytics,
                         private val localVersionCode: Int, private val autoUpdateRepository: AutoUpdateRepository,
                         private val localVersionSdk: Int) {

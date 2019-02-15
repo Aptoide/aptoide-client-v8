@@ -1,7 +1,7 @@
 package cm.aptoide.pt.navigation;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.autoupdate.AutoUpdateManager;
+import cm.aptoide.pt.autoupdate.kotlin.AutoUpdateManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
