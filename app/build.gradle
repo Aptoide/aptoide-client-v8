@@ -276,8 +276,8 @@ android {
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
         "\"" + project.ADCOLONY_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "TAPJOY_SDK_KEY",
-        "\"" + project.TAPJOY_SDK_KEY + "\""
+    variant.buildConfigField "String", "MOPUB_TAPJOY_SDK_KEY",
+        "\"" + project.MOPUB_TAPJOY_SDK_KEY + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
 
