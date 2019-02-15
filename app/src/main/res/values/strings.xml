@@ -609,6 +609,8 @@
   <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
   <string name="holidayspromotion_message_popup">Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Check it out!</string>
+  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
+  <string name="promotion_notification_body">Don\'t forget to claim your %s APPC Credits.</string>
 
   <!--AppCoins Wallet Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
