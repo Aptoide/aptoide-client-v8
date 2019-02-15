@@ -274,15 +274,15 @@ android {
         "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
-        "\"" + project.ADCOLONY_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "MOPUB_ADCOLONY_APPLICATION_ID",
+        "\"" + project.MOPUB_ADCOLONY_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_TAPJOY_SDK_KEY",
         "\"" + project.MOPUB_TAPJOY_SDK_KEY + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
 
-    variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
-        "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
+    variant.buildConfigField "String", "MOPUB_ADCOLONY_ZONE_ID_T7",
+        "\"" + project.MOPUB_ADCOLONY_ZONE_ID_T7 + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_PROD + "\""
