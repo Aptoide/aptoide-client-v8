@@ -28,7 +28,7 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   @Override public Observable<Boolean> recordImpression(String identifier) {
     return getExperimentId(identifier).flatMap(id -> {
-      if (cacheValidator.validateCache(id)) {
+      if (cacheValidator.isCacheValid(id)) {
         return service.recordImpression(id);
       }
       return Observable.just(false);
@@ -37,7 +37,7 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   @Override public Observable<Boolean> recordAction(String identifier) {
     return getExperimentId(identifier).flatMap(id -> {
-      if (cacheValidator.validateCache(id)) {
+      if (cacheValidator.isCacheValid(id)) {
         return getExperiment(identifier).flatMap(
             experiment -> service.recordAction(id, experiment.getAssignment()));
       }
@@ -47,8 +47,7 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   @Override
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-    cacheValidator.updateCache(experimentName, experiment);
-
+    localCache.put(experimentName, experiment);
     persistence.save(experimentName, experiment.getExperiment());
     return Observable.just(null);
   }
@@ -70,7 +69,7 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   private Observable<Experiment> resolveExperiment(String experimentId) {
     if (localCache.containsKey(experimentId)) {
-      if (cacheValidator.validateExperiment(experimentId)) {
+      if (cacheValidator.isExperimentValid(experimentId)) {
         return Observable.just(localCache.get(experimentId)
             .getExperiment());
       } else {

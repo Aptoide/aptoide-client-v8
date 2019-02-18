@@ -25,29 +25,22 @@ public class AbTestCacheValidatorTest {
   }
 
   @Test public void invalidateEmptyExperimentNoErrorTest() {
-    Assert.assertFalse(cacheValidator.validateExperiment("experiment1"));
+    Assert.assertFalse(cacheValidator.isExperimentValid("experiment1"));
   }
 
   @Test public void invalidateExpiredExperimentTest() {
-    Assert.assertFalse(cacheValidator.validateExperiment("experiment2"));
+    Assert.assertFalse(cacheValidator.isExperimentValid("experiment2"));
   }
 
   @Test public void invalidateErrorModelTest() {
-    Assert.assertFalse(cacheValidator.validateCache("experiment3"));
+    Assert.assertFalse(cacheValidator.isCacheValid("experiment3"));
   }
 
   @Test public void invalidateExperimentOverTest() {
-    Assert.assertFalse(cacheValidator.validateExperiment("experiment4"));
+    Assert.assertFalse(cacheValidator.isExperimentValid("experiment4"));
   }
 
   @Test public void validateExperimentTest() {
-    Assert.assertTrue(cacheValidator.validateExperiment("experiment5"));
-  }
-
-  @Test public void validateCacheUpdate() {
-    ExperimentModel experimentModel =
-        new ExperimentModel(new Experiment(1000, "payload", "", false), false);
-    cacheValidator.updateCache("experiment5", experimentModel);
-    Assert.assertFalse(cacheValidator.validateExperiment("experiment5"));
+    Assert.assertTrue(cacheValidator.isExperimentValid("experiment5"));
   }
 }

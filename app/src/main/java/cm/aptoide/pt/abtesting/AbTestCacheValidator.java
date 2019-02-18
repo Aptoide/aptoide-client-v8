@@ -10,26 +10,18 @@ public class AbTestCacheValidator {
     this.localCache = localCache;
   }
 
-  public boolean validateCache(String id) {
-    return localCache.containsKey(id) && !localCache.get(id)
-        .hasError() && !localCache.get(id)
+  public boolean isCacheValid(String experimentId) {
+    return localCache.containsKey(experimentId) && !localCache.get(experimentId)
+        .hasError() && !localCache.get(experimentId)
         .getExperiment()
         .isExperimentOver();
   }
 
-  public boolean validateExperiment(String id) {
-    return !localCache.get(id)
-        .getExperiment()
-        .isExpired() && !localCache.get(id)
-        .hasError() && !localCache.get(id)
-        .getExperiment()
-        .isExperimentOver() && localCache.get(id)
-        .getExperiment()
+  public boolean isExperimentValid(String experimentId) {
+    ExperimentModel model = localCache.get(experimentId);
+    return !model.getExperiment()
+        .isExpired() && !model.hasError() && !model.getExperiment()
+        .isExperimentOver() && model.getExperiment()
         .isPartOfExperiment();
-  }
-
-  public void updateCache(String id, ExperimentModel experiment) {
-    if (localCache.containsKey(id)) localCache.remove(id);
-    localCache.put(id, experiment);
   }
 }

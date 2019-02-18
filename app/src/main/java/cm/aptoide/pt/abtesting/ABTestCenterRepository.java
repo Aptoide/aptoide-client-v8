@@ -25,7 +25,7 @@ public class ABTestCenterRepository implements AbTestRepository {
 
   public Observable<Experiment> getExperiment(String identifier) {
     if (localCache.containsKey(identifier)) {
-      if (cacheValidator.validateExperiment(identifier)) {
+      if (cacheValidator.isExperimentValid(identifier)) {
         return Observable.just(localCache.get(identifier)
             .getExperiment());
       } else {
@@ -53,14 +53,14 @@ public class ABTestCenterRepository implements AbTestRepository {
   }
 
   public Observable<Boolean> recordImpression(String identifier) {
-    if (cacheValidator.validateCache(identifier)) {
+    if (cacheValidator.isCacheValid(identifier)) {
       return service.recordImpression(identifier);
     }
     return Observable.just(false);
   }
 
   public Observable<Boolean> recordAction(String identifier) {
-    if (cacheValidator.validateCache(identifier)) {
+    if (cacheValidator.isCacheValid(identifier)) {
       return getExperiment(identifier).flatMap(
           experiment -> service.recordAction(identifier, experiment.getAssignment()));
     }
@@ -68,7 +68,7 @@ public class ABTestCenterRepository implements AbTestRepository {
   }
 
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-    cacheValidator.updateCache(experimentName, experiment);
+    localCache.put(experimentName, experiment);
     persistence.save(experimentName, experiment.getExperiment());
     return Observable.just(null);
   }
