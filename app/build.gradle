@@ -197,7 +197,7 @@ android {
         [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
-         appLovinApiKey                  : "${project.APPLOVIN_SDK_KEY}",
+         appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
          fabricApiKey                    : "${project.FABRIC_API_KEY}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
@@ -270,22 +270,19 @@ android {
       variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
     }
 
-    variant.buildConfigField "String", "IRONSOURCE_APPLICATION_ID",
-        "\"" + project.IRONSOURCE_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "MOPUB_IRONSOURCE_APPLICATION_ID",
+        "\"" + project.MOPUB_IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "ADCOLONY_APPLICATION_ID",
-        "\"" + project.ADCOLONY_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "TAPJOY_SDK_KEY",
-        "\"" + project.TAPJOY_SDK_KEY + "\""
-    variant.buildConfigField "String", "UNITYADS_GAME_ID",
-        "\"" + project.UNITYADS_GAME_ID + "\""
-    variant.buildConfigField "String", "CHARTBOOST_APPLICATION_ID",
-        "\"" + project.CHARTBOOST_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "CHARTBOOST_APPLICATION_SIGNATURE",
-        "\"" + project.CHARTBOOST_APPLICATION_SIGNATURE + "\""
-    variant.buildConfigField "String", "ADCOLONY_ZONE_ID_T7",
-        "\"" + project.ADCOLONY_ZONE_ID_T7 + "\""
+    variant.buildConfigField "String", "MOPUB_ADCOLONY_APPLICATION_ID",
+        "\"" + project.MOPUB_ADCOLONY_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "MOPUB_TAPJOY_SDK_KEY",
+        "\"" + project.MOPUB_TAPJOY_SDK_KEY + "\""
+    variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
+        "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
+
+    variant.buildConfigField "String", "MOPUB_ADCOLONY_ZONE_ID_T7",
+        "\"" + project.MOPUB_ADCOLONY_ZONE_ID_T7 + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_PROD + "\""
