@@ -45,6 +45,7 @@ public class AppService {
   private final Resources resources;
   private boolean loadingApps;
   private boolean loadingSimilarApps;
+  private boolean loadingAppcSimilarApps;
 
   public AppService(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptorV7,
@@ -364,5 +365,20 @@ public class AppService {
         break;
     }
     return flagsVoteVoteType;
+  }
+
+  public Single<AppsList> loadAppcRecommendedApps(int limit, String packageName) {
+    if (loadingAppcSimilarApps) {
+      return Single.just(new AppsList(true));
+    }
+    return new GetRecommendedRequest(new GetRecommendedRequest.Body(limit, packageName, "appc"),
+        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences).observe(true, false)
+        .doOnSubscribe(() -> loadingAppcSimilarApps = true)
+        .doOnUnsubscribe(() -> loadingAppcSimilarApps = false)
+        .doOnTerminate(() -> loadingAppcSimilarApps = false)
+        .flatMap(appsList -> mapListApps(appsList))
+        .toSingle()
+        .onErrorReturn(throwable -> createErrorAppsList(throwable));
   }
 }

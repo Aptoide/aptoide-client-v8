@@ -109,6 +109,8 @@ import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 import com.mopub.common.logging.MoPubLog;
+import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
+import com.mopub.common.logging.MoPubLog;
 import com.mopub.nativeads.StartAppBaseConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -344,18 +346,24 @@ public abstract class AptoideApplication extends Application {
     aptoideDownloadManager.start();
   }
 
-  private void initializeMoPub(Context context, String moPubKey) {
+  private void initializeMoPub(Context context, String adUnitPlacementId) {
+    Map<String, String> appLovinConfiguration = new HashMap<>();
+    appLovinConfiguration.put("Placement_Id", BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
+
     Map<String, String> mediatedNetworkConfiguration = new HashMap<>();
     mediatedNetworkConfiguration.put("Placement_Id", BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
 
     SdkConfiguration sdkConfiguration =
-        new SdkConfiguration.Builder(moPubKey).withAdditionalNetwork(
+        new SdkConfiguration.Builder(adUnitPlacementId).withAdditionalNetwork(
+            AppLovinBaseAdapterConfiguration.class.toString())
+            .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
+                appLovinConfiguration).withAdditionalNetwork(
             StartAppBaseConfiguration.class.toString())
             .withMediatedNetworkConfiguration(StartAppBaseConfiguration.class.toString(),
                 mediatedNetworkConfiguration)
             .withLogLevel(MoPubLog.LogLevel.DEBUG)
-            .withLegitimateInterestAllowed(false)
             .build();
+
     MoPub.initializeSdk(context, sdkConfiguration, null);
   }
 

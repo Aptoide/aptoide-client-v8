@@ -45,8 +45,13 @@ import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormali
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.AbTestCacheValidator;
+import cm.aptoide.pt.abtesting.AbTestSearchRepository;
+import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
+import cm.aptoide.pt.abtesting.SearchAbTestService;
+import cm.aptoide.pt.abtesting.SearchExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -83,8 +88,6 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
-import cm.aptoide.pt.app.view.EditorialAnalytics;
-import cm.aptoide.pt.app.view.EditorialService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
@@ -138,6 +141,8 @@ import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
+import cm.aptoide.pt.editorial.EditorialAnalytics;
+import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BannerRepository;
@@ -194,6 +199,7 @@ import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
+import cm.aptoide.pt.search.SearchHostProvider;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -1103,10 +1109,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Singleton @Provides @Named("ws-prod-suggestions-base-url") String provideSearchBaseUrl() {
-    return "http://"
-        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST
-        + "/v1/";
+  @Singleton @Provides @Named("ws-prod-suggestions-base-url") String provideSearchBaseUrl(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new SearchHostProvider(ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences),
+        cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME,
+        cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_HOST,
+        cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST).getSearchHost();
   }
 
   @Singleton @Provides @Named("rx") CallAdapter.Factory providesCallAdapterFactory() {
@@ -1119,11 +1127,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, SearchExperiment searchExperiment) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
         AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager, moPubBannerAdExperiment, moPubNativeAdExperiment);
+        accountManager, moPubBannerAdExperiment, moPubNativeAdExperiment, searchExperiment);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1242,6 +1250,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AutoUpdateService.Service providesAutoUpdateService(
       @Named("retrofit-auto-update") Retrofit retrofit) {
     return retrofit.create(AutoUpdateService.Service.class);
+  }
+
+  @Singleton @Provides SearchAbTestService.Service providesSearchAbTestRetrofit(
+      @Named("retrofit-auto-update") Retrofit retrofit) {
+    return retrofit.create(SearchAbTestService.Service.class);
+  }
+
+  @Singleton @Provides SearchAbTestService providesSearchAbTestService(
+      SearchAbTestService.Service service) {
+    return new SearchAbTestService(service);
   }
 
   @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
@@ -1577,13 +1595,39 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RealmExperimentPersistence(database, new RealmExperimentMapper());
   }
 
-  @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
-      ABTestService abTestService, RealmExperimentPersistence persistence) {
-    return new ABTestCenterRepository(abTestService, new HashMap<>(), persistence);
+  @Singleton @Provides @Named("ab-test-local-cache")
+  HashMap<String, ExperimentModel> providesAbTestLocalCache() {
+    return new HashMap<>();
   }
 
-  @Singleton @Provides ABTestManager providesABTestManager(
+  @Singleton @Provides AbTestCacheValidator providesAbTestCacheValidator(
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache) {
+    return new AbTestCacheValidator(localCache);
+  }
+
+  @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
+      ABTestService abTestService, RealmExperimentPersistence persistence,
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
+      AbTestCacheValidator cacheValidator) {
+    return new ABTestCenterRepository(abTestService, localCache, persistence, cacheValidator);
+  }
+
+  @Singleton @Provides AbTestSearchRepository providesAbTestSearchRepository(
+      ABTestService abTestService, RealmExperimentPersistence persistence,
+      SearchAbTestService searchAbTestService,
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
+      AbTestCacheValidator abTestCacheValidator) {
+    return new AbTestSearchRepository(abTestService, localCache, persistence, searchAbTestService,
+        abTestCacheValidator);
+  }
+
+  @Singleton @Provides @Named("ab-test") ABTestManager providesABTestManager(
       ABTestCenterRepository abTestCenterRepository) {
+    return new ABTestManager(abTestCenterRepository);
+  }
+
+  @Singleton @Provides @Named("search-ab-test") ABTestManager providesSearchABTestManager(
+      AbTestSearchRepository abTestCenterRepository) {
     return new ABTestManager(abTestCenterRepository);
   }
 
@@ -1797,5 +1841,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Named("rating-one-decimal-format") @Singleton @Provides DecimalFormat providesDecimalFormat() {
     return new DecimalFormat("0.0");
+  }
+
+  @Singleton @Provides SearchExperiment providesSearchExperiment(
+      @Named("search-ab-test") ABTestManager abTestManager) {
+    return new SearchExperiment(abTestManager);
   }
 }

@@ -27,8 +27,9 @@ public class PullCampaignNotificationsRequest
   private final String id;
 
   protected PullCampaignNotificationsRequest(String id, Map<String, String> options,
-      OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(httpClient, converterFactory);
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      SharedPreferences sharedPreferences) {
+    super(httpClient, converterFactory, sharedPreferences);
     this.options = options;
     this.id = id;
   }
@@ -51,7 +52,7 @@ public class PullCampaignNotificationsRequest
     }
 
     return new PullCampaignNotificationsRequest(aptoideClientUuid, options, httpClient,
-        converterFactory);
+        converterFactory, sharedPreferences);
   }
 
   @Override

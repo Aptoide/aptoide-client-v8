@@ -45,4 +45,8 @@ public class AppCenter {
   public Single<AppsList> loadRecommendedApps(int limit, String packageName) {
     return appCenterRepository.loadRecommendedApps(limit, packageName);
   }
+
+  public Single<AppsList> loadAppcRecommendedApps(int limit, String packageName) {
+    return appCenterRepository.loadAppcRecommendedApps(limit, packageName);
+  }
 }

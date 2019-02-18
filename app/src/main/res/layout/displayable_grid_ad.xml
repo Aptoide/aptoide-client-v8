@@ -48,6 +48,7 @@
           />
 
       <LinearLayout
+          android:id="@+id/app_info_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginEnd="1dp"
@@ -83,6 +84,38 @@
             android:text="@string/all_title_ad"
             tools:ignore="SmallSp"
             style="@style/Aptoide.TextView.Regular.XXS.Black"
+            />
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/appc_info_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="1dp"
+          android:layout_marginLeft="1dp"
+          android:layout_marginRight="1dp"
+          android:layout_marginStart="1dp"
+          android:layout_marginTop="2dp"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:visibility="gone"
+          >
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_appcoins_white_border"
+            />
+
+        <TextView
+            android:id="@+id/appc_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/appc_short_spend_appc"
+            style="@style/Aptoide.TextView.Medium.XXS.OrangeGradientEnd"
             />
 
       </LinearLayout>

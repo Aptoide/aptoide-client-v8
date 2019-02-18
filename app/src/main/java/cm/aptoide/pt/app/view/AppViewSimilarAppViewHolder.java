@@ -3,9 +3,11 @@ package cm.aptoide.pt.app.view;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppViewSimilarApp;
+import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
@@ -16,6 +18,8 @@ import rx.subjects.PublishSubject;
 
 public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
 
+  private final LinearLayout appInfoLayout;
+  private final LinearLayout appcInfoLayout;
   private final TextView nameTextView;
   private final ImageView iconView;
   private final TextView rating;
@@ -32,10 +36,12 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClicked = appClicked;
 
-    nameTextView = ((TextView) itemView.findViewById(R.id.name));
-    iconView = ((ImageView) itemView.findViewById(R.id.icon));
-    rating = (TextView) itemView.findViewById(R.id.rating_label);
-    adLabel = (TextView) itemView.findViewById(R.id.ad_label);
+    appInfoLayout = itemView.findViewById(R.id.app_info_layout);
+    appcInfoLayout = itemView.findViewById(R.id.appc_info_layout);
+    nameTextView = itemView.findViewById(R.id.name);
+    iconView = itemView.findViewById(R.id.icon);
+    rating = itemView.findViewById(R.id.rating_label);
+    adLabel = itemView.findViewById(R.id.ad_label);
   }
 
   public void setSimilarApp(AppViewSimilarApp app, String type) {
@@ -57,20 +63,29 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
       }
       itemView.setOnClickListener(
           view -> appClicked.onNext(new SimilarAppClickEvent(app, type, getLayoutPosition())));
-    } else {
+    } else if (app.getApp() != null) {
       adLabel.setVisibility(View.GONE);
       nameTextView.setText(app.getApp()
           .getName());
       ImageLoader.with(itemView.getContext())
           .loadWithRoundCorners(app.getApp()
               .getIcon(), 8, iconView, R.drawable.placeholder_square);
-      float rating = app.getApp()
-          .getRating();
-      if (rating == 0) {
-        this.rating.setText(R.string.appcardview_title_no_stars);
+      if (app.getApp()
+          .hasAppcBilling()) {
+        appcInfoLayout.setVisibility(View.VISIBLE);
+        appInfoLayout.setVisibility(View.GONE);
       } else {
-        this.rating.setText(oneDecimalFormatter.format(rating));
+        appcInfoLayout.setVisibility(View.GONE);
+        appInfoLayout.setVisibility(View.VISIBLE);
+        float rating = app.getApp()
+            .getRating();
+        if (rating == 0) {
+          this.rating.setText(R.string.appcardview_title_no_stars);
+        } else {
+          this.rating.setText(oneDecimalFormatter.format(rating));
+        }
       }
+
       itemView.setOnClickListener(
           view -> appClicked.onNext(new SimilarAppClickEvent(app, type, getLayoutPosition())));
     }

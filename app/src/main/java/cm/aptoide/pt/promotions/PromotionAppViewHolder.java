@@ -61,9 +61,9 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
         lockInstallButton(true);
       } else if (appState == CLAIM) {
         promotionAction.setEnabled(true);
-        promotionAction.setBackgroundColor(itemView.getContext()
+        promotionAction.setBackgroundDrawable(itemView.getContext()
             .getResources()
-            .getColor(R.color.green));
+            .getDrawable(R.drawable.card_border_rounded_green));
         promotionAction.setOnClickListener(
             __ -> promotionAppClick.onNext(new PromotionAppClick(app, getClickType(appState))));
       } else {
@@ -95,9 +95,9 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
       if (resultValue.resourceId != 0) {
         promotionAction.setBackgroundResource(resultValue.resourceId);
       } else {
-        promotionAction.setBackgroundColor(itemView.getContext()
+        promotionAction.setBackgroundDrawable(itemView.getContext()
             .getResources()
-            .getColor(R.color.orange));
+            .getDrawable(R.drawable.card_border_rounded_orange));
       }
     }
   }
