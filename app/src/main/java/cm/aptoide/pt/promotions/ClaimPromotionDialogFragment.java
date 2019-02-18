@@ -3,9 +3,7 @@ package cm.aptoide.pt.promotions;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -344,9 +342,8 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
 
   @Override public void fetchWalletAddressByIntent() {
     if (walletErrorView.getVisibility() != View.VISIBLE) {
-      ((ActivityResultNavigator) getContext()).navigateForResult(Intent.ACTION_VIEW,
-          Uri.parse(WALLET_INTENT_URI_ACTION), WALLET_INTENT_REQUEST_CODE, WALLET_INTENT_EXTRA_KEY,
-          WALLET_INTENT_EXTRA_VALUE);
+      navigator.fetchWalletAddressByIntent(WALLET_INTENT_URI_ACTION, WALLET_INTENT_REQUEST_CODE,
+          WALLET_INTENT_EXTRA_KEY, WALLET_INTENT_EXTRA_VALUE);
     }
   }
 

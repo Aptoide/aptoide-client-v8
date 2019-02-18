@@ -383,13 +383,6 @@ public abstract class AptoideApplication extends Application {
         createStoreUserPrivacyEnabled, packageName);
   }
 
-  public FragmentModule getFragmentModule(BaseDialogFragment baseFragment,
-      Bundle savedInstanceState, Bundle arguments, boolean createStoreUserPrivacyEnabled,
-      String packageName) {
-    return new FragmentModule(baseFragment, savedInstanceState, arguments,
-        createStoreUserPrivacyEnabled, packageName);
-  }
-
   @Override protected void attachBaseContext(Context base) {
     super.attachBaseContext(base);
     MultiDex.install(this);

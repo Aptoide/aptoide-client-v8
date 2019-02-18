@@ -10,6 +10,7 @@ import rx.Single;
 import rx.subscriptions.CompositeSubscription;
 
 public class ClaimPromotionDialogPresenter implements Presenter {
+  private static final String WALLET_ADDRESS = "WALLET_ADDRESS";
 
   private CompositeSubscription subscriptions;
   private Scheduler viewScheduler;
@@ -67,7 +68,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
             Intent resultIntent = result.getData();
             if (resultIntent != null && resultIntent.getExtras() != null) {
               view.updateWalletText(resultIntent.getExtras()
-                  .getString("WALLET_ADDRESS"));
+                  .getString(WALLET_ADDRESS));
             } else {
               view.fetchWalletAddressByClipboard();
             }
