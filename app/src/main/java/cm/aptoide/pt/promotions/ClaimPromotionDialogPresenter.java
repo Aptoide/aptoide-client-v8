@@ -1,7 +1,9 @@
 package cm.aptoide.pt.promotions;
 
 import android.app.Activity;
+import android.content.Intent;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.presenter.View;
 import java.util.List;
 import rx.Scheduler;
 import rx.Single;
@@ -29,6 +31,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   }
 
   @Override public void present() {
+    handleOnResumeEvent();
+    handleOnActivityResult();
     handleFindAddressClick();
     handleContinueClick();
     handleRefreshCaptcha();
@@ -42,6 +46,40 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   public void dispose() {
     subscriptions.clear();
+  }
+
+  private void handleOnResumeEvent() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
+        .doOnNext(__ -> view.fetchWalletAddressByIntent())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.fetchWalletAddressByClipboard();
+        });
+  }
+
+  private void handleOnActivityResult() {
+    view.getActivityResults()
+        .doOnNext(result -> {
+          if (result.getRequestCode() != 123) return;
+          if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent resultIntent = result.getData();
+            if (resultIntent != null && resultIntent.getExtras() != null) {
+              view.updateWalletText(resultIntent.getExtras()
+                  .getString("WALLET_ADDRESS"));
+            } else {
+              view.fetchWalletAddressByClipboard();
+            }
+          } else {
+            view.fetchWalletAddressByClipboard();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          view.showGenericError();
+        });
   }
 
   private void handleFindAddressClick() {

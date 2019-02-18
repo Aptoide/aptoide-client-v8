@@ -101,6 +101,7 @@ import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -378,6 +379,13 @@ public abstract class AptoideApplication extends Application {
    */
   public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
       Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName) {
+    return new FragmentModule(baseFragment, savedInstanceState, arguments,
+        createStoreUserPrivacyEnabled, packageName);
+  }
+
+  public FragmentModule getFragmentModule(BaseDialogFragment baseFragment,
+      Bundle savedInstanceState, Bundle arguments, boolean createStoreUserPrivacyEnabled,
+      String packageName) {
     return new FragmentModule(baseFragment, savedInstanceState, arguments,
         createStoreUserPrivacyEnabled, packageName);
   }

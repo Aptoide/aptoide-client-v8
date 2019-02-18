@@ -90,6 +90,10 @@ import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.promotions.ClaimPromotionDialogPresenter;
+import cm.aptoide.pt.promotions.ClaimPromotionDialogView;
+import cm.aptoide.pt.promotions.ClaimPromotionsManager;
+import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -121,6 +125,7 @@ import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 @Module public class FragmentModule {
 
@@ -400,5 +405,13 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
       DownloadStateParser downloadStateParser) {
     return new PromotionViewAppMapper(downloadStateParser);
+  }
+
+  @FragmentScope @Provides ClaimPromotionDialogPresenter providesClaimPromotionDialogPresenter(
+      ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
+      ClaimPromotionsNavigator navigator) {
+    return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
+        new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
+        promotionsAnalytics, navigator);
   }
 }
