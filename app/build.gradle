@@ -276,8 +276,6 @@ android {
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_ADCOLONY_APPLICATION_ID",
         "\"" + project.MOPUB_ADCOLONY_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "MOPUB_TAPJOY_SDK_KEY",
-        "\"" + project.MOPUB_TAPJOY_SDK_KEY + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
 
@@ -472,14 +470,16 @@ dependencies {
   implementation "com.mopub.mediation:adcolony:${MOPUB_MEDIATION_ADCOLONY_VERSION}"
   implementation "com.adcolony:sdk:${ADCOLONY_SDK_VERSION}"
 
-  // Tapjoy
-  implementation "com.tapjoy:tapjoy-android-sdk:${TAPJOY_SDK_VERSION}@aar"
-  implementation "com.mopub.mediation:tapjoy:${MOPUB_MEDIATION_TAPJOY_VERSION}"
-
   // UnityAds, Chartboost & One by AOL
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
+  //AppNext
+  implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"
+  implementation "com.appnext.sdk:banners:${APPNEXT_SDK_VERSION}"
+  implementation "com.appnext.sdk:native-ads2:${APPNEXT_SDK_VERSION}"
+  implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
+  implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
