@@ -45,7 +45,9 @@ import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormali
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.AbTestSearchRepository;
+import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.SearchAbTestService;
@@ -1593,16 +1595,30 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RealmExperimentPersistence(database, new RealmExperimentMapper());
   }
 
+  @Singleton @Provides @Named("ab-test-local-cache")
+  HashMap<String, ExperimentModel> providesAbTestLocalCache() {
+    return new HashMap<>();
+  }
+
+  @Singleton @Provides AbTestCacheValidator providesAbTestCacheValidator(
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache) {
+    return new AbTestCacheValidator(localCache);
+  }
+
   @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
-      ABTestService abTestService, RealmExperimentPersistence persistence) {
-    return new ABTestCenterRepository(abTestService, new HashMap<>(), persistence);
+      ABTestService abTestService, RealmExperimentPersistence persistence,
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
+      AbTestCacheValidator cacheValidator) {
+    return new ABTestCenterRepository(abTestService, localCache, persistence, cacheValidator);
   }
 
   @Singleton @Provides AbTestSearchRepository providesAbTestSearchRepository(
       ABTestService abTestService, RealmExperimentPersistence persistence,
-      SearchAbTestService searchAbTestService) {
-    return new AbTestSearchRepository(abTestService, new HashMap<>(), persistence,
-        searchAbTestService);
+      SearchAbTestService searchAbTestService,
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
+      AbTestCacheValidator abTestCacheValidator) {
+    return new AbTestSearchRepository(abTestService, localCache, persistence, searchAbTestService,
+        abTestCacheValidator);
   }
 
   @Singleton @Provides @Named("ab-test") ABTestManager providesABTestManager(
