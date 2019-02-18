@@ -5,13 +5,13 @@ import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import rx.Single;
 
-public class AdsManager {
+public class MoPubAdsManager {
 
   private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
   private MoPubBannerAdExperiment moPubBannerAdExperiment;
   private MoPubNativeAdExperiment moPubNativeAdExperiment;
 
-  public AdsManager(MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
+  public MoPubAdsManager(MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
       MoPubNativeAdExperiment moPubNativeAdExperiment) {
     this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
