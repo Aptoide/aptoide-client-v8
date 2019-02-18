@@ -101,16 +101,6 @@
         android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
 
     <activity
-        android:name="com.adcolony.sdk.AdColonyInterstitialActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"
-        android:hardwareAccelerated="true"/>
-
-    <activity
-        android:name="com.adcolony.sdk.AdColonyAdViewActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"
-        android:hardwareAccelerated="true"/>
-
-    <activity
         android:name="com.unity3d.services.ads.adunit.AdUnitActivity"
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="true"

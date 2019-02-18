@@ -125,19 +125,6 @@
 ## appc proxy
 -dontwarn com.asf.appcoins.**
 
-# For communication with AdColony's WebView
--keepclassmembers class * {
-    @android.webkit.JavascriptInterface <methods>;
-}
-# Keep ADCNative class members unobfuscated
--keep class com.ironsource.adapters.adcolony.** { *; }
--keep class com.adcolony.** { *; }
--dontwarn com.adcolony.**
--dontwarn com.ironsource.adapters.adcolony.**
-
--keepclassmembers class com.adcolony.sdk.ADCNative** {
-    *;
- }
 
 -keep class com.moat.** { *; }
 -keepattributes JavascriptInterface
