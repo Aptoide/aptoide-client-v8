@@ -22,9 +22,13 @@ public interface PaymentLoginView extends GooglePlayServicesView {
 
   Observable<AptoideCredentials> aptoideLoginEvent();
 
+  Observable<Boolean> showAptoideSignUpAreaClick();
+
   Observable<AptoideCredentials> aptoideSignUpEvent();
 
   Observable<Void> grantFacebookRequiredPermissionsEvent();
+
+  Observable<Void> hidePasswordContainerEvent();
 
   void showLoading();
 
@@ -35,4 +39,14 @@ public interface PaymentLoginView extends GooglePlayServicesView {
   void showTermsConditionError();
 
   void showFacebookPermissionsRequiredError();
+
+  void setCobrandText();
+
+  void hideTCandPP();
+
+  void showTCandPP();
+
+  void showUsernamePasswordContainer(boolean showLogin, boolean shouldShowTCandPP);
+
+  void hideUsernamePasswordContainer(boolean shouldShowGDPR);
 }

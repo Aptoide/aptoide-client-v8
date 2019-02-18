@@ -59,7 +59,7 @@ import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.appview.PreferencesManager;
-import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
+import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -88,7 +88,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
-import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.presenter.LoginSignupCredentialsSpecificPresenter;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
@@ -348,11 +347,11 @@ import rx.schedulers.Schedulers;
         accountAnalytics);
   }
 
-  @FragmentScope @Provides PaymentLoginPresenter providesPaymentLoginPresenter(
+  @FragmentScope @Provides PaymentLoginFlavorPresenter providesPaymentLoginPresenter(
       AccountNavigator accountNavigator, AptoideAccountManager accountManager,
       CrashReport crashReport, AccountErrorMapper accountErrorMapper,
       ScreenOrientationManager screenOrientationManager, AccountAnalytics accountAnalytics) {
-    return new PaymentLoginPresenter((PaymentLoginView) fragment,
+    return new PaymentLoginFlavorPresenter((PaymentLoginView) fragment,
         arguments.getInt(FragmentNavigator.REQUEST_CODE_EXTRA),
         Arrays.asList("email", "user_friends"), accountNavigator, Arrays.asList("email"),
         accountManager, crashReport, accountErrorMapper, AndroidSchedulers.mainThread(),
