@@ -1636,11 +1636,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository) {
+      InstalledRepository installedRepository, @Named("homePromotionsId") String promotionId) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         preferencesManager, application.getApplicationContext()
-        .getPackageManager(), promotionsService, installedRepository);
+        .getPackageManager(), promotionsService, installedRepository, promotionId);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -1702,6 +1702,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("marketName") String provideMarketName() {
     return BuildConfig.MARKET_NAME;
+  }
+
+  @Singleton @Provides @Named("homePromotionsId") String provideHomePromotionsId() {
+    return BuildConfig.HOME_PROMOTION_ID;
   }
 
   @Singleton @Provides @Named("accountType") String provideAccountType() {
