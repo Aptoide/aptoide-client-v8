@@ -13,22 +13,19 @@ public class ABTestCenterRepository implements AbTestRepository {
   private ABTestService service;
   private RealmExperimentPersistence persistence;
   private HashMap<String, ExperimentModel> localCache;
+  private AbTestCacheValidator cacheValidator;
 
   public ABTestCenterRepository(ABTestService service, HashMap<String, ExperimentModel> localCache,
-      RealmExperimentPersistence persistence) {
+      RealmExperimentPersistence persistence, AbTestCacheValidator cacheValidator) {
     this.service = service;
     this.localCache = localCache;
     this.persistence = persistence;
+    this.cacheValidator = cacheValidator;
   }
 
   public Observable<Experiment> getExperiment(String identifier) {
     if (localCache.containsKey(identifier)) {
-      if (!localCache.get(identifier)
-          .getExperiment()
-          .isExpired() && !localCache.get(identifier)
-          .hasError() && !localCache.get(identifier)
-          .getExperiment()
-          .isExperimentOver()) {
+      if (cacheValidator.validateExperiment(identifier)) {
         return Observable.just(localCache.get(identifier)
             .getExperiment());
       } else {
@@ -56,20 +53,14 @@ public class ABTestCenterRepository implements AbTestRepository {
   }
 
   public Observable<Boolean> recordImpression(String identifier) {
-    if (localCache.containsKey(identifier) && !localCache.get(identifier)
-        .hasError() && !localCache.get(identifier)
-        .getExperiment()
-        .isExperimentOver()) {
+    if (cacheValidator.validateCache(identifier)) {
       return service.recordImpression(identifier);
     }
     return Observable.just(false);
   }
 
   public Observable<Boolean> recordAction(String identifier) {
-    if (localCache.containsKey(identifier) && !localCache.get(identifier)
-        .hasError() && !localCache.get(identifier)
-        .getExperiment()
-        .isExperimentOver()) {
+    if (cacheValidator.validateCache(identifier)) {
       return getExperiment(identifier).flatMap(
           experiment -> service.recordAction(identifier, experiment.getAssignment()));
     }
@@ -77,9 +68,7 @@ public class ABTestCenterRepository implements AbTestRepository {
   }
 
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-    if (localCache.containsKey(experimentName)) localCache.remove(experimentName);
-
-    localCache.put(experimentName, experiment);
+    cacheValidator.updateCache(experimentName, experiment);
     persistence.save(experimentName, experiment.getExperiment());
     return Observable.just(null);
   }

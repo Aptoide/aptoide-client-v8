@@ -13,8 +13,8 @@ public class Experiment {
   private boolean partOfExperiment;
   private boolean experimentOver;
 
-  public Experiment(String payload, String assignment, boolean experimentOver) {
-    this.requestTime = System.currentTimeMillis();
+  public Experiment(long requestTime, String payload, String assignment, boolean experimentOver) {
+    this.requestTime = requestTime;
     this.assignment = assignment;
     this.payload = payload;
     this.partOfExperiment = true;
