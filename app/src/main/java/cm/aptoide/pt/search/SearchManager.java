@@ -2,8 +2,6 @@ package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -37,17 +35,13 @@ import rx.Single;
   private final AdsRepository adsRepository;
   private final Database database;
   private final AptoideAccountManager accountManager;
-  private final MoPubBannerAdExperiment moPubBannerAdExperiment;
-  private final MoPubNativeAdExperiment moPubNativeAdExperiment;
   private final MoPubAdsManager moPubAdsManager;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
-      Database database, AptoideAccountManager accountManager,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment, MoPubAdsManager moPubAdsManager) {
+      Database database, AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -57,8 +51,6 @@ import rx.Single;
     this.adsRepository = adsRepository;
     this.database = database;
     this.accountManager = accountManager;
-    this.moPubBannerAdExperiment = moPubBannerAdExperiment;
-    this.moPubNativeAdExperiment = moPubNativeAdExperiment;
     this.moPubAdsManager = moPubAdsManager;
   }
 

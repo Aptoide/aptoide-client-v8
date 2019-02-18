@@ -1123,12 +1123,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment, MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
         AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager, moPubBannerAdExperiment, moPubNativeAdExperiment, moPubAdsManager);
+        accountManager, moPubAdsManager);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
