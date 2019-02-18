@@ -48,6 +48,7 @@ import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -67,6 +68,7 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -1122,17 +1124,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, MoPubAdsManager moPubAdsManager) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
         AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager, moPubBannerAdExperiment, moPubNativeAdExperiment);
+        accountManager, moPubBannerAdExperiment, moPubNativeAdExperiment, moPubAdsManager);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
       SearchSuggestionRemoteRepository remoteRepository) {
     return new SearchSuggestionManager(new SearchSuggestionService(remoteRepository),
         Schedulers.io());
+  }
+
+  @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
+      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
+      MoPubBannerAdExperiment moPubBannerAdExperiment,
+      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+    return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
+        moPubNativeAdExperiment);
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(

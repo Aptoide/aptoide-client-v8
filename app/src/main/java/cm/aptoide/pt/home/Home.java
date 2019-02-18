@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -22,18 +23,20 @@ public class Home {
   private final MoPubBannerAdExperiment bannerAdExperiment;
   private final MoPubNativeAdExperiment nativeAdExperiment;
   private final BannerRepository bannerRepository;
+  private final MoPubAdsManager moPubAdsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
       MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
-      PromotionsPreferencesManager promotionsPreferencesManager) {
+      MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
     this.bannerAdExperiment = bannerAdExperiment;
     this.nativeAdExperiment = nativeAdExperiment;
     this.bannerRepository = bannerRepository;
+    this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
   }
 

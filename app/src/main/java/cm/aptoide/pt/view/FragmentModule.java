@@ -32,6 +32,7 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
@@ -228,9 +229,9 @@ import rx.schedulers.Schedulers;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager,
       MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository,
-      MoPubNativeAdExperiment nativeAdExperiment) {
+      MoPubNativeAdExperiment nativeAdExperiment, MoPubAdsManager moPubAdsManager) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerAdExperiment,
-        nativeAdExperiment, bannerRepository, promotionsPreferencesManager);
+        nativeAdExperiment, bannerRepository, moPubAdsManager, promotionsPreferencesManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -286,11 +287,11 @@ import rx.schedulers.Schedulers;
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, MoPubAdsManager moPubAdsManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-        appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-        notificationAnalytics, installAnalytics,
+        appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
+        appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
         marketName, appCoinsManager, moPubInterstitialAdExperiment, moPubBannerAdExperiment,
         moPubNativeAdExperiment);

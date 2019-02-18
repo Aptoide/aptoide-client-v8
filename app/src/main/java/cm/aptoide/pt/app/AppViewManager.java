@@ -6,6 +6,7 @@ import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
@@ -51,6 +52,7 @@ public class AppViewManager {
   private final AppViewConfiguration appViewConfiguration;
   private final int limit;
   private final InstallAnalytics installAnalytics;
+  private final MoPubAdsManager moPubAdsManager;
   private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
@@ -71,10 +73,10 @@ public class AppViewManager {
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
       StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
       AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
-      String marketName, AppCoinsManager appCoinsManager,
+      MoPubAdsManager moPubAdsManager, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
+      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager,
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
       MoPubNativeAdExperiment moPubNativeAdExperiment) {
@@ -88,6 +90,7 @@ public class AppViewManager {
     this.storeUtilsProxy = storeUtilsProxy;
     this.aptoideAccountManager = aptoideAccountManager;
     this.appViewConfiguration = appViewConfiguration;
+    this.moPubAdsManager = moPubAdsManager;
     this.preferencesManager = preferencesManager;
     this.downloadStateParser = downloadStateParser;
     this.appViewAnalytics = appViewAnalytics;

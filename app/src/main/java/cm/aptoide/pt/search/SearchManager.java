@@ -5,6 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Store;
@@ -38,6 +39,7 @@ import rx.Single;
   private final AptoideAccountManager accountManager;
   private final MoPubBannerAdExperiment moPubBannerAdExperiment;
   private final MoPubNativeAdExperiment moPubNativeAdExperiment;
+  private final MoPubAdsManager moPubAdsManager;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -45,7 +47,7 @@ import rx.Single;
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
       Database database, AptoideAccountManager accountManager,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, MoPubAdsManager moPubAdsManager) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -57,6 +59,7 @@ import rx.Single;
     this.accountManager = accountManager;
     this.moPubBannerAdExperiment = moPubBannerAdExperiment;
     this.moPubNativeAdExperiment = moPubNativeAdExperiment;
+    this.moPubAdsManager = moPubAdsManager;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -125,10 +128,10 @@ import rx.Single;
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
-    return moPubBannerAdExperiment.shouldLoadBanner();
+    return moPubAdsManager.shouldLoadBannerAd();
   }
 
   public Single<Boolean> shouldLoadNativeAds() {
-    return moPubNativeAdExperiment.shouldLoadNative();
+    return moPubAdsManager.shouldLoadNativeAds();
   }
 }
