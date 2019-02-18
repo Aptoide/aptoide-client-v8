@@ -81,10 +81,11 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   private void initializeAdsMediation() {
-    IronSource.init(this, BuildConfig.IRONSOURCE_APPLICATION_ID);
-    AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
+    IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
+    AdColony.configure(this, BuildConfig.MOPUB_ADCOLONY_APPLICATION_ID,
+        BuildConfig.MOPUB_ADCOLONY_ZONE_ID_T7);
 
-    UnityAds.initialize(this, BuildConfig.UNITYADS_GAME_ID, new UnityAdsListener());
+    UnityAds.initialize(this, BuildConfig.MOPUB_UNITYADS_GAME_ID, new UnityAdsListener());
   }
 
   @Override protected void onStart() {
