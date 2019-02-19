@@ -89,7 +89,7 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
-import cm.aptoide.pt.presenter.LoginSignupCredentialsSpecificPresenter;
+import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -139,10 +139,10 @@ import rx.schedulers.Schedulers;
     this.packageName = packageName;
   }
 
-  @FragmentScope @Provides LoginSignupCredentialsSpecificPresenter provideLoginSignUpPresenter(
+  @FragmentScope @Provides LoginSignupCredentialsFlavorPresenter provideLoginSignUpPresenter(
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
-    return new LoginSignupCredentialsSpecificPresenter((LoginSignUpCredentialsView) fragment,
+    return new LoginSignupCredentialsFlavorPresenter((LoginSignUpCredentialsView) fragment,
         accountManager, CrashReport.getInstance(),
         arguments.getBoolean("dismiss_to_navigate_to_main_view"),
         arguments.getBoolean("clean_back_stack"), accountNavigator,

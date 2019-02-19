@@ -28,7 +28,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
-import cm.aptoide.pt.presenter.LoginSignupCredentialsSpecificPresenter;
+import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -46,7 +46,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   private static final String USERNAME_KEY = "username_key";
   private static final String PASSWORD_KEY = "password_key";
-  @Inject LoginSignupCredentialsSpecificPresenter presenter;
+  @Inject LoginSignupCredentialsFlavorPresenter presenter;
   @Inject ScreenOrientationManager orientationManager;
   @Inject AccountAnalytics accountAnalytics;
   @Inject @Named("marketName") String marketName;

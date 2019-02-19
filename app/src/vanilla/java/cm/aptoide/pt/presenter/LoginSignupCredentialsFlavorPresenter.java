@@ -10,7 +10,7 @@ import java.util.Collection;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class LoginSignupCredentialsSpecificPresenter extends LoginSignUpCredentialsPresenter {
+public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredentialsPresenter {
 
   private final LoginSignUpCredentialsView view;
   private final AccountAnalytics accountAnalytics;
@@ -19,7 +19,7 @@ public class LoginSignupCredentialsSpecificPresenter extends LoginSignUpCredenti
   private final CrashReport crashReport;
   private final AccountNavigator accountNavigator;
 
-  public LoginSignupCredentialsSpecificPresenter(LoginSignUpCredentialsView view,
+  public LoginSignupCredentialsFlavorPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, CrashReport crashReport,
       boolean dismissToNavigateToMainView, boolean navigateToHome,
       AccountNavigator accountNavigator, Collection<String> permissions,
