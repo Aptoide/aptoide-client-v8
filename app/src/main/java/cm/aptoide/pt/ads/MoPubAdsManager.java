@@ -59,22 +59,6 @@ public class MoPubAdsManager {
     return moPubInterstitialAdExperiment.recordAdClick();
   }
 
-  public Single<Boolean> recordBannerAdImpression() {
-    return moPubBannerAdExperiment.recordAdImpression();
-  }
-
-  public Single<Boolean> recordBannerAdClick() {
-    return moPubBannerAdExperiment.recordAdClick();
-  }
-
-  public Single<Boolean> recordNativeAdImpression() {
-    return moPubBannerAdExperiment.recordAdImpression();
-  }
-
-  public Single<Boolean> recordNativeAdClick() {
-    return moPubBannerAdExperiment.recordAdClick();
-  }
-
   private Single<Boolean> shouldRequestMoPubAd() {
     return Single.just(!isWalletInstalled());
   }
