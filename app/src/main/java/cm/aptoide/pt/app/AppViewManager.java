@@ -2,9 +2,6 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
@@ -65,9 +62,6 @@ public class AppViewManager {
   private AppCoinsManager appCoinsManager;
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
-  private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
-  private MoPubBannerAdExperiment moPubBannerAdExperiment;
-  private MoPubNativeAdExperiment moPubNativeAdExperiment;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -76,10 +70,7 @@ public class AppViewManager {
       MoPubAdsManager moPubAdsManager, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager,
-      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -100,9 +91,6 @@ public class AppViewManager {
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
-    this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
-    this.moPubBannerAdExperiment = moPubBannerAdExperiment;
-    this.moPubNativeAdExperiment = moPubNativeAdExperiment;
     this.isFirstLoad = true;
   }
 
@@ -171,11 +159,11 @@ public class AppViewManager {
   }
 
   public Single<Boolean> recordInterstitialImpression() {
-    return moPubInterstitialAdExperiment.recordAdImpression();
+    return moPubAdsManager.recordInterstitialAdImpression();
   }
 
   public Single<Boolean> recordInterstitialClick() {
-    return moPubInterstitialAdExperiment.recordAdClick();
+    return moPubAdsManager.recordInterstitialAdClick();
   }
 
   public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
@@ -435,14 +423,14 @@ public class AppViewManager {
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {
-    return moPubInterstitialAdExperiment.shouldLoadInterstitial();
+    return moPubAdsManager.shouldLoadInterstitialAd();
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
-    return moPubBannerAdExperiment.shouldLoadBanner();
+    return moPubAdsManager.shouldLoadBannerAd();
   }
 
   public Single<Boolean> shouldLoadNativeAds() {
-    return moPubNativeAdExperiment.shouldLoadNative();
+    return moPubAdsManager.shouldLoadNativeAds();
   }
 }
