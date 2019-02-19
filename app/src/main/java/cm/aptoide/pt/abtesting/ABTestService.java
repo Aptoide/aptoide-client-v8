@@ -53,8 +53,9 @@ public class ABTestService {
 
   private ExperimentModel mapToExperimentModel(ABTestImpressionResponse response,
       boolean hasError) {
-    return new ExperimentModel(new Experiment(response.getPayload(), response.getAssignment(),
-        mapExperimentStatus(response)), hasError);
+    return new ExperimentModel(
+        new Experiment(System.currentTimeMillis(), response.getPayload(), response.getAssignment(),
+            mapExperimentStatus(response)), hasError);
   }
 
   private boolean mapExperimentStatus(ABTestImpressionResponse response) {

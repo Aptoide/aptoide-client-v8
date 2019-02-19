@@ -38,7 +38,13 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
   <uses-sdk
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy, com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner, com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial, com.mopub.mobileads.native_video, com.mopub.mobileads.native_static, com.mopub.mobileads.base, com.flurry.android.ads.sdk, com.flurry.android.analytics.sdk"/>
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments,
+      com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy,
+      com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner,
+      com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial, com.mopub.mobileads.native_video,
+      com.mopub.mobileads.native_static, com.mopub.mobileads.base, com.flurry.android.ads.sdk,
+      com.flurry.android.analytics.sdk, com.appnext.ads.mediation.mopub, com.appnext.appnextsdkmopubbanners,
+      com.appnext.appnextsdk.API.mediation.MoPub"/>
 
   <application
       android:allowBackup="false"
@@ -130,23 +136,6 @@
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="false"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-
-    <activity
-        android:name="com.tapjoy.TJAdUnitActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
-    <activity
-        android:name="com.tapjoy.mraid.view.ActionHandler"
-        android:configChanges="orientation|keyboardHidden|screenSize"/>
-    <activity
-        android:name="com.tapjoy.mraid.view.Browser"
-        android:configChanges="orientation|keyboardHidden|screenSize"/>
-    <activity
-        android:name="com.tapjoy.TJContentActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
     <activity
         android:name=".view.OpenGLES20Activity"

@@ -10,13 +10,16 @@ public class AbTestSearchRepository implements AbTestRepository {
   private RealmExperimentPersistence persistence;
   private HashMap<String, ExperimentModel> localCache;
   private String experimentId;
+  private AbTestCacheValidator cacheValidator;
 
   public AbTestSearchRepository(ABTestService service, HashMap<String, ExperimentModel> localCache,
-      RealmExperimentPersistence persistence, SearchAbTestService searchAbTestService) {
+      RealmExperimentPersistence persistence, SearchAbTestService searchAbTestService,
+      AbTestCacheValidator cacheValidator) {
     this.searchAbTestService = searchAbTestService;
     this.service = service;
     this.persistence = persistence;
     this.localCache = localCache;
+    this.cacheValidator = cacheValidator;
   }
 
   public Observable<Experiment> getExperiment(String identifier) {
@@ -25,10 +28,7 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   @Override public Observable<Boolean> recordImpression(String identifier) {
     return getExperimentId(identifier).flatMap(id -> {
-      if (localCache.containsKey(id) && !localCache.get(id)
-          .hasError() && !localCache.get(id)
-          .getExperiment()
-          .isExperimentOver()) {
+      if (cacheValidator.isCacheValid(id)) {
         return service.recordImpression(id);
       }
       return Observable.just(false);
@@ -37,10 +37,7 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   @Override public Observable<Boolean> recordAction(String identifier) {
     return getExperimentId(identifier).flatMap(id -> {
-      if (localCache.containsKey(id) && !localCache.get(id)
-          .hasError() && !localCache.get(id)
-          .getExperiment()
-          .isExperimentOver()) {
+      if (cacheValidator.isCacheValid(id)) {
         return getExperiment(identifier).flatMap(
             experiment -> service.recordAction(id, experiment.getAssignment()));
       }
@@ -50,8 +47,6 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   @Override
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-    if (localCache.containsKey(experimentName)) localCache.remove(experimentName);
-
     localCache.put(experimentName, experiment);
     persistence.save(experimentName, experiment.getExperiment());
     return Observable.just(null);
@@ -74,12 +69,7 @@ public class AbTestSearchRepository implements AbTestRepository {
 
   private Observable<Experiment> resolveExperiment(String experimentId) {
     if (localCache.containsKey(experimentId)) {
-      if (!localCache.get(experimentId)
-          .getExperiment()
-          .isExpired() && !localCache.get(experimentId)
-          .hasError() && !localCache.get(experimentId)
-          .getExperiment()
-          .isExperimentOver()) {
+      if (cacheValidator.isExperimentValid(experimentId)) {
         return Observable.just(localCache.get(experimentId)
             .getExperiment());
       } else {
