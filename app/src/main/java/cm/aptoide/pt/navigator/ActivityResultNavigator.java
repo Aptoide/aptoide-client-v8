@@ -89,6 +89,14 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     return resultRelay.filter(result -> result.getRequestCode() == requestCode);
   }
 
+  @Override public void navigateForResult(String action, Uri uri, int requestCode, String extraId,
+      String extraValue) {
+    Intent intent = new Intent(action);
+    intent.setData(uri);
+    intent.putExtra(extraId, extraValue);
+    startActivityForResult(intent, requestCode);
+  }
+
   @Override public Observable<Result> navigateForResultWithOutput(String action, Uri outputUri,
       int requestCode) {
     Intent intent = new Intent(action);
