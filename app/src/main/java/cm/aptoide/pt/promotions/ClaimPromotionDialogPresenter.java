@@ -19,6 +19,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private PromotionsAnalytics promotionsAnalytics;
   private ClaimPromotionsNavigator navigator;
 
+  private boolean shouldSendIntent;
+
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
       ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
@@ -29,6 +31,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     this.claimPromotionsManager = claimPromotionsManager;
     this.promotionsAnalytics = promotionsAnalytics;
     this.navigator = navigator;
+    this.shouldSendIntent = true;
   }
 
   @Override public void present() {
@@ -52,8 +55,15 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private void handleOnResumeEvent() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
-        .doOnNext(__ -> view.fetchWalletAddressByIntent())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE))
+        .doOnNext(__ -> {
+          if (shouldSendIntent) {
+            view.fetchWalletAddressByIntent();
+            shouldSendIntent = false;
+          } else {
+            view.fetchWalletAddressByClipboard();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
           view.fetchWalletAddressByClipboard();
