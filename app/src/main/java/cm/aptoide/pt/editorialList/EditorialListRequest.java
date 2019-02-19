@@ -15,10 +15,13 @@ import rx.Observable;
 
 public class EditorialListRequest extends V7<EditorialListResponse, GetActionItemRequest.Body> {
 
+  private final int limit;
+
   protected EditorialListRequest(GetActionItemRequest.Body body, String baseHost,
       OkHttpClient httpClient, Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, int limit) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    this.limit = limit;
   }
 
   public static String getHost(SharedPreferences sharedPreferences) {
@@ -26,18 +29,18 @@ public class EditorialListRequest extends V7<EditorialListResponse, GetActionIte
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-        + "/api/7/";
+        + "/api/7.20181019/";
   }
 
   public static EditorialListRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, int limit) {
     return new EditorialListRequest(new GetActionItemRequest.Body(), getHost(sharedPreferences),
-        httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+        httpClient, converterFactory, bodyInterceptor, tokenInvalidator, limit);
   }
 
   @Override protected Observable<EditorialListResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getEditorialList(body);
+    return interfaces.getEditorialList(limit, body);
   }
 }
