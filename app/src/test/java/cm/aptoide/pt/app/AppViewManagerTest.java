@@ -2,10 +2,6 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
@@ -72,11 +68,7 @@ public class AppViewManagerTest {
   @Mock private GenericResponseV2 genericResponseV2;
   @Mock private Download download;
   @Mock private DownloadFactory downloadFactory;
-  @Mock private ABTestManager abTestManager;
   @Mock private AppCoinsManager appCoinsManager;
-  @Mock private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
-  @Mock private MoPubBannerAdExperiment moPubBannerAdExperiment;
-  @Mock private MoPubNativeAdExperiment moPubNativeAdExperiment;
   @Mock private MoPubAdsManager moPubAdsManager;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
