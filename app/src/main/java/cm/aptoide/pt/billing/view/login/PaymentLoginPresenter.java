@@ -16,7 +16,7 @@ import java.util.Collection;
 import rx.Observable;
 import rx.Scheduler;
 
-public class PaymentLoginPresenter implements Presenter {
+public abstract class PaymentLoginPresenter implements Presenter {
 
   private static final int RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE = 2;
   private final PaymentLoginView view;
@@ -53,12 +53,6 @@ public class PaymentLoginPresenter implements Presenter {
 
     onViewCreatedCheckLoginStatus();
 
-    handleClickOnTermsAndConditions();
-
-    handleClickOnPrivacyPolicy();
-
-    handleBackButtonAndUpNavigationEvent();
-
     handleFacebookSignUpResult();
 
     handleFacebookSignUpEvent();
@@ -71,29 +65,9 @@ public class PaymentLoginPresenter implements Presenter {
 
     handleRecoverPasswordEvent();
 
-    handleAptoideLoginEvent();
-
     handleAptoideSignUpEvent();
-  }
 
-  private void handleClickOnTermsAndConditions() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.termsAndConditionsClickEvent())
-        .doOnNext(__ -> accountNavigator.navigateToTermsAndConditions())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void handleClickOnPrivacyPolicy() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.privacyPolicyClickEvent())
-        .doOnNext(__ -> accountNavigator.navigateToPrivacyPolicy())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+    handleAptoideLoginEvent();
   }
 
   private void handleGrantFacebookRequiredPermissionsEvent() {
@@ -118,17 +92,14 @@ public class PaymentLoginPresenter implements Presenter {
         .subscribe();
   }
 
-  private void handleAptoideSignUpEvent() {
+  void handleAptoideSignUpEvent() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(event -> view.aptoideSignUpEvent()
-            .doOnNext(credentials -> showNotCheckedMessage(credentials.isChecked()))
-            .filter(AptoideCredentials::isChecked)
-            .doOnNext(__ -> {
-              view.showLoading();
-              orientationManager.lock();
-              accountAnalytics.sendAptoideSignUpButtonPressed();
-            })
+        .flatMap(event -> getAptoideSignUpEvent().doOnNext(__ -> {
+          view.showLoading();
+          orientationManager.lock();
+          accountAnalytics.sendAptoideSignUpButtonPressed();
+        })
             .flatMapCompletable(
                 result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
                     .observeOn(viewScheduler)
@@ -251,15 +222,6 @@ public class PaymentLoginPresenter implements Presenter {
         .subscribe();
   }
 
-  private void handleBackButtonAndUpNavigationEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> Observable.merge(view.backButtonEvent(), view.upNavigationEvent()))
-        .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, false))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
-  }
-
   private void handleRecoverPasswordEvent() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -269,9 +231,5 @@ public class PaymentLoginPresenter implements Presenter {
         .subscribe();
   }
 
-  private void showNotCheckedMessage(boolean checked) {
-    if (!checked) {
-      view.showTermsConditionError();
-    }
-  }
+  protected abstract Observable<AptoideCredentials> getAptoideSignUpEvent();
 }
