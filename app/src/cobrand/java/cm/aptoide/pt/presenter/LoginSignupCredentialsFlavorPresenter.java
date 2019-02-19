@@ -1,19 +1,17 @@
 package cm.aptoide.pt.presenter;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredentialsPresenter {
 
   private final LoginSignUpCredentialsView view;
-  private final AccountAnalytics accountAnalytics;
-  private final AptoideAccountManager accountManager;
   private final ThrowableToStringMapper errorMapper;
   private final CrashReport crashReport;
 
@@ -26,8 +24,6 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
     super(view, accountManager, crashReport, dismissToNavigateToMainView, navigateToHome,
         accountNavigator, permissions, requiredPermissions, errorMapper, accountAnalytics);
     this.view = view;
-    this.accountAnalytics = accountAnalytics;
-    this.accountManager = accountManager;
     this.errorMapper = errorMapper;
     this.crashReport = crashReport;
   }
@@ -39,41 +35,11 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
     handleCobrandText();
     showAptoideSignUpEvent();
     handleAptoideShowSignUpEvent();
-    handleAptoideSignUpEvent();
     hideTCandPP();
   }
 
-  private void handleAptoideSignUpEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.aptoideSignUpEvent()
-            .doOnNext(click -> {
-              view.hideKeyboard();
-              view.showLoading();
-              lockScreenRotation();
-              accountAnalytics.sendAptoideSignUpButtonPressed();
-            })
-            .flatMapCompletable(
-                credentials -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE,
-                    credentials)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnCompleted(() -> {
-                      accountAnalytics.loginSuccess();
-                      navigateToCreateProfile();
-                      unlockScreenRotation();
-                      view.hideLoading();
-                    })
-                    .doOnError(throwable -> {
-                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
-                          throwable);
-                      view.showError(errorMapper.map(throwable));
-                      crashReport.log(throwable);
-                      unlockScreenRotation();
-                      view.hideLoading();
-                    }))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+  protected Observable<AptoideCredentials> getAptoideSignUpEvent() {
+    return view.aptoideSignUpEvent();
   }
 
   private void hideTCandPP() {

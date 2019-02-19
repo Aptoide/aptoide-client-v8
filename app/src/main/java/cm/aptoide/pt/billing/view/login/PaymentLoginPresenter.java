@@ -1,6 +1,7 @@
 package cm.aptoide.pt.billing.view.login;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
@@ -12,6 +13,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
+import rx.Observable;
 import rx.Scheduler;
 
 public abstract class PaymentLoginPresenter implements Presenter {
@@ -63,6 +65,8 @@ public abstract class PaymentLoginPresenter implements Presenter {
 
     handleRecoverPasswordEvent();
 
+    handleAptoideSignUpEvent();
+
     handleAptoideLoginEvent();
   }
 
@@ -84,6 +88,32 @@ public abstract class PaymentLoginPresenter implements Presenter {
         .doOnNext(account -> accountAnalytics.loginSuccess())
         .observeOn(viewScheduler)
         .doOnNext(__ -> accountNavigator.popViewWithResult(requestCode, true))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+  }
+
+  void handleAptoideSignUpEvent() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(event -> getAptoideSignUpEvent().doOnNext(__ -> {
+          view.showLoading();
+          orientationManager.lock();
+          accountAnalytics.sendAptoideSignUpButtonPressed();
+        })
+            .flatMapCompletable(
+                result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
+                    .observeOn(viewScheduler)
+                    .doOnTerminate(() -> {
+                      view.hideLoading();
+                      orientationManager.unlock();
+                    })
+                    .doOnError(throwable -> {
+                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                          throwable);
+                      view.showError(errorMapper.map(throwable));
+                      crashReport.log(throwable);
+                    }))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
@@ -200,4 +230,6 @@ public abstract class PaymentLoginPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
+
+  protected abstract Observable<AptoideCredentials> getAptoideSignUpEvent();
 }

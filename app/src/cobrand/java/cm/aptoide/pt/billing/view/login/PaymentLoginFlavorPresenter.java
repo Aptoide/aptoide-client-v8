@@ -1,6 +1,7 @@
 package cm.aptoide.pt.billing.view.login;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -14,12 +15,8 @@ import rx.Scheduler;
 public class PaymentLoginFlavorPresenter extends PaymentLoginPresenter {
 
   private final PaymentLoginView view;
-  private final AccountAnalytics accountAnalytics;
-  private final AptoideAccountManager accountManager;
   private final ThrowableToStringMapper errorMapper;
   private final CrashReport crashReport;
-  private final ScreenOrientationManager orientationManager;
-  private final Scheduler viewScheduler;
   private final int requestCode;
   private final AccountNavigator accountNavigator;
 
@@ -31,14 +28,10 @@ public class PaymentLoginFlavorPresenter extends PaymentLoginPresenter {
     super(view, requestCode, permissions, accountNavigator, requiredPermissions, accountManager,
         crashReport, errorMapper, viewScheduler, orientationManager, accountAnalytics);
     this.view = view;
-    this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.requestCode = requestCode;
     this.crashReport = crashReport;
     this.errorMapper = errorMapper;
-    this.viewScheduler = viewScheduler;
-    this.orientationManager = orientationManager;
-    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -48,37 +41,13 @@ public class PaymentLoginFlavorPresenter extends PaymentLoginPresenter {
     handleCobrandText();
     showAptoideSignUpEvent();
     handleAptoideShowSignUpEvent();
-    handleAptoideSignUpEvent();
     hideTCandPP();
     handleBackButtonAndUpNavigationEvent();
     hidePasswordContainerEvent();
   }
 
-  private void handleAptoideSignUpEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(event -> view.aptoideSignUpEvent()
-            .doOnNext(__ -> {
-              view.showLoading();
-              orientationManager.lock();
-              accountAnalytics.sendAptoideSignUpButtonPressed();
-            })
-            .flatMapCompletable(
-                result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
-                    .observeOn(viewScheduler)
-                    .doOnTerminate(() -> {
-                      view.hideLoading();
-                      orientationManager.unlock();
-                    })
-                    .doOnError(throwable -> {
-                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
-                          throwable);
-                      view.showError(errorMapper.map(throwable));
-                      crashReport.log(throwable);
-                    }))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+  protected Observable<AptoideCredentials> getAptoideSignUpEvent() {
+    return view.aptoideSignUpEvent();
   }
 
   public void hideTCandPP() {

@@ -10,7 +10,7 @@ public class SettingsManager {
     return true;
   }
 
-  public boolean showGDRP() {
+  public boolean showGDPR() {
     return true;
   }
 }

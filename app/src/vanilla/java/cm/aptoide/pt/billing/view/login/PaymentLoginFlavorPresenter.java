@@ -15,12 +15,8 @@ import rx.Scheduler;
 public class PaymentLoginFlavorPresenter extends PaymentLoginPresenter {
 
   private final PaymentLoginView view;
-  private final AccountAnalytics accountAnalytics;
-  private final AptoideAccountManager accountManager;
   private final ThrowableToStringMapper errorMapper;
   private final CrashReport crashReport;
-  private final ScreenOrientationManager orientationManager;
-  private final Scheduler viewScheduler;
   private final AccountNavigator accountNavigator;
   private final int requestCode;
 
@@ -32,14 +28,10 @@ public class PaymentLoginFlavorPresenter extends PaymentLoginPresenter {
     super(view, requestCode, permissions, accountNavigator, requiredPermissions, accountManager,
         crashReport, errorMapper, viewScheduler, orientationManager, accountAnalytics);
     this.view = view;
-    this.accountManager = accountManager;
     this.requestCode = requestCode;
     this.crashReport = crashReport;
     this.errorMapper = errorMapper;
     this.accountNavigator = accountNavigator;
-    this.viewScheduler = viewScheduler;
-    this.orientationManager = orientationManager;
-    this.accountAnalytics = accountAnalytics;
   }
 
   @Override public void present() {
@@ -50,10 +42,15 @@ public class PaymentLoginFlavorPresenter extends PaymentLoginPresenter {
     handleClickOnTermsAndConditions();
     showAptoideSignUpEvent();
     handleAptoideShowSignUpEvent();
-    handleAptoideSignUpEvent();
     showTCandPP();
     handleBackButtonAndUpNavigationEvent();
     hidePasswordContainerEvent();
+  }
+
+  protected Observable<AptoideCredentials> getAptoideSignUpEvent() {
+    return view.aptoideSignUpEvent()
+        .doOnNext(credentials -> showNotCheckedMessage(credentials.isChecked()))
+        .filter(AptoideCredentials::isChecked);
   }
 
   private void handleClickOnTermsAndConditions() {
@@ -74,35 +71,6 @@ public class PaymentLoginFlavorPresenter extends PaymentLoginPresenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
-  }
-
-  private void handleAptoideSignUpEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(event -> view.aptoideSignUpEvent()
-            .doOnNext(credentials -> showNotCheckedMessage(credentials.isChecked()))
-            .filter(AptoideCredentials::isChecked)
-            .doOnNext(__ -> {
-              view.showLoading();
-              orientationManager.lock();
-              accountAnalytics.sendAptoideSignUpButtonPressed();
-            })
-            .flatMapCompletable(
-                result -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE, result)
-                    .observeOn(viewScheduler)
-                    .doOnTerminate(() -> {
-                      view.hideLoading();
-                      orientationManager.unlock();
-                    })
-                    .doOnError(throwable -> {
-                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
-                          throwable);
-                      view.showError(errorMapper.map(throwable));
-                      crashReport.log(throwable);
-                    }))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
   }
 
   private void showTCandPP() {

@@ -210,7 +210,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void setGDPR() {
-    if (settingsManager.showGDRP()) {
+    if (settingsManager.showGDPR()) {
       termsAndConditions = findPreference(TERMS_AND_CONDITIONS_PREFERENCE_KEY);
       privacyPolicy = findPreference(PRIVACY_POLICY_PREFERENCE_KEY);
     } else {
@@ -319,7 +319,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .subscribe(
             clicked -> fragmentNavigator.navigateTo(SendFeedbackFragment.newInstance(), true)));
 
-    if (settingsManager.showGDRP()) {
+    if (settingsManager.showGDPR()) {
       subscriptions.add(RxPreference.clicks(termsAndConditions)
           .subscribe(clicked -> CustomTabsHelper.getInstance()
               .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext(),

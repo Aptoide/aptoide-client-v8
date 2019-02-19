@@ -6,6 +6,7 @@
 package cm.aptoide.pt.presenter;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
@@ -84,6 +85,38 @@ public abstract class LoginSignUpCredentialsPresenter
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
+  }
+
+  private void handleAptoideSignUpEvent() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> getAptoideSignUpEvent().doOnNext(click -> {
+          view.hideKeyboard();
+          view.showLoading();
+          lockScreenRotation();
+          accountAnalytics.sendAptoideSignUpButtonPressed();
+        })
+            .flatMapCompletable(
+                credentials -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE,
+                    credentials)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnCompleted(() -> {
+                      accountAnalytics.loginSuccess();
+                      navigateToCreateProfile();
+                      unlockScreenRotation();
+                      view.hideLoading();
+                    })
+                    .doOnError(throwable -> {
+                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                          throwable);
+                      view.showError(errorMapper.map(throwable));
+                      crashReport.log(throwable);
+                      unlockScreenRotation();
+                      view.hideLoading();
+                    }))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   private void handleAptoideLoginEvent() {
@@ -303,6 +336,8 @@ public abstract class LoginSignUpCredentialsPresenter
       navigateBack();
     }
   }
+
+  protected abstract Observable<AptoideCredentials> getAptoideSignUpEvent();
 
   void lockScreenRotation() {
     view.lockScreenRotation();
