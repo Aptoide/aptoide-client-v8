@@ -564,8 +564,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body GetPromotionAppsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("user/action/item/cards/get/type=CURATION_1")
-    Observable<EditorialListResponse> getEditorialList(@Body BaseBody body);
+    @POST("user/action/item/cards/get/type=CURATION_1/limit={limit}")
+    Observable<EditorialListResponse> getEditorialList(@Path(value = "limit") int limit,
+        @Body BaseBody body);
   }
 }
 

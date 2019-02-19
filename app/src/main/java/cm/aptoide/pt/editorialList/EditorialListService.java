@@ -38,7 +38,7 @@ public class EditorialListService {
       return Single.just(new EditorialListViewModel(true));
     }
     return EditorialListRequest.of(bodyInterceptorPoolV7, okHttpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        tokenInvalidator, sharedPreferences, 10)
         .observe()
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
@@ -67,8 +67,8 @@ public class EditorialListService {
     List<CurationCard> curationCards = new ArrayList<>();
     for (EditorialListData actionItemData : items) {
       CurationCard curationCard =
-          new CurationCard(actionItemData.getCard_id(), actionItemData.getMessage(),
-              actionItemData.getIcon(), actionItemData.getTitle(), actionItemData.getUrl());
+          new CurationCard(actionItemData.getId(), actionItemData.getCaption(),
+              actionItemData.getIcon(), actionItemData.getTitle());
       curationCards.add(curationCard);
     }
     return curationCards;
