@@ -1,7 +1,5 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
@@ -20,21 +18,16 @@ public class Home {
   private final BundlesRepository bundlesRepository;
   private final ImpressionManager impressionManager;
   private final PromotionsManager promotionsManager;
-  private final MoPubBannerAdExperiment bannerAdExperiment;
-  private final MoPubNativeAdExperiment nativeAdExperiment;
   private final BannerRepository bannerRepository;
   private final MoPubAdsManager moPubAdsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
-      PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
-      MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
+      PromotionsManager promotionsManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
-    this.bannerAdExperiment = bannerAdExperiment;
-    this.nativeAdExperiment = nativeAdExperiment;
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
@@ -61,7 +54,7 @@ public class Home {
   }
 
   private Single<HomeBundlesModel> addAdBundle(HomeBundlesModel bundlesModel) {
-    return bannerAdExperiment.shouldLoadBanner()
+    return moPubAdsManager.shouldLoadBannerAd()
         .flatMap(shouldLoadBanner -> {
           if (shouldLoadBanner) {
             return bannerRepository.getBannerBundle()
@@ -135,6 +128,6 @@ public class Home {
   }
 
   public Single<Boolean> shouldLoadNativeAd() {
-    return nativeAdExperiment.shouldLoadNative();
+    return moPubAdsManager.shouldLoadNativeAds();
   }
 }

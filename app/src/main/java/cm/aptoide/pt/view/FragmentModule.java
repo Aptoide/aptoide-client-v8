@@ -8,8 +8,6 @@ import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -226,11 +224,10 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
       ImpressionManager impressionManager, AdsManager adsManager,
       PromotionsManager promotionsManager,
-      PromotionsPreferencesManager promotionsPreferencesManager,
-      MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository,
-      MoPubNativeAdExperiment nativeAdExperiment, MoPubAdsManager moPubAdsManager) {
-    return new Home(bundlesRepository, impressionManager, promotionsManager, bannerAdExperiment,
-        nativeAdExperiment, bannerRepository, moPubAdsManager, promotionsPreferencesManager);
+      PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
+      MoPubAdsManager moPubAdsManager) {
+    return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
+        moPubAdsManager, promotionsPreferencesManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
