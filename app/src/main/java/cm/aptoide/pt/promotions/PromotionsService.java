@@ -41,9 +41,9 @@ public class PromotionsService {
   }
 
   public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
-      String captcha) {
-    return ClaimPromotionRequest.of(walletAddress, packageName, captcha, bodyInterceptorPoolV7,
-        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences)
+      String captcha, String promotionId) {
+    return ClaimPromotionRequest.of(walletAddress, packageName, captcha, promotionId,
+        bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .map(this::mapClaim)
         .onErrorReturn(throwable -> {
@@ -98,9 +98,9 @@ public class PromotionsService {
     return result;
   }
 
-  public Single<List<PromotionApp>> getPromotionApps() {
-    return GetPromotionAppsRequest.of(bodyInterceptorPoolV7, okHttpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+  public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
+    return GetPromotionAppsRequest.of(promotionId, bodyInterceptorPoolV7, okHttpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe(false, false)
         .map(this::mapPromotionsResponse)
         .toSingle();

@@ -234,6 +234,8 @@ android {
         project.ANALYTICS_SESSION_INTERVAL_IN_MILLIS
     variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
         "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
+    variant.buildConfigField "String", "HOME_PROMOTION_ID",
+        "\"" + project.HOME_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
 
