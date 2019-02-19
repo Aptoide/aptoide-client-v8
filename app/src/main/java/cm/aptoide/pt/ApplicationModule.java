@@ -1141,7 +1141,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       MoPubBannerAdExperiment moPubBannerAdExperiment,
       MoPubNativeAdExperiment moPubNativeAdExperiment) {
     return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment);
+        moPubNativeAdExperiment, application.getApplicationContext()
+        .getPackageManager());
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
