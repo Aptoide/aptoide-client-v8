@@ -222,8 +222,7 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, AdsManager adsManager,
-      PromotionsManager promotionsManager,
+      ImpressionManager impressionManager, PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
