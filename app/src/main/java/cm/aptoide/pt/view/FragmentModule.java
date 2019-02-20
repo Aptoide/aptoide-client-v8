@@ -426,7 +426,7 @@ import rx.schedulers.Schedulers;
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        WebService.getDefaultConverter(), sharedPreferences);
+        WebService.getDefaultConverter(), sharedPreferences, 10);
   }
 
   @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
