@@ -115,14 +115,20 @@ public class MainActivity extends BottomNavigationActivity
   private void setupUpdatesNotification() {
     BottomNavigationMenuView appsView =
         (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-    BottomNavigationItemView itemView =
+    BottomNavigationItemView appsItemView =
         (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.APPS_POSITION);
+    BottomNavigationItemView editorialItemView =
+        (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.CURATION_POSITION);
 
     updatesBadge = LayoutInflater.from(this)
         .inflate(R.layout.updates_badge, appsView, false);
+    View newBadge = LayoutInflater.from(this)
+        .inflate(R.layout.updates_badge, appsView, false);
 
     updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
-    itemView.addView(updatesBadge);
+    appsItemView.addView(updatesBadge);
+    editorialItemView.addView(newBadge);
+    appsItemView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {
