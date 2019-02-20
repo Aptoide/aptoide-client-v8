@@ -371,7 +371,7 @@ public class DisplayablesFactory {
         displayables.add(new StoreDisplayable(store.getGetHomeMeta()
             .getData()
             .getStore(), storeContext, followerStats.getFollowing(), followerStats.getFollowers(),
-            R.string.storetab_short_followers, R.string.storetab_short_followings, true,
+            R.string.storetab_short_followings, R.string.storetab_short_followers, true,
             getStoreDescriptionMessage(context, store.getGetHomeMeta()
                 .getData()
                 .getStore())));
