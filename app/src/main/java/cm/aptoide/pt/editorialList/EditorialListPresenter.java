@@ -37,6 +37,8 @@ public class EditorialListPresenter implements Presenter {
     onCreateLoadViewModel();
     handleEditorialCardClick();
     handleRetryClick();
+    handleBottomReached();
+    handleUserImageClick();
     loadUserImage();
   }
 
@@ -44,25 +46,9 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
-        .flatMapSingle(created -> loadEditorialListViewModel())
+        .flatMapSingle(created -> loadEditorialListViewModel(false))
         .subscribe(__ -> {
         }, crashReporter::log);
-  }
-
-  private Single<EditorialListViewModel> loadEditorialListViewModel() {
-    return editorialListManager.loadEditorialListViewModel()
-        .observeOn(viewScheduler)
-        .doOnSuccess(editorialListViewModel -> {
-          if (!editorialListViewModel.isLoading()) {
-            view.hideLoading();
-          }
-          if (editorialListViewModel.hasError()) {
-            view.showError(editorialListViewModel.getError());
-          } else {
-            view.populateView(editorialListViewModel);
-          }
-        })
-        .map(editorialViewModel -> editorialViewModel);
   }
 
   private void loadUserImage() {
@@ -109,10 +95,57 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadEditorialListViewModel()))
+            .flatMapSingle(__ -> loadEditorialListViewModel(false)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
+  }
+
+  private void handleBottomReached() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reachesBottom()
+            .filter(__ -> editorialListManager.hasMore())
+            .observeOn(viewScheduler)
+            .doOnNext(bottomReached -> view.showLoadMore())
+            .flatMapSingle(bottomReached -> loadEditorialListViewModel(true))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(bundles -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore) {
+    return editorialListManager.loadEditorialListViewModel(loadMore)
+        .observeOn(viewScheduler)
+        .doOnSuccess(editorialListViewModel -> {
+          if (!editorialListViewModel.isLoading()) {
+            view.hideLoading();
+          }
+          if (editorialListViewModel.hasError()) {
+            view.showError(editorialListViewModel.getError());
+          } else {
+            view.populateView(editorialListViewModel);
+          }
+          view.hideLoadMore();
+        })
+        .map(editorialViewModel -> editorialViewModel);
+  }
+
+  private void handleUserImageClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.imageClick()
+            .observeOn(viewScheduler)
+            .doOnNext(account -> editorialListNavigator.navigateToMyAccount())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private Observable<String> getUserAvatar(Account account) {

@@ -566,7 +566,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("user/action/item/cards/get/type=CURATION_1/limit={limit}")
     Observable<EditorialListResponse> getEditorialList(@Path(value = "limit") int limit,
-        @Body BaseBody body);
+        @Body EditorialListRequest.Body body);
   }
 }
 

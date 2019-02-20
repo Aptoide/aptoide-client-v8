@@ -10,7 +10,19 @@ public class EditorialListManager {
     this.editorialListRepository = editorialListRepository;
   }
 
-  public Single<EditorialListViewModel> loadEditorialListViewModel() {
-    return editorialListRepository.loadEditorialListViewModel();
+  Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore) {
+    if (loadMore) {
+      return loadMoreCurationCards();
+    } else {
+      return editorialListRepository.loadEditorialListViewModel();
+    }
+  }
+
+  public boolean hasMore() {
+    return editorialListRepository.hasMore();
+  }
+
+  private Single<EditorialListViewModel> loadMoreCurationCards() {
+    return editorialListRepository.loadMoreCurationCards();
   }
 }
