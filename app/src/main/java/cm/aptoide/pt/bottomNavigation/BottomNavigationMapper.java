@@ -8,9 +8,9 @@ import cm.aptoide.pt.R;
 
 public class BottomNavigationMapper {
 
+  public static final int CURATION_POSITION = 1;
   public static final int APPS_POSITION = 4;
   static final int HOME_POSITION = 0;
-  static final int CURATION_POSITION = 1;
   static final int SEARCH_POSITION = 2;
   static final int STORES_POSITION = 3;
 
