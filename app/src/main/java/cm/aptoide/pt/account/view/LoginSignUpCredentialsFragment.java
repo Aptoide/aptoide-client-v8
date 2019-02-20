@@ -24,12 +24,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
-import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -47,7 +46,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   private static final String USERNAME_KEY = "username_key";
   private static final String PASSWORD_KEY = "password_key";
-  @Inject LoginSignUpCredentialsPresenter presenter;
+  @Inject LoginSignupCredentialsFlavorPresenter presenter;
   @Inject ScreenOrientationManager orientationManager;
   @Inject AccountAnalytics accountAnalytics;
   @Inject @Named("marketName") String marketName;
@@ -292,7 +291,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     googleLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public boolean tryCloseLoginBottomSheet() {
+  @Override public boolean tryCloseLoginBottomSheet(boolean shouldShowTCandPP) {
     if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
       bottomSheetBehavior.setPeekHeight(originalHeight);
       credentialsEditTextsArea.setVisibility(View.GONE);
@@ -300,8 +299,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       loginArea.setVisibility(View.GONE);
       signUpArea.setVisibility(View.GONE);
       separator.setVisibility(View.VISIBLE);
-      termsConditionCheckBox.setVisibility(View.VISIBLE);
-      termsAndConditions.setVisibility(View.VISIBLE);
+      if (shouldShowTCandPP) {
+        termsConditionCheckBox.setVisibility(View.VISIBLE);
+        termsAndConditions.setVisibility(View.VISIBLE);
+      }
       return true;
     }
     return false;
@@ -357,6 +358,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
   }
 
+  @Override public void setCobrandText() {
+    buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
+    signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -368,11 +374,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
 
-    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
-      buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
-    } else {
-      buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
-    }
     aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
@@ -383,17 +384,43 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
     signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
     loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
-    termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
-    checkboxDrawable = CompoundButtonCompat.getButtonDrawable(termsConditionCheckBox);
 
-    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
-      buttonSignUp.setText(String.format(getString(R.string.onboarding_button_join_us)));
-    } else {
-      signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
-    }
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     separator = view.findViewById(R.id.separator);
+
+    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+        R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(R.string.facebook_grant_permission_button)
+        .setNegativeButton(android.R.string.cancel)
+        .build();
+
+    termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
+    termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
+
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+
+    try {
+      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
+          .findViewById(R.id.login_signup_layout));
+    } catch (IllegalArgumentException ex) {
+      // this happens because in landscape the R.id.login_signup_layout is not
+      // a child of CoordinatorLayout
+    }
+
+    originalHeight = bottomSheetBehavior.getPeekHeight();
+    attachPresenter(presenter);
+    registerClickHandler(presenter);
+  }
+
+  public void hideTCandPP() {
+    termsConditionCheckBox.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
+  }
+
+  public void showTCandPP() {
+    checkboxDrawable = CompoundButtonCompat.getButtonDrawable(termsConditionCheckBox);
+    termsConditionCheckBox.setVisibility(View.VISIBLE);
 
     ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
@@ -427,29 +454,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-    termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
     termsAndConditions.setText(privacyAndTermsSpan);
     termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
-
-    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
-        R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(R.string.facebook_grant_permission_button)
-        .setNegativeButton(android.R.string.cancel)
-        .build();
-
-    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
-
-    try {
-      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
-          .findViewById(R.id.login_signup_layout));
-    } catch (IllegalArgumentException ex) {
-      // this happens because in landscape the R.id.login_signup_layout is not
-      // a child of CoordinatorLayout
-    }
-
-    originalHeight = bottomSheetBehavior.getPeekHeight();
-    attachPresenter(presenter);
-    registerClickHandler(presenter);
+    termsAndConditions.setVisibility(View.VISIBLE);
   }
 
   @Override public void onDestroyView() {

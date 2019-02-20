@@ -9,26 +9,39 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class GetPromotionAppsRequest extends V7<GetPromotionAppsResponse, BaseBody> {
+public class GetPromotionAppsRequest
+    extends V7<GetPromotionAppsResponse, GetPromotionAppsRequest.Body> {
 
-  public GetPromotionAppsRequest(BaseBody body, BodyInterceptor<BaseBody> bodyInterceptor,
+  public GetPromotionAppsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
   }
 
-  public static GetPromotionAppsRequest of(BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    final BaseBody body = new BaseBody();
-    return new GetPromotionAppsRequest(body, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
+  public static GetPromotionAppsRequest of(String promotionId,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    return new GetPromotionAppsRequest(new Body(promotionId), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override
   protected Observable<GetPromotionAppsResponse> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getPromotionApps(30, body, bypassCache);
+  }
+
+  public static class Body extends BaseBody {
+    private String promotionId;
+
+    public Body(String promotionId) {
+      this.promotionId = promotionId;
+    }
+
+    public String getPromotionId() {
+      return promotionId;
+    }
   }
 }

@@ -14,7 +14,9 @@ public class AbTestCacheValidator {
     return localCache.containsKey(experimentId) && !localCache.get(experimentId)
         .hasError() && !localCache.get(experimentId)
         .getExperiment()
-        .isExperimentOver();
+        .isExperimentOver() && localCache.get(experimentId)
+        .getExperiment()
+        .isPartOfExperiment();
   }
 
   public boolean isExperimentValid(String experimentId) {

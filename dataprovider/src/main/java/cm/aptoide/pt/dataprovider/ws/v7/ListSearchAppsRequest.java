@@ -104,8 +104,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     private List<String> storeNames;
     private HashMapNotNull<String, List<String>> storesAuthMap;
     private Boolean trusted;
-    private String experimentId;
-    private String experimentGroup;
+    private String abTestUid;
+    private String abTestGroup;
 
     public Body(Integer limit, int offset, String query, List<Long> storeIds,
         HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
@@ -121,8 +121,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     public Body(Integer limit, int offset, String query, List<Long> storeIds,
         HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
-        SharedPreferences sharedPreferences, Boolean isMature, String experimentId,
-        String experimentGroup) {
+        SharedPreferences sharedPreferences, Boolean isMature, String abTestUid,
+        String abTestGroup) {
       super(sharedPreferences);
       this.limit = limit;
       this.offset = offset;
@@ -130,8 +130,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       this.storeIds = storeIds;
       this.storesAuthMap = storesAuthMap;
       this.trusted = trusted;
-      this.experimentId = experimentId;
-      this.experimentGroup = experimentGroup;
+      this.abTestUid = abTestUid;
+      this.abTestGroup = abTestGroup;
       this.setMature(isMature);
     }
 
@@ -167,15 +167,15 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     }
 
     public Body(Integer limit, int offset, String query, Boolean trusted,
-        SharedPreferences sharedPreferences, Boolean isMature, String experimentId,
-        String experimentGroup) {
+        SharedPreferences sharedPreferences, Boolean isMature, String abTestUid,
+        String abTestGroup) {
       super(sharedPreferences);
       this.limit = limit;
       this.offset = offset;
       this.query = query;
       this.trusted = trusted;
-      this.experimentId = experimentId;
-      this.experimentGroup = experimentGroup;
+      this.abTestUid = abTestUid;
+      this.abTestGroup = abTestGroup;
       this.setMature(isMature);
     }
 
@@ -211,20 +211,20 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       return limit;
     }
 
-    public String getExperimentId() {
-      return experimentId;
+    public String getAbTestUid() {
+      return abTestUid;
     }
 
-    public void setExperimentId(String experimentId) {
-      this.experimentId = experimentId;
+    public void setAbTestUid(String abTestUid) {
+      this.abTestUid = abTestUid;
     }
 
-    public String getExperimentGroup() {
-      return experimentGroup;
+    public String getAbTestGroup() {
+      return abTestGroup;
     }
 
-    public void setExperimentGroup(String experimentGroup) {
-      this.experimentGroup = experimentGroup;
+    public void setAbTestGroup(String abTestGroup) {
+      this.abTestGroup = abTestGroup;
     }
   }
 }

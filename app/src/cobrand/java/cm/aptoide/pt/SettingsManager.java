@@ -9,4 +9,8 @@ public class SettingsManager {
   public boolean showAdultContent() {
     return false;
   }
+
+  public boolean showGDPR() {
+    return false;
+  }
 }

@@ -17,7 +17,7 @@ public class Experiment {
     this.requestTime = requestTime;
     this.assignment = assignment;
     this.payload = payload;
-    this.partOfExperiment = true;
+    this.partOfExperiment = !(assignment == null);
     this.experimentOver = experimentOver;
   }
 

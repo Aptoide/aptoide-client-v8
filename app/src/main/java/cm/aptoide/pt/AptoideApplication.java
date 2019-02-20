@@ -101,6 +101,7 @@ import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -110,6 +111,7 @@ import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
+import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.nativeads.StartAppBaseConfiguration;
 import java.io.IOException;
@@ -357,14 +359,25 @@ public abstract class AptoideApplication extends Application {
         new SdkConfiguration.Builder(adUnitPlacementId).withAdditionalNetwork(
             AppLovinBaseAdapterConfiguration.class.toString())
             .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
-                appLovinConfiguration).withAdditionalNetwork(
-            StartAppBaseConfiguration.class.toString())
+                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
+            .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
+                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            .withAdditionalNetwork(
+                StartAppBaseConfiguration.class.toString())
             .withMediatedNetworkConfiguration(StartAppBaseConfiguration.class.toString(),
                 mediatedNetworkConfiguration)
             .withLogLevel(MoPubLog.LogLevel.DEBUG)
             .build();
 
     MoPub.initializeSdk(context, sdkConfiguration, null);
+  }
+
+  @NonNull
+  private Map<String, String> getMediationNetworkConfiguration(String mediatedNetworkPlacementId) {
+    Map<String, String> mediationNetworkConfiguration = new HashMap<>();
+    mediationNetworkConfiguration.put("Placement_Id", mediatedNetworkPlacementId);
+    return mediationNetworkConfiguration;
   }
 
   public ApplicationComponent getApplicationComponent() {

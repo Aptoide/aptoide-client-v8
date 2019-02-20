@@ -1,10 +1,12 @@
 package cm.aptoide.pt.promotions;
 
 import android.text.Editable;
+import cm.aptoide.pt.navigator.Result;
+import cm.aptoide.pt.presenter.View;
 import com.jakewharton.rxbinding.widget.TextViewAfterTextChangeEvent;
 import rx.Observable;
 
-public interface ClaimPromotionDialogView {
+public interface ClaimPromotionDialogView extends View {
 
   Observable<String> getWalletClick();
 
@@ -47,4 +49,12 @@ public interface ClaimPromotionDialogView {
   Observable<ClaimDialogResultWrapper> dismissGenericMessage();
 
   void dismissDialog();
+
+  void fetchWalletAddressByIntent();
+
+  Observable<Result> getActivityResults();
+
+  void updateWalletText(String walletAddress);
+
+  void fetchWalletAddressByClipboard();
 }

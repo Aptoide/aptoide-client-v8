@@ -183,3 +183,7 @@
 -dontwarn com.startapp.**
 
 -dontwarn org.jetbrains.annotations.**
+
+#AppNext
+-keep class com.appnext.** { *; }
+-dontwarn com.appnext.**

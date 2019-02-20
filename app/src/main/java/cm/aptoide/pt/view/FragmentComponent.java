@@ -21,6 +21,7 @@ import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
+import cm.aptoide.pt.promotions.ClaimPromotionDialogFragment;
 import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
@@ -128,4 +129,6 @@ public interface FragmentComponent {
   void inject(WizardFragmentProvider wizardFragmentProvider);
 
   void inject(WizardPageTwoFragment wizardPageTwoFragment);
+
+  void inject(ClaimPromotionDialogFragment claimPromotionDialogFragment);
 }

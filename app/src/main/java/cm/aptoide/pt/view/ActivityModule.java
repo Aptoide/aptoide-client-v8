@@ -48,6 +48,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -320,7 +321,7 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides ClaimPromotionsNavigator providesClaimPromotionsNavigator(
       FragmentNavigator fragmentNavigator) {
-    return new ClaimPromotionsNavigator(fragmentNavigator);
+    return new ClaimPromotionsNavigator(fragmentNavigator, (ActivityResultNavigator) activity);
   }
 
   @ActivityScope @Provides PromotionsNavigator providesPromotionsNavigator(
