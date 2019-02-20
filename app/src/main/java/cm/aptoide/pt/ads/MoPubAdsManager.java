@@ -14,14 +14,17 @@ public class MoPubAdsManager {
   private final MoPubBannerAdExperiment moPubBannerAdExperiment;
   private final MoPubNativeAdExperiment moPubNativeAdExperiment;
   private final PackageManager packageManager;
+  private final WalletAdsOfferService walletAdsOfferService;
 
   public MoPubAdsManager(MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment, PackageManager packageManager) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, PackageManager packageManager,
+      WalletAdsOfferService walletAdsOfferService) {
     this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
     this.moPubBannerAdExperiment = moPubBannerAdExperiment;
     this.moPubNativeAdExperiment = moPubNativeAdExperiment;
     this.packageManager = packageManager;
+    this.walletAdsOfferService = walletAdsOfferService;
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {
@@ -60,7 +63,14 @@ public class MoPubAdsManager {
   }
 
   private Single<Boolean> shouldRequestMoPubAd() {
-    return Single.just(!isWalletInstalled());
+    return walletAdsOfferService.isWalletOfferActive()
+        .flatMap(isOfferActive -> {
+          if (isOfferActive) {
+            return Single.just(!isWalletInstalled());
+          } else {
+            return Single.just(true);
+          }
+        });
   }
 
   private boolean isWalletInstalled() {

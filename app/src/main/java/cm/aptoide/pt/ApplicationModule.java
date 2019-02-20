@@ -71,6 +71,7 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
+import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
@@ -1136,13 +1137,22 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         Schedulers.io());
   }
 
+  @Singleton @Provides WalletAdsOfferService providesWalletAdsOfferService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
+    return new WalletAdsOfferService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        converterFactory, sharedPreferences);
+  }
+
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment,
+      WalletAdsOfferService walletAdsOfferService) {
     return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
         moPubNativeAdExperiment, application.getApplicationContext()
-        .getPackageManager());
+        .getPackageManager(), walletAdsOfferService);
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
