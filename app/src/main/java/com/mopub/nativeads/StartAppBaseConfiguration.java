@@ -34,7 +34,7 @@ public class StartAppBaseConfiguration extends BaseAdapterConfiguration {
   @Override public void initializeNetwork(@NonNull Context context,
       @Nullable Map<String, String> configuration,
       @NonNull OnNetworkInitializationFinishedListener listener) {
-    StartAppSDK.init(context, BuildConfig.STARTAPP_APPLICATION_ID, false);
+    StartAppSDK.init(context, BuildConfig.MOPUB_STARTAPP_APPLICATION_ID, false);
     StartAppAd.disableSplash();
     listener.onNetworkInitializationFinished(this.getClass(),
         MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
