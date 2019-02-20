@@ -3,6 +3,7 @@ package cm.aptoide.pt.editorialList;
 import android.os.Bundle;
 import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.view.settings.MyAccountFragment;
 
 public class EditorialListNavigator {
 
@@ -19,5 +20,9 @@ public class EditorialListNavigator {
     EditorialFragment fragment = new EditorialFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
+  }
+
+  public void navigateToMyAccount() {
+    fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
 }

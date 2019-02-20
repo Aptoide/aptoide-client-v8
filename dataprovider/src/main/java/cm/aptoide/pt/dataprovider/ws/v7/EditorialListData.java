@@ -1,6 +1,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-public class EditorialListData {
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
+
+public class EditorialListData extends BaseV7EndlessDataListResponse {
 
   public String id;
   public String type;
