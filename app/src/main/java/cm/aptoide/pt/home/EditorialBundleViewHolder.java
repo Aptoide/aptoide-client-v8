@@ -19,6 +19,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private final TextView editorialTitle;
   private final TextView editorialSubtitle;
   private final ImageView backgroundImage;
+  private final TextView editorialViews;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener) {
     super(view);
@@ -26,6 +27,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     this.editorialCard = view.findViewById(R.id.editorial_card);
     this.editorialTitle = (TextView) view.findViewById(R.id.editorial_title);
     this.editorialSubtitle = (TextView) view.findViewById(R.id.editorial_subtitle);
+    this.editorialViews = view.findViewById(R.id.editorial_views);
     this.backgroundImage = (ImageView) view.findViewById(R.id.background_image);
   }
 
@@ -34,15 +36,17 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     ActionItem actionItem = actionBundle.getActionItem();
 
     setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
-        actionItem.getCardId(), position, homeBundle);
+        actionItem.getCardId(), actionItem.getNumberOfViews(), position, homeBundle);
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
-      int position, HomeBundle homeBundle) {
+      String numberOfViews, int position, HomeBundle homeBundle) {
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
     editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
     editorialSubtitle.setText(Translator.translate(subTitle, itemView.getContext(), ""));
+    editorialViews.setText(String.format(itemView.getContext()
+        .getString(R.string.editorial_card_short_number_views), numberOfViews));
     editorialCard.setOnClickListener(view -> {
       uiEventsListener.onNext(
           new EditorialHomeEvent(cardId, homeBundle, position, HomeEvent.Type.EDITORIAL));
