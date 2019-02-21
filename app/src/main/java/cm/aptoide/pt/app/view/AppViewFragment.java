@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
@@ -263,6 +262,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private Button listDonateButton;
   private MoPubInterstitial interstitialAd;
   private MoPubView bannerAd;
+  private View flagThisAppSection;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -349,6 +349,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     showAllReviewsButton = (Button) view.findViewById(R.id.read_all_button);
     apkfyElement = view.findViewById(R.id.apkfy_element);
 
+    flagThisAppSection = view.findViewById(R.id.flag_this_app_section);
     goodAppLayoutWrapper = view.findViewById(R.id.good_app_layout);
     flagsLayoutWrapper = view.findViewById(R.id.rating_flags_layout);
     workingWellLayout = view.findViewById(R.id.working_well_layout);
@@ -1127,6 +1128,24 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     similarListAdapter.add(
         new SimilarAppsBundle(similarApps, SimilarAppsBundle.BundleType.APPC_APPS));
     manageSimilarAppsVisibility(true, false);
+  }
+
+  @Override public void setupAppcAppView(DownloadAppViewModel model) {
+    if (model.getAppCoinsViewModel()
+        .hasAdvertising() || model.getAppCoinsViewModel()
+        .hasBilling()) {
+
+      TransitionDrawable transition = (TransitionDrawable) ContextCompat.getDrawable(getContext(),
+          R.drawable.appc_gradient_transition);
+      collapsingToolbarLayout.setBackgroundDrawable(transition);
+      transition.startTransition(1000);
+
+      install.setBackgroundDrawable(getContext().getResources()
+          .getDrawable(R.drawable.appc_gradient_rounded));
+      downloadProgressBar.setProgressDrawable(
+          ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
+      flagThisAppSection.setVisibility(View.GONE);
+    }
   }
 
   private void setSimilarAppsAdapters() {

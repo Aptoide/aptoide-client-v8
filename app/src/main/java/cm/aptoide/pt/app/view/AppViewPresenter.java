@@ -120,22 +120,14 @@ public class AppViewPresenter implements Presenter {
     handleInterstitialAdClick();
     handleInterstitialAdLoaded();
     showInterstitialAd();
-    showBannerAd();
   }
 
-  private void showBannerAd() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(Schedulers.io())
-        .flatMapSingle(model -> appViewManager.shouldLoadBannerAd())
+  private Observable<Boolean> showBannerAd() {
+    return appViewManager.shouldLoadBannerAd()
+        .toObservable()
         .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showBannerAd())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
+        .doOnNext(__ -> view.showBannerAd());
   }
 
   private void showInterstitialAd() {
@@ -225,6 +217,7 @@ public class AppViewPresenter implements Presenter {
             .flatMapSingle(app -> appViewManager.getTopDonations(app.getPackageName()))
             .observeOn(viewScheduler)
             .doOnNext(donations -> view.showDonations(donations)))
+        .flatMap(__ -> showBannerAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -677,6 +670,7 @@ public class AppViewPresenter implements Presenter {
                 .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
                     appViewViewModel.hasDonations()))
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
+                .doOnNext(downloadAppViewModel -> view.setupAppcAppView(downloadAppViewModel))
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
@@ -946,12 +940,14 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void showRecommendsDialog(boolean isLoggedIn, String packageName) {
-    if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
-      view.showRecommendsDialog();
-      appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
-    } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
-      appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
-      appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
+    if (appViewManager.shouldShowRecommendsDialogs()) {
+      if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
+        view.showRecommendsDialog();
+        appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
+      } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
+        appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
+        appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
+      }
     }
   }
 

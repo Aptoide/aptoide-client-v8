@@ -384,6 +384,11 @@ public class AppViewManager {
     return preferencesManager.shouldShowInstallRecommendsPreviewDialog();
   }
 
+  public boolean shouldShowRecommendsDialogs() {
+    return cachedAppCoinsViewModel == null
+        || !cachedAppCoinsViewModel.hasAdvertising() && !cachedAppCoinsViewModel.hasBilling();
+  }
+
   public boolean canShowNotLoggedInDialog() {
     return preferencesManager.canShowNotLoggedInDialog();
   }
@@ -452,14 +457,23 @@ public class AppViewManager {
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {
-    return moPubInterstitialAdExperiment.loadInterstitial();
+    return moPubInterstitialAdExperiment.loadInterstitial()
+        .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
+            && !cachedAppCoinsViewModel.hasBilling()
+            && !cachedAppCoinsViewModel.hasAdvertising()));
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
-    return moPubBannerAdExperiment.shouldLoadBanner();
+    return moPubBannerAdExperiment.shouldLoadBanner()
+        .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
+            && !cachedAppCoinsViewModel.hasBilling()
+            && !cachedAppCoinsViewModel.hasAdvertising()));
   }
 
   public Single<Boolean> shouldLoadNativeAds() {
-    return moPubNativeAdExperiment.shouldLoadNative();
+    return moPubNativeAdExperiment.shouldLoadNative()
+        .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
+            && !cachedAppCoinsViewModel.hasBilling()
+            && !cachedAppCoinsViewModel.hasAdvertising()));
   }
 }
