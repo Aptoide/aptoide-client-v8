@@ -66,6 +66,7 @@ import cm.aptoide.pt.editorial.EditorialManager;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
+import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -373,6 +374,11 @@ import rx.schedulers.Schedulers;
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
         installManager, preferencesManager, downloadFactory, downloadStateParser,
         notificationAnalytics, installAnalytics, editorialAnalytics);
+  }
+
+  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
+      EditorialService editorialService) {
+    return new EditorialRepository(editorialService);
   }
 
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
