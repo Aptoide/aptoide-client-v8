@@ -37,6 +37,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,7 +54,6 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
-import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.AppViewViewModel;
@@ -109,13 +109,10 @@ import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
-import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
-import com.mopub.nativeads.ViewBinder;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -140,6 +137,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
   private static final int PAY_APP_REQUEST_CODE = 12;
+  private static final int APPC_TRANSITION_MS = 1000;
 
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
@@ -263,6 +261,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private MoPubInterstitial interstitialAd;
   private MoPubView bannerAd;
   private View flagThisAppSection;
+  private View collapsingAppcBackground;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -390,6 +389,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     viewProgress = (ProgressBar) view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    collapsingAppcBackground = view.findViewById(R.id.collapsing_appc_coins_background);
 
     install = ((Button) view.findViewById(R.id.appview_install_button));
     downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
@@ -438,6 +438,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
               .setAlpha(1 - (percentage * 1.20f));
           ((ToolbarArcBackground) view.findViewById(R.id.toolbar_background_arc)).setScale(
               percentage);
+          collapsingAppcBackground.setAlpha(1 - percentage);
         });
 
     if (savedInstanceState != null) {
@@ -1138,7 +1139,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       TransitionDrawable transition = (TransitionDrawable) ContextCompat.getDrawable(getContext(),
           R.drawable.appc_gradient_transition);
       collapsingToolbarLayout.setBackgroundDrawable(transition);
-      transition.startTransition(1000);
+      transition.startTransition(APPC_TRANSITION_MS);
+
+      AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
+      animation1.setDuration(APPC_TRANSITION_MS);
+      collapsingAppcBackground.setAlpha(1f);
+      collapsingAppcBackground.setVisibility(View.VISIBLE);
+      collapsingAppcBackground.startAnimation(animation1);
 
       install.setBackgroundDrawable(getContext().getResources()
           .getDrawable(R.drawable.appc_gradient_rounded));
@@ -1709,13 +1716,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     /**
      * Only open the appview
      */
-    OPEN_ONLY, /**
+    OPEN_ONLY,
+    /**
      * opens the appView and starts the installation
      */
-    OPEN_AND_INSTALL, /**
+    OPEN_AND_INSTALL,
+    /**
      * open the appView and ask user if want to install the app
      */
-    OPEN_WITH_INSTALL_POPUP, /**
+    OPEN_WITH_INSTALL_POPUP,
+    /**
      * open the appView and ask user if want to install the app
      */
     APK_FY_INSTALL_POPUP
