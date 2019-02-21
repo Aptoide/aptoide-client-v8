@@ -40,8 +40,6 @@ public interface EditorialView extends View {
 
   Observable<Void> isViewReady();
 
-  void readyToDownload();
-
   Observable<ScrollEvent> placeHolderVisibilityChange();
 
   void removeBottomCardAnimation();

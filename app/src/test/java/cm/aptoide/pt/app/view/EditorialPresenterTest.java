@@ -88,7 +88,6 @@ public class EditorialPresenterTest {
     //And then populate the view
     verify(view).populateView(editorialViewModel);
     //And signal that it's ready to download
-    verify(view).readyToDownload();
   }
 
   @Test public void onCreateLoadAppOfTheWeekWithErrorViewModelTest() {
@@ -141,7 +140,6 @@ public class EditorialPresenterTest {
     verify(view).showLoading();
     //And then do the normal behaviour when creating the view
     view.populateView(editorialViewModel);
-    view.readyToDownload();
   }
 
   @Test public void handleClickOnMediaTest() {

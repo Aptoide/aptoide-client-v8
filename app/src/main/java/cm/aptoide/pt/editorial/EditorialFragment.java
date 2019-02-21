@@ -434,10 +434,6 @@ public class EditorialFragment extends NavigationTrackFragment
     return ready;
   }
 
-  @Override public void readyToDownload() {
-    ready.onNext(null);
-  }
-
   @Override public Observable<ScrollEvent> placeHolderVisibilityChange() {
     return RxNestedScrollView.scrollChangeEvents(scrollView)
         .flatMap(viewScrollChangeEvent -> Observable.just(viewScrollChangeEvent)
