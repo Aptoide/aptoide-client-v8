@@ -40,8 +40,6 @@ public interface EditorialView extends View {
 
   Observable<Void> isViewReady();
 
-  void readyToDownload();
-
   Observable<ScrollEvent> placeHolderVisibilityChange();
 
   void removeBottomCardAnimation();
@@ -63,4 +61,8 @@ public interface EditorialView extends View {
   void setMediaListDescriptionsVisible(EditorialEvent editorialEvent);
 
   Observable<Boolean> handleMovingCollapse();
+
+  Observable<Boolean> showDowngradeMessage();
+
+  void showDowngradingMessage();
 }

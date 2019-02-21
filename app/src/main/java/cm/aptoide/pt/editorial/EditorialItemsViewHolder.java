@@ -286,13 +286,14 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setPlaceHolderDefaultStateInfo(DownloadModel downloadModel, String update,
-      String install, String open) {
+      String install, String open, String downgrade) {
     downloadInfoLayout.setVisibility(View.GONE);
     cardInfoLayout.setVisibility(View.VISIBLE);
-    setButtonText(downloadModel, update, install, open);
+    setButtonText(downloadModel, update, install, open, downgrade);
   }
 
-  private void setButtonText(DownloadModel model, String update, String install, String open) {
+  private void setButtonText(DownloadModel model, String update, String install, String open,
+      String downgrade) {
     DownloadModel.Action action = model.getAction();
     switch (action) {
       case UPDATE:
@@ -303,6 +304,9 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         break;
       case OPEN:
         appCardButton.setText(open);
+        break;
+      case DOWNGRADE:
+        appCardButton.setText(downgrade);
         break;
     }
   }

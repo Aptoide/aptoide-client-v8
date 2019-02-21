@@ -371,11 +371,6 @@ import rx.subscriptions.CompositeSubscription;
         AndroidSchedulers.mainThread());
   }
 
-  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
-      EditorialService editorialService) {
-    return new EditorialRepository(editorialService);
-  }
-
   @FragmentScope @Provides EditorialManager providesEditorialManager(
       EditorialRepository editorialRepository, InstallManager installManager,
       PreferencesManager preferencesManager, DownloadFactory downloadFactory,
@@ -384,6 +379,11 @@ import rx.subscriptions.CompositeSubscription;
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
         installManager, preferencesManager, downloadFactory, downloadStateParser,
         notificationAnalytics, installAnalytics, editorialAnalytics);
+  }
+
+  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
+      EditorialService editorialService) {
+    return new EditorialRepository(editorialService);
   }
 
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
