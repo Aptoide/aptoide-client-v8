@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
@@ -337,6 +338,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void populateView(EditorialViewModel editorialViewModel) {
     populateAppContent(editorialViewModel);
     populateCardContent(editorialViewModel);
+    ready.onNext(null);
   }
 
   @Override public void showError(EditorialViewModel.Error error) {
@@ -369,7 +371,8 @@ public class EditorialFragment extends NavigationTrackFragment
         placeHolderViewHolder.setPlaceHolderDefaultStateInfo(downloadModel,
             getResources().getString(R.string.appview_button_update),
             getResources().getString(R.string.appview_button_install),
-            getResources().getString(R.string.appview_button_open));
+            getResources().getString(R.string.appview_button_open),
+            getResources().getString(R.string.appview_button_downgrade));
       }
       if (downloadModel.hasError()) {
         handleDownloadError(downloadModel.getDownloadState());
@@ -534,6 +537,18 @@ public class EditorialFragment extends NavigationTrackFragment
     return movingCollapseSubject.distinctUntilChanged();
   }
 
+  @Override public Observable<Boolean> showDowngradeMessage() {
+    return GenericDialogs.createGenericContinueCancelMessage(getContext(), null,
+        getContext().getResources()
+            .getString(R.string.downgrade_warning_dialog))
+        .map(eResponse -> eResponse.equals(YES));
+  }
+
+  @Override public void showDowngradingMessage() {
+    Snackbar.make(getView(), R.string.downgrading_msg, Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     placeHolderPositions = editorialViewModel.getPlaceHolderPositions();
     shouldAnimate = editorialViewModel.shouldHaveAnimation();
@@ -580,6 +595,9 @@ public class EditorialFragment extends NavigationTrackFragment
         break;
       case OPEN:
         appCardButton.setText(getResources().getString(R.string.appview_button_open));
+        break;
+      case DOWNGRADE:
+        appCardButton.setText(getResources().getString(R.string.appview_button_downgrade));
         break;
     }
   }

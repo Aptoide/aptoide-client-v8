@@ -66,7 +66,6 @@ import cm.aptoide.pt.editorial.EditorialManager;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
-import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -364,11 +363,6 @@ import rx.schedulers.Schedulers;
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
         AndroidSchedulers.mainThread());
-  }
-
-  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
-      EditorialService editorialService) {
-    return new EditorialRepository(editorialService);
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(

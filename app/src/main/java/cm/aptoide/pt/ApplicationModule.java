@@ -142,6 +142,7 @@ import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
+import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
@@ -1846,5 +1847,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SearchExperiment providesSearchExperiment(
       @Named("search-ab-test") ABTestManager abTestManager) {
     return new SearchExperiment(abTestManager);
+  }
+
+  @Singleton @Provides EditorialRepository providesEditorialRepository(
+      EditorialService editorialService) {
+    return new EditorialRepository(editorialService);
   }
 }

@@ -83,7 +83,6 @@ public class EditorialPresenter implements Presenter {
             view.showError(editorialViewModel.getError());
           } else {
             view.populateView(editorialViewModel);
-            view.readyToDownload();
           }
         })
         .map(editorialViewModel -> editorialViewModel);
@@ -139,8 +138,7 @@ public class EditorialPresenter implements Presenter {
   private void handleInstallClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> editorialManager.loadEditorialViewModel()
-            .toObservable())
+        .flatMap(__ -> setUpViewModelOnViewReady())
         .flatMap(editorialViewModel -> view.installButtonClick(editorialViewModel)
             .flatMapCompletable(editorialDownloadEvent -> {
               Completable completable = null;
@@ -160,6 +158,11 @@ public class EditorialPresenter implements Presenter {
                       .flatMapCompletable(appViewViewModel -> openInstalledApp(
                           appViewViewModel.getBottomCardPackageName()));
                   break;
+                case DOWNGRADE:
+                  completable = editorialManager.loadEditorialViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(__ -> downgradeApp(editorialDownloadEvent));
+                  break;
               }
               return completable;
             })
@@ -175,8 +178,7 @@ public class EditorialPresenter implements Presenter {
   private void cancelDownload() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> editorialManager.loadEditorialViewModel()
-            .toObservable())
+        .flatMap(__ -> setUpViewModelOnViewReady())
         .flatMap(editorialViewModel -> view.cancelDownload(editorialViewModel)
             .doOnNext(editorialEvent -> editorialAnalytics.sendDownloadCancelEvent(
                 editorialEvent.getPackageName()))
@@ -193,8 +195,7 @@ public class EditorialPresenter implements Presenter {
   private void resumeDownload() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> editorialManager.loadEditorialViewModel()
-            .toObservable())
+        .flatMap(__ -> setUpViewModelOnViewReady())
         .flatMap(editorialViewModel -> view.resumeDownload(editorialViewModel)
             .flatMap(editorialEvent -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
@@ -211,8 +212,7 @@ public class EditorialPresenter implements Presenter {
   private void pauseDownload() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> editorialManager.loadEditorialViewModel()
-            .toObservable())
+        .flatMap(__ -> setUpViewModelOnViewReady())
         .flatMap(editorialViewModel -> view.pauseDownload(editorialViewModel)
             .doOnNext(editorialEvent -> editorialAnalytics.sendDownloadPauseEvent(
                 editorialEvent.getPackageName()))
@@ -354,5 +354,18 @@ public class EditorialPresenter implements Presenter {
 
   private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {
     return firstVisiblePosition == lastVisiblePosition;
+  }
+
+  private Completable downgradeApp(EditorialDownloadEvent downloadEvent) {
+    return view.showDowngradeMessage()
+        .filter(downgrade -> downgrade)
+        .flatMapCompletable(__ -> downloadApp(downloadEvent))
+        .toCompletable();
+  }
+
+  private Observable<EditorialViewModel> setUpViewModelOnViewReady() {
+    return view.isViewReady()
+        .flatMap(__ -> editorialManager.loadEditorialViewModel()
+            .toObservable());
   }
 }

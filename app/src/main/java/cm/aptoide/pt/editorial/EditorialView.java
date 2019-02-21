@@ -63,4 +63,8 @@ public interface EditorialView extends View {
   void setMediaListDescriptionsVisible(EditorialEvent editorialEvent);
 
   Observable<Boolean> handleMovingCollapse();
+
+  Observable<Boolean> showDowngradeMessage();
+
+  void showDowngradingMessage();
 }
