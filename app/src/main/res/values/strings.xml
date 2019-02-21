@@ -287,6 +287,7 @@
   <string name="title_play_it">Play-It!</string>
   <string name="home_title_editors_choice">Editors\' Choice</string>
   <string name="home_game_of_the_week">Game of the Week</string>
+  <string name="editorial_card_short_number_views">%s views</string>
 
 
   <!--home Fragment-->

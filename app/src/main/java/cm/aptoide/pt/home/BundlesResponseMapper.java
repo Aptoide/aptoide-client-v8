@@ -122,7 +122,7 @@ public class BundlesResponseMapper {
         .getList()
         .get(0);
     return new ActionItem(item.getId(), item.getType() != null ? item.getType() : "",
-        item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl());
+        item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl(), item.getViews());
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {
