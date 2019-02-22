@@ -136,9 +136,8 @@ public class EditorialListPresenterTest {
     when(editorialListManager.loadEditorialListViewModel(false)).thenReturn(
         Single.just(successEditorialViewModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //When pull to refresh is done
     retryClickedEvent.onNext(null);
-    //Then bundles should be shown
+    //Then the editorial cards should be shown
     verify(view).populateView(successEditorialViewModel);
     //Then it should hide the loading indicator
     verify(view).hideLoading();
