@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorialList;
 
+import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -42,7 +43,7 @@ public class EditorialListPresenter implements Presenter {
     loadUserImage();
   }
 
-  private void onCreateLoadViewModel() {
+  @VisibleForTesting public void onCreateLoadViewModel() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
@@ -51,7 +52,7 @@ public class EditorialListPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void loadUserImage() {
+  @VisibleForTesting public void loadUserImage() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> accountManager.accountStatus())
@@ -72,7 +73,7 @@ public class EditorialListPresenter implements Presenter {
         });
   }
 
-  private void handleEditorialCardClick() {
+  @VisibleForTesting public void handleEditorialCardClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.editorialCardClicked()
@@ -89,7 +90,7 @@ public class EditorialListPresenter implements Presenter {
         });
   }
 
-  private void handleRetryClick() {
+  @VisibleForTesting public void handleRetryClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
@@ -101,7 +102,7 @@ public class EditorialListPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleBottomReached() {
+  @VisibleForTesting public void handleBottomReached() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reachesBottom()
@@ -134,7 +135,7 @@ public class EditorialListPresenter implements Presenter {
         .map(editorialViewModel -> editorialViewModel);
   }
 
-  private void handleUserImageClick() {
+  @VisibleForTesting public void handleUserImageClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.imageClick()
