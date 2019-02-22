@@ -386,7 +386,7 @@ public class AppViewManager {
 
   private boolean isAppcApp() {
     return cachedAppCoinsViewModel != null && (cachedAppCoinsViewModel.hasAdvertising()
-        || !cachedAppCoinsViewModel.hasBilling());
+        || cachedAppCoinsViewModel.hasBilling());
   }
 
   public boolean canShowNotLoggedInDialog() {
