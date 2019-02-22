@@ -670,7 +670,13 @@ public class AppViewPresenter implements Presenter {
                 .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
                     appViewViewModel.hasDonations()))
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
-                .doOnNext(downloadAppViewModel -> view.setupAppcAppView(downloadAppViewModel))
+                .doOnNext(model -> {
+                  if (model.getAppCoinsViewModel()
+                      .hasAdvertising() || model.getAppCoinsViewModel()
+                      .hasBilling()) {
+                    view.setupAppcAppView();
+                  }
+                })
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
@@ -940,14 +946,12 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void showRecommendsDialog(boolean isLoggedIn, String packageName) {
-    if (appViewManager.shouldShowRecommendsDialogs()) {
-      if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
-        view.showRecommendsDialog();
-        appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
-      } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
-        appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
-        appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
-      }
+    if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
+      view.showRecommendsDialog();
+      appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
+    } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
+      appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
+      appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
     }
   }
 

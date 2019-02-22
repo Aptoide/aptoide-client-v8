@@ -171,5 +171,5 @@ public interface AppViewView extends InstallAppView {
 
   void populateSimilarAppc(SimilarAppsViewModel appcAppsViewModel);
 
-  void setupAppcAppView(DownloadAppViewModel downloadAppViewModel);
+  void setupAppcAppView();
 }

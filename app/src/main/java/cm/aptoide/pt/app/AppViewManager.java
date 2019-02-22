@@ -381,16 +381,17 @@ public class AppViewManager {
   }
 
   public boolean shouldShowRecommendsPreviewDialog() {
-    return preferencesManager.shouldShowInstallRecommendsPreviewDialog();
+    return preferencesManager.shouldShowInstallRecommendsPreviewDialog()
+        && shouldShowRecommendsDialogs();
   }
 
-  public boolean shouldShowRecommendsDialogs() {
+  private boolean shouldShowRecommendsDialogs() {
     return cachedAppCoinsViewModel == null
         || !cachedAppCoinsViewModel.hasAdvertising() && !cachedAppCoinsViewModel.hasBilling();
   }
 
   public boolean canShowNotLoggedInDialog() {
-    return preferencesManager.canShowNotLoggedInDialog();
+    return preferencesManager.canShowNotLoggedInDialog() && shouldShowRecommendsDialogs();
   }
 
   public Completable shareOnTimeline(String packageName, long storeId, String shareType) {

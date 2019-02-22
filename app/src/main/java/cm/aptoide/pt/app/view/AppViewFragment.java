@@ -1131,28 +1131,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     manageSimilarAppsVisibility(true, false);
   }
 
-  @Override public void setupAppcAppView(DownloadAppViewModel model) {
-    if (model.getAppCoinsViewModel()
-        .hasAdvertising() || model.getAppCoinsViewModel()
-        .hasBilling()) {
+  @Override public void setupAppcAppView() {
+    TransitionDrawable transition = (TransitionDrawable) ContextCompat.getDrawable(getContext(),
+        R.drawable.appc_gradient_transition);
+    collapsingToolbarLayout.setBackgroundDrawable(transition);
+    transition.startTransition(APPC_TRANSITION_MS);
 
-      TransitionDrawable transition = (TransitionDrawable) ContextCompat.getDrawable(getContext(),
-          R.drawable.appc_gradient_transition);
-      collapsingToolbarLayout.setBackgroundDrawable(transition);
-      transition.startTransition(APPC_TRANSITION_MS);
+    AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
+    animation1.setDuration(APPC_TRANSITION_MS);
+    collapsingAppcBackground.setAlpha(1f);
+    collapsingAppcBackground.setVisibility(View.VISIBLE);
+    collapsingAppcBackground.startAnimation(animation1);
 
-      AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
-      animation1.setDuration(APPC_TRANSITION_MS);
-      collapsingAppcBackground.setAlpha(1f);
-      collapsingAppcBackground.setVisibility(View.VISIBLE);
-      collapsingAppcBackground.startAnimation(animation1);
-
-      install.setBackgroundDrawable(getContext().getResources()
-          .getDrawable(R.drawable.appc_gradient_rounded));
-      downloadProgressBar.setProgressDrawable(
-          ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
-      flagThisAppSection.setVisibility(View.GONE);
-    }
+    install.setBackgroundDrawable(getContext().getResources()
+        .getDrawable(R.drawable.appc_gradient_rounded));
+    downloadProgressBar.setProgressDrawable(
+        ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
+    flagThisAppSection.setVisibility(View.GONE);
   }
 
   private void setSimilarAppsAdapters() {
