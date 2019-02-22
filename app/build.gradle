@@ -276,13 +276,10 @@ android {
         "\"" + project.MOPUB_IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "MOPUB_ADCOLONY_APPLICATION_ID",
-        "\"" + project.MOPUB_ADCOLONY_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
-
-    variant.buildConfigField "String", "MOPUB_ADCOLONY_ZONE_ID_T7",
-        "\"" + project.MOPUB_ADCOLONY_ZONE_ID_T7 + "\""
+    variant.buildConfigField "String", "MOPUB_STARTAPP_APPLICATION_ID",
+        "\"" + project.MOPUB_STARTAPP_APPLICATION_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_PROD + "\""
@@ -468,13 +465,12 @@ dependencies {
   }
   implementation "com.mopub.mediation:vungle:${MOPUB_MEDIATION_VUNGLE_VERSION}"
 
-  // Adcolony
-  implementation "com.mopub.mediation:adcolony:${MOPUB_MEDIATION_ADCOLONY_VERSION}"
-  implementation "com.adcolony:sdk:${ADCOLONY_SDK_VERSION}"
-
   // UnityAds, Chartboost & One by AOL
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
+
+  //StartApp
+  implementation "com.startapp:inapp-sdk:${STARTAPP_SDK_VERSION}"
 
   //AppNext
   implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"

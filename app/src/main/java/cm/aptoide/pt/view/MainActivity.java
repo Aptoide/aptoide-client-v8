@@ -30,7 +30,6 @@ import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.adcolony.sdk.AdColony;
 import com.ironsource.mediationsdk.IronSource;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.unity3d.ads.UnityAds;
@@ -82,8 +81,6 @@ public class MainActivity extends BottomNavigationActivity
 
   private void initializeAdsMediation() {
     IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
-    AdColony.configure(this, BuildConfig.MOPUB_ADCOLONY_APPLICATION_ID,
-        BuildConfig.MOPUB_ADCOLONY_ZONE_ID_T7);
 
     UnityAds.initialize(this, BuildConfig.MOPUB_UNITYADS_GAME_ID, new UnityAdsListener());
   }

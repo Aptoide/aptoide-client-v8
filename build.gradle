@@ -22,7 +22,6 @@ allprojects {
     maven { url "https://dl.bintray.com/asf/asf" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
-    maven { url "https://adcolony.bintray.com/AdColony" }
     maven { url "http://dl.appnext.com/" }
 
     google()
@@ -126,10 +125,9 @@ ext {
   MOPUB_MEDIATION_IRONSOURCE_VERSION = '6.7.12.0'
   VUNGLE_SDK_VERSION = '6.3.24'
   MOPUB_MEDIATION_VUNGLE_VERSION = '6.3.24.0'
-  MOPUB_MEDIATION_ADCOLONY_VERSION = '3.3.7.0'
-  ADCOLONY_SDK_VERSION = '3.3.7'
   MOPUB_MEDIATION_UNITYADS_VERSION = '3.0.0.0'
   APPNEXT_SDK_VERSION = '2.4.4.472'
+  STARTAPP_SDK_VERSION = '3.10.1'
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'

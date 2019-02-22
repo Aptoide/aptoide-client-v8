@@ -101,7 +101,6 @@ import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
-import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -112,6 +111,7 @@ import com.mopub.common.SdkConfiguration;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
+import com.mopub.nativeads.StartAppBaseConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -354,6 +354,9 @@ public abstract class AptoideApplication extends Application {
                 getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
             .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
             .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
+                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            .withAdditionalNetwork(StartAppBaseConfiguration.class.toString())
+            .withMediatedNetworkConfiguration(StartAppBaseConfiguration.class.toString(),
                 getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
             .withLogLevel(MoPubLog.LogLevel.DEBUG)
             .build();
