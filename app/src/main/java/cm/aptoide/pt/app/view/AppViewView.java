@@ -3,6 +3,7 @@ package cm.aptoide.pt.app.view;
 import android.view.MenuItem;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppViewViewModel;
+import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
@@ -169,4 +170,6 @@ public interface AppViewView extends InstallAppView {
   void showBannerAd();
 
   void populateSimilarAppc(SimilarAppsViewModel appcAppsViewModel);
+
+  void setupAppcAppView();
 }

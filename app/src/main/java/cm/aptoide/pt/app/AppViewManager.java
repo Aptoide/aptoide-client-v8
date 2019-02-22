@@ -381,11 +381,16 @@ public class AppViewManager {
   }
 
   public boolean shouldShowRecommendsPreviewDialog() {
-    return preferencesManager.shouldShowInstallRecommendsPreviewDialog();
+    return preferencesManager.shouldShowInstallRecommendsPreviewDialog() && !isAppcApp();
+  }
+
+  private boolean isAppcApp() {
+    return cachedAppCoinsViewModel != null && (cachedAppCoinsViewModel.hasAdvertising()
+        || cachedAppCoinsViewModel.hasBilling());
   }
 
   public boolean canShowNotLoggedInDialog() {
-    return preferencesManager.canShowNotLoggedInDialog();
+    return preferencesManager.canShowNotLoggedInDialog() && !isAppcApp();
   }
 
   public Completable shareOnTimeline(String packageName, long storeId, String shareType) {
@@ -452,14 +457,23 @@ public class AppViewManager {
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {
-    return moPubInterstitialAdExperiment.loadInterstitial();
+    return moPubInterstitialAdExperiment.loadInterstitial()
+        .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
+            && !cachedAppCoinsViewModel.hasBilling()
+            && !cachedAppCoinsViewModel.hasAdvertising()));
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
-    return moPubBannerAdExperiment.shouldLoadBanner();
+    return moPubBannerAdExperiment.shouldLoadBanner()
+        .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
+            && !cachedAppCoinsViewModel.hasBilling()
+            && !cachedAppCoinsViewModel.hasAdvertising()));
   }
 
   public Single<Boolean> shouldLoadNativeAds() {
-    return moPubNativeAdExperiment.shouldLoadNative();
+    return moPubNativeAdExperiment.shouldLoadNative()
+        .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
+            && !cachedAppCoinsViewModel.hasBilling()
+            && !cachedAppCoinsViewModel.hasAdvertising()));
   }
 }

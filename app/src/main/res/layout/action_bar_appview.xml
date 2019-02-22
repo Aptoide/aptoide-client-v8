@@ -23,6 +23,18 @@
       tools:title="couves"
       >
 
+    <ImageView
+        android:id="@+id/collapsing_appc_coins_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="31dp"
+        android:src="@drawable/ic_app_view_appc_coins"
+        android:visibility="gone"
+        app:layout_collapseMode="parallax"
+        app:layout_collapseParallaxMultiplier="0.8"
+        />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
