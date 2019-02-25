@@ -17,6 +17,7 @@ import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.editorialList.EditorialListFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
