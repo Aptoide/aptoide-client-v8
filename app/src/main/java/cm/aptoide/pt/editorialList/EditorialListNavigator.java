@@ -1,7 +1,7 @@
 package cm.aptoide.pt.editorialList;
 
 import android.os.Bundle;
-import cm.aptoide.pt.app.view.EditorialFragment;
+import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 
