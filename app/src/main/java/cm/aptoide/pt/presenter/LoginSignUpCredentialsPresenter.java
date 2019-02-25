@@ -55,6 +55,7 @@ public abstract class LoginSignUpCredentialsPresenter
   @Override public void present() {
 
     handleAptoideLoginEvent();
+    handleAptoideSignUpEvent();
 
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
@@ -128,7 +129,8 @@ public abstract class LoginSignUpCredentialsPresenter
               view.showLoading();
               lockScreenRotation();
               accountAnalytics.sendAptoideLoginButtonPressed();
-            }).<Void>flatMapCompletable(credentials -> accountManager.login(credentials)
+            })
+            .flatMapCompletable(credentials -> accountManager.login(credentials)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> {
                   unlockScreenRotation();
@@ -143,7 +145,8 @@ public abstract class LoginSignUpCredentialsPresenter
                   unlockScreenRotation();
                   accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
                       throwable);
-                })).retry())
+                }))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
