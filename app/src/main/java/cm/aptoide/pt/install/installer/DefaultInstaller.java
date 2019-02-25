@@ -26,6 +26,7 @@ import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.RootCommandTimeoutException;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootShell;
@@ -49,17 +50,20 @@ public class DefaultInstaller implements Installer {
   private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
   private final SharedPreferences sharedPreferences;
+  private final AppInstaller appInstaller;
   private FileUtils fileUtils;
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, boolean debug, InstalledRepository installedRepository, int rootTimeout,
+      AppInstaller appInstaller, FileUtils fileUtils, boolean debug,
+      InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
+    this.appInstaller = appInstaller;
     this.fileUtils = fileUtils;
     this.installedRepository = installedRepository;
     this.installerAnalytics = installerAnalytics;
@@ -243,7 +247,11 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
-      startInstallIntent(context, installation.getFile());
+      if (true) {
+        startInstallIntent(context, installation.getFile());
+      } else {
+        appInstaller.install(installation.getFile());
+      }
       return null;
     }).subscribeOn(Schedulers.computation())
         .flatMap(installStarted -> waitPackageIntent(context, intentFilter,

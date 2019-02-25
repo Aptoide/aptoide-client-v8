@@ -2,6 +2,7 @@ package cm.aptoide.pt.packageinstaller;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInstaller;
@@ -20,36 +21,36 @@ public final class AppInstaller {
 
   private static final int REQUEST_INSTALL = 22;
   private static final int SESSION_INSTALL_REQUEST_CODE = 18;
-  private final Activity activity;
+  private final Context context;
   private final InstallResultCallback installResultCallback;
 
-  public AppInstaller(Activity activity, InstallResultCallback installResultCallback) {
-    this.activity = activity;
+  public AppInstaller(Context context, InstallResultCallback installResultCallback) {
+    this.context = context;
     this.installResultCallback = installResultCallback;
   }
 
-  public void install(String uri) {
+  public void install(File file) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      installWithPackageInstaller(uri);
+      installWithPackageInstaller(file);
     } else {
-      installWithActionInstallPackageIntent(uri);
+      installWithActionInstallPackageIntent(file);
     }
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  private void installWithPackageInstaller(String uri) {
+  private void installWithPackageInstaller(File file) {
     PackageInstaller.Session session = null;
     try {
-      PackageInstaller packageInstaller = activity.getPackageManager()
+      PackageInstaller packageInstaller = context.getPackageManager()
           .getPackageInstaller();
       PackageInstaller.SessionParams params =
           new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
       int sessionId = packageInstaller.createSession(params);
       session = packageInstaller.openSession(sessionId);
 
-      addApkToInstallSession(new File(uri), session);
+      addApkToInstallSession(file, session);
 
-      session.commit(PendingIntent.getBroadcast(activity, SESSION_INSTALL_REQUEST_CODE,
+      session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
           new Intent("install_session_api_complete"), 0)
           .getIntentSender());
       registerInstallResultBroadcast();
@@ -64,36 +65,44 @@ public final class AppInstaller {
     }
   }
 
-  private void installWithActionInstallPackageIntent(String uri) {
+  private void installWithActionInstallPackageIntent(File file) {
     Intent promptInstall = new Intent(Intent.ACTION_INSTALL_PACKAGE);
     promptInstall.putExtra(Intent.EXTRA_RETURN_RESULT, true);
-    promptInstall.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, activity.getApplicationContext()
+    promptInstall.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getApplicationContext()
         .getPackageName());
-    promptInstall.setData(Uri.fromFile(new File(uri)));
+    promptInstall.setData(Uri.fromFile(file));
     promptInstall.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     promptInstall.setFlags(
         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-    activity.startActivityForResult(promptInstall, REQUEST_INSTALL);
+    installResultCallback.onInstallationResult(
+        new InstallStatus(InstallStatus.Status.INSTALLING, "Installing..."));
+    context.startActivity(promptInstall);
   }
 
   @RequiresApi(Build.VERSION_CODES.LOLLIPOP) private void registerInstallResultBroadcast() {
-    activity.registerReceiver(new InstallResultReceiver(new PackageInstallerResultCallback() {
+    context.registerReceiver(new InstallResultReceiver(new PackageInstallerResultCallback() {
       @Override public void onInstallationResult(InstallStatus installStatus) {
         installResultCallback.onInstallationResult(installStatus);
       }
 
       @Override public void onPendingUserAction(Bundle extras) {
         Intent confirmIntent = (Intent) extras.get(Intent.EXTRA_INTENT);
-        activity.startActivityForResult(confirmIntent, SESSION_INSTALL_REQUEST_CODE);
+        if (confirmIntent != null) {
+          confirmIntent.setFlags(
+              Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        }
+        installResultCallback.onInstallationResult(
+            new InstallStatus(InstallStatus.Status.INSTALLING, "Installing..."));
+        context.startActivity(confirmIntent);
       }
     }), new IntentFilter("install_session_api_complete"), null, null);
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  private void addApkToInstallSession(File path, PackageInstaller.Session session) {
+  private void addApkToInstallSession(File file, PackageInstaller.Session session) {
     try {
-      OutputStream packageInSession = session.openWrite("apk-id", 0, path.length());
-      InputStream is = new FileInputStream(path);
+      OutputStream packageInSession = session.openWrite("apk-id", 0, file.length());
+      InputStream is = new FileInputStream(file);
       byte[] buffer = new byte[16384];
       int n;
       while ((n = is.read(buffer)) >= 0) {

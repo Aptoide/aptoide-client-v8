@@ -172,6 +172,7 @@ import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.logger.AnalyticsLogcatLogger;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV3;
@@ -185,6 +186,7 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -315,12 +317,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
+      @Named("obbPath") String obbPath, AppInstaller appInstaller) {
 
     return new InstallManager(application, aptoideDownloadManager,
-        new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
-        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils());
+        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller).create(
+            application), rootAvailabilityManager, defaultSharedPreferences,
+        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
+        obbPath, new FileUtils());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -443,8 +446,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       InstallationProvider installationProvider,
       @Named("default") SharedPreferences sharedPreferences,
       InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
-      InstallerAnalytics installerAnalytics) {
-    return new DefaultInstaller(application.getPackageManager(), installationProvider,
+      InstallerAnalytics installerAnalytics, AppInstaller appInstaller) {
+    return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
         installedRepository, 180000, rootAvailabilityManager, sharedPreferences,
         installerAnalytics);
@@ -1871,5 +1874,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SearchExperiment providesSearchExperiment(
       @Named("search-ab-test") ABTestManager abTestManager) {
     return new SearchExperiment(abTestManager);
+  }
+
+  @Singleton @Provides AppInstaller providesAppInstaller() {
+    return new AppInstaller(application.getApplicationContext(),
+        installStatus -> Logger.getInstance()
+            .d("package_install", "package install: status "
+                + installStatus.getStatus()
+                + ", message: "
+                + installStatus.getMessage()));
   }
 }

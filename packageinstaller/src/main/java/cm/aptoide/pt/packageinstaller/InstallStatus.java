@@ -18,6 +18,6 @@ public final class InstallStatus {
   }
 
   public enum Status {
-    SUCCESS, FAIL, CANCELED, UNKNOWN_ERROR
+    INSTALLING, SUCCESS, FAIL, CANCELED, UNKNOWN_ERROR
   }
 }
