@@ -28,4 +28,8 @@ public interface HomeContainerView extends View {
   Observable<String> promotionsHomeDialogClicked();
 
   void dismissPromotionsDialog();
+
+  void showTermsAndConditionsDialog();
+
+  Observable<String> gdprDialogClicked();
 }

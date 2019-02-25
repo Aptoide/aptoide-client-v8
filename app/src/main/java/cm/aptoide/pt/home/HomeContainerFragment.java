@@ -24,13 +24,14 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
 
   @Inject HomeContainerPresenter presenter;
+  private BottomNavigationActivity bottomNavigationActivity;
   private CheckBox gamesChip;
   private CheckBox appsChip;
-  private BottomNavigationActivity bottomNavigationActivity;
   private ImageView userAvatar;
   private ImageView promotionsIcon;
   private TextView promotionsTicker;
   private PromotionsHomeDialog promotionsHomeDialog;
+  private LoggedInTermsAndConditionsDialog gdprDialog;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -54,6 +55,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     promotionsIcon = view.findViewById(R.id.promotions_icon);
     promotionsTicker = view.findViewById(R.id.promotions_ticker);
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
+    gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
 
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
@@ -107,6 +109,10 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     if (promotionsHomeDialog != null) {
       promotionsHomeDialog.destroyDialog();
       promotionsHomeDialog = null;
+    }
+    if (gdprDialog != null) {
+      gdprDialog.destroyDialog();
+      gdprDialog = null;
     }
     promotionsIcon = null;
     promotionsTicker = null;
@@ -175,5 +181,13 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
 
   @Override public void dismissPromotionsDialog() {
     promotionsHomeDialog.dismissDialog();
+  }
+
+  @Override public void showTermsAndConditionsDialog() {
+    gdprDialog.showDialog();
+  }
+
+  @Override public Observable<String> gdprDialogClicked() {
+    return gdprDialog.dialogClicked();
   }
 }

@@ -2,7 +2,6 @@ package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -72,16 +71,6 @@ public class HomePresenter implements Presenter {
     handleDismissClick();
 
     handleActionBundlesImpression();
-
-    handleLoggedInAcceptTermsAndConditions();
-
-    handleTermsAndConditionsContinueClicked();
-
-    handleTermsAndConditionsLogOutClicked();
-
-    handleClickOnTermsAndConditions();
-
-    handleClickOnPrivacyPolicy();
 
     handleEditorialCardClick();
   }
@@ -427,82 +416,5 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
-  }
-
-  private void handleLoggedInAcceptTermsAndConditions() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> accountManager.accountStatus()
-            .first())
-        .filter(Account::isLoggedIn)
-        .filter(
-            account -> !(account.acceptedPrivacyPolicy() && account.acceptedTermsAndConditions()))
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showTermsAndConditionsDialog())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleTermsAndConditionsContinueClicked() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.gdprDialogClicked())
-        .filter(action -> action.equals("continue"))
-        .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleTermsAndConditionsLogOutClicked() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.gdprDialogClicked())
-        .filter(action -> action.equals("logout"))
-        .flatMapCompletable(__ -> accountManager.logout())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleClickOnTermsAndConditions() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.gdprDialogClicked())
-        .filter(action -> action.equals("terms"))
-        .doOnNext(__ -> homeNavigator.navigateToTermsAndConditions())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          throw new OnErrorNotImplementedException(err);
-        });
-  }
-
-  private void handleClickOnPrivacyPolicy() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.gdprDialogClicked())
-        .filter(action -> action.equals("privacy"))
-        .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          throw new OnErrorNotImplementedException(err);
-        });
-  }
-
-  private Observable<String> getUserAvatar(Account account) {
-    String userAvatarUrl = null;
-    if (account != null && account.isLoggedIn()) {
-      userAvatarUrl = account.getAvatar();
-    }
-    return Observable.just(userAvatarUrl);
   }
 }
