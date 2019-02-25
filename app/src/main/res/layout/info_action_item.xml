@@ -95,7 +95,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginRight="30dp"
             tools:text="@string/all_button_know_more"
-            style="@style/Aptoide.Button.Flat.GreyMedium"
+            style="@style/Aptoide.Button.Flat.DefaultOrangeGradientEnd"
             />
       </LinearLayout>
     </RelativeLayout>
