@@ -64,6 +64,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private RelativeLayout cardInfoLayout;
   private int currentMediaPosition;
   private boolean mediaDescriptionVisible;
+  private DownloadModel.Action action;
 
   public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
       PublishSubject<EditorialEvent> uiEventListener,
@@ -294,7 +295,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
 
   private void setButtonText(DownloadModel model, String update, String install, String open,
       String downgrade) {
-    DownloadModel.Action action = model.getAction();
+    action = model.getAction();
     switch (action) {
       case UPDATE:
         appCardButton.setText(update);
@@ -369,7 +370,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
             verName, verCode, path, pathAlt, obb)));
     appCardButton.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.BUTTON, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb)));
+            verName, verCode, path, pathAlt, obb, action)));
     appCardLayout.setOnClickListener(click -> uiEventListener.onNext(
         new EditorialEvent(EditorialEvent.Type.APPCARD, id, packageName)));
   }

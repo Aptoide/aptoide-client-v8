@@ -150,13 +150,13 @@ public class EditorialPresenter implements Presenter {
                       .flatMapCompletable(
                           viewModel -> downloadApp(editorialDownloadEvent).observeOn(viewScheduler)
                               .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
-                                  viewModel.getBottomCardPackageName(), action.toString())));
+                                  editorialDownloadEvent.getPackageName(), action.toString())));
                   break;
                 case OPEN:
                   completable = editorialManager.loadEditorialViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(appViewViewModel -> openInstalledApp(
-                          appViewViewModel.getBottomCardPackageName()));
+                          editorialDownloadEvent.getPackageName()));
                   break;
                 case DOWNGRADE:
                   completable = editorialManager.loadEditorialViewModel()

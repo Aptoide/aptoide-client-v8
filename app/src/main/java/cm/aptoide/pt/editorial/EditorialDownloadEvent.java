@@ -84,6 +84,24 @@ public class EditorialDownloadEvent {
     this.action = null;
   }
 
+  public EditorialDownloadEvent(Type button, String appName, String packageName, String md5sum,
+      String icon, String verName, int verCode, String path, String pathAlt, Obb obb,
+      DownloadModel.Action action) {
+
+    this.button = button;
+    this.appName = appName;
+    this.packageName = packageName;
+    this.md5sum = md5sum;
+    this.icon = icon;
+    this.verName = verName;
+    this.verCode = verCode;
+    this.path = path;
+    this.pathAlt = pathAlt;
+    this.obb = obb;
+    this.appId = -1;
+    this.action = action;
+  }
+
   public Type getClickType() {
     return button;
   }
