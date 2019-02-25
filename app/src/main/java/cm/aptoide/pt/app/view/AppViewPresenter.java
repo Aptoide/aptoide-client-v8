@@ -19,12 +19,16 @@ import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
@@ -110,28 +114,20 @@ public class AppViewPresenter implements Presenter {
     handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
-    handleClickOnDonateAfterInstall();
     handleClickOnTopDonorsDonate();
     handleDonateCardImpressions();
 
     handleInterstitialAdClick();
     handleInterstitialAdLoaded();
     showInterstitialAd();
-    showBannerAd();
   }
 
-  private void showBannerAd() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMapSingle(model -> appViewManager.shouldLoadBannerAd())
+  private Observable<Boolean> showBannerAd() {
+    return appViewManager.shouldLoadBannerAd()
+        .toObservable()
         .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showBannerAd())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
+        .doOnNext(__ -> view.showBannerAd());
   }
 
   private void showInterstitialAd() {
@@ -147,6 +143,7 @@ public class AppViewPresenter implements Presenter {
             .filter(model -> model.getDownloadModel()
                 .isDownloading())
             .first()
+            .observeOn(Schedulers.io())
             .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
             .filter(loadInterstitial -> loadInterstitial)
             .observeOn(viewScheduler)
@@ -167,6 +164,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.interstitialAdLoaded())
         .doOnNext(__ -> view.showInterstitialAd())
         .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
+        .observeOn(Schedulers.io())
         .flatMapSingle(__ -> appViewManager.recordInterstitialImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -178,6 +176,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.InterstitialAdClicked())
         .doOnNext(__ -> appViewAnalytics.installInterstitialClick())
+        .observeOn(Schedulers.io())
         .flatMapSingle(__ -> appViewManager.recordInterstitialClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -218,6 +217,7 @@ public class AppViewPresenter implements Presenter {
             .flatMapSingle(app -> appViewManager.getTopDonations(app.getPackageName()))
             .observeOn(viewScheduler)
             .doOnNext(donations -> view.showDonations(donations)))
+        .flatMap(__ -> showBannerAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -670,6 +670,13 @@ public class AppViewPresenter implements Presenter {
                 .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
                     appViewViewModel.hasDonations()))
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
+                .doOnNext(model -> {
+                  if (model.getAppCoinsViewModel()
+                      .hasAdvertising() || model.getAppCoinsViewModel()
+                      .hasBilling()) {
+                    view.setupAppcAppView();
+                  }
+                })
                 .toSingle()
                 .map(downloadAppViewModel -> appViewViewModel))
         .toObservable()
@@ -743,39 +750,73 @@ public class AppViewPresenter implements Presenter {
         })
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
-        .flatMap(appViewModel -> Observable.zip(updateSuggestedApps(appViewModel),
+        .flatMap(appViewModel -> Observable.zip(updateSimilarAppsBundles(appViewModel),
             updateReviews(appViewModel),
-            (similarAppsViewModel, reviewsViewModel) -> Observable.just(appViewModel))
+            (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
             .first()
             .map(__ -> appViewModel));
   }
 
-  private Observable<SimilarAppsViewModel> updateSuggestedApps(AppViewViewModel appViewModel) {
+  private Observable<List<SimilarAppsBundle>> updateSimilarAppsBundles(
+      AppViewViewModel appViewViewModel) {
+    return Observable.just(new ArrayList<SimilarAppsBundle>())
+        .flatMap(list -> updateSuggestedAppcApps(appViewViewModel, list))
+        .flatMap(list -> updateSuggestedApps(appViewViewModel, list))
+        .flatMap(list -> sortSuggestedApps(appViewViewModel, list))
+        .observeOn(viewScheduler)
+        .doOnNext(list -> view.populateSimilar(list));
+  }
+
+  private Observable<List<SimilarAppsBundle>> sortSuggestedApps(AppViewViewModel appViewViewModel,
+      List<SimilarAppsBundle> list) {
+    return Observable.just(list)
+        .map(__ -> {
+          if (list.size() >= 2) {
+            if (appViewViewModel.isAppCoinApp()) {
+              if (list.get(0)
+                  .getType() == SimilarAppsBundle.BundleType.APPS) {
+                Collections.swap(list, 0, 1);
+              }
+            } else {
+              if (list.get(0)
+                  .getType() == SimilarAppsBundle.BundleType.APPC_APPS) {
+                Collections.swap(list, 0, 1);
+              }
+            }
+          }
+          return list;
+        });
+  }
+
+  private Observable<List<SimilarAppsBundle>> updateSuggestedAppcApps(AppViewViewModel appViewModel,
+      List<SimilarAppsBundle> list) {
+    return appViewManager.loadAppcSimilarAppsViewModel(appViewModel.getPackageName(),
+        appViewModel.getMedia()
+            .getKeywords())
+        .map(appcAppsViewModel -> {
+          if (appcAppsViewModel.hasSimilarApps()) {
+            list.add(
+                new SimilarAppsBundle(appcAppsViewModel, SimilarAppsBundle.BundleType.APPC_APPS));
+          }
+          return list;
+        })
+        .toObservable();
+  }
+
+  private Observable<List<SimilarAppsBundle>> updateSuggestedApps(AppViewViewModel appViewModel,
+      List<SimilarAppsBundle> list) {
     return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
         appViewModel.getMedia()
             .getKeywords())
         .flatMap(similarAppsViewModel -> appViewManager.shouldLoadNativeAds()
-            .observeOn(viewScheduler)
-            .doOnSuccess(loadNativeAds -> {
-              if (loadNativeAds) {
-                view.setSimilarAppsMoPubAdapters();
-                view.loadNativeAds();
-              } else {
-                view.setSimilarAppsAdapters();
-              }
-            })
+            .doOnSuccess(similarAppsViewModel::setShouldLoadNativeAds)
             .map(__ -> similarAppsViewModel))
-        .observeOn(viewScheduler)
-        .doOnError(__ -> view.hideSimilarApps())
-        .doOnSuccess(adsViewModel -> {
-          if (!adsViewModel.hasSimilarApps()) {
-            view.hideSimilarApps();
-          } else if (adsViewModel.hasError()) {
-            if (adsViewModel.hasRecommendedAppsError()) view.hideSimilarApps();
-            if (adsViewModel.hasAdError()) view.populateSimilarWithoutAds(adsViewModel);
-          } else {
-            view.populateSimilar(adsViewModel);
+        .map(similarAppsViewModel -> {
+          if (similarAppsViewModel.hasSimilarApps()) {
+            list.add(
+                new SimilarAppsBundle(similarAppsViewModel, SimilarAppsBundle.BundleType.APPS));
           }
+          return list;
         })
         .toObservable();
   }
@@ -1077,22 +1118,6 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.apkfyDialogPositiveClick())
         .doOnNext(appname -> view.showApkfyElement(appname))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void handleClickOnDonateAfterInstall() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickDonateAfterInstallButton())
-        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .doOnNext(app -> {
-          appViewAnalytics.sendDonateClickAfterInstall();
-          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
-        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

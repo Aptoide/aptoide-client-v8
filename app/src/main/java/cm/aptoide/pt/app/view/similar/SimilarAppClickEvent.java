@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.view;
+package cm.aptoide.pt.app.view.similar;
 
 import cm.aptoide.pt.app.AppViewSimilarApp;
 

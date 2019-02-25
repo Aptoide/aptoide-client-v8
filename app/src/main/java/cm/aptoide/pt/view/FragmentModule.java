@@ -50,7 +50,7 @@ import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.appview.PreferencesManager;
-import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
+import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -86,8 +86,12 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
-import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.promotions.ClaimPromotionDialogPresenter;
+import cm.aptoide.pt.promotions.ClaimPromotionDialogView;
+import cm.aptoide.pt.promotions.ClaimPromotionsManager;
+import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
+import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -119,6 +123,7 @@ import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 @Module public class FragmentModule {
 
@@ -137,10 +142,10 @@ import rx.schedulers.Schedulers;
     this.packageName = packageName;
   }
 
-  @FragmentScope @Provides LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(
+  @FragmentScope @Provides LoginSignupCredentialsFlavorPresenter provideLoginSignUpPresenter(
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
-    return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment,
+    return new LoginSignupCredentialsFlavorPresenter((LoginSignUpCredentialsView) fragment,
         accountManager, CrashReport.getInstance(),
         arguments.getBoolean("dismiss_to_navigate_to_main_view"),
         arguments.getBoolean("clean_back_stack"), accountNavigator,
@@ -204,7 +209,7 @@ import rx.schedulers.Schedulers;
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper);
+        bottomNavigationMapper, Schedulers.io());
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
@@ -340,11 +345,11 @@ import rx.schedulers.Schedulers;
         accountAnalytics);
   }
 
-  @FragmentScope @Provides PaymentLoginPresenter providesPaymentLoginPresenter(
+  @FragmentScope @Provides PaymentLoginFlavorPresenter providesPaymentLoginPresenter(
       AccountNavigator accountNavigator, AptoideAccountManager accountManager,
       CrashReport crashReport, AccountErrorMapper accountErrorMapper,
       ScreenOrientationManager screenOrientationManager, AccountAnalytics accountAnalytics) {
-    return new PaymentLoginPresenter((PaymentLoginView) fragment,
+    return new PaymentLoginFlavorPresenter((PaymentLoginView) fragment,
         arguments.getInt(FragmentNavigator.REQUEST_CODE_EXTRA),
         Arrays.asList("email", "user_friends"), accountNavigator, Arrays.asList("email"),
         accountManager, crashReport, accountErrorMapper, AndroidSchedulers.mainThread(),
@@ -359,11 +364,6 @@ import rx.schedulers.Schedulers;
         AndroidSchedulers.mainThread());
   }
 
-  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
-      EditorialService editorialService) {
-    return new EditorialRepository(editorialService);
-  }
-
   @FragmentScope @Provides EditorialManager providesEditorialManager(
       EditorialRepository editorialRepository, InstallManager installManager,
       PreferencesManager preferencesManager, DownloadFactory downloadFactory,
@@ -372,6 +372,11 @@ import rx.schedulers.Schedulers;
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
         installManager, preferencesManager, downloadFactory, downloadStateParser,
         notificationAnalytics, installAnalytics, editorialAnalytics);
+  }
+
+  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
+      EditorialService editorialService) {
+    return new EditorialRepository(editorialService);
   }
 
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
@@ -393,5 +398,13 @@ import rx.schedulers.Schedulers;
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
       DownloadStateParser downloadStateParser) {
     return new PromotionViewAppMapper(downloadStateParser);
+  }
+
+  @FragmentScope @Provides ClaimPromotionDialogPresenter providesClaimPromotionDialogPresenter(
+      ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
+      ClaimPromotionsNavigator navigator) {
+    return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
+        new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
+        promotionsAnalytics, navigator);
   }
 }

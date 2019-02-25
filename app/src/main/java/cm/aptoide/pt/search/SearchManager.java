@@ -2,6 +2,9 @@ package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.abtesting.SearchExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -36,12 +39,13 @@ import rx.Single;
   private final Database database;
   private final AptoideAccountManager accountManager;
   private final MoPubAdsManager moPubAdsManager;
+  private final SearchExperiment searchExperiment;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
-      Database database, AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager) {
+      Database database, AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager, SearchExperiment searchExperiment) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -52,6 +56,7 @@ import rx.Single;
     this.database = database;
     this.accountManager = accountManager;
     this.moPubAdsManager = moPubAdsManager;
+    this.searchExperiment = searchExperiment;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -63,11 +68,14 @@ import rx.Single;
       boolean onlyTrustedApps, int offset) {
     return accountManager.enabled()
         .first()
-        .flatMap(enabled -> ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
-            StoreUtils.getSubscribedStoresIds(
-                AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, enabled)
-            .observe(true))
+        .flatMap(enabled -> searchExperiment.loadExperiment()
+            .flatMap(
+                experimentResult -> ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
+                    StoreUtils.getSubscribedStoresIds(
+                        AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
+                    httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled,
+                    experimentResult.getExperimentId(), experimentResult.getExperimentGroup())
+                    .observe(true)))
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
@@ -82,11 +90,14 @@ import rx.Single;
       int offset) {
     return accountManager.enabled()
         .first()
-        .flatMap(enabled -> ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps,
-            StoreUtils.getSubscribedStoresIds(
-                AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, enabled)
-            .observe(true))
+        .flatMap(enabled -> searchExperiment.loadExperiment()
+            .flatMap(
+                experimentResult -> ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps,
+                    StoreUtils.getSubscribedStoresIds(
+                        AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
+                    httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled,
+                    experimentResult.getExperimentId(), experimentResult.getExperimentGroup())
+                    .observe(true)))
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
@@ -109,6 +120,14 @@ import rx.Single;
         .toList()
         .first()
         .toSingle();
+  }
+
+  public Observable<Boolean> recordImpression() {
+    return searchExperiment.recordImpression();
+  }
+
+  public Observable<Boolean> recordAction() {
+    return searchExperiment.recordAction();
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {

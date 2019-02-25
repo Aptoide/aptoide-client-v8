@@ -3,11 +3,14 @@ package cm.aptoide.pt.app.view;
 import android.view.MenuItem;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppViewViewModel;
+import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
+import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
+import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.appview.InstallAppView;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
@@ -36,9 +39,7 @@ public interface AppViewView extends InstallAppView {
 
   void populateReviews(ReviewsViewModel reviews, AppViewViewModel app);
 
-  void populateSimilar(SimilarAppsViewModel ads);
-
-  void populateSimilarWithoutAds(SimilarAppsViewModel ads);
+  void populateSimilar(List<SimilarAppsBundle> similarAppsViewModel);
 
   Observable<FlagsVote.VoteType> clickWorkingFlag();
 
@@ -95,8 +96,6 @@ public interface AppViewView extends InstallAppView {
   Observable<Void> clickNoNetworkRetry();
 
   Observable<Void> clickGenericRetry();
-
-  Observable<Void> clickDonateAfterInstallButton();
 
   Observable<Void> clickTopDonorsDonateButton();
 
@@ -170,9 +169,7 @@ public interface AppViewView extends InstallAppView {
 
   void showBannerAd();
 
-  void setSimilarAppsAdapters();
+  void populateSimilarAppc(SimilarAppsViewModel appcAppsViewModel);
 
-  void setSimilarAppsMoPubAdapters();
-
-  void loadNativeAds();
+  void setupAppcAppView();
 }

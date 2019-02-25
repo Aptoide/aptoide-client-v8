@@ -43,12 +43,12 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment(
-      ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
+      @Named("ab-test") ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
     return new MoPubBannerAdExperiment(abTestManager, moPubAnalytics);
   }
 
   @Singleton @Provides MoPubNativeAdExperiment providesMoPubNativeAdExperiment(
-      ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
+      @Named("ab-test") ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
     return new MoPubNativeAdExperiment(abTestManager, moPubAnalytics);
   }
 

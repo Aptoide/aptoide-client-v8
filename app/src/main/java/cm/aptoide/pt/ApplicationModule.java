@@ -45,8 +45,13 @@ import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormali
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.AbTestCacheValidator;
+import cm.aptoide.pt.abtesting.AbTestSearchRepository;
+import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
+import cm.aptoide.pt.abtesting.SearchAbTestService;
+import cm.aptoide.pt.abtesting.SearchExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -1124,11 +1129,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager, SearchExperiment searchExperiment) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
         AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager, moPubAdsManager);
+        accountManager, moPubAdsManager, searchExperiment);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1265,6 +1270,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AutoUpdateService.Service providesAutoUpdateService(
       @Named("retrofit-auto-update") Retrofit retrofit) {
     return retrofit.create(AutoUpdateService.Service.class);
+  }
+
+  @Singleton @Provides SearchAbTestService.Service providesSearchAbTestRetrofit(
+      @Named("retrofit-auto-update") Retrofit retrofit) {
+    return retrofit.create(SearchAbTestService.Service.class);
+  }
+
+  @Singleton @Provides SearchAbTestService providesSearchAbTestService(
+      SearchAbTestService.Service service) {
+    return new SearchAbTestService(service);
   }
 
   @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
@@ -1600,13 +1615,39 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RealmExperimentPersistence(database, new RealmExperimentMapper());
   }
 
-  @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
-      ABTestService abTestService, RealmExperimentPersistence persistence) {
-    return new ABTestCenterRepository(abTestService, new HashMap<>(), persistence);
+  @Singleton @Provides @Named("ab-test-local-cache")
+  HashMap<String, ExperimentModel> providesAbTestLocalCache() {
+    return new HashMap<>();
   }
 
-  @Singleton @Provides ABTestManager providesABTestManager(
+  @Singleton @Provides AbTestCacheValidator providesAbTestCacheValidator(
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache) {
+    return new AbTestCacheValidator(localCache);
+  }
+
+  @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
+      ABTestService abTestService, RealmExperimentPersistence persistence,
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
+      AbTestCacheValidator cacheValidator) {
+    return new ABTestCenterRepository(abTestService, localCache, persistence, cacheValidator);
+  }
+
+  @Singleton @Provides AbTestSearchRepository providesAbTestSearchRepository(
+      ABTestService abTestService, RealmExperimentPersistence persistence,
+      SearchAbTestService searchAbTestService,
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
+      AbTestCacheValidator abTestCacheValidator) {
+    return new AbTestSearchRepository(abTestService, localCache, persistence, searchAbTestService,
+        abTestCacheValidator);
+  }
+
+  @Singleton @Provides @Named("ab-test") ABTestManager providesABTestManager(
       ABTestCenterRepository abTestCenterRepository) {
+    return new ABTestManager(abTestCenterRepository);
+  }
+
+  @Singleton @Provides @Named("search-ab-test") ABTestManager providesSearchABTestManager(
+      AbTestSearchRepository abTestCenterRepository) {
     return new ABTestManager(abTestCenterRepository);
   }
 
@@ -1615,11 +1656,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository) {
+      InstalledRepository installedRepository, @Named("homePromotionsId") String promotionId) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         preferencesManager, application.getApplicationContext()
-        .getPackageManager(), promotionsService, installedRepository);
+        .getPackageManager(), promotionsService, installedRepository, promotionId);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -1681,6 +1722,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("marketName") String provideMarketName() {
     return BuildConfig.MARKET_NAME;
+  }
+
+  @Singleton @Provides @Named("homePromotionsId") String provideHomePromotionsId() {
+    return BuildConfig.HOME_PROMOTION_ID;
   }
 
   @Singleton @Provides @Named("accountType") String provideAccountType() {
@@ -1820,5 +1865,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Named("rating-one-decimal-format") @Singleton @Provides DecimalFormat providesDecimalFormat() {
     return new DecimalFormat("0.0");
+  }
+
+  @Singleton @Provides SearchExperiment providesSearchExperiment(
+      @Named("search-ab-test") ABTestManager abTestManager) {
+    return new SearchExperiment(abTestManager);
   }
 }

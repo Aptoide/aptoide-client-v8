@@ -41,12 +41,13 @@ import rx.functions.Func2;
   private final SearchSuggestionManager suggestionManager;
   private final AptoideBottomNavigator bottomNavigator;
   private final BottomNavigationMapper bottomNavigationMapper;
+  private final Scheduler ioScheduler;
 
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, TrendingManager trendingManager,
       SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper, Scheduler ioScheduler) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -57,6 +58,7 @@ import rx.functions.Func2;
     this.suggestionManager = suggestionManager;
     this.bottomNavigator = bottomNavigator;
     this.bottomNavigationMapper = bottomNavigationMapper;
+    this.ioScheduler = ioScheduler;
   }
 
   @Override public void present() {
@@ -90,6 +92,7 @@ import rx.functions.Func2;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.showingSearchResultsView())
+        .observeOn(ioScheduler)
         .flatMapSingle(__ -> searchManager.shouldLoadBannerAd())
         .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
@@ -240,7 +243,9 @@ import rx.functions.Func2;
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onViewItemClicked())
-        .doOnNext(data -> openAppView(data))
+        .observeOn(ioScheduler)
+        .flatMap(data -> searchManager.recordAction()
+            .doOnNext(__ -> openAppView(data)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -350,6 +355,7 @@ import rx.functions.Func2;
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
         })
+        .observeOn(ioScheduler)
         .flatMap(nonFollowedStoresSearchResult -> searchManager.shouldLoadNativeAds()
             .observeOn(viewScheduler)
             .doOnSuccess(loadNativeAds -> {
@@ -394,15 +400,16 @@ import rx.functions.Func2;
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideSuggestionsViews())
         .doOnNext(__ -> view.showLoading())
+        .observeOn(ioScheduler)
         .flatMapSingle(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
             viewModel.isOnlyTrustedApps()).onErrorResumeNext(err -> {
           crashReport.log(err);
-          return Single.just(0);
+          return Single.just(-1);
         })
             .observeOn(viewScheduler)
             .doOnSuccess(__2 -> view.hideLoading())
             .doOnSuccess(itemCount -> {
-              if (itemCount == 0) {
+              if (itemCount <= 0) {
                 view.showNoResultsView();
                 analytics.searchNoResults(viewModel.getCurrentQuery());
               } else {
@@ -414,6 +421,9 @@ import rx.functions.Func2;
                 }
               }
             }))
+        .filter(result -> result != -1)
+        .observeOn(ioScheduler)
+        .flatMap(__ -> searchManager.recordImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

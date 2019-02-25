@@ -88,7 +88,7 @@ public class AppViewPresenterTest {
             null);
 
     downloadAppViewModel = new DownloadAppViewModel(downloadModel, new SimilarAppsViewModel(),
-        new AppCoinsViewModel());
+        new SimilarAppsViewModel(), new AppCoinsViewModel());
 
     errorAppViewViewModel = new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC);
 

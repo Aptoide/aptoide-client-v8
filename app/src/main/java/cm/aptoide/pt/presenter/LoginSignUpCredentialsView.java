@@ -64,7 +64,7 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   void hideGoogleLogin();
 
-  boolean tryCloseLoginBottomSheet();
+  boolean tryCloseLoginBottomSheet(boolean shouldShowTCandPP);
 
   boolean isPasswordVisible();
 
@@ -73,4 +73,10 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
   void lockScreenRotation();
 
   void unlockScreenRotation();
+
+  void setCobrandText();
+
+  void hideTCandPP();
+
+  void showTCandPP();
 }

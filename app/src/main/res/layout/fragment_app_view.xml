@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
+    android:background="@color/white"
     >
 
   <include
@@ -220,20 +221,6 @@
               tools:visibility="visible"
               />
 
-          <include
-              layout="@layout/appview_donate_install_card"
-              android:id="@+id/donate_install_card"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginEnd="8dp"
-              android:layout_marginLeft="8dp"
-              android:layout_marginRight="8dp"
-              android:layout_marginStart="8dp"
-              android:layout_marginTop="28dp"
-              android:visibility="gone"
-              tools:visibility="visible"
-              />
-
           <FrameLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -269,12 +256,10 @@
                 />
           </FrameLayout>
 
-          <include
-              layout="@layout/appview_similar_layout"
-              android:id="@+id/similar_download_apps"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="9dp"
+          <View
+              android:id="@+id/similar_download_placeholder"
+              android:layout_width="0dp"
+              android:layout_height="0dp"
               android:visibility="gone"
               />
 
@@ -386,14 +371,19 @@
             android:layout_marginTop="28dp"
             />
 
-        <include
-            layout="@layout/appview_similar_layout"
-            android:id="@+id/similar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
+        <View
+            android:id="@+id/similar_bottom_placeholder"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:visibility="gone"
             />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/similar_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
 
         <include
             layout="@layout/displayable_app_view_developer"

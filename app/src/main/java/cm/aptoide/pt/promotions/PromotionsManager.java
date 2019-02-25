@@ -31,13 +31,15 @@ public class PromotionsManager {
   private final PackageManager packageManager;
   private final PromotionsService promotionsService;
   private final InstalledRepository installedRepository;
+  private final String promotionId;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PackageManager packageManager,
-      PromotionsService promotionsService, InstalledRepository installedRepository) {
+      PromotionsService promotionsService, InstalledRepository installedRepository,
+      String promotionId) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -49,10 +51,11 @@ public class PromotionsManager {
     this.packageManager = packageManager;
     this.promotionsService = promotionsService;
     this.installedRepository = installedRepository;
+    this.promotionId = promotionId;
   }
 
   public Single<List<PromotionApp>> getPromotionApps() {
-    return promotionsService.getPromotionApps();
+    return promotionsService.getPromotionApps(promotionId);
   }
 
   public Observable<PromotionsModel> getPromotionsModel() {
@@ -145,7 +148,7 @@ public class PromotionsManager {
 
   public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
       String captcha) {
-    return promotionsService.claimPromotion(walletAddress, packageName, captcha);
+    return promotionsService.claimPromotion(walletAddress, packageName, captcha, promotionId);
   }
 
   public Observable<String> getPackageSignature(String packageName) {

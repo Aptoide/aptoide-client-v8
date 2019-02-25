@@ -125,22 +125,7 @@
 ## appc proxy
 -dontwarn com.asf.appcoins.**
 
-# For communication with AdColony's WebView
--keepclassmembers class * {
-    @android.webkit.JavascriptInterface <methods>;
-}
-# Keep ADCNative class members unobfuscated
--keep class com.ironsource.adapters.adcolony.** { *; }
--keep class com.adcolony.** { *; }
--dontwarn com.adcolony.**
--dontwarn com.ironsource.adapters.adcolony.**
 
--keepclassmembers class com.adcolony.sdk.ADCNative** {
-    *;
- }
-
-#TapJoy
--keep class com.tapjoy.** { *; }
 -keep class com.moat.** { *; }
 -keepattributes JavascriptInterface
 -keepattributes *Annotation*
@@ -158,7 +143,6 @@
  public static final ** CREATOR;
 }
 -keep class com.google.android.gms.ads.identifier.** { *; }
--dontwarn com.tapjoy.**
 
 -keep class com.chartboost.** { *; }
 -dontwarn com.ironsource.adapters.chartboost.**
@@ -183,3 +167,23 @@
 -dontwarn com.google.ar.core.**
 -dontwarn com.unity3d.services.**
 -dontwarn com.ironsource.adapters.unityads.**
+
+#StartApp proguard rules
+
+-keep class com.startapp.** {
+      *;
+}
+
+-keep class com.truenet.** {
+      *;
+}
+
+-keepattributes Exceptions, InnerClasses, Signature, Deprecated, SourceFile, LineNumberTable, *Annotation*, EnclosingMethod
+-dontwarn android.webkit.JavascriptInterface
+-dontwarn com.startapp.**
+
+-dontwarn org.jetbrains.annotations.**
+
+#AppNext
+-keep class com.appnext.** { *; }
+-dontwarn com.appnext.**
