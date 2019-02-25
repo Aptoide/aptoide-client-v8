@@ -23,10 +23,12 @@ public final class AppInstaller {
   private static final int SESSION_INSTALL_REQUEST_CODE = 18;
   private final Context context;
   private final InstallResultCallback installResultCallback;
+  private InstallResultReceiver installResultReceiver;
 
   public AppInstaller(Context context, InstallResultCallback installResultCallback) {
     this.context = context;
     this.installResultCallback = installResultCallback;
+    registerInstallResultBroadcast();
   }
 
   public void install(File file) {
@@ -53,7 +55,6 @@ public final class AppInstaller {
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
           new Intent("install_session_api_complete"), 0)
           .getIntentSender());
-      registerInstallResultBroadcast();
     } catch (IOException e) {
       throw new RuntimeException("Couldn't install package", e);
     } catch (RuntimeException e) {
@@ -79,23 +80,10 @@ public final class AppInstaller {
     context.startActivity(promptInstall);
   }
 
-  @RequiresApi(Build.VERSION_CODES.LOLLIPOP) private void registerInstallResultBroadcast() {
-    context.registerReceiver(new InstallResultReceiver(new PackageInstallerResultCallback() {
-      @Override public void onInstallationResult(InstallStatus installStatus) {
-        installResultCallback.onInstallationResult(installStatus);
-      }
-
-      @Override public void onPendingUserAction(Bundle extras) {
-        Intent confirmIntent = (Intent) extras.get(Intent.EXTRA_INTENT);
-        if (confirmIntent != null) {
-          confirmIntent.setFlags(
-              Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        }
-        installResultCallback.onInstallationResult(
-            new InstallStatus(InstallStatus.Status.INSTALLING, "Installing..."));
-        context.startActivity(confirmIntent);
-      }
-    }), new IntentFilter("install_session_api_complete"), null, null);
+  private void registerInstallResultBroadcast() {
+    installResultReceiver = new InstallResultReceiver(new MyPackageInstallerResultCallback());
+    context.registerReceiver(installResultReceiver,
+        new IntentFilter("install_session_api_complete"), null, null);
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -129,6 +117,23 @@ public final class AppInstaller {
         installResultCallback.onInstallationResult(
             new InstallStatus(InstallStatus.Status.FAIL, "Install failed"));
       }
+    }
+  }
+
+  private class MyPackageInstallerResultCallback implements PackageInstallerResultCallback {
+    @Override public void onInstallationResult(InstallStatus installStatus) {
+      installResultCallback.onInstallationResult(installStatus);
+    }
+
+    @Override public void onPendingUserAction(Bundle extras) {
+      Intent confirmIntent = (Intent) extras.get(Intent.EXTRA_INTENT);
+      if (confirmIntent != null) {
+        confirmIntent.setFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+      }
+      installResultCallback.onInstallationResult(
+          new InstallStatus(InstallStatus.Status.INSTALLING, "Installing..."));
+      context.startActivity(confirmIntent);
     }
   }
 }
