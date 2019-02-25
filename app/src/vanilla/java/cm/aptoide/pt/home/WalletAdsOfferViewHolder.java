@@ -21,8 +21,8 @@ class WalletAdsOfferViewHolder extends AppBundleViewHolder {
   public WalletAdsOfferViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener) {
     super(view);
     this.uiEventsListener = uiEventsListener;
-    this.installWalletButton = view.findViewById(R.id.dismiss_button);
-    this.dismissButton = view.findViewById(R.id.know_more_button);
+    this.installWalletButton = view.findViewById(R.id.know_more_button);
+    this.dismissButton = view.findViewById(R.id.dismiss_button);
     this.icon = view.findViewById(R.id.icon);
     this.title = view.findViewById(R.id.title);
     this.message = view.findViewById(R.id.message);
