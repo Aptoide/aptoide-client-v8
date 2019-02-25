@@ -53,7 +53,7 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment(
-      ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
+      @Named("ab-test") ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
     return new MoPubInterstitialAdExperiment(abTestManager, moPubAnalytics);
   }
 
