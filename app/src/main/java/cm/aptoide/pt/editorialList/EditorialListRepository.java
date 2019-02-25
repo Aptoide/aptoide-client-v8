@@ -15,12 +15,24 @@ public class EditorialListRepository {
     if (cachedEditorialListViewModel != null) {
       return Single.just(cachedEditorialListViewModel);
     }
-    return editorialListService.loadEditorialListService()
+    return loadNewEditorialListViewModel(0);
+  }
+
+  private Single<EditorialListViewModel> loadNewEditorialListViewModel(int offset) {
+    return editorialListService.loadEditorialListViewModel(offset)
         .map(editorialListViewModel -> {
           if (!editorialListViewModel.hasError() && !editorialListViewModel.isLoading()) {
             cachedEditorialListViewModel = editorialListViewModel;
           }
           return editorialListViewModel;
         });
+  }
+
+  public boolean hasMore() {
+    return cachedEditorialListViewModel.getOffset() < cachedEditorialListViewModel.getTotal();
+  }
+
+  public Single<EditorialListViewModel> loadMoreCurationCards() {
+    return loadNewEditorialListViewModel(cachedEditorialListViewModel.getOffset());
   }
 }

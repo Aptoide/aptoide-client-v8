@@ -213,7 +213,7 @@ import rx.schedulers.Schedulers;
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, Schedulers.io());
+        bottomNavigationMapper);
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
@@ -433,7 +433,7 @@ import rx.schedulers.Schedulers;
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        WebService.getDefaultConverter(), sharedPreferences);
+        WebService.getDefaultConverter(), sharedPreferences, 10);
   }
 
   @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(

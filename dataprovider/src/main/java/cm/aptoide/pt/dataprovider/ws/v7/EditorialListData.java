@@ -1,39 +1,36 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-public class EditorialListData {
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 
-  public String card_id;
-  public String layout;
+public class EditorialListData extends BaseV7EndlessDataListResponse {
+
+  public String id;
+  public String type;
   public String title;
-  public String message;
+  public String caption;
   public String icon;
-  public String url;
 
   public EditorialListData() {
 
   }
 
-  public String getCard_id() {
-    return card_id;
+  public String getId() {
+    return id;
   }
 
-  public String getLayout() {
-    return layout;
+  public String getType() {
+    return type;
   }
 
   public String getTitle() {
     return title;
   }
 
-  public String getMessage() {
-    return message;
+  public String getCaption() {
+    return caption;
   }
 
   public String getIcon() {
     return icon;
-  }
-
-  public String getUrl() {
-    return url;
   }
 }

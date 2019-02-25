@@ -5,15 +5,13 @@ public class CurationCard {
   private final String subTitle;
   private final String icon;
   private final String title;
-  private final String url;
 
-  public CurationCard(String id, String subTitle, String icon, String title, String url) {
+  public CurationCard(String id, String subTitle, String icon, String title) {
 
     this.id = id;
     this.subTitle = subTitle;
     this.icon = icon;
     this.title = title;
-    this.url = url;
   }
 
   public String getId() {
@@ -30,9 +28,5 @@ public class CurationCard {
 
   public String getTitle() {
     return title;
-  }
-
-  public String getUrl() {
-    return url;
   }
 }

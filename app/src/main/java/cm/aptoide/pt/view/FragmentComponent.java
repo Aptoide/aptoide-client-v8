@@ -42,7 +42,6 @@ import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
-import cm.aptoide.pt.view.wizard.WizardPageTwoFragment;
 import dagger.Subcomponent;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class, FlavourFragmentModule.class })
@@ -127,8 +126,6 @@ public interface FragmentComponent {
   void inject(ThankYouConnectingFragment thankYouConnectingFragment);
 
   void inject(WizardFragmentProvider wizardFragmentProvider);
-
-  void inject(WizardPageTwoFragment wizardPageTwoFragment);
 
   void inject(EditorialListFragment editorialListFragment);
 }
