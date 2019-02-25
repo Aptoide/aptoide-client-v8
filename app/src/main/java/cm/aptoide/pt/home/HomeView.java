@@ -50,4 +50,8 @@ public interface HomeView extends BundleView {
   void hidePromotionsIcon();
 
   void setAdsTest(boolean showNatives);
+
+  Observable<HomeEvent> walletOfferCardInstallWalletClick();
+
+  void sendDeeplinkToWalletAppView(String packageName);
 }

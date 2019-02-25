@@ -96,6 +96,21 @@ public class HomePresenter implements Presenter {
     handleClickOnPromotionsDialogContinue();
 
     handleClickOnPromotionsDialogCancel();
+
+    handleInstallWalletOfferClick();
+  }
+
+  private void handleInstallWalletOfferClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.walletOfferCardInstallWalletClick())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.sendDeeplinkToWalletAppView("com.appcoins.wallet"))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private void handlePromotionsClick() {
