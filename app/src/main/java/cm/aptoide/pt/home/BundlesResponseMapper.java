@@ -102,7 +102,8 @@ public class BundlesResponseMapper {
             }
           }
         } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE) || type.equals(
-            HomeBundle.BundleType.EDITORIAL)) {
+            HomeBundle.BundleType.EDITORIAL) || type.equals(
+            HomeBundle.BundleType.WALLET_ADS_OFFER)) {
           appBundles.add(new ActionBundle(title, type, event, widgetTag,
               map((ActionItemResponse) viewObject)));
         }
@@ -141,6 +142,8 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.INFO_BUNDLE;
       case "CURATION_1":
         return HomeBundle.BundleType.EDITORIAL;
+      case "WALLET_ADS_OFFER":
+        return HomeBundle.BundleType.WALLET_ADS_OFFER;
       default:
         return HomeBundle.BundleType.UNKNOWN;
     }
