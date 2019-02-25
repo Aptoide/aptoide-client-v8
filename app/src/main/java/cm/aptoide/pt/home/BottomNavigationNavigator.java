@@ -64,7 +64,7 @@ public class BottomNavigationNavigator {
   }
 
   public void navigateToHome() {
-    HomeFragment homeFragment = new HomeFragment();
+    HomeContainerFragment homeFragment = new HomeContainerFragment();
     navigateToSelectedFragment(homePosition, homeFragment);
   }
 

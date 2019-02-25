@@ -75,6 +75,8 @@ import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
+import cm.aptoide.pt.home.HomeContainerPresenter;
+import cm.aptoide.pt.home.HomeContainerView;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
@@ -89,11 +91,11 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogPresenter;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogView;
 import cm.aptoide.pt.promotions.ClaimPromotionsManager;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
-import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -413,5 +415,12 @@ import rx.subscriptions.CompositeSubscription;
     return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
         new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
         promotionsAnalytics, navigator);
+  }
+
+  @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
+      CrashReport crashReport, AptoideAccountManager accountManager, HomeNavigator homeNavigator,
+      HomeAnalytics homeAnalytics, Home home) {
+    return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
+        crashReport, accountManager, homeNavigator, homeAnalytics, home);
   }
 }

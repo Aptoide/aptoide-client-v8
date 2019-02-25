@@ -49,8 +49,6 @@ public class HomePresenter implements Presenter {
   @Override public void present() {
     onCreateLoadBundles();
 
-    loadUserImage();
-
     handleAppClick();
 
     handleRecommendedAppClick();
@@ -66,8 +64,6 @@ public class HomePresenter implements Presenter {
     handleBottomNavigationEvents();
 
     handleRetryClick();
-
-    handleUserImageClick();
 
     handleBundleScrolledRight();
 
@@ -88,31 +84,6 @@ public class HomePresenter implements Presenter {
     handleClickOnPrivacyPolicy();
 
     handleEditorialCardClick();
-
-    handlePromotionsClick();
-
-    checkForPromotionApps();
-
-    handleClickOnPromotionsDialogContinue();
-
-    handleClickOnPromotionsDialogCancel();
-  }
-
-  private void handlePromotionsClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.promotionsClick()
-            .observeOn(viewScheduler)
-            .doOnNext(account -> {
-              homeAnalytics.sendPromotionsIconClickEvent();
-              homeNavigator.navigateToPromotions();
-            })
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -458,41 +429,6 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  @VisibleForTesting public void loadUserImage() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> accountManager.accountStatus())
-        .flatMap(account -> getUserAvatar(account))
-        .observeOn(viewScheduler)
-        .doOnNext(userAvatarUrl -> {
-          if (userAvatarUrl != null) {
-            view.setUserImage(userAvatarUrl);
-          } else {
-            view.setDefaultUserImage();
-          }
-          view.showAvatar();
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  @VisibleForTesting public void handleUserImageClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.imageClick()
-            .observeOn(viewScheduler)
-            .doOnNext(account -> homeNavigator.navigateToMyAccount())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
   private void handleLoggedInAcceptTermsAndConditions() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -559,69 +495,6 @@ public class HomePresenter implements Presenter {
         .subscribe(__ -> {
         }, err -> {
           throw new OnErrorNotImplementedException(err);
-        });
-  }
-
-  private void checkForPromotionApps() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(__ -> home.hasPromotionApps())
-        .filter(HomePromotionsWrapper::hasPromotions)
-        .observeOn(viewScheduler)
-        .doOnNext(apps -> {
-          view.showPromotionsHomeIcon(apps);
-          homeAnalytics.sendPromotionsImpressionEvent();
-          if (apps.getPromotions() > 0 && apps.getTotalUnclaimedAppcValue() > 0) {
-            if (apps.getPromotions() < 10) {
-              view.setPromotionsTickerWithValue(apps.getPromotions());
-            } else {
-              view.setEllipsizedPromotionsTicker();
-            }
-          }
-        })
-        .filter(HomePromotionsWrapper::shouldShowDialog)
-        .doOnNext(apps -> {
-          homeAnalytics.sendPromotionsDialogImpressionEvent();
-          home.setPromotionsDialogShown();
-          view.showPromotionsHomeDialog(apps);
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          view.hidePromotionsIcon();
-        });
-  }
-
-  private void handleClickOnPromotionsDialogContinue() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.promotionsHomeDialogClicked())
-        .filter(action -> action.equals("navigate"))
-        .doOnNext(__ -> {
-          homeAnalytics.sendPromotionsDialogNavigateEvent();
-          view.dismissPromotionsDialog();
-          homeNavigator.navigateToPromotions();
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleClickOnPromotionsDialogCancel() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.promotionsHomeDialogClicked())
-        .filter(action -> action.equals("cancel"))
-        .doOnNext(__ -> {
-          homeAnalytics.sendPromotionsDialogDismissEvent();
-          view.dismissPromotionsDialog();
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
         });
   }
 
