@@ -395,9 +395,7 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(appCardButton)
         .map(__ -> new EditorialDownloadEvent(editorialViewModel, action))
         .mergeWith(downloadEventListener.filter(editorialEvent -> editorialEvent.getClickType()
-            .equals(EditorialEvent.Type.BUTTON))
-            .map(editorialDownloadEvent -> new EditorialDownloadEvent(editorialDownloadEvent,
-                action)));
+            .equals(EditorialEvent.Type.BUTTON)));
   }
 
   @Override
