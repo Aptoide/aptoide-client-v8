@@ -122,12 +122,15 @@ public class AppViewPresenter implements Presenter {
     showInterstitialAd();
   }
 
-  private Observable<Boolean> showBannerAd() {
+  private Completable showBannerAd() {
     return appViewManager.shouldLoadBannerAd()
-        .toObservable()
-        .filter(loadBanner -> loadBanner)
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showBannerAd());
+        .flatMapCompletable(loadBanner -> {
+          if (loadBanner) {
+            view.showBannerAd();
+          }
+          return Completable.complete();
+        });
   }
 
   private void showInterstitialAd() {
@@ -209,15 +212,15 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> loadApp().flatMapSingle(
-            appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).onErrorReturn(
-                __1 -> null)
-                .map(__1 -> appViewViewModel))
+        .flatMap(__ -> loadApp().flatMapCompletable(appViewViewModel -> showBannerAd())
+            .flatMapSingle(
+                appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).onErrorReturn(
+                    __1 -> null)
+                    .map(__1 -> appViewViewModel))
             .filter(app -> app.hasDonations())// after getApk webservice is updated
             .flatMapSingle(app -> appViewManager.getTopDonations(app.getPackageName()))
             .observeOn(viewScheduler)
             .doOnNext(donations -> view.showDonations(donations)))
-        .flatMap(__ -> showBannerAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
