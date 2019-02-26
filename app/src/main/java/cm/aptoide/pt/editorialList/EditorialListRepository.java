@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorialList;
 
+import java.util.List;
 import rx.Single;
 
 public class EditorialListRepository {
@@ -22,17 +23,33 @@ public class EditorialListRepository {
     return editorialListService.loadEditorialListViewModel(offset)
         .map(editorialListViewModel -> {
           if (!editorialListViewModel.hasError() && !editorialListViewModel.isLoading()) {
-            cachedEditorialListViewModel = editorialListViewModel;
+            updateCache(editorialListViewModel, false);
           }
           return editorialListViewModel;
         });
   }
 
   public boolean hasMore() {
-    return cachedEditorialListViewModel.getOffset() < cachedEditorialListViewModel.getTotal();
+    if (cachedEditorialListViewModel != null) {
+      return cachedEditorialListViewModel.getOffset() < cachedEditorialListViewModel.getTotal();
+    }
+    return false;
   }
 
   public Single<EditorialListViewModel> loadMoreCurationCards() {
-    return loadNewEditorialListViewModel(cachedEditorialListViewModel.getOffset());
+    return loadNewEditorialListViewModel(cachedEditorialListViewModel.getOffset()).doOnSuccess(
+        editorialListViewModel -> updateCache(editorialListViewModel, true));
+  }
+
+  private void updateCache(EditorialListViewModel editorialListViewModel, boolean loadMore) {
+    if (loadMore) {
+      List<CurationCard> curationCards = cachedEditorialListViewModel.getCurationCards();
+      curationCards.addAll(editorialListViewModel.getCurationCards());
+      cachedEditorialListViewModel =
+          new EditorialListViewModel(curationCards, cachedEditorialListViewModel.getOffset(),
+              cachedEditorialListViewModel.getTotal());
+    } else {
+      cachedEditorialListViewModel = editorialListViewModel;
+    }
   }
 }
