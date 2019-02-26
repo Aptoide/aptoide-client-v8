@@ -456,16 +456,14 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           if (resultValue.resourceId != 0) {
             promotionAction.setBackgroundResource(resultValue.resourceId);
           } else {
-            promotionAction.setBackgroundColor(getContext().getResources()
-                .getColor(R.color.orange));
+            promotionAction.setBackgroundDrawable(getContext().getResources()
+                .getDrawable(R.drawable.card_border_rounded_orange));
           }
           promotionAction.setText(getContext().getString(R.string.appview_button_install));
           promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
               new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.INSTALL_APP)));
         } else {
           promotionAction.setEnabled(false);
-          promotionAction.setBackgroundColor(getContext().getResources()
-              .getColor(R.color.grey_fog_light));
           promotionAction.setBackgroundDrawable(getContext().getResources()
               .getDrawable(R.drawable.card_border_fog_grey_normal));
           promotionAction.setTextColor(getContext().getResources()
@@ -474,8 +472,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionsAdapter.isWalletInstalled(isWalletInstalled);
       } else if (getState(promotionViewApp) == CLAIM) {
         promotionAction.setEnabled(true);
-        promotionAction.setBackgroundColor(getContext().getResources()
-            .getColor(R.color.green));
+        promotionAction.setBackgroundDrawable(getContext().getResources()
+            .getDrawable(R.drawable.card_border_rounded_green));
         promotionAction.setTextColor(Color.WHITE);
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
@@ -489,8 +487,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         if (resultValue.resourceId != 0) {
           promotionAction.setBackgroundResource(resultValue.resourceId);
         } else {
-          promotionAction.setBackgroundColor(getContext().getResources()
-              .getColor(R.color.orange));
+          promotionAction.setBackgroundDrawable(getContext().getResources()
+              .getDrawable(R.drawable.card_border_rounded_orange));
         }
         if (promotionViewApp.isClaimed()) {
           promotionAction.setText(getContext().getString(R.string.appview_button_install));
