@@ -32,4 +32,6 @@ public interface HomeContainerView extends View {
   void showTermsAndConditionsDialog();
 
   Observable<String> gdprDialogClicked();
+
+  Observable<Boolean> gamesChipClicked();
 }

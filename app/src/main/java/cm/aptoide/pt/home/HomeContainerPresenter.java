@@ -33,6 +33,7 @@ public class HomeContainerPresenter implements Presenter {
   }
 
   @Override public void present() {
+    loadMainHomeContent();
     loadUserImage();
     handleUserImageClick();
     handlePromotionsClick();
@@ -44,6 +45,19 @@ public class HomeContainerPresenter implements Presenter {
     handleTermsAndConditionsLogOutClicked();
     handleClickOnTermsAndConditions();
     handleClickOnPrivacyPolicy();
+    handleClickOnGamesChip();
+    handleClickOnAppsChip();
+  }
+
+  @VisibleForTesting public void loadMainHomeContent() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> homeNavigator.loadMainHomeContent())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
   }
 
   @VisibleForTesting public void loadUserImage() {
@@ -223,6 +237,35 @@ public class HomeContainerPresenter implements Presenter {
         .flatMap(__ -> view.gdprDialogClicked())
         .filter(action -> action.equals("privacy"))
         .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  @VisibleForTesting public void handleClickOnGamesChip() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.gamesChipClicked())
+        .doOnNext(isChecked -> {
+          if (isChecked) {
+            homeNavigator.loadGamesHomeContent();
+          } else {
+            homeNavigator.loadMainHomeContent();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  @VisibleForTesting public void handleClickOnAppsChip() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        //IMPLEMENT
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {

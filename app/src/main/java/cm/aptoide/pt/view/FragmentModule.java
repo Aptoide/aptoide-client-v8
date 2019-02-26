@@ -4,10 +4,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -86,6 +88,8 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentResultNavigator;
+import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
@@ -119,9 +123,11 @@ import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
+import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
@@ -155,6 +161,13 @@ import rx.subscriptions.CompositeSubscription;
         arguments.getBoolean("clean_back_stack"), accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         accountAnalytics);
+  }
+
+  @FragmentScope @Provides @Named("home-fragment-navigator")
+  FragmentNavigator provideHomeFragmentNavigator(Map<Integer, Result> fragmentResultMap,
+      BehaviorRelay<Map<Integer, Result>> fragmentResultRelay, FragmentManager fragmentManager) {
+    return new FragmentResultNavigator(fragmentManager, R.id.main_content, android.R.anim.fade_in,
+        android.R.anim.fade_out, fragmentResultMap, fragmentResultRelay);
   }
 
   @FragmentScope @Provides ImagePickerPresenter provideImagePickerPresenter(
@@ -217,13 +230,23 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
-      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
-      HomeAnalytics homeAnalytics) {
+      @Named("main-home-navigator") HomeNavigator homeNavigator, AdMapper adMapper,
+      AptoideAccountManager aptoideAccountManager, HomeAnalytics homeAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
         CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
   }
 
-  @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
+  @FragmentScope @Provides @Named("main-home-navigator") HomeNavigator providesMainHomeNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
+      @Named("aptoide-theme") String theme) {
+    return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
+  }
+
+  @FragmentScope @Provides @Named("container-home-navigator")
+  HomeNavigator providesHomeContainerHomeNavigator(
+      @Named("home-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
       @Named("aptoide-theme") String theme) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
@@ -247,7 +270,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides MyStoresNavigator providesMyStoreNavigator(
-      FragmentNavigator fragmentNavigator, BottomNavigationMapper bottomNavigationMapper) {
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
     return new MyStoresNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
   }
@@ -257,7 +281,8 @@ import rx.subscriptions.CompositeSubscription;
     return new HomeAnalytics(navigationTracker, analyticsManager);
   }
 
-  @FragmentScope @Provides AppsNavigator providesAppsNavigator(FragmentNavigator fragmentNavigator,
+  @FragmentScope @Provides AppsNavigator providesAppsNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
     return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper, appNavigator);
@@ -330,8 +355,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(
-      MoreBundleManager moreBundleManager, CrashReport crashReport, HomeNavigator homeNavigator,
-      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
+      MoreBundleManager moreBundleManager, CrashReport crashReport,
+      @Named("main-home-navigator") HomeNavigator homeNavigator, AdMapper adMapper,
+      BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
     return new MoreBundlePresenter((MoreBundleView) fragment, moreBundleManager,
         AndroidSchedulers.mainThread(), crashReport, homeNavigator, adMapper, bundleEvent,
         homeAnalytics);
@@ -418,8 +444,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
-      CrashReport crashReport, AptoideAccountManager accountManager, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home) {
+      CrashReport crashReport, AptoideAccountManager accountManager,
+      @Named("container-home-navigator") HomeNavigator homeNavigator, HomeAnalytics homeAnalytics,
+      Home home) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         crashReport, accountManager, homeNavigator, homeAnalytics, home);
   }

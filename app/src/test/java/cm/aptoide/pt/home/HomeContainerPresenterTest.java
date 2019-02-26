@@ -169,5 +169,32 @@ public class HomeContainerPresenterTest {
 
     verify(homeNavigator).navigateToPrivacyPolicy();
   }
+
+  @Test public void loadHomeMainContent() {
+    presenter.loadMainHomeContent();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeNavigator).loadMainHomeContent();
+  }
+
+  @Test public void gamesChipIsChecked_handleClickOnGamesChipTest() {
+    when(view.gamesChipClicked()).thenReturn(Observable.just(true));
+    presenter.handleClickOnGamesChip();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeNavigator).loadMainHomeContent();
+  }
+
+  @Test public void gamesChipIsNotChecked_handleClickOnGamesChipTest() {
+    when(view.gamesChipClicked()).thenReturn(Observable.just(false));
+    presenter.handleClickOnGamesChip();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeNavigator).loadGamesHomeContent();
+  }
+
+  @Test public void appsChipIsChecked_handleClickOnAppsChipTest() {
+
+  }
 }
 

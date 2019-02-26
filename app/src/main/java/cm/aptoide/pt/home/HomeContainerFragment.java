@@ -190,4 +190,9 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   @Override public Observable<String> gdprDialogClicked() {
     return gdprDialog.dialogClicked();
   }
+
+  @Override public Observable<Boolean> gamesChipClicked() {
+    return RxView.clicks(gamesChip)
+        .map(__ -> gamesChip.isChecked());
+  }
 }

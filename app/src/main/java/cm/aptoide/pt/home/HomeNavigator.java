@@ -118,4 +118,12 @@ public class HomeNavigator {
   public void navigateToPromotions() {
     fragmentNavigator.navigateTo(new PromotionsFragment(), true);
   }
+
+  public void loadMainHomeContent() {
+    fragmentNavigator.navigateToWithoutBackSave(new HomeFragment(), true);
+  }
+
+  public void loadGamesHomeContent() {
+    fragmentNavigator.navigateToWithoutBackSave(new MyAccountFragment(), true);
+  }
 }
