@@ -56,17 +56,13 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
         .doOnNext(__ -> {
-          if (shouldSendIntent) {
-            view.fetchWalletAddressByIntent();
-            shouldSendIntent = false;
-          } else {
+          if (!shouldSendIntent) {
             view.fetchWalletAddressByClipboard();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          view.fetchWalletAddressByClipboard();
         });
   }
 
@@ -80,29 +76,40 @@ public class ClaimPromotionDialogPresenter implements Presenter {
               view.updateWalletText(resultIntent.getExtras()
                   .getString(WALLET_ADDRESS));
             } else {
-              view.fetchWalletAddressByClipboard();
+              shouldSendIntent = false;
+              view.sendWalletIntent();
             }
           } else {
-            view.fetchWalletAddressByClipboard();
+            shouldSendIntent = false;
+            view.sendWalletIntent();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          view.showGenericError();
+          shouldSendIntent = false;
+          view.sendWalletIntent();
         });
   }
 
   private void handleFindAddressClick() {
-    subscriptions.add(view.getWalletClick()
-        .doOnNext(packageName -> {
-          promotionsAnalytics.sendClickOnWalletDialogFindWallet(packageName);
-          view.sendWalletIntent();
-        })
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.getWalletClick()
+            .doOnNext(packageName -> {
+              promotionsAnalytics.sendClickOnWalletDialogFindWallet(packageName);
+              view.fetchWalletAddressByIntent();
+            })
+            .doOnError(___ -> {
+              shouldSendIntent = false;
+              view.sendWalletIntent();
+            })
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          view.showGenericError();
-        }));
+        });
   }
 
   private void handleContinueClick() {
