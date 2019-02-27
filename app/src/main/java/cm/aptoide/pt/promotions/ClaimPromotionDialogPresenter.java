@@ -79,7 +79,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
               shouldSendIntent = false;
               view.sendWalletIntent();
             }
-          } else {
+          } else if (result.getResultCode() != Activity.RESULT_CANCELED) {
             shouldSendIntent = false;
             view.sendWalletIntent();
           }
