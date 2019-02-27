@@ -40,6 +40,7 @@ public class EditorialListPresenterTest {
   private PublishSubject<Account> accountStatusEvent;
   private PublishSubject<Void> imageClickEvent;
   private PublishSubject<EditorialHomeEvent> cardClickEvent;
+  private PublishSubject<Void> refreshEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -50,6 +51,7 @@ public class EditorialListPresenterTest {
     accountStatusEvent = PublishSubject.create();
     imageClickEvent = PublishSubject.create();
     cardClickEvent = PublishSubject.create();
+    refreshEvent = PublishSubject.create();
 
     presenter = new EditorialListPresenter(view, editorialListManager, accountManager,
         editorialListNavigator, editorialListAnalytics, crashReporter, Schedulers.immediate());
@@ -65,11 +67,12 @@ public class EditorialListPresenterTest {
     when(view.editorialCardClicked()).thenReturn(cardClickEvent);
     when(accountManager.accountStatus()).thenReturn(accountStatusEvent);
     when(view.imageClick()).thenReturn(imageClickEvent);
+    when(view.refreshes()).thenReturn(refreshEvent);
   }
 
   @Test public void onCreateLoadSuccessViewModelTest() {
     //When the viewModel is requested then it should return a viewModel
-    when(editorialListManager.loadEditorialListViewModel(false)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(false, false)).thenReturn(
         Single.just(successEditorialViewModel));
     //Given an initialized Presenter
     presenter.onCreateLoadViewModel();
@@ -86,7 +89,7 @@ public class EditorialListPresenterTest {
 
   @Test public void onCreateLoadLoadingViewModelTest() {
     //When the viewModel is requested then it should return a viewModel
-    when(editorialListManager.loadEditorialListViewModel(false)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(false, false)).thenReturn(
         Single.just(loadingEditorialViewModel));
     //Given an initialized Presenter
     presenter.onCreateLoadViewModel();
@@ -101,7 +104,7 @@ public class EditorialListPresenterTest {
 
   @Test public void onCreateLoadErrorViewModelTest() {
     //When the viewModel is requested then it should return a viewModel
-    when(editorialListManager.loadEditorialListViewModel(false)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(false, false)).thenReturn(
         Single.just(errorEditorialViewModel));
     //Given an initialized Presenter
     presenter.onCreateLoadViewModel();
@@ -133,7 +136,7 @@ public class EditorialListPresenterTest {
   @Test public void handleRetryClickTest() {
     //Given an initialised presenter
     presenter.handleRetryClick();
-    when(editorialListManager.loadEditorialListViewModel(false)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(false, false)).thenReturn(
         Single.just(successEditorialViewModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     retryClickedEvent.onNext(null);
@@ -145,10 +148,27 @@ public class EditorialListPresenterTest {
     verify(view).hideLoadMore();
   }
 
+  @Test public void handlePullToRefreshTest() {
+    //Given an initialised presenter
+    presenter.handlePullToRefresh();
+    when(editorialListManager.loadEditorialListViewModel(false, true)).thenReturn(
+        Single.just(successEditorialViewModel));
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    refreshEvent.onNext(null);
+    //Then it should hide the swipe refresh icon
+    verify(view).hideRefresh();
+    //Then the editorial cards should be shown
+    verify(view).update(successEditorialViewModel.getCurationCards());
+    //Then it should hide the loading indicator
+    verify(view).hideLoading();
+    //Then it should hide the load more indicator (if exists)
+    verify(view).hideLoadMore();
+  }
+
   @Test public void handleBottomReachedTest() {
     //Given an initialised presenter
     presenter.handleBottomReached();
-    when(editorialListManager.loadEditorialListViewModel(true)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(true, false)).thenReturn(
         Single.just(successEditorialViewModel));
     when(editorialListManager.hasMore()).thenReturn(true);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -158,7 +178,7 @@ public class EditorialListPresenterTest {
     //Then it should show the load more progress indicator
     verify(view).showLoadMore();
     //Then it should request the next cards to the model repository
-    verify(editorialListManager).loadEditorialListViewModel(true);
+    verify(editorialListManager).loadEditorialListViewModel(true, false);
     //Then it should hide the load more progress indicator
     verify(view).hideLoadMore();
     verify(view).hideLoading();

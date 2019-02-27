@@ -2,6 +2,7 @@ package cm.aptoide.pt.editorialList;
 
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
+import java.util.List;
 import rx.Observable;
 
 public interface EditorialListView extends View {
@@ -16,6 +17,10 @@ public interface EditorialListView extends View {
   void showNetworkError();
 
   Observable<Void> retryClicked();
+
+  Observable<Void> refreshes();
+
+  void hideRefresh();
 
   Observable<Void> imageClick();
 
@@ -34,4 +39,6 @@ public interface EditorialListView extends View {
   void showLoadMore();
 
   void hideLoadMore();
+
+  void update(List<CurationCard> editorialListViewModel);
 }
