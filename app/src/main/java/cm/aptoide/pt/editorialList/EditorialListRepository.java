@@ -11,8 +11,8 @@ public class EditorialListRepository {
     this.editorialListService = editorialListService;
   }
 
-  public Single<EditorialListViewModel> loadEditorialListViewModel() {
-    if (cachedEditorialListViewModel != null) {
+  public Single<EditorialListViewModel> loadEditorialListViewModel(boolean invalidateCache) {
+    if (cachedEditorialListViewModel != null && !invalidateCache) {
       return Single.just(cachedEditorialListViewModel);
     }
     return loadNewEditorialListViewModel(0);
