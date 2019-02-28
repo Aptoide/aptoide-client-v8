@@ -2,9 +2,6 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
