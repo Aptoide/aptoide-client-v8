@@ -84,7 +84,8 @@ public class DefaultInstaller implements Installer {
         .onErrorReturn(throwable -> false);
   }
 
-  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
+  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
     return rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRoot -> installerAnalytics.installationType(
             ManagerPreferences.allowRootInstallation(sharedPreferences), isRoot))
@@ -104,9 +105,9 @@ public class DefaultInstaller implements Installer {
                 return Observable.just(null);
               } else {
                 if (forceDefaultInstall) {
-                  return startDefaultInstallation(context, installation);
+                  return startDefaultInstallation(context, installation, shouldSetPackageInstaller);
                 } else {
-                  return startInstallation(context, installation);
+                  return startInstallation(context, installation, shouldSetPackageInstaller);
                 }
               }
             }))
@@ -115,17 +116,19 @@ public class DefaultInstaller implements Installer {
         .toCompletable();
   }
 
-  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall) {
-    return install(context, md5, forceDefaultInstall);
+  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
+    return install(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
   }
 
-  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall) {
+  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
     return installationProvider.getInstallation(md5)
         .first()
         .flatMapCompletable(installation -> uninstall(context, installation.getPackageName(),
             installation.getVersionName()))
         .toCompletable()
-        .andThen(install(context, md5, forceDefaultInstall));
+        .andThen(install(context, md5, forceDefaultInstall, shouldSetPackageInstaller));
   }
 
   @Override public Completable uninstall(Context context, String packageName, String versionName) {
@@ -155,15 +158,18 @@ public class DefaultInstaller implements Installer {
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
-      Installation installation) {
-    return defaultInstall(context, installation).doOnNext(installation1 -> installation1.save());
+      Installation installation, boolean shouldSetPackageInstaller) {
+    return defaultInstall(context, installation, shouldSetPackageInstaller).doOnNext(
+        installation1 -> installation1.save());
   }
 
   @NonNull
-  private Observable<Installation> startInstallation(Context context, Installation installation) {
+  private Observable<Installation> startInstallation(Context context, Installation installation,
+      boolean shouldSetPackageInstaller) {
     return systemInstall(context, installation).onErrorResumeNext(
         throwable -> rootInstall(installation))
-        .onErrorResumeNext(throwable -> defaultInstall(context, installation))
+        .onErrorResumeNext(
+            throwable -> defaultInstall(context, installation, shouldSetPackageInstaller))
         .doOnError(throwable -> sendErrorEvent(installation.getPackageName(),
             installation.getVersionCode(), new InstallationException(
                 "Installation with root failed for "
@@ -241,16 +247,17 @@ public class DefaultInstaller implements Installer {
     return installation;
   }
 
-  private Observable<Installation> defaultInstall(Context context, Installation installation) {
+  private Observable<Installation> defaultInstall(Context context, Installation installation,
+      boolean shouldSetPackageInstaller) {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
-      if (true) {
-        startInstallIntent(context, installation.getFile());
-      } else {
+      if (shouldSetPackageInstaller) {
         appInstaller.install(installation.getFile());
+      } else {
+        startInstallIntent(context, installation.getFile());
       }
       return null;
     }).subscribeOn(Schedulers.computation())
