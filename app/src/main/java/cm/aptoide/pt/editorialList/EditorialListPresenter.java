@@ -110,7 +110,7 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadEditorialListViewModel(false)))
+            .flatMapSingle(__ -> loadEditorialListViewModel(true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
@@ -162,7 +162,11 @@ public class EditorialListPresenter implements Presenter {
             view.hideLoading();
           }
           if (editorialListViewModel.hasError()) {
-            view.showError(editorialListViewModel.getError());
+            if (editorialListViewModel.getError() == EditorialListViewModel.Error.NETWORK) {
+              view.showNetworkError();
+            } else {
+              view.showGenericError();
+            }
           } else {
             view.update(editorialListViewModel.getCurationCards());
           }

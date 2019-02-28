@@ -33,6 +33,10 @@ public class EditorialListRepository {
   }
 
   public Single<EditorialListViewModel> loadMoreCurationCards() {
-    return loadNewEditorialListViewModel(cachedEditorialListViewModel.getOffset());
+    int offset = 0;
+    if (cachedEditorialListViewModel != null) {
+      offset = cachedEditorialListViewModel.getOffset();
+    }
+    return loadNewEditorialListViewModel(offset);
   }
 }

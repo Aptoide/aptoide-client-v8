@@ -127,7 +127,7 @@ public class EditorialListPresenterTest {
 
   @Test public void onCreateLoadGenericErrorViewModelTest() {
     //When the viewModel is requested then it should return a viewModel
-    when(editorialListManager.loadEditorialListViewModel(false)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(false, false)).thenReturn(
         Single.just(genericErrorEditorialViewModel));
     //Given an initialized Presenter
     presenter.onCreateLoadViewModel();
@@ -159,7 +159,7 @@ public class EditorialListPresenterTest {
   @Test public void handleRetryClickTest() {
     //Given an initialised presenter
     presenter.handleRetryClick();
-    when(editorialListManager.loadEditorialListViewModel(false, false)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(true, false)).thenReturn(
         Single.just(successEditorialViewModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     retryClickedEvent.onNext(null);
