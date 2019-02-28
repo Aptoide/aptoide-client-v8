@@ -128,6 +128,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   @Override public void showGenericError() {
     genericErrorView.setVisibility(View.VISIBLE);
     noNetworkErrorView.setVisibility(View.GONE);
+    editorialList.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
@@ -137,6 +138,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   @Override public void showNetworkError() {
     this.noNetworkErrorView.setVisibility(View.VISIBLE);
     this.genericErrorView.setVisibility(View.GONE);
+    this.editorialList.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
@@ -184,17 +186,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
 
   @Override public void populateView(EditorialListViewModel editorialListViewModel) {
     adapter.add(editorialListViewModel.getCurationCards());
-  }
-
-  @Override public void showError(EditorialListViewModel.Error error) {
-    switch (error) {
-      case NETWORK:
-        noNetworkErrorView.setVisibility(View.VISIBLE);
-        break;
-      case GENERIC:
-        genericErrorView.setVisibility(View.VISIBLE);
-        break;
-    }
   }
 
   @Override public void showLoadMore() {

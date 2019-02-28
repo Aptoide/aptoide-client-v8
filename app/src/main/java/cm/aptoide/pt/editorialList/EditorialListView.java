@@ -34,8 +34,6 @@ public interface EditorialListView extends View {
 
   void populateView(EditorialListViewModel editorialListViewModel);
 
-  void showError(EditorialListViewModel.Error error);
-
   void showLoadMore();
 
   void hideLoadMore();

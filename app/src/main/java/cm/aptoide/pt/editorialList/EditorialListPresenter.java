@@ -140,7 +140,11 @@ public class EditorialListPresenter implements Presenter {
             view.hideLoading();
           }
           if (editorialListViewModel.hasError()) {
-            view.showError(editorialListViewModel.getError());
+            if (editorialListViewModel.getError() == EditorialListViewModel.Error.NETWORK) {
+              view.showNetworkError();
+            } else {
+              view.showGenericError();
+            }
           } else {
             view.populateView(editorialListViewModel);
           }
