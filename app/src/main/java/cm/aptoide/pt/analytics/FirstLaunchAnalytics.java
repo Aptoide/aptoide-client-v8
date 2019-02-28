@@ -1,6 +1,5 @@
 package cm.aptoide.pt.analytics;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -18,8 +17,8 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.safetynet.HarmfulAppsData;
-import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.safetynet.SafetyNetClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -71,13 +70,13 @@ public class FirstLaunchAnalytics {
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
 
-  private Context context;
+  private SafetyNetClient safetyNetClient;
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
-      Context context) {
+      SafetyNetClient safetyNetClient) {
     this.analyticsManager = analyticsManager;
     this.logger = logger;
-    this.context = context;
+    this.safetyNetClient = safetyNetClient;
   }
 
   public void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
@@ -88,33 +87,33 @@ public class FirstLaunchAnalytics {
   }
 
   private void sendPlayProtectEvent() {
-    SafetyNet.getClient(context)
-        .listHarmfulApps()
+    safetyNetClient.listHarmfulApps()
         .addOnCompleteListener(task -> {
-          String isActive = "false";
-          String isFlagged = null;
+          boolean isActive = false;
+          boolean isFlagged = false;
           String category = null;
 
           if (task.isSuccessful()) {
-            isActive = "true";
-            isFlagged = "false";
+            isActive = true;
+            isFlagged = false;
             SafetyNetApi.HarmfulAppsResponse result = task.getResult();
             category = getCategoryFlaggedByPlayProtect(result.getHarmfulAppsList());
             if (category != null) {
-              isFlagged = "true";
+              isFlagged = true;
             }
           }
           Map<String, Object> data = new HashMap<>();
+          data.put(IS_ACTIVE, isActive ? "true" : "false");
+          data.put(FLAGGED, isFlagged ? "true" : "false");
           data.put(CATEGORY, category);
-          data.put(IS_ACTIVE, isActive);
-          data.put(FLAGGED, isFlagged);
           analyticsManager.logEvent(data, PLAY_PROTECT_EVENT, AnalyticsManager.Action.OPEN, "");
         });
   }
 
   private String getCategoryFlaggedByPlayProtect(List<HarmfulAppsData> list) {
     for (HarmfulAppsData app : list) {
-      if (app.apkPackageName.equals(context.getPackageName())) {
+      if (app.apkPackageName.equals(safetyNetClient.getApplicationContext()
+          .getPackageName())) {
         return getPlayProtectCategoryName(app.apkCategory);
       }
     }
