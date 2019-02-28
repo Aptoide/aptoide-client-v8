@@ -185,6 +185,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   }
 
   @Override public void populateView(EditorialListViewModel editorialListViewModel) {
+    editorialList.setVisibility(View.VISIBLE);
     adapter.add(editorialListViewModel.getCurationCards());
   }
 
@@ -201,6 +202,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   }
 
   @Override public void update(List<CurationCard> curationCards) {
+    editorialList.setVisibility(View.VISIBLE);
     if (adapter != null) {
       adapter.update(curationCards);
     }
