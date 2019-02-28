@@ -60,7 +60,7 @@ public class AutoUpdateManager {
   public Observable<Install> startUpdate() {
     return getAutoUpdateModel().flatMap(autoUpdateModel -> Observable.just(
         downloadFactory.create(autoUpdateModel.getMd5(), autoUpdateModel.getVersionCode(),
-            autoUpdateModel.getPackageName(), autoUpdateModel.getUri()))
+            autoUpdateModel.getPackageName(), autoUpdateModel.getUri(), false))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(
                 __ -> downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,

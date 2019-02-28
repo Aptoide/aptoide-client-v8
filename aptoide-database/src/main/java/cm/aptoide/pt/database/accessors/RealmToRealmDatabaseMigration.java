@@ -418,5 +418,13 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+
+    if (oldVersion == 8096) {
+      schema.get("Download")
+          .addField("hasAppc", boolean.class);
+      schema.get("Update")
+          .addField("hasAppc", boolean.class);
+      oldVersion++;
+    }
   }
 }

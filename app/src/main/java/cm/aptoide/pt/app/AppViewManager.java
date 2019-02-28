@@ -322,7 +322,8 @@ public class AppViewManager {
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
-            cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
+            cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb(),
+            cachedApp.hasAdvertising() || cachedApp.hasBilling()))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(__ -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
                 editorsChoicePosition)))
