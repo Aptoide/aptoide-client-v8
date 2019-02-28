@@ -26,7 +26,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
-      android:layout_marginBottom="@dimen/padding_medium_small"
+      android:layout_marginBottom="@dimen/padding_medium"
       android:layout_marginEnd="@dimen/padding_small"
       android:layout_marginLeft="@dimen/padding_small"
       android:layout_marginRight="@dimen/padding_small"
@@ -63,7 +63,7 @@
 
   </LinearLayout>
 
-  <ScrollView
+  <LinearLayout
       android:id="@+id/scroll_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -83,13 +83,6 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/padding_medium_default"
         >
-
-      <ImageView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal"
-          android:src="@drawable/icon_timeline"
-          />
 
       <TextView
           android:layout_width="match_parent"
@@ -129,6 +122,6 @@
 
     </LinearLayout>
 
-  </ScrollView>
+  </LinearLayout>
 
 </RelativeLayout>

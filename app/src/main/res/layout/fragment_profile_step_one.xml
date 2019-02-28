@@ -88,6 +88,7 @@
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:src="@drawable/ic_logged_in"
+
           />
 
       <TextView
@@ -97,7 +98,7 @@
           android:layout_marginTop="@dimen/padding_medium_small"
           android:gravity="center_horizontal"
           android:text="@string/create_profile_pub_pri_suc_login"
-          android:textColor="@color/default_color"
+          android:textColor="?attr/colorPrimaryDark"
           style="@style/Aptoide.TextView.Medium.L"
           />
 
