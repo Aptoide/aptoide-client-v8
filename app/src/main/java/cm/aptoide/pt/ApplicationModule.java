@@ -1319,7 +1319,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(
       AnalyticsManager analyticsManager, AnalyticsLogger logger) {
-    return new FirstLaunchAnalytics(analyticsManager, logger);
+    return new FirstLaunchAnalytics(analyticsManager, logger, application);
   }
 
   @Singleton @Provides @Named("aptoideLogger") EventLogger providesAptoideEventLogger(
@@ -1773,8 +1773,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
         AccountAnalytics.FOLLOW_FRIENDS, UpdatesAnalytics.UPDATE_EVENT,
         PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
-        InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
-        AppViewAnalytics.SIMILAR_APP_INTERACT, NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
+        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallFabricEvents.ROOT_V2_COMPLETE,
+        InstallFabricEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
+        NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
         AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
         AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,

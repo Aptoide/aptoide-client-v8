@@ -1,5 +1,6 @@
 package cm.aptoide.pt.analytics;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,9 +17,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.android.gms.safetynet.HarmfulAppsData;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
 import okhttp3.OkHttpClient;
@@ -34,6 +39,7 @@ import rx.schedulers.Schedulers;
 public class FirstLaunchAnalytics {
 
   public static final String FIRST_LAUNCH = "Aptoide_First_Launch";
+  public static final String PLAY_PROTECT_EVENT = "Google_Play_Protect";
   private static final String EVENT_NAME = "FIRST_LAUNCH";
   private static final String GMS = "GMS";
   private static final String HAS_HGMS = "Has GMS";
@@ -52,6 +58,9 @@ public class FirstLaunchAnalytics {
   private static final String UTM_CONTENT = "UTM Content";
   private static final String UTM_CAMPAIGN = "UTM Campaign";
   private static final String ENTRY_POINT = "Entry Point";
+  private static final String CATEGORY = "category";
+  private static final String IS_ACTIVE = "is_active";
+  private static final String FLAGGED = "flagged";
   private static final String TAG = FirstLaunchAnalytics.class.getSimpleName();
 
   private final AnalyticsManager analyticsManager;
@@ -62,9 +71,13 @@ public class FirstLaunchAnalytics {
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
 
-  public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger) {
+  private Context context;
+
+  public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
+      Context context) {
     this.analyticsManager = analyticsManager;
     this.logger = logger;
+    this.context = context;
   }
 
   public void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
@@ -72,6 +85,88 @@ public class FirstLaunchAnalytics {
     analyticsManager.logEvent(
         createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
         FIRST_LAUNCH, AnalyticsManager.Action.OPEN, "");
+  }
+
+  private void sendPlayProtectEvent() {
+    SafetyNet.getClient(context)
+        .listHarmfulApps()
+        .addOnCompleteListener(task -> {
+          String isActive = "false";
+          String isFlagged = null;
+          String category = null;
+
+          if (task.isSuccessful()) {
+            isActive = "true";
+            isFlagged = "false";
+            SafetyNetApi.HarmfulAppsResponse result = task.getResult();
+            category = getCategoryFlaggedByPlayProtect(result.getHarmfulAppsList());
+            if (category != null) {
+              isFlagged = "true";
+            }
+          }
+          Map<String, Object> data = new HashMap<>();
+          data.put(CATEGORY, category);
+          data.put(IS_ACTIVE, isActive);
+          data.put(FLAGGED, isFlagged);
+          analyticsManager.logEvent(data, PLAY_PROTECT_EVENT, AnalyticsManager.Action.OPEN, "");
+        });
+  }
+
+  private String getCategoryFlaggedByPlayProtect(List<HarmfulAppsData> list) {
+    for (HarmfulAppsData app : list) {
+      if (app.apkPackageName.equals(context.getPackageName())) {
+        return getPlayProtectCategoryName(app.apkCategory);
+      }
+    }
+    return null;
+  }
+
+  private String getPlayProtectCategoryName(int apkCategory) {
+    switch (apkCategory) {
+      case 9:
+        return "BACKDOOR";
+      case 8:
+        return "CALL_FRAUD";
+      case 21:
+        return "DATA_COLLECTION";
+      case 20:
+        return "DENIAL_OF_SERVICE";
+      case 5:
+        return "FRAUDWARE";
+      case 11:
+        return "GENERIC_MALWARE";
+      case 12:
+        return "HARMFUL_SITE";
+      case 14:
+        return "HOSTILE_DOWNLOADER";
+      case 15:
+        return "NON_ANDROID_THREAT";
+      case 2:
+        return "PHISHING";
+      case 17:
+        return "PRIVILEGE_ESCALATION";
+      case 1:
+        return "RANSOMWARE";
+      case 16:
+        return "ROOTING";
+      case 10:
+        return "SPYWARE";
+      case 19:
+        return "SPAM";
+      case 6:
+        return "TOLL_FRAUD";
+      case 18:
+        return "TRACKING";
+      case 3:
+        return "TROJAN";
+      case 4:
+        return "UNCOMMON";
+      case 7:
+        return "WAP_FRAUD";
+      case 13:
+        return "WINDOWS_MALWARE";
+    }
+    return "UNKNOWN_CATEGORY";
   }
 
   private Map<String, Object> createFacebookFirstLaunchDataMap(String utmSource, String utmMedium,
@@ -98,6 +193,7 @@ public class FirstLaunchAnalytics {
           .getUniqueIdentifier()));
       return null;
     })
+        .doOnNext(__ -> sendPlayProtectEvent())
         .filter(firstRun -> SecurePreferences.isFirstRun(sharedPreferences))
         .doOnNext(dimensions -> setupDimensions(application))
         .doOnNext(facebookFirstLaunch -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
