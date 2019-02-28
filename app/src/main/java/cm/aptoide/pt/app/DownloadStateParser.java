@@ -17,7 +17,7 @@ public class DownloadStateParser {
   public DownloadModel.DownloadState parseDownloadState(Install.InstallationStatus state) {
     DownloadModel.DownloadState downloadState;
     switch (state) {
-      case INSTALLING:
+      case DOWNLOADING:
         downloadState = DownloadModel.DownloadState.ACTIVE;
         break;
       case PAUSED:

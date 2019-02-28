@@ -38,7 +38,7 @@ public class AppMapper {
       case INITIAL_STATE:
         status = StateApp.Status.STANDBY;
         break;
-      case INSTALLING:
+      case DOWNLOADING:
         status = StateApp.Status.ACTIVE;
         break;
       case INSTALLED:
@@ -96,7 +96,7 @@ public class AppMapper {
       case INITIAL_STATE:
         status = StateApp.Status.STANDBY;
         break;
-      case INSTALLING:
+      case DOWNLOADING:
         status = StateApp.Status.UPDATING;
         break;
       case INSTALLED:

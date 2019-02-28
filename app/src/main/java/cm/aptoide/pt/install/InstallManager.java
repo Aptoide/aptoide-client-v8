@@ -131,10 +131,10 @@ public class InstallManager {
   private List<Install> sortList(List<Install> installs) {
     Collections.sort(installs, (install, t1) -> {
       int toReturn;
-      if (install.getState() == Install.InstallationStatus.INSTALLING
+      if (install.getState() == Install.InstallationStatus.DOWNLOADING
           && !install.isIndeterminate()) {
         toReturn = 1;
-      } else if (t1.getState() == Install.InstallationStatus.INSTALLING && !t1.isIndeterminate()) {
+      } else if (t1.getState() == Install.InstallationStatus.DOWNLOADING && !t1.isIndeterminate()) {
         toReturn = -1;
       } else {
         int diff = install.getState()
@@ -155,7 +155,7 @@ public class InstallManager {
 
   public Observable<Install> getCurrentInstallation() {
     return getInstallations().flatMap(installs -> Observable.from(installs)
-        .filter(install -> install.getState() == Install.InstallationStatus.INSTALLING));
+        .filter(install -> install.getState() == Install.InstallationStatus.DOWNLOADING));
   }
 
   public Completable install(Download download) {
@@ -246,13 +246,13 @@ public class InstallManager {
 
     if (installationState.getStatus() == Installed.STATUS_INSTALLING
         && installationState.getType() != Installed.TYPE_DEFAULT) {
-      return Install.InstallationStatus.INSTALLING;
+      return Install.InstallationStatus.DOWNLOADING;
     }
 
     if (installationState.getStatus() == Installed.STATUS_WAITING
         && download != null
         && download.getOverallDownloadStatus() == Download.COMPLETED) {
-      return Install.InstallationStatus.INSTALLING;
+      return Install.InstallationStatus.DOWNLOADING;
     }
 
     if (installationState.getStatus() == Installed.STATUS_ROOT_TIMEOUT) {
@@ -331,7 +331,7 @@ public class InstallManager {
         case Download.BLOCK_COMPLETE:
         case Download.PROGRESS:
         case Download.PENDING:
-          status = Install.InstallationStatus.INSTALLING;
+          status = Install.InstallationStatus.DOWNLOADING;
           break;
         case Download.IN_QUEUE:
           status = Install.InstallationStatus.IN_QUEUE;
