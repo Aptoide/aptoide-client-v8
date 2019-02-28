@@ -103,7 +103,7 @@
       android:layout_marginLeft="16dp"
       android:layout_marginRight="16dp"
       android:layout_marginStart="16dp"
-      android:text="@string/holidayspromotion_button_wallet_open"
+      android:text="@string/holidayspromotion_button_wallet_get"
       style="@style/Aptoide.Button"
       />
 
