@@ -50,6 +50,7 @@ public class InstallService extends BaseService implements DownloadsNotification
   public static final String EXTRA_INSTALLATION_MD5 = "INSTALLATION_MD5";
   public static final String EXTRA_INSTALLER_TYPE = "INSTALLER_TYPE";
   public static final String EXTRA_FORCE_DEFAULT_INSTALL = "EXTRA_FORCE_DEFAULT_INSTALL";
+  public static final String EXTRA_SET_PACKAGE_INSTALLER = "EXTRA_SET_PACKAGE_INSTALLER";
   public static final int INSTALLER_TYPE_DEFAULT = 0;
 
   private static final int NOTIFICATION_ID = 8;

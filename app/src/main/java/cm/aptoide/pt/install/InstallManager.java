@@ -179,7 +179,7 @@ public class InstallManager {
         })
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(install -> installInBackground(install, forceDefaultInstall))
+        .flatMap(install -> installInBackground(install, forceDefaultInstall, download.hasAppc()))
         .first()
         .toCompletable();
   }
@@ -382,16 +382,19 @@ public class InstallManager {
     });
   }
 
-  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall) {
+  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
     return getInstall(install.getMd5(), install.getPackageName(),
         install.getVersionCode()).mergeWith(
-        startBackgroundInstallationAndWait(install, forceDefaultInstall));
+        startBackgroundInstallationAndWait(install, forceDefaultInstall,
+            shouldSetPackageInstaller));
   }
 
   @NonNull private Observable<Install> startBackgroundInstallationAndWait(Install install,
-      boolean forceDefaultInstall) {
+      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
     return waitBackgroundInstallationResult(install.getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(install.getMd5(), forceDefaultInstall))
+        () -> startBackgroundInstallation(install.getMd5(), forceDefaultInstall,
+            shouldSetPackageInstaller))
         .map(aVoid -> install);
   }
 
@@ -404,11 +407,13 @@ public class InstallManager {
         .map(intent -> null);
   }
 
-  private void startBackgroundInstallation(String md5, boolean forceDefaultInstall) {
+  private void startBackgroundInstallation(String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
     intent.putExtra(InstallService.EXTRA_FORCE_DEFAULT_INSTALL, forceDefaultInstall);
+    intent.putExtra(InstallService.EXTRA_SET_PACKAGE_INSTALLER, shouldSetPackageInstaller);
     if (installer instanceof DefaultInstaller) {
       intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_DEFAULT);
     }
