@@ -460,20 +460,23 @@ public class AppViewManager {
     return moPubInterstitialAdExperiment.loadInterstitial()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()));
+            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedApp.isMature()));
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
     return moPubBannerAdExperiment.shouldLoadBanner()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()));
+            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedApp.isMature()));
   }
 
   public Single<Boolean> shouldLoadNativeAds() {
     return moPubNativeAdExperiment.shouldLoadNative()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()));
+            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedApp.isMature()));
   }
 }

@@ -68,6 +68,7 @@ public class GetAppMeta extends BaseV7Response {
     private String graphic;
     private String added;
     private String modified;
+    private Age age;
     private Developer developer;
     private Store store;
     private GetAppMetaFile file;
@@ -79,6 +80,14 @@ public class GetAppMeta extends BaseV7Response {
     private AppCoinsInfo appcoins;
 
     public App() {
+    }
+
+    public Age getAge() {
+      return age;
+    }
+
+    public void setAge(Age age) {
+      this.age = age;
     }
 
     public boolean isPaid() {
@@ -371,6 +380,48 @@ public class GetAppMeta extends BaseV7Response {
           + ", pay="
           + this.getPay()
           + ")";
+    }
+  }
+
+  public static class Age {
+    private String name;
+    private String title;
+    private String pegi;
+    private int rating;
+
+    public Age() {
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String getTitle() {
+      return title;
+    }
+
+    public void setTitle(String title) {
+      this.title = title;
+    }
+
+    public String getPegi() {
+      return pegi;
+    }
+
+    public void setPegi(String pegi) {
+      this.pegi = pegi;
+    }
+
+    public int getRating() {
+      return rating;
+    }
+
+    public void setRating(int rating) {
+      this.rating = rating;
     }
   }
 

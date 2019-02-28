@@ -2,7 +2,6 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -71,7 +70,6 @@ public class AppViewManagerTest {
   @Mock private GenericResponseV2 genericResponseV2;
   @Mock private Download download;
   @Mock private DownloadFactory downloadFactory;
-  @Mock private ABTestManager abTestManager;
   @Mock private AppCoinsManager appCoinsManager;
   @Mock private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
   @Mock private MoPubBannerAdExperiment moPubBannerAdExperiment;
@@ -102,7 +100,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags, false);
 
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
@@ -153,7 +151,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, "md5", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags, false);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "md5", "",
@@ -203,7 +201,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, "any", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "uniqueName", false, false, bdsFlags);
+            appStats, null, null, null, true, true, "uniqueName", false, false, bdsFlags, false);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "",
@@ -253,7 +251,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "", (long) 1, "any", "any", "any", "any", true, null, null,
             null, null, null, (long) 1, "any", null, null, 1, null, null, store, null, appStats,
-            null, null, null, true, true, "uniqueName", false, false, bdsFlags);
+            null, null, null, true, true, "uniqueName", false, false, bdsFlags, false);
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "", "", "", null, null, "", "", 0.0, "", "", "");
@@ -457,7 +455,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "anyString", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags, false);
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
             (long) 1);
@@ -566,7 +564,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "packageName", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, "", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "", false, false, bdsFlags);
+            appStats, null, null, null, true, true, "", false, false, bdsFlags, false);
 
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
 
