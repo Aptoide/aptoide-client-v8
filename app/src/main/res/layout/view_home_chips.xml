@@ -3,13 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="52dp"
+    android:animateLayoutChanges="true"
     android:background="@drawable/background_with_shadow"
     android:gravity="center"
     android:orientation="horizontal"
-    android:animateLayoutChanges="true"
     >
-
-
   <CheckBox
       android:id="@+id/games_chip"
       android:layout_width="152dp"
@@ -29,8 +27,9 @@
       android:gravity="center"
       android:maxLines="2"
       android:minLines="2"
+      android:text="@string/home_chip_games"
       android:paddingRight="10dp"
-      android:text="Games"
+      android:textAllCaps="true"
       android:textColor="#FE6446"
       />
   <CheckBox
@@ -52,7 +51,8 @@
       android:maxLines="2"
       android:minLines="2"
       android:paddingRight="10dp"
-      android:text="Apps"
+      android:text="@string/home_chip_apps"
+      android:textAllCaps="true"
       android:textColor="#FE6446"
       />
 
