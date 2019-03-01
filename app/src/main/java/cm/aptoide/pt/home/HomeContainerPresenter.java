@@ -270,6 +270,8 @@ public class HomeContainerPresenter implements Presenter {
           } else {
             homeContainerNavigator.loadMainHomeContent();
           }
+          homeAnalytics.sendGamesChipInteractEvent();
+          homeAnalytics.sendGamesChipHomeInteractEvent();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -288,6 +290,8 @@ public class HomeContainerPresenter implements Presenter {
           } else {
             homeContainerNavigator.loadMainHomeContent();
           }
+          homeAnalytics.sendAppsChipInteractEvent();
+          homeAnalytics.sendAppsChipHomeInteractEvent();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
