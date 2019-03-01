@@ -13,10 +13,10 @@ import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.app.view.EditorialFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
+import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeFragment;
@@ -42,6 +42,7 @@ import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
+import cm.aptoide.pt.view.wizard.WizardPageTwoFragment;
 import dagger.Subcomponent;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class, FlavourFragmentModule.class })
@@ -126,6 +127,8 @@ public interface FragmentComponent {
   void inject(ThankYouConnectingFragment thankYouConnectingFragment);
 
   void inject(WizardFragmentProvider wizardFragmentProvider);
+
+  void inject(WizardPageTwoFragment wizardPageTwoFragment);
 
   void inject(EditorialListFragment editorialListFragment);
 }

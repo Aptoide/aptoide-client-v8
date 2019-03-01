@@ -10,11 +10,12 @@ public class EditorialListManager {
     this.editorialListRepository = editorialListRepository;
   }
 
-  Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore) {
+  Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore,
+      boolean invalidateCache) {
     if (loadMore) {
       return loadMoreCurationCards();
     } else {
-      return editorialListRepository.loadEditorialListViewModel();
+      return editorialListRepository.loadEditorialListViewModel(invalidateCache);
     }
   }
 
