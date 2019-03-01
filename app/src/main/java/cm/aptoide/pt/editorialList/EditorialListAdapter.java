@@ -14,8 +14,8 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolde
   private static final int LOADING = R.layout.progress_item;
   private static final int EDITORIAL_CARD = R.layout.editorial_action_item;
   private final ProgressCard progressBundle;
-  private final List<CurationCard> editorialListItems;
   private final PublishSubject<HomeEvent> uiEventsListener;
+  private List<CurationCard> editorialListItems;
 
   public EditorialListAdapter(List<CurationCard> editorialListItems, ProgressCard progressBundle,
       PublishSubject<HomeEvent> uiEventsListener) {
@@ -81,5 +81,10 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolde
       }
     }
     return -1;
+  }
+
+  public void update(List<CurationCard> curationCards) {
+    this.editorialListItems = curationCards;
+    notifyDataSetChanged();
   }
 }
