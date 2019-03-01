@@ -37,6 +37,7 @@ public class EditorialListPresenter implements Presenter {
   @Override public void present() {
     onCreateLoadViewModel();
     handleEditorialCardClick();
+    handlePullToRefresh();
     handleRetryClick();
     handleBottomReached();
     handleUserImageClick();
@@ -90,13 +91,26 @@ public class EditorialListPresenter implements Presenter {
         });
   }
 
+  @VisibleForTesting public void handlePullToRefresh() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.refreshes()
+            .flatMapSingle(refreshed -> loadFreshEditorialListViewModel())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(bundles -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
   @VisibleForTesting public void handleRetryClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadEditorialListViewModel(false)))
+            .flatMapSingle(__ -> loadEditorialListViewModel(true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
@@ -119,7 +133,7 @@ public class EditorialListPresenter implements Presenter {
   }
 
   private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore) {
-    return editorialListManager.loadEditorialListViewModel(loadMore)
+    return editorialListManager.loadEditorialListViewModel(loadMore, false)
         .observeOn(viewScheduler)
         .doOnSuccess(editorialListViewModel -> {
           if (!editorialListViewModel.isLoading()) {
@@ -133,6 +147,28 @@ public class EditorialListPresenter implements Presenter {
             }
           } else {
             view.populateView(editorialListViewModel);
+          }
+          view.hideLoadMore();
+        })
+        .map(editorialViewModel -> editorialViewModel);
+  }
+
+  private Single<EditorialListViewModel> loadFreshEditorialListViewModel() {
+    return editorialListManager.loadEditorialListViewModel(false, true)
+        .observeOn(viewScheduler)
+        .doOnSuccess(editorialListViewModel -> {
+          view.hideRefresh();
+          if (!editorialListViewModel.isLoading()) {
+            view.hideLoading();
+          }
+          if (editorialListViewModel.hasError()) {
+            if (editorialListViewModel.getError() == EditorialListViewModel.Error.NETWORK) {
+              view.showNetworkError();
+            } else {
+              view.showGenericError();
+            }
+          } else {
+            view.update(editorialListViewModel.getCurationCards());
           }
           view.hideLoadMore();
         })
