@@ -244,7 +244,7 @@ import rx.functions.Func2;
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onViewItemClicked())
         .observeOn(ioScheduler)
-        .flatMap(data -> searchManager.recordAction()
+        .flatMap(data -> searchManager.recordAction(data.getPosition())
             .doOnNext(__ -> openAppView(data)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

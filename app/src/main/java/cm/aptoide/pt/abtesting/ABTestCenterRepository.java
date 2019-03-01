@@ -67,6 +67,10 @@ public class ABTestCenterRepository implements AbTestRepository {
     return Observable.just(false);
   }
 
+  @Override public Observable<Boolean> recordAction(String identifier, int position) {
+    return recordAction(identifier);
+  }
+
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
     localCache.put(experimentName, experiment);
     persistence.save(experimentName, experiment.getExperiment());

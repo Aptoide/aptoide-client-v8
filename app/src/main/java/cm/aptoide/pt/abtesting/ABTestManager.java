@@ -26,6 +26,10 @@ public class ABTestManager {
     return abTestRepository.recordAction(identifier);
   }
 
+  public Observable<Boolean> recordAction(String identifier, int position) {
+    return abTestRepository.recordAction(identifier, position);
+  }
+
   public Observable<String> getExperimentId(String id) {
     return abTestRepository.getExperimentId(id);
   }

@@ -129,8 +129,8 @@ import rx.Single;
     return searchExperiment.recordImpression();
   }
 
-  public Observable<Boolean> recordAction() {
-    return searchExperiment.recordAction();
+  public Observable<Boolean> recordAction(int position) {
+    return searchExperiment.recordAction(position);
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {

@@ -27,8 +27,8 @@ public class SearchExperiment {
     return abTestManager.recordImpression(EXPERIMENT_ID);
   }
 
-  public Observable<Boolean> recordAction() {
-    return abTestManager.recordAction(EXPERIMENT_ID);
+  public Observable<Boolean> recordAction(int position) {
+    return abTestManager.recordAction(EXPERIMENT_ID, position);
   }
 
   public static class SearchExperimentResult {
