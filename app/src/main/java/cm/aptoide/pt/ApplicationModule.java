@@ -1321,7 +1321,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(
       AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient) {
-    return new FirstLaunchAnalytics(analyticsManager, logger, safetyNetClient);
+    return new FirstLaunchAnalytics(analyticsManager, logger, safetyNetClient,
+        application.getPackageName());
   }
 
   @Singleton @Provides SafetyNetClient providesSafetyNetClient() {

@@ -64,19 +64,20 @@ public class FirstLaunchAnalytics {
 
   private final AnalyticsManager analyticsManager;
   private final AnalyticsLogger logger;
+  private final String packageName;
   private String utmSource = UNKNOWN;
   private String utmMedium = UNKNOWN;
   private String utmCampaign = UNKNOWN;
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
-
   private SafetyNetClient safetyNetClient;
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
-      SafetyNetClient safetyNetClient) {
+      SafetyNetClient safetyNetClient, String packageName) {
     this.analyticsManager = analyticsManager;
     this.logger = logger;
     this.safetyNetClient = safetyNetClient;
+    this.packageName = packageName;
   }
 
   public void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
@@ -112,8 +113,7 @@ public class FirstLaunchAnalytics {
 
   private String getCategoryFlaggedByPlayProtect(List<HarmfulAppsData> list) {
     for (HarmfulAppsData app : list) {
-      if (app.apkPackageName.equals(safetyNetClient.getApplicationContext()
-          .getPackageName())) {
+      if (app.apkPackageName.equals(packageName)) {
         return getPlayProtectCategoryName(app.apkCategory);
       }
     }
