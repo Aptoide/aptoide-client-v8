@@ -18,11 +18,13 @@ import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class HomeContainerFragment extends NavigationTrackFragment implements HomeContainerView {
 
+  public static final String UP_SCROLL = "up";
+  public static final String DOWN_SCROLL = "down";
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
-
   @Inject HomeContainerPresenter presenter;
   private BottomNavigationActivity bottomNavigationActivity;
   private CheckBox gamesChip;
@@ -32,6 +34,8 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   private TextView promotionsTicker;
   private PromotionsHomeDialog promotionsHomeDialog;
   private LoggedInTermsAndConditionsDialog gdprDialog;
+
+  private PublishSubject<String> chipCheckedEvent;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -47,6 +51,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    chipCheckedEvent = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -56,19 +61,11 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     promotionsTicker = view.findViewById(R.id.promotions_ticker);
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
     gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
-
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
     gamesChip = view.findViewById(R.id.games_chip);
     appsChip = view.findViewById(R.id.apps_chip);
-
-    gamesChip.setOnClickListener(click -> {
-      if (appsChip.isChecked()) appsChip.setChecked(false);
-    });
-    appsChip.setOnClickListener(click -> {
-      if (gamesChip.isChecked()) gamesChip.setChecked(false);
-    });
 
     gamesChip.setOnCheckedChangeListener((__, isChecked) -> {
       if (isChecked) {
@@ -86,6 +83,15 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
       }
     });
     attachPresenter(presenter);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    String checked = "";
+    if (gamesChip.isChecked()) {
+      checked = "games";
+    } else if (appsChip.isChecked()) checked = "apps";
+    chipCheckedEvent.onNext(checked);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -193,6 +199,21 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
 
   @Override public Observable<Boolean> gamesChipClicked() {
     return RxView.clicks(gamesChip)
-        .map(__ -> gamesChip.isChecked());
+        .map(__ -> gamesChip.isChecked())
+        .doOnNext(__ -> {
+          if (appsChip.isChecked()) appsChip.setChecked(false);
+        });
+  }
+
+  @Override public Observable<Boolean> appsChipClicked() {
+    return RxView.clicks(appsChip)
+        .map(__ -> appsChip.isChecked())
+        .doOnNext(__ -> {
+          if (gamesChip.isChecked()) gamesChip.setChecked(false);
+        });
+  }
+
+  @Override public Observable<String> isChipChecked() {
+    return chipCheckedEvent;
   }
 }

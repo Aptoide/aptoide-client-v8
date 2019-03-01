@@ -34,4 +34,8 @@ public interface HomeContainerView extends View {
   Observable<String> gdprDialogClicked();
 
   Observable<Boolean> gamesChipClicked();
+
+  Observable<Boolean> appsChipClicked();
+
+  Observable<String> isChipChecked();
 }

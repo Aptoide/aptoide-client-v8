@@ -77,6 +77,7 @@ import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
+import cm.aptoide.pt.home.HomeContainerNavigator;
 import cm.aptoide.pt.home.HomeContainerPresenter;
 import cm.aptoide.pt.home.HomeContainerView;
 import cm.aptoide.pt.home.HomeNavigator;
@@ -230,13 +231,13 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
-      @Named("main-home-navigator") HomeNavigator homeNavigator, AdMapper adMapper,
-      AptoideAccountManager aptoideAccountManager, HomeAnalytics homeAnalytics) {
+      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
+      HomeAnalytics homeAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
         CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
   }
 
-  @FragmentScope @Provides @Named("main-home-navigator") HomeNavigator providesMainHomeNavigator(
+  @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
       @Named("aptoide-theme") String theme) {
@@ -244,13 +245,9 @@ import rx.subscriptions.CompositeSubscription;
         bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
   }
 
-  @FragmentScope @Provides @Named("container-home-navigator")
-  HomeNavigator providesHomeContainerHomeNavigator(
-      @Named("home-fragment-navigator") FragmentNavigator fragmentNavigator,
-      BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
-    return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
+  @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
+      @Named("home-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new HomeContainerNavigator(fragmentNavigator);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
@@ -355,9 +352,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(
-      MoreBundleManager moreBundleManager, CrashReport crashReport,
-      @Named("main-home-navigator") HomeNavigator homeNavigator, AdMapper adMapper,
-      BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
+      MoreBundleManager moreBundleManager, CrashReport crashReport, HomeNavigator homeNavigator,
+      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
     return new MoreBundlePresenter((MoreBundleView) fragment, moreBundleManager,
         AndroidSchedulers.mainThread(), crashReport, homeNavigator, adMapper, bundleEvent,
         homeAnalytics);
@@ -445,9 +441,9 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
       CrashReport crashReport, AptoideAccountManager accountManager,
-      @Named("container-home-navigator") HomeNavigator homeNavigator, HomeAnalytics homeAnalytics,
-      Home home) {
+      HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
+      HomeAnalytics homeAnalytics, Home home) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        crashReport, accountManager, homeNavigator, homeAnalytics, home);
+        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
   }
 }

@@ -1,10 +1,12 @@
 package cm.aptoide.pt.home;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.link.CustomTabsHelper;
@@ -124,6 +126,12 @@ public class HomeNavigator {
   }
 
   public void loadGamesHomeContent() {
-    fragmentNavigator.navigateToWithoutBackSave(new MyAccountFragment(), true);
+    Fragment fragment = new MoreBundleFragment();
+    Bundle args = new Bundle();
+    args.putString(StoreTabGridRecyclerFragment.BundleCons.TITLE, "Top Games");
+    args.putString(StoreTabGridRecyclerFragment.BundleCons.ACTION,
+        "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=home/widget=apps_list%3A0%262%3Adownloads7d");
+    fragment.setArguments(args);
+    fragmentNavigator.navigateToWithoutBackSave(fragment, true);
   }
 }

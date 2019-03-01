@@ -26,6 +26,7 @@ public class HomeContainerPresenterTest {
   @Mock private AptoideAccountManager aptoideAccountManager;
   @Mock private Account account;
   @Mock private HomeAnalytics homeAnalytics;
+  @Mock private HomeContainerNavigator homeContainerNavigator;
 
   private HomeContainerPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -35,7 +36,7 @@ public class HomeContainerPresenterTest {
     lifecycleEvent = PublishSubject.create();
 
     presenter = new HomeContainerPresenter(view, Schedulers.immediate(), crashReporter,
-        aptoideAccountManager, homeNavigator, homeAnalytics, home);
+        aptoideAccountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.toolbarUserClick()).thenReturn(Observable.just(null));
     when(aptoideAccountManager.accountStatus()).thenReturn(Observable.just(account));
@@ -170,31 +171,60 @@ public class HomeContainerPresenterTest {
     verify(homeNavigator).navigateToPrivacyPolicy();
   }
 
-  @Test public void loadHomeMainContent() {
+  @Test public void gamesChipChecked_loadHomeMainContentTest() {
+    when(view.isChipChecked()).thenReturn(Observable.just("games"));
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    verify(homeNavigator).loadMainHomeContent();
+    verify(homeContainerNavigator).loadGamesHomeContent();
+  }
+
+  @Test public void noChipsChecked_loadHomeMainContentTest() {
+    when(view.isChipChecked()).thenReturn(Observable.just(""));
+    presenter.loadMainHomeContent();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeContainerNavigator).loadMainHomeContent();
+  }
+
+  @Test public void appsChipChecked_loadHomeMainContentTest() {
+    when(view.isChipChecked()).thenReturn(Observable.just("apps"));
+    presenter.loadMainHomeContent();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeContainerNavigator).loadAppsHomeContent();
   }
 
   @Test public void gamesChipIsChecked_handleClickOnGamesChipTest() {
-    when(view.gamesChipClicked()).thenReturn(Observable.just(true));
-    presenter.handleClickOnGamesChip();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    verify(homeNavigator).loadMainHomeContent();
-  }
-
-  @Test public void gamesChipIsNotChecked_handleClickOnGamesChipTest() {
     when(view.gamesChipClicked()).thenReturn(Observable.just(false));
     presenter.handleClickOnGamesChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    verify(homeNavigator).loadGamesHomeContent();
+    verify(homeContainerNavigator).loadMainHomeContent();
+  }
+
+  @Test public void gamesChipIsNotChecked_handleClickOnGamesChipTest() {
+    when(view.gamesChipClicked()).thenReturn(Observable.just(true));
+    presenter.handleClickOnGamesChip();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeContainerNavigator).loadGamesHomeContent();
   }
 
   @Test public void appsChipIsChecked_handleClickOnAppsChipTest() {
+    when(view.appsChipClicked()).thenReturn(Observable.just(false));
+    presenter.handleClickOnAppsChip();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    verify(homeContainerNavigator).loadMainHomeContent();
+  }
+
+  @Test public void appsChipIsNotChecked_handleClickOnAppsChipTest() {
+    when(view.appsChipClicked()).thenReturn(Observable.just(true));
+    presenter.handleClickOnAppsChip();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeContainerNavigator).loadAppsHomeContent();
   }
 }
 

@@ -16,17 +16,20 @@ public class HomeContainerPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
   private final AptoideAccountManager accountManager;
+  private final HomeContainerNavigator homeContainerNavigator;
   private final HomeNavigator homeNavigator;
   private final HomeAnalytics homeAnalytics;
   private final Home home;
 
   public HomeContainerPresenter(HomeContainerView view, Scheduler viewScheduler,
-      CrashReport crashReport, AptoideAccountManager accountManager, HomeNavigator homeNavigator,
+      CrashReport crashReport, AptoideAccountManager accountManager,
+      HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
       HomeAnalytics homeAnalytics, Home home) {
     this.view = view;
     this.viewScheduler = viewScheduler;
     this.crashReport = crashReport;
     this.accountManager = accountManager;
+    this.homeContainerNavigator = homeContainerNavigator;
     this.homeNavigator = homeNavigator;
     this.homeAnalytics = homeAnalytics;
     this.home = home;
@@ -52,7 +55,20 @@ public class HomeContainerPresenter implements Presenter {
   @VisibleForTesting public void loadMainHomeContent() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> homeNavigator.loadMainHomeContent())
+        .flatMap(__ -> view.isChipChecked())
+        .doOnNext(checked -> {
+          switch (checked) {
+            case "games":
+              homeContainerNavigator.loadGamesHomeContent();
+              break;
+            case "apps":
+              homeContainerNavigator.loadAppsHomeContent();
+              break;
+            default:
+              homeContainerNavigator.loadMainHomeContent();
+              break;
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
@@ -250,9 +266,9 @@ public class HomeContainerPresenter implements Presenter {
         .flatMap(__ -> view.gamesChipClicked())
         .doOnNext(isChecked -> {
           if (isChecked) {
-            homeNavigator.loadGamesHomeContent();
+            homeContainerNavigator.loadGamesHomeContent();
           } else {
-            homeNavigator.loadMainHomeContent();
+            homeContainerNavigator.loadMainHomeContent();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -265,7 +281,14 @@ public class HomeContainerPresenter implements Presenter {
   @VisibleForTesting public void handleClickOnAppsChip() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        //IMPLEMENT
+        .flatMap(__ -> view.appsChipClicked())
+        .doOnNext(isChecked -> {
+          if (isChecked) {
+            homeContainerNavigator.loadAppsHomeContent();
+          } else {
+            homeContainerNavigator.loadMainHomeContent();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
