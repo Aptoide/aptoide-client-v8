@@ -109,7 +109,9 @@ public class HomePresenter implements Presenter {
         .filter(event -> event.getBundle() instanceof ActionBundle)
         .map(event -> ((ActionItemHomeEvent) event))
         .flatMapCompletable(actionItemHomeEvent -> home.removeWalletOfferCard(
-            ((ActionBundle) actionItemHomeEvent.getBundle()), actionItemHomeEvent.getCardId()))
+            ((ActionBundle) actionItemHomeEvent.getBundle()), actionItemHomeEvent.getCardId())
+            .observeOn(viewScheduler)
+            .doOnCompleted(() -> view.hideBundle(actionItemHomeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
