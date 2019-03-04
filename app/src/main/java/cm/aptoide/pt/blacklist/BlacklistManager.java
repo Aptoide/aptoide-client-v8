@@ -19,8 +19,7 @@ public class BlacklistManager {
   }
 
   public void blacklist(BlacklistUnit blacklistUnit) {
-    blacklistPersistence.blacklist(blacklistUnit.getId(),
-        blacklistUnit.getMaxPossibleImpressions());
+    blacklistPersistence.blacklist(blacklistUnit.getId());
   }
 
   public enum BlacklistUnit {

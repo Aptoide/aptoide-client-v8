@@ -11,11 +11,11 @@ public class BlacklistPersistence {
   }
 
   public boolean isBlacklisted(String id, int maxPossibleImpressions) {
-    return sharedPreferences.getInt(id, 0) == maxPossibleImpressions;
+    return sharedPreferences.getInt(id, maxPossibleImpressions) == 0;
   }
 
-  public void addImpression(String id, int maxImpressions) {
-    int actualImpressions = sharedPreferences.getInt(id, maxImpressions);
+  public void addImpression(String id, int maxPossibleImpressions) {
+    int actualImpressions = sharedPreferences.getInt(id, maxPossibleImpressions);
     if (actualImpressions >= 0) {
       actualImpressions--;
       sharedPreferences.edit()
@@ -24,9 +24,9 @@ public class BlacklistPersistence {
     }
   }
 
-  public void blacklist(String id, int maxPossibleImpressions) {
+  public void blacklist(String id) {
     sharedPreferences.edit()
-        .putInt(id, maxPossibleImpressions)
+        .putInt(id, 0)
         .apply();
   }
 }
