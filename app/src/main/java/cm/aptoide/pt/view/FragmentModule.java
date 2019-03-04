@@ -54,7 +54,7 @@ import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.blacklist.BlacklistPersistence;
-import cm.aptoide.pt.blacklist.BundleToBlacklistUnitMapper;
+import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -233,10 +233,9 @@ import rx.subscriptions.CompositeSubscription;
       ImpressionManager impressionManager, PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
-      BundleToBlacklistUnitMapper bundleToBlacklistUnitMapper) {
+      BlacklistUnitMapper blacklistUnitMapper) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
-        moPubAdsManager, promotionsPreferencesManager, blacklistManager,
-        bundleToBlacklistUnitMapper);
+        moPubAdsManager, promotionsPreferencesManager, blacklistManager, blacklistUnitMapper);
   }
 
   @FragmentScope @Provides BlacklistManager providesBlacklistManager(
@@ -249,8 +248,8 @@ import rx.subscriptions.CompositeSubscription;
     return new BlacklistPersistence(sharedPreferences);
   }
 
-  @FragmentScope @Provides BundleToBlacklistUnitMapper providesBundleToBlacklistUnitMapper() {
-    return new BundleToBlacklistUnitMapper();
+  @FragmentScope @Provides BlacklistUnitMapper providesBundleToBlacklistUnitMapper() {
+    return new BlacklistUnitMapper();
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
