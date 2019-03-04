@@ -19,6 +19,8 @@
       android:layout_gravity="center"
       android:gravity="center"
       android:minHeight="112dp"
+      app:contentInsetRight="0dp"
+      app:contentInsetStart="0dp"
       app:layout_collapseMode="pin"
       app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
       >
@@ -36,29 +38,32 @@
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
           android:layout_gravity="center"
+          android:layout_marginLeft="14dp"
+          android:layout_marginStart="14dp"
           android:src="@drawable/ic_promotions_home"
-          android:visibility="gone"
+          android:visibility="visible"
           />
 
       <TextView
           android:id="@+id/promotions_ticker"
           android:layout_width="wrap_content"
           android:layout_height="16dp"
-          android:layout_marginLeft="26dp"
-          android:layout_marginStart="26dp"
-          android:layout_marginTop="12dp"
+          android:layout_marginLeft="36dp"
+          android:layout_marginStart="36dp"
+          android:layout_marginTop="9dp"
           android:background="@drawable/promotions_ticker_badge"
           android:gravity="center"
           android:textColor="@color/white"
           android:textStyle="bold"
           android:visibility="gone"
           tools:text="9+"
+          tools:visibility="visible"
           style="@style/Aptoide.TextView.Medium.XXS"
           />
 
       <include
           layout="@layout/action_bar_logo"
-          android:layout_width="232dp"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
