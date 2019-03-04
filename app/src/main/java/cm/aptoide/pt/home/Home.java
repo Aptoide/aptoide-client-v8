@@ -1,6 +1,8 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.blacklist.BundleToBlacklistUnitMapper;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -21,16 +23,21 @@ public class Home {
   private final BannerRepository bannerRepository;
   private final MoPubAdsManager moPubAdsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
+  private BlacklistManager blacklistManager;
+  private BundleToBlacklistUnitMapper bundleToBlacklistUnitMapper;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, BannerRepository bannerRepository,
-      MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager) {
+      MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager,
+      BlacklistManager blacklistManager, BundleToBlacklistUnitMapper bundleToBlacklistUnitMapper) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
+    this.blacklistManager = blacklistManager;
+    this.bundleToBlacklistUnitMapper = bundleToBlacklistUnitMapper;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -93,6 +100,16 @@ public class Home {
         .andThen(bundlesRepository.remove(bundle));
   }
 
+  public Completable removeWalletOfferCard(ActionBundle bundle, String cardId) {
+    return Completable.fromAction(
+        () -> blacklistManager.blacklist(mapBundleToBlacklistUnit(bundle, cardId)));
+  }
+
+  private BlacklistManager.BlacklistUnit mapBundleToBlacklistUnit(ActionBundle bundle,
+      String cardId) {
+    return bundleToBlacklistUnitMapper.mapBundleToBlacklistUnit(bundle, cardId);
+  }
+
   public Completable actionBundleImpression(ActionBundle bundle) {
     return impressionManager.markAsRead(bundle.getActionItem()
         .getCardId(), false);
@@ -129,5 +146,9 @@ public class Home {
 
   public Single<Boolean> shouldLoadNativeAd() {
     return moPubAdsManager.shouldLoadNativeAds();
+  }
+
+  public void blacklistWalletOfferCard() {
+    blacklistManager.blacklist(BlacklistManager.BlacklistUnit.WALLET_ADS_OFFER);
   }
 }

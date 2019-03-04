@@ -2,7 +2,7 @@ package cm.aptoide.pt.blacklist;
 
 import android.content.SharedPreferences;
 
-class BlacklistPersistence {
+public class BlacklistPersistence {
 
   private SharedPreferences sharedPreferences;
 

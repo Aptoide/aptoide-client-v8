@@ -411,6 +411,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     startActivity(intent);
   }
 
+  @Override public Observable<HomeEvent> walletOfferCardDismissClick() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.DISMISS_WALLET_OFFER));
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;

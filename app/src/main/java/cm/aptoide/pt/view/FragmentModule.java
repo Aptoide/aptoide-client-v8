@@ -52,6 +52,9 @@ import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
+import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.blacklist.BlacklistPersistence;
+import cm.aptoide.pt.blacklist.BundleToBlacklistUnitMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -87,11 +90,11 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogPresenter;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogView;
 import cm.aptoide.pt.promotions.ClaimPromotionsManager;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
-import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -229,9 +232,25 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
       ImpressionManager impressionManager, PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
-      MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
+      BundleToBlacklistUnitMapper bundleToBlacklistUnitMapper) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
-        moPubAdsManager, promotionsPreferencesManager);
+        moPubAdsManager, promotionsPreferencesManager, blacklistManager,
+        bundleToBlacklistUnitMapper);
+  }
+
+  @FragmentScope @Provides BlacklistManager providesBlacklistManager(
+      BlacklistPersistence blacklistPersistence) {
+    return new BlacklistManager(blacklistPersistence);
+  }
+
+  @FragmentScope @Provides BlacklistPersistence providesBlacklistPersistence(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new BlacklistPersistence(sharedPreferences);
+  }
+
+  @FragmentScope @Provides BundleToBlacklistUnitMapper providesBundleToBlacklistUnitMapper() {
+    return new BundleToBlacklistUnitMapper();
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
