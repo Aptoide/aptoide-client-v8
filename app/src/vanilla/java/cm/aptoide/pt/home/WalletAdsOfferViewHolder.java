@@ -40,6 +40,7 @@ class WalletAdsOfferViewHolder extends AppBundleViewHolder {
     installWalletButton.setOnClickListener(view -> uiEventsListener.onNext(
         new HomeEvent(homeBundle, position, HomeEvent.Type.INSTALL_WALLET)));
     dismissButton.setOnClickListener(itemView -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, position, HomeEvent.Type.DISMISS_BUNDLE)));
+        new ActionItemHomeEvent(homeBundle, position, HomeEvent.Type.DISMISS_WALLET_OFFER,
+            actionItem.getCardId())));
   }
 }
