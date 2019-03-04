@@ -18,7 +18,7 @@ public class SearchExperiment {
               if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
                 return new SearchExperimentResult(experimentId, experiment.getAssignment());
               } else {
-                return new SearchExperimentResult("no_experiment", "control_group");
+                return new SearchExperimentResult("no_experiment", "control");
               }
             }));
   }

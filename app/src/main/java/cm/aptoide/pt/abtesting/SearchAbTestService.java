@@ -12,7 +12,8 @@ public class SearchAbTestService {
   }
 
   public Observable<AbSearchGroupResponse> getExperimentForSearchAbTest() {
-    return service.getAbTestForSearch();
+    return service.getAbTestForSearch()
+        .onErrorReturn(__ -> new AbSearchGroupResponse());
   }
 
   public interface Service {

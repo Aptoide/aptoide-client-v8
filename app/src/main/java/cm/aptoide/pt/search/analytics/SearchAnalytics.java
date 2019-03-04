@@ -15,6 +15,8 @@ public class SearchAnalytics {
   public static final String NO_RESULTS = "Search_No_Results";
   public static final String APP_CLICK = "Search_Results_App_View_Click";
   public static final String SEARCH_START = "Search_Start";
+  public static final String AB_SEARCH_ACTION = "AB_Searction_Action";
+  public static final String AB_SEARCH_IMPRESSION = "AB_Search_Impression";
   private static final String FROM_TRENDING = "trending";
   private static final String FROM_AUTOCOMPLETE = "autocomplete";
   private static final String MANUAL = "manual";
@@ -86,6 +88,28 @@ public class SearchAnalytics {
     return navigationTracker.getViewName(isCurrent);
   }
 
+  public void recordAbTestActionAnalytics(String experimentId, String experimentGroup, String query,
+      int position, String packageName) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(AttributeKey.AB_TEST_ID, experimentId);
+    map.put(AttributeKey.AB_TEST_GROUP, experimentGroup);
+    map.put(AttributeKey.QUERY, query);
+    map.put(AttributeKey.POSITION, position);
+    map.put(AttributeKey.PACKAGE_NAME, packageName);
+    analyticsManager.logEvent(map, AB_SEARCH_ACTION, AnalyticsManager.Action.CLICK,
+        getViewName(true));
+  }
+
+  public void recordAbTestImpressionAnalytics(String experimentId, String experimentGroup,
+      String query) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(AttributeKey.AB_TEST_ID, experimentId);
+    map.put(AttributeKey.AB_TEST_GROUP, experimentGroup);
+    map.put(AttributeKey.QUERY, query);
+    analyticsManager.logEvent(map, AB_SEARCH_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
+        getViewName(true));
+  }
+
   private static final class AttributeKey {
     private static final String QUERY = "search_term";
     private static final String SOURCE = "source";
@@ -95,5 +119,7 @@ public class SearchAnalytics {
     private static final String IS_AD = "is_ad";
     private static final String POSITION = "position";
     private static final String KEYWORD_INPUT = "inserted_keyword";
+    private static final String AB_TEST_ID = "ab_test_uid";
+    private static final String AB_TEST_GROUP = "ab_test_group";
   }
 }

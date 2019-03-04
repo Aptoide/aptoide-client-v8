@@ -300,13 +300,13 @@ public class SearchResultFragment extends BackButtonFragment
     progressBar.setVisibility(View.GONE);
   }
 
-  @Override public void addFollowedStoresResult(List<SearchAppResult> dataList) {
-    followedStoresResultAdapter.addResultForSearch(dataList);
+  @Override public void addFollowedStoresResult(String query, List<SearchAppResult> dataList) {
+    followedStoresResultAdapter.addResultForSearch(query, dataList);
     viewModel.addFollowedStoresSearchAppResults(dataList);
   }
 
-  @Override public void addAllStoresResult(List<SearchAppResult> dataList) {
-    allStoresResultAdapter.addResultForSearch(dataList);
+  @Override public void addAllStoresResult(String query, List<SearchAppResult> dataList) {
+    allStoresResultAdapter.addResultForSearch(query, dataList);
     viewModel.addAllStoresSearchAppResults(dataList);
   }
 

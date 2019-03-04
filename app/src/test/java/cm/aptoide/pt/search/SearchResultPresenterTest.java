@@ -76,7 +76,7 @@ public class SearchResultPresenterTest {
     lifecycleEvent = PublishSubject.create();
 
     searchAdResultWrapper = new SearchAdResultWrapper(searchAdResult, 1);
-    searchAppResultWrapper = new SearchAppResultWrapper(searchAppResult, 1);
+    searchAppResultWrapper = new SearchAppResultWrapper("", searchAppResult, 1);
 
     presenter =
         new SearchResultPresenter(searchResultView, searchAnalytics, searchNavigator, crashReport,
@@ -207,8 +207,8 @@ public class SearchResultPresenterTest {
     verify(searchResultView).hideSuggestionsViews();
     verify(searchResultView).showLoading();
 
-    verify(searchResultView).addFollowedStoresResult(searchAppResultList);
-    verify(searchResultView).addAllStoresResult(searchAppResultList);
+    verify(searchResultView).addFollowedStoresResult("non-empty", searchAppResultList);
+    verify(searchResultView).addAllStoresResult("non-empty", searchAppResultList);
     verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfFollowedStores(anyInt());
     verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfAllStores(anyInt());
     verify(searchResultView, times(0)).hideFollowedStoresTab();
@@ -312,7 +312,7 @@ public class SearchResultPresenterTest {
     //When the user clicks on an item from the search result list
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
     when(searchResultView.onViewItemClicked()).thenReturn(Observable.just(searchAppResultWrapper));
-    when(searchManager.recordAction()).thenReturn(Observable.just(true));
+    when(searchManager.recordAbTestAction(1)).thenReturn(Observable.just(true));
     when(searchAppResult.getPackageName()).thenReturn("random");
     when(searchAppResult.getAppId()).thenReturn((long) 0);
     when(searchAppResult.getStoreName()).thenReturn("random");
@@ -321,7 +321,7 @@ public class SearchResultPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should send the necessary analytics and navigate to the app's App view
-    //verify(searchManager).recordAction();
+    //verify(searchManager).recordAbTestAction();
     verify(searchAnalytics).searchAppClick("non-empty", "random", 1);
     verify(searchNavigator).goToAppView(anyLong(), eq("random"), anyString(), eq("random"));
   }
@@ -375,7 +375,7 @@ public class SearchResultPresenterTest {
 
     //Then it should display the loading more animation and load more
     verify(searchResultView).showLoadingMore();
-    verify(searchResultView).addAllStoresResult(searchAppResultList);
+    verify(searchResultView).addAllStoresResult(null, searchAppResultList);
     verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfAllStores(anyInt());
     verify(searchResultView).hideLoadingMore();
     verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfFollowedStores(anyInt());
@@ -400,7 +400,7 @@ public class SearchResultPresenterTest {
 
     //Then it should display the loading more animation and load more
     verify(searchResultView).showLoadingMore();
-    verify(searchResultView).addFollowedStoresResult(searchAppResultList);
+    verify(searchResultView).addFollowedStoresResult("non-empty", searchAppResultList);
     verify(searchResultModel, times(2)).incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
         anyInt());
     verify(searchResultView).hideLoadingMore();
