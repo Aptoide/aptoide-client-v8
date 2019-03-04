@@ -113,6 +113,7 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
+          crashReporter.log(throwable);
           throw new OnErrorNotImplementedException(throwable);
         });
   }

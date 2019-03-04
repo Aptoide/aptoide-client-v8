@@ -7,7 +7,8 @@ public class BlacklistUnitMapper {
     if (blacklistKey.equals("WALLET_ADS_OFFER_51")) {
       return BlacklistManager.BlacklistUnit.WALLET_ADS_OFFER;
     } else {
-      return null;
+      throw new IllegalArgumentException(
+          "Wrong blacklist key. Please, make sure you are passing the correct type and id.");
     }
   }
 }
