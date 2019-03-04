@@ -614,6 +614,10 @@
   <string name="holidayspromotion_button_popup">Check it out!</string>
   <string name="promotion_notification_title">Get %s APPC Credits now!</string>
   <string name="promotion_notification_body">Don\'t forget to claim your %s APPC Credits.</string>
+  <string name="promotion_update_popup_title">Update Aptoide</string>
+  <string name="promotion_update_popup_message">You need to Aptoide to see this promotion.</string>
+  <string name="promotion_over_title">This promotion is over!</string>
+  <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
   
   
 
