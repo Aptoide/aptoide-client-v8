@@ -101,13 +101,9 @@ public class Home {
   }
 
   public Completable removeWalletOfferCard(ActionBundle bundle, String cardId) {
-    return Completable.fromAction(() -> blacklistManager.blacklist(mapBundleToBlacklistUnit(
-        bundle.getType()
-            .toString() + cardId)));
-  }
-
-  private BlacklistManager.BlacklistUnit mapBundleToBlacklistUnit(String id) {
-    return blacklistUnitMapper.mapToBlacklistUnit(id);
+    return Completable.fromAction(() -> blacklistManager.blacklist(
+        blacklistUnitMapper.mapToBlacklistUnit(bundle.getType()
+            .toString() + "_" + cardId)));
   }
 
   public Completable actionBundleImpression(ActionBundle bundle) {
