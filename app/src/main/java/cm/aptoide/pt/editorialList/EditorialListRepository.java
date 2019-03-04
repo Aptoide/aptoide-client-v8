@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorialList;
 
+import java.util.List;
 import rx.Single;
 
 public class EditorialListRepository {
@@ -15,14 +16,15 @@ public class EditorialListRepository {
     if (cachedEditorialListViewModel != null && !invalidateCache) {
       return Single.just(cachedEditorialListViewModel);
     }
-    return loadNewEditorialListViewModel(0);
+    return loadNewEditorialListViewModel(0, false);
   }
 
-  private Single<EditorialListViewModel> loadNewEditorialListViewModel(int offset) {
+  private Single<EditorialListViewModel> loadNewEditorialListViewModel(int offset,
+      boolean loadMore) {
     return editorialListService.loadEditorialListViewModel(offset)
         .map(editorialListViewModel -> {
           if (!editorialListViewModel.hasError() && !editorialListViewModel.isLoading()) {
-            cachedEditorialListViewModel = editorialListViewModel;
+            updateCache(editorialListViewModel, loadMore);
           }
           return editorialListViewModel;
         });
@@ -37,6 +39,18 @@ public class EditorialListRepository {
     if (cachedEditorialListViewModel != null) {
       offset = cachedEditorialListViewModel.getOffset();
     }
-    return loadNewEditorialListViewModel(offset);
+    return loadNewEditorialListViewModel(offset, true);
+  }
+
+  private void updateCache(EditorialListViewModel editorialListViewModel, boolean loadMore) {
+    if (!loadMore) {
+      cachedEditorialListViewModel = editorialListViewModel;
+    } else {
+      List<CurationCard> curationCards = cachedEditorialListViewModel.getCurationCards();
+      curationCards.addAll(editorialListViewModel.getCurationCards());
+      cachedEditorialListViewModel =
+          new EditorialListViewModel(curationCards, cachedEditorialListViewModel.getOffset(),
+              cachedEditorialListViewModel.getTotal());
+    }
   }
 }
