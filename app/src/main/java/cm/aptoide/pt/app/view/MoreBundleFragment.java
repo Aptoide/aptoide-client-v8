@@ -27,6 +27,7 @@ import cm.aptoide.pt.home.BundlesAdapter;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.home.ProgressBundle;
+import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
@@ -41,6 +42,8 @@ import javax.inject.Named;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
+
+import static android.view.View.GONE;
 
 /**
  * Created by D01 on 04/06/2018.
@@ -69,6 +72,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   private View noNetworkRetryButton;
   private View retryButton;
   private Toolbar toolbar;
+  private View toolbarElement;
   private PublishSubject<Boolean> notifyItemsAdded;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +94,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
       }
     }
     bundlesList = (RecyclerView) view.findViewById(R.id.more_bundles_list);
+    toolbarElement = view.findViewById(R.id.action_bar);
     genericErrorView = view.findViewById(R.id.generic_error);
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
@@ -107,10 +112,14 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
-    appCompatActivity.setSupportActionBar(toolbar);
-    ActionBar actionBar = appCompatActivity.getSupportActionBar();
-    if (actionBar != null) {
-      actionBar.setDisplayHomeAsUpEnabled(true);
+    if (getArguments().getBoolean(StoreTabGridRecyclerFragment.BundleCons.TOOLBAR, true)) {
+      appCompatActivity.setSupportActionBar(toolbar);
+      ActionBar actionBar = appCompatActivity.getSupportActionBar();
+      if (actionBar != null) {
+        actionBar.setDisplayHomeAsUpEnabled(true);
+      }
+    } else {
+      toolbarElement.setVisibility(GONE);
     }
     attachPresenter(presenter);
   }
@@ -182,25 +191,25 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   }
 
   @Override public void showLoading() {
-    bundlesList.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    bundlesList.setVisibility(GONE);
+    genericErrorView.setVisibility(GONE);
+    noNetworkErrorView.setVisibility(GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     bundlesList.setVisibility(View.VISIBLE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
-    progressBar.setVisibility(View.GONE);
+    genericErrorView.setVisibility(GONE);
+    noNetworkErrorView.setVisibility(GONE);
+    progressBar.setVisibility(GONE);
     swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showGenericError() {
     this.genericErrorView.setVisibility(View.VISIBLE);
-    this.noNetworkErrorView.setVisibility(View.GONE);
-    this.bundlesList.setVisibility(View.GONE);
-    this.progressBar.setVisibility(View.GONE);
+    this.noNetworkErrorView.setVisibility(GONE);
+    this.bundlesList.setVisibility(GONE);
+    this.progressBar.setVisibility(GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
     }
@@ -254,9 +263,9 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
 
   @Override public void showNetworkError() {
     this.noNetworkErrorView.setVisibility(View.VISIBLE);
-    this.genericErrorView.setVisibility(View.GONE);
-    this.bundlesList.setVisibility(View.GONE);
-    this.progressBar.setVisibility(View.GONE);
+    this.genericErrorView.setVisibility(GONE);
+    this.bundlesList.setVisibility(GONE);
+    this.progressBar.setVisibility(GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
     }

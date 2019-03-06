@@ -5,7 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-  <include layout="@layout/app_bar_layout"/>
+  <include
+      layout="@layout/app_bar_layout"
+      android:id="@+id/action_bar"
+      />
 
   <FrameLayout
       android:layout_width="match_parent"

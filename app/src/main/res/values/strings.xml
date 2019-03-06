@@ -291,6 +291,8 @@
 
   <!--home Fragment-->
   <string name="featured_stores">Featured stores</string>
+  <string name="home_chip_games">Games</string>
+  <string name="home_chip_apps">Apps</string>
 
   <!--Download fragment-->
   <string name="newer_version_available">Newer version available</string>

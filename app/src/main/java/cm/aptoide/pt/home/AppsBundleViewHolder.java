@@ -48,6 +48,7 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
     });
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
+    appsList.setNestedScrollingEnabled(false);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {

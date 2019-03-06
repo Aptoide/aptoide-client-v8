@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -62,10 +61,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private View noNetworkRetryButton;
   private View retryButton;
   private ImageView userAvatar;
-  private ImageView promotionsIcon;
-  private TextView promotionsTicker;
   private BottomNavigationActivity bottomNavigationActivity;
-  private LoggedInTermsAndConditionsDialog gdprDialog;
   private PromotionsHomeDialog promotionsHomeDialog;
 
   @Override public void onAttach(Activity activity) {
@@ -115,10 +111,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
-    gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
-    promotionsIcon = view.findViewById(R.id.promotions_icon);
-    promotionsTicker = view.findViewById(R.id.promotions_ticker);
     attachPresenter(presenter);
   }
 
@@ -151,15 +144,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     genericErrorView = null;
     noNetworkErrorView = null;
     progressBar = null;
-    if (gdprDialog != null) {
-      gdprDialog.destroyDialog();
-      gdprDialog = null;
-    }
     if (promotionsHomeDialog != null) {
       promotionsHomeDialog.destroyDialog();
       promotionsHomeDialog = null;
     }
-    promotionsIcon = null;
     super.onDestroyView();
   }
 
@@ -294,14 +282,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(EditorialHomeEvent.class);
   }
 
-  @Override public Observable<String> gdprDialogClicked() {
-    return gdprDialog.dialogClicked();
-  }
-
-  @Override public Observable<String> promotionsHomeDialogClicked() {
-    return promotionsHomeDialog.dialogClicked();
-  }
-
   @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.KNOW_MORE));
@@ -333,58 +313,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void hideBundle(int bundlePosition) {
     adapter.remove(bundlePosition);
-  }
-
-  @Override public void showAvatar() {
-    userAvatar.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void setDefaultUserImage() {
-    ImageLoader.with(getContext())
-        .loadUsingCircleTransform(R.drawable.ic_account_circle, userAvatar);
-  }
-
-  @Override public void showTermsAndConditionsDialog() {
-    gdprDialog.showDialog();
-  }
-
-  @Override public Observable<Void> promotionsClick() {
-    return RxView.clicks(promotionsIcon);
-  }
-
-  @Override public void showPromotionsHomeDialog(HomePromotionsWrapper wrapper) {
-    promotionsHomeDialog.showDialog(getContext(), wrapper);
-  }
-
-  @Override public void showPromotionsHomeIcon(HomePromotionsWrapper homeWrapper) {
-    promotionsIcon.setVisibility(View.VISIBLE);
-    if (homeWrapper.getPromotions() > 0) {
-      if (homeWrapper.getPromotions() < 10) {
-        promotionsTicker.setText(Integer.toString(homeWrapper.getPromotions()));
-      } else {
-        promotionsTicker.setText("9+");
-      }
-      promotionsTicker.setVisibility(View.VISIBLE);
-    }
-  }
-
-  @Override public void dismissPromotionsDialog() {
-    promotionsHomeDialog.dismissDialog();
-  }
-
-  @Override public void setPromotionsTickerWithValue(int value) {
-    promotionsTicker.setText(Integer.toString(value));
-    promotionsTicker.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void setEllipsizedPromotionsTicker() {
-    promotionsTicker.setText("9+");
-    promotionsTicker.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hidePromotionsIcon() {
-    promotionsIcon.setVisibility(View.GONE);
-    promotionsTicker.setVisibility(View.GONE);
   }
 
   @Override public void setAdsTest(boolean showNatives) {

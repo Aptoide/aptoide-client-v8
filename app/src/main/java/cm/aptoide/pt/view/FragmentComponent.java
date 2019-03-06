@@ -18,6 +18,7 @@ import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
+import cm.aptoide.pt.home.HomeContainerFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
@@ -131,4 +132,6 @@ public interface FragmentComponent {
   void inject(WizardPageTwoFragment wizardPageTwoFragment);
 
   void inject(ClaimPromotionDialogFragment claimPromotionDialogFragment);
+
+  void inject(HomeContainerFragment homeContainerFragment);
 }

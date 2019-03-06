@@ -280,42 +280,6 @@ public class HomePresenterTest {
     verify(view).hideLoading();
   }
 
-  @Test public void loadLoggedInUserImageUserTest() {
-    //When the user is logged in
-    when(account.getAvatar()).thenReturn("A string");
-    when(account.isLoggedIn()).thenReturn(true);
-    //Given an initialised HomePresenter
-    presenter.loadUserImage();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //And AccountManager returns an account
-    accountStatusEvent.onNext(account);
-    //Then it should show the image
-    verify(view).setUserImage("A string");
-    verify(view).showAvatar();
-  }
-
-  @Test public void loadNotLoggedInUserImageUserTest() {
-    //When the user is logged in
-    when(account.isLoggedIn()).thenReturn(false);
-    //Given an initialised HomePresenter
-    presenter.loadUserImage();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //And AccountManager returns an account
-    accountStatusEvent.onNext(account);
-    //Then it should show the image
-    verify(view).showAvatar();
-  }
-
-  @Test public void handleUserImageClick() {
-    //Given an initialised HomePresenter
-    presenter.handleUserImageClick();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //When an user clicks the profile image
-    imageClickEvent.onNext(null);
-    //Then it should navigate to the Settings Fragment
-    verify(homeNavigator).navigateToMyAccount();
-  }
-
   @Test public void onBundleScrolledRight_SendScrollEvent() {
     //Given an initialised HomePresenter
     presenter.handleBundleScrolledRight();
