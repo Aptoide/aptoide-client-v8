@@ -105,7 +105,11 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.walletOfferCardInstallWalletClick())
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.sendDeeplinkToWalletAppView("com.appcoins.wallet"))
+        .map(HomeEvent::getBundle)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .doOnNext(bundle -> view.sendDeeplinkToWalletAppView(bundle.getActionItem()
+            .getUrl()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {

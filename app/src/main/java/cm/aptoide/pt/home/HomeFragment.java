@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -16,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -403,11 +403,9 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .equals(HomeEvent.Type.INSTALL_WALLET));
   }
 
-  @Override public void sendDeeplinkToWalletAppView(String packageName) {
-    Intent intent = new Intent(this.getContext(), AptoideApplication.getActivityProvider()
-        .getMainActivityFragmentClass());
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+  @Override public void sendDeeplinkToWalletAppView(String url) {
+    Intent intent = new Intent(this.getContext(), DeepLinkIntentReceiver.class);
+    intent.setData(Uri.parse(url));
     startActivity(intent);
   }
 
