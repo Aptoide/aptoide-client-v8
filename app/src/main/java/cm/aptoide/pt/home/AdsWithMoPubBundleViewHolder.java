@@ -65,7 +65,7 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
     appsList.setAdapter(moPubRecyclerAdapter);
-    appsList.setNestedScrollingEnabled(true);
+    appsList.setNestedScrollingEnabled(false);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {

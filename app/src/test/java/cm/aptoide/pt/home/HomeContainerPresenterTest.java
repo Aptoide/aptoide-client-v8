@@ -84,7 +84,6 @@ public class HomeContainerPresenterTest {
 
     verify(view).showPromotionsHomeIcon(homePromotionsWrapper);
     verify(homeAnalytics).sendPromotionsImpressionEvent();
-    verify(view).setPromotionsTickerWithValue(homePromotionsWrapper.getPromotions());
     verify(homeAnalytics).sendPromotionsDialogImpressionEvent();
     verify(home).setPromotionsDialogShown();
     verify(view).showPromotionsHomeDialog(homePromotionsWrapper);
@@ -100,7 +99,6 @@ public class HomeContainerPresenterTest {
 
     verify(view).showPromotionsHomeIcon(homePromotionsWrapper);
     verify(homeAnalytics).sendPromotionsImpressionEvent();
-    verify(view).setPromotionsTickerWithValue(homePromotionsWrapper.getPromotions());
   }
 
   @Test public void handleClickOnPromotionsDialogContinueTest() {
@@ -172,7 +170,7 @@ public class HomeContainerPresenterTest {
   }
 
   @Test public void gamesChipChecked_loadHomeMainContentTest() {
-    when(view.isChipChecked()).thenReturn(Observable.just("games"));
+    when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.GAMES));
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -180,7 +178,7 @@ public class HomeContainerPresenterTest {
   }
 
   @Test public void noChipsChecked_loadHomeMainContentTest() {
-    when(view.isChipChecked()).thenReturn(Observable.just(""));
+    when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.HOME));
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -188,7 +186,7 @@ public class HomeContainerPresenterTest {
   }
 
   @Test public void appsChipChecked_loadHomeMainContentTest() {
-    when(view.isChipChecked()).thenReturn(Observable.just("apps"));
+    when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.APPS));
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
