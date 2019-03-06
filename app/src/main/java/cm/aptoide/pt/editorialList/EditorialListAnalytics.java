@@ -9,10 +9,9 @@ import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
 
 public class EditorialListAnalytics {
 
-  public static final String CURATION_CARD_CLICK = "Curation_Card_Click";
+  public static final String CURATION_CARD_CLICK = "Editorial_BN_Curation_Card_Click";
   static final String TAP_ON_CARD = "tap on card";
   private static final String ACTION = "action";
-  private static final String BUNDLE_TAG = "bundle_tag";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
