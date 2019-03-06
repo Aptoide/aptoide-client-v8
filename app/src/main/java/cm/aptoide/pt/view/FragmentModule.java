@@ -61,6 +61,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialManager;
@@ -96,11 +97,11 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogPresenter;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogView;
 import cm.aptoide.pt.promotions.ClaimPromotionsManager;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
-import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -457,5 +458,12 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
       NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
     return new EditorialListAnalytics(navigationTracker, analyticsManager);
+  }
+
+  @FragmentScope @Provides EditorialAnalytics providesEditorialAnalytics(
+      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
+        arguments.getBoolean("fromHome"));
   }
 }

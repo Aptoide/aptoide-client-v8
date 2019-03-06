@@ -34,6 +34,8 @@ public interface EditorialListView extends View {
 
   void populateView(EditorialListViewModel editorialListViewModel);
 
+  Observable<EditorialListEvent> visibleCards();
+
   void showLoadMore();
 
   void hideLoadMore();

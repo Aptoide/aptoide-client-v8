@@ -36,6 +36,7 @@ public class EditorialListPresenter implements Presenter {
 
   @Override public void present() {
     onCreateLoadViewModel();
+    handleImpressions();
     handleEditorialCardClick();
     handlePullToRefresh();
     handleRetryClick();
@@ -49,6 +50,7 @@ public class EditorialListPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
         .flatMapSingle(created -> loadEditorialListViewModel(false))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
   }
@@ -80,7 +82,8 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(__ -> view.editorialCardClicked()
             .observeOn(viewScheduler)
             .doOnNext(click -> {
-              editorialListAnalytics.sendEditorialInteractEvent(click.getCardId());
+              editorialListAnalytics.sendEditorialInteractEvent(click.getCardId(),
+                  click.getBundlePosition());
               editorialListNavigator.navigateToEditorial(click.getCardId());
             })
             .retry())
@@ -110,9 +113,21 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadEditorialListViewModel(true)))
+            .flatMapSingle(__ -> loadFreshEditorialListViewModel()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void handleImpressions() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.visibleCards()
+            .observeOn(viewScheduler)
+            .doOnNext(editorialListEvent -> editorialListAnalytics.sendEditorialImpressionEvent(
+                editorialListEvent.getCardId(), editorialListEvent.getPosition())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
         }, crashReporter::log);
   }
 

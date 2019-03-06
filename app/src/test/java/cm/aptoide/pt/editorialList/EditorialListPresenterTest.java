@@ -40,6 +40,7 @@ public class EditorialListPresenterTest {
   private PublishSubject<Account> accountStatusEvent;
   private PublishSubject<Void> imageClickEvent;
   private PublishSubject<EditorialHomeEvent> cardClickEvent;
+  private PublishSubject<EditorialListEvent> impressionEvent;
   private EditorialListViewModel networkErrorEditorialViewModel;
   private PublishSubject<Void> refreshEvent;
 
@@ -52,6 +53,7 @@ public class EditorialListPresenterTest {
     accountStatusEvent = PublishSubject.create();
     imageClickEvent = PublishSubject.create();
     cardClickEvent = PublishSubject.create();
+    impressionEvent = PublishSubject.create();
     refreshEvent = PublishSubject.create();
 
     presenter = new EditorialListPresenter(view, editorialListManager, accountManager,
@@ -72,6 +74,7 @@ public class EditorialListPresenterTest {
     when(accountManager.accountStatus()).thenReturn(accountStatusEvent);
     when(view.imageClick()).thenReturn(imageClickEvent);
     when(view.refreshes()).thenReturn(refreshEvent);
+    when(view.visibleCards()).thenReturn(impressionEvent);
   }
 
   @Test public void onCreateLoadSuccessViewModelTest() {
@@ -149,9 +152,9 @@ public class EditorialListPresenterTest {
     presenter.handleEditorialCardClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When there's is a click on an Editorial Card, it should emit an EditorialHomeEvent
-    cardClickEvent.onNext(new EditorialHomeEvent("1", null, -1, HomeEvent.Type.EDITORIAL));
+    cardClickEvent.onNext(new EditorialHomeEvent("1", null, 1, HomeEvent.Type.EDITORIAL));
     //Then it should send editorial interact analytic event
-    verify(editorialListAnalytics).sendEditorialInteractEvent("1");
+    verify(editorialListAnalytics).sendEditorialInteractEvent("1", 1);
     //And navigate to the specified editorial view
     verify(editorialListNavigator).navigateToEditorial("1");
   }
@@ -159,12 +162,12 @@ public class EditorialListPresenterTest {
   @Test public void handleRetryClickTest() {
     //Given an initialised presenter
     presenter.handleRetryClick();
-    when(editorialListManager.loadEditorialListViewModel(true, false)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(false, true)).thenReturn(
         Single.just(successEditorialViewModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     retryClickedEvent.onNext(null);
     //Then the editorial cards should be shown
-    verify(view).populateView(successEditorialViewModel);
+    verify(view).update(successEditorialViewModel.getCurationCards());
     //Then it should hide the loading indicator
     verify(view).hideLoading();
     //Then it should hide the load more indicator (if exists)
@@ -243,5 +246,15 @@ public class EditorialListPresenterTest {
     imageClickEvent.onNext(null);
     //Then it should navigate to the Settings Fragment
     verify(editorialListNavigator).navigateToMyAccount();
+  }
+
+  @Test public void handleImpressions() {
+    //Given an initialised presenter
+    presenter.handleImpressions();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an user scrolls
+    impressionEvent.onNext(new EditorialListEvent("1", 1));
+    //Then it should navigate to the Settings Fragment
+    verify(editorialListAnalytics).sendEditorialImpressionEvent("1", 1);
   }
 }

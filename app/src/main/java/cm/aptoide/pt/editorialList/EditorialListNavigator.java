@@ -17,6 +17,7 @@ public class EditorialListNavigator {
   public void navigateToEditorial(String cardId) {
     Bundle bundle = new Bundle();
     bundle.putString("cardId", cardId);
+    bundle.putBoolean("fromHome", false);
     EditorialFragment fragment = new EditorialFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);

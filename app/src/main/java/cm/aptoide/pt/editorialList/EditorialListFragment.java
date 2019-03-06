@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 public class EditorialListFragment extends NavigationTrackFragment implements EditorialListView {
@@ -187,6 +188,16 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   @Override public void populateView(EditorialListViewModel editorialListViewModel) {
     editorialList.setVisibility(View.VISIBLE);
     adapter.add(editorialListViewModel.getCurationCards());
+  }
+
+  @Override public Observable<EditorialListEvent> visibleCards() {
+    return RxRecyclerView.scrollEvents(editorialList)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
+        .filter(position -> position != RecyclerView.NO_POSITION)
+        .distinctUntilChanged()
+        .map(visibleItem -> new EditorialListEvent(adapter.getCard(visibleItem)
+            .getId(), visibleItem));
   }
 
   @Override public void showLoadMore() {
