@@ -37,5 +37,5 @@ public interface HomeContainerView extends View {
 
   Observable<Boolean> appsChipClicked();
 
-  Observable<String> isChipChecked();
+  Observable<HomeContainerFragment.ChipsEvents> isChipChecked();
 }

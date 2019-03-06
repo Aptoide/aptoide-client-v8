@@ -23,9 +23,6 @@ import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
 
 public class HomePresenter implements Presenter {
 
-  private static final int UP_SCROLL_THRESHOLD = -10;
-  private static final int DOWN_SCROLL_THRESHOLD = 10;
-
   private final HomeView view;
   private final Home home;
   private final Scheduler viewScheduler;

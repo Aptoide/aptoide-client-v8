@@ -58,10 +58,10 @@ public class HomeContainerPresenter implements Presenter {
         .flatMap(__ -> view.isChipChecked())
         .doOnNext(checked -> {
           switch (checked) {
-            case "games":
+            case GAMES:
               homeContainerNavigator.loadGamesHomeContent();
               break;
-            case "apps":
+            case APPS:
               homeContainerNavigator.loadAppsHomeContent();
               break;
             default:
@@ -137,13 +137,6 @@ public class HomeContainerPresenter implements Presenter {
         .doOnNext(apps -> {
           view.showPromotionsHomeIcon(apps);
           homeAnalytics.sendPromotionsImpressionEvent();
-          if (apps.getPromotions() > 0 && apps.getTotalUnclaimedAppcValue() > 0) {
-            if (apps.getPromotions() < 10) {
-              view.setPromotionsTickerWithValue(apps.getPromotions());
-            } else {
-              view.setEllipsizedPromotionsTicker();
-            }
-          }
         })
         .filter(HomePromotionsWrapper::shouldShowDialog)
         .doOnNext(apps -> {

@@ -22,8 +22,6 @@ import rx.subjects.PublishSubject;
 
 public class HomeContainerFragment extends NavigationTrackFragment implements HomeContainerView {
 
-  public static final String UP_SCROLL = "up";
-  public static final String DOWN_SCROLL = "down";
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject HomeContainerPresenter presenter;
   private BottomNavigationActivity bottomNavigationActivity;
@@ -35,7 +33,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   private PromotionsHomeDialog promotionsHomeDialog;
   private LoggedInTermsAndConditionsDialog gdprDialog;
 
-  private PublishSubject<String> chipCheckedEvent;
+  private PublishSubject<ChipsEvents> chipCheckedEvent;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -87,10 +85,10 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
 
   @Override public void onResume() {
     super.onResume();
-    String checked = "";
+    ChipsEvents checked = ChipsEvents.HOME;
     if (gamesChip.isChecked()) {
-      checked = "games";
-    } else if (appsChip.isChecked()) checked = "apps";
+      checked = ChipsEvents.GAMES;
+    } else if (appsChip.isChecked()) checked = ChipsEvents.APPS;
     chipCheckedEvent.onNext(checked);
   }
 
@@ -153,7 +151,8 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   @Override public void showPromotionsHomeIcon(HomePromotionsWrapper homePromotionsWrapper) {
     promotionsIcon.setVisibility(View.VISIBLE);
     if (homePromotionsWrapper.getPromotions() > 0) {
-      if (homePromotionsWrapper.getPromotions() < 10) {
+      if (homePromotionsWrapper.getPromotions() < 10
+          && homePromotionsWrapper.getTotalUnclaimedAppcValue() > 0) {
         promotionsTicker.setText(Integer.toString(homePromotionsWrapper.getPromotions()));
       } else {
         promotionsTicker.setText("9+");
@@ -213,7 +212,11 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
         });
   }
 
-  @Override public Observable<String> isChipChecked() {
+  @Override public Observable<ChipsEvents> isChipChecked() {
     return chipCheckedEvent;
+  }
+
+  public enum ChipsEvents {
+    GAMES, APPS, HOME,
   }
 }
