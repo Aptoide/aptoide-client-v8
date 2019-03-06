@@ -110,7 +110,7 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadEditorialListViewModel(true)))
+            .flatMapSingle(__ -> loadFreshEditorialListViewModel()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);

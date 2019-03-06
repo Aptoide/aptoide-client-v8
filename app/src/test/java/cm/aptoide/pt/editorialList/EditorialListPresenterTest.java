@@ -159,12 +159,12 @@ public class EditorialListPresenterTest {
   @Test public void handleRetryClickTest() {
     //Given an initialised presenter
     presenter.handleRetryClick();
-    when(editorialListManager.loadEditorialListViewModel(true, false)).thenReturn(
+    when(editorialListManager.loadEditorialListViewModel(false, true)).thenReturn(
         Single.just(successEditorialViewModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     retryClickedEvent.onNext(null);
     //Then the editorial cards should be shown
-    verify(view).populateView(successEditorialViewModel);
+    verify(view).update(successEditorialViewModel.getCurationCards());
     //Then it should hide the loading indicator
     verify(view).hideLoading();
     //Then it should hide the load more indicator (if exists)
