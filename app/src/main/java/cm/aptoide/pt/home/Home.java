@@ -95,15 +95,10 @@ public class Home {
   }
 
   public Completable remove(ActionBundle bundle) {
-    return impressionManager.markAsRead(bundle.getActionItem()
-        .getCardId(), true)
-        .andThen(bundlesRepository.remove(bundle));
-  }
-
-  public Completable removeWalletOfferCard(ActionBundle bundle, String cardId) {
     return Completable.fromAction(() -> blacklistManager.blacklist(
         blacklistUnitMapper.mapToBlacklistUnit(bundle.getType()
-            .toString() + "_" + cardId)))
+            .toString() + "_" + bundle.getActionItem()
+            .getCardId())))
         .andThen(bundlesRepository.remove(bundle));
   }
 

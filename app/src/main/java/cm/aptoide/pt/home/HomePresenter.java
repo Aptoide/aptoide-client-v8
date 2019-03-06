@@ -98,26 +98,6 @@ public class HomePresenter implements Presenter {
     handleClickOnPromotionsDialogCancel();
 
     handleInstallWalletOfferClick();
-
-    handleDismissItemClick();
-  }
-
-  private void handleDismissItemClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.walletOfferCardDismissClick())
-        .filter(event -> event.getBundle() instanceof ActionBundle)
-        .map(event -> ((ActionItemHomeEvent) event))
-        .flatMapCompletable(actionItemHomeEvent -> home.removeWalletOfferCard(
-            ((ActionBundle) actionItemHomeEvent.getBundle()), actionItemHomeEvent.getCardId())
-            .observeOn(viewScheduler)
-            .doOnCompleted(() -> view.hideBundle(actionItemHomeEvent.getBundlePosition())))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          crashReporter.log(throwable);
-          throw new OnErrorNotImplementedException(throwable);
-        });
   }
 
   private void handleInstallWalletOfferClick() {
