@@ -15,7 +15,7 @@ public class SearchAnalytics {
   public static final String NO_RESULTS = "Search_No_Results";
   public static final String APP_CLICK = "Search_Results_App_View_Click";
   public static final String SEARCH_START = "Search_Start";
-  public static final String AB_SEARCH_ACTION = "AB_Searction_Action";
+  public static final String AB_SEARCH_ACTION = "AB_Search_Action";
   public static final String AB_SEARCH_IMPRESSION = "AB_Search_Impression";
   private static final String FROM_TRENDING = "trending";
   private static final String FROM_AUTOCOMPLETE = "autocomplete";
