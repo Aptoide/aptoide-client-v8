@@ -19,6 +19,7 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   public static final int LAYOUT = R.layout.search_app_row;
   private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
   private final AppSecondaryInfoViewHolder appInfoViewHolder;
+  private final String query;
 
   private TextView nameTextView;
   private ImageView iconImageView;
@@ -30,11 +31,12 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private int position;
   private CompositeSubscription subscriptions;
 
-  public SearchResultViewHolder(View itemView,
-      PublishRelay<SearchAppResultWrapper> onItemViewClick) {
+  public SearchResultViewHolder(View itemView, PublishRelay<SearchAppResultWrapper> onItemViewClick,
+      String query) {
     super(itemView);
     subscriptions = new CompositeSubscription();
     this.onItemViewClick = onItemViewClick;
+    this.query = query;
     appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, new DecimalFormat("0.0"));
     bindViews(itemView);
   }
@@ -97,6 +99,7 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
 
     subscriptions.add(RxView.clicks(itemView)
         .map(__ -> searchApp)
-        .subscribe(data -> onItemViewClick.call(new SearchAppResultWrapper(data, position))));
+        .subscribe(
+            data -> onItemViewClick.call(new SearchAppResultWrapper(query, data, position))));
   }
 }

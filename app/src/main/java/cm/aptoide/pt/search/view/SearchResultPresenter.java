@@ -15,6 +15,7 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchResultCount;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
@@ -26,7 +27,6 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
-import rx.functions.Func2;
 
 @SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
     implements Presenter {
@@ -244,8 +244,18 @@ import rx.functions.Func2;
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onViewItemClicked())
         .observeOn(ioScheduler)
-        .flatMap(data -> searchManager.recordAction()
-            .doOnNext(__ -> openAppView(data)))
+        .flatMap(data -> searchManager.recordAbTestAction(data.getPosition())
+            .doOnNext(__ -> openAppView(data))
+            .map(__ -> data))
+        .flatMap(data -> searchManager.getExperimentResult()
+            .doOnNext(result -> {
+              if (result != null) {
+                analytics.recordAbTestActionAnalytics(result.getExperimentId(),
+                    result.getExperimentGroup(), data.getQuery(), data.getPosition(),
+                    data.getSearchAppResult()
+                        .getPackageName());
+              }
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -325,24 +335,21 @@ import rx.functions.Func2;
     // search every store. followed and not followed
     return Single.zip(loadDataFromFollowedStores(query, onlyTrustedApps, 0),
         loadDataFromNonFollowedStores(query, onlyTrustedApps, 0),
-        new Func2<List<SearchAppResult>, List<SearchAppResult>, Integer>() {
-          @Override public Integer call(List<SearchAppResult> followedStoresCount,
-              List<SearchAppResult> nonFollowedStoresCount) {
-            int result = 0;
-            if (followedStoresCount != null && followedStoresCount.size() > 0) {
-              result += followedStoresCount.size();
-            } else {
-              view.hideFollowedStoresTab();
-            }
-
-            if (nonFollowedStoresCount != null && nonFollowedStoresCount.size() > 0) {
-              result += nonFollowedStoresCount.size();
-            } else {
-              view.hideNonFollowedStoresTab();
-            }
-
-            return result;
+        (followedStoresCount, nonFollowedStoresCount) -> {
+          int result = 0;
+          if (followedStoresCount != null && followedStoresCount.size() > 0) {
+            result += followedStoresCount.size();
+          } else {
+            view.hideFollowedStoresTab();
           }
+
+          if (nonFollowedStoresCount != null && nonFollowedStoresCount.size() > 0) {
+            result += nonFollowedStoresCount.size();
+          } else {
+            view.hideNonFollowedStoresTab();
+          }
+
+          return result;
         });
   }
 
@@ -350,7 +357,7 @@ import rx.functions.Func2;
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnSuccess(dataList -> view.addAllStoresResult(dataList))
+        .doOnSuccess(dataList -> view.addAllStoresResult(query, dataList))
         .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(getItemCount(data));
@@ -370,7 +377,7 @@ import rx.functions.Func2;
       boolean onlyTrustedApps, int offset) {
     return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
         .observeOn(viewScheduler)
-        .doOnSuccess(dataList -> view.addFollowedStoresResult(dataList))
+        .doOnSuccess(dataList -> view.addFollowedStoresResult(query, dataList))
         .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(getItemCount(data));
@@ -382,7 +389,7 @@ import rx.functions.Func2;
       int offset) {
     return searchManager.searchInStore(query, storeName, offset)
         .observeOn(viewScheduler)
-        .doOnSuccess(dataList -> view.addFollowedStoresResult(dataList))
+        .doOnSuccess(dataList -> view.addFollowedStoresResult(query, dataList))
         .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.setAllStoresSelected(false);
@@ -420,10 +427,20 @@ import rx.functions.Func2;
                   view.showFollowedStoresResult();
                 }
               }
-            }))
-        .filter(result -> result != -1)
+            })
+            .zipWith(Single.just(viewModel),
+                (itemCount, model) -> new SearchResultCount(itemCount, model)))
+        .filter(result -> result.getResultCount() != -1)
         .observeOn(ioScheduler)
-        .flatMap(__ -> searchManager.recordImpression())
+        .flatMap(result -> searchManager.getExperimentResult()
+            .doOnNext(experimentResult -> {
+              if (experimentResult != null) {
+                analytics.recordAbTestImpressionAnalytics(experimentResult.getExperimentId(),
+                    experimentResult.getExperimentGroup(), result.getSearchResultViewModel()
+                        .getCurrentQuery());
+              }
+            }))
+        .flatMap(__ -> searchManager.recordAbTestImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
