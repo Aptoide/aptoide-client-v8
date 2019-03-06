@@ -124,7 +124,7 @@ public class HomeAnalytics {
         network);
   }
 
-  public void sendAppcKnowMoreInteractEvent(String bundleTag, int bundlePosition) {
+  public void sendActionItemTapOnCardInteractEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_CARD);
     data.put(BUNDLE_TAG, bundleTag);
@@ -133,7 +133,7 @@ public class HomeAnalytics {
     analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
   }
 
-  public void sendAppcDismissInteractEvent(String bundleTag, int bundlePosition) {
+  public void sendActionItemDismissInteractEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_CARD_DISMISS);
     data.put(BUNDLE_TAG, bundleTag);

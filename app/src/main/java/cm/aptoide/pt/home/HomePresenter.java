@@ -105,6 +105,8 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.walletOfferCardInstallWalletClick())
         .observeOn(viewScheduler)
+        .doOnNext(event -> homeAnalytics.sendActionItemTapOnCardInteractEvent(event.getBundle()
+            .getTag(), event.getBundlePosition()))
         .map(HomeEvent::getBundle)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
@@ -173,7 +175,7 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.infoBundleKnowMoreClicked())
         .observeOn(viewScheduler)
         .doOnNext(homeEvent -> {
-          homeAnalytics.sendAppcKnowMoreInteractEvent(homeEvent.getBundle()
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
               .getTag(), homeEvent.getBundlePosition());
           homeNavigator.navigateToAppCoinsInformationView();
         })
@@ -189,8 +191,9 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.dismissBundleClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
-        .doOnNext(homeEvent -> homeAnalytics.sendAppcDismissInteractEvent(homeEvent.getBundle()
-            .getTag(), homeEvent.getBundlePosition()))
+        .doOnNext(homeEvent -> homeAnalytics.sendActionItemDismissInteractEvent(
+            homeEvent.getBundle()
+                .getTag(), homeEvent.getBundlePosition()))
         .flatMap(homeEvent -> home.remove((ActionBundle) homeEvent.getBundle())
             .andThen(Observable.just(homeEvent)))
         .observeOn(viewScheduler)
