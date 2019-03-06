@@ -23,7 +23,7 @@ public class BlacklistManager {
   }
 
   public enum BlacklistUnit {
-    WALLET_ADS_OFFER("Wallet_Ads_Offer", 10);
+    WALLET_ADS_OFFER("Wallet_Ads_Offer", 10), APPC_CARD_INFO("Appc_Card_Info", 10);
 
     private String id;
     private int maxPossibleImpressions;
