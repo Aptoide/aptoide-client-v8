@@ -144,8 +144,10 @@ public class HomePresenter implements Presenter {
         .doOnNext(homeEvent -> {
           if (homeEvent.getBundle()
               .getType()
-              .equals(HomeBundle.BundleType.INFO_BUNDLE)) {
-            homeAnalytics.sendAppcImpressionEvent(homeEvent.getBundle()
+              .equals(HomeBundle.BundleType.INFO_BUNDLE) || homeEvent.getBundle()
+              .getType()
+              .equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
+            homeAnalytics.sendActionItemImpressionEvent(homeEvent.getBundle()
                 .getTag(), homeEvent.getBundlePosition());
           } else {
             ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();

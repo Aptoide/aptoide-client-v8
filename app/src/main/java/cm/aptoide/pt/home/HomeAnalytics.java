@@ -143,7 +143,7 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendAppcImpressionEvent(String bundleTag, int bundlePosition) {
+  public void sendActionItemImpressionEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, VIEW_CARD);
     data.put(BUNDLE_TAG, bundleTag);
