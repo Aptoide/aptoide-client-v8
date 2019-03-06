@@ -108,8 +108,9 @@ public class Home {
   }
 
   public Completable actionBundleImpression(ActionBundle bundle) {
-    return impressionManager.markAsRead(bundle.getActionItem()
-        .getCardId(), false);
+    return Completable.fromAction(() -> blacklistManager.addImpression(
+        blacklistUnitMapper.mapToBlacklistUnit(bundle.getType() + "_" + bundle.getActionItem()
+            .getCardId())));
   }
 
   public Single<HomePromotionsWrapper> hasPromotionApps() {
