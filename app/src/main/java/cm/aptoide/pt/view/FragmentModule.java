@@ -238,19 +238,6 @@ import rx.subscriptions.CompositeSubscription;
         moPubAdsManager, promotionsPreferencesManager, blacklistManager, blacklistUnitMapper);
   }
 
-  @FragmentScope @Provides BlacklistManager providesBlacklistManager(
-      BlacklistPersistence blacklistPersistence) {
-    return new BlacklistManager(blacklistPersistence);
-  }
-
-  @FragmentScope @Provides BlacklistPersistence providesBlacklistPersistence(
-      @Named("default") SharedPreferences sharedPreferences) {
-    return new BlacklistPersistence(sharedPreferences);
-  }
-
-  @FragmentScope @Provides BlacklistUnitMapper providesBundleToBlacklistUnitMapper() {
-    return new BlacklistUnitMapper();
-  }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
       AptoideAccountManager aptoideAccountManager, MyStoresNavigator navigator) {

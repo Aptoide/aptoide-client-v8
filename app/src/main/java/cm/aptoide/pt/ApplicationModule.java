@@ -98,6 +98,9 @@ import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.blacklist.BlacklistPersistence;
+import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -1539,10 +1542,26 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AdMapper();
   }
 
+  @Singleton @Provides BlacklistManager providesBlacklistManager(
+      BlacklistPersistence blacklistPersistence) {
+    return new BlacklistManager(blacklistPersistence);
+  }
+
+  @Singleton @Provides BlacklistPersistence providesBlacklistPersistence(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new BlacklistPersistence(sharedPreferences);
+  }
+
+  @Singleton @Provides BlacklistUnitMapper providesBundleToBlacklistUnitMapper() {
+    return new BlacklistUnitMapper();
+  }
+
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName, InstallManager installManager,
-      PackageRepository packageRepository) {
-    return new BundlesResponseMapper(marketName, installManager, packageRepository);
+      PackageRepository packageRepository, BlacklistManager blacklistManager,
+      BlacklistUnitMapper blacklistUnitMapper) {
+    return new BundlesResponseMapper(marketName, installManager, packageRepository,
+        blacklistManager, blacklistUnitMapper);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
