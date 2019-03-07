@@ -55,6 +55,6 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
 
   public void setEditorialCard(CurationCard curationCard, int position) {
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
-        curationCard.getSubTitle(), curationCard.getId(), position, null);
+        curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(), position, null);
   }
 }

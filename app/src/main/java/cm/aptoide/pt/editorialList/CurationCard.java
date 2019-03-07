@@ -5,13 +5,15 @@ public class CurationCard {
   private final String subTitle;
   private final String icon;
   private final String title;
+  private final String views;
 
-  public CurationCard(String id, String subTitle, String icon, String title) {
+  public CurationCard(String id, String subTitle, String icon, String title, String views) {
 
     this.id = id;
     this.subTitle = subTitle;
     this.icon = icon;
     this.title = title;
+    this.views = views;
   }
 
   public String getId() {
@@ -28,5 +30,9 @@ public class CurationCard {
 
   public String getTitle() {
     return title;
+  }
+
+  public String getViews() {
+    return views;
   }
 }
