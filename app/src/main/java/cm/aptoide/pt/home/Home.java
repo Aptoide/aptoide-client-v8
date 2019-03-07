@@ -1,8 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.blacklist.Blacklister;
-import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
+import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -22,22 +21,20 @@ public class Home {
   private final PromotionsManager promotionsManager;
   private final BannerRepository bannerRepository;
   private final MoPubAdsManager moPubAdsManager;
+  private final BlacklistManager blacklistManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
-  private Blacklister blacklister;
-  private BlacklistUnitMapper blacklistUnitMapper;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager,
-      Blacklister blacklister, BlacklistUnitMapper blacklistUnitMapper) {
+      BlacklistManager blacklistManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
-    this.blacklister = blacklister;
-    this.blacklistUnitMapper = blacklistUnitMapper;
+    this.blacklistManager = blacklistManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -95,17 +92,16 @@ public class Home {
   }
 
   public Completable remove(ActionBundle bundle) {
-    return Completable.fromAction(() -> blacklister.blacklist(
-        blacklistUnitMapper.mapToBlacklistUnit(bundle.getType()
-            .toString() + "_" + bundle.getActionItem()
-            .getCardId())))
+    return Completable.fromAction(() -> blacklistManager.blacklist(bundle.getType()
+        .toString() + "_" + bundle.getActionItem()
+        .getCardId()))
         .andThen(bundlesRepository.remove(bundle));
   }
 
   public Completable actionBundleImpression(ActionBundle bundle) {
-    return Completable.fromAction(() -> blacklister.addImpression(
-        blacklistUnitMapper.mapToBlacklistUnit(bundle.getType() + "_" + bundle.getActionItem()
-            .getCardId())));
+    return Completable.fromAction(() -> blacklistManager.addImpression(
+        bundle.getType() + "_" + bundle.getActionItem()
+            .getCardId()));
   }
 
   public Single<HomePromotionsWrapper> hasPromotionApps() {
@@ -139,9 +135,5 @@ public class Home {
 
   public Single<Boolean> shouldLoadNativeAd() {
     return moPubAdsManager.shouldLoadNativeAds();
-  }
-
-  public void blacklistWalletOfferCard() {
-    blacklister.blacklist(Blacklister.BlacklistUnit.WALLET_ADS_OFFER);
   }
 }

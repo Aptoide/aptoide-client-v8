@@ -98,9 +98,10 @@ import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.blacklist.Blacklister;
+import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.blacklist.BlacklistPersistence;
 import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
+import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -1542,8 +1543,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AdMapper();
   }
 
-  @Singleton @Provides Blacklister providesBlacklistManager(
-      BlacklistPersistence blacklistPersistence) {
+  @Singleton @Provides Blacklister providesBlacklister(BlacklistPersistence blacklistPersistence) {
     return new Blacklister(blacklistPersistence);
   }
 
@@ -1556,11 +1556,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new BlacklistUnitMapper();
   }
 
+  @Singleton @Provides BlacklistManager providesBlacklistManager(Blacklister blacklister,
+      BlacklistUnitMapper blacklistUnitMapper) {
+    return new BlacklistManager(blacklister, blacklistUnitMapper);
+  }
+
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName, InstallManager installManager,
-      PackageRepository packageRepository, Blacklister blacklister,
-      BlacklistUnitMapper blacklistUnitMapper) {
-    return new BundlesResponseMapper(marketName, installManager, packageRepository, blacklister, blacklistUnitMapper);
+      PackageRepository packageRepository, BlacklistManager blacklistManager) {
+    return new BundlesResponseMapper(marketName, installManager, packageRepository,
+        blacklistManager);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
