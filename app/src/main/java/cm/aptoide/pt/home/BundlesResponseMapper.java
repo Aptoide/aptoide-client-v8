@@ -105,10 +105,13 @@ public class BundlesResponseMapper {
             }
           }
         } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE) || type.equals(
-            HomeBundle.BundleType.EDITORIAL) || type.equals(
-            HomeBundle.BundleType.WALLET_ADS_OFFER)) {
+            HomeBundle.BundleType.EDITORIAL)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          if (!blacklistManager.isBlacklisted(type + "_" + actionItem.getCardId())) {
+          appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
+        } else if (type.equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
+          ActionItem actionItem = map((ActionItemResponse) viewObject);
+          if (!blacklistManager.isBlacklisted(type + "_" + actionItem.getCardId())
+              && !packageRepository.isAppInstalled("com.appcoins.wallet")) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
         }
