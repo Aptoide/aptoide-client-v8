@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
@@ -38,16 +38,16 @@ public class BundlesResponseMapper {
   private final String marketName;
   private final InstallManager installManager;
   private final PackageRepository packageRepository;
-  private final BlacklistManager blacklistManager;
+  private final Blacklister blacklister;
   private final BlacklistUnitMapper blacklistUnitMapper;
 
   public BundlesResponseMapper(String marketName, InstallManager installManager,
-      PackageRepository packageRepository, BlacklistManager blacklistManager,
+      PackageRepository packageRepository, Blacklister blacklister,
       BlacklistUnitMapper blacklistUnitMapper) {
     this.marketName = marketName;
     this.installManager = installManager;
     this.packageRepository = packageRepository;
-    this.blacklistManager = blacklistManager;
+    this.blacklister = blacklister;
     this.blacklistUnitMapper = blacklistUnitMapper;
   }
 
@@ -112,7 +112,7 @@ public class BundlesResponseMapper {
             HomeBundle.BundleType.EDITORIAL) || type.equals(
             HomeBundle.BundleType.WALLET_ADS_OFFER)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          if (!blacklistManager.isBlacklisted(
+          if (!blacklister.isBlacklisted(
               blacklistUnitMapper.mapToBlacklistUnit(type + "_" + actionItem.getCardId()))) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
@@ -23,20 +23,20 @@ public class Home {
   private final BannerRepository bannerRepository;
   private final MoPubAdsManager moPubAdsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
-  private BlacklistManager blacklistManager;
+  private Blacklister blacklister;
   private BlacklistUnitMapper blacklistUnitMapper;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager,
-      BlacklistManager blacklistManager, BlacklistUnitMapper blacklistUnitMapper) {
+      Blacklister blacklister, BlacklistUnitMapper blacklistUnitMapper) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
-    this.blacklistManager = blacklistManager;
+    this.blacklister = blacklister;
     this.blacklistUnitMapper = blacklistUnitMapper;
   }
 
@@ -95,7 +95,7 @@ public class Home {
   }
 
   public Completable remove(ActionBundle bundle) {
-    return Completable.fromAction(() -> blacklistManager.blacklist(
+    return Completable.fromAction(() -> blacklister.blacklist(
         blacklistUnitMapper.mapToBlacklistUnit(bundle.getType()
             .toString() + "_" + bundle.getActionItem()
             .getCardId())))
@@ -103,7 +103,7 @@ public class Home {
   }
 
   public Completable actionBundleImpression(ActionBundle bundle) {
-    return Completable.fromAction(() -> blacklistManager.addImpression(
+    return Completable.fromAction(() -> blacklister.addImpression(
         blacklistUnitMapper.mapToBlacklistUnit(bundle.getType() + "_" + bundle.getActionItem()
             .getCardId())));
   }
@@ -142,6 +142,6 @@ public class Home {
   }
 
   public void blacklistWalletOfferCard() {
-    blacklistManager.blacklist(BlacklistManager.BlacklistUnit.WALLET_ADS_OFFER);
+    blacklister.blacklist(Blacklister.BlacklistUnit.WALLET_ADS_OFFER);
   }
 }

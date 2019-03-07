@@ -52,8 +52,7 @@ import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
-import cm.aptoide.pt.blacklist.BlacklistManager;
-import cm.aptoide.pt.blacklist.BlacklistPersistence;
+import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -232,10 +231,10 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
       ImpressionManager impressionManager, PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
-      MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
+      MoPubAdsManager moPubAdsManager, Blacklister blacklister,
       BlacklistUnitMapper blacklistUnitMapper) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
-        moPubAdsManager, promotionsPreferencesManager, blacklistManager, blacklistUnitMapper);
+        moPubAdsManager, promotionsPreferencesManager, blacklister, blacklistUnitMapper);
   }
 
 

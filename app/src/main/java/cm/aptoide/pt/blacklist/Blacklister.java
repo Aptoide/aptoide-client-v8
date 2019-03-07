@@ -1,10 +1,10 @@
 package cm.aptoide.pt.blacklist;
 
-public class BlacklistManager {
+public class Blacklister {
 
   private BlacklistPersistence blacklistPersistence;
 
-  public BlacklistManager(BlacklistPersistence blacklistPersistence) {
+  public Blacklister(BlacklistPersistence blacklistPersistence) {
     this.blacklistPersistence = blacklistPersistence;
   }
 
