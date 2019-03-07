@@ -7,6 +7,7 @@ import android.content.IntentSender;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -33,9 +34,11 @@ import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.app.view.donations.model.DonationsDialogResult;
 import cm.aptoide.pt.app.view.donations.utils.GenericPaymentIntentBuilder;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.MainActivity;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -52,6 +55,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
   @Inject WalletService walletService;
   @Inject AppNavigator appNavigator;
   @Inject DonationsAnalytics donationsAnalytics;
+  @Inject @Named("aptoide-theme") String theme;
   boolean textUpdate;
   boolean sliderUpdate;
   private String packageName;
@@ -183,10 +187,14 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     appcSlider.incrementProgressBy(1);
     appcSlider.getProgressDrawable()
         .setColorFilter(new PorterDuffColorFilter(getContext().getResources()
-            .getColor(R.color.default_orange_gradient_end), PorterDuff.Mode.SRC_IN));
-    appcSlider.getThumb()
-        .setColorFilter(getContext().getResources()
-            .getColor(R.color.default_orange_gradient_end), PorterDuff.Mode.SRC_IN);
+            .getColor(StoreTheme.get(theme)
+                .getDarkerColor()), PorterDuff.Mode.SRC_IN));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      appcSlider.getThumb()
+          .setColorFilter(getContext().getResources()
+              .getColor(StoreTheme.get(theme)
+                  .getDarkerColor()), PorterDuff.Mode.SRC_IN);
+    }
     appcSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         sliderUpdate = false;

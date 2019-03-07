@@ -135,7 +135,7 @@
           android:padding="6dp"
           android:text="@string/rate"
           android:textAllCaps="true"
-          android:textColor="@color/default_orange_gradient_end"
+          android:textColor="?attr/colorPrimaryDark"
           android:textSize="@dimen/text_size_medium"
           />
 

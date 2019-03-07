@@ -29,6 +29,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.CompositePresenter;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -42,6 +43,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import javax.inject.Inject;
+import javax.inject.Named;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 import rx.Completable;
@@ -58,6 +60,7 @@ public class ManageUserFragment extends BackButtonFragment
   @Inject ManageUserPresenter manageUserPresenter;
   @Inject ScreenOrientationManager orientationManager;
   @Inject NewsletterManager newsletterManager;
+  @Inject @Named("aptoide-theme") String theme;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -172,10 +175,9 @@ public class ManageUserFragment extends BackButtonFragment
           setupCalendar(calendar, year, monthNumber, day);
           setupCalendarDateString(year, monthNumber, day);
         };
-    datePickerDialog =
-        new DatePickerDialog(getContext(), R.style.DatePickerDialog, datePickerDialogListener,
-            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH));
+    datePickerDialog = new DatePickerDialog(getContext(), StoreTheme.get(theme)
+        .getDatePickerStyle(), datePickerDialogListener, calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
   }
 
   private void setupCalendarDateString(int year, int month, int day) {

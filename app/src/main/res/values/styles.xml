@@ -571,7 +571,67 @@
     <item name="android:textColor">@color/grey_fog_dark</item>
   </style>
 
-  <style name="DatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+  <style name="DefaultDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
     <item name="colorAccent">@color/default_orange_gradient_end</item>
+  </style>
+
+  <style name="GreyDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/grey_gradient_end</item>
+  </style>
+
+  <style name="TealDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/teal_gradient_end</item>
+  </style>
+
+  <style name="BrownDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/brown_gradient_end</item>
+  </style>
+
+  <style name="BlueGreyDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/blue_grey_gradient_end</item>
+  </style>
+
+  <style name="LightGreenDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/light_green_gradient_end</item>
+  </style>
+
+  <style name="LightBlueDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/light_blue_gradient_end</item>
+  </style>
+
+  <style name="AmberDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/amber_gradient_end</item>
+  </style>
+
+  <style name="LimeDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/lime_gradient_end</item>
+  </style>
+
+  <style name="OrangeDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/orange_gradient_end</item>
+  </style>
+
+  <style name="PinkDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/pink_gradient_end</item>
+  </style>
+
+  <style name="IndigoDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/indigo_gradient_end</item>
+  </style>
+
+  <style name="GreenDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/green_gradient_end</item>
+  </style>
+
+  <style name="RedDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/red_gradient_end</item>
+  </style>
+
+  <style name="DeepPurpleDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/deep_purple_gradient_end</item>
+  </style>
+
+  <style name="BlackDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/black_gradient_end</item>
   </style>
 </resources>
