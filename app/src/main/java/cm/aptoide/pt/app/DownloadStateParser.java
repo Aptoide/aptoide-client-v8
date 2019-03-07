@@ -39,6 +39,9 @@ public class DownloadStateParser {
       case NOT_ENOUGH_SPACE_ERROR:
         downloadState = DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
         break;
+      case INSTALLING:
+        downloadState = DownloadModel.DownloadState.INSTALLING;
+        break;
       default:
         downloadState = DownloadModel.DownloadState.COMPLETE;
         break;

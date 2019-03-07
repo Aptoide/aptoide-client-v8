@@ -155,7 +155,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
-  private PublishSubject<SimilarAppClickEvent> similarAppcAppClick;
   private PublishSubject<ShareDialogs.ShareResponse> shareDialogClick;
   private PublishSubject<Integer> reviewsAutoScroll;
   private PublishSubject<Void> noNetworkRetryClick;
@@ -167,7 +166,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
-  private PublishSubject<Boolean> similarAppcAppsVisibilitySubject;
   private PublishSubject<DownloadModel.Action> installClickSubject;
   private PublishSubject<MoPubInterstitialAdClickType> interstitialClick;
 
@@ -262,6 +260,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private MoPubView bannerAd;
   private View flagThisAppSection;
   private View collapsingAppcBackground;
+  private TextView installStateText;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -270,7 +269,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     readMoreClick = PublishSubject.create();
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
-    similarAppcAppClick = PublishSubject.create();
     shareDialogClick = PublishSubject.create();
     ready = PublishSubject.create();
     reviewsAutoScroll = PublishSubject.create();
@@ -278,7 +276,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     genericRetryClick = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
     similarAppsVisibilitySubject = PublishSubject.create();
-    similarAppcAppsVisibilitySubject = PublishSubject.create();
     shareRecommendsDialogClick = PublishSubject.create();
     skipRecommendsDialogClick = PublishSubject.create();
     dontShowAgainRecommendsDialogClick = PublishSubject.create();
@@ -398,6 +395,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+    installStateText = view.findViewById(R.id.appview_download_download_state);
 
     donationsAdapter = new DonationsAdapter(new ArrayList<>());
     donationsList.setAdapter(donationsAdapter);
@@ -1404,13 +1402,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showDownloadAppModel(DownloadAppViewModel model, boolean hasDonations) {
     DownloadModel downloadModel = model.getDownloadModel();
     SimilarAppsViewModel similarAppsViewModel = model.getSimilarAppsViewModel();
-    SimilarAppsViewModel similarAppcAppsViewModel = model.getSimilarAppcAppsViewModel();
     AppCoinsViewModel appCoinsViewModel = model.getAppCoinsViewModel();
     this.action = downloadModel.getAction();
     if (downloadModel.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();
     }
-    if (downloadModel.isDownloading()) {
+    if (downloadModel.isDownloading() || downloadModel.getDownloadState()
+        .equals(DownloadModel.DownloadState.INSTALLING)) {
       appcInfoView.hideInfo();
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
@@ -1552,6 +1550,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case INDETERMINATE:
         downloadProgressBar.setIndeterminate(true);
@@ -1559,6 +1558,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case PAUSE:
         downloadProgressBar.setIndeterminate(false);
@@ -1568,6 +1568,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.VISIBLE);
         resumeDownload.setVisibility(View.VISIBLE);
         downloadControlsLayout.setLayoutParams(pauseHidden);
+        installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case COMPLETE:
         downloadProgressBar.setIndeterminate(true);
@@ -1575,6 +1576,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
+        break;
+      case INSTALLING:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.GONE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadProgressValue.setVisibility(View.INVISIBLE);
+        downloadControlsLayout.setVisibility(View.INVISIBLE);
+        installStateText.setText(getString(R.string.appview_short_installing));
         break;
       case ERROR:
         showErrorDialog("", getContext().getString(R.string.error_occured));

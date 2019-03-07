@@ -17,6 +17,7 @@ import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -348,6 +349,13 @@ public class AppViewManager {
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
       int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
     return installManager.getInstall(md5, packageName, versionCode)
+        .doOnNext(install -> Logger.getInstance()
+            .d("install.appviewmanager.loaddownloadmodel", "md5 "
+                + install.getMd5()
+                + " status "
+                + install.getState()
+                + " progress "
+                + install.getProgress()))
         .map(install -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), paidApp,
                 pay != null && pay.isPaid()), install.getProgress(),
