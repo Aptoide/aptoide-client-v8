@@ -16,7 +16,7 @@ public class BlacklistPersistence {
 
   public void addImpression(String id, int maxPossibleImpressions) {
     int actualImpressions = sharedPreferences.getInt(id, maxPossibleImpressions);
-    if (actualImpressions >= 0) {
+    if (actualImpressions > 0) {
       actualImpressions--;
       sharedPreferences.edit()
           .putInt(id, actualImpressions)
