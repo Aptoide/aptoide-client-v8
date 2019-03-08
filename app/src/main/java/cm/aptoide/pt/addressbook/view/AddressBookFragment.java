@@ -29,6 +29,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.AddressBookContract;
 import cm.aptoide.pt.presenter.AddressBookPresenter;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -61,7 +62,7 @@ public class AddressBookFragment extends UIComponentFragment
   @Inject TwitterAuthClient mTwitterAuthClient;
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
-  @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject @Named("aptoide-theme") String theme;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
@@ -104,7 +105,8 @@ public class AddressBookFragment extends UIComponentFragment
             application.getDefaultSharedPreferences()), analytics,
         new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName), theme),
+            marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
+            theme),
         application.getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
@@ -124,7 +126,8 @@ public class AddressBookFragment extends UIComponentFragment
   }
 
   @Override public void setupViews() {
-    addressbook_2nd_msg.setText(getString(R.string.addressbook_2nd_msg));
+    addressbook_2nd_msg.setText(
+        marketResourceFormatter.formatString(getContext(), R.string.addressbook_2nd_msg));
     mActionsListener.getButtonsState();
     //dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

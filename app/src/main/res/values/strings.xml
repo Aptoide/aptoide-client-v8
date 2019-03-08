@@ -163,7 +163,6 @@
   <string name="remote_install_help_url" translatable="false">http://blog.aptoide.com/remote-tv-install</string>
 
   <!-- Product cards -->
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
   <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
@@ -185,7 +184,6 @@
   <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
   <string name="reviewappview_highlighted_reviews_explanation_3">Write about an app you have installed</string>
-  <string name="reviewappview_highlighted_reviews_explanation_4">Be a user of %1$s for over 3 months</string>
 
   <!--Rate: app view: review:comments-->
   <string name="reviewappview_short_comments_by_language_all">All languages</string>
@@ -363,7 +361,6 @@
 
   <!-- Auto Update -->
   <string name="update_self_title">Update available</string>
-  <string name="update_self_msg">There is a new version of %s available\nDo you want to update?</string>
   <string name="retrieving_update">Retrieving update…</string>
 
   <string name="menu_search_item_go_to_store">Go to store</string>
@@ -472,7 +469,6 @@
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
 
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
-  <string name="hello_follow_me_on_aptoide">Hello! Follow me on %s</string>
 
   <!-- Not Logged in Fragment -->
   <string name="not_logged_in_share_short_start_interacting">Start interacting:</string>

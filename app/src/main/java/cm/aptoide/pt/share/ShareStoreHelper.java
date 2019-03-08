@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import java.util.Locale;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import rx.Observable;
 
 /**
@@ -13,11 +13,11 @@ import rx.Observable;
 public class ShareStoreHelper {
 
   private final Context context;
-  private final String marketName;
+  private final MarketResourceFormatter marketResourceFormatter;
 
-  public ShareStoreHelper(Context context, String marketName) {
+  public ShareStoreHelper(Context context, MarketResourceFormatter marketResourceFormatter) {
     this.context = context;
-    this.marketName = marketName;
+    this.marketResourceFormatter = marketResourceFormatter;
   }
 
   public void shareStore(String storeUrl, String storeIconPath) {
@@ -34,8 +34,9 @@ public class ShareStoreHelper {
   }
 
   private void caseDefaultShare(String storeUrl) {
-    String msg = String.format(Locale.ENGLISH,
-        context.getString(R.string.hello_follow_me_on_aptoide) + " " + storeUrl, marketName);
+    String msg = marketResourceFormatter.formatString(context, R.string.hello_follow_me_on_aptoide)
+        + " "
+        + storeUrl;
 
     Intent sharingIntent = new Intent(Intent.ACTION_SEND);
     sharingIntent.setType("text/plain");

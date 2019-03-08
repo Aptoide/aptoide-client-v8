@@ -73,6 +73,7 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.settings.MyAccountNavigator;
@@ -265,10 +266,10 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      @Named("marketName") String marketName) {
+      @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources,
-        marketName);
+        marketName, marketResourceFormatter);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(

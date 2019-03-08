@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -32,8 +34,10 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment
   @LayoutRes private static final int LAYOUT = R.layout.fragment_profile_step_two;
   @Inject AccountAnalytics accountAnalytics;
   @Inject LoginSignupManager loginSignupManager;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   private Button continueBtn;
   private Button privateProfileBtn;
+  private TextView createProfileTitle;
   private ProgressDialog waitDialog;
   private boolean externalLogin;
   private AccountNavigator accountNavigator;
@@ -130,5 +134,8 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment
     super.bindViews(view);
     continueBtn = (Button) view.findViewById(R.id.logged_in_continue);
     privateProfileBtn = (Button) view.findViewById(R.id.logged_in_private_button);
+    createProfileTitle = view.findViewById(R.id.create_profile_title);
+    createProfileTitle.setText(
+        marketResourceFormatter.formatString(getContext(), R.string.create_profile_pub_pri));
   }
 }

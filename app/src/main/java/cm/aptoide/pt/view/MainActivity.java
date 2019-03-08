@@ -28,6 +28,7 @@ import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.ironsource.mediationsdk.IronSource;
@@ -43,7 +44,7 @@ public class MainActivity extends BottomNavigationActivity
 
   @Inject Presenter presenter;
   @Inject Resources resources;
-  @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -178,7 +179,7 @@ public class MainActivity extends BottomNavigationActivity
     updateSelfDialog.setTitle(getText(R.string.update_self_title));
     updateSelfDialog.setIcon(R.mipmap.ic_launcher);
     updateSelfDialog.setMessage(
-        AptoideUtils.StringU.getFormattedString(R.string.update_self_msg, resources, marketName));
+        marketResourceFormatter.formatString(getApplicationContext(), R.string.update_self_msg));
     updateSelfDialog.setCancelable(false);
     updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
         (arg0, arg1) -> {
