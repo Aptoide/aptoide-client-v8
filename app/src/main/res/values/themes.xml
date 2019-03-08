@@ -131,6 +131,8 @@
     <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
     <item name="alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
+    <item name="homeChips">@drawable/default_home_chips_background</item>
+
   </style>
 
   <style name="AptoideThemeDefault" parent="AppBaseTheme">
@@ -275,6 +277,7 @@
     <item name="nav_item_color_state">@drawable/grey_nav_item_color_state</item>
     <item name="wizard3Color">@color/grey</item>
     <item name="loggedInIcon">@drawable/grey_ic_logged_in</item>
+    <item name="homeChips">@drawable/grey_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomGrey</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
@@ -299,6 +302,7 @@
     <item name="nav_item_color_state">@drawable/teal_nav_item_color_state</item>
     <item name="wizard3Color">@color/teal</item>
     <item name="loggedInIcon">@drawable/teal_ic_logged_in</item>
+    <item name="homeChips">@drawable/teal_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomTeal</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideTeal</item>
@@ -322,6 +326,7 @@
     <item name="nav_item_color_state">@drawable/brown_nav_item_color_state</item>
     <item name="wizard3Color">@color/brown</item>
     <item name="loggedInIcon">@drawable/brown_ic_logged_in</item>
+    <item name="homeChips">@drawable/brown_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomBrown</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBrown</item>
@@ -346,6 +351,7 @@
     <item name="nav_item_color_state">@drawable/blue_grey_nav_item_color_state</item>
     <item name="wizard3Color">@color/blue_grey</item>
     <item name="loggedInIcon">@drawable/blue_grey_ic_logged_in</item>
+    <item name="homeChips">@drawable/blue_grey_home_chips_background</item>
 
 
     <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
@@ -372,6 +378,7 @@
     <item name="nav_item_color_state">@drawable/light_green_nav_item_color_state</item>
     <item name="wizard3Color">@color/light_green</item>
     <item name="loggedInIcon">@drawable/light_green_ic_logged_in</item>
+    <item name="homeChips">@drawable/light_green_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightgreen</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
@@ -396,6 +403,7 @@
     <item name="nav_item_color_state">@drawable/light_blue_nav_item_color_state</item>
     <item name="wizard3Color">@color/light_blue</item>
     <item name="loggedInIcon">@drawable/light_blue_ic_logged_in</item>
+    <item name="homeChips">@drawable/light_blue_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomLightblue</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
@@ -420,6 +428,7 @@
     <item name="nav_item_color_state">@drawable/amber_nav_item_color_state</item>
     <item name="wizard3Color">@color/amber</item>
     <item name="loggedInIcon">@drawable/amber_ic_logged_in</item>
+    <item name="homeChips">@drawable/amber_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomAmber</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideAmber</item>
@@ -443,6 +452,7 @@
     <item name="nav_item_color_state">@drawable/lime_nav_item_color_state</item>
     <item name="wizard3Color">@color/lime</item>
     <item name="loggedInIcon">@drawable/lime_ic_logged_in</item>
+    <item name="homeChips">@drawable/lime_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomLime</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLime</item>
@@ -467,6 +477,7 @@
     <item name="nav_item_color_state">@drawable/orange_nav_item_color_state</item>
     <item name="wizard3Color">@color/orange</item>
     <item name="loggedInIcon">@drawable/orange_ic_logged_in</item>
+    <item name="homeChips">@drawable/orange_home_chips_background</item>
 
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomOrange</item>
@@ -491,6 +502,7 @@
     <item name="nav_item_color_state">@drawable/pink_nav_item_color_state</item>
     <item name="wizard3Color">@color/pink</item>
     <item name="loggedInIcon">@drawable/pink_ic_logged_in</item>
+    <item name="homeChips">@drawable/pink_home_chips_background</item>
 
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomPink</item>
@@ -516,6 +528,7 @@
     <item name="nav_item_color_state">@drawable/indigo_nav_item_color_state</item>
     <item name="wizard3Color">@color/indigo</item>
     <item name="loggedInIcon">@drawable/indigo_ic_logged_in</item>
+    <item name="homeChips">@drawable/indigo_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomIndigo</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideIndigo</item>
@@ -543,6 +556,7 @@
     <item name="nav_item_color_state">@drawable/red_nav_item_color_state</item>
     <item name="wizard3Color">@color/red</item>
     <item name="loggedInIcon">@drawable/red_ic_logged_in</item>
+    <item name="homeChips">@drawable/red_home_chips_background</item>
 
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomRed</item>
@@ -567,6 +581,7 @@
     <item name="nav_item_color_state">@drawable/green_nav_item_color_state</item>
     <item name="wizard3Color">@color/green</item>
     <item name="loggedInIcon">@drawable/green_ic_logged_in</item>
+    <item name="homeChips">@drawable/green_home_chips_background</item>
 
     <!-- widgets -->
     <item name="customButton">@style/WidgetButtonCustomGreen</item>
@@ -595,6 +610,7 @@
     <item name="nav_item_color_state">@drawable/deep_purple_nav_item_color_state</item>
     <item name="wizard3Color">@color/deep_purple</item>
     <item name="loggedInIcon">@drawable/deep_purple_ic_logged_in</item>
+    <item name="homeChips">@drawable/deep_purple_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomDeepPurple</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
@@ -618,6 +634,7 @@
     <item name="nav_item_color_state">@drawable/black_nav_item_color_state</item>
     <item name="wizard3Color">@color/black</item>
     <item name="loggedInIcon">@drawable/black_ic_logged_in</item>
+    <item name="homeChips">@drawable/black_home_chips_background</item>
 
     <item name="customButton">@style/WidgetButtonCustomBlack</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBlack</item>
