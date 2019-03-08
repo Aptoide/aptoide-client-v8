@@ -31,7 +31,10 @@ public class EditorialListRepository {
   }
 
   public boolean hasMore() {
-    return cachedEditorialListViewModel.getOffset() < cachedEditorialListViewModel.getTotal();
+    if (cachedEditorialListViewModel != null) {
+      return cachedEditorialListViewModel.getOffset() < cachedEditorialListViewModel.getTotal();
+    }
+    return false;
   }
 
   public Single<EditorialListViewModel> loadMoreCurationCards() {
@@ -49,8 +52,8 @@ public class EditorialListRepository {
       List<CurationCard> curationCards = cachedEditorialListViewModel.getCurationCards();
       curationCards.addAll(editorialListViewModel.getCurationCards());
       cachedEditorialListViewModel =
-          new EditorialListViewModel(curationCards, cachedEditorialListViewModel.getOffset(),
-              cachedEditorialListViewModel.getTotal());
+          new EditorialListViewModel(curationCards, editorialListViewModel.getOffset(),
+              editorialListViewModel.getTotal());
     }
   }
 }

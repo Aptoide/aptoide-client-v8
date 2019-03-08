@@ -63,11 +63,8 @@ public class EditorialListService {
   private EditorialListViewModel mapEditorialList(EditorialListResponse actionItemResponse) {
     DataList<EditorialListData> dataList = actionItemResponse.getDataList();
     List<EditorialListData> items = dataList.getList();
-    int offset = dataList.getOffset();
-    int limit = dataList.getLimit();
-    int total = dataList.getTotal();
     List<CurationCard> curationCards = buildCurationCardList(items);
-    return new EditorialListViewModel(curationCards, offset + limit, total);
+    return new EditorialListViewModel(curationCards, dataList.getNext(), dataList.getTotal());
   }
 
   private List<CurationCard> buildCurationCardList(List<EditorialListData> items) {
