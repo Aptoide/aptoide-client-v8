@@ -41,7 +41,8 @@
           android:layout_marginLeft="14dp"
           android:layout_marginStart="14dp"
           android:src="@drawable/ic_promotions_home"
-          android:visibility="visible"
+          android:visibility="gone"
+          tools:visibility="visible"
           />
 
       <TextView
