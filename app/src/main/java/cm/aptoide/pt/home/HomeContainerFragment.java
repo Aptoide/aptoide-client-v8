@@ -14,9 +14,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
+import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -24,6 +26,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
 
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject HomeContainerPresenter presenter;
+  @Inject @Named("aptoide-theme") String theme;
   private BottomNavigationActivity bottomNavigationActivity;
   private CheckBox gamesChip;
   private CheckBox appsChip;
@@ -69,7 +72,8 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
       if (isChecked) {
         gamesChip.setTextColor(getResources().getColor(R.color.white));
       } else {
-        gamesChip.setTextColor(getResources().getColor(R.color.default_orange_gradient_end));
+        gamesChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
+            .getDarkerColor()));
       }
     });
 
@@ -77,7 +81,8 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
       if (isChecked) {
         appsChip.setTextColor(getResources().getColor(R.color.white));
       } else {
-        appsChip.setTextColor(getResources().getColor(R.color.default_orange_gradient_end));
+        appsChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
+            .getDarkerColor()));
       }
     });
     attachPresenter(presenter);

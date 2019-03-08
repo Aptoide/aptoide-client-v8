@@ -18,7 +18,7 @@
       android:layout_marginStart="16dp"
       android:layout_weight="2"
       android:animateLayoutChanges="true"
-      android:background="@drawable/selector_match_team"
+      android:background="?attr/homeChips"
       android:button="@null"
       android:drawableEnd="@drawable/ic_cancel_white_24dp"
       android:drawablePadding="-30sp"
@@ -27,10 +27,10 @@
       android:gravity="center"
       android:maxLines="2"
       android:minLines="2"
-      android:text="@string/home_chip_games"
       android:paddingRight="10dp"
+      android:text="@string/home_chip_games"
       android:textAllCaps="true"
-      android:textColor="#FE6446"
+      android:textColor="?attr/colorPrimaryDark"
       />
   <CheckBox
       android:id="@+id/apps_chip"
@@ -41,7 +41,7 @@
       android:layout_marginRight="16dp"
       android:layout_weight="2"
       android:animateLayoutChanges="true"
-      android:background="@drawable/selector_match_team"
+      android:background="?attr/homeChips"
       android:button="@null"
       android:drawableEnd="@drawable/ic_cancel_white_24dp"
       android:drawablePadding="-30sp"
@@ -53,7 +53,7 @@
       android:paddingRight="10dp"
       android:text="@string/home_chip_apps"
       android:textAllCaps="true"
-      android:textColor="#FE6446"
+      android:textColor="?attr/colorPrimaryDark"
       />
 
 
