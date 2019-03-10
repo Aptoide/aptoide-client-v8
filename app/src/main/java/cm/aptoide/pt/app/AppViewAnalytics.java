@@ -301,12 +301,12 @@ public class AppViewAnalytics {
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
-      String editorsChoice) {
+      String editorsChoice, boolean areAdsBlockedByOffer) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.APPVIEW, action);
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.INSTALL, action);
+          editorsChoice, InstallType.INSTALL, action, areAdsBlockedByOffer);
     }
   }
 

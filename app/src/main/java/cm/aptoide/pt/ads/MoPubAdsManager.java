@@ -62,6 +62,10 @@ public class MoPubAdsManager {
     return moPubInterstitialAdExperiment.recordAdClick();
   }
 
+  public Single<Boolean> areAdsBlockedByWalletOffer() {
+    return shouldRequestMoPubAd();
+  }
+
   private Single<Boolean> shouldRequestMoPubAd() {
     return walletAdsOfferService.isWalletOfferActive()
         .flatMap(isOfferActive -> {

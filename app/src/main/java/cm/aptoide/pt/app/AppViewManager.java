@@ -314,22 +314,25 @@ public class AppViewManager {
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
-                editorsChoicePosition)))
+        .flatMapSingle(download -> moPubAdsManager.areAdsBlockedByWalletOffer()
+            .doOnSuccess(
+                areAdsBlocked -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
+                    editorsChoicePosition, areAdsBlocked))
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, long appId) {
-    setupDownloadEvents(download, null, appId, null, null);
+  private void setupDownloadEvents(Download download, long appId, Boolean areAdsBlocked) {
+    setupDownloadEvents(download, null, appId, null, null, areAdsBlocked);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
-      long appId, String malwareRank, String editorsChoice) {
+      long appId, String malwareRank, String editorsChoice, boolean areAdsBlocked) {
     int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice);
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, areAdsBlocked);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
@@ -350,8 +353,10 @@ public class AppViewManager {
 
   public Completable resumeDownload(String md5, long appId) {
     return installManager.getDownload(md5)
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, appId)));
+        .flatMap(download -> moPubAdsManager.areAdsBlockedByWalletOffer()
+            .doOnSuccess(areAdsBlocked -> setupDownloadEvents(download, appId, areAdsBlocked))
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download));
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {

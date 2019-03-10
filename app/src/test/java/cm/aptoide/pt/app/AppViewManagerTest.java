@@ -609,7 +609,7 @@ public class AppViewManagerTest {
     verify(installManager).install(download);
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
-        AnalyticsManager.Action.CLICK, "aString", null);
+        AnalyticsManager.Action.CLICK, "aString", null, false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null);
   }
@@ -667,7 +667,7 @@ public class AppViewManagerTest {
     verify(installManager).install(download);
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString", null,
-        AnalyticsManager.Action.CLICK, null, null);
+        AnalyticsManager.Action.CLICK, null, null, true);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString");
   }
