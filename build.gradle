@@ -150,6 +150,8 @@ ext {
   FABRIC_VERSION = '1.25.4'
 
   APPC_CONTRACT_PROXY_VERSION = '0.4.5.19b'
+
+  LOTTIE_VERSION = '2.7.0'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html
