@@ -120,6 +120,8 @@ public class AppViewPresenter implements Presenter {
     handleInterstitialAdClick();
     handleInterstitialAdLoaded();
     showInterstitialAd();
+
+    handleDismissWalletPromotion();
   }
 
   private Completable showBannerAd() {
@@ -754,6 +756,7 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSimilarAppsBundles(appViewModel),
+            //LOAD WALLET PROMO HERE
             updateReviews(appViewModel),
             (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
             .first()
@@ -1154,6 +1157,18 @@ public class AppViewPresenter implements Presenter {
             appViewAnalytics.sendDonateImpressionAfterInstall(model.getPackageName());
           }
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handleDismissWalletPromotion() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.dismissWalletPromotionClick())
+        .doOnNext(__ -> view.dismissWalletPromotionView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

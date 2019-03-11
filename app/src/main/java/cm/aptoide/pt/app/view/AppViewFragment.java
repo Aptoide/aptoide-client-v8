@@ -262,6 +262,18 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private MoPubView bannerAd;
   private View flagThisAppSection;
   private View collapsingAppcBackground;
+  //wallet promotion
+  private View walletPromotionView;
+  private TextView walletPromotionTitle;
+  private TextView walletPromotionMessage;
+  private View walletDownloadControlsLayout;
+  private Button walletPromotionCancelButton;
+  private Button walletPromotionDownloadButton;
+  private ProgressBar downloadWalletProgressBar;
+  private TextView downloadWalletProgressValue;
+  private ImageView cancelWalletDownload;
+  private ImageView pauseWalletDownload;
+  private ImageView resumeWalletDownload;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -398,6 +410,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+
+    walletPromotionView = view.findViewById(R.id.wallet_install_promotion);
+    walletPromotionTitle = walletPromotionView.findViewById(R.id.wallet_title);
+    walletPromotionMessage = walletPromotionView.findViewById(R.id.wallet_message);
+    walletDownloadControlsLayout = walletPromotionView.findViewById(R.id.buttons_layout);
+    walletPromotionCancelButton = walletPromotionView.findViewById(R.id.cancel_button);
+    walletPromotionDownloadButton = walletPromotionView.findViewById(R.id.download_button);
+    downloadWalletProgressBar =
+        walletDownloadControlsLayout.findViewById(R.id.wallet_download_progress_bar);
+    downloadWalletProgressValue =
+        walletDownloadControlsLayout.findViewById(R.id.wallet_download_progress_number);
+    cancelWalletDownload =
+        walletDownloadControlsLayout.findViewById(R.id.wallet_download_cancel_button);
+    pauseWalletDownload =
+        walletDownloadControlsLayout.findViewById(R.id.wallet_download_pause_download);
+    resumeWalletDownload =
+        walletDownloadControlsLayout.findViewById(R.id.wallet_download_resume_download);
 
     donationsAdapter = new DonationsAdapter(new ArrayList<>());
     donationsList.setAdapter(donationsAdapter);
@@ -1148,6 +1177,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     downloadProgressBar.setProgressDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
     flagThisAppSection.setVisibility(View.GONE);
+    showAppcWalletPromotionView();
+  }
+
+  @Override public void showAppcWalletPromotionView() {
+    walletPromotionView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<Void> dismissWalletPromotionClick() {
+    return RxView.clicks(walletPromotionCancelButton);
+  }
+
+  @Override public Observable<Void> downloadWalletPromotionClick() {
+    return RxView.clicks(walletPromotionDownloadButton);
+  }
+
+  @Override public void dismissWalletPromotionView() {
+    walletPromotionView.setVisibility(View.GONE);
   }
 
   private void setSimilarAppsAdapters() {
