@@ -632,5 +632,8 @@
   <string name="wallet_promotion_card_title">Remove Ads Now!</string>
   <string name="wallet_promotion_card_body">Install the AppCoins Wallet to remove ads!</string>
 
+  <!--Editorial Content-->
+  <string name="editorial_card_views_short">%s views</string>
+  
 </resources>
 
