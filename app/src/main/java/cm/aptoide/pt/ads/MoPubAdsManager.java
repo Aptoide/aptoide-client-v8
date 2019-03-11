@@ -25,28 +25,40 @@ public class MoPubAdsManager {
   public Single<Boolean> shouldLoadInterstitialAd() {
     return areAdsBlockedByWalletOffer().flatMap(requestInterstitialAd -> {
       if (requestInterstitialAd) {
-        return moPubInterstitialAdExperiment.shouldLoadInterstitial();
+        return requestInterstitialAdsExperiment();
       }
       return Single.just(false);
     });
+  }
+
+  private Single<Boolean> requestInterstitialAdsExperiment() {
+    return moPubInterstitialAdExperiment.shouldLoadInterstitial();
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
     return areAdsBlockedByWalletOffer().flatMap(requestInterstitialAd -> {
       if (requestInterstitialAd) {
-        return moPubBannerAdExperiment.shouldLoadBanner();
+        return requestBannerAdsExperiment();
       }
       return Single.just(false);
     });
   }
 
+  private Single<Boolean> requestBannerAdsExperiment() {
+    return moPubBannerAdExperiment.shouldLoadBanner();
+  }
+
   public Single<Boolean> shouldLoadNativeAds() {
     return areAdsBlockedByWalletOffer().flatMap(requestInterstitialAd -> {
       if (requestInterstitialAd) {
-        return moPubNativeAdExperiment.shouldLoadNative();
+        return requestNativeAdsExperiment();
       }
       return Single.just(false);
     });
+  }
+
+  private Single<Boolean> requestNativeAdsExperiment() {
+    return moPubNativeAdExperiment.shouldLoadNative();
   }
 
   public Single<Boolean> recordInterstitialAdImpression() {
