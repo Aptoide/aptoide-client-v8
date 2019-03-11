@@ -76,6 +76,7 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
@@ -1160,9 +1161,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
       MoPubNativeAdExperiment moPubNativeAdExperiment,
-      WalletAdsOfferService walletAdsOfferService) {
+      WalletAdsOfferManager walletAdsOfferManager) {
     return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment, application.getApplicationContext()
+        moPubNativeAdExperiment, walletAdsOfferManager);
+  }
+
+  @Singleton @Provides WalletAdsOfferManager providesWalletAdsOfferManager(
+      WalletAdsOfferService walletAdsOfferService) {
+    return new WalletAdsOfferManager(application.getApplicationContext()
         .getPackageManager(), walletAdsOfferService);
   }
 
