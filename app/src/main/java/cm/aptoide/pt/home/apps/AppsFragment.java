@@ -13,20 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.download.DownloadAnalytics;
-import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.home.BottomNavigationActivity;
 import cm.aptoide.pt.home.BottomNavigationItem;
-import cm.aptoide.pt.install.InstallAnalytics;
-import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -37,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
@@ -50,14 +39,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class AppsFragment extends NavigationTrackFragment implements AppsFragmentView {
 
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
-  @Inject DownloadAnalytics downloadAnalytics;
-  @Inject InstallAnalytics installAnalytics;
-  @Inject UpdatesAnalytics updatesAnalytics;
-  @Inject AptoideAccountManager accountManager;
-  @Inject AppsNavigator appsNavigator;
-  @Inject UpdatesManager updatesManager;
-  @Inject InstallManager installManager;
-  @Inject DownloadFactory downloadFactory;
+  @Inject AppsPresenter appsPresenter;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
   private PublishSubject<AppClick> appItemClicks;
@@ -101,12 +83,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     buildIgnoreUpdatesDialog();
     userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
 
-    attachPresenter(new AppsPresenter(this,
-        new AppsManager(updatesManager, installManager, new AppMapper(), downloadAnalytics,
-            installAnalytics, updatesAnalytics, getContext().getPackageManager(), getContext(),
-            downloadFactory), AndroidSchedulers.mainThread(), Schedulers.io(),
-        CrashReport.getInstance(), new PermissionManager(), ((PermissionService) getContext()),
-        accountManager, appsNavigator));
+    attachPresenter(appsPresenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

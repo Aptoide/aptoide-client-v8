@@ -59,6 +59,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialManager;
@@ -77,7 +78,12 @@ import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
+import cm.aptoide.pt.home.apps.AppMapper;
+import cm.aptoide.pt.home.apps.AppsFragmentView;
+import cm.aptoide.pt.home.apps.AppsManager;
 import cm.aptoide.pt.home.apps.AppsNavigator;
+import cm.aptoide.pt.home.apps.AppsPresenter;
+import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -113,6 +119,7 @@ import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
+import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
@@ -407,5 +414,26 @@ import rx.subscriptions.CompositeSubscription;
     return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
         new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
         promotionsAnalytics, navigator);
+  }
+
+  @FragmentScope @Provides AppMapper providesAppMapper() {
+    return new AppMapper();
+  }
+
+  @FragmentScope @Provides AppsManager providesAppsManager(UpdatesManager updatesManager,
+      InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, UpdatesAnalytics updatesAnalytics,
+      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager) {
+    return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
+        installAnalytics, updatesAnalytics, fragment.getContext()
+        .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager);
+  }
+
+  @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,
+      AptoideAccountManager aptoideAccountManager, AppsNavigator appsNavigator) {
+    return new AppsPresenter(((AppsFragmentView) fragment), appsManager,
+        AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
+        new PermissionManager(), ((PermissionService) fragment.getContext()), aptoideAccountManager,
+        appsNavigator);
   }
 }
