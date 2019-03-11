@@ -1,6 +1,7 @@
 package cm.aptoide.pt.navigation;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.SplashScreenManager;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.BottomNavigationActivity;
@@ -48,6 +49,7 @@ public class BottomNavigationPresenterTest {
   @Mock private BottomNavigationNavigator bottomNavigationNavigator;
   @Mock private UpdatesManager updatesManager;
   @Mock private AutoUpdateManager autoUpdateManager;
+  @Mock private SplashScreenManager splashScreenManager;
   private MainPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Integer> navigationEvent;
@@ -62,7 +64,7 @@ public class BottomNavigationPresenterTest {
         CrashReport.getInstance(), apkFy, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
-        bottomNavigationNavigator, updatesManager, autoUpdateManager);
+        bottomNavigationNavigator, updatesManager, autoUpdateManager, splashScreenManager);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);
