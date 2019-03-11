@@ -41,6 +41,7 @@ import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
+import cm.aptoide.pt.view.splashscreen.SplashScreenFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
 import cm.aptoide.pt.view.wizard.WizardPageTwoFragment;
@@ -134,4 +135,6 @@ public interface FragmentComponent {
   void inject(ClaimPromotionDialogFragment claimPromotionDialogFragment);
 
   void inject(HomeContainerFragment homeContainerFragment);
+
+  void inject(SplashScreenFragment splashScreenFragment);
 }

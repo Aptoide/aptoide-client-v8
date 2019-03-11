@@ -7,6 +7,7 @@ package cm.aptoide.pt.presenter;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.SplashScreenManager;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -50,6 +51,7 @@ public class MainPresenter implements Presenter {
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final UpdatesManager updatesManager;
   private final AutoUpdateManager autoUpdateManager;
+  private final SplashScreenManager splashScreenManager;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -59,7 +61,7 @@ public class MainPresenter implements Presenter {
       DeepLinkManager deepLinkManager, boolean firstCreated,
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
-      AutoUpdateManager autoUpdateManager) {
+      AutoUpdateManager autoUpdateManager, SplashScreenManager splashScreenManager) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -79,6 +81,7 @@ public class MainPresenter implements Presenter {
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.updatesManager = updatesManager;
     this.autoUpdateManager = autoUpdateManager;
+    this.splashScreenManager = splashScreenManager;
   }
 
   @Override public void present() {
@@ -192,6 +195,8 @@ public class MainPresenter implements Presenter {
       if (SecurePreferences.isWizardAvailable(securePreferences)) {
         showWizard();
         SecurePreferences.setWizardAvailable(false, securePreferences);
+      } else {
+        splashScreenManager.showSplashScreen();
       }
     }
   }

@@ -28,6 +28,11 @@ public interface AptoideBottomNavigator {
   void toggleBottomNavigation();
 
   /**
+   * Hides the bottom navigation
+   */
+  void hideBottomNavigation();
+
+  /**
    * Puts the focus on the button of the BottomNavigation
    *
    * @param bottomNavigationItem Button to give focus
