@@ -274,10 +274,19 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     }
   }
 
-  public void installClicked(String md5, String packageName, AnalyticsManager.Action action) {
+  public void installClicked(String md5, String packageName, AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     String previousContext = navigationTracker.getViewName(false);
-    downloadCompleteEvent(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext);
+
+    if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
+
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED));
+    } else {
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext);
+    }
   }
 
   public void downloadCompleteEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
