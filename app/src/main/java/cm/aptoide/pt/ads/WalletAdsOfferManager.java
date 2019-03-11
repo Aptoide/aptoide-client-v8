@@ -35,4 +35,8 @@ public class WalletAdsOfferManager {
     }
     return false;
   }
+
+  public enum OfferResponseStatus {
+    NO_ADS, ADS_UNLOCKED, ADS_LOCKED
+  }
 }

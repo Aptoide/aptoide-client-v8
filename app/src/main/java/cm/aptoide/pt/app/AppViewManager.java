@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
@@ -30,6 +31,9 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
+
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_LOCKED;
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
 
 /**
  * Created by D01 on 04/05/18.
@@ -314,25 +318,37 @@ public class AppViewManager {
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
-        .flatMapSingle(download -> moPubAdsManager.areAdsBlockedByWalletOffer()
-            .doOnSuccess(
-                areAdsBlocked -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
-                    editorsChoicePosition, areAdsBlocked))
+        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(hasAds -> {
+              if (hasAds) {
+                return moPubAdsManager.shouldShowAds()
+                    .doOnSuccess(showAds -> setupDownloadEvents(download, downloadAction, appId,
+                        trustedValue, editorsChoicePosition,
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
+                            : ADS_LOCKED));
+              } else {
+                setupDownloadEvents(download, downloadAction, appId, trustedValue,
+                    editorsChoicePosition, NO_ADS);
+                return Single.just(false);
+              }
+            })
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, long appId, Boolean areAdsBlocked) {
-    setupDownloadEvents(download, null, appId, null, null, areAdsBlocked);
+  private void setupDownloadEvents(Download download, long appId,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+    setupDownloadEvents(download, null, appId, null, null, offerResponseStatus);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
-      long appId, String malwareRank, String editorsChoice, boolean areAdsBlocked) {
+      long appId, String malwareRank, String editorsChoice,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, areAdsBlocked);
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
@@ -353,8 +369,19 @@ public class AppViewManager {
 
   public Completable resumeDownload(String md5, long appId) {
     return installManager.getDownload(md5)
-        .flatMap(download -> moPubAdsManager.areAdsBlockedByWalletOffer()
-            .doOnSuccess(areAdsBlocked -> setupDownloadEvents(download, appId, areAdsBlocked))
+        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(hasAds -> {
+              if (hasAds) {
+                return moPubAdsManager.shouldShowAds()
+                    .doOnSuccess(showAds -> setupDownloadEvents(download, appId,
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
+                            : ADS_LOCKED));
+              } else {
+                setupDownloadEvents(download, appId,
+                    WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
+                return Single.just(false);
+              }
+            })
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }

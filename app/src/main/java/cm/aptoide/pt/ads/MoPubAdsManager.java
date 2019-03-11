@@ -23,41 +23,41 @@ public class MoPubAdsManager {
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {
-    return areAdsBlockedByWalletOffer().flatMap(requestInterstitialAd -> {
+    return shouldShowAds().flatMap(requestInterstitialAd -> {
       if (requestInterstitialAd) {
-        return requestInterstitialAdsExperiment();
+        return shouldHaveInterstitialAds();
       }
       return Single.just(false);
     });
   }
 
-  private Single<Boolean> requestInterstitialAdsExperiment() {
+  public Single<Boolean> shouldHaveInterstitialAds() {
     return moPubInterstitialAdExperiment.shouldLoadInterstitial();
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
-    return areAdsBlockedByWalletOffer().flatMap(requestInterstitialAd -> {
+    return shouldShowAds().flatMap(requestInterstitialAd -> {
       if (requestInterstitialAd) {
-        return requestBannerAdsExperiment();
+        return shouldHaveBannerAds();
       }
       return Single.just(false);
     });
   }
 
-  private Single<Boolean> requestBannerAdsExperiment() {
+  private Single<Boolean> shouldHaveBannerAds() {
     return moPubBannerAdExperiment.shouldLoadBanner();
   }
 
   public Single<Boolean> shouldLoadNativeAds() {
-    return areAdsBlockedByWalletOffer().flatMap(requestInterstitialAd -> {
+    return shouldShowAds().flatMap(requestInterstitialAd -> {
       if (requestInterstitialAd) {
-        return requestNativeAdsExperiment();
+        return shouldHaveNativeAds();
       }
       return Single.just(false);
     });
   }
 
-  private Single<Boolean> requestNativeAdsExperiment() {
+  private Single<Boolean> shouldHaveNativeAds() {
     return moPubNativeAdExperiment.shouldLoadNative();
   }
 
@@ -69,7 +69,7 @@ public class MoPubAdsManager {
     return moPubInterstitialAdExperiment.recordAdClick();
   }
 
-  public Single<Boolean> areAdsBlockedByWalletOffer() {
+  public Single<Boolean> shouldShowAds() {
     return walletAdsOfferManager.shouldRequestMoPubAd();
   }
 }

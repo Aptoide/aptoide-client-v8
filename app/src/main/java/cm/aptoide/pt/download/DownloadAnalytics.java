@@ -6,6 +6,7 @@ import android.telephony.TelephonyManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
@@ -253,16 +254,24 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public void installClicked(String md5, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
-      boolean areAdsBlockedByOffer) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     String previousContext = navigationTracker.getViewName(false);
     String currentContext = navigationTracker.getViewName(true);
     editorsChoiceDownloadCompletedEvent(previousContext, md5, packageName, editorsBrickPosition,
         installType, currentContext, action);
     pushNotificationDownloadEvent(previousContext, md5, packageName, installType, action,
         currentContext);
-    downloadCompleteEvent(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
-        previousContext, areAdsBlockedByOffer);
+    if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
+
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
+          previousContext,
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED));
+    } else {
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
+          previousContext);
+    }
   }
 
   public void installClicked(String md5, String packageName, AnalyticsManager.Action action) {
