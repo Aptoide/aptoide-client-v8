@@ -556,7 +556,7 @@ dependencies {
   }
 
   //careful updating this because of support library conflicts
-  //implementation "com.airbnb.android:lottie:${LOTTIE_VERSION}"
+  implementation "com.airbnb.android:lottie:${LOTTIE_VERSION}"
 
 }
 
