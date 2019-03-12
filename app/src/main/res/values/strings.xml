@@ -625,7 +625,6 @@
   <string name="promotion_over_title">This promotion is over!</string>
   <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
 
-  
 
   <!--AppCoins Wallet Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
@@ -647,6 +646,6 @@
   <string name="promo_update2appc_appview_title">Get %s APPC Credits Now!</string>
   <string name="promo_update2appc_appview_message">Update this app to the AppCoins version and <b>get %s APPC Credtis</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins Version</string>
-  
+
 </resources>
 

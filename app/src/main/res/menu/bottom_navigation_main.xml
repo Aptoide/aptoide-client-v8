@@ -11,7 +11,7 @@
       android:id="@+id/action_curation"
       android:enabled="true"
       android:icon="@drawable/ic_editorial"
-      android:title="@string/bottomnavigation_button_curation"
+      android:title="@string/bottomnavigation_button_editorial"
       app:showAsAction="ifRoom"/>
   <item
       android:id="@+id/action_search"
