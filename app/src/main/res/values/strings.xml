@@ -43,7 +43,7 @@
   <string name="bottomnavigation_button_search">Search</string>
   <string name="bottomnavigation_button_stores">Stores</string>
   <string name="bottomnavigation_button_apps">Apps</string>
-  <string name="bottomnavigation_button_curation">Editorial</string>
+  <string name="bottomnavigation_button_editorial">Editorial</string>
   <string name="bottomnavigation_button_news">News</string>
   <string name="bottomnavigation_button_trending">Trending</string>
   <string name="bottomnavigation_button_discover">Discover</string>
@@ -621,6 +621,7 @@
   <string name="promotion_notification_body">Don\'t forget to claim your %s APPC Credits.</string>
   <string name="promotion_update_popup_title">Update Aptoide</string>
   <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
+  <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">This promotion is over!</string>
   <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
 
@@ -639,10 +640,13 @@
   <string name="editorial_card_views_short">%s views</string>
 
   <!--Update Apps Promotion-->
-  <string name="promo_update_title">Get APPC Credits Now!</string>
-  <string name="promo_update_body">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
-  <string name="promo_update_data_disclaimer">Check in the game settings if you can save your progress.</string>
-  <string name="promo_update_appcard_short">Uptade to AppCoins version</string>
-
+  <string name="promo_update2appc_title">Get APPC Credits Now!</string>
+  <string name="promo_update2appc_message">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>
+  <string name="promo_update2appc_appcard_short">Uptade to AppCoins version</string>
+  <string name="promo_update2appc_appview_title">Get %s APPC Credits Now!</string>
+  <string name="promo_update2appc_appview_message">Update this app to the AppCoins version and <b>get %s APPC Credtis</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_update_button">Update to AppCoins Version</string>
+  
 </resources>
 
