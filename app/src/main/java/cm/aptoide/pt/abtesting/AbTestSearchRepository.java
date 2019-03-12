@@ -50,7 +50,7 @@ public class AbTestSearchRepository implements AbTestRepository {
     return getExperimentResponse(identifier).flatMap(response -> {
       if (cacheValidator.isCacheValid(response.getAbSearchId())) {
         return getExperiment(identifier).flatMap(experiment -> {
-          if (position <= response.getItems()) {
+          if (position < response.getItems()) {
             return service.recordAction(response.getAbSearchId(), experiment.getAssignment());
           }
           return Observable.just(false);
