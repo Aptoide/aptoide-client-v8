@@ -282,19 +282,19 @@ android {
         "\"" + project.MOPUB_STARTAPP_APPLICATION_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID_PROD + "\""
+        "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID_PROD + "\""
+        "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_HOME_PLACEMENT_ID_PROD + "\""
+        "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_SEARCH_PLACEMENT_ID_PROD + "\""
+        "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID_PROD + "\""
+        "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_SEARCH_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_SEARCH_PLACEMENT_ID_PROD + "\""
+        "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_HOME_PLACEMENT_ID_PROD + "\""
+        "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
 
 
     variant.outputs.all { output ->
