@@ -43,6 +43,10 @@
   <string name="bottomnavigation_button_search">Search</string>
   <string name="bottomnavigation_button_stores">Stores</string>
   <string name="bottomnavigation_button_apps">Apps</string>
+  <string name="bottomnavigation_button_editorial">Editorial</string>
+  <string name="bottomnavigation_button_news">News</string>
+  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_discover">Discover</string>
 
   <!-- AppView -->
   <string name="appview_short_developer_website">Website</string>
