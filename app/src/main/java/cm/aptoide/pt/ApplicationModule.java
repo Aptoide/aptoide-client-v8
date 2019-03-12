@@ -1692,11 +1692,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository, @Named("homePromotionsId") String promotionId) {
+      InstalledRepository installedRepository, @Named("homePromotionsId") String promotionId,
+      MoPubAdsManager moPubAdsManager) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         preferencesManager, application.getApplicationContext()
-        .getPackageManager(), promotionsService, installedRepository, promotionId);
+        .getPackageManager(), promotionsService, installedRepository, promotionId, moPubAdsManager);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(

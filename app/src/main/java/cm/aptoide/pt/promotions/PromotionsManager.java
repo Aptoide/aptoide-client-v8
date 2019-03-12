@@ -3,6 +3,8 @@ package cm.aptoide.pt.promotions;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
@@ -16,6 +18,9 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
+
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_LOCKED;
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
 
 public class PromotionsManager {
 
@@ -32,6 +37,7 @@ public class PromotionsManager {
   private final PromotionsService promotionsService;
   private final InstalledRepository installedRepository;
   private final String promotionId;
+  private final MoPubAdsManager moPubAdsManager;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
@@ -39,7 +45,7 @@ public class PromotionsManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PackageManager packageManager,
       PromotionsService promotionsService, InstalledRepository installedRepository,
-      String promotionId) {
+      String promotionId, MoPubAdsManager moPubAdsManager) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -52,6 +58,7 @@ public class PromotionsManager {
     this.promotionsService = promotionsService;
     this.installedRepository = installedRepository;
     this.promotionId = promotionId;
+    this.moPubAdsManager = moPubAdsManager;
   }
 
   public Single<List<PromotionApp>> getPromotionApps() {
@@ -103,9 +110,23 @@ public class PromotionsManager {
         promotionViewApp.getMd5(), promotionViewApp.getAppIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
         promotionViewApp.getAlternativePath(), promotionViewApp.getObb()))
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, promotionViewApp.getPackageName(),
-                promotionViewApp.getAppId())))
+        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(hasAds -> {
+              if (hasAds) {
+                return moPubAdsManager.shouldShowAds()
+                    .doOnSuccess(
+                        showAds -> setupDownloadEvents(download, promotionViewApp.getPackageName(),
+                            promotionViewApp.getAppId(),
+                            showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
+                                : ADS_LOCKED));
+              } else {
+                setupDownloadEvents(download, promotionViewApp.getPackageName(),
+                    promotionViewApp.getAppId(), NO_ADS);
+                return Single.just(false);
+              }
+            })
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
@@ -113,11 +134,12 @@ public class PromotionsManager {
     preferencesManager.increaseNotLoggedInInstallClicks();
   }
 
-  private void setupDownloadEvents(Download download, String packageName, long appId) {
+  private void setupDownloadEvents(Download download, String packageName, long appId,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
     promotionsAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK);
+        AnalyticsManager.Action.CLICK, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
@@ -134,8 +156,21 @@ public class PromotionsManager {
 
   public Completable resumeDownload(String md5, String packageName, long appId) {
     return installManager.getDownload(md5)
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)));
+        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(hasAds -> {
+              if (hasAds) {
+                return moPubAdsManager.shouldShowAds()
+                    .doOnSuccess(showAds -> setupDownloadEvents(download, packageName, appId,
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
+                            : ADS_LOCKED));
+              } else {
+                setupDownloadEvents(download, packageName, appId,
+                    WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
+                return Single.just(false);
+              }
+            })
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download));
   }
 
   public void saveWalletAddress(String walletAddress) {

@@ -366,11 +366,22 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void downloadCompleteEvent(String id, String packageName, String trustedValue,
-      AnalyticsManager.Action action) {
+      AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
 
     String previousContext = navigationTracker.getViewName(false);
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
     ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
+
+    if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
+
+      downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
+          previousContext,
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED));
+    } else {
+      downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
+          previousContext);
+    }
 
     downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
         previousContext);
