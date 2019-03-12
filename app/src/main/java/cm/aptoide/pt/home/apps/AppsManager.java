@@ -237,11 +237,36 @@ public class AppsManager {
     return updatesManager.getAllUpdates()
         .first()
         .filter(updatesList -> !updatesList.isEmpty())
-        .flatMapIterable(updatesList -> updatesList)
-        .flatMap(update -> {
-          Download download = downloadFactory.create(update);
-          return Observable.just(download);
-        })
+        .flatMap(updates -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(hasAds -> {
+              if (hasAds) {
+                return moPubAdsManager.shouldShowAds()
+                    .map(showAds -> showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
+                        : ADS_LOCKED);
+              } else {
+                return Single.just(NO_ADS);
+              }
+            })
+            .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
+                .map(showAds1 -> updates)
+                .flatMapIterable(updatesList -> updatesList)
+                .flatMap(update -> Observable.just(downloadFactory.create(update))
+                    .doOnNext(download1 -> setupUpdateEvents(download1, Origin.UPDATE_ALL,
+                        offerResponseStatus))
+                    .toList()
+                    .flatMap(installManager::startInstalls))))
+        .toCompletable();
+
+
+
+
+
+
+
+        /*.flatMapIterable(updatesList -> updatesList).flatMap(update -> {
+      Download download = downloadFactory.create(update);
+      return Observable.just(download);
+    })
         .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
             .flatMap(hasAds -> {
               if (hasAds) {
@@ -257,7 +282,7 @@ public class AppsManager {
             .map(__ -> download))
         .toList()
         .flatMap(downloads -> installManager.startInstalls(downloads))
-        .toCompletable();
+        .toCompletable();*/
   }
 
   public Observable<Void> excludeUpdate(App app) {
