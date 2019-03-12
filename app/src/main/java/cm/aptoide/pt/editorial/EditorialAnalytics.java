@@ -12,18 +12,22 @@ import java.util.HashMap;
 
 public class EditorialAnalytics {
   public static final String CURATION_CARD_INSTALL = "Curation_Card_Install";
+  public static final String EDITORIAL_BN_CURATION_CARD_INSTALL =
+      "Editorial_BN_Curation_Card_Install";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String TYPE = "type";
 
   private final DownloadAnalytics downloadAnalytics;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
+  private final boolean fromHome;
 
   public EditorialAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, boolean fromHome) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
+    this.fromHome = fromHome;
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
@@ -41,11 +45,14 @@ public class EditorialAnalytics {
   }
 
   public void clickOnInstallButton(String packageName, String type) {
+    String installEvent = CURATION_CARD_INSTALL;
+    if (!fromHome) {
+      installEvent = EDITORIAL_BN_CURATION_CARD_INSTALL;
+    }
     HashMap<String, Object> map = new HashMap<>();
     map.put(APPLICATION_NAME, packageName);
     map.put(TYPE, type);
-    analyticsManager.logEvent(map, CURATION_CARD_INSTALL, AnalyticsManager.Action.CLICK,
-        getViewName(true));
+    analyticsManager.logEvent(map, installEvent, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
   private String getViewName(boolean isCurrent) {

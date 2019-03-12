@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home;
+package cm.aptoide.pt.bottomNavigation;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
+import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import javax.inject.Inject;

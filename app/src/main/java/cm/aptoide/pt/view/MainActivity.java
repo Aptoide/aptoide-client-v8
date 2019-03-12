@@ -24,7 +24,8 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.UnityAdsListener;
-import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -107,13 +108,20 @@ public class MainActivity extends BottomNavigationActivity
   private void setupUpdatesNotification() {
     BottomNavigationMenuView appsView =
         (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-    BottomNavigationItemView itemView = (BottomNavigationItemView) appsView.getChildAt(3);
+    BottomNavigationItemView appsItemView =
+        (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.APPS_POSITION);
+    BottomNavigationItemView editorialItemView =
+        (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.CURATION_POSITION);
 
     updatesBadge = LayoutInflater.from(this)
         .inflate(R.layout.updates_badge, appsView, false);
+    View newBadge = LayoutInflater.from(this)
+        .inflate(R.layout.new_badge, appsView, false);
 
     updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
-    itemView.addView(updatesBadge);
+    appsItemView.addView(updatesBadge);
+    editorialItemView.addView(newBadge);
+    appsItemView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

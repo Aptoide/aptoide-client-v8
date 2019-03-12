@@ -56,12 +56,14 @@ import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialManager;
@@ -70,10 +72,16 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
+import cm.aptoide.pt.editorialList.EditorialListAnalytics;
+import cm.aptoide.pt.editorialList.EditorialListManager;
+import cm.aptoide.pt.editorialList.EditorialListNavigator;
+import cm.aptoide.pt.editorialList.EditorialListPresenter;
+import cm.aptoide.pt.editorialList.EditorialListRepository;
+import cm.aptoide.pt.editorialList.EditorialListService;
+import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BannerRepository;
-import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
@@ -446,6 +454,50 @@ import rx.subscriptions.CompositeSubscription;
     return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
         new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
         promotionsAnalytics, navigator);
+  }
+
+  @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
+      EditorialListManager editorialListManager, AptoideAccountManager aptoideAccountManager,
+      EditorialListNavigator editorialListNavigator,
+      EditorialListAnalytics editorialListAnalytics) {
+    return new EditorialListPresenter((EditorialListView) fragment, editorialListManager,
+        aptoideAccountManager, editorialListNavigator, editorialListAnalytics,
+        CrashReport.getInstance(), AndroidSchedulers.mainThread());
+  }
+
+  @FragmentScope @Provides EditorialListManager providesEditorialListManager(
+      EditorialListRepository editorialListRepository) {
+    return new EditorialListManager(editorialListRepository);
+  }
+
+  @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
+      EditorialListService editorialListService) {
+    return new EditorialListRepository(editorialListService);
+  }
+
+  @FragmentScope @Provides EditorialListService providesEditorialService(
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        WebService.getDefaultConverter(), sharedPreferences, 10);
+  }
+
+  @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
+      FragmentNavigator fragmentNavigator) {
+    return new EditorialListNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
+      NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
+    return new EditorialListAnalytics(navigationTracker, analyticsManager);
+  }
+
+  @FragmentScope @Provides EditorialAnalytics providesEditorialAnalytics(
+      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
+        arguments.getBoolean("fromHome"));
   }
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(

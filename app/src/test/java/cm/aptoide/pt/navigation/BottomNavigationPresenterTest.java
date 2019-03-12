@@ -2,9 +2,9 @@ package cm.aptoide.pt.navigation;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.BottomNavigationActivity;
-import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;

@@ -43,7 +43,7 @@
   <string name="bottomnavigation_button_search">Search</string>
   <string name="bottomnavigation_button_stores">Stores</string>
   <string name="bottomnavigation_button_apps">Apps</string>
-  <string name="bottomnavigation_button_editorial">Editorial</string>
+  <string name="bottomnavigation_button_curation">Editorial</string>
   <string name="bottomnavigation_button_news">News</string>
   <string name="bottomnavigation_button_trending">Trending</string>
   <string name="bottomnavigation_button_discover">Discover</string>
@@ -289,6 +289,7 @@
   <string name="title_play_it">Play-It!</string>
   <string name="home_title_editors_choice">Editors\' Choice</string>
   <string name="home_game_of_the_week">Game of the Week</string>
+  <string name="editorial_card_short_number_views">%s views</string>
 
 
   <!--home Fragment-->
@@ -622,7 +623,7 @@
   <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
   <string name="promotion_over_title">This promotion is over!</string>
   <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
-  
+
   
 
   <!--AppCoins Wallet Promotion-->
@@ -636,12 +637,12 @@
 
   <!--Editorial Content-->
   <string name="editorial_card_views_short">%s views</string>
-  
+
   <!--Update Apps Promotion-->
   <string name="promo_update_title">Get APPC Credits Now!</string>
   <string name="promo_update_body">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
   <string name="promo_update_data_disclaimer">Check in the game settings if you can save your progress.</string>
   <string name="promo_update_appcard_short">Uptade to AppCoins version</string>
-  
+
 </resources>
 

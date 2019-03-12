@@ -7,6 +7,7 @@ public class ActionItemData {
   private String title;
   private String caption;
   private String url;
+  private String views;
 
   public String getType() {
     return type;
@@ -54,5 +55,13 @@ public class ActionItemData {
 
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  public String getViews() {
+    return views;
+  }
+
+  public void setViews(String views) {
+    this.views = views;
   }
 }

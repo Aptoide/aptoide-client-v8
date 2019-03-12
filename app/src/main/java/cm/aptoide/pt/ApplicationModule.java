@@ -95,6 +95,7 @@ import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -143,10 +144,10 @@ import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialService;
+import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.BannerRepository;
-import cm.aptoide.pt.home.BottomNavigationAnalytics;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
@@ -1681,12 +1682,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, sharedPreferences);
   }
 
-  @Singleton @Provides EditorialAnalytics providesEditorialAnalytics(
-      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker);
-  }
-
   @Singleton @Provides DonationsService providesDonationsService(
       DonationsService.ServiceV8 service) {
     return new DonationsService(service, Schedulers.io());
@@ -1801,10 +1796,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
         HomeAnalytics.HOME_CHIP_CLICK, TimelineAnalytics.MESSAGE_IMPRESSION,
         TimelineAnalytics.MESSAGE_INTERACT, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
+        EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
+        TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
+        AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
         NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
         DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
-        EditorialAnalytics.CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
+        EditorialAnalytics.CURATION_CARD_INSTALL,
+        EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
         PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR);
   }
 
