@@ -86,6 +86,12 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     }
   }
 
+  @Override public void hideBottomNavigation() {
+    if (bottomNavigationView.getVisibility() != View.GONE) {
+      bottomNavigationView.setVisibility(View.GONE);
+    }
+  }
+
   @Override public void requestFocus(BottomNavigationItem bottomNavigationItem) {
     int bottomNavigationPosition =
         bottomNavigationMapper.mapToBottomNavigationPosition(bottomNavigationItem);

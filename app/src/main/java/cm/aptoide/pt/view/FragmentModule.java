@@ -74,6 +74,7 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BannerRepository;
 import cm.aptoide.pt.home.BottomNavigationMapper;
+import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
@@ -115,6 +116,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.splashscreen.SplashScreenNavigator;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -122,6 +124,8 @@ import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.splashscreen.SplashScreenPresenter;
+import cm.aptoide.pt.view.splashscreen.SplashScreenView;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -228,6 +232,11 @@ import rx.subscriptions.CompositeSubscription;
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper, Schedulers.io());
+  }
+
+  @FragmentScope @Provides SplashScreenPresenter providesSplashScreenPresenter(
+      SplashScreenNavigator splashScreenNavigator) {
+    return new SplashScreenPresenter((SplashScreenView) fragment, splashScreenNavigator);
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
