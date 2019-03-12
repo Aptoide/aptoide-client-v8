@@ -631,5 +631,11 @@
   <!--Editorial Content-->
   <string name="editorial_card_views_short">%s views</string>
   
+  <!--Update Apps Promotion-->
+  <string name="promo_update_title">Get APPC Credits Now!</string>
+  <string name="promo_update_body">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
+  <string name="promo_update_data_disclaimer">Check in the game settings if you can save your progress.</string>
+  <string name="promo_update_appcard_short">Uptade to AppCoins version</string>
+  
 </resources>
 
