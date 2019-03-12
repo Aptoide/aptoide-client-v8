@@ -84,7 +84,6 @@ public class AppMapper {
 
   private StateApp.Status mapUpdateStatus(Install.InstallationStatus state) {
     StateApp.Status status;
-
     switch (state) {
       case GENERIC_ERROR:
       case INSTALLATION_TIMEOUT:
@@ -102,6 +101,9 @@ public class AppMapper {
       case INSTALLED:
       case UNINSTALLED:
         status = StateApp.Status.UPDATE;
+        break;
+      case INSTALLING:
+        status = StateApp.Status.INSTALLING;
         break;
       default:
         status = StateApp.Status.UPDATE;

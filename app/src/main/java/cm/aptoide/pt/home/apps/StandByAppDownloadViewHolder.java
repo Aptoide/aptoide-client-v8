@@ -47,7 +47,7 @@ class StandByAppDownloadViewHolder extends AppsViewHolder {
   @Override public void setApp(App app) {
     ImageLoader.with(itemView.getContext())
         .load(((DownloadApp) app).getIcon(), appIcon);
-    appName.setText(((DownloadApp) app).getAppName());
+    appName.setText(((DownloadApp) app).getName());
 
     if (((DownloadApp) app).isIndeterminate()) {
       progressBar.setIndeterminate(true);
