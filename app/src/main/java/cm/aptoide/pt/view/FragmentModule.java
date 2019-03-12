@@ -82,7 +82,6 @@ import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BannerRepository;
-import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
@@ -484,7 +483,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
-      FragmentNavigator fragmentNavigator) {
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
     return new EditorialListNavigator(fragmentNavigator);
   }
 
