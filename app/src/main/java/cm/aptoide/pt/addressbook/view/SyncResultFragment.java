@@ -17,6 +17,7 @@ import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.presenter.SyncResultContract;
 import cm.aptoide.pt.presenter.SyncResultPresenter;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.google.gson.Gson;
@@ -39,7 +40,7 @@ public class SyncResultFragment extends UIComponentFragment
   private static final String TAG = "TAG";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
-  @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject @Named("aptoide-theme") String theme;
   private SyncResultContract.UserActionsListener mActionsListener;
   private List<Contact> contacts;
@@ -86,7 +87,8 @@ public class SyncResultFragment extends UIComponentFragment
         new SyncResultPresenter(this, new AddressBookAnalytics(analyticsManager, navigationTracker),
             new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
                 getString(R.string.addressbook_about),
-                getString(R.string.addressbook_data_about, marketName), theme));
+                marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
+                theme));
     mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, getContext());
   }
 
@@ -104,7 +106,8 @@ public class SyncResultFragment extends UIComponentFragment
     recyclerView.setLayoutManager(
         new GridLayoutManager(getContext(), SYNCED_LIST_NUMBER_OF_COLUMNS));
 
-    successMessage.setText(getString(R.string.addressbook_success_connected_friends,
+    successMessage.setText(marketResourceFormatter.formatString(getContext(),
+        R.string.addressbook_success_connected_friends,
         Integer.toString(contacts.size())));
 
     RxView.clicks(allowFind)

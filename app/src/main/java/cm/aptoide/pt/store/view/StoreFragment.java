@@ -60,6 +60,7 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -90,6 +91,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Inject AppNavigator appNavigator;
   @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   private AptoideAccountManager accountManager;
   private String storeName;
   private String title;
@@ -221,7 +223,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     sharedPreferences = application.getDefaultSharedPreferences();
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
-    shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+    shareStoreHelper = new ShareStoreHelper(getActivity(), marketResourceFormatter);
 
     if (hasSearchFromStoreFragment()) {
       searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);

@@ -36,6 +36,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -65,12 +66,13 @@ import rx.subscriptions.Subscriptions;
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
   private final String marketName;
+  private final MarketResourceFormatter marketResourceFormatter;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, InstalledRepository installedRepository,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
-      String marketName) {
+      String marketName, MarketResourceFormatter marketResourceFormatter) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
@@ -81,6 +83,7 @@ import rx.subscriptions.Subscriptions;
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
     this.marketName = marketName;
+    this.marketResourceFormatter = marketResourceFormatter;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -200,8 +203,9 @@ import rx.subscriptions.Subscriptions;
           .getString(R.string.reviewappview_highlighted_reviews_explanation_2));
       setBulletText(highlightedReviewsExplained_3, activity.getResources()
           .getString(R.string.reviewappview_highlighted_reviews_explanation_3));
-      setBulletText(highlightedReviewsExplained_4, activity.getResources()
-          .getString(R.string.reviewappview_highlighted_reviews_explanation_4, marketName));
+      setBulletText(highlightedReviewsExplained_4,
+          marketResourceFormatter.formatString(view.getContext(),
+              R.string.reviewappview_highlighted_reviews_explanation_4));
 
       // create and show rating dialog
       dialog.show();

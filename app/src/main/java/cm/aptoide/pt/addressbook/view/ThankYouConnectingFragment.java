@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -19,7 +20,7 @@ public class ThankYouConnectingFragment extends UIComponentFragment
     implements NotBottomNavigationView {
   public static final String TAG = "TAG";
   @Inject @Named("aptoide-theme") String theme;
-  @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   private Button done;
   private String entranceTag;
 
@@ -50,7 +51,7 @@ public class ThankYouConnectingFragment extends UIComponentFragment
     AddressBookNavigationManager addressBookNavigationManager =
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName),
+            marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
             theme);
     RxView.clicks(done)
         .subscribe(clicks -> addressBookNavigationManager.leaveAddressBook(),

@@ -220,6 +220,7 @@ import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -1709,6 +1710,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("marketName") String provideMarketName() {
     return BuildConfig.MARKET_NAME;
+  }
+
+  @Singleton @Provides MarketResourceFormatter provideMarketResourceFormatter(
+      @Named("marketName") String marketName) {
+    return new MarketResourceFormatter(marketName);
   }
 
   @Singleton @Provides @Named("homePromotionsId") String provideHomePromotionsId() {

@@ -85,6 +85,7 @@
         >
 
       <TextView
+          android:id="@+id/create_profile_title"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_medium_small"
