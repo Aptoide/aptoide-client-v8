@@ -1,21 +1,21 @@
 package cm.aptoide.pt.view.splashscreen;
 
-import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.splashscreen.SplashScreenNavigator;
 import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
 public class SplashScreenPresenter implements Presenter {
 
-  private BottomNavigationNavigator bottomNavigationNavigator;
+  private SplashScreenNavigator splashScreenNavigator;
   private SplashScreenView view;
 
   public SplashScreenPresenter(SplashScreenView splashScreenView,
-      BottomNavigationNavigator bottomNavigationNavigator) {
+      SplashScreenNavigator splashScreenNavigator) {
     this.view = splashScreenView;
-    this.bottomNavigationNavigator = bottomNavigationNavigator;
+    this.splashScreenNavigator = splashScreenNavigator;
   }
 
   @Override public void present() {
@@ -27,7 +27,7 @@ public class SplashScreenPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .delay(3000, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(__ -> bottomNavigationNavigator.navigateToHome())
+        .doOnNext(__ -> splashScreenNavigator.navigateToHome())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

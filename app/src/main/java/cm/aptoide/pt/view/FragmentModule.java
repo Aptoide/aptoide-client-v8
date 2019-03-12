@@ -116,6 +116,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.splashscreen.SplashScreenNavigator;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -234,8 +235,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides SplashScreenPresenter providesSplashScreenPresenter(
-      BottomNavigationNavigator bottomNavigationNavigator) {
-    return new SplashScreenPresenter((SplashScreenView) fragment, bottomNavigationNavigator);
+      SplashScreenNavigator splashScreenNavigator) {
+    return new SplashScreenPresenter((SplashScreenView) fragment, splashScreenNavigator);
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,

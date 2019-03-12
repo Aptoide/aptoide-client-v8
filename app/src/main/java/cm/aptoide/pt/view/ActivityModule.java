@@ -15,7 +15,6 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.SplashScreenManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -71,6 +70,8 @@ import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.splashscreen.SplashScreenManager;
+import cm.aptoide.pt.splashscreen.SplashScreenNavigator;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
@@ -171,19 +172,24 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
       UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
-      SplashScreenManager splashScreenManager) {
+      SplashScreenManager splashScreenManager, SplashScreenNavigator splashScreenNavigator) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager, splashScreenManager);
+        autoUpdateManager, splashScreenManager, splashScreenNavigator);
   }
 
-  @ActivityScope @Provides SplashScreenManager provideSplashScreenManager(
+  @ActivityScope @Provides SplashScreenManager provideSplashScreenManager() {
+    return new SplashScreenManager();
+  }
+
+  @ActivityScope @Provides SplashScreenNavigator provideSplashScreenNavigator(
+      BottomNavigationNavigator bottomNavigationNavigator,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new SplashScreenManager(fragmentNavigator);
+    return new SplashScreenNavigator(bottomNavigationNavigator, fragmentNavigator);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
