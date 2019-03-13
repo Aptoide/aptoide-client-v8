@@ -256,33 +256,6 @@ public class AppsManager {
                     .toList()
                     .flatMap(installManager::startInstalls))))
         .toCompletable();
-
-
-
-
-
-
-
-        /*.flatMapIterable(updatesList -> updatesList).flatMap(update -> {
-      Download download = downloadFactory.create(update);
-      return Observable.just(download);
-    })
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupUpdateEvents(download, Origin.UPDATE_ALL,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
-                            : ADS_LOCKED));
-              } else {
-                setupUpdateEvents(download, Origin.UPDATE_ALL, NO_ADS);
-                return Single.just(false);
-              }
-            })
-            .map(__ -> download))
-        .toList()
-        .flatMap(downloads -> installManager.startInstalls(downloads))
-        .toCompletable();*/
   }
 
   public Observable<Void> excludeUpdate(App app) {
