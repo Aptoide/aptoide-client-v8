@@ -19,6 +19,7 @@ import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.app.WalletPromotionViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
@@ -757,8 +758,9 @@ public class AppViewPresenter implements Presenter {
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSimilarAppsBundles(appViewModel),
             //LOAD WALLET PROMO HERE
-            updateReviews(appViewModel),
-            (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
+            updateReviews(appViewModel), updateWalletPromotion(appViewModel),
+            (similarAppsBundles, reviewsViewModel, walletPromotionViewModel) -> Observable.just(
+                appViewModel))
             .first()
             .map(__ -> appViewModel));
   }
@@ -840,6 +842,16 @@ public class AppViewPresenter implements Presenter {
           }
         })
         .toObservable();
+  }
+
+  private Observable<WalletPromotionViewModel> updateWalletPromotion(
+      AppViewViewModel appViewViewModel) {
+    return appViewManager.loadWalletPromotionViewModel(appViewViewModel.getPackageName(),
+        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())
+        .observeOn(viewScheduler)
+        .doOnNext(model -> {
+          if (!model.isClaimed() && model.isAppcoinsApp()) view.showAppcWalletPromotionView();
+        });
   }
 
   private void cancelDownload() {

@@ -22,12 +22,13 @@ public class Home {
   private final MoPubBannerAdExperiment bannerAdExperiment;
   private final MoPubNativeAdExperiment nativeAdExperiment;
   private final BannerRepository bannerRepository;
+  private final String promotionId;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
       MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
-      PromotionsPreferencesManager promotionsPreferencesManager) {
+      PromotionsPreferencesManager promotionsPreferencesManager, String promotionId) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
@@ -35,6 +36,7 @@ public class Home {
     this.nativeAdExperiment = nativeAdExperiment;
     this.bannerRepository = bannerRepository;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
+    this.promotionId = promotionId;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -103,7 +105,7 @@ public class Home {
   }
 
   public Single<HomePromotionsWrapper> hasPromotionApps() {
-    return promotionsManager.getPromotionApps()
+    return promotionsManager.getPromotionApps(promotionId)
         .map(this::mapPromotions);
   }
 

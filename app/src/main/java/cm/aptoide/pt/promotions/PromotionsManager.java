@@ -31,15 +31,13 @@ public class PromotionsManager {
   private final PackageManager packageManager;
   private final PromotionsService promotionsService;
   private final InstalledRepository installedRepository;
-  private final String promotionId;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PackageManager packageManager,
-      PromotionsService promotionsService, InstalledRepository installedRepository,
-      String promotionId) {
+      PromotionsService promotionsService, InstalledRepository installedRepository) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -51,20 +49,19 @@ public class PromotionsManager {
     this.packageManager = packageManager;
     this.promotionsService = promotionsService;
     this.installedRepository = installedRepository;
-    this.promotionId = promotionId;
   }
 
-  public Single<List<PromotionApp>> getPromotionApps() {
+  public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
     return promotionsService.getPromotionApps(promotionId);
   }
 
-  public Observable<PromotionsModel> getPromotionsModel() {
-    return getPromotionApps().toObservable()
+  public Observable<PromotionsModel> getPromotionsModel(String promotionsId) {
+    return getPromotionApps(promotionsId).toObservable()
         .map(
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }
 
-  private boolean isWalletInstalled() {
+  public boolean isWalletInstalled() {
     for (ApplicationInfo applicationInfo : packageManager.getInstalledApplications(0)) {
       if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
         return true;
@@ -147,7 +144,7 @@ public class PromotionsManager {
   }
 
   public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
-      String captcha) {
+      String captcha, String promotionId) {
     return promotionsService.claimPromotion(walletAddress, packageName, captcha, promotionId);
   }
 

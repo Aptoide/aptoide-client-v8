@@ -271,9 +271,9 @@ import rx.subscriptions.CompositeSubscription;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager,
       MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository,
-      MoPubNativeAdExperiment nativeAdExperiment) {
+      MoPubNativeAdExperiment nativeAdExperiment, @Named("homePromotionsId") String promotionsId) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerAdExperiment,
-        nativeAdExperiment, bannerRepository, promotionsPreferencesManager);
+        nativeAdExperiment, bannerRepository, promotionsPreferencesManager, promotionsId);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -331,14 +331,15 @@ import rx.subscriptions.CompositeSubscription;
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, PromotionsManager promotionsManager,
+      @Named("appviewWalletPromotionId") String promotionId) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
         marketName, appCoinsManager, moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment);
+        moPubNativeAdExperiment, promotionsManager, promotionId);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -436,10 +437,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator) {
+      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsId) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
-        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator);
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsId);
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -449,10 +450,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides ClaimPromotionDialogPresenter providesClaimPromotionDialogPresenter(
       ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
-      ClaimPromotionsNavigator navigator) {
+      ClaimPromotionsNavigator navigator, @Named("homePromotionsId") String promotionId) {
     return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
         new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
-        promotionsAnalytics, navigator);
+        promotionsAnalytics, navigator, promotionId);
   }
 
   @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(

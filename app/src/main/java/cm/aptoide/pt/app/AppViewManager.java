@@ -15,9 +15,12 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.promotions.PromotionApp;
+import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.SocialRepository;
@@ -43,6 +46,7 @@ public class AppViewManager {
   private final DownloadFactory downloadFactory;
   private final AppCenter appCenter;
   private final ReviewsManager reviewsManager;
+  private final PromotionsManager promotionsManager;
   private final AdsManager adsManager;
   private final StoreManager storeManager;
   private final FlagManager flagManager;
@@ -64,9 +68,11 @@ public class AppViewManager {
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
+  private WalletPromotionViewModel walletPromotionViewModel;
   private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
   private MoPubBannerAdExperiment moPubBannerAdExperiment;
   private MoPubNativeAdExperiment moPubNativeAdExperiment;
+  private String promotionId;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -78,7 +84,8 @@ public class AppViewManager {
       String marketName, AppCoinsManager appCoinsManager,
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, PromotionsManager promotionsManager,
+      String promotionId) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -101,6 +108,8 @@ public class AppViewManager {
     this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
     this.moPubBannerAdExperiment = moPubBannerAdExperiment;
     this.moPubNativeAdExperiment = moPubNativeAdExperiment;
+    this.promotionsManager = promotionsManager;
+    this.promotionId = promotionId;
     this.isFirstLoad = true;
   }
 
@@ -478,5 +487,44 @@ public class AppViewManager {
             && !cachedAppCoinsViewModel.hasBilling()
             && !cachedAppCoinsViewModel.hasAdvertising()
             && !cachedApp.isMature()));
+  }
+
+  public Observable<WalletPromotionViewModel> loadWalletPromotionViewModel(String packageName,
+      boolean hasAppc) {
+    if (!hasAppc) return Observable.just(new WalletPromotionViewModel(false, false, false));
+    return promotionsManager.getPromotionApps(promotionId)
+        .map(this::mapToWalletPromotion)
+        .toObservable()
+        .flatMap(view -> installManager.getInstall(view.getMd5sum(), view.getPackageName(),
+            view.getVersionCode())
+            .map(result -> new WalletPromotionViewModel(
+                mapToDownloadModel(result.getType(), result.getProgress(), result.getState()),
+                view.getAppName(), view.getIcon(), view.getId(), view.getPackageName(),
+                view.getMd5sum(), view.getVersionCode(), view.getVersionName(), view.getPath(),
+                view.getPathAlt(), view.getObb(), view.getAppcValue(), view.isClaimed(),
+                promotionsManager.isWalletInstalled(), view.isAppcoinsApp())));
+  }
+
+  private WalletPromotionViewModel mapToWalletPromotion(List<PromotionApp> apps) {
+    if (apps == null || apps.isEmpty()) {
+      return new WalletPromotionViewModel(false, true, true);
+    } else if (apps.size() != 1) {
+      return new WalletPromotionViewModel(false, true, true);
+    } else if (apps.get(0)
+        .isClaimed()) {
+      return new WalletPromotionViewModel(false, true, true);
+    } else {
+      PromotionApp app = apps.get(0);
+      return new WalletPromotionViewModel(null, app.getName(), app.getAppIcon(), app.getAppId(),
+          app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
+          app.getDownloadPath(), app.getAlternativePath(), app.getObb(),
+          Math.round(app.getAppcValue()), app.isClaimed(), false, true);
+    }
+  }
+
+  private DownloadModel mapToDownloadModel(Install.InstallationType type, int progress,
+      Install.InstallationStatus state) {
+    return new DownloadModel(downloadStateParser.parseDownloadType(type, false, false), progress,
+        downloadStateParser.parseDownloadState(state), null);
   }
 }

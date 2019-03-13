@@ -1177,7 +1177,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     downloadProgressBar.setProgressDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
     flagThisAppSection.setVisibility(View.GONE);
-    showAppcWalletPromotionView();
   }
 
   @Override public void showAppcWalletPromotionView() {
