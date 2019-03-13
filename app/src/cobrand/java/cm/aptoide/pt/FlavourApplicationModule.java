@@ -2,6 +2,7 @@ package cm.aptoide.pt;
 
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.preferences.AdultContentManager;
 import dagger.Module;
@@ -39,5 +40,9 @@ import javax.inject.Singleton;
 
   @Singleton @Provides MoPubNativeAdExperiment providesMoPubNativeAdExperiment() {
     return new MoPubNativeAdExperiment();
+  }
+
+  @Singleton @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment() {
+    return new MoPubInterstitialAdExperiment();
   }
 }
