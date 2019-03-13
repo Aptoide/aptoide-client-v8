@@ -10,6 +10,8 @@ public interface AbTestRepository {
 
   Observable<Boolean> recordAction(String identifier);
 
+  Observable<Boolean> recordAction(String identifier, int position);
+
   Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName);
 
   Observable<String> getExperimentId(String id);

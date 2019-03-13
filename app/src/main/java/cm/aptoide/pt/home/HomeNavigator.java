@@ -5,6 +5,8 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.link.CustomTabsHelper;
@@ -98,6 +100,7 @@ public class HomeNavigator {
   public void navigateToEditorial(String cardId) {
     Bundle bundle = new Bundle();
     bundle.putString("cardId", cardId);
+    bundle.putBoolean("fromHome", true);
     EditorialFragment fragment = new EditorialFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);

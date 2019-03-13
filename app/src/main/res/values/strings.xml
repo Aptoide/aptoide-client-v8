@@ -43,6 +43,10 @@
   <string name="bottomnavigation_button_search">Search</string>
   <string name="bottomnavigation_button_stores">Stores</string>
   <string name="bottomnavigation_button_apps">Apps</string>
+  <string name="bottomnavigation_button_editorial">Editorial</string>
+  <string name="bottomnavigation_button_news">News</string>
+  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_discover">Discover</string>
 
   <!-- AppView -->
   <string name="appview_short_developer_website">Website</string>
@@ -163,7 +167,6 @@
   <string name="remote_install_help_url" translatable="false">http://blog.aptoide.com/remote-tv-install</string>
 
   <!-- Product cards -->
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
   <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
@@ -185,7 +188,6 @@
   <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
   <string name="reviewappview_highlighted_reviews_explanation_3">Write about an app you have installed</string>
-  <string name="reviewappview_highlighted_reviews_explanation_4">Be a user of %1$s for over 3 months</string>
 
   <!--Rate: app view: review:comments-->
   <string name="reviewappview_short_comments_by_language_all">All languages</string>
@@ -287,10 +289,13 @@
   <string name="title_play_it">Play-It!</string>
   <string name="home_title_editors_choice">Editors\' Choice</string>
   <string name="home_game_of_the_week">Game of the Week</string>
+  <string name="editorial_card_short_number_views">%s views</string>
 
 
   <!--home Fragment-->
   <string name="featured_stores">Featured stores</string>
+  <string name="home_chip_games">Games</string>
+  <string name="home_chip_apps">Apps</string>
 
   <!--Download fragment-->
   <string name="newer_version_available">Newer version available</string>
@@ -347,6 +352,8 @@
   <!-- Add stores dialog -->
   <string name="add_store_dialog_title">Find exclusive and tailored content in different stores</string>
 
+  <!-- Splashscreen -->
+  <string name="splashscreen_powered_by">POWERED BY</string>
 
   <!-- Login -->
 
@@ -361,7 +368,6 @@
 
   <!-- Auto Update -->
   <string name="update_self_title">Update available</string>
-  <string name="update_self_msg">There is a new version of %s available\nDo you want to update?</string>
   <string name="retrieving_update">Retrieving update…</string>
 
   <string name="menu_search_item_go_to_store">Go to store</string>
@@ -470,7 +476,6 @@
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
 
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
-  <string name="hello_follow_me_on_aptoide">Hello! Follow me on %s</string>
 
   <!-- Not Logged in Fragment -->
   <string name="not_logged_in_share_short_start_interacting">Start interacting:</string>
@@ -615,11 +620,11 @@
   <string name="promotion_notification_title">Get %s APPC Credits now!</string>
   <string name="promotion_notification_body">Don\'t forget to claim your %s APPC Credits.</string>
   <string name="promotion_update_popup_title">Update Aptoide</string>
-  <string name="promotion_update_popup_message">You need to Aptoide to see this promotion.</string>
+  <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
+  <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">This promotion is over!</string>
   <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
-  
-  
+
 
   <!--AppCoins Wallet Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
@@ -629,6 +634,18 @@
   <string name="wallet_promotion_no_button">No, thanks</string>
   <string name="wallet_promotion_card_title">Remove Ads Now!</string>
   <string name="wallet_promotion_card_body">Install the AppCoins Wallet to remove ads!</string>
+
+  <!--Editorial Content-->
+  <string name="editorial_card_views_short">%s views</string>
+
+  <!--Update Apps Promotion-->
+  <string name="promo_update2appc_title">Get APPC Credits Now!</string>
+  <string name="promo_update2appc_message">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>
+  <string name="promo_update2appc_appcard_short">Update to AppCoins version</string>
+  <string name="promo_update2appc_appview_title">Get %s APPC Credits Now!</string>
+  <string name="promo_update2appc_appview_message">Update this app to the AppCoins version and <b>get %s APPC Credtis</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_update_button">Update to AppCoins Version</string>
 
 </resources>
 

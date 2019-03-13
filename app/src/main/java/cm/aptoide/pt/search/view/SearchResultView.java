@@ -31,9 +31,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void hideLoading();
 
-  void addFollowedStoresResult(List<SearchAppResult> dataList);
+  void addFollowedStoresResult(String query, List<SearchAppResult> dataList);
 
-  void addAllStoresResult(List<SearchAppResult> dataList);
+  void addAllStoresResult(String query, List<SearchAppResult> dataList);
 
   Model getViewModel();
 

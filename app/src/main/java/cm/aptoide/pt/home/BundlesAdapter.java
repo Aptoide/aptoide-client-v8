@@ -49,9 +49,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case EDITORS:
         return new EditorsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
-      case SOCIAL:
-        return new SocialBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(SOCIAL, parent, false), uiEventsListener, oneDecimalFormatter);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
@@ -87,8 +84,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   @Override public int getItemViewType(int position) {
     switch (bundles.get(position)
         .getType()) {
-      case SOCIAL:
-        return SOCIAL;
       case APPS:
       case APPCOINS_ADS:
         return APPS;

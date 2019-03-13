@@ -53,6 +53,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.util.SettingsConstants;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -90,6 +91,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String DELETE_ACCOUNT = "deleteAccount";
   protected Toolbar toolbar;
   @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject @Named("aptoide-theme") String theme;
   @Inject SupportEmailProvider supportEmailProvider;
   private Context context;
@@ -294,11 +296,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void setupClickHandlers() {
     handleDeleteAccountVisibility();
     Preference autoUpdatePreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
-    autoUpdatePreference.setTitle(
-        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-            getContext().getResources(), marketName));
-    autoUpdatePreference.setSummary(getContext().getResources()
-        .getString(R.string.setting_category_autoupdate_message));
+    autoUpdatePreference.setTitle(marketResourceFormatter.formatString(getContext(),
+        R.string.setting_category_autoupdate_title));
+    autoUpdatePreference.setSummary(marketResourceFormatter.formatString(getContext(),
+        R.string.setting_category_autoupdate_message));
 
     subscriptions.add(RxPreference.clicks(deleteAccount)
         .flatMapSingle(__ -> authenticationPersistence.getAuthentication())

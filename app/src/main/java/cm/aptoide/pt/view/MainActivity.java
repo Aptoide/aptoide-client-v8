@@ -24,10 +24,12 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.UnityAdsListener;
-import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.ironsource.mediationsdk.IronSource;
@@ -43,7 +45,7 @@ public class MainActivity extends BottomNavigationActivity
 
   @Inject Presenter presenter;
   @Inject Resources resources;
-  @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -106,13 +108,20 @@ public class MainActivity extends BottomNavigationActivity
   private void setupUpdatesNotification() {
     BottomNavigationMenuView appsView =
         (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-    BottomNavigationItemView itemView = (BottomNavigationItemView) appsView.getChildAt(3);
+    BottomNavigationItemView appsItemView =
+        (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.APPS_POSITION);
+    BottomNavigationItemView editorialItemView =
+        (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.CURATION_POSITION);
 
     updatesBadge = LayoutInflater.from(this)
         .inflate(R.layout.updates_badge, appsView, false);
+    View newBadge = LayoutInflater.from(this)
+        .inflate(R.layout.new_badge, appsView, false);
 
     updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
-    itemView.addView(updatesBadge);
+    appsItemView.addView(updatesBadge);
+    editorialItemView.addView(newBadge);
+    appsItemView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {
@@ -178,7 +187,7 @@ public class MainActivity extends BottomNavigationActivity
     updateSelfDialog.setTitle(getText(R.string.update_self_title));
     updateSelfDialog.setIcon(R.mipmap.ic_launcher);
     updateSelfDialog.setMessage(
-        AptoideUtils.StringU.getFormattedString(R.string.update_self_msg, resources, marketName));
+        marketResourceFormatter.formatString(getApplicationContext(), R.string.update_self_msg));
     updateSelfDialog.setCancelable(false);
     updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
         (arg0, arg1) -> {

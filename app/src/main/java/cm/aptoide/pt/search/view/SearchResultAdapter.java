@@ -23,6 +23,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
   private final List<SearchAdResult> searchAdResults;
   private final List<SearchAppResult> searchResults;
+  private String query;
   private boolean adsLoaded = false;
   private boolean isLoadingMore = false;
   private CrashReport crashReport;
@@ -44,7 +45,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
     switch (viewType) {
       case SearchResultViewHolder.LAYOUT: {
-        return new SearchResultViewHolder(view, onItemViewClick);
+        return new SearchResultViewHolder(view, onItemViewClick, query);
       }
 
       case SearchResultAdViewHolder.LAYOUT: {
@@ -114,7 +115,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     return searchResults.get(position - searchAdResults.size());
   }
 
-  public void addResultForSearch(List<SearchAppResult> dataList) {
+  public void addResultForSearch(String query, List<SearchAppResult> dataList) {
+    this.query = query;
     searchResults.addAll(dataList);
     notifyDataSetChanged();
   }

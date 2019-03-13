@@ -11,9 +11,9 @@ public class SearchAbTestService {
     this.service = service;
   }
 
-  public Observable<String> getExperimentForSearchAbTest() {
+  public Observable<AbSearchGroupResponse> getExperimentForSearchAbTest() {
     return service.getAbTestForSearch()
-        .map(AbSearchGroupResponse::getAbSearchId);
+        .onErrorReturn(__ -> new AbSearchGroupResponse());
   }
 
   public interface Service {

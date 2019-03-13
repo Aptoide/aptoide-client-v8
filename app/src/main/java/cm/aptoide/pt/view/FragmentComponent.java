@@ -17,7 +17,9 @@ import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.editorialList.EditorialListFragment;
 import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
+import cm.aptoide.pt.home.HomeContainerFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
@@ -40,6 +42,7 @@ import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
+import cm.aptoide.pt.view.splashscreen.SplashScreenFragment;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
 import cm.aptoide.pt.view.wizard.WizardPageTwoFragment;
@@ -131,4 +134,10 @@ public interface FragmentComponent {
   void inject(WizardPageTwoFragment wizardPageTwoFragment);
 
   void inject(ClaimPromotionDialogFragment claimPromotionDialogFragment);
+
+  void inject(HomeContainerFragment homeContainerFragment);
+
+  void inject(SplashScreenFragment splashScreenFragment);
+
+  void inject(EditorialListFragment editorialListFragment);
 }

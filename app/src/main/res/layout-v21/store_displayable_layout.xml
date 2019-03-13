@@ -153,7 +153,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@string/create_store_displayable_explore_button"
-            android:textColor="@color/default_color"
+            android:textColor="?attr/colorPrimaryDark"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

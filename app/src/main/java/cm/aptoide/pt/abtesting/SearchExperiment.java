@@ -18,7 +18,7 @@ public class SearchExperiment {
               if (!experiment.isExperimentOver() && experiment.isPartOfExperiment()) {
                 return new SearchExperimentResult(experimentId, experiment.getAssignment());
               } else {
-                return new SearchExperimentResult("no_experiment", "control_group");
+                return new SearchExperimentResult("no_experiment", "control");
               }
             }));
   }
@@ -27,8 +27,8 @@ public class SearchExperiment {
     return abTestManager.recordImpression(EXPERIMENT_ID);
   }
 
-  public Observable<Boolean> recordAction() {
-    return abTestManager.recordAction(EXPERIMENT_ID);
+  public Observable<Boolean> recordAction(int position) {
+    return abTestManager.recordAction(EXPERIMENT_ID, position);
   }
 
   public static class SearchExperimentResult {

@@ -7,15 +7,17 @@ public class ActionItem {
   private final String subTitle;
   private final String icon;
   private final String url;
+  private final String numberOfViews;
 
   public ActionItem(String cardId, String type, String title, String subTitle, String icon,
-      String url) {
+      String url, String numberOfViews) {
     this.cardId = cardId;
     this.type = type;
     this.title = title;
     this.subTitle = subTitle;
     this.icon = icon;
     this.url = url;
+    this.numberOfViews = numberOfViews;
   }
 
   public String getCardId() {
@@ -40,5 +42,9 @@ public class ActionItem {
 
   public String getUrl() {
     return url;
+  }
+
+  public String getNumberOfViews() {
+    return numberOfViews;
   }
 }

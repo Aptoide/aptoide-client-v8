@@ -4,10 +4,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -53,6 +55,7 @@ import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -68,13 +71,22 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
+import cm.aptoide.pt.editorialList.EditorialListAnalytics;
+import cm.aptoide.pt.editorialList.EditorialListManager;
+import cm.aptoide.pt.editorialList.EditorialListNavigator;
+import cm.aptoide.pt.editorialList.EditorialListPresenter;
+import cm.aptoide.pt.editorialList.EditorialListRepository;
+import cm.aptoide.pt.editorialList.EditorialListService;
+import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BannerRepository;
-import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
+import cm.aptoide.pt.home.HomeContainerNavigator;
+import cm.aptoide.pt.home.HomeContainerPresenter;
+import cm.aptoide.pt.home.HomeContainerView;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
@@ -89,6 +101,8 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentResultNavigator;
+import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
@@ -113,6 +127,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.splashscreen.SplashScreenNavigator;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -121,11 +136,15 @@ import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.splashscreen.SplashScreenPresenter;
+import cm.aptoide.pt.view.splashscreen.SplashScreenView;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
+import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
@@ -159,6 +178,13 @@ import rx.subscriptions.CompositeSubscription;
         arguments.getBoolean("clean_back_stack"), accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         accountAnalytics);
+  }
+
+  @FragmentScope @Provides @Named("home-fragment-navigator")
+  FragmentNavigator provideHomeFragmentNavigator(Map<Integer, Result> fragmentResultMap,
+      BehaviorRelay<Map<Integer, Result>> fragmentResultRelay, FragmentManager fragmentManager) {
+    return new FragmentResultNavigator(fragmentManager, R.id.main_content, android.R.anim.fade_in,
+        android.R.anim.fade_out, fragmentResultMap, fragmentResultRelay);
   }
 
   @FragmentScope @Provides ImagePickerPresenter provideImagePickerPresenter(
@@ -220,6 +246,11 @@ import rx.subscriptions.CompositeSubscription;
         bottomNavigationMapper, Schedulers.io());
   }
 
+  @FragmentScope @Provides SplashScreenPresenter providesSplashScreenPresenter(
+      SplashScreenNavigator splashScreenNavigator) {
+    return new SplashScreenPresenter((SplashScreenView) fragment, splashScreenNavigator);
+  }
+
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
       HomeAnalytics homeAnalytics) {
@@ -227,11 +258,17 @@ import rx.subscriptions.CompositeSubscription;
         CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
   }
 
-  @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
+  @FragmentScope @Provides HomeNavigator providesHomeNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
       @Named("aptoide-theme") String theme) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
+  }
+
+  @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
+      @Named("home-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new HomeContainerNavigator(fragmentNavigator);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
@@ -249,7 +286,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides MyStoresNavigator providesMyStoreNavigator(
-      FragmentNavigator fragmentNavigator, BottomNavigationMapper bottomNavigationMapper) {
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
     return new MyStoresNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
   }
@@ -259,7 +297,8 @@ import rx.subscriptions.CompositeSubscription;
     return new HomeAnalytics(navigationTracker, analyticsManager);
   }
 
-  @FragmentScope @Provides AppsNavigator providesAppsNavigator(FragmentNavigator fragmentNavigator,
+  @FragmentScope @Provides AppsNavigator providesAppsNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
     return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper, appNavigator);
@@ -414,6 +453,58 @@ import rx.subscriptions.CompositeSubscription;
     return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
         new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
         promotionsAnalytics, navigator);
+  }
+
+  @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
+      EditorialListManager editorialListManager, AptoideAccountManager aptoideAccountManager,
+      EditorialListNavigator editorialListNavigator,
+      EditorialListAnalytics editorialListAnalytics) {
+    return new EditorialListPresenter((EditorialListView) fragment, editorialListManager,
+        aptoideAccountManager, editorialListNavigator, editorialListAnalytics,
+        CrashReport.getInstance(), AndroidSchedulers.mainThread());
+  }
+
+  @FragmentScope @Provides EditorialListManager providesEditorialListManager(
+      EditorialListRepository editorialListRepository) {
+    return new EditorialListManager(editorialListRepository);
+  }
+
+  @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
+      EditorialListService editorialListService) {
+    return new EditorialListRepository(editorialListService);
+  }
+
+  @FragmentScope @Provides EditorialListService providesEditorialService(
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        WebService.getDefaultConverter(), sharedPreferences, 10);
+  }
+
+  @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new EditorialListNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
+      NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
+    return new EditorialListAnalytics(navigationTracker, analyticsManager);
+  }
+
+  @FragmentScope @Provides EditorialAnalytics providesEditorialAnalytics(
+      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
+        arguments.getBoolean("fromHome"));
+  }
+
+  @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
+      CrashReport crashReport, AptoideAccountManager accountManager,
+      HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
+      HomeAnalytics homeAnalytics, Home home) {
+    return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
+        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {

@@ -4,6 +4,7 @@ package cm.aptoide.pt.home;
  * Created by D01 on 12/03/18.
  */
 
+import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import rx.Observable;
 
 /**
@@ -26,6 +27,11 @@ public interface AptoideBottomNavigator {
    * Hides or shows the BottomNavigation depending on the fragment
    */
   void toggleBottomNavigation();
+
+  /**
+   * Hides the bottom navigation
+   */
+  void hideBottomNavigation();
 
   /**
    * Puts the focus on the button of the BottomNavigation

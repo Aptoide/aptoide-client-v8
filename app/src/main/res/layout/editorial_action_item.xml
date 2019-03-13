@@ -67,5 +67,32 @@
         style="@style/Aptoide.TextView.Regular.M"
         />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/background_image"
+        android:layout_marginBottom="8dp"
+        >
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginLeft="12dp"
+          android:layout_marginStart="12dp"
+          android:layout_marginTop="1dp"
+          android:background="@drawable/ic_eye"
+          />
+
+      <TextView
+          android:id="@+id/editorial_views"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="8dp"
+          android:layout_marginStart="8dp"
+          tools:text="1000 views"
+          style="@style/Aptoide.TextView.Regular.XS.White"
+          />
+    </LinearLayout>
+
   </RelativeLayout>
 </android.support.v7.widget.CardView>

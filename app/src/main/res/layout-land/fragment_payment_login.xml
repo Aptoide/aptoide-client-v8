@@ -318,7 +318,11 @@
       <Button
           android:id="@+id/fragment_payment_login_join_button"
           android:layout_width="0dp"
+          android:layout_gravity="center_horizontal"
           android:layout_weight="1"
+          android:ellipsize="end"
+          android:padding="10dp"
+          android:singleLine="true"
           tools:text="Join Aptoide"
           style="@style/Aptoide.Button.Ghost"
           />

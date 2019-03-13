@@ -14,8 +14,6 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
-import cm.aptoide.pt.dataprovider.ws.v7.home.Card;
-import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.logger.Logger;
@@ -24,9 +22,6 @@ import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static cm.aptoide.pt.home.SocialBundle.CardType.APTOIDE_RECOMMENDS;
-import static cm.aptoide.pt.home.SocialBundle.CardType.SOCIAL_RECOMMENDATIONS;
 
 /**
  * Created by jdandrade on 08/03/2018.
@@ -85,25 +80,6 @@ public class BundlesResponseMapper {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
               new Event().setName(Event.Name.getAds), widgetTag));
-        } else if (type.equals(HomeBundle.BundleType.SOCIAL)) {
-          List<Card> list = ((SocialResponse) viewObject).getDataList()
-              .getList();
-          List<App> apps = new ArrayList<>();
-          for (Card card : list) {
-            App app = card.getApp();
-            if (!packageRepository.isAppInstalled(app.getPackageName())) {
-              apps.add(app);
-              if (card.hasUser()) {
-                appBundles.add(new SocialBundle(map(apps, type, widgetTag), type, event, widgetTag,
-                    card.getUser()
-                        .getAvatar(), card.getUser()
-                    .getName(), SOCIAL_RECOMMENDATIONS));
-              } else {
-                appBundles.add(new SocialBundle(map(apps, type, widgetTag), type, event, widgetTag,
-                    R.mipmap.ic_launcher, marketName, APTOIDE_RECOMMENDS));
-              }
-            }
-          }
         } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE) || type.equals(
             HomeBundle.BundleType.EDITORIAL)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
@@ -131,7 +107,7 @@ public class BundlesResponseMapper {
         .getList()
         .get(0);
     return new ActionItem(item.getId(), item.getType() != null ? item.getType() : "",
-        item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl());
+        item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl(), item.getViews());
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {

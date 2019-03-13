@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.presenter.PhoneInputContract;
 import cm.aptoide.pt.presenter.PhoneInputPresenter;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
@@ -46,7 +47,7 @@ public class PhoneInputFragment extends UIComponentFragment
   public static final String TAG = "TAG";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
-  @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject @Named("aptoide-theme") String theme;
   private PhoneInputContract.UserActionsListener mActionsListener;
   private TextView mNotNowV;
@@ -89,7 +90,8 @@ public class PhoneInputFragment extends UIComponentFragment
         new AddressBookAnalytics(analyticsManager, navigationTracker),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName), theme));
+            marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
+            theme));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE),
@@ -103,7 +105,8 @@ public class PhoneInputFragment extends UIComponentFragment
 
   @Override public void setupViews() {
     mNotNowV.setPaintFlags(mNotNowV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    mSharePhoneV.setText(getString(R.string.addressbook_share_phone));
+    mSharePhoneV.setText(
+        marketResourceFormatter.formatString(getContext(), R.string.addressbook_share_phone));
 
     String countryCodeE164 = contactUtils.getCountryCodeForRegion();
     if (!countryCodeE164.isEmpty()) {

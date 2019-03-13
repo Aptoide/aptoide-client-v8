@@ -37,9 +37,9 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.BottomNavigationActivity;
-import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -300,13 +300,13 @@ public class SearchResultFragment extends BackButtonFragment
     progressBar.setVisibility(View.GONE);
   }
 
-  @Override public void addFollowedStoresResult(List<SearchAppResult> dataList) {
-    followedStoresResultAdapter.addResultForSearch(dataList);
+  @Override public void addFollowedStoresResult(String query, List<SearchAppResult> dataList) {
+    followedStoresResultAdapter.addResultForSearch(query, dataList);
     viewModel.addFollowedStoresSearchAppResults(dataList);
   }
 
-  @Override public void addAllStoresResult(List<SearchAppResult> dataList) {
-    allStoresResultAdapter.addResultForSearch(dataList);
+  @Override public void addAllStoresResult(String query, List<SearchAppResult> dataList) {
+    allStoresResultAdapter.addResultForSearch(query, dataList);
     viewModel.addAllStoresSearchAppResults(dataList);
   }
 

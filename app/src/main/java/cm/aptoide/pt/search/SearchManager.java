@@ -38,6 +38,7 @@ import rx.Single;
   private final AptoideAccountManager accountManager;
   private final MoPubAdsManager moPubAdsManager;
   private final SearchExperiment searchExperiment;
+  private SearchExperiment.SearchExperimentResult cachedExperimentResult;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -68,13 +69,15 @@ import rx.Single;
     return accountManager.enabled()
         .first()
         .flatMap(enabled -> searchExperiment.loadExperiment()
-            .flatMap(
-                experimentResult -> ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
-                    StoreUtils.getSubscribedStoresIds(
-                        AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
-                    httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled,
-                    experimentResult.getExperimentId(), experimentResult.getExperimentGroup())
-                    .observe(true)))
+            .flatMap(experimentResult -> {
+              cachedExperimentResult = experimentResult;
+              return ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
+                  StoreUtils.getSubscribedStoresIds(
+                      AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
+                  httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled,
+                  experimentResult.getExperimentId(), experimentResult.getExperimentGroup())
+                  .observe(true);
+            }))
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
@@ -121,12 +124,20 @@ import rx.Single;
         .toSingle();
   }
 
-  public Observable<Boolean> recordImpression() {
+  public Observable<SearchExperiment.SearchExperimentResult> getExperimentResult() {
+    if (cachedExperimentResult != null) {
+      return Observable.just(cachedExperimentResult);
+    } else {
+      return Observable.just(null);
+    }
+  }
+
+  public Observable<Boolean> recordAbTestImpression() {
     return searchExperiment.recordImpression();
   }
 
-  public Observable<Boolean> recordAction() {
-    return searchExperiment.recordAction();
+  public Observable<Boolean> recordAbTestAction(int position) {
+    return searchExperiment.recordAction(position);
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {
