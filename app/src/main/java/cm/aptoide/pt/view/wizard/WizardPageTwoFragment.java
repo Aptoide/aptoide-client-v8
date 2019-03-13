@@ -28,6 +28,11 @@ public class WizardPageTwoFragment extends BackButtonFragment {
     return new WizardPageTwoFragment();
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
+  }
+
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_wizard_model_page, container, false);
