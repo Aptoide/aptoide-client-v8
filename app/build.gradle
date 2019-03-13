@@ -238,6 +238,8 @@ android {
         "\"" + project.HOME_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
+    variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT",
+        project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS
 
     if (flavors[0].name.contains("cobrand")) {
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""

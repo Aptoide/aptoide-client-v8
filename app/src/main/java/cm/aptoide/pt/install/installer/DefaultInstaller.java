@@ -34,6 +34,7 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -55,12 +56,13 @@ public class DefaultInstaller implements Installer {
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
+  private int installingStateTimeout;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       AppInstaller appInstaller, FileUtils fileUtils, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
-      InstallerAnalytics installerAnalytics) {
+      InstallerAnalytics installerAnalytics, int installingStateTimeout) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.appInstaller = appInstaller;
@@ -71,6 +73,7 @@ public class DefaultInstaller implements Installer {
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
     this.sharedPreferences = sharedPreferences;
+    this.installingStateTimeout = installingStateTimeout;
   }
 
   public PackageManager getPackageManager() {
@@ -270,7 +273,15 @@ public class DefaultInstaller implements Installer {
         .map(success -> installation)
         .startWith(updateInstallation(installation,
             shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
-                : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+                : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING))
+        .delay(installingStateTimeout, TimeUnit.MILLISECONDS)
+        .doOnNext(__ -> {
+          if (installation.getStatus() == Installed.STATUS_INSTALLING) {
+            updateInstallation(installation,
+                shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                    : Installed.TYPE_DEFAULT, Installed.STATUS_UNINSTALLED);
+          }
+        });
   }
 
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {

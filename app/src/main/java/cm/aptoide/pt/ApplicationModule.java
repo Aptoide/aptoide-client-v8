@@ -320,10 +320,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("obbPath") String obbPath, AppInstaller appInstaller) {
 
     return new InstallManager(application, aptoideDownloadManager,
-        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller).create(
-            application), rootAvailabilityManager, defaultSharedPreferences,
-        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
-        obbPath, new FileUtils());
+        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
+            BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT).create(application),
+        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
+        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -449,8 +449,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       InstallerAnalytics installerAnalytics, AppInstaller appInstaller) {
     return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
-        installedRepository, 180000, rootAvailabilityManager, sharedPreferences,
-        installerAnalytics);
+        installedRepository, 180000, rootAvailabilityManager, sharedPreferences, installerAnalytics,
+        BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT);
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
