@@ -76,6 +76,7 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
+import cm.aptoide.pt.ads.WalletAdsOfferCardProvider;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -1168,12 +1169,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         moPubNativeAdExperiment, walletAdsOfferManager);
   }
 
-  @Singleton @Provides WalletAdsOfferManager providesWalletAdsOfferManager(
-      WalletAdsOfferService walletAdsOfferService) {
-    return new WalletAdsOfferManager(application.getApplicationContext()
-        .getPackageManager(), walletAdsOfferService);
-  }
-
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
       @Named("ws-prod-suggestions-base-url") String baseUrl,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -1571,9 +1566,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName, InstallManager installManager,
-      PackageRepository packageRepository, BlacklistManager blacklistManager) {
+      PackageRepository packageRepository, BlacklistManager blacklistManager,
+      WalletAdsOfferCardProvider walletAdsOfferCardProvider) {
     return new BundlesResponseMapper(marketName, installManager, packageRepository,
-        blacklistManager);
+        blacklistManager, walletAdsOfferCardProvider);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {

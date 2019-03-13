@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.ads.WalletAdsOfferCardProvider;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
@@ -32,13 +33,16 @@ public class BundlesResponseMapper {
   private final InstallManager installManager;
   private final PackageRepository packageRepository;
   private final BlacklistManager blacklistManager;
+  private final WalletAdsOfferCardProvider walletAdsOfferCardProvider;
 
   public BundlesResponseMapper(String marketName, InstallManager installManager,
-      PackageRepository packageRepository, BlacklistManager blacklistManager) {
+      PackageRepository packageRepository, BlacklistManager blacklistManager,
+      WalletAdsOfferCardProvider walletAdsOfferCardProvider) {
     this.marketName = marketName;
     this.installManager = installManager;
     this.packageRepository = packageRepository;
     this.blacklistManager = blacklistManager;
+    this.walletAdsOfferCardProvider = walletAdsOfferCardProvider;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
@@ -85,8 +89,8 @@ public class BundlesResponseMapper {
           appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
         } else if (type.equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          if (!blacklistManager.isBlacklisted(type + "_" + actionItem.getCardId())
-              && !packageRepository.isAppInstalled("com.appcoins.wallet")) {
+          if (walletAdsOfferCardProvider.shouldShowWalletOfferCard(
+              type + "_" + actionItem.getCardId())) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
         }
