@@ -734,12 +734,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("default") ObjectMapper objectMapper, Converter.Factory converterFactory,
-      @Named("extraID") String extraId, AccountFactory accountFactory) {
+      @Named("extraID") String extraId, AccountFactory accountFactory,
+      CobrandManager cobrandManager) {
     return new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
         objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
         authenticationPersistence, noAuthenticationBodyInterceptorV3, bodyInterceptorV3,
-        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7);
+        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7, cobrandManager);
   }
+
+  @Singleton @Provides CobrandManager provideCobrandManager() {
+    return new CobrandManager();
+  }
+
 
   @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
       @Named("user-agent") Interceptor userAgentInterceptor,

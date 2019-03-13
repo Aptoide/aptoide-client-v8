@@ -7,6 +7,7 @@ import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Store;
+import cm.aptoide.pt.CobrandManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -62,6 +63,7 @@ public class AccountServiceV3 implements AccountService {
   private final BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptorV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7;
+  private final CobrandManager cobrandManager;
 
   public AccountServiceV3(AccountFactory accountFactory, OkHttpClient httpClient,
       OkHttpClient longTimeoutHttpClient, Converter.Factory converterFactory,
@@ -71,7 +73,8 @@ public class AccountServiceV3 implements AccountService {
       BodyInterceptor<BaseBody> defaultBodyInterceptorV3,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7) {
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      CobrandManager cobrandManager) {
     this.accountFactory = accountFactory;
     this.httpClient = httpClient;
     this.longTimeoutHttpClient = longTimeoutHttpClient;
@@ -86,6 +89,7 @@ public class AccountServiceV3 implements AccountService {
     this.multipartBodyInterceptorV7 = multipartBodyInterceptorV7;
     this.bodyInterceptorWebV7 = bodyInterceptorWebV7;
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
+    this.cobrandManager = cobrandManager;
   }
 
   @Override public Single<Account> getAccount(String email, String password) {
@@ -97,7 +101,7 @@ public class AccountServiceV3 implements AccountService {
   public Single<Account> createAccount(String email, String metadata, String name, String type) {
     return OAuth2AuthenticationRequest.of(email, metadata, type, null,
         v3NoAuthorizationBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, extraId)
+        sharedPreferences, extraId, cobrandManager.isCobrand())
         .observe()
         .toSingle()
         .flatMap(oAuth -> {

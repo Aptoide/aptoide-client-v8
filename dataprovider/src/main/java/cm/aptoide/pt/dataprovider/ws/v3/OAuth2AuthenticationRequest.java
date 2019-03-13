@@ -30,7 +30,8 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,
       @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId,
+      boolean cobrand) {
 
     final BaseBody body = new BaseBody();
 
@@ -50,7 +51,9 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
           body.put("oauthToken", password);
           break;
         case "FACEBOOK":
-          body.put("authMode", "facebook");
+          String authVal = "facebook";
+          if (cobrand) authVal = "facebook_cobrand";
+          body.put("authMode", authVal);
           body.put("oauthToken", password);
           break;
         case "ABAN":
