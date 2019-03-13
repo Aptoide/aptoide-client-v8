@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
@@ -579,6 +580,8 @@ public class AppViewManagerTest {
         Single.just(detailedAppRequestResult));
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
+    when(moPubAdsManager.shouldHaveInterstitialAds()).thenReturn(Single.just(true));
+    when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
 
     appViewManager.loadAppViewViewModel()
         .subscribe();
@@ -609,7 +612,8 @@ public class AppViewManagerTest {
     verify(installManager).install(download);
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
-        AnalyticsManager.Action.CLICK, "aString", null, false);
+        AnalyticsManager.Action.CLICK, "aString", null,
+        WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null);
   }
@@ -656,6 +660,8 @@ public class AppViewManagerTest {
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
+    when(moPubAdsManager.shouldHaveInterstitialAds()).thenReturn(Single.just(true));
+    when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
 
     //Then the appViewManager should return a Complete when the request is done
     appViewManager.resumeDownload("md5", 1)
@@ -667,7 +673,8 @@ public class AppViewManagerTest {
     verify(installManager).install(download);
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString", null,
-        AnalyticsManager.Action.CLICK, null, null, true);
+        AnalyticsManager.Action.CLICK, null, null,
+        WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString");
   }
