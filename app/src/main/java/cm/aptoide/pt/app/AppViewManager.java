@@ -480,11 +480,27 @@ public class AppViewManager {
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {
-    return moPubAdsManager.shouldLoadInterstitialAd()
+    return moPubAdsManager.shouldHaveInterstitialAds()
+        .flatMap(hasAds -> {
+          if (hasAds) {
+            return moPubAdsManager.shouldShowAds()
+                .doOnSuccess(showAds -> {
+                  if (!showAds) {
+                    sendAdsWalletPromotionEvent();
+                  }
+                });
+          } else {
+            return Single.just(false);
+          }
+        })
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
             && !cachedAppCoinsViewModel.hasAdvertising()
             && !cachedApp.isMature()));
+  }
+
+  private void sendAdsWalletPromotionEvent() {
+    appViewAnalytics.sendAdsWalletPromotionEvent();
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
