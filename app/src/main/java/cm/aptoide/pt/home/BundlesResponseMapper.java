@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;

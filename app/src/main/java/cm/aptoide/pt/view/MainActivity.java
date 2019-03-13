@@ -36,7 +36,6 @@ import com.ironsource.mediationsdk.IronSource;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.unity3d.ads.UnityAds;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
