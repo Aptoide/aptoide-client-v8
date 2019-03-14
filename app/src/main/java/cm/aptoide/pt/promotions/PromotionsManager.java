@@ -19,7 +19,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_LOCKED;
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
 import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
 
 public class PromotionsManager {
@@ -117,8 +117,8 @@ public class PromotionsManager {
                     .doOnSuccess(
                         showAds -> setupDownloadEvents(download, promotionViewApp.getPackageName(),
                             promotionViewApp.getAppId(),
-                            showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
-                                : ADS_LOCKED));
+                            showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
+                                : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, promotionViewApp.getPackageName(),
                     promotionViewApp.getAppId(), NO_ADS);
@@ -161,8 +161,8 @@ public class PromotionsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, packageName, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
-                            : ADS_LOCKED));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
+                            : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, packageName, appId,
                     WalletAdsOfferManager.OfferResponseStatus.NO_ADS);

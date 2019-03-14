@@ -266,7 +266,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
           previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED));
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
     } else {
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
@@ -282,7 +282,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED));
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
     } else {
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext);
@@ -377,7 +377,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
       downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
           previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED));
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
     } else {
       downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
           previousContext);

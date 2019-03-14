@@ -32,7 +32,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_LOCKED;
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
 import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
 
 /**
@@ -324,8 +324,8 @@ public class AppViewManager {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, downloadAction, appId,
                         trustedValue, editorsChoicePosition,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
-                            : ADS_LOCKED));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
+                            : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, downloadAction, appId, trustedValue,
                     editorsChoicePosition, NO_ADS);
@@ -374,8 +374,8 @@ public class AppViewManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
-                            : ADS_LOCKED));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
+                            : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, appId,
                     WalletAdsOfferManager.OfferResponseStatus.NO_ADS);

@@ -23,7 +23,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_LOCKED;
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
 import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
 import static cm.aptoide.pt.install.Install.InstallationType.INSTALL;
 import static cm.aptoide.pt.install.Install.InstallationType.INSTALLED;
@@ -138,8 +138,8 @@ public class AppsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
-                            : ADS_LOCKED));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
+                            : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, NO_ADS);
                 return Single.just(false);
@@ -213,8 +213,8 @@ public class AppsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupUpdateEvents(download, Origin.UPDATE,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
-                            : ADS_LOCKED));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
+                            : ADS_HIDE));
               } else {
                 setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
                 return Single.just(false);
@@ -241,8 +241,8 @@ public class AppsManager {
             .flatMap(hasAds -> {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
-                    .map(showAds -> showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_UNLOCKED
-                        : ADS_LOCKED);
+                    .map(showAds -> showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
+                        : ADS_HIDE);
               } else {
                 return Single.just(NO_ADS);
               }
