@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.view.Translator;
 import rx.subjects.PublishSubject;
 
 class WalletAdsOfferViewHolder extends AppBundleViewHolder {
@@ -35,8 +34,8 @@ class WalletAdsOfferViewHolder extends AppBundleViewHolder {
         .load(actionItem.getIcon(), icon);
     installWalletButton.setText(R.string.wallet_promotion_install_button);
     dismissButton.setText(R.string.wallet_promotion_no_button);
-    title.setText(Translator.translate(actionItem.getTitle(), itemView.getContext(), ""));
-    message.setText(Translator.translate(actionItem.getSubTitle(), itemView.getContext(), ""));
+    title.setText(actionItem.getTitle());
+    message.setText(actionItem.getSubTitle());
     installWalletButton.setOnClickListener(view -> uiEventsListener.onNext(
         new HomeEvent(homeBundle, position, HomeEvent.Type.INSTALL_WALLET)));
     dismissButton.setOnClickListener(itemView -> uiEventsListener.onNext(
