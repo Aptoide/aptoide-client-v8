@@ -1566,10 +1566,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName, InstallManager installManager,
-      PackageRepository packageRepository, BlacklistManager blacklistManager,
       WalletAdsOfferCardManager walletAdsOfferCardManager) {
-    return new BundlesResponseMapper(marketName, installManager, packageRepository,
-        blacklistManager, walletAdsOfferCardManager);
+    return new BundlesResponseMapper(installManager, walletAdsOfferCardManager);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {

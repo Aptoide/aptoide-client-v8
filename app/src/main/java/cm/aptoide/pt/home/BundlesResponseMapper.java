@@ -1,7 +1,6 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
-import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -15,7 +14,6 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
@@ -29,19 +27,11 @@ import java.util.List;
 
 public class BundlesResponseMapper {
 
-  private final String marketName;
   private final InstallManager installManager;
-  private final PackageRepository packageRepository;
-  private final BlacklistManager blacklistManager;
   private final WalletAdsOfferCardManager walletAdsOfferCardManager;
 
-  public BundlesResponseMapper(String marketName, InstallManager installManager,
-      PackageRepository packageRepository, BlacklistManager blacklistManager,
-      WalletAdsOfferCardManager walletAdsOfferCardManager) {
-    this.marketName = marketName;
+  public BundlesResponseMapper(InstallManager installManager, WalletAdsOfferCardManager walletAdsOfferCardManager) {
     this.installManager = installManager;
-    this.packageRepository = packageRepository;
-    this.blacklistManager = blacklistManager;
     this.walletAdsOfferCardManager = walletAdsOfferCardManager;
   }
 
