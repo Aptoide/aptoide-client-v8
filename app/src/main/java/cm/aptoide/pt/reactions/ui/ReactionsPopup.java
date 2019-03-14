@@ -40,7 +40,7 @@ public class ReactionsPopup {
     reactionsView.setVisibility(View.VISIBLE);
     popup.setContentView(reactionsView);
     popup.setFocusable(true);
-    popup.setClippingEnabled(false);
+    popup.setClippingEnabled(true);
     popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
     reactionsView.setCallback(reactionType -> {
