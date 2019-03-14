@@ -157,6 +157,7 @@ import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.impressions.ImpressionService;
+import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
@@ -172,7 +173,6 @@ import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.logger.AnalyticsLogcatLogger;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.BodyInterceptorV3;
@@ -317,13 +317,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, AppInstaller appInstaller) {
+      @Named("obbPath") String obbPath, AppInstaller appInstaller,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
 
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
-            BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT).create(application),
-        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils());
+            BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT, appInstallerStatusReceiver).create(
+            application), rootAvailabilityManager, defaultSharedPreferences,
+        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
+        obbPath, new FileUtils());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -446,11 +448,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       InstallationProvider installationProvider,
       @Named("default") SharedPreferences sharedPreferences,
       InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
-      InstallerAnalytics installerAnalytics, AppInstaller appInstaller) {
+      InstallerAnalytics installerAnalytics, AppInstaller appInstaller,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
     return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
         installedRepository, 180000, rootAvailabilityManager, sharedPreferences, installerAnalytics,
-        BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT);
+        BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT, appInstallerStatusReceiver);
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
@@ -1876,12 +1879,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SearchExperiment(abTestManager);
   }
 
-  @Singleton @Provides AppInstaller providesAppInstaller() {
+  @Singleton @Provides AppInstaller providesAppInstaller(
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
     return new AppInstaller(application.getApplicationContext(),
-        installStatus -> Logger.getInstance()
-            .d("package_install", "package install: status "
-                + installStatus.getStatus()
-                + ", message: "
-                + installStatus.getMessage()));
+        installStatus -> appInstallerStatusReceiver.onStatusReceived(installStatus));
+  }
+
+  @Singleton @Provides AppInstallerStatusReceiver providesAppInstallerStatusReceiver() {
+    return new AppInstallerStatusReceiver(PublishSubject.create());
   }
 }

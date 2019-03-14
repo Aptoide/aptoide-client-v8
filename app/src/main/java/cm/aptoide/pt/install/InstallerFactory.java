@@ -31,14 +31,17 @@ public class InstallerFactory {
   private final MinimalAdMapper adMapper;
   private final InstallerAnalytics installerAnalytics;
   private final AppInstaller appInstaller;
-  private int installingStateTimeout;
+  private final int installingStateTimeout;
+  private final AppInstallerStatusReceiver appInstallerStatusReceiver;
 
   public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics,
-      AppInstaller appInstaller, int installingStateTimeout) {
+      AppInstaller appInstaller, int installingStateTimeout,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
     this.adMapper = adMapper;
     this.installerAnalytics = installerAnalytics;
     this.appInstaller = appInstaller;
     this.installingStateTimeout = installingStateTimeout;
+    this.appInstallerStatusReceiver = appInstallerStatusReceiver;
   }
 
   public Installer create(Context context) {
@@ -54,7 +57,7 @@ public class InstallerFactory {
         RepositoryFactory.getInstalledRepository(context.getApplicationContext()), 180000,
         ((AptoideApplication) context.getApplicationContext()).getRootAvailabilityManager(),
         ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences(),
-        installerAnalytics, installingStateTimeout);
+        installerAnalytics, installingStateTimeout, appInstallerStatusReceiver);
   }
 
   @NonNull private DownloadInstallationProvider getInstallationProvider(

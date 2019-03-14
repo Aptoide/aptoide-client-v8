@@ -20,6 +20,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.install.RootCommandTimeoutException;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
+import cm.aptoide.pt.packageinstaller.InstallStatus;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootShell;
@@ -52,6 +54,7 @@ public class DefaultInstaller implements Installer {
   private final InstallationProvider installationProvider;
   private final SharedPreferences sharedPreferences;
   private final AppInstaller appInstaller;
+  private final AppInstallerStatusReceiver appInstallerStatusReceiver;
   private FileUtils fileUtils;
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
@@ -62,13 +65,15 @@ public class DefaultInstaller implements Installer {
       AppInstaller appInstaller, FileUtils fileUtils, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
-      InstallerAnalytics installerAnalytics, int installingStateTimeout) {
+      InstallerAnalytics installerAnalytics, int installingStateTimeout,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.appInstaller = appInstaller;
     this.fileUtils = fileUtils;
     this.installedRepository = installedRepository;
     this.installerAnalytics = installerAnalytics;
+    this.appInstallerStatusReceiver = appInstallerStatusReceiver;
     RootShell.debugMode = debug;
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
@@ -268,20 +273,37 @@ public class DefaultInstaller implements Installer {
       }
       return null;
     }).subscribeOn(Schedulers.computation())
-        .flatMap(installStarted -> waitPackageIntent(context, intentFilter,
-            installation.getPackageName()))
+        .flatMap(isInstallerInstallation -> Observable.merge(
+            waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
+                installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
+                  if (installation.getStatus() == Installed.STATUS_INSTALLING) {
+                    updateInstallation(installation,
+                        shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                            : Installed.TYPE_DEFAULT, Installed.STATUS_UNINSTALLED);
+                  }
+                  return null;
+                })), appInstallerStatusReceiver.getInstallerInstallStatus()
+                .doOnNext(installStatus -> updateInstallation(installation,
+                    shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                        : Installed.TYPE_DEFAULT, map(installStatus)))))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
             shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
-                : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING))
-        .delay(installingStateTimeout, TimeUnit.MILLISECONDS)
-        .doOnNext(__ -> {
-          if (installation.getStatus() == Installed.STATUS_INSTALLING) {
-            updateInstallation(installation,
-                shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
-                    : Installed.TYPE_DEFAULT, Installed.STATUS_UNINSTALLED);
-          }
-        });
+                : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+  }
+
+  private int map(InstallStatus installStatus) {
+    switch (installStatus.getStatus()) {
+      case INSTALLING:
+        return Installed.STATUS_INSTALLING;
+      case SUCCESS:
+        return Installed.STATUS_COMPLETED;
+      case FAIL:
+      case CANCELED:
+      case UNKNOWN_ERROR:
+      default:
+        return Installed.STATUS_UNINSTALLED;
+    }
   }
 
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {
