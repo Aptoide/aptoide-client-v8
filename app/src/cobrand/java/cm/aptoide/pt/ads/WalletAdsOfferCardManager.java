@@ -1,6 +1,6 @@
 package cm.aptoide.pt.ads;
 
-public class WalletAdsOfferCardProvider {
+public class WalletAdsOfferCardManager {
 
   public boolean shouldShowWalletOfferCard(String blacklistId) {
     return false;

@@ -4,7 +4,7 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
-import cm.aptoide.pt.ads.WalletAdsOfferCardProvider;
+import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.preferences.AdultContentManager;
 import dagger.Module;
@@ -52,7 +52,7 @@ import javax.inject.Singleton;
     return new WalletAdsOfferManager();
   }
 
-  @Singleton @Provides WalletAdsOfferCardProvider providesWalletAdsOfferCardProvider() {
-    return new WalletAdsOfferCardProvider();
+  @Singleton @Provides WalletAdsOfferCardManager providesWalletAdsOfferCardManager() {
+    return new WalletAdsOfferCardManager();
   }
 }

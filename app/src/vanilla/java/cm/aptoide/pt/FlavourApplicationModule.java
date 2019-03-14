@@ -7,7 +7,7 @@ import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.MoPubAnalytics;
-import cm.aptoide.pt.ads.WalletAdsOfferCardProvider;
+import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.blacklist.BlacklistManager;
@@ -72,8 +72,8 @@ import javax.inject.Singleton;
         .getPackageManager(), walletAdsOfferService);
   }
 
-  @Singleton @Provides WalletAdsOfferCardProvider providesWalletAdsOfferCardProvider(
+  @Singleton @Provides WalletAdsOfferCardManager providesWalletAdsOfferCardManager(
       BlacklistManager blacklistManager, PackageRepository packageRepository) {
-    return new WalletAdsOfferCardProvider(blacklistManager, packageRepository);
+    return new WalletAdsOfferCardManager(blacklistManager, packageRepository);
   }
 }

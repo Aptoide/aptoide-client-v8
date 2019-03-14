@@ -76,7 +76,7 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
-import cm.aptoide.pt.ads.WalletAdsOfferCardProvider;
+import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -1567,9 +1567,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName, InstallManager installManager,
       PackageRepository packageRepository, BlacklistManager blacklistManager,
-      WalletAdsOfferCardProvider walletAdsOfferCardProvider) {
+      WalletAdsOfferCardManager walletAdsOfferCardManager) {
     return new BundlesResponseMapper(marketName, installManager, packageRepository,
-        blacklistManager, walletAdsOfferCardProvider);
+        blacklistManager, walletAdsOfferCardManager);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {

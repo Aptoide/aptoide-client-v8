@@ -3,12 +3,12 @@ package cm.aptoide.pt.ads;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.install.PackageRepository;
 
-public class WalletAdsOfferCardProvider {
+public class WalletAdsOfferCardManager {
 
   private final BlacklistManager blacklistManager;
   private final PackageRepository packageRepository;
 
-  public WalletAdsOfferCardProvider(BlacklistManager blacklistManager,
+  public WalletAdsOfferCardManager(BlacklistManager blacklistManager,
       PackageRepository packageRepository) {
     this.blacklistManager = blacklistManager;
     this.packageRepository = packageRepository;
