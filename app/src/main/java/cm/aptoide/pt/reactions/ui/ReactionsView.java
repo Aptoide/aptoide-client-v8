@@ -1,10 +1,8 @@
 package cm.aptoide.pt.reactions.ui;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.R;
@@ -17,6 +15,7 @@ public class ReactionsView extends LinearLayout {
 
   public static final int WIDTH_REACTIONS = DisplayUtil.dpToPx(56);
   public static final int HEIGHT_REACTIONS = DisplayUtil.dpToPx(56);
+  public static final int REACTIONS_PADDING = 8;
   private List<Reaction> reactions;
 
   public ReactionsView(Context context) {
@@ -35,11 +34,11 @@ public class ReactionsView extends LinearLayout {
   }
 
   private void init() {
-    reactions = Arrays.asList(new Reaction(ReactionType.LIKE, this.getContext()),
-        new Reaction(ReactionType.LAUGH, this.getContext()),
-        new Reaction(ReactionType.LOVE, this.getContext()),
-        new Reaction(ReactionType.THUG, this.getContext()),
-        new Reaction(ReactionType.DOWN, this.getContext()));
+    reactions = Arrays.asList(new Reaction(ReactionType.LIKE, REACTIONS_PADDING, this.getContext()),
+        new Reaction(ReactionType.LAUGH, REACTIONS_PADDING, this.getContext()),
+        new Reaction(ReactionType.LOVE, REACTIONS_PADDING, this.getContext()),
+        new Reaction(ReactionType.THUG, REACTIONS_PADDING, this.getContext()),
+        new Reaction(ReactionType.DOWN, REACTIONS_PADDING, this.getContext()));
 
     this.setOrientation(HORIZONTAL);
     this.setBackground(this.getContext()
@@ -52,24 +51,12 @@ public class ReactionsView extends LinearLayout {
     for (Reaction reaction : reactions) {
       reaction.setReactionParams(reactionParams);
       this.addView(reaction.getView());
+      reaction.play();
     }
   }
 
   public int getReactionsViewHeight() {
-    return 8 + 8 + HEIGHT_REACTIONS;
-  }
-
-  @Override protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-    super.onVisibilityChanged(changedView, visibility);
-    if (visibility == VISIBLE) {
-      for (Reaction reaction : reactions) {
-        reaction.play();
-      }
-    } else {
-      for (Reaction reaction : reactions) {
-        reaction.cancel();
-      }
-    }
+    return REACTIONS_PADDING + REACTIONS_PADDING + HEIGHT_REACTIONS;
   }
 
   public void setCallback(@Nullable Callback callback) {
