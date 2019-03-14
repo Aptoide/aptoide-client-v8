@@ -165,6 +165,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.install.InstallerPackageNameManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
@@ -318,14 +319,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
       @Named("obbPath") String obbPath, AppInstaller appInstaller,
-      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      InstallerPackageNameManager installerPackageNameManager) {
 
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
             BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT, appInstallerStatusReceiver).create(
             application), rootAvailabilityManager, defaultSharedPreferences,
         secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
-        obbPath, new FileUtils());
+        obbPath, new FileUtils(), installerPackageNameManager);
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -1887,5 +1889,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppInstallerStatusReceiver providesAppInstallerStatusReceiver() {
     return new AppInstallerStatusReceiver(PublishSubject.create());
+  }
+
+  @Singleton @Provides InstallerPackageNameManager providesInstallerPackageNameManager() {
+    return new InstallerPackageNameManager();
   }
 }
