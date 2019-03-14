@@ -3,6 +3,7 @@ package cm.aptoide.pt.reactions.ui;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -62,9 +63,15 @@ public class ReactionsPopup {
    * @see #dismiss()
    */
   public void show() {
-    popup.showAsDropDown(anchorView, (int) anchorView.getX(),
-        (int) anchorView.getY() - anchorView.getHeight() - reactionsView.getReactionsViewHeight(),
-        this.gravity);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      popup.showAsDropDown(anchorView, (int) anchorView.getX(),
+          (int) anchorView.getY() - anchorView.getHeight() - reactionsView.getReactionsViewHeight(),
+          this.gravity);
+    } else {
+      popup.showAsDropDown(anchorView, (int) anchorView.getX(), (int) anchorView.getY()
+          - anchorView.getHeight()
+          - reactionsView.getReactionsViewHeight());
+    }
   }
 
   /**
