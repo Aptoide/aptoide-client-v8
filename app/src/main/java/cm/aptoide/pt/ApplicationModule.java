@@ -66,6 +66,7 @@ import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureContentPersistence;
+import cm.aptoide.pt.account.OAuthModeProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -735,17 +736,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("default") ObjectMapper objectMapper, Converter.Factory converterFactory,
       @Named("extraID") String extraId, AccountFactory accountFactory,
-      CobrandManager cobrandManager) {
+      OAuthModeProvider oAuthModeProvider) {
     return new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
         objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
         authenticationPersistence, noAuthenticationBodyInterceptorV3, bodyInterceptorV3,
-        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7, cobrandManager);
+        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7, oAuthModeProvider);
   }
 
-  @Singleton @Provides CobrandManager provideCobrandManager() {
-    return new CobrandManager();
+  @Singleton @Provides OAuthModeProvider provideOAuthModeProvider() {
+    return new OAuthModeProvider();
   }
-
 
   @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
       @Named("user-agent") Interceptor userAgentInterceptor,
