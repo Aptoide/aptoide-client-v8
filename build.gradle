@@ -59,7 +59,7 @@ ext {
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '26.1.0'
+  SUPPORT_LIB_VERSION = '27.1.0'
 
   // Google Play Services
   PLAY_SERVICES_VERSION = '15.0.1'
