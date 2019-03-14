@@ -27,7 +27,6 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import java.util.Collections;
 import java.util.List;
-import javax.inject.Inject;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -49,9 +48,9 @@ public class InstallManager {
   private final FileUtils fileUtils;
   private final Context context;
   private final InstallerPackageNameManager installerPackageNameManager;
-  @Inject DownloadsRepository downloadRepository;
-  @Inject InstalledRepository installedRepository;
-  private RootAvailabilityManager rootAvailabilityManager;
+  private final DownloadsRepository downloadRepository;
+  private final InstalledRepository installedRepository;
+  private final RootAvailabilityManager rootAvailabilityManager;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
