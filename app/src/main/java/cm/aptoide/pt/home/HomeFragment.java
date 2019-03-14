@@ -322,7 +322,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void setAdsTest(boolean showNatives) {
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents, marketName,
+        oneDecimalFormatter, marketName,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
             marketName, showNatives));
     bundlesList.setAdapter(adapter);

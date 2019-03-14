@@ -28,17 +28,14 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final String marketName;
   private final AdsBundlesViewHolderFactory adsBundlesViewHolderFactory;
   private List<HomeBundle> bundles;
-  private PublishSubject<AdHomeEvent> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<AdHomeEvent> adPublishSubject, String marketName,
-      AdsBundlesViewHolderFactory adsBundlesViewHolderFactory) {
+      String marketName, AdsBundlesViewHolderFactory adsBundlesViewHolderFactory) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
-    this.adClickedEvents = adPublishSubject;
     this.marketName = marketName;
     this.adsBundlesViewHolderFactory = adsBundlesViewHolderFactory;
   }
