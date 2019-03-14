@@ -177,9 +177,6 @@ public class InstallManager {
           if (storedDownload.getOverallDownloadStatus() == Download.ERROR) {
             storedDownload.setOverallDownloadStatus(Download.INVALID_STATUS);
             downloadRepository.save(storedDownload);
-            Logger.getInstance()
-                .d("install.installmanager.install",
-                    "save " + "status:" + storedDownload.getOverallDownloadStatus());
           }
         })
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
@@ -344,14 +341,6 @@ public class InstallManager {
           break;
       }
     }
-    if (download != null) {
-      Logger.getInstance()
-          .d("install.installmanager.mapDownloadState",
-              " " + status + " true downloadstatus: " + download.getOverallDownloadStatus());
-    } else {
-      Logger.getInstance()
-          .d("install.installmanager.mapDownloadState", " " + status + " false downloadstatus: ");
-    }
     return status;
   }
 
@@ -380,9 +369,6 @@ public class InstallManager {
     if (storedDownload.getAction() != download.getAction()) {
       storedDownload.setAction(download.getAction());
       downloadRepository.save(storedDownload);
-      Logger.getInstance()
-          .d("install.installmanager.updateDownloadAction",
-              "save " + "status:" + storedDownload.getOverallDownloadStatus());
     }
     return storedDownload;
   }
@@ -392,9 +378,6 @@ public class InstallManager {
     return errors.flatMap(throwable -> {
       if (throwable instanceof DownloadNotFoundException) {
         downloadRepository.save(download);
-        Logger.getInstance()
-            .d("install.installmanager.createDownloadAndRetry",
-                "save " + "status:" + download.getOverallDownloadStatus());
         return Observable.just(throwable);
       } else {
         return Observable.error(throwable);
@@ -612,9 +595,6 @@ public class InstallManager {
       fileToDownload.setPath(newFilePath);
     }
     downloadRepository.save(download);
-    Logger.getInstance()
-        .d("install.installmanager.moveCompletedDownloadFiles",
-            "save " + "status:" + download.getOverallDownloadStatus());
   }
 
   @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {

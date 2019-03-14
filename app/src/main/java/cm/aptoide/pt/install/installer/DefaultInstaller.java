@@ -155,14 +155,10 @@ public class DefaultInstaller implements Installer {
     return installedRepository.getAsList(packageName, versionCode)
         .map(installed -> {
           if (installed != null) {
-            Logger.getInstance()
-                .d("install.defaultinstaller.getstate", "install status " + installed.getStatus());
             return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
                 installed.getVersionName(), installed.getStatus(), installed.getType(),
                 installed.getName(), installed.getIcon());
           } else {
-            Logger.getInstance()
-                .d("install.defaultinstaller.getstate", "installed is null ~ not installed");
             return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
                 Installed.TYPE_UNKNOWN);
           }
