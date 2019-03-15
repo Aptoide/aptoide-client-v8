@@ -490,18 +490,21 @@ public class AppViewManager {
 
   public Observable<WalletPromotionViewModel> loadWalletPromotionViewModel(String packageName,
       boolean hasAppc) {
-    if (!hasAppc) return Observable.just(new WalletPromotionViewModel(false, false, false));
-    return promotionsManager.getPromotionApps(promotionId)
-        .map(this::mapToWalletPromotion)
-        .toObservable()
-        .flatMap(view -> installManager.getInstall(view.getMd5sum(), view.getPackageName(),
-            view.getVersionCode())
-            .map(result -> new WalletPromotionViewModel(
-                mapToDownloadModel(result.getType(), result.getProgress(), result.getState()),
-                view.getAppName(), view.getIcon(), view.getId(), view.getPackageName(),
-                view.getMd5sum(), view.getVersionCode(), view.getVersionName(), view.getPath(),
-                view.getPathAlt(), view.getObb(), view.getAppcValue(), view.isClaimed(),
-                promotionsManager.isWalletInstalled(), view.isAppcoinsApp())));
+    if (!hasAppc) {
+      return Observable.just(new WalletPromotionViewModel(false, false, false));
+    } else {
+      return promotionsManager.getPromotionApps(promotionId)
+          .map(this::mapToWalletPromotion)
+          .toObservable()
+          .flatMap(view -> installManager.getInstall(view.getMd5sum(), view.getPackageName(),
+              view.getVersionCode())
+              .map(result -> new WalletPromotionViewModel(
+                  mapToDownloadModel(result.getType(), result.getProgress(), result.getState()),
+                  view.getAppName(), view.getIcon(), view.getId(), view.getPackageName(),
+                  view.getMd5sum(), view.getVersionCode(), view.getVersionName(), view.getPath(),
+                  view.getPathAlt(), view.getObb(), view.getAppcValue(), view.isClaimed(),
+                  promotionsManager.isWalletInstalled(), view.isAppcoinsApp())));
+    }
   }
 
   private WalletPromotionViewModel mapToWalletPromotion(List<PromotionApp> apps) {
