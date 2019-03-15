@@ -488,8 +488,7 @@ public class AppViewManager {
             && !cachedApp.isMature()));
   }
 
-  public Observable<WalletPromotionViewModel> loadWalletPromotionViewModel(String packageName,
-      boolean hasAppc) {
+  public Observable<WalletPromotionViewModel> loadWalletPromotionViewModel(boolean hasAppc) {
     if (!hasAppc) {
       return Observable.just(new WalletPromotionViewModel(false, false, false));
     } else {
