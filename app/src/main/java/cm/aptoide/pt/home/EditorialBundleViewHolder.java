@@ -9,6 +9,8 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.Translator;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.editorial.ViewsFormatter.formatNumberOfViews;
+
 /**
  * Created by franciscocalado on 29/08/2018.
  */
@@ -46,7 +48,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
     editorialSubtitle.setText(Translator.translate(subTitle, itemView.getContext(), ""));
     editorialViews.setText(String.format(itemView.getContext()
-        .getString(R.string.editorial_card_short_number_views), numberOfViews));
+            .getString(R.string.editorial_card_short_number_views),
+        formatNumberOfViews(numberOfViews)));
     editorialCard.setOnClickListener(view -> {
       uiEventsListener.onNext(
           new EditorialHomeEvent(cardId, homeBundle, position, HomeEvent.Type.EDITORIAL));
