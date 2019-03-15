@@ -495,15 +495,16 @@ public class AppViewManager {
     } else {
       return promotionsManager.getPromotionApps(promotionId)
           .map(this::mapToWalletPromotion)
-          .toObservable()
-          .flatMap(view -> installManager.getInstall(view.getMd5sum(), view.getPackageName(),
-              view.getVersionCode())
-              .map(result -> new WalletPromotionViewModel(
-                  mapToDownloadModel(result.getType(), result.getProgress(), result.getState()),
-                  view.getAppName(), view.getIcon(), view.getId(), view.getPackageName(),
-                  view.getMd5sum(), view.getVersionCode(), view.getVersionName(), view.getPath(),
-                  view.getPathAlt(), view.getObb(), view.getAppcValue(), view.isClaimed(),
-                  promotionsManager.isWalletInstalled(), view.isAppcoinsApp())));
+          .flatMapObservable(
+              view -> installManager.getInstall(view.getMd5sum(), view.getPackageName(),
+                  view.getVersionCode())
+                  .map(result -> new WalletPromotionViewModel(
+                      mapToDownloadModel(result.getType(), result.getProgress(), result.getState()),
+                      view.getAppName(), view.getIcon(), view.getId(), view.getPackageName(),
+                      view.getMd5sum(), view.getVersionCode(), view.getVersionName(),
+                      view.getPath(), view.getPathAlt(), view.getObb(), view.getAppcValue(),
+                      view.isClaimed(), promotionsManager.isWalletInstalled(),
+                      view.isAppcoinsApp())));
     }
   }
 
