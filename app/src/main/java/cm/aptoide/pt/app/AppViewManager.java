@@ -68,7 +68,6 @@ public class AppViewManager {
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
-  private WalletPromotionViewModel walletPromotionViewModel;
   private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
   private MoPubBannerAdExperiment moPubBannerAdExperiment;
   private MoPubNativeAdExperiment moPubNativeAdExperiment;

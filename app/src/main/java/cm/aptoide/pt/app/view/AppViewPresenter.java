@@ -757,7 +757,6 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSimilarAppsBundles(appViewModel),
-            //LOAD WALLET PROMO HERE
             updateReviews(appViewModel), updateWalletPromotion(appViewModel),
             (similarAppsBundles, reviewsViewModel, walletPromotionViewModel) -> Observable.just(
                 appViewModel))
