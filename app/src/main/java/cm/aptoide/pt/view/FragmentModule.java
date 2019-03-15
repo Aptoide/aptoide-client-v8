@@ -10,9 +10,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -34,6 +31,7 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
@@ -56,6 +54,7 @@ import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
+import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -91,7 +90,12 @@ import cm.aptoide.pt.home.HomeContainerView;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
+import cm.aptoide.pt.home.apps.AppMapper;
+import cm.aptoide.pt.home.apps.AppsFragmentView;
+import cm.aptoide.pt.home.apps.AppsManager;
 import cm.aptoide.pt.home.apps.AppsNavigator;
+import cm.aptoide.pt.home.apps.AppsPresenter;
+import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -130,6 +134,7 @@ import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
+import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.splashscreen.SplashScreenPresenter;
 import cm.aptoide.pt.view.splashscreen.SplashScreenView;
@@ -267,13 +272,11 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, AdsManager adsManager,
-      PromotionsManager promotionsManager,
-      PromotionsPreferencesManager promotionsPreferencesManager,
-      MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository,
-      MoPubNativeAdExperiment nativeAdExperiment) {
-    return new Home(bundlesRepository, impressionManager, promotionsManager, bannerAdExperiment,
-        nativeAdExperiment, bannerRepository, promotionsPreferencesManager);
+      ImpressionManager impressionManager, PromotionsManager promotionsManager,
+      PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
+      MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager) {
+    return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
+        moPubAdsManager, promotionsPreferencesManager, blacklistManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -329,16 +332,13 @@ import rx.subscriptions.CompositeSubscription;
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       Resources resources, WindowManager windowManager, SocialRepository socialRepository,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
-      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubAdsManager moPubAdsManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-        appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-        notificationAnalytics, installAnalytics,
+        appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
+        appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment);
+        marketName, appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -505,5 +505,26 @@ import rx.subscriptions.CompositeSubscription;
       HomeAnalytics homeAnalytics, Home home) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
+  }
+
+  @FragmentScope @Provides AppMapper providesAppMapper() {
+    return new AppMapper();
+  }
+
+  @FragmentScope @Provides AppsManager providesAppsManager(UpdatesManager updatesManager,
+      InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, UpdatesAnalytics updatesAnalytics,
+      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager) {
+    return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
+        installAnalytics, updatesAnalytics, fragment.getContext()
+        .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager);
+  }
+
+  @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,
+      AptoideAccountManager aptoideAccountManager, AppsNavigator appsNavigator) {
+    return new AppsPresenter(((AppsFragmentView) fragment), appsManager,
+        AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
+        new PermissionManager(), ((PermissionService) fragment.getContext()), aptoideAccountManager,
+        appsNavigator);
   }
 }

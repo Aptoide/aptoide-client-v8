@@ -107,8 +107,7 @@ public class SyncResultFragment extends UIComponentFragment
         new GridLayoutManager(getContext(), SYNCED_LIST_NUMBER_OF_COLUMNS));
 
     successMessage.setText(marketResourceFormatter.formatString(getContext(),
-        R.string.addressbook_success_connected_friends,
-        Integer.toString(contacts.size())));
+        R.string.addressbook_success_connected_friends, Integer.toString(contacts.size())));
 
     RxView.clicks(allowFind)
         .subscribe(click -> mActionsListener.allowFindClicked());

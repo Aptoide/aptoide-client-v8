@@ -2,6 +2,7 @@ package cm.aptoide.pt.promotions;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -40,11 +41,12 @@ public class PromotionsAnalytics {
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
-      AnalyticsManager.Action action) {
+      AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.PROMOTIONS, action);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
-        action);
+        action, offerResponseStatus);
   }
 
   public void sendOpenPromotionsFragmentEvent() {

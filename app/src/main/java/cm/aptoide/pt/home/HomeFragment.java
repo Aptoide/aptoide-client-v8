@@ -1,6 +1,8 @@
 package cm.aptoide.pt.home;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
@@ -319,10 +322,21 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void setAdsTest(boolean showNatives) {
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents, marketName,
+        oneDecimalFormatter, marketName,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
             marketName, showNatives));
     bundlesList.setAdapter(adapter);
+  }
+
+  @Override public Observable<HomeEvent> walletOfferCardInstallWalletClick() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.INSTALL_WALLET));
+  }
+
+  @Override public void sendDeeplinkToWalletAppView(String url) {
+    Intent intent = new Intent(this.getContext(), DeepLinkIntentReceiver.class);
+    intent.setData(Uri.parse(url));
+    startActivity(intent);
   }
 
   private boolean isEndReached() {

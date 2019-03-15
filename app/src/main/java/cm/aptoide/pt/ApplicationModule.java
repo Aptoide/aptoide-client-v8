@@ -53,6 +53,7 @@ import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.SearchAbTestService;
 import cm.aptoide.pt.abtesting.SearchExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -73,8 +74,12 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
+import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
+import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
@@ -96,6 +101,10 @@ import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.billing.BillingAnalytics;
+import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.blacklist.BlacklistPersistence;
+import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
+import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -1136,18 +1145,34 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment, SearchExperiment searchExperiment) {
+      MoPubAdsManager moPubAdsManager, SearchExperiment searchExperiment) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
         AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager, moPubBannerAdExperiment, moPubNativeAdExperiment, searchExperiment);
+        accountManager, moPubAdsManager, searchExperiment);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
       SearchSuggestionRemoteRepository remoteRepository) {
     return new SearchSuggestionManager(new SearchSuggestionService(remoteRepository),
         Schedulers.io());
+  }
+
+  @Singleton @Provides WalletAdsOfferService providesWalletAdsOfferService(@Named("pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
+    return new WalletAdsOfferService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        converterFactory, sharedPreferences);
+  }
+
+  @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
+      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
+      MoPubBannerAdExperiment moPubBannerAdExperiment,
+      MoPubNativeAdExperiment moPubNativeAdExperiment,
+      WalletAdsOfferManager walletAdsOfferManager) {
+    return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
+        moPubNativeAdExperiment, walletAdsOfferManager);
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
@@ -1527,10 +1552,28 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AdMapper();
   }
 
+  @Singleton @Provides Blacklister providesBlacklister(BlacklistPersistence blacklistPersistence) {
+    return new Blacklister(blacklistPersistence);
+  }
+
+  @Singleton @Provides BlacklistPersistence providesBlacklistPersistence(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new BlacklistPersistence(sharedPreferences);
+  }
+
+  @Singleton @Provides BlacklistUnitMapper providesBundleToBlacklistUnitMapper() {
+    return new BlacklistUnitMapper();
+  }
+
+  @Singleton @Provides BlacklistManager providesBlacklistManager(Blacklister blacklister,
+      BlacklistUnitMapper blacklistUnitMapper) {
+    return new BlacklistManager(blacklister, blacklistUnitMapper);
+  }
+
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName, InstallManager installManager,
-      PackageRepository packageRepository) {
-    return new BundlesResponseMapper(marketName, installManager, packageRepository);
+      WalletAdsOfferCardManager walletAdsOfferCardManager) {
+    return new BundlesResponseMapper(installManager, walletAdsOfferCardManager);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
@@ -1651,11 +1694,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository, @Named("homePromotionsId") String promotionId) {
+      InstalledRepository installedRepository, @Named("homePromotionsId") String promotionId,
+      MoPubAdsManager moPubAdsManager) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         preferencesManager, application.getApplicationContext()
-        .getPackageManager(), promotionsService, installedRepository, promotionId);
+        .getPackageManager(), promotionsService, installedRepository, promotionId, moPubAdsManager);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -1811,7 +1855,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
         EditorialAnalytics.CURATION_CARD_INSTALL,
         EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
-        PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR);
+        PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR,
+        AppViewAnalytics.ADS_WALLET_PROMOTION_EVENT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

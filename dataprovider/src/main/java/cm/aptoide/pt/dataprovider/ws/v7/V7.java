@@ -53,6 +53,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetSocialRecommendsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.home.WalletAdsOfferResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
@@ -563,6 +564,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     Observable<GetPromotionAppsResponse> getPromotionApps(@Path(value = "limit") int limit,
         @Body GetPromotionAppsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("appcoins/promotions/ads/get") Observable<WalletAdsOfferResponse> isWalletOfferActive(
+        @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/action/item/cards/get/type=CURATION_1/limit={limit}")
     Observable<EditorialListResponse> getEditorialList(@Path(value = "limit") int limit,

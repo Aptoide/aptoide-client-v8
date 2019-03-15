@@ -6,6 +6,7 @@ import android.telephony.TelephonyManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
@@ -52,6 +53,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   private static final String TELECO = "teleco";
   private static final String TRUSTED_BADGE = "Trusted Badge";
   private static final String URL = "url";
+  private static final String ADS_WALLET_PROMOTION = "ads_wallet_promotion";
   private final Map<String, DownloadEvent> cache;
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
@@ -251,27 +253,65 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void installClicked(String md5, String packageName, String trustedValue,
-      String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action) {
+      String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     String previousContext = navigationTracker.getViewName(false);
     String currentContext = navigationTracker.getViewName(true);
     editorsChoiceDownloadCompletedEvent(previousContext, md5, packageName, editorsBrickPosition,
         installType, currentContext, action);
     pushNotificationDownloadEvent(previousContext, md5, packageName, installType, action,
         currentContext);
-    downloadCompleteEvent(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
-        previousContext);
+    if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
+
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
+          previousContext,
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
+    } else {
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
+          previousContext);
+    }
   }
 
-  public void installClicked(String md5, String packageName, AnalyticsManager.Action action) {
+  public void installClicked(String md5, String packageName, AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     String previousContext = navigationTracker.getViewName(false);
-    downloadCompleteEvent(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext);
+
+    if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
+
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
+    } else {
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext);
+    }
+  }
+
+  public void downloadCompleteEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
+      String id, String packageName, String trustedValue, AnalyticsManager.Action action,
+      String previousContext, boolean areAdsBlockedByOffer) {
+    HashMap<String, Object> downloadMap =
+        createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue);
+    downloadMap.put(ADS_WALLET_PROMOTION, areAdsBlockedByOffer);
+    DownloadEvent downloadEvent =
+        new DownloadEvent(DOWNLOAD_COMPLETE_EVENT, downloadMap, previousContext, action);
+    cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
   }
 
   public void downloadCompleteEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
       String id, String packageName, String trustedValue, AnalyticsManager.Action action,
       String previousContext) {
+    DownloadEvent downloadEvent = new DownloadEvent(DOWNLOAD_COMPLETE_EVENT,
+        createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue),
+        previousContext, action);
+    cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
+  }
+
+  @NonNull
+  private HashMap<String, Object> createDownloadCompleteEventMap(ScreenTagHistory previousScreen,
+      ScreenTagHistory currentScreen, String packageName, String trustedValue) {
     HashMap<String, Object> downloadMap = new HashMap<>();
     downloadMap.put(PACKAGENAME, packageName);
     downloadMap.put(TRUSTED_BADGE, trustedValue);
@@ -284,9 +324,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         downloadMap.put(STORE, previousScreen.getStore());
       }
     }
-    DownloadEvent downloadEvent =
-        new DownloadEvent(DOWNLOAD_COMPLETE_EVENT, downloadMap, previousContext, action);
-    cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
+    return downloadMap;
   }
 
   private void pushNotificationDownloadEvent(String previousScreen, String id, String packageName,
@@ -328,11 +366,22 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void downloadCompleteEvent(String id, String packageName, String trustedValue,
-      AnalyticsManager.Action action) {
+      AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
 
     String previousContext = navigationTracker.getViewName(false);
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
     ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
+
+    if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
+
+      downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
+          previousContext,
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
+    } else {
+      downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
+          previousContext);
+    }
 
     downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
         previousContext);
