@@ -1390,7 +1390,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("aptoideEvents") Collection<String> provideAptoideEvents() {
-    return Arrays.asList(AppViewAnalytics.OPEN_APP_VIEW,
+    return Arrays.asList(FirstLaunchAnalytics.FIRST_LAUNCH_BI,
+        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, AppViewAnalytics.OPEN_APP_VIEW,
         NotificationAnalytics.NOTIFICATION_EVENT_NAME, TimelineAnalytics.OPEN_APP,
         TimelineAnalytics.UPDATE_APP, TimelineAnalytics.OPEN_STORE, TimelineAnalytics.OPEN_ARTICLE,
         TimelineAnalytics.LIKE, TimelineAnalytics.OPEN_BLOG, TimelineAnalytics.OPEN_VIDEO,
