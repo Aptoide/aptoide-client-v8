@@ -61,6 +61,7 @@ import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.app.WalletPromotionViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
@@ -262,6 +263,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private MoPubView bannerAd;
   private View flagThisAppSection;
   private View collapsingAppcBackground;
+
   //wallet promotion
   private View walletPromotionView;
   private TextView walletPromotionTitle;
@@ -1179,7 +1181,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     flagThisAppSection.setVisibility(View.GONE);
   }
 
-  @Override public void showAppcWalletPromotionView() {
+  @Override
+  public void showAppcWalletPromotionView(WalletPromotionViewModel walletPromotionViewModel) {
     walletPromotionView.setVisibility(View.VISIBLE);
   }
 

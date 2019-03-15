@@ -845,10 +845,13 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<WalletPromotionViewModel> updateWalletPromotion(
       AppViewViewModel appViewViewModel) {
-    return appViewManager.loadWalletPromotionViewModel(appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())
+    return appViewManager.loadWalletPromotionViewModel(
+        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())
         .observeOn(viewScheduler)
-        .doOnNext(model -> {
-          if (!model.isClaimed() && model.isAppcoinsApp()) view.showAppcWalletPromotionView();
+        .doOnNext(walletPromotionViewModel -> {
+          if (!walletPromotionViewModel.isClaimed() && walletPromotionViewModel.isAppcoinsApp()) {
+            view.showAppcWalletPromotionView(walletPromotionViewModel);
+          }
         });
   }
 

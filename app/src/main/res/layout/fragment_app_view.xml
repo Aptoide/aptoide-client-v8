@@ -279,6 +279,7 @@
             layout="@layout/appview_wallet_promotion_install_layout"
             android:id="@+id/wallet_install_promotion"
             android:visibility="gone"
+            tools:visibility="visible"
             />
 
         <include
