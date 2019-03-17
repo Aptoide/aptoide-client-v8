@@ -1197,7 +1197,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           .isDownloading()) {
         setupActiveWalletPromotion(viewModel);
       } else {
-        setupInactiveWalletPromotion();
+        setupInactiveWalletPromotion(viewModel);
       }
     }
     promotionView.setVisibility(View.VISIBLE);
@@ -1215,6 +1215,33 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     promotionView.setVisibility(View.GONE);
   }
 
+  @Override public Observable<WalletPromotionViewModel> installWalletButtonClick() {
+    return promotionAppClick.filter(
+        promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.UPDATE
+            || promotionAppClick.getClickType() == PromotionEvent.ClickType.INSTALL_APP
+            || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNLOAD
+            || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNGRADE)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public Observable<WalletPromotionViewModel> pausePromotionDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionEvent.ClickType.PAUSE_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public Observable<WalletPromotionViewModel> cancelPromotionDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionEvent.ClickType.CANCEL_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public Observable<WalletPromotionViewModel> resumePromotionDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionEvent.ClickType.RESUME_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
   private void setupClaimWalletPromotion() {
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionInstallDisableLayout.setVisibility(View.GONE);
@@ -1222,11 +1249,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletPromotionClaimLayout.setVisibility(View.VISIBLE);
   }
 
-  private void setupInactiveWalletPromotion() {
+  private void setupInactiveWalletPromotion(WalletPromotionViewModel viewModel) {
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionInstallDisableLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.VISIBLE);
+    walletPromotionDownloadButton.setOnClickListener(__ -> promotionAppClick.onNext(
+        new PromotionEvent(viewModel, PromotionEvent.ClickType.INSTALL_APP)));
   }
 
   private void setupActiveWalletPromotion(WalletPromotionViewModel viewModel) {

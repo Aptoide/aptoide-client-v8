@@ -337,6 +337,18 @@ public class AppViewManager {
         .toCompletable();
   }
 
+  public Completable downloadApp(WalletPromotionViewModel promotionViewApp) {
+    return Observable.just(downloadFactory.create(downloadStateParser.parseDownloadAction(
+        promotionViewApp.getDownloadModel()
+            .getAction()), promotionViewApp.getAppName(), promotionViewApp.getPackageName(),
+        promotionViewApp.getMd5sum(), promotionViewApp.getIcon(), promotionViewApp.getVersionName(),
+        promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
+        promotionViewApp.getPathAlt(), promotionViewApp.getObb()))
+        .flatMapCompletable(download -> installManager.install(download)
+            .doOnSubscribe(__ -> setupDownloadEvents(download, promotionViewApp.getId())))
+        .toCompletable();
+  }
+
   private void setupDownloadEvents(Download download, long appId) {
     setupDownloadEvents(download, null, appId, null, null);
   }

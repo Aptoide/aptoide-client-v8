@@ -123,6 +123,7 @@ public class AppViewPresenter implements Presenter {
     showInterstitialAd();
 
     handleDismissWalletPromotion();
+    handleInstallWalletPromotion();
   }
 
   private Completable showBannerAd() {
@@ -1187,6 +1188,37 @@ public class AppViewPresenter implements Presenter {
         }, error -> {
           throw new OnErrorNotImplementedException(error);
         });
+  }
+
+  private void handleInstallWalletPromotion() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.installWalletButtonClick()
+            .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
+            .observeOn(viewScheduler)
+            .doOnError(throwable -> throwable.printStackTrace())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new IllegalStateException(error);
+        });
+  }
+
+  private Completable downloadApp(WalletPromotionViewModel walletPromotionViewModel) {
+    return Observable.defer(() -> {
+      if (appViewManager.shouldShowRootInstallWarningPopup()) {
+        return view.showRootInstallWarningPopup()
+            .doOnNext(answer -> appViewManager.allowRootInstall(answer));
+      }
+      return Observable.just(null);
+    })
+        .observeOn(viewScheduler)
+        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
+        .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
+        .observeOn(Schedulers.io())
+        .flatMapCompletable(__1 -> appViewManager.downloadApp(walletPromotionViewModel))
+        .toCompletable();
   }
 }
 
