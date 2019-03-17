@@ -279,6 +279,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ImageView cancelWalletDownload;
   private ImageView pauseWalletDownload;
   private ImageView resumeWalletDownload;
+  private PublishSubject<PromotionEvent> promotionAppClick;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -302,6 +303,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     appBought = PublishSubject.create();
     installClickSubject = PublishSubject.create();
     interstitialClick = PublishSubject.create();
+    promotionAppClick = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -1228,7 +1230,73 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setupActiveWalletPromotion(WalletPromotionViewModel viewModel) {
-    // TODO: 17/03/2019 progress/state
+    walletPromotionDownloadLayout.setVisibility(View.VISIBLE);
+    walletPromotionButtonsLayout.setVisibility(View.GONE);
+
+    DownloadModel.DownloadState downloadState = viewModel.getDownloadModel()
+        .getDownloadState();
+
+    LinearLayout.LayoutParams pauseShowing =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
+    LinearLayout.LayoutParams pauseHidden =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 2f);
+    switch (downloadState) {
+      case ACTIVE:
+        downloadWalletProgressBar.setIndeterminate(false);
+        downloadWalletProgressBar.setProgress(viewModel.getDownloadModel()
+            .getProgress());
+        downloadWalletProgressValue.setText(String.valueOf(viewModel.getDownloadModel()
+            .getProgress()) + "%");
+        pauseWalletDownload.setVisibility(View.VISIBLE);
+        pauseWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
+        cancelWalletDownload.setVisibility(View.GONE);
+        resumeWalletDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case INDETERMINATE:
+        downloadWalletProgressBar.setIndeterminate(true);
+        pauseWalletDownload.setVisibility(View.VISIBLE);
+        pauseWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
+        cancelWalletDownload.setVisibility(View.GONE);
+        resumeWalletDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case PAUSE:
+        downloadWalletProgressBar.setIndeterminate(false);
+        downloadWalletProgressBar.setProgress(viewModel.getDownloadModel()
+            .getProgress());
+        downloadWalletProgressValue.setText(String.valueOf(viewModel.getDownloadModel()
+            .getProgress()) + "%");
+        pauseWalletDownload.setVisibility(View.GONE);
+        cancelWalletDownload.setVisibility(View.VISIBLE);
+        cancelWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.CANCEL_DOWNLOAD)));
+        resumeWalletDownload.setVisibility(View.VISIBLE);
+        resumeWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.RESUME_DOWNLOAD)));
+        downloadControlsLayout.setLayoutParams(pauseHidden);
+        break;
+      case COMPLETE:
+        downloadWalletProgressBar.setIndeterminate(true);
+        pauseWalletDownload.setVisibility(View.VISIBLE);
+        pauseWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
+        cancelWalletDownload.setVisibility(View.GONE);
+        resumeWalletDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case ERROR:
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_STORAGE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
+        break;
+    }
   }
 
   private void setSimilarAppsAdapters() {
