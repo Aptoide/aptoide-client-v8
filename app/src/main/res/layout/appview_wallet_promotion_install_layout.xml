@@ -76,7 +76,7 @@
   </LinearLayout>
 
   <LinearLayout
-      android:id="@+id/wallet_transfer_info"
+      android:id="@+id/wallet_download_info"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
@@ -196,7 +196,7 @@
     </LinearLayout>
   </LinearLayout>
   <LinearLayout
-      android:id="@+id/install_to_get_appc_layout"
+      android:id="@+id/wallet_install_disabled_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -218,7 +218,7 @@
 
   </LinearLayout>
   <LinearLayout
-      android:id="@+id/claim_appc_layout"
+      android:id="@+id/wallet_claim_appc_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -232,7 +232,7 @@
       >
 
     <Button
-        android:id="@+id/claim_appc_button"
+        android:id="@+id/wallet_claim_appc_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CLAIM YOUR 10 APPC CREDITS"

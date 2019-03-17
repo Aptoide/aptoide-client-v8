@@ -16,14 +16,12 @@ public class WalletPromotionViewModel {
   private final String pathAlt;
   private final Obb obb;
   private final int appcValue;
-  private final boolean isClaimed;
   private final boolean isWalletInstalled;
-  private final boolean isAppcoinsApp;
+  private final boolean shouldShowOffer;
 
   public WalletPromotionViewModel(DownloadModel downloadModel, String appName, String icon, long id,
       String packageName, String md5sum, int versionCode, String versionName, String path,
-      String pathAlt, Obb obb, int appcValue, boolean isClaimed, boolean isWalletInstalled,
-      boolean isAppcoinsApp) {
+      String pathAlt, Obb obb, int appcValue, boolean isWalletInstalled, boolean shouldShowOffer) {
     this.downloadModel = downloadModel;
     this.appName = appName;
     this.icon = icon;
@@ -36,13 +34,12 @@ public class WalletPromotionViewModel {
     this.pathAlt = pathAlt;
     this.obb = obb;
     this.appcValue = appcValue;
-    this.isClaimed = isClaimed;
     this.isWalletInstalled = isWalletInstalled;
-    this.isAppcoinsApp = isAppcoinsApp;
+    this.shouldShowOffer = shouldShowOffer;
   }
 
-  public WalletPromotionViewModel(boolean isWalletInstalled, boolean isAppcoinsApp,
-      boolean isClaimed) {
+  public WalletPromotionViewModel(boolean shouldShowOffer) {
+    this.shouldShowOffer = shouldShowOffer;
     this.downloadModel = null;
     this.appName = "";
     this.icon = "";
@@ -55,9 +52,7 @@ public class WalletPromotionViewModel {
     this.pathAlt = null;
     this.obb = null;
     this.appcValue = -1;
-    this.isWalletInstalled = isWalletInstalled;
-    this.isAppcoinsApp = isAppcoinsApp;
-    this.isClaimed = isClaimed;
+    this.isWalletInstalled = false;
   }
 
   public String getAppName() {
@@ -100,19 +95,19 @@ public class WalletPromotionViewModel {
     return obb;
   }
 
-  public boolean isWalletInstalled() {
-    return isWalletInstalled;
-  }
-
-  public boolean isAppcoinsApp() {
-    return isAppcoinsApp;
-  }
-
-  public boolean isClaimed() {
-    return isClaimed;
-  }
-
   public int getAppcValue() {
     return appcValue;
+  }
+
+  public DownloadModel getDownloadModel() {
+    return this.downloadModel;
+  }
+
+  public boolean shouldShowOffer() {
+    return this.shouldShowOffer;
+  }
+
+  public boolean isWalletInstalled() {
+    return isWalletInstalled;
   }
 }

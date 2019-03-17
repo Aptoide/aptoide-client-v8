@@ -490,36 +490,40 @@ public class AppViewManager {
 
   public Observable<WalletPromotionViewModel> loadWalletPromotionViewModel(boolean hasAppc) {
     if (!hasAppc) {
-      return Observable.just(new WalletPromotionViewModel(false, false, false));
+      return Observable.just(new WalletPromotionViewModel(false));
     } else {
       return promotionsManager.getPromotionApps(promotionId)
           .map(this::mapToWalletPromotion)
           .flatMapObservable(viewModel -> installManager.getInstall(viewModel.getMd5sum(),
               viewModel.getPackageName(), viewModel.getVersionCode())
-              .map(result -> new WalletPromotionViewModel(
-                  mapToDownloadModel(result.getType(), result.getProgress(), result.getState()),
+              .map(install -> new WalletPromotionViewModel(
+                  mapToDownloadModel(install.getType(), install.getProgress(), install.getState()),
                   viewModel.getAppName(), viewModel.getIcon(), viewModel.getId(),
                   viewModel.getPackageName(), viewModel.getMd5sum(), viewModel.getVersionCode(),
                   viewModel.getVersionName(), viewModel.getPath(), viewModel.getPathAlt(),
-                  viewModel.getObb(), viewModel.getAppcValue(), viewModel.isClaimed(),
-                  promotionsManager.isWalletInstalled(), viewModel.isAppcoinsApp())));
+                  viewModel.getObb(), viewModel.getAppcValue(),
+                  promotionsManager.isWalletInstalled(), viewModel.shouldShowOffer())));
     }
   }
 
   private WalletPromotionViewModel mapToWalletPromotion(List<PromotionApp> apps) {
     if (apps == null || apps.isEmpty()) {
-      return new WalletPromotionViewModel(false, true, true);
-    } else if (apps.size() != 1) {
-      return new WalletPromotionViewModel(false, true, true);
-    } else if (apps.get(0)
-        .isClaimed()) {
-      return new WalletPromotionViewModel(false, true, true);
+      return new WalletPromotionViewModel(false);
     } else {
       PromotionApp app = apps.get(0);
-      return new WalletPromotionViewModel(null, app.getName(), app.getAppIcon(), app.getAppId(),
-          app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
-          app.getDownloadPath(), app.getAlternativePath(), app.getObb(),
-          Math.round(app.getAppcValue()), app.isClaimed(), false, true);
+      if (app.getPackageName()
+          .equals("com.appcoins.wallet")) {
+        if (app.isClaimed()) {
+          return new WalletPromotionViewModel(false);
+        } else {
+          return new WalletPromotionViewModel(null, app.getName(), app.getAppIcon(), app.getAppId(),
+              app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
+              app.getDownloadPath(), app.getAlternativePath(), app.getObb(),
+              Math.round(app.getAppcValue()), false, true);
+        }
+      } else {
+        return new WalletPromotionViewModel(false);
+      }
     }
   }
 

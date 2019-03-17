@@ -265,10 +265,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View collapsingAppcBackground;
 
   //wallet promotion
-  private View walletPromotionView;
+  private View promotionView;
+  private View walletPromotionDownloadLayout;
+  private View walletPromotionClaimLayout;
+  private View walletPromotionInstallDisableLayout;
   private TextView walletPromotionTitle;
   private TextView walletPromotionMessage;
-  private View walletDownloadControlsLayout;
+  private View walletPromotionButtonsLayout;
   private Button walletPromotionCancelButton;
   private Button walletPromotionDownloadButton;
   private ProgressBar downloadWalletProgressBar;
@@ -413,22 +416,25 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
 
-    walletPromotionView = view.findViewById(R.id.wallet_install_promotion);
-    walletPromotionTitle = walletPromotionView.findViewById(R.id.wallet_title);
-    walletPromotionMessage = walletPromotionView.findViewById(R.id.wallet_message);
-    walletDownloadControlsLayout = walletPromotionView.findViewById(R.id.buttons_layout);
-    walletPromotionCancelButton = walletPromotionView.findViewById(R.id.cancel_button);
-    walletPromotionDownloadButton = walletPromotionView.findViewById(R.id.download_button);
+    promotionView = view.findViewById(R.id.wallet_install_promotion);
+    walletPromotionTitle = promotionView.findViewById(R.id.wallet_title);
+    walletPromotionMessage = promotionView.findViewById(R.id.wallet_message);
+    walletPromotionButtonsLayout = promotionView.findViewById(R.id.buttons_layout);
+    walletPromotionCancelButton = promotionView.findViewById(R.id.cancel_button);
+    walletPromotionDownloadButton = promotionView.findViewById(R.id.download_button);
+    walletPromotionDownloadLayout = view.findViewById(R.id.wallet_download_info);
     downloadWalletProgressBar =
-        walletDownloadControlsLayout.findViewById(R.id.wallet_download_progress_bar);
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_progress_bar);
     downloadWalletProgressValue =
-        walletDownloadControlsLayout.findViewById(R.id.wallet_download_progress_number);
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_progress_number);
     cancelWalletDownload =
-        walletDownloadControlsLayout.findViewById(R.id.wallet_download_cancel_button);
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_cancel_button);
     pauseWalletDownload =
-        walletDownloadControlsLayout.findViewById(R.id.wallet_download_pause_download);
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_pause_download);
     resumeWalletDownload =
-        walletDownloadControlsLayout.findViewById(R.id.wallet_download_resume_download);
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_resume_download);
+    walletPromotionClaimLayout = view.findViewById(R.id.wallet_claim_appc_layout);
+    walletPromotionInstallDisableLayout = view.findViewById(R.id.wallet_install_disabled_layout);
 
     donationsAdapter = new DonationsAdapter(new ArrayList<>());
     donationsList.setAdapter(donationsAdapter);
@@ -1181,9 +1187,18 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     flagThisAppSection.setVisibility(View.GONE);
   }
 
-  @Override
-  public void showAppcWalletPromotionView(WalletPromotionViewModel walletPromotionViewModel) {
-    walletPromotionView.setVisibility(View.VISIBLE);
+  @Override public void showAppcWalletPromotionView(WalletPromotionViewModel viewModel) {
+    if (viewModel.isWalletInstalled()) {
+      setupClaimWalletPromotion();
+    } else {
+      if (viewModel.getDownloadModel()
+          .isDownloading()) {
+        setupActiveWalletPromotion(viewModel);
+      } else {
+        setupInactiveWalletPromotion();
+      }
+    }
+    promotionView.setVisibility(View.VISIBLE);
   }
 
   @Override public Observable<Void> dismissWalletPromotionClick() {
@@ -1195,7 +1210,25 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void dismissWalletPromotionView() {
-    walletPromotionView.setVisibility(View.GONE);
+    promotionView.setVisibility(View.GONE);
+  }
+
+  private void setupClaimWalletPromotion() {
+    walletPromotionDownloadLayout.setVisibility(View.GONE);
+    walletPromotionInstallDisableLayout.setVisibility(View.GONE);
+    walletPromotionButtonsLayout.setVisibility(View.GONE);
+    walletPromotionClaimLayout.setVisibility(View.VISIBLE);
+  }
+
+  private void setupInactiveWalletPromotion() {
+    walletPromotionDownloadLayout.setVisibility(View.GONE);
+    walletPromotionInstallDisableLayout.setVisibility(View.GONE);
+    walletPromotionClaimLayout.setVisibility(View.GONE);
+    walletPromotionButtonsLayout.setVisibility(View.VISIBLE);
+  }
+
+  private void setupActiveWalletPromotion(WalletPromotionViewModel viewModel) {
+    // TODO: 17/03/2019 progress/state
   }
 
   private void setSimilarAppsAdapters() {

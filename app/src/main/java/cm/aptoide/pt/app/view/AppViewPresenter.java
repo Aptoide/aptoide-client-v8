@@ -849,7 +849,7 @@ public class AppViewPresenter implements Presenter {
         appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())
         .observeOn(viewScheduler)
         .doOnNext(walletPromotionViewModel -> {
-          if (!walletPromotionViewModel.isClaimed() && walletPromotionViewModel.isAppcoinsApp()) {
+          if (walletPromotionViewModel.shouldShowOffer()) {
             view.showAppcWalletPromotionView(walletPromotionViewModel);
           }
         });
