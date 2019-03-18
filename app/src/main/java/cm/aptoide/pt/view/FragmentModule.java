@@ -332,7 +332,7 @@ import rx.subscriptions.CompositeSubscription;
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
       MoPubNativeAdExperiment moPubNativeAdExperiment, PromotionsManager promotionsManager,
-      @Named("appviewWalletPromotionId") String promotionId) {
+      @Named("wallet-offer-promotion-id") String promotionId) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
@@ -345,12 +345,13 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
+      PromotionsNavigator promotionsNavigator,
+      @Named("wallet-offer-promotion-id") String promotionId) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()));
+        ((PermissionService) fragment.getContext()), promotionsNavigator, promotionId);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -450,10 +451,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides ClaimPromotionDialogPresenter providesClaimPromotionDialogPresenter(
       ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
-      ClaimPromotionsNavigator navigator, @Named("homePromotionsId") String promotionId) {
+      ClaimPromotionsNavigator navigator) {
     return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
         new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
-        promotionsAnalytics, navigator, promotionId);
+        promotionsAnalytics, navigator, arguments.getString("promotion_id", "default"));
   }
 
   @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(

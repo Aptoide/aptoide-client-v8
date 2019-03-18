@@ -54,7 +54,7 @@ public class PromotionsPresenter implements Presenter {
             .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractClaimEvent(
                 promotionViewApp.getPackageName(), promotionViewApp.getAppcValue()))
             .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
-                promotionViewApp.getPackageName()))
+                promotionViewApp.getPackageName(), promotionId))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

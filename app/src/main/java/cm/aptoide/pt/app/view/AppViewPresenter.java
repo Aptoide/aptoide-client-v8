@@ -25,6 +25,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class AppViewPresenter implements Presenter {
 
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private final PromotionsNavigator promotionsNavigator;
+  private final String promotionId;
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
@@ -63,7 +66,8 @@ public class AppViewPresenter implements Presenter {
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
-      PermissionManager permissionManager, PermissionService permissionService) {
+      PermissionManager permissionManager, PermissionService permissionService,
+      PromotionsNavigator promotionsNavigator, String promotionId) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -75,6 +79,8 @@ public class AppViewPresenter implements Presenter {
     this.crashReport = crashReport;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.promotionsNavigator = promotionsNavigator;
+    this.promotionId = promotionId;
   }
 
   @Override public void present() {
@@ -124,6 +130,8 @@ public class AppViewPresenter implements Presenter {
 
     handleDismissWalletPromotion();
     handleInstallWalletPromotion();
+
+    claimApp();
   }
 
   private Completable showBannerAd() {
@@ -1205,7 +1213,21 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-          throw new IllegalStateException(error);
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void claimApp() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.claimAppClick()
+            .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
+                promotionViewApp.getPackageName(), promotionId))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
         });
   }
 

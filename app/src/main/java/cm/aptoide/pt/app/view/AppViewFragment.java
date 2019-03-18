@@ -135,11 +135,16 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  */
 
 public class AppViewFragment extends NavigationTrackFragment implements AppViewView {
+  private static final int DOWNLOADING = 1;
+  private static final int DOWNGRADE = 2;
+  private static final int INSTALL = 3;
+  private static final int CLAIM = 4;
+  private static final int UPDATE = 5;
+  private static final int DOWNLOAD = 6;
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
   private static final int PAY_APP_REQUEST_CODE = 12;
   private static final int APPC_TRANSITION_MS = 1000;
-
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   @Inject @Named("marketName") String marketName;
@@ -268,6 +273,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View promotionView;
   private View walletPromotionDownloadLayout;
   private View walletPromotionClaimLayout;
+  private Button walletPromotionClaimButton;
   private View walletPromotionInstallDisableLayout;
   private TextView walletPromotionTitle;
   private TextView walletPromotionMessage;
@@ -436,6 +442,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     resumeWalletDownload =
         walletPromotionDownloadLayout.findViewById(R.id.wallet_download_resume_download);
     walletPromotionClaimLayout = view.findViewById(R.id.wallet_claim_appc_layout);
+    walletPromotionClaimButton = view.findViewById(R.id.wallet_claim_appc_button);
     walletPromotionInstallDisableLayout = view.findViewById(R.id.wallet_install_disabled_layout);
 
     donationsAdapter = new DonationsAdapter(new ArrayList<>());
@@ -1191,7 +1198,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showAppcWalletPromotionView(WalletPromotionViewModel viewModel) {
     if (viewModel.isWalletInstalled()) {
-      setupClaimWalletPromotion();
+      setupClaimWalletPromotion(viewModel);
     } else {
       if (viewModel.getDownloadModel()
           .isDownloading()) {
@@ -1205,10 +1212,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Void> dismissWalletPromotionClick() {
     return RxView.clicks(walletPromotionCancelButton);
-  }
-
-  @Override public Observable<Void> downloadWalletPromotionClick() {
-    return RxView.clicks(walletPromotionDownloadButton);
   }
 
   @Override public void dismissWalletPromotionView() {
@@ -1242,11 +1245,69 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
-  private void setupClaimWalletPromotion() {
+  @Override public Observable<WalletPromotionViewModel> claimAppClick() {
+    return promotionAppClick.filter(
+        promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.CLAIM)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  private void setupClaimWalletPromotion(WalletPromotionViewModel viewModel) {
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionInstallDisableLayout.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.VISIBLE);
+    walletPromotionClaimButton.setOnClickListener(__ -> promotionAppClick.onNext(
+        new PromotionEvent(viewModel, getClickType(getState(viewModel)))));
+  }
+
+  private int getState(WalletPromotionViewModel app) {
+    int state;
+    DownloadModel downloadModel = app.getDownloadModel();
+    if (downloadModel.isDownloading()) {
+      return DOWNLOADING;
+    } else {
+      switch (downloadModel.getAction()) {
+        case DOWNGRADE:
+          state = DOWNGRADE;
+          break;
+        case INSTALL:
+          state = INSTALL;
+          break;
+        case OPEN:
+          state = CLAIM;
+          break;
+        case UPDATE:
+          state = UPDATE;
+          break;
+        default:
+          throw new IllegalArgumentException("Invalid type of download action");
+      }
+      return state;
+    }
+  }
+
+  private PromotionEvent.ClickType getClickType(int appState) {
+    PromotionEvent.ClickType clickType;
+    switch (appState) {
+      case DOWNGRADE:
+        clickType = PromotionEvent.ClickType.DOWNGRADE;
+        break;
+      case UPDATE:
+        clickType = PromotionEvent.ClickType.UPDATE;
+        break;
+      case DOWNLOAD:
+        clickType = PromotionEvent.ClickType.DOWNLOAD;
+        break;
+      case INSTALL:
+        clickType = PromotionEvent.ClickType.INSTALL_APP;
+        break;
+      case CLAIM:
+        clickType = PromotionEvent.ClickType.CLAIM;
+        break;
+      default:
+        throw new IllegalArgumentException("Wrong view type of promotion app");
+    }
+    return clickType;
   }
 
   private void setupInactiveWalletPromotion(WalletPromotionViewModel viewModel) {

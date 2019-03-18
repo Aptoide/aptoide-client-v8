@@ -177,8 +177,6 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> dismissWalletPromotionClick();
 
-  Observable<Void> downloadWalletPromotionClick();
-
   void dismissWalletPromotionView();
 
   Observable<WalletPromotionViewModel> installWalletButtonClick();
@@ -188,4 +186,6 @@ public interface AppViewView extends InstallAppView {
   Observable<WalletPromotionViewModel> cancelPromotionDownload();
 
   Observable<WalletPromotionViewModel> resumePromotionDownload();
+
+  Observable<WalletPromotionViewModel> claimAppClick();
 }
