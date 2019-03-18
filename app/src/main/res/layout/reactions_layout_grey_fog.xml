@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <include
+      layout="@layout/add_reaction_grey_fog"
+      android:id="@+id/add_reactions"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
+      />
+
+  <include
+      layout="@layout/reactions"
+      android:id="@+id/reactions"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="9dp"
+      android:layout_marginStart="9dp"
+      android:layout_toEndOf="@id/add_reactions"
+      android:layout_toRightOf="@id/add_reactions"
+      />
+
+  <TextView
+      android:id="@+id/number_of_reactions"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="11.4dp"
+      android:layout_marginStart="11.4dp"
+      android:layout_toEndOf="@id/reactions"
+      android:layout_toRightOf="@id/reactions"
+      android:textColor="@color/grey_fog_dark"
+      android:textStyle="bold"
+      android:visibility="invisible"
+      tools:text="100"
+      tools:visibility="visible"
+      style="@style/Aptoide.TextView.Regular.XS"
+      />
+
+</RelativeLayout>
