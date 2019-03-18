@@ -20,7 +20,7 @@ public interface HomeBundle {
   String getTag();
 
   enum BundleType {
-    EDITORS, APPS, ADS, UNKNOWN, LOADING, STORE, SOCIAL, INFO_BUNDLE, APPCOINS_ADS, EDITORIAL, SMALL_BANNER;
+    EDITORS, APPS, ADS, UNKNOWN, LOADING, STORE, SOCIAL, INFO_BUNDLE, APPCOINS_ADS, EDITORIAL, SMALL_BANNER, TOP;
 
     public boolean isApp() {
       return this.equals(APPS) || this.equals(EDITORS) || this.equals(ADS) || this.equals(
