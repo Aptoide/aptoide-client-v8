@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:layout_alignBottom="@id/background_image"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="49dp"
         android:layout_marginEnd="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
@@ -69,32 +69,22 @@
         style="@style/Aptoide.TextView.Regular.M"
         />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
         android:layout_alignBottom="@id/background_image"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="9dp"
         >
-      <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:layout_marginLeft="12dp"
-          android:layout_marginStart="12dp"
-          android:layout_marginTop="1dp"
-          android:background="@drawable/ic_eye"
+
+      <include
+          layout="@layout/reactions_layout"
+          android:id="@+id/reactions_layout"
           />
 
-      <TextView
-          android:id="@+id/editorial_views"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="8dp"
-          android:layout_marginStart="8dp"
-          tools:text="1000 views"
-          style="@style/Aptoide.TextView.Regular.XS.White"
+      <include
+          layout="@layout/views_layout"
+          android:id="@+id/views_layout"
           />
-    </LinearLayout>
-
+    </RelativeLayout>
   </RelativeLayout>
 </android.support.v7.widget.CardView>
