@@ -74,10 +74,13 @@
         android:layout_height="24dp"
         android:layout_alignBottom="@id/background_image"
         android:layout_marginBottom="9dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"
+
         >
 
       <include
-          layout="@layout/reactions_layout"
+          layout="@layout/reactions_layout_white"
           android:id="@+id/reactions_layout"
           />
 

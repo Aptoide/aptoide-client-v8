@@ -7,13 +7,12 @@
 
   <ImageButton
       android:layout_width="wrap_content"
-      android:layout_height="24dp"
+      android:layout_height="wrap_content"
       android:background="@drawable/round_white_button"
-      android:paddingBottom="5.3dp"
-      android:paddingLeft="9.3dp"
-      android:paddingRight="9.3dp"
-      android:paddingTop="5.3dp"
+      android:paddingBottom="4dp"
+      android:paddingLeft="8dp"
+      android:paddingRight="8dp"
+      android:paddingTop="4dp"
       android:src="@drawable/ic_reaction_emoticon"
       />
-
 </LinearLayout>
