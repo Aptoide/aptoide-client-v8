@@ -216,15 +216,20 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> loadApp().flatMapCompletable(appViewViewModel -> showBannerAd())
-            .flatMapSingle(
-                appViewViewModel -> manageOrganicAds(appViewViewModel.getMinimalAd()).onErrorReturn(
-                    __1 -> null)
-                    .map(__1 -> appViewViewModel))
-            .filter(app -> app.hasDonations())// after getApk webservice is updated
-            .flatMapSingle(app -> appViewManager.getTopDonations(app.getPackageName()))
-            .observeOn(viewScheduler)
-            .doOnNext(donations -> view.showDonations(donations)))
+        .flatMap(__ -> loadApp().flatMapSingle(appViewViewModel -> showBannerAd().andThen(
+            manageOrganicAds(appViewViewModel.getMinimalAd()).onErrorReturn(__1 -> null)
+                .map(__1 -> appViewViewModel)))
+            .flatMapSingle(app -> {
+              if (app.hasDonations()) {
+                return appViewManager.getTopDonations(app.getPackageName())
+                    .observeOn(viewScheduler)
+                    .doOnSuccess(donations -> view.showDonations(donations))
+                    .map(donations -> app);
+              } else {
+                return Single.just(app);
+              }
+            }))
+        .flatMap(appViewModel -> updateWalletPromotion(appViewModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
@@ -758,9 +763,8 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(appViewViewModel -> view.recoverScrollViewState())
         .filter(model -> !model.hasError())
         .flatMap(appViewModel -> Observable.zip(updateSimilarAppsBundles(appViewModel),
-            updateReviews(appViewModel), updateWalletPromotion(appViewModel),
-            (similarAppsBundles, reviewsViewModel, walletPromotionViewModel) -> Observable.just(
-                appViewModel))
+            updateReviews(appViewModel),
+            (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
             .first()
             .map(__ -> appViewModel));
   }
