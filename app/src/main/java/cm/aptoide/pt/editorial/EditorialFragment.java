@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -37,6 +38,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -56,6 +58,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.reactions.ReactionMapper.mapReaction;
 import static cm.aptoide.pt.util.AptoideColorUtils.getChangedColorLightness;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
@@ -96,6 +99,11 @@ public class EditorialFragment extends NavigationTrackFragment
   private ImageView resumeDownload;
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
+  private ImageButton reactButton;
+  private ImageView firstReaction;
+  private ImageView secondReaction;
+  private ImageView thirdReaction;
+  private TextView numberOfReactions;
 
   private DownloadModel.Action action;
   private Subscription errorMessageSubscription;
@@ -166,6 +174,12 @@ public class EditorialFragment extends NavigationTrackFragment
         downloadEventListener);
     editorialItems.setLayoutManager(layoutManager);
     editorialItems.setAdapter(adapter);
+
+    reactButton = view.findViewById(R.id.add_reactions);
+    firstReaction = view.findViewById(R.id.reaction_1);
+    secondReaction = view.findViewById(R.id.reaction_2);
+    thirdReaction = view.findViewById(R.id.reaction_3);
+    numberOfReactions = view.findViewById(R.id.number_of_reactions);
 
     cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
@@ -541,6 +555,25 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showDowngradingMessage() {
     Snackbar.make(getView(), R.string.downgrading_msg, Snackbar.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<Void> reactionsButtonClicked() {
+    return RxView.clicks(reactButton);
+  }
+
+  private void setReactions(List<ReactionType> reactions, String numberOfReactions) {
+    ImageView[] imageViews = { firstReaction, secondReaction, thirdReaction };
+    for (int i = 0; i < reactions.size(); i++) {
+      if (i < imageViews.length) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(mapReaction(reactions.get(i)), imageViews[i]);
+        imageViews[i].setVisibility(View.VISIBLE);
+      }
+    }
+    if (!numberOfReactions.equals("0")) {
+      this.numberOfReactions.setText(numberOfReactions);
+      this.numberOfReactions.setVisibility(View.VISIBLE);
+    }
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {

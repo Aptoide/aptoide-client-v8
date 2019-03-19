@@ -65,4 +65,6 @@ public interface EditorialView extends View {
   Observable<Boolean> showDowngradeMessage();
 
   void showDowngradingMessage();
+
+  Observable<Void> reactionsButtonClicked();
 }

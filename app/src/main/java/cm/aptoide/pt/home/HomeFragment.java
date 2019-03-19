@@ -289,6 +289,12 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .equals(HomeEvent.Type.KNOW_MORE));
   }
 
+  @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.REACTION))
+        .cast(EditorialHomeEvent.class);
+  }
+
   @UiThread @Override public void scrollToTop() {
     LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();

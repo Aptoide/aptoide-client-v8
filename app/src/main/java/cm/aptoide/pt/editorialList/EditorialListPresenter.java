@@ -1,6 +1,7 @@
 package cm.aptoide.pt.editorialList;
 
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -42,6 +43,7 @@ public class EditorialListPresenter implements Presenter {
     handleRetryClick();
     handleBottomReached();
     handleUserImageClick();
+    handleReactionClick();
     loadUserImage();
   }
 
@@ -188,6 +190,23 @@ public class EditorialListPresenter implements Presenter {
           view.hideLoadMore();
         })
         .map(editorialViewModel -> editorialViewModel);
+  }
+
+  @VisibleForTesting public void handleReactionClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> {
+          editorialListAnalytics.sendReactionButtonClickEvent(homeEvent.getCardId(),
+              homeEvent.getBundlePosition()); //TODO implementation
+          Log.d("TAG123", "handleReactionClick: ");
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void handleUserImageClick() {
