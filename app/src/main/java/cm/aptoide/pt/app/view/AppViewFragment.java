@@ -1615,6 +1615,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
                     .getSymbol(), model.getPay()
                     .getPrice()));
         break;
+      case MIGRATE:
+        install.setText(getResources().getString(R.string.appview_button_update_to_appc));
     }
   }
 

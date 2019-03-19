@@ -71,6 +71,7 @@ public class AppViewViewModel {
   private boolean hasAdvertising;
   private List<String> bdsFlags;
   private String campaignUrl;
+  private String signature;
 
   public AppViewViewModel(long appId, String appName, Store store, String storeTheme,
       boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
@@ -82,7 +83,7 @@ public class AppViewViewModel {
       String paidAppPath, String paymentStatus, boolean isLatestTrustedVersion, String uniqueName,
       OpenType openType, double appc, SearchAdResult minimalAd, String editorsChoice,
       String originTag, boolean isStoreFollowed, String marketName, boolean hasBilling,
-      boolean hasAdvertising, List<String> bdsFlags, String campaignUrl) {
+      boolean hasAdvertising, List<String> bdsFlags, String campaignUrl, String signature) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -131,6 +132,7 @@ public class AppViewViewModel {
     this.hasAdvertising = hasAdvertising;
     this.bdsFlags = bdsFlags;
     this.campaignUrl = campaignUrl;
+    this.signature = signature;
     this.loading = false;
     this.error = null;
   }
@@ -181,6 +183,7 @@ public class AppViewViewModel {
     this.originTag = "";
     this.marketName = "";
     this.isStoreFollowed = false;
+    this.signature = "";
     this.error = null;
     this.hasBilling = false;
     this.hasAdvertising = false;
@@ -234,6 +237,7 @@ public class AppViewViewModel {
     this.originTag = "";
     this.marketName = "";
     this.isStoreFollowed = false;
+    this.signature = "";
     this.loading = false;
     this.hasBilling = false;
     this.hasAdvertising = false;
@@ -454,5 +458,9 @@ public class AppViewViewModel {
 
   public String getCampaignUrl() {
     return campaignUrl;
+  }
+
+  public String getSignature() {
+    return signature;
   }
 }

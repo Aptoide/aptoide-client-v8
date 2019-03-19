@@ -64,6 +64,7 @@ public class AppViewManager {
   private String marketName;
   private boolean isFirstLoad;
   private AppCoinsManager appCoinsManager;
+  private AppcMigrationManager appcMigrationManager;
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
@@ -75,7 +76,8 @@ public class AppViewManager {
       MoPubAdsManager moPubAdsManager, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager) {
+      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager,
+      AppcMigrationManager appcMigrationManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -96,6 +98,7 @@ public class AppViewManager {
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
+    this.appcMigrationManager = appcMigrationManager;
     this.isFirstLoad = true;
   }
 
@@ -187,8 +190,10 @@ public class AppViewManager {
   }
 
   public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
-    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay).map(
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
+      boolean hasAppc) {
+    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay, signature, storeId,
+        hasAppc).map(
         downloadModel -> new DownloadAppViewModel(downloadModel, cachedSimilarAppsViewModel,
             cachedAppcSimilarAppsViewModel, cachedAppCoinsViewModel));
   }
@@ -283,7 +288,7 @@ public class AppViewManager {
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
-            appViewConfiguration.getCampaignUrl()));
+            appViewConfiguration.getCampaignUrl(), app.getSignature()));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {
@@ -324,8 +329,7 @@ public class AppViewManager {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, downloadAction, appId,
                         trustedValue, editorsChoicePosition,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, downloadAction, appId, trustedValue,
                     editorsChoicePosition, NO_ADS);
@@ -355,12 +359,15 @@ public class AppViewManager {
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
-    return installManager.getInstall(md5, packageName, versionCode)
-        .map(install -> new DownloadModel(
-            downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid()), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), pay));
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
+      boolean hasAppc) {
+    return appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId,
+        hasAppc)
+        .flatMapObservable(isMigration -> installManager.getInstall(md5, packageName, versionCode)
+            .map(install -> new DownloadModel(
+                downloadStateParser.parseDownloadType(install.getType(), paidApp,
+                    pay != null && pay.isPaid(), isMigration), install.getProgress(),
+                downloadStateParser.parseDownloadState(install.getState()), pay)));
   }
 
   public Completable pauseDownload(String md5) {
@@ -374,8 +381,7 @@ public class AppViewManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, appId,
                     WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
@@ -517,5 +523,11 @@ public class AppViewManager {
             && !cachedAppCoinsViewModel.hasBilling()
             && !cachedAppCoinsViewModel.hasAdvertising()
             && !cachedApp.isMature()));
+  }
+
+  public Single<Boolean> isAppcMigrationApp(String packageName, String signature, int versionCode,
+      int storeId, boolean hasAppc) {
+    return appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId,
+        hasAppc);
   }
 }

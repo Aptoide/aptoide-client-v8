@@ -47,10 +47,12 @@ public class DownloadStateParser {
   }
 
   public DownloadModel.Action parseDownloadType(Install.InstallationType type, boolean paidApp,
-      boolean wasPaid) {
+      boolean wasPaid, boolean isMigration) {
     DownloadModel.Action action;
     if (paidApp && !wasPaid) {
       action = DownloadModel.Action.PAY;
+    } else if (isMigration) {
+      action = DownloadModel.Action.MIGRATE;
     } else {
       switch (type) {
         case INSTALLED:
