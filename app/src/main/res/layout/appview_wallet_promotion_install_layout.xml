@@ -35,8 +35,7 @@
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@id/wallet_icon"
         android:layout_toRightOf="@id/wallet_icon"
-
-        android:text="Get 10 APPC Credits now!"
+        tools:text="Get 10 APPC Credits now!"
         style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         />
 
@@ -49,7 +48,7 @@
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@id/wallet_icon"
         android:layout_toRightOf="@id/wallet_icon"
-        android:text="Install this app and get 10 APPC Credits. You need the AppCoins wallet to receive them."
+        tools:text="Install this app and get 10 APPC Credits. You need the AppCoins wallet to receive them."
         style="@style/Aptoide.TextView.Medium.XS.GreyMedium"
         />
   </RelativeLayout>
@@ -64,14 +63,14 @@
     <Button
         android:id="@+id/cancel_button"
         android:layout_weight="1"
-        android:text="No, thanks"
+        android:text="@string/wallet_promotion_no_button"
         android:textColor="@color/grey"
         style="@style/Aptoide.Button.Flat"
         />
     <Button
         android:id="@+id/download_button"
         android:layout_weight="1"
-        android:text="Install Wallet"
+        android:text="@string/wallet_promotion_install_button"
         android:textColor="#ff6600"
         style="@style/Aptoide.Button.Flat"
         />
@@ -212,10 +211,10 @@
       >
 
     <Button
-        android:id="@+id/install_to_get_appc_button"
+        android:id="@+id/wallet_install_disabled_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="INSTALL TO GET 10 APPC CREDITS"
+        tools:text="INSTALL TO GET 10 APPC CREDITS"
         />
 
   </LinearLayout>
@@ -237,7 +236,7 @@
         android:id="@+id/wallet_claim_appc_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CLAIM YOUR 10 APPC CREDITS"
+        tools:text="CLAIM YOUR 10 APPC CREDITS"
         />
 
   </LinearLayout>

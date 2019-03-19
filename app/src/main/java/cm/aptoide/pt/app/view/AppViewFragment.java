@@ -275,6 +275,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View walletPromotionClaimLayout;
   private Button walletPromotionClaimButton;
   private View walletPromotionInstallDisableLayout;
+  private Button walletPromotionInstallDisableButton;
   private TextView walletPromotionTitle;
   private TextView walletPromotionMessage;
   private View walletPromotionButtonsLayout;
@@ -444,6 +445,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletPromotionClaimLayout = view.findViewById(R.id.wallet_claim_appc_layout);
     walletPromotionClaimButton = view.findViewById(R.id.wallet_claim_appc_button);
     walletPromotionInstallDisableLayout = view.findViewById(R.id.wallet_install_disabled_layout);
+    walletPromotionInstallDisableButton = view.findViewById(R.id.wallet_install_disabled_button);
 
     donationsAdapter = new DonationsAdapter(new ArrayList<>());
     donationsList.setAdapter(donationsAdapter);
@@ -1199,7 +1201,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showAppcWalletPromotionView(WalletPromotionViewModel viewModel) {
     if (viewModel.isWalletInstalled()) {
       if (!viewModel.isAppViewAppInstalled()) {
-        setupInstallDependencyApp();
+        setupInstallDependencyApp(viewModel);
       } else {
         setupClaimWalletPromotion(viewModel);
       }
@@ -1255,7 +1257,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
-  private void setupInstallDependencyApp() {
+  private void setupInstallDependencyApp(WalletPromotionViewModel viewModel) {
+    setupInstalledWalletPromotionText(viewModel);
+    walletPromotionInstallDisableButton.setText(
+        String.format(getString(R.string.wallet_promotion_button_install_disabled),
+            String.valueOf(viewModel.getAppcValue())));
     walletPromotionInstallDisableLayout.setVisibility(View.VISIBLE);
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
@@ -1263,12 +1269,24 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setupClaimWalletPromotion(WalletPromotionViewModel viewModel) {
+    setupInstalledWalletPromotionText(viewModel);
+    walletPromotionClaimButton.setText(
+        String.format(getString(R.string.wallet_promotion_button_claim),
+            String.valueOf(viewModel.getAppcValue())));
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionInstallDisableLayout.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.VISIBLE);
     walletPromotionClaimButton.setOnClickListener(__ -> promotionAppClick.onNext(
         new PromotionEvent(viewModel, getClickType(getState(viewModel)))));
+  }
+
+  private void setupInstalledWalletPromotionText(WalletPromotionViewModel viewModel) {
+    walletPromotionTitle.setText(String.format(getString(R.string.wallet_promotion_title),
+        String.valueOf(viewModel.getAppcValue())));
+    walletPromotionMessage.setText(
+        String.format(getString(R.string.wallet_promotion__wallet_installed_message),
+            String.valueOf(viewModel.getAppcValue())));
   }
 
   private int getState(WalletPromotionViewModel app) {
@@ -1322,6 +1340,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setupInactiveWalletPromotion(WalletPromotionViewModel viewModel) {
+    setupInstalledWalletPromotionText(viewModel);
+
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionInstallDisableLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.GONE);
@@ -1331,6 +1351,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setupActiveWalletPromotion(WalletPromotionViewModel viewModel) {
+    setupInstalledWalletPromotionText(viewModel);
+
     walletPromotionDownloadLayout.setVisibility(View.VISIBLE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
 
