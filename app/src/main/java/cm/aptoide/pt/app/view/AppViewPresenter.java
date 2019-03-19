@@ -132,6 +132,9 @@ public class AppViewPresenter implements Presenter {
     handleInstallWalletPromotion();
 
     claimApp();
+    resumePromotionDownload();
+    cancelPromotionDownload();
+    pausePromotionDownload();
   }
 
   private Completable showBannerAd() {
@@ -1214,6 +1217,51 @@ public class AppViewPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> {
           throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void resumePromotionDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.resumePromotionDownload()
+            .flatMap(app -> permissionManager.requestDownloadAccess(permissionService)
+                .flatMap(success -> permissionManager.requestExternalStoragePermission(
+                    permissionService))
+                .flatMapCompletable(
+                    __ -> appViewManager.resumeDownload(app.getMd5sum(), app.getId()))
+                .retry()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
+  }
+
+  private void cancelPromotionDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.cancelPromotionDownload()
+            .flatMapCompletable(
+                app -> appViewManager.cancelDownload(app.getMd5sum(), app.getPackageName(),
+                    app.getVersionCode()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void pausePromotionDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.pausePromotionDownload()
+            .flatMapCompletable(
+                promotionViewApp -> appViewManager.pauseDownload(promotionViewApp.getMd5sum()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new IllegalStateException(error);
         });
   }
 
