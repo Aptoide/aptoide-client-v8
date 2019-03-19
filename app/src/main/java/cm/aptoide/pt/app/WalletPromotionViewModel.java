@@ -18,10 +18,12 @@ public class WalletPromotionViewModel {
   private final int appcValue;
   private final boolean isWalletInstalled;
   private final boolean shouldShowOffer;
+  private final boolean isAppViewAppInstalled;
 
   public WalletPromotionViewModel(DownloadModel downloadModel, String appName, String icon, long id,
       String packageName, String md5sum, int versionCode, String versionName, String path,
-      String pathAlt, Obb obb, int appcValue, boolean isWalletInstalled, boolean shouldShowOffer) {
+      String pathAlt, Obb obb, int appcValue, boolean isWalletInstalled, boolean shouldShowOffer,
+      boolean isAppViewAppInstalled) {
     this.downloadModel = downloadModel;
     this.appName = appName;
     this.icon = icon;
@@ -36,10 +38,12 @@ public class WalletPromotionViewModel {
     this.appcValue = appcValue;
     this.isWalletInstalled = isWalletInstalled;
     this.shouldShowOffer = shouldShowOffer;
+    this.isAppViewAppInstalled = isAppViewAppInstalled;
   }
 
   public WalletPromotionViewModel(boolean shouldShowOffer) {
     this.shouldShowOffer = shouldShowOffer;
+    this.isAppViewAppInstalled = false;
     this.downloadModel = null;
     this.appName = "";
     this.icon = "";
@@ -109,5 +113,9 @@ public class WalletPromotionViewModel {
 
   public boolean isWalletInstalled() {
     return isWalletInstalled;
+  }
+
+  public boolean isAppViewAppInstalled() {
+    return isAppViewAppInstalled;
   }
 }

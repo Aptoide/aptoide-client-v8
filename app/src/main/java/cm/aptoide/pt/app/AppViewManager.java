@@ -18,6 +18,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -55,6 +56,7 @@ public class AppViewManager {
   private final AppViewConfiguration appViewConfiguration;
   private final int limit;
   private final InstallAnalytics installAnalytics;
+  private final InstalledRepository installedRepository;
   private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
@@ -84,7 +86,7 @@ public class AppViewManager {
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
       MoPubNativeAdExperiment moPubNativeAdExperiment, PromotionsManager promotionsManager,
-      String promotionId) {
+      String promotionId, InstalledRepository installedRepository) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -109,6 +111,7 @@ public class AppViewManager {
     this.moPubNativeAdExperiment = moPubNativeAdExperiment;
     this.promotionsManager = promotionsManager;
     this.promotionId = promotionId;
+    this.installedRepository = installedRepository;
     this.isFirstLoad = true;
   }
 
@@ -508,13 +511,19 @@ public class AppViewManager {
           .map(this::mapToWalletPromotion)
           .flatMapObservable(viewModel -> installManager.getInstall(viewModel.getMd5sum(),
               viewModel.getPackageName(), viewModel.getVersionCode())
-              .map(install -> new WalletPromotionViewModel(
-                  mapToDownloadModel(install.getType(), install.getProgress(), install.getState()),
-                  viewModel.getAppName(), viewModel.getIcon(), viewModel.getId(),
+              .flatMap(install -> installedRepository.getInstalled(cachedApp.getPackageName())
+                  .map(installed -> new PromotionInstallDependency(install, installed != null)))
+              .map(installDependency -> new WalletPromotionViewModel(mapToDownloadModel(
+                  installDependency.getInstall()
+                      .getType(), installDependency.getInstall()
+                      .getProgress(), installDependency.getInstall()
+                      .getState()), viewModel.getAppName(), viewModel.getIcon(), viewModel.getId(),
                   viewModel.getPackageName(), viewModel.getMd5sum(), viewModel.getVersionCode(),
                   viewModel.getVersionName(), viewModel.getPath(), viewModel.getPathAlt(),
-                  viewModel.getObb(), viewModel.getAppcValue(),
-                  promotionsManager.isWalletInstalled(), viewModel.shouldShowOffer())));
+                  viewModel.getObb(), viewModel.getAppcValue(), installDependency.getInstall()
+                  .getState()
+                  .equals(Install.InstallationStatus.INSTALLED), viewModel.shouldShowOffer(),
+                  installDependency.isAppInstalled())));
     }
   }
 
@@ -531,7 +540,7 @@ public class AppViewManager {
           return new WalletPromotionViewModel(null, app.getName(), app.getAppIcon(), app.getAppId(),
               app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
               app.getDownloadPath(), app.getAlternativePath(), app.getObb(),
-              Math.round(app.getAppcValue()), false, true);
+              Math.round(app.getAppcValue()), false, true, false);
         }
       } else {
         return new WalletPromotionViewModel(false);

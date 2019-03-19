@@ -95,6 +95,7 @@ import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -332,14 +333,15 @@ import rx.subscriptions.CompositeSubscription;
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
       MoPubNativeAdExperiment moPubNativeAdExperiment, PromotionsManager promotionsManager,
-      @Named("wallet-offer-promotion-id") String promotionId) {
+      @Named("wallet-offer-promotion-id") String promotionId,
+      InstalledRepository installedRepository) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
         marketName, appCoinsManager, moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment, promotionsManager, promotionId);
+        moPubNativeAdExperiment, promotionsManager, promotionId, installedRepository);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

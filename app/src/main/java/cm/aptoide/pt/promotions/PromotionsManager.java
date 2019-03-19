@@ -61,7 +61,7 @@ public class PromotionsManager {
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }
 
-  public boolean isWalletInstalled() {
+  private boolean isWalletInstalled() {
     for (ApplicationInfo applicationInfo : packageManager.getInstalledApplications(0)) {
       if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
         return true;

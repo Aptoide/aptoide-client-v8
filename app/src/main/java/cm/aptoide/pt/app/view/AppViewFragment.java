@@ -1198,7 +1198,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showAppcWalletPromotionView(WalletPromotionViewModel viewModel) {
     if (viewModel.isWalletInstalled()) {
-      setupClaimWalletPromotion(viewModel);
+      if (!viewModel.isAppViewAppInstalled()) {
+        setupInstallDependencyApp();
+      } else {
+        setupClaimWalletPromotion(viewModel);
+      }
     } else {
       if (viewModel.getDownloadModel()
           .isDownloading()) {
@@ -1249,6 +1253,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.CLAIM)
         .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  private void setupInstallDependencyApp() {
+    walletPromotionInstallDisableLayout.setVisibility(View.VISIBLE);
+    walletPromotionDownloadLayout.setVisibility(View.GONE);
+    walletPromotionButtonsLayout.setVisibility(View.GONE);
+    walletPromotionClaimLayout.setVisibility(View.GONE);
   }
 
   private void setupClaimWalletPromotion(WalletPromotionViewModel viewModel) {
