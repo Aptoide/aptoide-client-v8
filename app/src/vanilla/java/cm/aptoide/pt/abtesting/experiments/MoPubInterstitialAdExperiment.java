@@ -15,7 +15,7 @@ public class MoPubInterstitialAdExperiment {
     this.moPubAnalytics = moPubAnalytics;
   }
 
-  public Single<Boolean> loadInterstitial() {
+  public Single<Boolean> shouldLoadInterstitial() {
     return abTestManager.getExperiment(EXPERIMENT_ID)
         .toSingle()
         .flatMap(experiment -> {

@@ -102,20 +102,20 @@
             android:layout_alignParentRight="true"
             >
           <Button
-              android:id="@+id/know_more_button"
+              android:id="@+id/dismiss_button"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@string/all_button_know_more"
+              tools:text="@string/all_button_got_it"
               style="@style/Aptoide.Button.Flat.GreyMedium"
               />
           <Button
-              android:id="@+id/dismiss_button"
+              android:id="@+id/action_button"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginEnd="18dp"
               android:layout_marginRight="18dp"
-              android:text="@string/all_button_got_it"
-              style="@style/Aptoide.Button.Flat.GreyMedium"
+              tools:text="@string/all_button_know_more"
+              style="@style/Aptoide.Button.Flat.DefaultOrangeGradientEnd"
               />
         </LinearLayout>
       </RelativeLayout>

@@ -135,4 +135,14 @@
   <style name="Aptoide.Button.Flat.S.GreyMedium">
     <item name="android:textColor">@color/grey_medium</item>
   </style>
+
+  <style name="Aptoide.Button.Flat.DefaultOrangeGradientEnd" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">@dimen/button_height</item>
+    <item name="android:textColor">@color/default_orange_gradient_end</item>
+    <item name="android:fontFamily">sans-serif</item>
+    <item name="android:textSize">?attr/buttonTextSize</item>
+    <item name="android:textAllCaps">true</item>
+  </style>
+
 </resources>

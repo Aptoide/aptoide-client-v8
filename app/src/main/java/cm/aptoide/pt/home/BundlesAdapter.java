@@ -13,33 +13,30 @@ import rx.subjects.PublishSubject;
  */
 
 public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
-  private static final int SOCIAL = R.layout.social_recommends_bundle_item;
-  private static final int EDITORS = R.layout.editors_choice_bundle_item;
-  private static final int APPS = R.layout.apps_bundle_item;
-  private static final int STORE = R.layout.store_bundle_item;
-  private static final int ADS = R.layout.ads_bundle_item;
-  private static final int LOADING = R.layout.progress_item;
-  private static final int EDITORIAL = R.layout.editorial_action_item;
-  private static final int INFO = R.layout.info_action_item;
-  private static final int SMALL_BANNER = R.layout.ads_small_banner;
-  private static final int TOP = R.layout.top_bundle_item;
+  private static final int EDITORS = 1;
+  private static final int APPS = 2;
+  private static final int STORE = 3;
+  private static final int ADS = 4;
+  private static final int LOADING = 5;
+  private static final int EDITORIAL = 6;
+  private static final int INFO = 7;
+  private static final int SMALL_BANNER = 8;
+  private static final int WALLET_ADS_OFFER = 9;
+  private static final int TOP = 10;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final String marketName;
   private final AdsBundlesViewHolderFactory adsBundlesViewHolderFactory;
   private List<HomeBundle> bundles;
-  private PublishSubject<AdHomeEvent> adClickedEvents;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      PublishSubject<AdHomeEvent> adPublishSubject, String marketName,
-      AdsBundlesViewHolderFactory adsBundlesViewHolderFactory) {
+      String marketName, AdsBundlesViewHolderFactory adsBundlesViewHolderFactory) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
-    this.adClickedEvents = adPublishSubject;
     this.marketName = marketName;
     this.adsBundlesViewHolderFactory = adsBundlesViewHolderFactory;
   }
@@ -48,30 +45,35 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     switch (viewType) {
       case EDITORS:
         return new EditorsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(EDITORS, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
+            .inflate(R.layout.editors_choice_bundle_item, parent, false), uiEventsListener,
+            oneDecimalFormatter, marketName);
       case APPS:
         return new AppsBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(APPS, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
+            .inflate(R.layout.apps_bundle_item, parent, false), uiEventsListener,
+            oneDecimalFormatter, marketName);
       case STORE:
         return new StoreBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(STORE, parent, false));
+            .inflate(R.layout.store_bundle_item, parent, false));
       case ADS:
         return adsBundlesViewHolderFactory.createViewHolder(parent);
       case INFO:
         return new InfoBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(INFO, parent, false), uiEventsListener);
+            .inflate(R.layout.info_action_item, parent, false), uiEventsListener);
       case EDITORIAL:
         return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(EDITORIAL, parent, false), uiEventsListener);
+            .inflate(R.layout.editorial_action_item, parent, false), uiEventsListener);
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(LOADING, parent, false));
+            .inflate(R.layout.progress_item, parent, false));
       case SMALL_BANNER:
         return new SmallBannerAdBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(SMALL_BANNER, parent, false));
+            .inflate(R.layout.ads_small_banner, parent, false));
+      case WALLET_ADS_OFFER:
+        return new WalletAdsOfferViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.info_action_item, parent, false), uiEventsListener);
       case TOP:
         return new TopBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(TOP, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
+            .inflate(R.layout.top_bundle_item, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -101,6 +103,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return EDITORIAL;
       case SMALL_BANNER:
         return SMALL_BANNER;
+      case WALLET_ADS_OFFER:
+        return WALLET_ADS_OFFER;
       case TOP:
         return TOP;
       default:

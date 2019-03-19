@@ -1,7 +1,6 @@
 package cm.aptoide.pt.util;
 
 import android.content.Context;
-import cm.aptoide.pt.R;
 
 public class MarketResourceFormatter {
 

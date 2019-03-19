@@ -63,8 +63,8 @@ public class InviteFriendsFragment extends UIComponentFragment
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
             marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
-            theme), openMode,
-        new AddressBookAnalytics(analyticsManager, navigationTracker), marketName);
+            theme), openMode, new AddressBookAnalytics(analyticsManager, navigationTracker),
+        marketName);
   }
 
   @Override public void loadExtras(Bundle args) {

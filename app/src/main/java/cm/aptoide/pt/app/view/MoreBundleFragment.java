@@ -105,7 +105,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, adClickedEvents, marketName,
+        oneDecimalFormatter, marketName,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
             marketName, false));
     layoutManager = new LinearLayoutManager(getContext());
