@@ -8,6 +8,8 @@ import rx.Observable;
 public interface EditorialListView extends View {
   Observable<EditorialHomeEvent> editorialCardClicked();
 
+  Observable<EditorialHomeEvent> reactionsButtonClicked();
+
   void showLoading();
 
   void hideLoading();

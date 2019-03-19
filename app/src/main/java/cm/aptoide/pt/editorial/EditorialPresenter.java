@@ -1,6 +1,7 @@
 package cm.aptoide.pt.editorial;
 
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -49,6 +50,7 @@ public class EditorialPresenter implements Presenter {
     handleClickOnMedia();
     handleClickOnAppCard();
     handlePaletteColor();
+    handleReactionClick();
 
     handleInstallClick();
     pauseDownload();
@@ -347,6 +349,25 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleReactionClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .flatMap(click -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .observeOn(viewScheduler)
+        .doOnNext(editorialViewModel -> {
+          editorialAnalytics.sendReactionButtonClickEvent(
+              editorialViewModel.getCardId()); //TODO implementation
+          Log.d("TAG123", "handleReactionClick: ");
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });

@@ -113,6 +113,12 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .cast(EditorialHomeEvent.class);
   }
 
+  @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.REACTION))
+        .cast(EditorialHomeEvent.class);
+  }
+
   @Override public void showLoading() {
     genericErrorView.setVisibility(View.GONE);
     noNetworkErrorView.setVisibility(View.GONE);

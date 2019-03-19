@@ -265,4 +265,8 @@ public class HomeAnalytics {
     }
     throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");
   }
+
+  public void sendReactionButtonClickEvent(String cardId, int bundlePosition) {
+    //TODO
+  }
 }

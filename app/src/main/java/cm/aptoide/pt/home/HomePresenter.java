@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -93,6 +94,8 @@ public class HomePresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+
+    handleReactionClick();
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -139,6 +142,23 @@ public class HomePresenter implements Presenter {
           homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
               .getTag(), homeEvent.getBundlePosition());
           homeNavigator.navigateToAppCoinsInformationView();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleReactionClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendReactionButtonClickEvent(homeEvent.getCardId(),
+              homeEvent.getBundlePosition()); //TODO implementation
+          Log.d("TAG123", "handleReactionClick: ");
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {

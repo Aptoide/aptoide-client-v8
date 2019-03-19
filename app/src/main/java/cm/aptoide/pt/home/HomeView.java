@@ -15,6 +15,8 @@ public interface HomeView extends BundleView {
 
   Observable<HomeEvent> infoBundleKnowMoreClicked();
 
+  Observable<EditorialHomeEvent> reactionsButtonClicked();
+
   void scrollToTop();
 
   void setUserImage(String userAvatarUrl);
