@@ -256,6 +256,13 @@
                 />
           </FrameLayout>
 
+          <include
+              layout="@layout/appview_wallet_promotion_install_layout"
+              android:id="@+id/wallet_install_promotion"
+              android:visibility="gone"
+              tools:visibility="visible"
+              />
+
           <View
               android:id="@+id/similar_download_placeholder"
               android:layout_width="0dp"
@@ -273,13 +280,6 @@
             android:layout_marginRight="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            />
-
-        <include
-            layout="@layout/appview_wallet_promotion_install_layout"
-            android:id="@+id/wallet_install_promotion"
-            android:visibility="gone"
-            tools:visibility="visible"
             />
 
         <include
