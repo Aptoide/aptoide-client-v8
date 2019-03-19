@@ -59,7 +59,7 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
     itemView.setOnClickListener(this);
   }
 
-  @Override public void bindView(OtherVersionDisplayable displayable) {
+  @Override public void bindView(OtherVersionDisplayable displayable, int position) {
     setItemBackgroundColor(itemView);
     try {
       this.displayable = displayable;

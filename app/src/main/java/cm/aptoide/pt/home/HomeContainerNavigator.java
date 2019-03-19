@@ -37,7 +37,7 @@ public class HomeContainerNavigator {
     args.putString(StoreTabGridRecyclerFragment.BundleCons.TITLE, fragmentNavigator.getFragment()
         .getString(R.string.home_chip_apps));
     args.putString(StoreTabGridRecyclerFragment.BundleCons.ACTION,
-        "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=home/widget=apps_list%3A15%267%3Atrending30d");
+        "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=apps/widget=apps_list%3A0%262%3Apdownloads7d");
     args.putBoolean(StoreTabGridRecyclerFragment.BundleCons.TOOLBAR, false);
     fragment.setArguments(args);
     fragmentNavigator.navigateToWithoutBackSave(fragment, true);

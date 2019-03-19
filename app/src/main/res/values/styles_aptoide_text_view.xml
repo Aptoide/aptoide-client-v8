@@ -210,6 +210,10 @@
     <item name="android:textColor">@color/grey_medium</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XXS.Black">
+    <item name="android:textColor">@color/black</item>
+  </style>
+
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
     <item name="android:textAllCaps">true</item>

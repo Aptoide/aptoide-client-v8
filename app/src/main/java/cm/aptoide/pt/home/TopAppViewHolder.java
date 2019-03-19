@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +31,9 @@ public class TopAppViewHolder extends AppViewHolder {
     name = itemView.findViewById(R.id.name_label);
     downloadNumber = itemView.findViewById(R.id.download_number_label);
     appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, oneDecimalFormatter);
+    TextView rating = itemView.findViewById(R.id.rating_label);
+    rating.setTextAppearance(itemView.getContext(), R.style.Aptoide_TextView_Medium_XXS_Black);
+
   }
 
   @Override
@@ -38,7 +42,7 @@ public class TopAppViewHolder extends AppViewHolder {
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
     name.setText(app.getName());
     topNumber.setText(String.valueOf(bundlePosition + 1));
-    appInfoViewHolder.setInfo(app.hasAppcBilling(), app.getRating(), true);
+    appInfoViewHolder.setInfo(app.hasAppcBilling(), app.getRating(), true, true);
     downloadNumber.setText(
         String.format("%s %s", AptoideUtils.StringU.withSuffix(app.getDownloads()),
             itemView.getContext()

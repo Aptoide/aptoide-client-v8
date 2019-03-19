@@ -6,7 +6,9 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
+import cm.aptoide.pt.store.view.top.TopAppListDisplayable;
 import cm.aptoide.pt.store.view.featured.AppBrickListDisplayable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.LinkedList;
@@ -35,7 +37,13 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
           .getList();
 
       List<Displayable> displayables = new LinkedList<>();
-      if (layout != null) {
+      if (homeEventType.equals(HomeEvent.Type.MORE_TOP)) {
+        for (App app : list) {
+          app.getStore()
+              .setAppearance(new Store.Appearance(storeTheme, null));
+          displayables.add(new TopAppListDisplayable(app, tag, navigationTracker, storeContext));
+        }
+      } else if (layout != null) {
         switch (layout) {
           case GRAPHIC:
             for (App app : list) {

@@ -40,6 +40,7 @@ import cm.aptoide.pt.store.view.StoreAddCommentDisplayable;
 import cm.aptoide.pt.store.view.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.store.view.StoreGridHeaderWidget;
 import cm.aptoide.pt.store.view.StoreLatestCommentsDisplayable;
+import cm.aptoide.pt.store.view.top.TopAppListDisplayable;
 import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
 import cm.aptoide.pt.store.view.featured.AppBrickListDisplayable;
 import cm.aptoide.pt.store.view.featured.AppBrickListWidget;
@@ -50,6 +51,7 @@ import cm.aptoide.pt.store.view.my.StoreDisplayable;
 import cm.aptoide.pt.store.view.my.StoreWidget;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreWidget;
+import cm.aptoide.pt.store.view.top.TopAppListWidget;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.timeline.view.follow.FollowStoreWidget;
@@ -145,6 +147,8 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(GridAppListWidget.class, GridAppListDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AppBrickListWidget.class, AppBrickListDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(TopAppListWidget.class, TopAppListDisplayable.class));
 
     // Updates
     displayableWidgetMappings.add(

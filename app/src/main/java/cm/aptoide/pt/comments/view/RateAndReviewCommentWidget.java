@@ -97,7 +97,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
     notHelpfullButtonLayout = itemView.findViewById(R.id.not_helpful_layout);
   }
 
-  @Override public void bindView(RateAndReviewCommentDisplayable displayable) {
+  @Override public void bindView(RateAndReviewCommentDisplayable displayable, int position) {
     final Review review = displayable.getPojo()
         .getReview();
     final String appName = displayable.getPojo()

@@ -21,19 +21,28 @@ public class AppSecondaryInfoViewHolder {
     rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
-  public void setInfo(boolean hasAppcBilling, float appRating, boolean showRating) {
-    if (hasAppcBilling) {
-      appcText.setText(R.string.appc_short_spend_appc);
-      appcLayout.setVisibility(View.VISIBLE);
-      if (showRating) ratingLayout.setVisibility(View.INVISIBLE);
-    } else if (showRating) {
-      if (appRating == 0) {
-        this.rating.setText(R.string.appcardview_title_no_stars);
+  public void setInfo(boolean hasAppcBilling, float appRating, boolean showRating,
+      boolean showBoth) {
+    appcText.setText(R.string.appc_short_spend_appc);
+    if (appRating == 0) {
+      this.rating.setText(R.string.appcardview_title_no_stars);
+    } else {
+      this.rating.setText(oneDecimalFormatter.format(appRating));
+    }
+
+    if (showBoth) {
+      if (hasAppcBilling) {
+        appcLayout.setVisibility(View.VISIBLE);
       } else {
-        this.rating.setText(oneDecimalFormatter.format(appRating));
+        appcLayout.setVisibility(View.INVISIBLE);
       }
       ratingLayout.setVisibility(View.VISIBLE);
+    } else if (showRating) {
       appcLayout.setVisibility(View.INVISIBLE);
+      ratingLayout.setVisibility(View.VISIBLE);
+    } else if (hasAppcBilling) {
+      appcLayout.setVisibility(View.VISIBLE);
+      ratingLayout.setVisibility(View.INVISIBLE);
     } else {
       appcLayout.setVisibility(View.INVISIBLE);
     }

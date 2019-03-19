@@ -59,6 +59,6 @@ public class TopBundleViewHolder extends AppBundleViewHolder {
     topBundleAdapter.updateBundle(homeBundle, position);
     topBundleAdapter.update((List<Application>) homeBundle.getContent());
     moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
+        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE_TOP)));
   }
 }

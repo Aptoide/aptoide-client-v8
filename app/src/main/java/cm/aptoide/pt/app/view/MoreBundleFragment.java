@@ -229,7 +229,8 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
 
   @Override public Observable<HomeEvent> moreClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.MORE));
+        .equals(HomeEvent.Type.MORE) || homeClick.getType()
+        .equals(HomeEvent.Type.MORE_TOP));
   }
 
   @Override public Observable<AppHomeEvent> appClicked() {

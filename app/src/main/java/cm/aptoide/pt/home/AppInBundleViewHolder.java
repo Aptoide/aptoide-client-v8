@@ -31,7 +31,7 @@ public class AppInBundleViewHolder extends AppViewHolder {
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, iconView, R.drawable.placeholder_square);
 
-    appInfoViewHolder.setInfo(app.hasAppcBilling(), app.getRating(), true);
+    appInfoViewHolder.setInfo(app.hasAppcBilling(), app.getRating(), true, false);
 
     itemView.setOnClickListener(v -> appClicks.onNext(
         new AppHomeEvent(app, position, homeBundle, bundlePosition, HomeEvent.Type.APP)));
