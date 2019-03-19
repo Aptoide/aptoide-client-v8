@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
     android:layout_marginTop="8dp"
     android:background="@drawable/appc_gradient_translucent"
     android:orientation="vertical"
@@ -211,7 +210,10 @@
         android:id="@+id/wallet_install_disabled_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/card_border_fog_grey_wallet_promotion"
+        android:enabled="false"
         tools:text="INSTALL TO GET 10 APPC CREDITS"
+        style="@style/Aptoide.TextView.Medium.S.GreyFog"
         />
 
   </LinearLayout>
@@ -234,6 +236,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="CLAIM YOUR 10 APPC CREDITS"
+        style="@style/Aptoide.Button.Install"
         />
 
   </LinearLayout>
