@@ -17,7 +17,9 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.SocialRepository;
@@ -74,6 +76,8 @@ public class AppViewManagerTest {
   @Mock private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
   @Mock private MoPubBannerAdExperiment moPubBannerAdExperiment;
   @Mock private MoPubNativeAdExperiment moPubNativeAdExperiment;
+  @Mock private PromotionsManager promotionsManager;
+  @Mock private InstalledRepository installedRepository;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
   private AppStats appStats;
@@ -91,7 +95,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
@@ -112,7 +117,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -162,7 +168,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -212,7 +219,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -261,7 +269,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -304,7 +313,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -331,7 +341,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -358,7 +369,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -470,7 +482,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "marketName", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -577,7 +590,8 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             preferencesManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, socialRepository, "anyString", appCoinsManager,
-            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment);
+            moPubInterstitialAdExperiment, moPubBannerAdExperiment, moPubNativeAdExperiment,
+            promotionsManager, "", installedRepository);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));
