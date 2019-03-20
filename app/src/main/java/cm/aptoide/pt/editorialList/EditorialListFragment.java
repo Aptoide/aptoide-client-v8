@@ -225,6 +225,12 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     }
   }
 
+  @Override public Observable<EditorialHomeEvent> cardCreated() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.EDITORIAL_CREATED))
+        .cast(EditorialHomeEvent.class);
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;

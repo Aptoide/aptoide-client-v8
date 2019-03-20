@@ -37,6 +37,7 @@ public class EditorialListPresenter implements Presenter {
 
   @Override public void present() {
     onCreateLoadViewModel();
+    loadReactionModel();
     handleImpressions();
     handleEditorialCardClick();
     handlePullToRefresh();
@@ -45,6 +46,21 @@ public class EditorialListPresenter implements Presenter {
     handleUserImageClick();
     handleReactionClick();
     loadUserImage();
+  }
+
+  @VisibleForTesting public void loadReactionModel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.cardCreated())
+        .flatMap(editorialHomeEvent -> editorialListManager.loadReactionModel(
+            editorialHomeEvent.getCardId()))
+        .observeOn(viewScheduler)
+        .doOnNext(view::update)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {

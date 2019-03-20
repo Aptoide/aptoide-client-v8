@@ -28,4 +28,6 @@ public interface HomeView extends BundleView {
   void hideBundle(int bundlePosition);
 
   void setAdsTest(boolean showNatives);
+
+  Observable<EditorialHomeEvent> cardCreated();
 }

@@ -42,5 +42,7 @@ public interface EditorialListView extends View {
 
   void hideLoadMore();
 
-  void update(List<CurationCard> editorialListViewModel);
+  void update(List<CurationCard> curationCards);
+
+  Observable<EditorialHomeEvent> cardCreated();
 }
