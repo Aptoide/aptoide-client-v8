@@ -197,7 +197,6 @@
             android:id="@+id/install_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:visibility="visible"
             tools:visibility="visible"
