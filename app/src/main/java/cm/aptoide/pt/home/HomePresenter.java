@@ -96,6 +96,20 @@ public class HomePresenter implements Presenter {
         });
 
     handleReactionClick();
+
+    loadReactionModel();
+  }
+
+  @VisibleForTesting public void loadReactionModel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.cardCreated())
+        .flatMap(editorialHomeEvent -> home.loadReactionModel(editorialHomeEvent.getCardId()))
+        .observeOn(viewScheduler)
+        .doOnNext(bundles -> view.showBundles(bundles))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -129,7 +143,7 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
         }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
+          crashReporter.log(throwable);
         });
   }
 

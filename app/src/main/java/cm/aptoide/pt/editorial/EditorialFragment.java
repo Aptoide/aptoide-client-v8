@@ -561,7 +561,7 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(reactButton);
   }
 
-  private void setReactions(List<ReactionType> reactions, String numberOfReactions) {
+  @Override public void setReactions(List<ReactionType> reactions, String numberOfReactions) {
     ImageView[] imageViews = { firstReaction, secondReaction, thirdReaction };
     for (int i = 0; i < reactions.size(); i++) {
       if (i < imageViews.length) {

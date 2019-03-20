@@ -28,13 +28,14 @@ public class EditorialManager {
   private final NotificationAnalytics notificationAnalytics;
   private final InstallAnalytics installAnalytics;
   private final EditorialAnalytics editorialAnalytics;
+  private final FakeReactionsManager fakeReactionsManager;
   private DownloadStateParser downloadStateParser;
 
   public EditorialManager(EditorialRepository editorialRepository, String cardId,
       InstallManager installManager, PreferencesManager preferencesManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      EditorialAnalytics editorialAnalytics) {
+      EditorialAnalytics editorialAnalytics, FakeReactionsManager fakeReactionsManager) {
 
     this.editorialRepository = editorialRepository;
     this.cardId = cardId;
@@ -45,6 +46,7 @@ public class EditorialManager {
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
     this.editorialAnalytics = editorialAnalytics;
+    this.fakeReactionsManager = fakeReactionsManager;
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
@@ -111,5 +113,9 @@ public class EditorialManager {
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
     return Completable.fromAction(
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+  }
+
+  public Observable<FakeReactionModel> loadReactionModel(String cardId) {
+    return fakeReactionsManager.loadReactionModel(cardId);
   }
 }

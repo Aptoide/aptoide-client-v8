@@ -72,6 +72,7 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
+import cm.aptoide.pt.editorial.FakeReactionsManager;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
@@ -277,9 +278,9 @@ import rx.subscriptions.CompositeSubscription;
       ImpressionManager impressionManager, PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
-      @Named("homePromotionsId") String promotionsId) {
+      @Named("homePromotionsId") String promotionsId, FakeReactionsManager fakereactionsManager) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
-        moPubAdsManager, promotionsPreferencesManager, blacklistManager, promotionsId);
+        moPubAdsManager, promotionsPreferencesManager, blacklistManager, promotionsId, fakeReactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -427,10 +428,11 @@ import rx.subscriptions.CompositeSubscription;
       EditorialRepository editorialRepository, InstallManager installManager,
       PreferencesManager preferencesManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
+      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics,
+      FakeReactionsManager fakeReactionsManager) {
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
         installManager, preferencesManager, downloadFactory, downloadStateParser,
-        notificationAnalytics, installAnalytics, editorialAnalytics);
+        notificationAnalytics, installAnalytics, editorialAnalytics, fakeReactionsManager);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(
@@ -477,8 +479,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
-      EditorialListRepository editorialListRepository) {
-    return new EditorialListManager(editorialListRepository);
+      EditorialListRepository editorialListRepository, FakeReactionsManager fakeReactionsManager) {
+    return new EditorialListManager(editorialListRepository, fakeReactionsManager);
   }
 
   @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
@@ -517,6 +519,10 @@ import rx.subscriptions.CompositeSubscription;
       HomeAnalytics homeAnalytics, Home home) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
+  }
+
+  @FragmentScope @Provides FakeReactionsManager providesReactionsManager() {
+    return new FakeReactionsManager();
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
