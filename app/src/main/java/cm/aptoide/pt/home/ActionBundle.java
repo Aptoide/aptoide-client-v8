@@ -13,6 +13,7 @@ public class ActionBundle implements HomeBundle {
   private final ActionItem actionItem;
   private List<ReactionType> reactionTypes;
   private String numberOfReactions;
+  private ReactionType userReaction;
 
   public ActionBundle(String title, BundleType type, Event event, String tag,
       ActionItem actionItem) {
@@ -21,6 +22,7 @@ public class ActionBundle implements HomeBundle {
     this.event = event;
     this.tag = tag;
     this.actionItem = actionItem;
+    userReaction = null;
     reactionTypes = Collections.emptyList();
     numberOfReactions = "";
   }
@@ -63,5 +65,13 @@ public class ActionBundle implements HomeBundle {
 
   public void setNumberOfReactions(String numberOfReactions) {
     this.numberOfReactions = numberOfReactions;
+  }
+
+  public ReactionType getUserReaction() {
+    return userReaction;
+  }
+
+  public void setUserReaction(ReactionType userReaction) {
+    this.userReaction = userReaction;
   }
 }

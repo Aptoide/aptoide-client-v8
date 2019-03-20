@@ -6,12 +6,14 @@ import java.util.List;
 public class FakeReactionModel {
 
   private final String cardId;
+  private final ReactionType userReaction;
   private final List<ReactionType> reactionTypes;
   private final String numberOfReactions;
 
-  public FakeReactionModel(String cardId, List<ReactionType> reactionTypes,
-      String numberOfReactions) {
+  public FakeReactionModel(String cardId, ReactionType userReaction,
+      List<ReactionType> reactionTypes, String numberOfReactions) {
     this.cardId = cardId;
+    this.userReaction = userReaction;
     this.reactionTypes = reactionTypes;
     this.numberOfReactions = numberOfReactions;
   }
@@ -26,5 +28,9 @@ public class FakeReactionModel {
 
   public String getCardId() {
     return cardId;
+  }
+
+  public ReactionType getUserReaction() {
+    return userReaction;
   }
 }

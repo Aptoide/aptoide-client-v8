@@ -151,6 +151,7 @@ public class Home {
       List<HomeBundle> homeBundles) {
     for (HomeBundle homeBundle : homeBundles) {
       if (homeBundle instanceof ActionBundle) {
+        ((ActionBundle) homeBundle).setUserReaction(reactionModel.getUserReaction());
         ((ActionBundle) homeBundle).setNumberOfReactions(reactionModel.getNumberOfReactions());
         ((ActionBundle) homeBundle).setReactionTypes(reactionModel.getReactionTypes());
       }

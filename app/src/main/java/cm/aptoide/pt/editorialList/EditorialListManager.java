@@ -2,7 +2,8 @@ package cm.aptoide.pt.editorialList;
 
 import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.FakeReactionsManager;
-import java.util.List;
+import cm.aptoide.pt.editorial.ReactionsResponse;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import rx.Observable;
 import rx.Single;
 
@@ -34,23 +35,11 @@ public class EditorialListManager {
     return editorialListRepository.loadMoreCurationCards();
   }
 
-  public Observable<List<CurationCard>> loadReactionModel(String cardId) {
-    return fakeReactionsManager.loadReactionModel(cardId)
-        .flatMap(reactionModel -> editorialListRepository.loadEditorialListViewModel(false)
-            .toObservable()
-            .flatMap(editorialListViewModel -> updateCards(reactionModel,
-                editorialListViewModel.getCurationCards())));
+  public Observable<FakeReactionModel> loadReactionModel(String cardId) {
+    return fakeReactionsManager.loadReactionModel(cardId);
   }
 
-  private Observable<List<CurationCard>> updateCards(FakeReactionModel reactionModel,
-      List<CurationCard> curationCards) {
-    for (CurationCard curationCard : curationCards) {
-      if (curationCard.getId()
-          .equals(reactionModel.getCardId())) {
-        curationCard.setNumberOfReactions(reactionModel.getNumberOfReactions());
-        curationCard.setReactionTypes(reactionModel.getReactionTypes());
-      }
-    }
-    return Observable.just(curationCards);
+  public Observable<ReactionsResponse> setReaction(String cardId, ReactionType reaction) {
+    return fakeReactionsManager.setReaction(cardId, reaction);
   }
 }

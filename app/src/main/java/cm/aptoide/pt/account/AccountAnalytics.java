@@ -462,7 +462,8 @@ public class AccountAnalytics {
         "Reviews FAB"), REPLY_REVIEW("Reply Review"), REVIEW_FEEDBACK(
         "Review Feedback"), SOCIAL_LIKE("Like Social Card"), STORE_COMMENT(
         "Store Comment"), LATEST_COMMENTS_STORE(
-        "Comment on Latest Store Comments"), POST_ON_TIMELINE("Post on Timeline");
+        "Comment on Latest Store Comments"), POST_ON_TIMELINE("Post on Timeline"), EDITORIAL(
+        "Editorial");
 
     private final String origin;
 
