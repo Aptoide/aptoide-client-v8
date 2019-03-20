@@ -497,8 +497,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new EditorialListNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      AccountNavigator accountNavigator) {
+    return new EditorialListNavigator(fragmentNavigator, accountNavigator);
   }
 
   @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
