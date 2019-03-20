@@ -940,6 +940,11 @@ public class AppViewPresenter implements Presenter {
                       .observeOn(viewScheduler)
                       .flatMapCompletable(appViewViewModel -> payApp(appViewViewModel.getAppId()));
                   break;
+                case MIGRATE:
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(appViewViewModel -> migrateApp(action, appViewViewModel));
+                  break;
                 default:
                   completable =
                       Completable.error(new IllegalArgumentException("Invalid type of action"));
@@ -978,6 +983,10 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(__ -> view.showDowngradingMessage())
         .flatMapCompletable(__ -> downloadApp(action, appViewModel))
         .toCompletable();
+  }
+
+  private Completable migrateApp(DownloadModel.Action action, AppViewViewModel appViewViewModel) {
+    return downloadApp(action, appViewViewModel);
   }
 
   private Completable openInstalledApp(String packageName) {

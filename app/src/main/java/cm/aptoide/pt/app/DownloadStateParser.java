@@ -87,6 +87,9 @@ public class DownloadStateParser {
       case DOWNGRADE:
         downloadAction = Download.ACTION_DOWNGRADE;
         break;
+      case MIGRATE:
+        downloadAction = Download.ACTION_DOWNGRADE;
+        break;
       default:
         throw new IllegalArgumentException("Invalid action");
     }

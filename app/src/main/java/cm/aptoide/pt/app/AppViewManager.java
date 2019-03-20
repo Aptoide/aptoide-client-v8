@@ -361,13 +361,12 @@ public class AppViewManager {
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
       int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
       boolean hasAppc) {
-    return appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId,
-        hasAppc)
-        .flatMapObservable(isMigration -> installManager.getInstall(md5, packageName, versionCode)
-            .map(install -> new DownloadModel(
-                downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                    pay != null && pay.isPaid(), isMigration), install.getProgress(),
-                downloadStateParser.parseDownloadState(install.getState()), pay)));
+    return Observable.combineLatest(installManager.getInstall(md5, packageName, versionCode),
+        appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
+        (install, isMigration) -> new DownloadModel(
+            downloadStateParser.parseDownloadType(install.getType(), paidApp,
+                pay != null && pay.isPaid(), isMigration), install.getProgress(),
+            downloadStateParser.parseDownloadState(install.getState()), pay));
   }
 
   public Completable pauseDownload(String md5) {
@@ -523,11 +522,5 @@ public class AppViewManager {
             && !cachedAppCoinsViewModel.hasBilling()
             && !cachedAppCoinsViewModel.hasAdvertising()
             && !cachedApp.isMature()));
-  }
-
-  public Single<Boolean> isAppcMigrationApp(String packageName, String signature, int versionCode,
-      int storeId, boolean hasAppc) {
-    return appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId,
-        hasAppc);
   }
 }

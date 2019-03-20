@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.install.InstalledRepository;
-import rx.Single;
+import rx.Observable;
 
 public class AppcMigrationManager {
 
@@ -13,16 +13,13 @@ public class AppcMigrationManager {
     this.repository = repository;
   }
 
-  public Single<Boolean> isMigrationApp(String packageName, String signature, int versionCode,
+  public Observable<Boolean> isMigrationApp(String packageName, String signature, int versionCode,
       long storeId, boolean hasAppc) {
     return repository.getInstalled(packageName)
         .map(installed -> installed != null
             && !installed.getSignature()
             .equals(signature)
             && installed.getVersionCode() <= versionCode
-            && storeId == BDS_STORE_ID
-            && hasAppc)
-        .first()
-        .toSingle();
+            && storeId == BDS_STORE_ID && hasAppc);
   }
 }
