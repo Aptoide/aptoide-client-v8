@@ -51,6 +51,7 @@ public class EditorialPresenter implements Presenter {
     handleClickOnAppCard();
     handlePaletteColor();
     handleReactionClick();
+    loadReactionModel();
 
     handleInstallClick();
     pauseDownload();
@@ -366,6 +367,21 @@ public class EditorialPresenter implements Presenter {
               editorialViewModel.getCardId()); //TODO implementation
           Log.d("TAG123", "handleReactionClick: ");
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void loadReactionModel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> setUpViewModelOnViewReady())
+        .flatMap(editorialViewModel -> editorialManager.loadReactionModel(
+            editorialViewModel.getCardId()))
+        .doOnNext(reactionModel -> view.setReactions(reactionModel.getReactionTypes(),
+            reactionModel.getNumberOfReactions()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
