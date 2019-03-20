@@ -73,6 +73,26 @@ public class HomePresenter implements Presenter {
     handleActionBundlesImpression();
 
     handleEditorialCardClick();
+    handleInstallWalletOfferClick();
+  }
+
+  private void handleInstallWalletOfferClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.walletOfferCardInstallWalletClick())
+        .observeOn(viewScheduler)
+        .doOnNext(event -> homeAnalytics.sendActionItemTapOnCardInteractEvent(event.getBundle()
+            .getTag(), event.getBundlePosition()))
+        .map(HomeEvent::getBundle)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .doOnNext(bundle -> view.sendDeeplinkToWalletAppView(bundle.getActionItem()
+            .getUrl()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -83,8 +103,10 @@ public class HomePresenter implements Presenter {
         .doOnNext(homeEvent -> {
           if (homeEvent.getBundle()
               .getType()
-              .equals(HomeBundle.BundleType.INFO_BUNDLE)) {
-            homeAnalytics.sendAppcImpressionEvent(homeEvent.getBundle()
+              .equals(HomeBundle.BundleType.INFO_BUNDLE) || homeEvent.getBundle()
+              .getType()
+              .equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
+            homeAnalytics.sendActionItemImpressionEvent(homeEvent.getBundle()
                 .getTag(), homeEvent.getBundlePosition());
           } else {
             ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();
@@ -95,7 +117,9 @@ public class HomePresenter implements Presenter {
         })
         .filter(homeEvent -> homeEvent.getBundle()
             .getType()
-            .equals(HomeBundle.BundleType.INFO_BUNDLE))
+            .equals(HomeBundle.BundleType.INFO_BUNDLE) || homeEvent.getBundle()
+            .getType()
+            .equals(HomeBundle.BundleType.WALLET_ADS_OFFER))
         .map(HomeEvent::getBundle)
         .cast(ActionBundle.class)
         .flatMapCompletable(home::actionBundleImpression)
@@ -112,7 +136,7 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.infoBundleKnowMoreClicked())
         .observeOn(viewScheduler)
         .doOnNext(homeEvent -> {
-          homeAnalytics.sendAppcKnowMoreInteractEvent(homeEvent.getBundle()
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
               .getTag(), homeEvent.getBundlePosition());
           homeNavigator.navigateToAppCoinsInformationView();
         })
@@ -128,8 +152,9 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.dismissBundleClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
-        .doOnNext(homeEvent -> homeAnalytics.sendAppcDismissInteractEvent(homeEvent.getBundle()
-            .getTag(), homeEvent.getBundlePosition()))
+        .doOnNext(homeEvent -> homeAnalytics.sendActionItemDismissInteractEvent(
+            homeEvent.getBundle()
+                .getTag(), homeEvent.getBundlePosition()))
         .flatMap(homeEvent -> home.remove((ActionBundle) homeEvent.getBundle())
             .andThen(Observable.just(homeEvent)))
         .observeOn(viewScheduler)

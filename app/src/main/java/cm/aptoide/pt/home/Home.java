@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
+import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -19,24 +19,24 @@ public class Home {
   private final BundlesRepository bundlesRepository;
   private final ImpressionManager impressionManager;
   private final PromotionsManager promotionsManager;
-  private final MoPubBannerAdExperiment bannerAdExperiment;
-  private final MoPubNativeAdExperiment nativeAdExperiment;
   private final BannerRepository bannerRepository;
+  private final MoPubAdsManager moPubAdsManager;
+  private final BlacklistManager blacklistManager;
   private final String promotionId;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
-      PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
-      MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
-      PromotionsPreferencesManager promotionsPreferencesManager, String promotionId) {
+      PromotionsManager promotionsManager, BannerRepository bannerRepository,
+      MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager,
+      BlacklistManager blacklistManager, String promotionId) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
-    this.bannerAdExperiment = bannerAdExperiment;
-    this.nativeAdExperiment = nativeAdExperiment;
     this.bannerRepository = bannerRepository;
+    this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
     this.promotionId = promotionId;
+    this.blacklistManager = blacklistManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -60,7 +60,7 @@ public class Home {
   }
 
   private Single<HomeBundlesModel> addAdBundle(HomeBundlesModel bundlesModel) {
-    return bannerAdExperiment.shouldLoadBanner()
+    return moPubAdsManager.shouldLoadBannerAd()
         .flatMap(shouldLoadBanner -> {
           if (shouldLoadBanner) {
             return bannerRepository.getBannerBundle()
@@ -94,14 +94,16 @@ public class Home {
   }
 
   public Completable remove(ActionBundle bundle) {
-    return impressionManager.markAsRead(bundle.getActionItem()
-        .getCardId(), true)
+    return Completable.fromAction(() -> blacklistManager.blacklist(bundle.getType()
+        .toString() + "_" + bundle.getActionItem()
+        .getCardId()))
         .andThen(bundlesRepository.remove(bundle));
   }
 
   public Completable actionBundleImpression(ActionBundle bundle) {
-    return impressionManager.markAsRead(bundle.getActionItem()
-        .getCardId(), false);
+    return Completable.fromAction(() -> blacklistManager.addImpression(
+        bundle.getType() + "_" + bundle.getActionItem()
+            .getCardId()));
   }
 
   public Single<HomePromotionsWrapper> hasPromotionApps() {
@@ -134,6 +136,6 @@ public class Home {
   }
 
   public Single<Boolean> shouldLoadNativeAd() {
-    return nativeAdExperiment.shouldLoadNative();
+    return moPubAdsManager.shouldLoadNativeAds();
   }
 }

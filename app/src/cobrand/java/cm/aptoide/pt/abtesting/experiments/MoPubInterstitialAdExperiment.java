@@ -7,7 +7,7 @@ public class MoPubInterstitialAdExperiment {
   public MoPubInterstitialAdExperiment() {
   }
 
-  public Single<Boolean> loadInterstitial() {
+  public Single<Boolean> shouldLoadInterstitial() {
     return Single.just(false);
   }
 

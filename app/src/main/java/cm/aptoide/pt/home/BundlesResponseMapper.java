@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -13,7 +14,6 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
@@ -27,15 +27,13 @@ import java.util.List;
 
 public class BundlesResponseMapper {
 
-  private final String marketName;
   private final InstallManager installManager;
-  private final PackageRepository packageRepository;
+  private final WalletAdsOfferCardManager walletAdsOfferCardManager;
 
-  public BundlesResponseMapper(String marketName, InstallManager installManager,
-      PackageRepository packageRepository) {
-    this.marketName = marketName;
+  public BundlesResponseMapper(InstallManager installManager,
+      WalletAdsOfferCardManager walletAdsOfferCardManager) {
     this.installManager = installManager;
-    this.packageRepository = packageRepository;
+    this.walletAdsOfferCardManager = walletAdsOfferCardManager;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
@@ -78,8 +76,14 @@ public class BundlesResponseMapper {
               new Event().setName(Event.Name.getAds), widgetTag));
         } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE) || type.equals(
             HomeBundle.BundleType.EDITORIAL)) {
-          appBundles.add(new ActionBundle(title, type, event, widgetTag,
-              map((ActionItemResponse) viewObject)));
+          ActionItem actionItem = map((ActionItemResponse) viewObject);
+          appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
+        } else if (type.equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
+          ActionItem actionItem = map((ActionItemResponse) viewObject);
+          if (walletAdsOfferCardManager.shouldShowWalletOfferCard(
+              type + "_" + actionItem.getCardId())) {
+            appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
+          }
         }
       } catch (Exception e) {
         Logger.getInstance()
@@ -116,6 +120,8 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.INFO_BUNDLE;
       case "CURATION_1":
         return HomeBundle.BundleType.EDITORIAL;
+      case "WALLET_ADS_OFFER":
+        return HomeBundle.BundleType.WALLET_ADS_OFFER;
       default:
         return HomeBundle.BundleType.UNKNOWN;
     }

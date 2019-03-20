@@ -3,6 +3,7 @@ package cm.aptoide.pt.app;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.database.realm.Download;
@@ -30,6 +31,7 @@ public class AppViewAnalytics {
   public static final String CLICK_INSTALL = "Clicked on install button";
   public static final String DONATIONS_IMPRESSION = "Donations_Impression";
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
+  public static final String ADS_WALLET_PROMOTION_EVENT = "Ads_Wallet_Promotion";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -301,12 +303,12 @@ public class AppViewAnalytics {
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
-      String editorsChoice) {
+      String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.APPVIEW, action);
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.INSTALL, action);
+          editorsChoice, InstallType.INSTALL, action, offerResponseStatus);
     }
   }
 
@@ -396,5 +398,10 @@ public class AppViewAnalytics {
     analyticsManager.logEvent(data, APP_VIEW_INTERACT,
         action.equals("impression") ? AnalyticsManager.Action.IMPRESSION
             : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
+  }
+
+  public void sendAdsWalletPromotionEvent() {
+    analyticsManager.logEvent(null, ADS_WALLET_PROMOTION_EVENT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 }

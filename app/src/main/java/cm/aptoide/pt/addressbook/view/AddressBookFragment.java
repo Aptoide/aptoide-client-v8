@@ -106,8 +106,7 @@ public class AddressBookFragment extends UIComponentFragment
         new AddressBookNavigationManager(getFragmentNavigator(), getTag(),
             getString(R.string.addressbook_about),
             marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
-            theme),
-        application.getDefaultSharedPreferences());
+            theme), application.getDefaultSharedPreferences());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());

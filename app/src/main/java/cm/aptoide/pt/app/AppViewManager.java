@@ -2,10 +2,9 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
@@ -37,6 +36,9 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
+import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
+
 /**
  * Created by D01 on 04/05/18.
  */
@@ -57,6 +59,7 @@ public class AppViewManager {
   private final int limit;
   private final InstallAnalytics installAnalytics;
   private final InstalledRepository installedRepository;
+  private final MoPubAdsManager moPubAdsManager;
   private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
@@ -70,23 +73,18 @@ public class AppViewManager {
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
-  private MoPubInterstitialAdExperiment moPubInterstitialAdExperiment;
-  private MoPubBannerAdExperiment moPubBannerAdExperiment;
-  private MoPubNativeAdExperiment moPubNativeAdExperiment;
   private String promotionId;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
       StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
       AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      PreferencesManager preferencesManager, DownloadStateParser downloadStateParser,
-      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, int limit, SocialRepository socialRepository,
-      String marketName, AppCoinsManager appCoinsManager,
-      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment, PromotionsManager promotionsManager,
-      String promotionId, InstalledRepository installedRepository) {
+      MoPubAdsManager moPubAdsManager, PreferencesManager preferencesManager,
+      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
+      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager,
+      PromotionsManager promotionsManager, String promotionId,
+      InstalledRepository installedRepository) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -97,6 +95,7 @@ public class AppViewManager {
     this.storeUtilsProxy = storeUtilsProxy;
     this.aptoideAccountManager = aptoideAccountManager;
     this.appViewConfiguration = appViewConfiguration;
+    this.moPubAdsManager = moPubAdsManager;
     this.preferencesManager = preferencesManager;
     this.downloadStateParser = downloadStateParser;
     this.appViewAnalytics = appViewAnalytics;
@@ -106,9 +105,6 @@ public class AppViewManager {
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
-    this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
-    this.moPubBannerAdExperiment = moPubBannerAdExperiment;
-    this.moPubNativeAdExperiment = moPubNativeAdExperiment;
     this.promotionsManager = promotionsManager;
     this.promotionId = promotionId;
     this.installedRepository = installedRepository;
@@ -195,11 +191,11 @@ public class AppViewManager {
   }
 
   public Single<Boolean> recordInterstitialImpression() {
-    return moPubInterstitialAdExperiment.recordAdImpression();
+    return moPubAdsManager.recordInterstitialAdImpression();
   }
 
   public Single<Boolean> recordInterstitialClick() {
-    return moPubInterstitialAdExperiment.recordAdClick();
+    return moPubAdsManager.recordInterstitialAdClick();
   }
 
   public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
@@ -334,9 +330,21 @@ public class AppViewManager {
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
-                editorsChoicePosition)))
+        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(hasAds -> {
+              if (hasAds) {
+                return moPubAdsManager.shouldShowAds()
+                    .doOnSuccess(showAds -> setupDownloadEvents(download, downloadAction, appId,
+                        trustedValue, editorsChoicePosition,
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
+              } else {
+                setupDownloadEvents(download, downloadAction, appId, trustedValue,
+                    editorsChoicePosition, NO_ADS);
+                return Single.just(false);
+              }
+            })
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
@@ -348,20 +356,23 @@ public class AppViewManager {
         promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
         promotionViewApp.getPathAlt(), promotionViewApp.getObb()))
         .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, promotionViewApp.getId())))
+            .doOnSubscribe(__ -> setupDownloadEvents(download, promotionViewApp.getId(),
+                WalletAdsOfferManager.OfferResponseStatus.NO_ADS)))
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, long appId) {
-    setupDownloadEvents(download, null, appId, null, null);
+  private void setupDownloadEvents(Download download, long appId,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+    setupDownloadEvents(download, null, appId, null, null, offerResponseStatus);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
-      long appId, String malwareRank, String editorsChoice) {
+      long appId, String malwareRank, String editorsChoice,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice);
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
@@ -382,8 +393,20 @@ public class AppViewManager {
 
   public Completable resumeDownload(String md5, long appId) {
     return installManager.getDownload(md5)
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, appId)));
+        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(hasAds -> {
+              if (hasAds) {
+                return moPubAdsManager.shouldShowAds()
+                    .doOnSuccess(showAds -> setupDownloadEvents(download, appId,
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
+              } else {
+                setupDownloadEvents(download, appId,
+                    WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
+                return Single.just(false);
+              }
+            })
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download));
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
@@ -480,15 +503,31 @@ public class AppViewManager {
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {
-    return moPubInterstitialAdExperiment.loadInterstitial()
+    return moPubAdsManager.shouldHaveInterstitialAds()
+        .flatMap(hasAds -> {
+          if (hasAds) {
+            return moPubAdsManager.shouldShowAds()
+                .doOnSuccess(showAds -> {
+                  if (!showAds) {
+                    sendAdsWalletPromotionEvent();
+                  }
+                });
+          } else {
+            return Single.just(false);
+          }
+        })
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
             && !cachedAppCoinsViewModel.hasAdvertising()
             && !cachedApp.isMature()));
   }
 
+  private void sendAdsWalletPromotionEvent() {
+    appViewAnalytics.sendAdsWalletPromotionEvent();
+  }
+
   public Single<Boolean> shouldLoadBannerAd() {
-    return moPubBannerAdExperiment.shouldLoadBanner()
+    return moPubAdsManager.shouldLoadBannerAd()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
             && !cachedAppCoinsViewModel.hasAdvertising()
@@ -496,7 +535,7 @@ public class AppViewManager {
   }
 
   public Single<Boolean> shouldLoadNativeAds() {
-    return moPubNativeAdExperiment.shouldLoadNative()
+    return moPubAdsManager.shouldLoadNativeAds()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
             && !cachedAppCoinsViewModel.hasAdvertising()
