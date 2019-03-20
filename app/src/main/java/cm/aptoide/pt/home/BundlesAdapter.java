@@ -73,7 +73,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             .inflate(R.layout.info_action_item, parent, false), uiEventsListener);
       case TOP:
         return new TopBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.top_bundle_item, parent, false), uiEventsListener, oneDecimalFormatter, marketName);
+            .inflate(R.layout.top_bundle_item, parent, false), uiEventsListener,
+            oneDecimalFormatter, marketName);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }

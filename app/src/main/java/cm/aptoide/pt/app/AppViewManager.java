@@ -324,8 +324,7 @@ public class AppViewManager {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, downloadAction, appId,
                         trustedValue, editorsChoicePosition,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, downloadAction, appId, trustedValue,
                     editorsChoicePosition, NO_ADS);
@@ -374,8 +373,7 @@ public class AppViewManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, appId,
                     WalletAdsOfferManager.OfferResponseStatus.NO_ADS);

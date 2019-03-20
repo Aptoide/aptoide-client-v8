@@ -161,8 +161,7 @@ public class PromotionsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, packageName, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, packageName, appId,
                     WalletAdsOfferManager.OfferResponseStatus.NO_ADS);

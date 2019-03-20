@@ -30,7 +30,8 @@ public class BundlesResponseMapper {
   private final InstallManager installManager;
   private final WalletAdsOfferCardManager walletAdsOfferCardManager;
 
-  public BundlesResponseMapper(InstallManager installManager, WalletAdsOfferCardManager walletAdsOfferCardManager) {
+  public BundlesResponseMapper(InstallManager installManager,
+      WalletAdsOfferCardManager walletAdsOfferCardManager) {
     this.installManager = installManager;
     this.walletAdsOfferCardManager = walletAdsOfferCardManager;
   }
