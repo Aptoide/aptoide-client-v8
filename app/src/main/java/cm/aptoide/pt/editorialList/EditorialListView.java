@@ -1,7 +1,10 @@
 package cm.aptoide.pt.editorialList;
 
+import cm.aptoide.pt.editorial.FakeReactionModel;
+import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import java.util.List;
 import rx.Observable;
 
@@ -45,4 +48,18 @@ public interface EditorialListView extends View {
   void update(List<CurationCard> curationCards);
 
   Observable<EditorialHomeEvent> cardCreated();
+
+  Observable<ReactionsHomeEvent> reactionClicked();
+
+  void showReactionsPopup(String cardId, int bundlePosition);
+
+  void setUserReaction(int bundlePosition, ReactionType reaction);
+
+  void showLogInDialog();
+
+  Observable<Void> snackLogInClick();
+
+  void showErrorToast();
+
+  void updateReactions(FakeReactionModel reactionModel, int bundlePosition);
 }

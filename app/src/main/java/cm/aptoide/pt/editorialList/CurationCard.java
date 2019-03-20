@@ -3,6 +3,7 @@ package cm.aptoide.pt.editorialList;
 import cm.aptoide.pt.reactions.data.ReactionType;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 
 public class CurationCard {
   private final String id;
@@ -12,6 +13,7 @@ public class CurationCard {
   private final String views;
   private List<ReactionType> reactionTypes;
   private String numberOfReactions;
+  private ReactionType userReaction;
 
   public CurationCard(String id, String subTitle, String icon, String title, String views) {
     this.id = id;
@@ -19,6 +21,7 @@ public class CurationCard {
     this.icon = icon;
     this.title = title;
     this.views = views;
+    userReaction = null;
     reactionTypes = Collections.emptyList();
     numberOfReactions = "";
   }
@@ -57,5 +60,13 @@ public class CurationCard {
 
   public void setNumberOfReactions(String numberOfReactions) {
     this.numberOfReactions = numberOfReactions;
+  }
+
+  @Nullable public ReactionType getUserReaction() {
+    return userReaction;
+  }
+
+  public void setUserReaction(ReactionType userReaction) {
+    this.userReaction = userReaction;
   }
 }

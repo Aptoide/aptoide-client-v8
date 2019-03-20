@@ -291,7 +291,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.REACTION))
+        .equals(HomeEvent.Type.REACTION_BUTTON))
         .cast(EditorialHomeEvent.class);
   }
 

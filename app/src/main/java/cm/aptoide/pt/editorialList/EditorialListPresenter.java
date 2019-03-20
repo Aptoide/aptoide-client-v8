@@ -1,12 +1,13 @@
 package cm.aptoide.pt.editorialList;
 
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -45,6 +46,8 @@ public class EditorialListPresenter implements Presenter {
     handleBottomReached();
     handleUserImageClick();
     handleReactionClick();
+    handleUserReaction();
+    handleLogInClick();
     loadUserImage();
   }
 
@@ -53,9 +56,10 @@ public class EditorialListPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cardCreated())
         .flatMap(editorialHomeEvent -> editorialListManager.loadReactionModel(
-            editorialHomeEvent.getCardId()))
-        .observeOn(viewScheduler)
-        .doOnNext(view::update)
+            editorialHomeEvent.getCardId())
+            .observeOn(viewScheduler)
+            .doOnNext(reactionModel -> view.updateReactions(reactionModel,
+                editorialHomeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
@@ -216,13 +220,45 @@ public class EditorialListPresenter implements Presenter {
         .doOnNext(homeEvent -> {
           editorialListAnalytics.sendReactionButtonClickEvent(homeEvent.getCardId(),
               homeEvent.getBundlePosition()); //TODO implementation
-          Log.d("TAG123", "handleReactionClick: ");
+          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getBundlePosition());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void handleUserReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionClicked())
+        .flatMap(homeEvent -> editorialListManager.setReaction(homeEvent.getCardId(),
+            homeEvent.getReaction())
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+                homeEvent.getBundlePosition(), homeEvent.getReaction())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, int bundlePosition,
+      ReactionType reaction) {
+    if (reactionsResponse.wasSuccess()) {
+      view.setUserReaction(bundlePosition, reaction);
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLogInDialog();
+    } else {
+      view.showErrorToast();
+    }
+  }
+
+  @VisibleForTesting public void handleLogInClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.snackLogInClick())
+        .doOnNext(homeEvent -> editorialListNavigator.navigateToLogIn())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleUserImageClick() {
@@ -234,9 +270,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private Observable<String> getUserAvatar(Account account) {

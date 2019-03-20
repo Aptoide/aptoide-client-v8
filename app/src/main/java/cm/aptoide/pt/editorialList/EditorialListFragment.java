@@ -3,9 +3,11 @@ package cm.aptoide.pt.editorialList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +17,15 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
+import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.editorial.FakeReactionModel;
+import cm.aptoide.pt.editorial.ReactionsHomeEvent;
+import cm.aptoide.pt.home.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -31,6 +39,8 @@ import rx.subjects.PublishSubject;
 
 public class EditorialListFragment extends NavigationTrackFragment implements EditorialListView {
 
+  private static final String TAG = EditorialFragment.class.getName();
+
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -41,6 +51,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private RecyclerView editorialList;
   private EditorialListAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
+  private PublishSubject<Void> snackListener;
   private LinearLayoutManager layoutManager;
   private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -115,7 +126,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
 
   @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.REACTION))
+        .equals(HomeEvent.Type.REACTION_BUTTON))
         .cast(EditorialHomeEvent.class);
   }
 
@@ -231,9 +242,67 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .cast(EditorialHomeEvent.class);
   }
 
+  @Override public Observable<ReactionsHomeEvent> reactionClicked() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.REACTION))
+        .cast(ReactionsHomeEvent.class);
+  }
+
+  @Override public void showReactionsPopup(String cardId, int bundlePosition) {
+    EditorialBundleViewHolder editorialBundleViewHolder =
+        getViewHolderForAdapterPosition(bundlePosition);
+    if (editorialBundleViewHolder != null) {
+      editorialBundleViewHolder.showReactions(cardId, bundlePosition);
+    }
+  }
+
+  @Override public void setUserReaction(int bundlePosition, ReactionType reaction) {
+    EditorialBundleViewHolder editorialBundleViewHolder =
+        getViewHolderForAdapterPosition(bundlePosition);
+    if (editorialBundleViewHolder != null) {
+      editorialBundleViewHolder.setUserReaction(reaction);
+    }
+  }
+
+  @Override public void showLogInDialog() {
+    ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
+        snackView -> snackListener.onNext(null), Snackbar.LENGTH_SHORT);
+  }
+
+  @Override public Observable<Void> snackLogInClick() {
+    return snackListener;
+  }
+
+  @Override public void showErrorToast() {
+    Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void updateReactions(FakeReactionModel reactionModel, int bundlePosition) {
+    EditorialBundleViewHolder editorialBundleViewHolder =
+        getViewHolderForAdapterPosition(bundlePosition);
+    if (editorialBundleViewHolder != null) {
+      editorialBundleViewHolder.setReactions(reactionModel.getReactionTypes(),
+          reactionModel.getNumberOfReactions(), reactionModel.getUserReaction());
+    }
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;
+  }
+
+  private EditorialBundleViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {
+    if (placeHolderPosition != -1) {
+      EditorialBundleViewHolder placeHolderViewHolder =
+          ((EditorialBundleViewHolder) editorialList.findViewHolderForAdapterPosition(
+              placeHolderPosition));
+      if (placeHolderViewHolder == null) {
+        Log.e(TAG, "Unable to find editorialViewHolder");
+      }
+      return placeHolderViewHolder;
+    }
+    return null;
   }
 
   @Override public void onDetach() {
