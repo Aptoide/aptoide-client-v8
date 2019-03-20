@@ -23,28 +23,49 @@ public class AppSecondaryInfoViewHolder {
 
   public void setInfo(boolean hasAppcBilling, float appRating, boolean showRating,
       boolean showBoth) {
-    appcText.setText(R.string.appc_short_spend_appc);
-    if (appRating == 0) {
-      this.rating.setText(R.string.appcardview_title_no_stars);
-    } else {
-      this.rating.setText(oneDecimalFormatter.format(appRating));
+    if (appcText != null) {
+      appcText.setText(R.string.appc_short_spend_appc);
     }
-
+    setRating(appRating);
     if (showBoth) {
       if (hasAppcBilling) {
-        appcLayout.setVisibility(View.VISIBLE);
+        setAppcVisibility(View.VISIBLE);
       } else {
-        appcLayout.setVisibility(View.INVISIBLE);
+        setAppcVisibility(View.INVISIBLE);
       }
-      ratingLayout.setVisibility(View.VISIBLE);
-    } else if (showRating) {
-      appcLayout.setVisibility(View.INVISIBLE);
-      ratingLayout.setVisibility(View.VISIBLE);
-    } else if (hasAppcBilling) {
-      appcLayout.setVisibility(View.VISIBLE);
-      ratingLayout.setVisibility(View.INVISIBLE);
+      setRatingVisibility(View.VISIBLE);
     } else {
-      appcLayout.setVisibility(View.INVISIBLE);
+      if (hasAppcBilling) {
+        setAppcVisibility(View.VISIBLE);
+        setRatingVisibility(View.INVISIBLE);
+      } else if (showRating) {
+        setAppcVisibility(View.INVISIBLE);
+        setRatingVisibility(View.VISIBLE);
+      } else {
+        setAppcVisibility(View.INVISIBLE);
+      }
+    }
+  }
+
+  private void setAppcVisibility(int visibility) {
+    if (appcLayout != null) {
+      appcLayout.setVisibility(visibility);
+    }
+  }
+
+  private void setRatingVisibility(int visibility) {
+    if (ratingLayout != null) {
+      ratingLayout.setVisibility(visibility);
+    }
+  }
+
+  private void setRating(float rating) {
+    if (this.rating != null) {
+      if (rating == 0) {
+        this.rating.setText(R.string.appcardview_title_no_stars);
+      } else {
+        this.rating.setText(oneDecimalFormatter.format(rating));
+      }
     }
   }
 }
