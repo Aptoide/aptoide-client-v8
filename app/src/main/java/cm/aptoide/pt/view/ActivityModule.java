@@ -296,9 +296,9 @@ import static android.content.Context.WINDOW_SERVICE;
     return new AppCoinsInfoNavigator(((ActivityNavigator) activity), fragmentNavigator, theme);
   }
 
-  @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(
-      AppNavigator appNavigator) {
-    return new EditorialNavigator((ActivityNavigator) activity, appNavigator);
+  @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
+      AccountNavigator accountNavigator) {
+    return new EditorialNavigator((ActivityNavigator) activity, appNavigator, accountNavigator);
   }
 
   @ActivityScope @Provides @Named("screenHeight") float providesScreenHeight(Resources resources) {
