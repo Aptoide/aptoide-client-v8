@@ -47,7 +47,7 @@ public class InstallManager {
   private final String obbPath;
   private final FileUtils fileUtils;
   private final Context context;
-  private final InstallerPackageNameManager installerPackageNameManager;
+  private final PackageInstallerManager packageInstallerManager;
   private final DownloadsRepository downloadRepository;
   private final InstalledRepository installedRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
@@ -57,7 +57,7 @@ public class InstallManager {
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
       String cachePath, String apkPath, String obbPath, FileUtils fileUtils,
-      InstallerPackageNameManager installerPackageNameManager) {
+      PackageInstallerManager packageInstallerManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -70,7 +70,7 @@ public class InstallManager {
     this.apkPath = apkPath;
     this.obbPath = obbPath;
     this.fileUtils = fileUtils;
-    this.installerPackageNameManager = installerPackageNameManager;
+    this.packageInstallerManager = packageInstallerManager;
   }
 
   public void stopAllInstallations() {
@@ -182,7 +182,7 @@ public class InstallManager {
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
         .flatMap(install -> installInBackground(install, forceDefaultInstall,
-            installerPackageNameManager.shouldSetInstallerPackageName(download)))
+            packageInstallerManager.shouldSetInstallerPackageName(download)))
         .first()
         .toCompletable();
   }
