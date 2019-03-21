@@ -62,7 +62,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   public static Fragment newInstance(Event event, String title, String storeTheme, String tag,
       StoreContext storeContext) {
-    return newInstance(event, null, title, storeTheme, tag, storeContext);
+    return newInstance(event, HomeEvent.Type.NO_OP, title, storeTheme, tag, storeContext);
   }
 
   public static Fragment newInstance(Event event, HomeEvent.Type type, String title,
