@@ -12,7 +12,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
 
 /**
@@ -262,9 +261,7 @@ public class EditorialPresenter implements Presenter {
         .doOnNext(view::showDownloadModel)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handlePlaceHolderVisibility() {
@@ -275,9 +272,7 @@ public class EditorialPresenter implements Presenter {
         .doOnNext(model -> view.managePlaceHolderVisibity())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
+        }, error -> crashReporter.log(error));
   }
 
   private Completable openInstalledApp(String packageName) {
@@ -297,9 +292,7 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handlePaletteColor() {
@@ -312,7 +305,7 @@ public class EditorialPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> {
           view.applyPaletteSwatch(null);
-          throw new OnErrorNotImplementedException(error);
+          crashReporter.log(error);
         });
   }
 
@@ -333,9 +326,7 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleMovingCollapse() {
@@ -352,9 +343,7 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleReactionClick() {
@@ -384,9 +373,7 @@ public class EditorialPresenter implements Presenter {
             reactionModel.getReactionTypes(), reactionModel.getNumberOfReactions()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleUserReaction() {
