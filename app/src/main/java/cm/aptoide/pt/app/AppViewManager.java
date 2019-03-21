@@ -349,7 +349,6 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(WalletPromotionViewModel promotionViewApp) {
-    increaseInstallClick();
     return Observable.just(downloadFactory.create(downloadStateParser.parseDownloadAction(
         promotionViewApp.getDownloadModel()
             .getAction()), promotionViewApp.getAppName(), promotionViewApp.getPackageName(),
