@@ -40,7 +40,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
-  @Override public void bindView(AppBrickListDisplayable displayable) {
+  @Override public void bindView(AppBrickListDisplayable displayable, int position) {
     App app = displayable.getPojo();
 
     ImageLoader.with(getContext())

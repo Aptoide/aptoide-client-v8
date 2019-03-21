@@ -21,7 +21,7 @@ public class FollowStoreWidget extends Widget<FollowStoreDisplayable> {
     storeLayout = itemView.findViewById(R.id.store_tab_follow_store_layout);
   }
 
-  @Override public void bindView(FollowStoreDisplayable displayable) {
+  @Override public void bindView(FollowStoreDisplayable displayable, int position) {
     FragmentManager fragmentManager = getContext().getSupportFragmentManager();
     compositeSubscription.add(RxView.clicks(storeLayout)
         .subscribe(click -> new AddStoreDialog().show(fragmentManager, "addStoreDialog")));

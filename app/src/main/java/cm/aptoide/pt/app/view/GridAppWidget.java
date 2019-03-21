@@ -38,7 +38,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
     appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, new DecimalFormat("0.0"));
   }
 
-  @Override public void bindView(T displayable) {
+  @Override public void bindView(T displayable, int position) {
     final App pojo = displayable.getPojo();
     final long appId = pojo.getId();
     final FragmentActivity context = getContext();
@@ -49,7 +49,7 @@ public class GridAppWidget<T extends GridAppDisplayable> extends Widget<T> {
     name.setText(pojo.getName());
     appInfoViewHolder.setInfo(pojo.hasBilling(), pojo.getStats()
         .getRating()
-        .getAvg(), true);
+        .getAvg(), true, false);
     storeName = pojo.getStore()
         .getName();
     compositeSubscription.add(RxView.clicks(itemView)

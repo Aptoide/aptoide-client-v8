@@ -138,8 +138,7 @@ public class AppsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, NO_ADS);
                 return Single.just(false);
@@ -213,8 +212,7 @@ public class AppsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupUpdateEvents(download, Origin.UPDATE,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
                 return Single.just(false);

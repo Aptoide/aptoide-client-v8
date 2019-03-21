@@ -32,7 +32,7 @@ public class ExcludedUpdateWidget extends Widget<ExcludedUpdateDisplayable> {
     isExcluded = (CheckBox) itemView.findViewById(R.id.is_excluded);
   }
 
-  @Override public void bindView(final ExcludedUpdateDisplayable displayable) {
+  @Override public void bindView(final ExcludedUpdateDisplayable displayable, int position) {
     final Update excludedUpdate = displayable.getPojo();
 
     ImageLoader.with(getContext())

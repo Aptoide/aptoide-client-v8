@@ -36,7 +36,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
     commentStore = (Button) itemView.findViewById(R.id.comment_store_button);
   }
 
-  @Override public void bindView(StoreAddCommentDisplayable displayable) {
+  @Override public void bindView(StoreAddCommentDisplayable displayable, int position) {
 
     final Context context = getContext();
 

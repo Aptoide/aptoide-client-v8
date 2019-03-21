@@ -36,7 +36,7 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
     imageView = (ImageView) itemView.findViewById(R.id.image_category);
   }
 
-  @Override public void bindView(GridDisplayDisplayable displayable) {
+  @Override public void bindView(GridDisplayDisplayable displayable, int position) {
     GetStoreDisplays.EventImage pojo = displayable.getPojo();
     final FragmentActivity context = getContext();
     ImageLoader.with(context)

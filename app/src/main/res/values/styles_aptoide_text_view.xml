@@ -173,6 +173,10 @@
     <item name="android:textColor">@color/black</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.L.BlackAlpha">
+    <item name="android:textColor">@color/black_87_alpha</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.S.Black">
     <item name="android:textColor">@color/black</item>
   </style>
@@ -204,6 +208,10 @@
 
   <style name="Aptoide.TextView.Medium.XXS.GreyMedium">
     <item name="android:textColor">@color/grey_medium</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.XXS.Black">
+    <item name="android:textColor">@color/black</item>
   </style>
 
   <!-- Text Style -->

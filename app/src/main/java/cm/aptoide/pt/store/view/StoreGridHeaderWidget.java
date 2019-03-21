@@ -30,7 +30,7 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
     more = (Button) itemView.findViewById(R.id.more);
   }
 
-  @Override public void bindView(StoreGridHeaderDisplayable displayable) {
+  @Override public void bindView(StoreGridHeaderDisplayable displayable, int position) {
     final GetStoreWidgets.WSWidget wsWidget = displayable.getWsWidget();
     final boolean moreIsVisible = wsWidget.hasActions();
     final AptoideApplication application =

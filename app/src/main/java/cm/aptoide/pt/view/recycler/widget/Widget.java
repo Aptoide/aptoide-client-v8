@@ -51,15 +51,15 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
     }
   }
 
-  public void internalBindView(T displayable) {
+  public void internalBindView(T displayable, int position) {
     if (compositeSubscription == null) {
       compositeSubscription = new CompositeSubscription();
     }
     displayable.setVisible(true);
-    bindView(displayable);
+    bindView(displayable, position);
   }
 
-  public abstract void bindView(T displayable);
+  public abstract void bindView(T displayable, int position);
 
   public View getRootView() {
     return getFragmentNavigator().peekLast()

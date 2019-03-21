@@ -23,6 +23,7 @@
           android:id="@+id/more_bundles_list"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          android:clipChildren="false"
           />
     </android.support.v4.widget.SwipeRefreshLayout>
     <include layout="@layout/partial_view_incl_no_network"/>
