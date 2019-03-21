@@ -26,7 +26,6 @@ class InstallResultReceiver extends BroadcastReceiver {
       String message = extras.getString(PackageInstaller.EXTRA_STATUS_MESSAGE);
       switch (status) {
         case PackageInstaller.STATUS_PENDING_USER_ACTION:
-          // This app isn't privileged, so the user has to confirm the install.
           packageInstallerResultCallback.onPendingUserAction(extras);
           break;
         case PackageInstaller.STATUS_SUCCESS:
