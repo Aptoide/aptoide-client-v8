@@ -2,12 +2,14 @@ package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.editorial.FakeReactionModel;
+import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.view.app.Application;
 import rx.Observable;
 import rx.Scheduler;
@@ -29,19 +31,16 @@ public class HomePresenter implements Presenter {
   private final CrashReport crashReporter;
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
-  private final AptoideAccountManager accountManager;
   private final HomeAnalytics homeAnalytics;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager,
-      HomeAnalytics homeAnalytics) {
+      HomeNavigator homeNavigator, AdMapper adMapper, HomeAnalytics homeAnalytics) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
-    this.accountManager = accountManager;
     this.homeAnalytics = homeAnalytics;
   }
 
@@ -73,6 +72,31 @@ public class HomePresenter implements Presenter {
     handleActionBundlesImpression();
 
     handleEditorialCardClick();
+
+    handleReactionClick();
+
+    onCardCreatedLoadReactionModel();
+
+    handleUserReaction();
+
+    handleLogInClick();
+  }
+
+  @VisibleForTesting public void onCardCreatedLoadReactionModel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.cardCreated())
+        .flatMap(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
+            editorialHomeEvent.getBundlePosition()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private Observable<FakeReactionModel> loadReactionModel(String cardId, int position) {
+    return home.loadReactionModel(cardId)
+        .observeOn(viewScheduler)
+        .doOnNext(reactionModel -> view.updateReactions(reactionModel, position));
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -102,7 +126,7 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
         }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
+          crashReporter.log(throwable);
         });
   }
 
@@ -121,6 +145,55 @@ public class HomePresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  @VisibleForTesting public void handleReactionClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendReactionButtonClickEvent(homeEvent.getCardId(),
+              homeEvent.getBundlePosition()); //TODO implementation
+          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getBundlePosition());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  @VisibleForTesting public void handleUserReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionClicked())
+        .flatMap(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getReaction())
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+                homeEvent.getBundlePosition(), homeEvent.getReaction()))
+            .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getBundlePosition())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, int bundlePosition,
+      ReactionType reaction) {
+    if (reactionsResponse.wasSuccess()) {
+      view.setUserReaction(bundlePosition, reaction);
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLogInDialog();
+    } else {
+      view.showErrorToast();
+    }
+  }
+
+  @VisibleForTesting public void handleLogInClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.snackLogInClick())
+        .doOnNext(homeEvent -> homeNavigator.navigateToLogIn())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleDismissClick() {
@@ -263,9 +336,7 @@ public class HomePresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   private void handleBottomNavigationEvents() {
@@ -276,9 +347,7 @@ public class HomePresenter implements Presenter {
         .doOnNext(navigated -> view.scrollToTop())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleAdClick() {

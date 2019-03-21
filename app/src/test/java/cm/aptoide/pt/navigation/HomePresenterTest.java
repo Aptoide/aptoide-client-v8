@@ -95,7 +95,7 @@ public class HomePresenterTest {
     visibleBundleEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
-        new AdMapper(), aptoideAccountManager, homeAnalytics);
+        new AdMapper(), homeAnalytics);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300, "", false);

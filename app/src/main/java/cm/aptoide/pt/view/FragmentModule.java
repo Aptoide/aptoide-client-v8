@@ -72,6 +72,7 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
+import cm.aptoide.pt.editorial.FakeReactionsManager;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
@@ -250,15 +251,16 @@ import rx.subscriptions.CompositeSubscription;
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
       HomeAnalytics homeAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
+        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
+      @Named("aptoide-theme") String theme, AccountNavigator accountNavigator) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme,
+        accountNavigator);
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
@@ -271,9 +273,9 @@ import rx.subscriptions.CompositeSubscription;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager,
       MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository,
-      MoPubNativeAdExperiment nativeAdExperiment) {
+      MoPubNativeAdExperiment nativeAdExperiment, FakeReactionsManager fakeReactionsManager) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerAdExperiment,
-        nativeAdExperiment, bannerRepository, promotionsPreferencesManager);
+        nativeAdExperiment, bannerRepository, promotionsPreferencesManager, fakeReactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -415,10 +417,11 @@ import rx.subscriptions.CompositeSubscription;
       EditorialRepository editorialRepository, InstallManager installManager,
       PreferencesManager preferencesManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
+      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics,
+      FakeReactionsManager fakeReactionsManager) {
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
         installManager, preferencesManager, downloadFactory, downloadStateParser,
-        notificationAnalytics, installAnalytics, editorialAnalytics);
+        notificationAnalytics, installAnalytics, editorialAnalytics, fakeReactionsManager);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(
@@ -465,8 +468,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
-      EditorialListRepository editorialListRepository) {
-    return new EditorialListManager(editorialListRepository);
+      EditorialListRepository editorialListRepository, FakeReactionsManager fakeReactionsManager) {
+    return new EditorialListManager(editorialListRepository, fakeReactionsManager);
   }
 
   @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
@@ -483,8 +486,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new EditorialListNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      AccountNavigator accountNavigator) {
+    return new EditorialListNavigator(fragmentNavigator, accountNavigator);
   }
 
   @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
@@ -505,5 +509,9 @@ import rx.subscriptions.CompositeSubscription;
       HomeAnalytics homeAnalytics, Home home) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
+  }
+
+  @FragmentScope @Provides FakeReactionsManager providesReactionsManager() {
+    return new FakeReactionsManager();
   }
 }

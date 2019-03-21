@@ -4,12 +4,14 @@ import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.editorial.FakeReactionModel;
+import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-import rx.exceptions.OnErrorNotImplementedException;
 
 public class EditorialListPresenter implements Presenter {
 
@@ -36,13 +38,34 @@ public class EditorialListPresenter implements Presenter {
 
   @Override public void present() {
     onCreateLoadViewModel();
+    onCardCreatedLoadReactionModel();
     handleImpressions();
     handleEditorialCardClick();
     handlePullToRefresh();
     handleRetryClick();
     handleBottomReached();
     handleUserImageClick();
+    handleReactionClick();
+    handleUserReaction();
+    handleLogInClick();
     loadUserImage();
+  }
+
+  @VisibleForTesting public void onCardCreatedLoadReactionModel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.cardCreated())
+        .flatMap(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
+            editorialHomeEvent.getBundlePosition()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private Observable<FakeReactionModel> loadReactionModel(String cardId, int position) {
+    return editorialListManager.loadReactionModel(cardId)
+        .observeOn(viewScheduler)
+        .doOnNext(reactionModel -> view.updateReactions(reactionModel, position));
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {
@@ -71,9 +94,7 @@ public class EditorialListPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleEditorialCardClick() {
@@ -89,9 +110,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handlePullToRefresh() {
@@ -102,9 +121,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleRetryClick() {
@@ -142,9 +159,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore) {
@@ -190,6 +205,56 @@ public class EditorialListPresenter implements Presenter {
         .map(editorialViewModel -> editorialViewModel);
   }
 
+  @VisibleForTesting public void handleReactionClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> {
+          editorialListAnalytics.sendReactionButtonClickEvent(homeEvent.getCardId(),
+              homeEvent.getBundlePosition()); //TODO implementation
+          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getBundlePosition());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void handleUserReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionClicked())
+        .flatMap(homeEvent -> editorialListManager.setReaction(homeEvent.getCardId(),
+            homeEvent.getReaction())
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+                homeEvent.getBundlePosition(), homeEvent.getReaction()))
+            .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getBundlePosition())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, int bundlePosition,
+      ReactionType reaction) {
+    if (reactionsResponse.wasSuccess()) {
+      view.setUserReaction(bundlePosition, reaction);
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLogInDialog();
+    } else {
+      view.showErrorToast();
+    }
+  }
+
+  @VisibleForTesting public void handleLogInClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.snackLogInClick())
+        .doOnNext(homeEvent -> editorialListNavigator.navigateToLogIn())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
   @VisibleForTesting public void handleUserImageClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -199,9 +264,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private Observable<String> getUserAvatar(Account account) {

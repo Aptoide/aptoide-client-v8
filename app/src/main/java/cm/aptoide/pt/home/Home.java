@@ -2,12 +2,17 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
+import cm.aptoide.pt.editorial.FakeReactionModel;
+import cm.aptoide.pt.editorial.FakeReactionsManager;
+import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import java.util.List;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -22,12 +27,14 @@ public class Home {
   private final MoPubBannerAdExperiment bannerAdExperiment;
   private final MoPubNativeAdExperiment nativeAdExperiment;
   private final BannerRepository bannerRepository;
+  private final FakeReactionsManager fakeReactionsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
       MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
-      PromotionsPreferencesManager promotionsPreferencesManager) {
+      PromotionsPreferencesManager promotionsPreferencesManager,
+      FakeReactionsManager fakeReactionsManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
@@ -35,6 +42,7 @@ public class Home {
     this.nativeAdExperiment = nativeAdExperiment;
     this.bannerRepository = bannerRepository;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
+    this.fakeReactionsManager = fakeReactionsManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -118,7 +126,6 @@ public class Home {
     if (apps.size() > 0) {
       for (PromotionApp app : apps) {
         totalAppcValue += app.getAppcValue();
-
         if (!app.isClaimed()) {
           promotions++;
           unclaimedAppcValue += app.getAppcValue();
@@ -133,5 +140,13 @@ public class Home {
 
   public Single<Boolean> shouldLoadNativeAd() {
     return nativeAdExperiment.shouldLoadNative();
+  }
+
+  public Observable<FakeReactionModel> loadReactionModel(String cardId) {
+    return fakeReactionsManager.loadReactionModel(cardId);
+  }
+
+  public Observable<ReactionsResponse> setReaction(String cardId, ReactionType reaction) {
+    return fakeReactionsManager.setReaction(cardId, reaction);
   }
 }
