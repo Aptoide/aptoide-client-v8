@@ -2,9 +2,9 @@ package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
@@ -31,19 +31,16 @@ public class HomePresenter implements Presenter {
   private final CrashReport crashReporter;
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
-  private final AptoideAccountManager accountManager;
   private final HomeAnalytics homeAnalytics;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager,
-      HomeAnalytics homeAnalytics) {
+      HomeNavigator homeNavigator, AdMapper adMapper, HomeAnalytics homeAnalytics) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
-    this.accountManager = accountManager;
     this.homeAnalytics = homeAnalytics;
   }
 
@@ -78,24 +75,28 @@ public class HomePresenter implements Presenter {
 
     handleReactionClick();
 
-    loadReactionModel();
+    onCardCreatedLoadReactionModel();
 
     handleUserReaction();
 
     handleLogInClick();
   }
 
-  @VisibleForTesting public void loadReactionModel() {
+  @VisibleForTesting public void onCardCreatedLoadReactionModel() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cardCreated())
-        .flatMap(editorialHomeEvent -> home.loadReactionModel(editorialHomeEvent.getCardId())
-            .observeOn(viewScheduler)
-            .doOnNext(reactionModel -> view.updateReactions(reactionModel,
-                editorialHomeEvent.getBundlePosition())))
+        .flatMap(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
+            editorialHomeEvent.getBundlePosition()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
+  }
+
+  private Observable<FakeReactionModel> loadReactionModel(String cardId, int position) {
+    return home.loadReactionModel(cardId)
+        .observeOn(viewScheduler)
+        .doOnNext(reactionModel -> view.updateReactions(reactionModel, position));
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -167,7 +168,8 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.reactionClicked())
         .flatMap(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getReaction())
             .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
-                homeEvent.getBundlePosition(), homeEvent.getReaction())))
+                homeEvent.getBundlePosition(), homeEvent.getReaction()))
+            .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);

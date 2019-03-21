@@ -52,7 +52,7 @@ public class EditorialPresenter implements Presenter {
     handleReactionClick();
     handleUserReaction();
     handleLogInClick();
-    loadReactionModel();
+    onCreateLoadReactionModel();
 
     handleInstallClick();
     pauseDownload();
@@ -363,17 +363,21 @@ public class EditorialPresenter implements Presenter {
         }, throwable -> crashReporter.log(throwable));
   }
 
-  @VisibleForTesting public void loadReactionModel() {
+  @VisibleForTesting public void onCreateLoadReactionModel() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> setUpViewModelOnViewReady())
-        .flatMap(editorialViewModel -> editorialManager.loadReactionModel(
-            editorialViewModel.getCardId()))
-        .doOnNext(reactionModel -> view.setReactions(reactionModel.getUserReaction(),
-            reactionModel.getReactionTypes(), reactionModel.getNumberOfReactions()))
+        .flatMap(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
+  }
+
+  private Observable<FakeReactionModel> loadReactionModel(String cardId) {
+    return editorialManager.loadReactionModel(cardId)
+        .observeOn(viewScheduler)
+        .doOnNext(reactionModel -> view.setReactions(reactionModel.getUserReaction(),
+            reactionModel.getReactionTypes(), reactionModel.getNumberOfReactions()));
   }
 
   @VisibleForTesting public void handleUserReaction() {
@@ -383,7 +387,8 @@ public class EditorialPresenter implements Presenter {
         .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
             reactionEvent.getReactionType())
             .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
-                reactionEvent.getReactionType())))
+                reactionEvent.getReactionType()))
+            .flatMap(__ -> loadReactionModel(reactionEvent.getCardId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);

@@ -56,14 +56,11 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     ActionItem actionItem = actionBundle.getActionItem();
 
     setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
-        actionItem.getCardId(), actionItem.getNumberOfViews(), position, homeBundle,
-        actionBundle.getReactionTypes(), actionBundle.getNumberOfReactions(),
-        actionBundle.getUserReaction());
+        actionItem.getCardId(), actionItem.getNumberOfViews(), position, homeBundle);
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
-      String numberOfViews, int position, HomeBundle homeBundle, List<ReactionType> reactionTypes,
-      String numberOfReactions, ReactionType userReaction) {
+      String numberOfViews, int position, HomeBundle homeBundle) {
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
     editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
@@ -71,7 +68,6 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     editorialViews.setText(String.format(itemView.getContext()
             .getString(R.string.editorial_card_short_number_views),
         formatNumberOfViews(numberOfViews)));
-    setReactions(reactionTypes, numberOfReactions, userReaction);
     reactButton.setOnClickListener(view -> uiEventsListener.onNext(
         new EditorialHomeEvent(cardId, homeBundle, position, HomeEvent.Type.REACTION_BUTTON)));
     editorialCard.setOnClickListener(view -> uiEventsListener.onNext(
@@ -104,9 +100,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
 
   public void setEditorialCard(CurationCard curationCard, int position) {
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
-        curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(), position, null,
-        curationCard.getReactionTypes(), curationCard.getNumberOfReactions(),
-        curationCard.getUserReaction());
+        curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(), position, null);
   }
 
   public void showReactions(String cardId, int position) {
