@@ -228,7 +228,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String LAYOUT = "layout";
     public static final String TAG = "tag";
     public static final String STORE_NAME = "store_name";
-    public static String STORE_CONTEXT = "Store_context";
     public static final String TOOLBAR = "toolbar";
+    public static String STORE_CONTEXT = "Store_context";
   }
 }

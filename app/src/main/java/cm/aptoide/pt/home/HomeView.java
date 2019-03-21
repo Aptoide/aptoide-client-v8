@@ -26,4 +26,8 @@ public interface HomeView extends BundleView {
   void hideBundle(int bundlePosition);
 
   void setAdsTest(boolean showNatives);
+
+  Observable<HomeEvent> walletOfferCardInstallWalletClick();
+
+  void sendDeeplinkToWalletAppView(String url);
 }

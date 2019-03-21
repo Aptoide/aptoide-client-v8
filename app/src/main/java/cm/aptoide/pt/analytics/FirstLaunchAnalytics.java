@@ -11,8 +11,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -39,7 +37,7 @@ public class FirstLaunchAnalytics {
 
   public static final String FIRST_LAUNCH = "Aptoide_First_Launch";
   public static final String PLAY_PROTECT_EVENT = "Google_Play_Protect";
-  private static final String EVENT_NAME = "FIRST_LAUNCH";
+  public static final String FIRST_LAUNCH_BI = "FIRST_LAUNCH";
   private static final String GMS = "GMS";
   private static final String HAS_HGMS = "Has GMS";
   private static final String NO_GMS = "No GMS";
@@ -50,7 +48,6 @@ public class FirstLaunchAnalytics {
   private static final String SITE_VERSION = "site_version";
   private static final String USER_AGENT = "user_agent";
   private static final String UNKNOWN = "unknown";
-  private static final String BI_ACTION = "OPEN";
   private static final String CONTEXT = "APPLICATION";
   private static final String UTM_SOURCE = "UTM Source";
   private static final String UTM_MEDIUM = "UTM Medium";
@@ -84,7 +81,10 @@ public class FirstLaunchAnalytics {
       String utmContent, String entryPoint) {
     analyticsManager.logEvent(
         createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
-        FIRST_LAUNCH, AnalyticsManager.Action.OPEN, "");
+        FIRST_LAUNCH, AnalyticsManager.Action.OPEN, CONTEXT);
+    analyticsManager.logEvent(
+        createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
+        FIRST_LAUNCH_BI, AnalyticsManager.Action.OPEN, CONTEXT);
   }
 
   private void sendPlayProtectEvent() {
@@ -107,7 +107,8 @@ public class FirstLaunchAnalytics {
           data.put(IS_ACTIVE, isActive ? "true" : "false");
           data.put(FLAGGED, isFlagged ? "true" : "false");
           data.put(CATEGORY, category);
-          analyticsManager.logEvent(data, PLAY_PROTECT_EVENT, AnalyticsManager.Action.OPEN, "");
+          analyticsManager.logEvent(data, PLAY_PROTECT_EVENT, AnalyticsManager.Action.OPEN,
+              CONTEXT);
         });
   }
 
@@ -197,15 +198,6 @@ public class FirstLaunchAnalytics {
         .doOnNext(dimensions -> setupDimensions(application))
         .doOnNext(facebookFirstLaunch -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
             utmContent, entryPoint))
-        .flatMap(facebookFirstLaunch -> {
-          UTMTrackingBuilder utmTrackingBuilder =
-              new UTMTrackingBuilder(getTracking(application), getUTM());
-          BiUtmAnalyticsRequestBody body =
-              new BiUtmAnalyticsRequestBody(utmTrackingBuilder.getUTMTrackingData());
-          return BiUtmAnalyticsRequest.of(BI_ACTION, EVENT_NAME, CONTEXT, body, bodyInterceptor,
-              okHttpClient, converterFactory, sharedPreferences, tokenInvalidator)
-              .observe();
-        })
         .toCompletable()
         .subscribeOn(Schedulers.io());
   }

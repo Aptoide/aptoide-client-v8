@@ -4,8 +4,14 @@ import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.MoPubAnalytics;
+import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
+import cm.aptoide.pt.ads.WalletAdsOfferService;
+import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -51,7 +57,23 @@ import javax.inject.Singleton;
     return new MoPubNativeAdExperiment(abTestManager, moPubAnalytics);
   }
 
+  @Singleton @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment(
+      @Named("ab-test") ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
+    return new MoPubInterstitialAdExperiment(abTestManager, moPubAnalytics);
+  }
+
   @Singleton @Provides @Named("partnerID") String providePartnerID() {
     return "";
+  }
+
+  @Singleton @Provides WalletAdsOfferManager providesWalletAdsOfferManager(
+      WalletAdsOfferService walletAdsOfferService) {
+    return new WalletAdsOfferManager(application.getApplicationContext()
+        .getPackageManager(), walletAdsOfferService);
+  }
+
+  @Singleton @Provides WalletAdsOfferCardManager providesWalletAdsOfferCardManager(
+      BlacklistManager blacklistManager, PackageRepository packageRepository) {
+    return new WalletAdsOfferCardManager(blacklistManager, packageRepository);
   }
 }
