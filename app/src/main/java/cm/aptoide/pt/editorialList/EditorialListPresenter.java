@@ -11,7 +11,6 @@ import cm.aptoide.pt.reactions.data.ReactionType;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-import rx.exceptions.OnErrorNotImplementedException;
 
 public class EditorialListPresenter implements Presenter {
 
@@ -62,9 +61,7 @@ public class EditorialListPresenter implements Presenter {
                 editorialHomeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {
@@ -93,9 +90,7 @@ public class EditorialListPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleEditorialCardClick() {
@@ -111,9 +106,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handlePullToRefresh() {
@@ -124,9 +117,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleRetryClick() {
@@ -164,9 +155,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore) {
