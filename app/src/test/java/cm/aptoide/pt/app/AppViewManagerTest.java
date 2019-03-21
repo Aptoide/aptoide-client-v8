@@ -627,15 +627,16 @@ public class AppViewManagerTest {
 
     //When the presenter asks for the downloadModel
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));
+    when(migrationManager.isMigrationApp("packageName", "", 1, 2, false)).thenReturn(
+        Observable.just(false));
 
     DownloadModel downloadModel =
         appViewManager.loadDownloadModel("md5", "packageName", 1, false, null, "", 2, false)
             .toBlocking()
             .first();
 
-    //verify(migrationManager).isMigrationApp("packageName", "", 1, 2, false);
     ////Then it should ask the installManager to start the install
-    //verify(installManager).getInstall("md5", "packageName", 1);
+    verify(installManager).getInstall("md5", "packageName", 1);
 
     //And it should return a DownloadViewModel with the correct progress, action and download state
     Assert.assertEquals(2, downloadModel.getProgress());
