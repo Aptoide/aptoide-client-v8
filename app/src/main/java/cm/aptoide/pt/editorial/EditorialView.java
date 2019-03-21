@@ -70,5 +70,18 @@ public interface EditorialView extends View {
 
   Observable<Void> reactionsButtonClicked();
 
-  void setReactions(List<ReactionType> reactions, String numberOfReactions);
+  void setReactions(ReactionType userReaction, List<ReactionType> reactions,
+      String numberOfReactions);
+
+  void showReactionsPopup(String cardId);
+
+  Observable<ReactionEvent> reactionClicked();
+
+  void setUserReaction(ReactionType reaction);
+
+  void showLogInDialog();
+
+  Observable<Void> snackLogInClick();
+
+  void showErrorToast();
 }

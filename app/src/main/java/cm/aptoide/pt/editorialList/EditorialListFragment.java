@@ -68,6 +68,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     uiEventsListener = PublishSubject.create();
+    snackListener = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
 
   @Override public void onDestroy() {
     uiEventsListener = null;
+    snackListener = null;
     super.onDestroy();
   }
 
@@ -298,7 +300,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
           ((EditorialBundleViewHolder) editorialList.findViewHolderForAdapterPosition(
               placeHolderPosition));
       if (placeHolderViewHolder == null) {
-        Log.e(TAG, "Unable to find editorialViewHolder");
+        Log.e(TAG, "Unable to find editorialBundleViewHolder");
       }
       return placeHolderViewHolder;
     }

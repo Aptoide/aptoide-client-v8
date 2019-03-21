@@ -257,9 +257,10 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
+      @Named("aptoide-theme") String theme, AccountNavigator accountNavigator) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme,
+        accountNavigator);
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(

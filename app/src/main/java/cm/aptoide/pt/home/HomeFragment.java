@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +20,13 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.editorial.FakeReactionModel;
+import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
+import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -42,6 +49,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
 
+  private static final String TAG = EditorialFragment.class.getName();
   /**
    * The minimum number of items to have below your current scroll position before loading more.
    */
@@ -52,6 +60,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
+  private PublishSubject<Void> snackListener;
   private PublishSubject<AdHomeEvent> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
@@ -78,6 +87,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     oneDecimalFormatter = null;
     adClickedEvents = null;
     userAvatar = null;
+    snackListener = null;
     super.onDestroy();
   }
 
@@ -87,6 +97,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
+    snackListener = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
@@ -337,8 +348,65 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(EditorialHomeEvent.class);
   }
 
+  @Override public Observable<ReactionsHomeEvent> reactionClicked() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.REACTION))
+        .cast(ReactionsHomeEvent.class);
+  }
+
+  @Override public void showReactionsPopup(String cardId, int bundlePosition) {
+    EditorialBundleViewHolder editorialBundleViewHolder =
+        getViewHolderForAdapterPosition(bundlePosition);
+    if (editorialBundleViewHolder != null) {
+      editorialBundleViewHolder.showReactions(cardId, bundlePosition);
+    }
+  }
+
+  @Override public void setUserReaction(int bundlePosition, ReactionType reaction) {
+    EditorialBundleViewHolder editorialBundleViewHolder =
+        getViewHolderForAdapterPosition(bundlePosition);
+    if (editorialBundleViewHolder != null) {
+      editorialBundleViewHolder.setUserReaction(reaction);
+    }
+  }
+
+  @Override public void showLogInDialog() {
+    ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
+        snackView -> snackListener.onNext(null), Snackbar.LENGTH_SHORT);
+  }
+
+  @Override public Observable<Void> snackLogInClick() {
+    return snackListener;
+  }
+
+  @Override public void showErrorToast() {
+    Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void updateReactions(FakeReactionModel reactionModel, int bundlePosition) {
+    EditorialBundleViewHolder editorialBundleViewHolder =
+        getViewHolderForAdapterPosition(bundlePosition);
+    if (editorialBundleViewHolder != null) {
+      editorialBundleViewHolder.setReactions(reactionModel.getReactionTypes(),
+          reactionModel.getNumberOfReactions(), reactionModel.getUserReaction());
+    }
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;
+  }
+
+  private EditorialBundleViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {
+    try {
+      EditorialBundleViewHolder placeHolderViewHolder =
+          ((EditorialBundleViewHolder) bundlesList.findViewHolderForAdapterPosition(
+              placeHolderPosition));
+      return placeHolderViewHolder;
+    } catch (Exception e) {
+      Log.e(TAG, "Unable to find editorialViewHolder");
+    }
+    return null;
   }
 }

@@ -1,13 +1,13 @@
 package cm.aptoide.pt.editorial;
 
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
@@ -51,6 +51,8 @@ public class EditorialPresenter implements Presenter {
     handleClickOnAppCard();
     handlePaletteColor();
     handleReactionClick();
+    handleUserReaction();
+    handleLogInClick();
     loadReactionModel();
 
     handleInstallClick();
@@ -365,13 +367,11 @@ public class EditorialPresenter implements Presenter {
         .doOnNext(editorialViewModel -> {
           editorialAnalytics.sendReactionButtonClickEvent(
               editorialViewModel.getCardId()); //TODO implementation
-          Log.d("TAG123", "handleReactionClick: ");
+          view.showReactionsPopup(editorialViewModel.getCardId());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void loadReactionModel() {
@@ -380,13 +380,46 @@ public class EditorialPresenter implements Presenter {
         .flatMap(created -> setUpViewModelOnViewReady())
         .flatMap(editorialViewModel -> editorialManager.loadReactionModel(
             editorialViewModel.getCardId()))
-        .doOnNext(reactionModel -> view.setReactions(reactionModel.getReactionTypes(),
-            reactionModel.getNumberOfReactions()))
+        .doOnNext(reactionModel -> view.setReactions(reactionModel.getUserReaction(),
+            reactionModel.getReactionTypes(), reactionModel.getNumberOfReactions()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  @VisibleForTesting public void handleUserReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionClicked())
+        .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
+            reactionEvent.getReactionType())
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+                reactionEvent.getReactionType())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, ReactionType reaction) {
+    if (reactionsResponse.wasSuccess()) {
+      view.setUserReaction(reaction);
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLogInDialog();
+    } else {
+      view.showErrorToast();
+    }
+  }
+
+  @VisibleForTesting public void handleLogInClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.snackLogInClick())
+        .doOnNext(homeEvent -> editorialNavigator.navigateToLogIn())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {

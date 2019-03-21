@@ -463,7 +463,7 @@ public class AccountAnalytics {
         "Review Feedback"), SOCIAL_LIKE("Like Social Card"), STORE_COMMENT(
         "Store Comment"), LATEST_COMMENTS_STORE(
         "Comment on Latest Store Comments"), POST_ON_TIMELINE("Post on Timeline"), EDITORIAL(
-        "Editorial");
+        "React on Editorial");
 
     private final String origin;
 
