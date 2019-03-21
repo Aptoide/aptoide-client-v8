@@ -1,6 +1,8 @@
 package cm.aptoide.pt.editorial;
 
 import android.net.Uri;
+import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -12,10 +14,13 @@ import cm.aptoide.pt.navigator.ActivityNavigator;
 public class EditorialNavigator {
   private final ActivityNavigator activityNavigator;
   private final AppNavigator appNavigator;
+  private final AccountNavigator accountNavigator;
 
-  public EditorialNavigator(ActivityNavigator activityNavigator, AppNavigator appNavigator) {
+  public EditorialNavigator(ActivityNavigator activityNavigator, AppNavigator appNavigator,
+      AccountNavigator accountNavigator) {
     this.activityNavigator = activityNavigator;
     this.appNavigator = appNavigator;
+    this.accountNavigator = accountNavigator;
   }
 
   public void navigateToUri(String uri) {
@@ -24,5 +29,9 @@ public class EditorialNavigator {
 
   public void navigateToAppView(long appId, String packageName) {
     appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, "");
+  }
+
+  public void navigateToLogIn() {
+    accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.EDITORIAL);
   }
 }

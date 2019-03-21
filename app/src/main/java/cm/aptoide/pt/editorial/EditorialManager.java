@@ -10,6 +10,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -117,5 +118,9 @@ public class EditorialManager {
 
   public Observable<FakeReactionModel> loadReactionModel(String cardId) {
     return fakeReactionsManager.loadReactionModel(cardId);
+  }
+
+  public Observable<ReactionsResponse> setReaction(String cardId, ReactionType reaction) {
+    return fakeReactionsManager.setReaction(cardId, reaction);
   }
 }

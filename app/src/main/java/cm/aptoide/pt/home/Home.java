@@ -4,10 +4,12 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.FakeReactionsManager;
+import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -147,22 +149,11 @@ public class Home {
     return moPubAdsManager.shouldLoadNativeAds();
   }
 
-  public Observable<List<HomeBundle>> loadReactionModel(String cardId) {
-    return fakeReactionsManager.loadReactionModel(cardId)
-        .flatMap(reactionModel -> bundlesRepository.loadHomeBundles()
-            .toObservable()
-            .flatMap(homeBundlesModel -> updateBundles(reactionModel, homeBundlesModel.getList())));
+  public Observable<FakeReactionModel> loadReactionModel(String cardId) {
+    return fakeReactionsManager.loadReactionModel(cardId);
   }
 
-  private Observable<List<HomeBundle>> updateBundles(FakeReactionModel reactionModel,
-      List<HomeBundle> homeBundles) {
-    for (HomeBundle homeBundle : homeBundles) {
-      if (homeBundle instanceof ActionBundle) {
-        ((ActionBundle) homeBundle).setUserReaction(reactionModel.getUserReaction());
-        ((ActionBundle) homeBundle).setNumberOfReactions(reactionModel.getNumberOfReactions());
-        ((ActionBundle) homeBundle).setReactionTypes(reactionModel.getReactionTypes());
-      }
-    }
-    return Observable.just(homeBundles);
+  public Observable<ReactionsResponse> setReaction(String cardId, ReactionType reaction) {
+    return fakeReactionsManager.setReaction(cardId, reaction);
   }
 }
