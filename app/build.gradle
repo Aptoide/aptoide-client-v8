@@ -472,6 +472,7 @@ dependencies {
 
   // UnityAds, Chartboost & One by AOL
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+  implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
   //StartApp
