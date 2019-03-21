@@ -4,6 +4,7 @@ import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -37,7 +38,7 @@ public class EditorialListPresenter implements Presenter {
 
   @Override public void present() {
     onCreateLoadViewModel();
-    loadReactionModel();
+    onCardCreatedLoadReactionModel();
     handleImpressions();
     handleEditorialCardClick();
     handlePullToRefresh();
@@ -50,18 +51,21 @@ public class EditorialListPresenter implements Presenter {
     loadUserImage();
   }
 
-  @VisibleForTesting public void loadReactionModel() {
+  @VisibleForTesting public void onCardCreatedLoadReactionModel() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cardCreated())
-        .flatMap(editorialHomeEvent -> editorialListManager.loadReactionModel(
-            editorialHomeEvent.getCardId())
-            .observeOn(viewScheduler)
-            .doOnNext(reactionModel -> view.updateReactions(reactionModel,
-                editorialHomeEvent.getBundlePosition())))
+        .flatMap(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
+            editorialHomeEvent.getBundlePosition()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
+  }
+
+  private Observable<FakeReactionModel> loadReactionModel(String cardId, int position) {
+    return editorialListManager.loadReactionModel(cardId)
+        .observeOn(viewScheduler)
+        .doOnNext(reactionModel -> view.updateReactions(reactionModel, position));
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {
@@ -223,7 +227,8 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(homeEvent -> editorialListManager.setReaction(homeEvent.getCardId(),
             homeEvent.getReaction())
             .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
-                homeEvent.getBundlePosition(), homeEvent.getReaction())))
+                homeEvent.getBundlePosition(), homeEvent.getReaction()))
+            .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
