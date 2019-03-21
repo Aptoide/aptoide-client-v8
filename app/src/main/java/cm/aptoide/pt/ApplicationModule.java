@@ -454,8 +454,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AppInstallerStatusReceiver appInstallerStatusReceiver) {
     return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
-        installedRepository, 180000, rootAvailabilityManager, sharedPreferences, installerAnalytics,
-        BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT, appInstallerStatusReceiver);
+        installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
+        installerAnalytics, BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT,
+        appInstallerStatusReceiver);
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
