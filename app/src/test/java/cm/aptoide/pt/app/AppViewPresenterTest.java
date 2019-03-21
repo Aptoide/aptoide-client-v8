@@ -81,7 +81,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "");
+            "marketName", false, false, bdsFlags, "", "");
 
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
@@ -107,7 +107,10 @@ public class AppViewPresenterTest {
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-        appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
+        appViewViewModel.isPaid(), appViewViewModel.getPay(), appViewViewModel.getSignature(),
+        appViewViewModel.getStore()
+            .getId(),
+        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -132,7 +135,10 @@ public class AppViewPresenterTest {
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-        appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
+        appViewViewModel.isPaid(), appViewViewModel.getPay(), appViewViewModel.getSignature(),
+        appViewViewModel.getStore()
+            .getId(),
+        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -155,7 +161,10 @@ public class AppViewPresenterTest {
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(errorAppViewViewModel.getMd5(),
         errorAppViewViewModel.getPackageName(), errorAppViewViewModel.getVersionCode(),
-        errorAppViewViewModel.isPaid(), errorAppViewViewModel.getPay())).thenReturn(
+        errorAppViewViewModel.isPaid(), errorAppViewViewModel.getPay(),
+        appViewViewModel.getSignature(), appViewViewModel.getStore()
+            .getId(),
+        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -180,7 +189,10 @@ public class AppViewPresenterTest {
     //when the download model is requested
     when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
         appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-        appViewViewModel.isPaid(), appViewViewModel.getPay())).thenReturn(
+        appViewViewModel.isPaid(), appViewViewModel.getPay(), appViewViewModel.getSignature(),
+        appViewViewModel.getStore()
+            .getId(),
+        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -213,7 +225,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
-            false, bdsFlags, "");
+            false, bdsFlags, "", "");
 
     //Given an initialized presenter
     presenter.handleFirstLoad();
@@ -228,8 +240,10 @@ public class AppViewPresenterTest {
     when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppViewViewModel.getMd5(),
         emptyEditorsChoiceAppViewViewModel.getPackageName(),
         emptyEditorsChoiceAppViewViewModel.getVersionCode(),
-        emptyEditorsChoiceAppViewViewModel.isPaid(),
-        emptyEditorsChoiceAppViewViewModel.getPay())).thenReturn(
+        emptyEditorsChoiceAppViewViewModel.isPaid(), emptyEditorsChoiceAppViewViewModel.getPay(),
+        appViewViewModel.getSignature(), appViewViewModel.getStore()
+            .getId(),
+        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
