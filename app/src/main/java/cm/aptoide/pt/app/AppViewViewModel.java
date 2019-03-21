@@ -195,7 +195,8 @@ public class AppViewViewModel {
     this.error = error;
     this.appId = -1;
     this.appName = "";
-    this.store = null;
+    this.store = new Store();
+    store.setId(-1);
     this.storeTheme = "";
     this.isGoodApp = false;
     this.malware = null;

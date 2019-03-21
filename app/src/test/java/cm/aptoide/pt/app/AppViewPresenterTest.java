@@ -162,9 +162,9 @@ public class AppViewPresenterTest {
     when(appViewManager.loadDownloadAppViewModel(errorAppViewViewModel.getMd5(),
         errorAppViewViewModel.getPackageName(), errorAppViewViewModel.getVersionCode(),
         errorAppViewViewModel.isPaid(), errorAppViewViewModel.getPay(),
-        appViewViewModel.getSignature(), appViewViewModel.getStore()
+        errorAppViewViewModel.getSignature(), errorAppViewViewModel.getStore()
             .getId(),
-        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
+        errorAppViewViewModel.hasAdvertising() || errorAppViewViewModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);

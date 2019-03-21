@@ -225,8 +225,6 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          Logger.getInstance()
-              .e("BS", throwable.getMessage());
           crashReport.log(throwable);
         });
   }
