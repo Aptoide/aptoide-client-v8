@@ -8,6 +8,8 @@ import android.content.pm.PackageInstaller;
 import android.os.Build;
 import android.os.Bundle;
 
+import static cm.aptoide.pt.packageinstaller.AppInstaller.INSTALL_SESSION_API_COMPLETE_ACTION;
+
 class InstallResultReceiver extends BroadcastReceiver {
 
   private final PackageInstallerResultCallback packageInstallerResultCallback;
@@ -19,7 +21,7 @@ class InstallResultReceiver extends BroadcastReceiver {
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) @Override
   public void onReceive(Context context, Intent intent) {
     Bundle extras = intent.getExtras();
-    if (extras != null && "install_session_api_complete".equals(intent.getAction())) {
+    if (extras != null && INSTALL_SESSION_API_COMPLETE_ACTION.equals(intent.getAction())) {
       int status = extras.getInt(PackageInstaller.EXTRA_STATUS);
       String message = extras.getString(PackageInstaller.EXTRA_STATUS_MESSAGE);
       switch (status) {

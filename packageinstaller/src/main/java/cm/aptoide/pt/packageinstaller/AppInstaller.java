@@ -19,6 +19,7 @@ import java.io.OutputStream;
 
 public final class AppInstaller {
 
+  static final String INSTALL_SESSION_API_COMPLETE_ACTION = "install_session_api_complete";
   private static final int REQUEST_INSTALL = 22;
   private static final int SESSION_INSTALL_REQUEST_CODE = 18;
   private final Context context;
@@ -52,7 +53,7 @@ public final class AppInstaller {
       addApkToInstallSession(file, session);
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
-          new Intent("install_session_api_complete"), 0)
+          new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), 0)
           .getIntentSender());
     } catch (IOException e) {
       throw new RuntimeException("Couldn't install package", e);
@@ -96,7 +97,7 @@ public final class AppInstaller {
           }
         });
     context.registerReceiver(installResultReceiver,
-        new IntentFilter("install_session_api_complete"), null, null);
+        new IntentFilter(INSTALL_SESSION_API_COMPLETE_ACTION), null, null);
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
