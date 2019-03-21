@@ -360,10 +360,13 @@ public class AppViewManager {
             .flatMap(hasAds -> {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download, promotionViewApp.getId(),
+                    .doOnSuccess(showAds -> setupDownloadEvents(download,
+                        promotionViewApp.getDownloadModel()
+                            .getAction(), promotionViewApp.getId(),
                         showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
-                setupDownloadEvents(download, promotionViewApp.getId(), NO_ADS);
+                setupDownloadEvents(download, promotionViewApp.getDownloadModel()
+                    .getAction(), promotionViewApp.getId(), NO_ADS);
                 return Single.just(false);
               }
             })
@@ -375,6 +378,11 @@ public class AppViewManager {
   private void setupDownloadEvents(Download download, long appId,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     setupDownloadEvents(download, null, appId, null, null, offerResponseStatus);
+  }
+
+  private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
+      long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+    setupDownloadEvents(download, downloadAction, appId, null, null, offerResponseStatus);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
