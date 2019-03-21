@@ -1407,8 +1407,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (downloadModel.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();
     }
-    if (downloadModel.isDownloading() || downloadModel.getDownloadState()
-        .equals(DownloadModel.DownloadState.INSTALLING)) {
+    if (downloadModel.isActive()) {
       appcInfoView.hideInfo();
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);

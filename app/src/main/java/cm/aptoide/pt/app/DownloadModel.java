@@ -44,6 +44,10 @@ public class DownloadModel {
         || downloadState.equals(DownloadState.INDETERMINATE);
   }
 
+  public boolean isActive() {
+    return isDownloading() || downloadState.equals(DownloadState.INSTALLING);
+  }
+
   public GetAppMeta.Pay getPay() {
     return pay;
   }
