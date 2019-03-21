@@ -349,15 +349,26 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(WalletPromotionViewModel promotionViewApp) {
+    increaseInstallClick();
     return Observable.just(downloadFactory.create(downloadStateParser.parseDownloadAction(
         promotionViewApp.getDownloadModel()
             .getAction()), promotionViewApp.getAppName(), promotionViewApp.getPackageName(),
         promotionViewApp.getMd5sum(), promotionViewApp.getIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
         promotionViewApp.getPathAlt(), promotionViewApp.getObb()))
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, promotionViewApp.getId(),
-                WalletAdsOfferManager.OfferResponseStatus.NO_ADS)))
+        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(hasAds -> {
+              if (hasAds) {
+                return moPubAdsManager.shouldShowAds()
+                    .doOnSuccess(showAds -> setupDownloadEvents(download, promotionViewApp.getId(),
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
+              } else {
+                setupDownloadEvents(download, promotionViewApp.getId(), NO_ADS);
+                return Single.just(false);
+              }
+            })
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
