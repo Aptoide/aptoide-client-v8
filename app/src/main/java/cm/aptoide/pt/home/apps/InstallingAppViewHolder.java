@@ -17,8 +17,19 @@ class InstallingAppViewHolder extends AppsViewHolder {
   }
 
   @Override public void setApp(App app) {
+    String icon;
+    String appName;
+
+    if (app instanceof UpdateApp) {
+      icon = ((UpdateApp) app).getIcon();
+      appName = ((UpdateApp) app).getName();
+    } else {
+      icon = ((DownloadApp) app).getIcon();
+      appName = ((DownloadApp) app).getName();
+    }
+
     ImageLoader.with(itemView.getContext())
-        .load(((UpdateApp) app).getIcon(), appIcon);
-    appName.setText(((UpdateApp) app).getName());
+        .load(icon, appIcon);
+    this.appName.setText(appName);
   }
 }

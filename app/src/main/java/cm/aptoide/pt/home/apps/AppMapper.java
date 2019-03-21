@@ -41,6 +41,9 @@ public class AppMapper {
       case DOWNLOADING:
         status = StateApp.Status.ACTIVE;
         break;
+      case INSTALLING:
+        status = StateApp.Status.INSTALLING;
+        break;
       case INSTALLED:
       case UNINSTALLED:
         status = StateApp.Status.COMPLETED;

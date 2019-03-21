@@ -123,6 +123,9 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       case PAUSING:
         type = PAUSING_DOWNLOAD;
         break;
+      case INSTALLING:
+        type = INSTALLING;
+        break;
       default:
         throw new IllegalArgumentException("Wrong download status : " + downloadStatus.name());
     }
