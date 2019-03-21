@@ -575,9 +575,6 @@ public class EditorialFragment extends NavigationTrackFragment
     if (userReaction != null) {
       setUserReaction(userReaction);
     }
-    if (userReaction != null) {
-      setUserReaction(userReaction);
-    }
     for (int i = 0; i < reactions.size(); i++) {
       if (i < imageViews.length) {
         ImageLoader.with(getContext())
