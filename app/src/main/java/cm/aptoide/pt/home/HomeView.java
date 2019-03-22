@@ -4,6 +4,7 @@ import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.apps.BundleView;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Observable;
 
 /**
@@ -42,7 +43,7 @@ public interface HomeView extends BundleView {
 
   void showReactionsPopup(String cardId, int bundlePosition);
 
-  void setUserReaction(int bundlePosition, ReactionType reaction);
+  void setUserReaction(int bundlePosition, String reaction);
 
   void showLogInDialog();
 
@@ -50,5 +51,5 @@ public interface HomeView extends BundleView {
 
   void showErrorToast();
 
-  void updateReactions(FakeReactionModel reactionModel, int bundlePosition);
+  void updateReactions(LoadReactionModel reactionModel, int bundlePosition);
 }

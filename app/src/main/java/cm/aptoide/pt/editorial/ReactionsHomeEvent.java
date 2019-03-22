@@ -5,15 +5,15 @@ import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.reactions.data.ReactionType;
 
 public class ReactionsHomeEvent extends EditorialHomeEvent {
-  private final ReactionType reaction;
+  private final String reaction;
 
   public ReactionsHomeEvent(String cardId, HomeBundle bundle, int bundlePosition, Type clickType,
-      ReactionType reaction) {
+      String reaction) {
     super(cardId, bundle, bundlePosition, clickType);
     this.reaction = reaction;
   }
 
-  public ReactionType getReaction() {
+  public String getReaction() {
     return reaction;
   }
 }

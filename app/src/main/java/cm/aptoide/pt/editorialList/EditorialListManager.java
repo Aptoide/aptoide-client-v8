@@ -1,21 +1,22 @@
 package cm.aptoide.pt.editorialList;
 
 import cm.aptoide.pt.editorial.FakeReactionModel;
-import cm.aptoide.pt.editorial.FakeReactionsManager;
 import cm.aptoide.pt.editorial.ReactionsResponse;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Observable;
 import rx.Single;
 
 public class EditorialListManager {
 
   private final EditorialListRepository editorialListRepository;
-  private final FakeReactionsManager fakeReactionsManager;
+  private final ReactionsManager reactionsManager;
 
   public EditorialListManager(EditorialListRepository editorialListRepository,
-      FakeReactionsManager fakeReactionsManager) {
+      ReactionsManager reactionsManager) {
     this.editorialListRepository = editorialListRepository;
-    this.fakeReactionsManager = fakeReactionsManager;
+    this.reactionsManager = reactionsManager;
   }
 
   Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore,
@@ -35,11 +36,11 @@ public class EditorialListManager {
     return editorialListRepository.loadMoreCurationCards();
   }
 
-  public Observable<FakeReactionModel> loadReactionModel(String cardId) {
-    return fakeReactionsManager.loadReactionModel(cardId);
+  public Single<LoadReactionModel> loadReactionModel(String cardId) {
+    return reactionsManager.loadReactionModel(cardId);
   }
 
-  public Observable<ReactionsResponse> setReaction(String cardId, ReactionType reaction) {
-    return fakeReactionsManager.setReaction(cardId, reaction);
+  public Single<ReactionsResponse> setReaction(String cardId, String reaction) {
+    return reactionsManager.setReaction(cardId, reaction);
   }
 }

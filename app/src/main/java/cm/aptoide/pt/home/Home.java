@@ -3,13 +3,14 @@ package cm.aptoide.pt.home;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.editorial.FakeReactionModel;
-import cm.aptoide.pt.editorial.FakeReactionsManager;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -28,14 +29,13 @@ public class Home {
   private final MoPubAdsManager moPubAdsManager;
   private final BlacklistManager blacklistManager;
   private final String promotionId;
-  private final FakeReactionsManager fakeReactionsManager;
+  private final ReactionsManager reactionsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
       MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
-      PromotionsPreferencesManager promotionsPreferencesManager,
-      FakeReactionsManager fakeReactionsManager) {
+      PromotionsPreferencesManager promotionsPreferencesManager, ReactionsManager reactionsManager,
       PromotionsManager promotionsManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager,
       BlacklistManager blacklistManager, String promotionId) {
@@ -45,6 +45,7 @@ public class Home {
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
+    this.reactionsManager = reactionsManager;
     this.promotionId = promotionId;
     this.blacklistManager = blacklistManager;
     this.fakeReactionsManager = fakeReactionsManager;
@@ -149,11 +150,11 @@ public class Home {
     return moPubAdsManager.shouldLoadNativeAds();
   }
 
-  public Observable<FakeReactionModel> loadReactionModel(String cardId) {
-    return fakeReactionsManager.loadReactionModel(cardId);
+  public Single<LoadReactionModel> loadReactionModel(String cardId) {
+    return reactionsManager.loadReactionModel(cardId);
   }
 
-  public Observable<ReactionsResponse> setReaction(String cardId, ReactionType reaction) {
-    return fakeReactionsManager.setReaction(cardId, reaction);
+  public Single<ReactionsResponse> setReaction(String cardId, String reaction) {
+    return reactionsManager.setReaction(cardId, reaction);
   }
 }

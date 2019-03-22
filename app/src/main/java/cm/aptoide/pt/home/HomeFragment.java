@@ -29,6 +29,7 @@ import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
@@ -376,7 +377,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     }
   }
 
-  @Override public void setUserReaction(int bundlePosition, ReactionType reaction) {
+  @Override public void setUserReaction(int bundlePosition, String reaction) {
     EditorialBundleViewHolder editorialBundleViewHolder =
         getViewHolderForAdapterPosition(bundlePosition);
     if (editorialBundleViewHolder != null) {
@@ -398,12 +399,12 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .show();
   }
 
-  @Override public void updateReactions(FakeReactionModel reactionModel, int bundlePosition) {
+  @Override public void updateReactions(LoadReactionModel reactionModel, int bundlePosition) {
     EditorialBundleViewHolder editorialBundleViewHolder =
         getViewHolderForAdapterPosition(bundlePosition);
     if (editorialBundleViewHolder != null) {
-      editorialBundleViewHolder.setReactions(reactionModel.getReactionTypes(),
-          reactionModel.getNumberOfReactions(), reactionModel.getUserReaction());
+      editorialBundleViewHolder.setReactions(reactionModel.getTopReactionList(),
+          reactionModel.getTotal(), reactionModel.getMyReaction());
     }
   }
 

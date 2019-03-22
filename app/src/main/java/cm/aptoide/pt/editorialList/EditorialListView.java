@@ -5,6 +5,7 @@ import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import java.util.List;
 import rx.Observable;
 
@@ -53,7 +54,7 @@ public interface EditorialListView extends View {
 
   void showReactionsPopup(String cardId, int bundlePosition);
 
-  void setUserReaction(int bundlePosition, ReactionType reaction);
+  void setUserReaction(int bundlePosition, String reaction);
 
   void showLogInDialog();
 
@@ -61,5 +62,5 @@ public interface EditorialListView extends View {
 
   void showErrorToast();
 
-  void updateReactions(FakeReactionModel reactionModel, int bundlePosition);
+  void updateReactions(LoadReactionModel reactionModel, int bundlePosition);
 }
