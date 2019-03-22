@@ -1224,8 +1224,6 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.installWalletButtonClick()
             .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
-            .observeOn(viewScheduler)
-            .doOnError(throwable -> throwable.printStackTrace())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
