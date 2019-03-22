@@ -333,4 +333,19 @@
       </rules>
     </arrangement>
   </codeStyleSettings>
+  <codeStyleSettings language="kotlin">
+    <option name="CALL_PARAMETERS_WRAP" value="1"/>
+    <option name="METHOD_PARAMETERS_WRAP" value="1"/>
+    <option name="EXTENDS_LIST_WRAP" value="1"/>
+    <option name="METHOD_CALL_CHAIN_WRAP" value="1"/>
+    <option name="ASSIGNMENT_WRAP" value="1"/>
+    <option name="PARAMETER_ANNOTATION_WRAP" value="1"/>
+    <option name="VARIABLE_ANNOTATION_WRAP" value="1"/>
+    <option name="ENUM_CONSTANTS_WRAP" value="1"/>
+    <indentOptions>
+      <option name="INDENT_SIZE" value="2"/>
+      <option name="CONTINUATION_INDENT_SIZE" value="4"/>
+      <option name="TAB_SIZE" value="2"/>
+    </indentOptions>
+  </codeStyleSettings>
 </code_scheme>
