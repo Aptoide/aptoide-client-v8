@@ -8,7 +8,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import cm.aptoide.pt.view.Translator;
 import java.util.List;
@@ -79,8 +79,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     }
   }
 
-  public void setReactions(List<ReactionType> reactions, String numberOfReactions,
-      ReactionType userReaction) {
+  public void setReactions(List<TopReaction> reactions, int numberOfReactions,
+      String userReaction) {
     if (userReaction != null) {
       setUserReaction(userReaction);
     }
@@ -88,11 +88,12 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     for (int i = 0; i < reactions.size(); i++) {
       if (i < imageViews.length) {
         ImageLoader.with(itemView.getContext())
-            .loadWithShadowCircleTransform(mapReaction(reactions.get(i)), imageViews[i]);
+            .loadWithShadowCircleTransform(mapReaction(reactions.get(i)
+                .getType()), imageViews[i]);
         imageViews[i].setVisibility(View.VISIBLE);
       }
     }
-    if (!numberOfReactions.equals("0")) {
+    if (numberOfReactions > 0) {
       this.numberOfReactions.setText(numberOfReactions);
       this.numberOfReactions.setVisibility(View.VISIBLE);
     }
@@ -108,13 +109,14 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     reactionsPopup.show();
     reactionsPopup.setOnReactionsItemClickListener(item -> {
       uiEventsListener.onNext(
-          new ReactionsHomeEvent(cardId, null, position, HomeEvent.Type.REACTION, item));
+          new ReactionsHomeEvent(cardId, null, position, HomeEvent.Type.REACTION, item.toString()
+              .toLowerCase()));
       reactionsPopup.dismiss();
       reactionsPopup.setOnReactionsItemClickListener(null);
     });
   }
 
-  public void setUserReaction(ReactionType reaction) {
+  public void setUserReaction(String reaction) {
     reactButton.setImageResource(mapReaction(reaction));
   }
 }

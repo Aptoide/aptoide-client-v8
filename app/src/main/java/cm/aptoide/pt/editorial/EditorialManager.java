@@ -10,7 +10,9 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -29,14 +31,14 @@ public class EditorialManager {
   private final NotificationAnalytics notificationAnalytics;
   private final InstallAnalytics installAnalytics;
   private final EditorialAnalytics editorialAnalytics;
-  private final FakeReactionsManager fakeReactionsManager;
+  private final ReactionsManager reactionsManager;
   private DownloadStateParser downloadStateParser;
 
   public EditorialManager(EditorialRepository editorialRepository, String cardId,
       InstallManager installManager, PreferencesManager preferencesManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      EditorialAnalytics editorialAnalytics, FakeReactionsManager fakeReactionsManager) {
+      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager) {
 
     this.editorialRepository = editorialRepository;
     this.cardId = cardId;
@@ -47,7 +49,7 @@ public class EditorialManager {
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
     this.editorialAnalytics = editorialAnalytics;
-    this.fakeReactionsManager = fakeReactionsManager;
+    this.reactionsManager = reactionsManager;
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
@@ -116,11 +118,11 @@ public class EditorialManager {
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
   }
 
-  public Observable<FakeReactionModel> loadReactionModel(String cardId) {
-    return fakeReactionsManager.loadReactionModel(cardId);
+  public Single<LoadReactionModel> loadReactionModel(String cardId) {
+    return reactionsManager.loadReactionModel(cardId);
   }
 
-  public Observable<ReactionsResponse> setReaction(String cardId, ReactionType reaction) {
-    return fakeReactionsManager.setReaction(cardId, reaction);
+  public Single<ReactionsResponse> setReaction(String cardId, String reaction) {
+    return reactionsManager.setReaction(cardId, reaction);
   }
 }

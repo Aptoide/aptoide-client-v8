@@ -3,13 +3,14 @@ package cm.aptoide.pt.home;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.editorial.FakeReactionModel;
-import cm.aptoide.pt.editorial.FakeReactionsManager;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -27,14 +28,14 @@ public class Home {
   private final MoPubBannerAdExperiment bannerAdExperiment;
   private final MoPubNativeAdExperiment nativeAdExperiment;
   private final BannerRepository bannerRepository;
-  private final FakeReactionsManager fakeReactionsManager;
+  private final ReactionsManager reactionsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
       MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
       PromotionsPreferencesManager promotionsPreferencesManager,
-      FakeReactionsManager fakeReactionsManager) {
+      ReactionsManager reactionsManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
@@ -42,7 +43,7 @@ public class Home {
     this.nativeAdExperiment = nativeAdExperiment;
     this.bannerRepository = bannerRepository;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
-    this.fakeReactionsManager = fakeReactionsManager;
+    this.reactionsManager = reactionsManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -142,11 +143,11 @@ public class Home {
     return nativeAdExperiment.shouldLoadNative();
   }
 
-  public Observable<FakeReactionModel> loadReactionModel(String cardId) {
-    return fakeReactionsManager.loadReactionModel(cardId);
+  public Single<LoadReactionModel> loadReactionModel(String cardId) {
+    return reactionsManager.loadReactionModel(cardId);
   }
 
-  public Observable<ReactionsResponse> setReaction(String cardId, ReactionType reaction) {
-    return fakeReactionsManager.setReaction(cardId, reaction);
+  public Single<ReactionsResponse> setReaction(String cardId, String reaction) {
+    return reactionsManager.setReaction(cardId, reaction);
   }
 }

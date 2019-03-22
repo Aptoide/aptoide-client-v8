@@ -9,6 +9,7 @@ import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -55,17 +56,17 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cardCreated())
-        .flatMap(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
+        .flatMapSingle(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
             editorialHomeEvent.getBundlePosition()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private Observable<FakeReactionModel> loadReactionModel(String cardId, int position) {
+  private Single<LoadReactionModel> loadReactionModel(String cardId, int position) {
     return editorialListManager.loadReactionModel(cardId)
         .observeOn(viewScheduler)
-        .doOnNext(reactionModel -> view.updateReactions(reactionModel, position));
+        .doOnSuccess(reactionModel -> view.updateReactions(reactionModel, position));
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {
@@ -224,9 +225,9 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
-        .flatMap(homeEvent -> editorialListManager.setReaction(homeEvent.getCardId(),
+        .flatMapSingle(homeEvent -> editorialListManager.setReaction(homeEvent.getCardId(),
             homeEvent.getReaction())
-            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
                 homeEvent.getBundlePosition(), homeEvent.getReaction()))
             .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -235,7 +236,7 @@ public class EditorialListPresenter implements Presenter {
   }
 
   private void handleReactionsResponse(ReactionsResponse reactionsResponse, int bundlePosition,
-      ReactionType reaction) {
+      String reaction) {
     if (reactionsResponse.wasSuccess()) {
       view.setUserReaction(bundlePosition, reaction);
     } else if (reactionsResponse.reactionsExceeded()) {

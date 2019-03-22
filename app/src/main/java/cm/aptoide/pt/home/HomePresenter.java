@@ -10,6 +10,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.view.app.Application;
 import rx.Observable;
 import rx.Scheduler;
@@ -86,17 +87,17 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cardCreated())
-        .flatMap(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
+        .flatMapSingle(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
             editorialHomeEvent.getBundlePosition()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private Observable<FakeReactionModel> loadReactionModel(String cardId, int position) {
+  private Single<LoadReactionModel> loadReactionModel(String cardId, int position) {
     return home.loadReactionModel(cardId)
         .observeOn(viewScheduler)
-        .doOnNext(reactionModel -> view.updateReactions(reactionModel, position));
+        .doOnSuccess(reactionModel -> view.updateReactions(reactionModel, position));
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -166,8 +167,8 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
-        .flatMap(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getReaction())
-            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+        .flatMapSingle(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getReaction())
+            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
                 homeEvent.getBundlePosition(), homeEvent.getReaction()))
             .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -176,7 +177,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleReactionsResponse(ReactionsResponse reactionsResponse, int bundlePosition,
-      ReactionType reaction) {
+      String reaction) {
     if (reactionsResponse.wasSuccess()) {
       view.setUserReaction(bundlePosition, reaction);
     } else if (reactionsResponse.reactionsExceeded()) {

@@ -1,13 +1,11 @@
 package cm.aptoide.pt.editorial;
 
-import cm.aptoide.pt.reactions.data.ReactionType;
-
 class ReactionEvent {
 
   private final String cardId;
-  private final ReactionType reactionType;
+  private final String reactionType;
 
-  public ReactionEvent(String cardId, ReactionType reactionType) {
+  public ReactionEvent(String cardId, String reactionType) {
 
     this.cardId = cardId;
     this.reactionType = reactionType;
@@ -17,7 +15,7 @@ class ReactionEvent {
     return cardId;
   }
 
-  public ReactionType getReactionType() {
+  public String getReactionType() {
     return reactionType;
   }
 }

@@ -1,12 +1,11 @@
 package cm.aptoide.pt.reactions.network;
 
+import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.reactions.TopReaction;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -22,7 +21,7 @@ public class ReactionsRemoteService implements ReactionsService {
     this.ioScheduler = ioScheduler;
   }
 
-  @Override public Completable setReaction(String id, ReactionType like) {
+  @Override public Single<ReactionsResponse> setReaction(String id, String like) {
     return null;
   }
 
@@ -43,6 +42,7 @@ public class ReactionsRemoteService implements ReactionsService {
   }
 
   public interface ServiceV8 {
+    //@GET("echo/8.20181116/groups/apps-group/objects/{id}/reactions/summary")
     @GET("echo/8.20181116/groups/apps-group/objects/{id}/reactions/summary")
     Observable<TopReactionsResponse> getTopReactionsResponse(@Path("id") String id);
   }

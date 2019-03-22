@@ -38,7 +38,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -569,8 +569,8 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(reactButton);
   }
 
-  @Override public void setReactions(ReactionType userReaction, List<ReactionType> reactions,
-      String numberOfReactions) {
+  @Override public void setReactions(String userReaction, List<TopReaction> reactions,
+      int numberOfReactions) {
     ImageView[] imageViews = { firstReaction, secondReaction, thirdReaction };
     if (userReaction != null) {
       setUserReaction(userReaction);
@@ -578,11 +578,12 @@ public class EditorialFragment extends NavigationTrackFragment
     for (int i = 0; i < reactions.size(); i++) {
       if (i < imageViews.length) {
         ImageLoader.with(getContext())
-            .loadWithShadowCircleTransform(mapReaction(reactions.get(i)), imageViews[i]);
+            .loadWithShadowCircleTransform(mapReaction(reactions.get(i)
+                .getType()), imageViews[i]);
         imageViews[i].setVisibility(View.VISIBLE);
       }
     }
-    if (!numberOfReactions.equals("0")) {
+    if (numberOfReactions != 0) {
       this.numberOfReactions.setText(numberOfReactions);
       this.numberOfReactions.setVisibility(View.VISIBLE);
     }
@@ -592,7 +593,8 @@ public class EditorialFragment extends NavigationTrackFragment
     ReactionsPopup reactionsPopup = new ReactionsPopup(getContext(), reactButton);
     reactionsPopup.show();
     reactionsPopup.setOnReactionsItemClickListener(item -> {
-      reactionEventListener.onNext(new ReactionEvent(cardId, item));
+      reactionEventListener.onNext(new ReactionEvent(cardId, item.toString()
+          .toLowerCase()));
       reactionsPopup.dismiss();
       reactionsPopup.setOnReactionsItemClickListener(null);
     });
@@ -602,7 +604,7 @@ public class EditorialFragment extends NavigationTrackFragment
     return reactionEventListener;
   }
 
-  @Override public void setUserReaction(ReactionType reaction) {
+  @Override public void setUserReaction(String reaction) {
     reactButton.setImageResource(mapReaction(reaction));
   }
 

@@ -117,6 +117,7 @@ import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -273,9 +274,9 @@ import rx.subscriptions.CompositeSubscription;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager,
       MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository,
-      MoPubNativeAdExperiment nativeAdExperiment, FakeReactionsManager fakeReactionsManager) {
+      MoPubNativeAdExperiment nativeAdExperiment, ReactionsManager reactionsManager) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerAdExperiment,
-        nativeAdExperiment, bannerRepository, promotionsPreferencesManager, fakeReactionsManager);
+        nativeAdExperiment, bannerRepository, promotionsPreferencesManager, reactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -418,10 +419,10 @@ import rx.subscriptions.CompositeSubscription;
       PreferencesManager preferencesManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics,
-      FakeReactionsManager fakeReactionsManager) {
+      ReactionsManager reactionsManager) {
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
         installManager, preferencesManager, downloadFactory, downloadStateParser,
-        notificationAnalytics, installAnalytics, editorialAnalytics, fakeReactionsManager);
+        notificationAnalytics, installAnalytics, editorialAnalytics, reactionsManager);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(
@@ -468,8 +469,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
-      EditorialListRepository editorialListRepository, FakeReactionsManager fakeReactionsManager) {
-    return new EditorialListManager(editorialListRepository, fakeReactionsManager);
+      EditorialListRepository editorialListRepository, ReactionsManager reactionsManager) {
+    return new EditorialListManager(editorialListRepository, reactionsManager);
   }
 
   @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(

@@ -1,11 +1,11 @@
 package cm.aptoide.pt.reactions.mock;
 
-import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.reactions.network.ReactionsService;
-import rx.Completable;
+import rx.Single;
 
 public abstract class ReactionsFakeService implements ReactionsService {
-  @Override public Completable setReaction(String id, ReactionType like) {
-    return Completable.complete();
+  @Override public Single<ReactionsResponse> setReaction(String id, String like) {
+    return Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS));
   }
 }

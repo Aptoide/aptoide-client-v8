@@ -197,6 +197,7 @@ import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsService;
 import cm.aptoide.pt.reactions.Reactions;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.ReactionsRemoteService;
 import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.repository.StoreRepository;
@@ -1304,6 +1305,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(ReactionsRemoteService.ServiceV8.class);
   }
 
+  @Singleton @Provides ReactionsService providesReactionsService(
+      ReactionsRemoteService.ServiceV8 reactionServiceV8) {
+    return new ReactionsRemoteService(reactionServiceV8, Schedulers.io());
+  }
+
   @Singleton @Provides CaptchaService.ServiceInterface providesCaptchaServiceInterface(
       @Named("retrofit-apichain-bds") Retrofit retrofit) {
     return retrofit.create(CaptchaService.ServiceInterface.class);
@@ -1897,5 +1903,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides Reactions providesReactionsInteractor(ReactionsService reactionsService) {
     return new Reactions(reactionsService);
+  }
+
+  @Singleton @Provides ReactionsManager providesReactionsManager(
+      ReactionsService reactionsService) {
+    return new ReactionsManager(reactionsService);
   }
 }
