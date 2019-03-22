@@ -255,6 +255,15 @@
                 tools:visibility="visible"
                 />
           </FrameLayout>
+          <include
+              layout="@layout/appview_migration_warning"
+              android:id="@+id/migration_warning"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:layout_marginTop="12dp"
+              android:visibility="gone"
+              />
 
           <include
               layout="@layout/appview_wallet_promotion_install_layout"

@@ -70,6 +70,7 @@ public class AppViewManager {
   private String marketName;
   private boolean isFirstLoad;
   private AppCoinsManager appCoinsManager;
+  private AppcMigrationManager appcMigrationManager;
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
@@ -84,7 +85,7 @@ public class AppViewManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
       SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager,
       PromotionsManager promotionsManager, String promotionId,
-      InstalledRepository installedRepository) {
+      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -108,6 +109,7 @@ public class AppViewManager {
     this.promotionsManager = promotionsManager;
     this.promotionId = promotionId;
     this.installedRepository = installedRepository;
+    this.appcMigrationManager = appcMigrationManager;
     this.isFirstLoad = true;
   }
 
@@ -199,8 +201,10 @@ public class AppViewManager {
   }
 
   public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
-    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay).map(
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
+      boolean hasAppc) {
+    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay, signature, storeId,
+        hasAppc).map(
         downloadModel -> new DownloadAppViewModel(downloadModel, cachedSimilarAppsViewModel,
             cachedAppcSimilarAppsViewModel, cachedAppCoinsViewModel));
   }
@@ -295,7 +299,7 @@ public class AppViewManager {
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
-            appViewConfiguration.getCampaignUrl()));
+            appViewConfiguration.getCampaignUrl(), app.getSignature()));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {
@@ -397,11 +401,13 @@ public class AppViewManager {
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
-    return installManager.getInstall(md5, packageName, versionCode)
-        .map(install -> new DownloadModel(
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
+      boolean hasAppc) {
+    return Observable.combineLatest(installManager.getInstall(md5, packageName, versionCode),
+        appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
+        (install, isMigration) -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid()), install.getProgress(),
+                pay != null && pay.isPaid(), isMigration), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState()), pay));
   }
 
@@ -607,7 +613,7 @@ public class AppViewManager {
 
   private DownloadModel mapToDownloadModel(Install.InstallationType type, int progress,
       Install.InstallationStatus state) {
-    return new DownloadModel(downloadStateParser.parseDownloadType(type, false, false), progress,
-        downloadStateParser.parseDownloadState(state), null);
+    return new DownloadModel(downloadStateParser.parseDownloadType(type, false, false, false),
+        progress, downloadStateParser.parseDownloadState(state), null);
   }
 }

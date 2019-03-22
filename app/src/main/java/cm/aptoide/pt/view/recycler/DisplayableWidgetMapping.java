@@ -50,6 +50,8 @@ import cm.aptoide.pt.store.view.my.StoreDisplayable;
 import cm.aptoide.pt.store.view.my.StoreWidget;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreWidget;
+import cm.aptoide.pt.store.view.top.TopAppListDisplayable;
+import cm.aptoide.pt.store.view.top.TopAppListWidget;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.timeline.view.follow.FollowStoreWidget;
@@ -145,6 +147,8 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(GridAppListWidget.class, GridAppListDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(AppBrickListWidget.class, AppBrickListDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(TopAppListWidget.class, TopAppListDisplayable.class));
 
     // Updates
     displayableWidgetMappings.add(

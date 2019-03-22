@@ -33,7 +33,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
 
   @SuppressWarnings("unchecked") @Override
   public void onBindViewHolder(Widget holder, int position) {
-    holder.internalBindView(displayables.get(position));
+    holder.internalBindView(displayables.get(position), position);
   }
 
   @Override public int getItemViewType(int position) {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="2dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginStart="2dp"
+    android:layout_marginTop="16dp"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    >
+
+  <TextView
+      android:id="@+id/bundle_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical|start"
+      android:layout_marginBottom="16dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginStart="8dp"
+      tools:text="random bundle"
+      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
+      />
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/top_list"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      />
+  <Button
+      android:id="@+id/bundle_more"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="5dp"
+      android:layout_marginLeft="5dp"
+      android:layout_marginRight="5dp"
+      android:layout_marginStart="5dp"
+      android:layout_marginTop="3dp"
+      android:text="@string/button_header_more"
+      android:textColor="?attr/colorPrimaryDark"
+      app:fontFamily="@style/Aptoide.TextView.Medium"
+      style="?attr/backgroundCard"
+      />
+</LinearLayout>

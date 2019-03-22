@@ -62,6 +62,7 @@ import rx.schedulers.Schedulers;
             .replace(V7.getHost(sharedPreferences), "");
       }
       switch (wsWidget.getType()) {
+        case APPS_TOP_GROUP:
         case APPS_GROUP:
           return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)

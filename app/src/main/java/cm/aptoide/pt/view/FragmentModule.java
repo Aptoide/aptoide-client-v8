@@ -37,6 +37,7 @@ import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.AppcMigrationManager;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
@@ -325,6 +326,11 @@ import rx.subscriptions.CompositeSubscription;
         okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
+  @FragmentScope @Provides AppcMigrationManager providesAppcMigrationManager(
+      InstalledRepository repository) {
+    return new AppcMigrationManager(repository);
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
@@ -336,13 +342,14 @@ import rx.subscriptions.CompositeSubscription;
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
       @Named("wallet-offer-promotion-id") String promotionId,
-      InstalledRepository installedRepository) {
+      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
         appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, promotionsManager, promotionId, installedRepository);
+        marketName, appCoinsManager, promotionsManager, promotionId, installedRepository,
+        appcMigrationManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

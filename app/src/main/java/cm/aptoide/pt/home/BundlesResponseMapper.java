@@ -60,7 +60,9 @@ public class BundlesResponseMapper {
             .equals(Event.Name.getStoreWidgets)) {
           event.setName(Event.Name.getMoreBundle);
         }
-        if (type.equals(HomeBundle.BundleType.APPS) || type.equals(HomeBundle.BundleType.EDITORS)) {
+        if (type.equals(HomeBundle.BundleType.APPS)
+            || type.equals(HomeBundle.BundleType.EDITORS)
+            || type.equals(HomeBundle.BundleType.TOP)) {
           appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
               .getList(), type, widgetTag), type, event, widgetTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
@@ -156,6 +158,8 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.ADS;
       case TIMELINE_CARD:
         return HomeBundle.BundleType.SOCIAL;
+      case APPS_TOP_GROUP:
+        return HomeBundle.BundleType.TOP;
       default:
         return HomeBundle.BundleType.APPS;
     }

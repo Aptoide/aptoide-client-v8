@@ -44,7 +44,7 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   @Override public void setup(SearchAppResult result, int position) {
     this.searchApp = result;
     this.position = position;
-    appInfoViewHolder.setInfo(result.hasAppcBilling(), result.getAverageRating(), false);
+    appInfoViewHolder.setInfo(result.hasAppcBilling(), result.getAverageRating(), false, false);
     setAppName();
     setDownloadCount();
     setAverageValue();

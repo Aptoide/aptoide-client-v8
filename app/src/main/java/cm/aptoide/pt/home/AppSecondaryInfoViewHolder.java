@@ -21,21 +21,51 @@ public class AppSecondaryInfoViewHolder {
     rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
-  public void setInfo(boolean hasAppcBilling, float appRating, boolean showRating) {
-    if (hasAppcBilling) {
+  public void setInfo(boolean hasAppcBilling, float appRating, boolean showRating,
+      boolean showBoth) {
+    if (appcText != null) {
       appcText.setText(R.string.appc_short_spend_appc);
-      appcLayout.setVisibility(View.VISIBLE);
-      if (showRating) ratingLayout.setVisibility(View.INVISIBLE);
-    } else if (showRating) {
-      if (appRating == 0) {
+    }
+    setRating(appRating);
+    if (showBoth) {
+      if (hasAppcBilling) {
+        setAppcVisibility(View.VISIBLE);
+      } else {
+        setAppcVisibility(View.INVISIBLE);
+      }
+      setRatingVisibility(View.VISIBLE);
+    } else {
+      if (hasAppcBilling) {
+        setAppcVisibility(View.VISIBLE);
+        setRatingVisibility(View.INVISIBLE);
+      } else if (showRating) {
+        setAppcVisibility(View.INVISIBLE);
+        setRatingVisibility(View.VISIBLE);
+      } else {
+        setAppcVisibility(View.INVISIBLE);
+      }
+    }
+  }
+
+  private void setAppcVisibility(int visibility) {
+    if (appcLayout != null) {
+      appcLayout.setVisibility(visibility);
+    }
+  }
+
+  private void setRatingVisibility(int visibility) {
+    if (ratingLayout != null) {
+      ratingLayout.setVisibility(visibility);
+    }
+  }
+
+  private void setRating(float rating) {
+    if (this.rating != null) {
+      if (rating == 0) {
         this.rating.setText(R.string.appcardview_title_no_stars);
       } else {
-        this.rating.setText(oneDecimalFormatter.format(appRating));
+        this.rating.setText(oneDecimalFormatter.format(rating));
       }
-      ratingLayout.setVisibility(View.VISIBLE);
-      appcLayout.setVisibility(View.INVISIBLE);
-    } else {
-      appcLayout.setVisibility(View.INVISIBLE);
     }
   }
 }
