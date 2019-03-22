@@ -207,7 +207,7 @@ import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsService;
 import cm.aptoide.pt.reactions.Reactions;
-import cm.aptoide.pt.reactions.mock.ReactionsFakeService;
+import cm.aptoide.pt.reactions.network.ReactionsRemoteService;
 import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
@@ -1189,6 +1189,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("reactions-host") String providesReactionsHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_REACTIONS_HOST
+        + "/";
+  }
+
   @Singleton @Provides @Named("base-host") String providesBaseHost(
       @Named("default") SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
@@ -1254,6 +1263,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("retrofit-load-top-reactions")
+  Retrofit providesLoadTopReactionsRetrofit(@Named("reactions-host") String baseHost,
+      @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides @Named("retrofit-apichain-bds") Retrofit providesApiChainBDSRetrofit(
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
@@ -1308,6 +1328,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
       @Named("retrofit-donations") Retrofit retrofit) {
     return retrofit.create(DonationsService.ServiceV8.class);
+  }
+
+  @Singleton @Provides ReactionsRemoteService.ServiceV8 providesReactionsServiceV8(
+      @Named("retrofit-load-top-reactions") Retrofit retrofit) {
+    return retrofit.create(ReactionsRemoteService.ServiceV8.class);
   }
 
   @Singleton @Provides CaptchaService.ServiceInterface providesCaptchaServiceInterface(
@@ -1929,9 +1954,5 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides Reactions providesReactionsInteractor(ReactionsService reactionsService) {
     return new Reactions(reactionsService);
-  }
-
-  @Singleton @Provides ReactionsService providesReactionsService() {
-    return new ReactionsFakeService();
   }
 }
