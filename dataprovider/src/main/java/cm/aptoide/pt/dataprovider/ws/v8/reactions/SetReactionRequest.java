@@ -1,4 +1,4 @@
-package cm.aptoide.pt.dataprovider.ws.v7.reactions;
+package cm.aptoide.pt.dataprovider.ws.v8.reactions;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
